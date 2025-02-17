@@ -1,0 +1,30 @@
+name: Lint and Formatting Check
+
+on: push
+
+jobs:
+  main:
+    name: Run ESLint + Prettier
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Run npm install
+        run: npm ci
+
+      - name: Set up test environment file
+        run: echo "GOOGLE_CLIENT_ID=dummy" > .env.local && echo "GOOGLE_CLIENT_SECRET=dummy" >> .env.local && echo "NEXTAUTH_URL=http://localhost:3000" >> .env.local && echo "NEXTAUTH_SECRET=dummy" >> .env.local && echo "DATABASE_URL=dummy" >> .env.local && echo "DISCORD_CLIENT_ID=dummy" >> .env.local && echo "DISCORD_CLIENT_SECRET=dummy" >> .env.local
+
+      - name: Run ESLint
+        run: npm run lint:check
+
+      - name: Run Prettier
+        run: npm run format:check
