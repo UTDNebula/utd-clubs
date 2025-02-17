@@ -1,6 +1,5 @@
 'use server';
 
-import { format, isSameDay } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MoreIcon } from '@src/icons/Icons';
@@ -50,9 +49,8 @@ const HorizontalCard = async ({
             >
               {event.club.name}
             </Link>{' '}
-            •<wbr />
+            • <wbr />
             <span className="text-blue-primary">
-              {/* Use the ClientEventTime component here */}
               <ClientEventTime
                 startTime={event.startTime} //ClientEventTime logic
                 endTime={event.endTime}
@@ -114,7 +112,6 @@ const VerticalCard = async ({
             </Link>
             <div>
               <span className="text-blue-primary">
-                {/* Use the ClientEventTime component here */}
                 <ClientEventTime
                   startTime={event.startTime}
                   endTime={event.endTime}
