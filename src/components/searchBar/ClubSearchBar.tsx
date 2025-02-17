@@ -23,9 +23,7 @@ export const ClubSearchBar = () => {
       onClick={onClickSearchResult}
       submitButton
       submitLogic={() => {
-        if (data && data[0]) {
-          onClickSearchResult(data[0]);
-        }
+        router.push(`/directory/search?search=${encodeURIComponent(search)}`);
       }}
     />
   );

@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import EditContactSelector from '@src/app/manage/[clubId]/edit/EditContactSelector';
 import { type SelectClub, type SelectContact } from '@src/server/db/models';
 import { api } from '@src/trpc/react';
+import { type contact } from '@src/utils/contact';
 import { editClubContactSchema } from '@src/utils/formSchemas';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
@@ -55,7 +56,7 @@ const deletedReducer = (
 export default function EditContactForm({
   club,
 }: {
-  club: SelectClub & { contacts: SelectContact[] };
+  club: SelectClub & { contacts: contact[] };
 }) {
   const {
     register,

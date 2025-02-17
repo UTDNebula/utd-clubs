@@ -14,40 +14,67 @@ export const metadata: Metadata = {
 };
 
 const About = () => {
+  const teamMembers = [
+    { name: 'Ethan Bickel', position: 'Project Lead' },
+    { name: 'Braeden Kotko', position: 'Engineer' },
+    { name: 'Connor Harris', position: 'Engineer' },
+    { name: 'Jonathan Le', position: 'Engineer' },
+    { name: 'Alex Vazquez', position: 'Engineer' },
+    { name: 'Ishaan Gupta', position: 'Engineer' },
+    { name: 'Ritvik Thota', position: 'Engineer' },
+  ];
+  const recruits = [
+    { name: 'Jordan Joelson', position: 'Engineer' },
+    { name: 'Mansi Cherukupally', position: 'Engineer' },
+    { name: 'Aryav Rastogi', position: 'Engineer' },
+    { name: 'Sreevasan Siasubramanian', position: 'Engineer' },
+    { name: 'Ninad Sudarsanam', position: 'Engineer' },
+    { name: 'Shivesh Gupta', position: 'Engineer' },
+    { name: 'Natalia Sekulic', position: 'Engineer' },
+    { name: 'Mamoun Elmamoun', position: 'Engineer' },
+    { name: 'Chloe Alzaga', position: 'Engineer' },
+    { name: 'Joshua Perez', position: 'Engineer' },
+    { name: 'Ankith Ganji', position: 'Engineer' },
+    { name: 'Valeria Gallardo', position: 'Designer' },
+    { name: 'Waseef Kabir', position: 'Designer' },
+    { name: 'Ved Mahant', position: 'Designer' },
+  ];
   return (
     <main className="h-full md:pl-72">
       <Header />
       <div className="mx-6 h-full">
-        <h1 className="p-2 py-12 text-2xl font-bold text-slate-500">
-          About us
-        </h1>
         <div className="rounded-lg bg-slate-100 p-8 shadow-md">
           <h2 className="mb-4 text-lg font-semibold text-slate-500">
-            Project Jupiter
+            About Jupiter
           </h2>
-          <h3 className="mb-2 text-base text-slate-500">Our Goal</h3>
+
           <p className="mt-2 space-y-4 text-sm font-light text-slate-500">
-            Jupiter is a user-friendly platform that can be utilized by students
-            to seamlessly join school clubs. This tool allows students to browse
-            through the list of available clubs, their activities, and
-            objectives, all in one place. Students can easily sign up for clubs
-            that interest them and receive real-time updates on events,
-            meetings, and other activities organized by the clubs. The platform
-            also enables club leaders to manage and promote their clubs more
-            efficiently, keeping members informed about important details and
-            facilitating communication between members.
+            Jupiter is a platform being developed by nebula labs in order to
+            help students find organizations and events on and around campus.
             <br />
+            You&apos;re able to track organizations you&apos;re interested in,
+            find new organizations, and keep up to date on events you want to
+            attend.
             <br />
-            Jupiter comes with several features that make it an ideal tool for
-            school club management. For instance, the platform provides a
-            comprehensive dashboard that enables club leaders to track
-            attendance, monitor club performance, and collect feedback from
-            members. The tool also integrates with the school&apos;s social
-            media pages and website, making it easy for students to discover
-            clubs that match their interests. With Jupiter, students can easily
-            find and join clubs, and club leaders can manage their clubs more
-            effectively, leading to more successful and fulfilling club
-            experiences for everyone involved.
+            For organizations we offer a better way to keep your info up to
+            date, and for people well suited for your organization to find out
+            about you and your events.
+          </p>
+          <p className="mt-2 space-y-4 text-sm font-light text-slate-500">
+            If you&apos;re interested in contributing to Jupiter check out the{' '}
+            <a
+              href="https://discord.utdnebula.com/"
+              className="text-blue-primary hover:underline"
+            >
+              Nebula Discord
+            </a>
+            , or our{' '}
+            <a
+              href="https://github.com/UTDNebula/jupiter"
+              className="text-blue-primary hover:underline"
+            >
+              Github
+            </a>
           </p>
         </div>
         <div className="mt-16 py-3">
@@ -55,17 +82,35 @@ const About = () => {
             Our Team
           </h1>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-            {Array.from({ length: 8 }).map((_, key) => (
+            {teamMembers.map((member, key) => (
               <div
                 key={key}
                 className="rounded-lg bg-slate-100 p-5 shadow-md transition-shadow duration-300 hover:shadow-lg"
               >
                 <h2 className="mb-2 text-xl font-medium text-slate-500">
-                  Name
+                  {member.name}
                 </h2>
-                <h3 className="text-lg text-slate-500">Position</h3>
+                <h3 className="text-lg text-slate-500">{member.position}</h3>
               </div>
             ))}
+          </div>
+          <div className="mt-16 py-3">
+            <h1 className="mb-10 text-center text-3xl font-bold text-slate-500">
+              Recruits
+            </h1>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+              {recruits.map((member, key) => (
+                <div
+                  key={key}
+                  className="rounded-lg bg-slate-100 p-5 shadow-md transition-shadow duration-300 hover:shadow-lg"
+                >
+                  <h2 className="mb-2 text-xl font-medium text-slate-500">
+                    {member.name}
+                  </h2>
+                  <h3 className="text-lg text-slate-500">{member.position}</h3>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
