@@ -1,5 +1,10 @@
 import { eq, ilike, sql, and, notInArray, inArray, lt, gt } from 'drizzle-orm';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from '../trpc';
 import { z } from 'zod';
 import { clubEditRouter } from './clubEdit';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
@@ -290,7 +295,7 @@ export const clubRouter = createTRPCRouter({
         throw e;
       }
     }),
-  changeTags: protectedProcedure
+  changeTags: adminProcedure
     .input(tagReplaceSchema)
     .mutation(async ({ input, ctx }) => {
       const clubsToChange = await ctx.db.query.club.findMany({
@@ -312,6 +317,6 @@ export const clubRouter = createTRPCRouter({
         );
       }
       await Promise.all(clubPromise);
-      return {};
+      return { affected: clubsToChange.length };
     }),
 });
