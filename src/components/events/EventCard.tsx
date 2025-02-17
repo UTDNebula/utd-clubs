@@ -1,5 +1,5 @@
 'use server';
-import { format, isSameDay } from 'date-fns';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { MoreIcon } from '@src/icons/Icons';
@@ -7,6 +7,7 @@ import { type RouterOutputs } from '@src/trpc/shared';
 import EventLikeButton from './EventLikeButton';
 import { getServerAuthSession } from '@src/server/auth';
 import dynamic from 'next/dynamic';
+import ClientEventTime from './ClientEventTime'; //importing new component
 
 const EventTimeAlert = dynamic(() => import('./EventTimeAlert'), {
   ssr: false,
@@ -48,16 +49,15 @@ const HorizontalCard = async ({
             >
               {event.club.name}
             </Link>{' '}
-            •<wbr />
+            • <wbr />
             <span className="text-blue-primary">
-              {format(event.startTime, 'E, MMM d, p')}
-              {isSameDay(event.startTime, event.endTime) ? (
-                <> - {format(event.endTime, 'p')}</>
-              ) : (
-                <> - {format(event.endTime, 'E, MMM d, p')}</>
-              )}
+              <ClientEventTime
+                startTime={event.startTime} //ClientEventTime logic
+                endTime={event.endTime}
+              />
             </span>
           </h4>
+
           <p className="line-clamp-3 overflow-clip text-ellipsis text-xs font-bold">
             {event.description}
           </p>
@@ -112,16 +112,10 @@ const VerticalCard = async ({
             </Link>
             <div>
               <span className="text-blue-primary">
-                {format(event.startTime, 'E, MMM d, p')}
-                {isSameDay(event.startTime, event.endTime) ? (
-                  <> - {format(event.endTime, 'p')}</>
-                ) : (
-                  <>
-                    {' '}
-                    - <br />
-                    {format(event.endTime, 'E, MMM d, p')}
-                  </>
-                )}
+                <ClientEventTime
+                  startTime={event.startTime}
+                  endTime={event.endTime}
+                />
               </span>
             </div>
           </h4>

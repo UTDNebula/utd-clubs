@@ -247,7 +247,7 @@ export const clubRouter = createTRPCRouter({
       });
       return officers;
     }),
-  getListedOfficers: protectedProcedure
+  getListedOfficers: publicProcedure
     .input(byIdSchema)
     .query(async ({ input, ctx }) => {
       const officers = await ctx.db.query.officers.findMany({
