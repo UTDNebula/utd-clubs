@@ -1,5 +1,10 @@
 import { eq, ilike, sql, and, notInArray, inArray, lt, gt } from 'drizzle-orm';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from '../trpc';
 import { z } from 'zod';
 import { clubEditRouter } from './clubEdit';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
@@ -20,6 +25,10 @@ const joinLeaveSchema = z.object({
   clubId: z.string().default(''),
 });
 
+const tagReplaceSchema = z.object({
+  oldTag: z.string(),
+  newTag: z.string(),
+});
 const allSchema = z.object({
   tag: z.string().nullish(),
   cursor: z.number().min(0).default(0),
@@ -285,5 +294,29 @@ export const clubRouter = createTRPCRouter({
         console.error(e);
         throw e;
       }
+    }),
+  changeTags: adminProcedure
+    .input(tagReplaceSchema)
+    .mutation(async ({ input, ctx }) => {
+      const clubsToChange = await ctx.db.query.club.findMany({
+        where: sql`${input.oldTag} = ANY(tags)`,
+      });
+      clubsToChange.map((club) => {
+        club.tags = club.tags.map((tag) =>
+          tag == input.oldTag ? input.newTag : tag,
+        );
+        return club;
+      });
+      const clubPromise: Promise<unknown>[] = [];
+      for (const clu of clubsToChange) {
+        clubPromise.push(
+          ctx.db
+            .update(club)
+            .set({ tags: clu.tags })
+            .where(eq(club.id, clu.id)),
+        );
+      }
+      await Promise.all(clubPromise);
+      return { affected: clubsToChange.length };
     }),
 });
