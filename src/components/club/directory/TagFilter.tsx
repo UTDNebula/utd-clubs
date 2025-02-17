@@ -13,7 +13,7 @@ const TagFilter = ({ tags }: { tags: string[] }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const setSelected = (tag: string) =>
     router.replace(`/?tag=${tag}`, { scroll: false });
-  const deselect = (tag: string) => router.replace(`/`, { scroll: false });
+  const deselect = () => router.replace(`/`, { scroll: false });
 
   const handleScrollLeft = () => {
     const container = scrollContainerRef.current;
