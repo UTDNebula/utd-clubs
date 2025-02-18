@@ -7,9 +7,6 @@ const ClubInfoSegment: FC<{
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }> = async ({ club }) => {
   const isActive = await api.club.isActive({ id: club.id });
-  const president = (await api.club.getOfficers({ id: club.id })).find(
-    (officer) => officer.memberType === 'President',
-  );
   return (
     <div className="w-full rounded-lg bg-slate-100 p-10">
       <div className="flex flex-col items-start justify-between md:flex-row">
@@ -30,16 +27,6 @@ const ClubInfoSegment: FC<{
             <p className="text-sm text-slate-400">Founded</p>
             <p className="text-right text-sm text-slate-600">May 2020</p>
           </div>
-          {president && (
-            <div className="mt-2 flex w-36 justify-between">
-              <p className="text-sm text-slate-400">President</p>
-              <p className="text-right text-sm text-slate-600">
-                {president.userMetadata.firstName +
-                  ' ' +
-                  president.userMetadata.lastName}
-              </p>
-            </div>
-          )}
           <div className="mt-2 flex w-36 justify-between">
             <p className="text-sm text-slate-400">Active</p>
             <p className="text-right text-sm text-slate-600">
