@@ -72,7 +72,8 @@ a {
   background-blend-mode: darken;
   left: -0px; /* this must be TWICE the required offset distance*/
   background-position-x: left;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
     url('../../public/banner.png');
 }
 

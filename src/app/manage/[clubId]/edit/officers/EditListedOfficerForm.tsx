@@ -78,10 +78,14 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'officers',
+    keyName: 'field_id',
   });
   const [deleted, modifyDeleted] = useReducer(deletedReducer, []);
   const removeItem = (index: number) => {
-    const off = officers.find((officer) => officer.id == fields[index]?.id);
+    const off = officers.find((officer) => {
+      console.log(officer.id, fields[index]?.id);
+      return officer.id == fields[index]?.id;
+    });
     if (off) modifyDeleted({ type: 'add', target: off.id });
     remove(index);
   };

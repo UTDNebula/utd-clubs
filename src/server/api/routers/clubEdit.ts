@@ -198,13 +198,14 @@ export const clubEditRouter = createTRPCRouter({
           code: 'UNAUTHORIZED',
         });
       }
+
       if (input.deleted.length > 0) {
         await ctx.db
-          .delete(userMetadataToClubs)
+          .delete(officers)
           .where(
             and(
-              eq(userMetadataToClubs.clubId, input.clubId),
-              inArray(userMetadataToClubs.userId, input.deleted),
+              eq(officers.clubId, input.clubId),
+              inArray(officers.id, input.deleted),
             ),
           );
       }
