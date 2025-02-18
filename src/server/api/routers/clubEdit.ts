@@ -63,12 +63,14 @@ const editOfficerSchema = z.object({
       id: z.string(),
       name: z.string(),
       position: z.string(),
+      isPresident: z.boolean(),
     })
     .array(),
   created: z
     .object({
       name: z.string(),
       position: z.string(),
+      isPresident: z.boolean(),
     })
     .array(),
 });
@@ -212,7 +214,7 @@ export const clubEditRouter = createTRPCRouter({
       for (const modded of input.modified) {
         const prom = ctx.db
           .update(officers)
-          .set({ position: modded.position })
+          .set({ position: modded.position, isPresident: modded.isPresident, })
           .where(
             and(eq(officers.id, modded.id), eq(officers.clubId, input.clubId)),
           );
@@ -226,6 +228,7 @@ export const clubEditRouter = createTRPCRouter({
           clubId: input.clubId,
           name: officer.name,
           position: officer.position,
+          isPresident: officer.isPresident,
         })),
       );
     }),
