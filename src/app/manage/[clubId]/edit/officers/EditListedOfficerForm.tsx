@@ -95,7 +95,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
         update(i, {
           ...fields[i]!,
           isPresident: i == index,
-          position: i == index ? "President" : fields[i]!.position
+          position: i == index ? "President" : "Officer"
         });
       }
     }
