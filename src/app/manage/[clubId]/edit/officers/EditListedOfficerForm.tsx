@@ -38,8 +38,17 @@ const modifiedFields = (
     (value) => typeof value.id === 'undefined',
   );
   return {
-    modified: modded as { id: string; name: string; position: string, isPresident: boolean }[],
-    created: created as { name: string; position: string, isPresident: boolean }[],
+    modified: modded as {
+      id: string;
+      name: string;
+      position: string;
+      isPresident: boolean;
+    }[],
+    created: created as {
+      name: string;
+      position: string;
+      isPresident: boolean;
+    }[],
   };
 };
 
@@ -73,7 +82,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, dirtyFields, isDirty }
+    formState: { errors, dirtyFields, isDirty },
   } = useForm<z.infer<typeof editListedOfficerSchema>>({
     resolver: zodResolver(editListedOfficerSchema),
     defaultValues: { officers: officers },
@@ -95,11 +104,11 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
         update(i, {
           ...fields[i]!,
           isPresident: i == index,
-          position: i == index ? "President" : "Officer"
+          position: i == index ? 'President' : 'Officer',
         });
       }
     }
-  }
+  };
   const router = useRouter();
   const editOfficers = api.club.edit.listedOfficers.useMutation({
     onSuccess: () => {
@@ -191,7 +200,14 @@ type OfficerItemProps = {
   isPresident: boolean;
   makePresident: (index: number) => void;
 };
-const OfficerItem = ({ register, index, remove, errors, isPresident, makePresident }: OfficerItemProps) => {
+const OfficerItem = ({
+  register,
+  index,
+  remove,
+  errors,
+  isPresident,
+  makePresident,
+}: OfficerItemProps) => {
   return (
     <div className="flex flex-row items-center rounded-md bg-slate-300 p-2">
       <div className="flex flex-col">
@@ -234,7 +250,7 @@ const OfficerItem = ({ register, index, remove, errors, isPresident, makePreside
         make president
       </button>
       <button
-        className="disabled:hidden ml-8"
+        className="ml-8 disabled:hidden"
         type="button"
         onClick={() => remove(index)}
       >

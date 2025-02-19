@@ -214,7 +214,7 @@ export const clubEditRouter = createTRPCRouter({
       for (const modded of input.modified) {
         const prom = ctx.db
           .update(officers)
-          .set({ position: modded.position, isPresident: modded.isPresident, })
+          .set({ position: modded.position, isPresident: modded.isPresident })
           .where(
             and(eq(officers.id, modded.id), eq(officers.clubId, input.clubId)),
           );
