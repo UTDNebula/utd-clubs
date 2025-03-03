@@ -1,17 +1,22 @@
 'use client';
 import { api } from '@src/trpc/react';
 import { useState } from 'react';
-import { DebouncedSearchBar } from './DebouncedSearchBar';
+import useDebounce from '@src/utils/useDebounce';
+import { SearchResults, SearchResultsItem } from './SearchResults';
+import SearchBar from '.';
 
 type UserSearchBarProps = {
   passUser: (user: { id: string; name: string }) => void;
 };
 export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
   const [search, setSearch] = useState('');
+  const [focused, setFocused] = useState(false);
+  const debouncedFocused = useDebounce(focused, 300);
+  const debouncedSearch = useDebounce(search, 300);
   const userQuery = api.userMetadata.searchByName.useQuery(
-    { name: search },
+    { name: debouncedSearch },
     {
-      enabled: !!search,
+      enabled: !!debouncedSearch,
     },
   );
   const formattedData = userQuery.isSuccess
@@ -20,22 +25,41 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
       })
     : [];
   return (
-    <DebouncedSearchBar
-      placeholder="Search for Someone"
-      setSearch={setSearch}
-      value={search}
-      searchResults={formattedData}
-      onClick={(user) => {
-        passUser({ id: user.id, name: user.name });
-        setSearch('');
-      }}
-      submitLogic={() => {
-        if (formattedData && formattedData[0]) {
-          const user = formattedData[0];
-          passUser({ id: user.id, name: user.name });
-          setSearch('');
-        }
-      }}
-    />
+    <>
+      <div className="relative mr-3 w-full max-w-xs md:max-w-sm lg:max-w-md">
+        <SearchBar
+          placeholder="Search for Someone"
+          tabIndex={0}
+          onChange={(e) => setSearch(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          submitLogic={() => {
+            if (formattedData && formattedData[0]) {
+              const user = formattedData[0];
+              passUser({ id: user.id, name: user.name });
+              setSearch('');
+            }
+          }}
+        />
+        {debouncedSearch &&
+          debouncedFocused &&
+          userQuery.data &&
+          userQuery.data.length > 0 && (
+            <SearchResults
+              searchResults={formattedData.map((item) => (
+                <SearchResultsItem
+                  key={item.id}
+                  onClick={() => {
+                    passUser({ id: item.id, name: item.name });
+                    setSearch('');
+                  }}
+                >
+                  {item.name}
+                </SearchResultsItem>
+              ))}
+            />
+          )}
+      </div>
+    </>
   );
 };
