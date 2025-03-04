@@ -90,10 +90,13 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
   const { fields, append, remove, update } = useFieldArray({
     control,
     name: 'officers',
+    keyName: 'fieldId',
   });
   const [deleted, modifyDeleted] = useReducer(deletedReducer, []);
   const removeItem = (index: number) => {
-    const off = officers.find((officer) => officer.id == fields[index]?.id);
+    const off = officers.find((officer) => {
+      return officer.id == fields[index]?.id;
+    });
     if (off) modifyDeleted({ type: 'add', target: off.id });
     remove(index);
   };
@@ -155,7 +158,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
           <div className="space-y-2">
             {fields.map((field, index) => (
               <OfficerItem
-                key={field.id}
+                key={field.fieldId}
                 register={register}
                 index={index}
                 makePresident={makePresident}
