@@ -9,13 +9,18 @@ type SearchBarProps = Omit<ComponentProps<'input'>, 'type'> & {
 export const SearchBar = (props: SearchBarProps) => {
   const submitButton = props.submitButton;
   const submitLogic = props.submitLogic;
+  const goodProps = {
+    ...props,
+    submitButton: undefined,
+    submitLogic: undefined,
+  };
   return (
     <div className="relative">
       <span className="absolute inset-y-0 flex items-center pl-3">
         <SearchIcon />
       </span>
       <input
-        {...props}
+        {...goodProps}
         type="text"
         className={`h-10 w-full rounded-full border pl-10 ${submitButton ? 'pr-[38px]' : 'pr-3'} focus:outline-none ${props.className}`}
         onKeyDown={(e) => {

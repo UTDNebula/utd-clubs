@@ -25,6 +25,12 @@ export default function Page() {
         >
           Manage Carousel
         </Link>
+        <Link
+          href="/admin/tags"
+          className="rounded-md bg-slate-300 px-2 py-1 text-blue-500 transition-colors hover:bg-slate-400 hover:text-blue-600"
+        >
+          Change tags
+        </Link>
       </div>
     </div>
   );

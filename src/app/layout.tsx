@@ -6,7 +6,7 @@ import { headers } from 'next/headers';
 import { TRPCReactProvider } from '@src/trpc/react';
 import { type Metadata } from 'next';
 
-import { Analytics } from '@vercel/analytics/react';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -49,7 +49,7 @@ export default function RootLayout({
             <div className="max-h-screen overflow-y-scroll">{children}</div>
           </div>
         </TRPCReactProvider>
-        <Analytics />
+        <GoogleAnalytics gaId="G-FYTBHVKNG6" />
       </body>
     </html>
   );

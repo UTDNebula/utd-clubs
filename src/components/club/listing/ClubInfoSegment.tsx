@@ -7,9 +7,6 @@ const ClubInfoSegment: FC<{
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }> = async ({ club }) => {
   const isActive = await api.club.isActive({ id: club.id });
-  const president = club.userMetadataToClubs.find(
-    (officer) => officer.memberType === 'President',
-  );
   return (
     <div className="w-full rounded-lg bg-slate-100 p-10">
       <div className="flex flex-col items-start justify-between md:flex-row">
@@ -30,16 +27,6 @@ const ClubInfoSegment: FC<{
             <p className="text-sm text-slate-400">Founded</p>
             <p className="text-right text-sm text-slate-600">May 2020</p>
           </div>
-          {president && (
-            <div className="mt-2 flex w-36 justify-between">
-              <p className="text-sm text-slate-400">President</p>
-              <p className="text-right text-sm text-slate-600">
-                {president.userMetadata.firstName +
-                  ' ' +
-                  president.userMetadata.lastName}
-              </p>
-            </div>
-          )}
           <div className="mt-2 flex w-36 justify-between">
             <p className="text-sm text-slate-400">Active</p>
             <p className="text-right text-sm text-slate-600">
@@ -52,13 +39,13 @@ const ClubInfoSegment: FC<{
             {club.description}
           </p>
         </div>
-        {club.userMetadataToClubs.length != 0 && (
+        {club.officers.length != 0 && (
           <div className="min-w-fit">
             <>
               <h1 className="text-center text-2xl font-medium">Leadership</h1>
               <div className="flex flex-col justify-center align-middle">
-                {club.userMetadataToClubs.map((officer) => (
-                  <div className="mt-5 flex flex-row" key={officer.userId}>
+                {club.officers.map((officer) => (
+                  <div className="mt-5 flex flex-row" key={officer.id}>
                     <Image
                       src={club.image}
                       alt="Picture of the author"
@@ -68,12 +55,10 @@ const ClubInfoSegment: FC<{
                     />
                     <div className="mx-5 flex flex-col justify-center align-middle">
                       <p className="text-left text-sm text-slate-600">
-                        {officer.userMetadata.firstName +
-                          ' ' +
-                          officer.userMetadata.lastName}
+                        {officer.name}
                       </p>
                       <p className="mt-2 text-sm text-slate-400">
-                        {officer.title ?? 'Officer'}
+                        {officer.position}
                       </p>
                     </div>
                   </div>

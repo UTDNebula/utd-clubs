@@ -117,7 +117,6 @@ export const userMetadataToClubs = pgTable(
     memberType: clubRoleEnum('member_type')
       .$default(() => 'Member')
       .notNull(),
-    title: text('title'),
   },
   (t) => ({
     pk: primaryKey(t.userId, t.clubId),

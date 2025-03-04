@@ -11,6 +11,7 @@ import { events } from './events';
 import { userMetadataToClubs } from './users';
 import { contacts } from './contacts';
 import { carousel } from './admin';
+import { officers } from './officers';
 
 export const approvedEnum = pgEnum('approved_enum', [
   'approved',
@@ -39,6 +40,7 @@ export const club = pgTable('club', {
 export const clubRelations = relations(club, ({ many }) => ({
   contacts: many(contacts),
   events: many(events),
+  officers: many(officers),
   userMetadataToClubs: many(userMetadataToClubs),
   carousel: many(carousel),
 }));

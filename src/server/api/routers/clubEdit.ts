@@ -1,6 +1,6 @@
 import { db } from '@src/server/db';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
-import { and, eq, inArray, sql } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { editClubSchema } from '@src/utils/formSchemas';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
@@ -8,6 +8,7 @@ import { selectContact } from '@src/server/db/models';
 import { club } from '@src/server/db/schema/club';
 import { contacts } from '@src/server/db/schema/contacts';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
+import { officers } from '@src/server/db/schema/officers';
 
 async function isUserOfficer(userId: string, clubId: string) {
   const officer = await db.query.userMetadataToClubs.findFirst({
@@ -36,7 +37,7 @@ const editContactSchema = z.object({
   modified: selectContact.array(),
   created: selectContact.omit({ clubId: true }).array(),
 });
-const editOfficerSchema = z.object({
+const editCollaboratorSchema = z.object({
   clubId: z.string(),
   deleted: z.string().array(),
   modified: z
@@ -50,6 +51,24 @@ const editOfficerSchema = z.object({
     .object({
       userId: z.string(),
       title: z.string(),
+    })
+    .array(),
+});
+
+const editOfficerSchema = z.object({
+  clubId: z.string(),
+  deleted: z.string().array(),
+  modified: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+      position: z.string(),
+    })
+    .array(),
+  created: z
+    .object({
+      name: z.string(),
+      position: z.string(),
     })
     .array(),
 });
@@ -117,7 +136,7 @@ export const clubEditRouter = createTRPCRouter({
         .onConflictDoNothing();
     }),
   officers: protectedProcedure
-    .input(editOfficerSchema)
+    .input(editCollaboratorSchema)
     .mutation(async ({ input, ctx }) => {
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
       if (!isOfficer) {
@@ -136,20 +155,21 @@ export const clubEditRouter = createTRPCRouter({
             ),
           );
       }
-      const promises: Promise<unknown>[] = [];
-      for (const modded of input.modified) {
-        const prom = ctx.db
-          .update(userMetadataToClubs)
-          .set({ title: modded.title })
-          .where(
-            and(
-              eq(userMetadataToClubs.userId, modded.userId),
-              eq(userMetadataToClubs.clubId, input.clubId),
-            ),
-          );
-        promises.push(prom);
-      }
-      await Promise.allSettled(promises);
+      // TODO: link to officers table
+      // const promises: Promise<unknown>[] = [];
+      // for (const modded of input.modified) {
+      //   const prom = ctx.db
+      //     .update(userMetadataToClubs)
+      //     .set({ title: modded.title })
+      //     .where(
+      //       and(
+      //         eq(userMetadataToClubs.userId, modded.userId),
+      //         eq(userMetadataToClubs.clubId, input.clubId),
+      //       ),
+      //     );
+      //   promises.push(prom);
+      // }
+      // await Promise.allSettled(promises);
       if (input.created.length === 0) return;
 
       await ctx.db
@@ -164,9 +184,51 @@ export const clubEditRouter = createTRPCRouter({
         )
         .onConflictDoUpdate({
           target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
-          set: { memberType: 'Officer' as const, title: sql`excluded.title` },
+          set: { memberType: 'Officer' as const },
           where: eq(userMetadataToClubs.memberType, 'Member'),
         });
+    }),
+  listedOfficers: protectedProcedure
+    .input(editOfficerSchema)
+    .mutation(async ({ input, ctx }) => {
+      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
+      if (!isOfficer) {
+        throw new TRPCError({
+          message: 'must be an officer to modify this club',
+          code: 'UNAUTHORIZED',
+        });
+      }
+
+      if (input.deleted.length > 0) {
+        await ctx.db
+          .delete(officers)
+          .where(
+            and(
+              eq(officers.clubId, input.clubId),
+              inArray(officers.id, input.deleted),
+            ),
+          );
+      }
+      const promises: Promise<unknown>[] = [];
+      for (const modded of input.modified) {
+        const prom = ctx.db
+          .update(officers)
+          .set({ position: modded.position })
+          .where(
+            and(eq(officers.id, modded.id), eq(officers.clubId, input.clubId)),
+          );
+        promises.push(prom);
+      }
+      await Promise.allSettled(promises);
+      if (input.created.length === 0) return;
+
+      await ctx.db.insert(officers).values(
+        input.created.map((officer) => ({
+          clubId: input.clubId,
+          name: officer.name,
+          position: officer.position,
+        })),
+      );
     }),
   delete: protectedProcedure
     .input(deleteSchema)
