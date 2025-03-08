@@ -31,6 +31,7 @@ const tagReplaceSchema = z.object({
 });
 const allSchema = z.object({
   tag: z.string().nullish(),
+  name: z.string().nullish(),
   cursor: z.number().min(0).default(0),
   limit: z.number().min(1).max(50).default(10),
   initialCursor: z.number().min(0).default(0),
@@ -108,6 +109,9 @@ export const clubRouter = createTRPCRouter({
 
       if (input.tag && input.tag !== 'All') {
         query = query.where(sql`${input.tag} = ANY(${club.tags})`);
+      }
+      if (input.name) {
+        query = query.where(ilike(club.name, `%${input.name}%`));
       }
 
       const res = await query.execute();

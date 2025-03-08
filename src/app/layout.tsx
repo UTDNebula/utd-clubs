@@ -46,7 +46,9 @@ export default function RootLayout({
         <TRPCReactProvider headers={headers()}>
           <div className="flex flex-row">
             {/* <Sidebar /> */}
-            <div className="max-h-screen overflow-y-scroll">{children}</div>
+            <div className="max-h-screen w-full overflow-y-scroll">
+              {children}
+            </div>
           </div>
         </TRPCReactProvider>
         <GoogleAnalytics gaId="G-FYTBHVKNG6" />
