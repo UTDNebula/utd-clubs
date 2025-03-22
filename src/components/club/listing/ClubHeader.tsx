@@ -75,7 +75,6 @@ const ClubHeader = async ({ club }: { club: Club }) => {
                 />
               </>
             )}
-            <ContactButtons contacts={club.contacts || []} />
           </div>
         </div>
       </div>
