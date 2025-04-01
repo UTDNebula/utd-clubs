@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import ContactButtons from './ContactButtons';
 import type {
   SelectClub,
   SelectContact as Contacts,
@@ -75,7 +74,6 @@ const ClubHeader = async ({ club }: { club: Club }) => {
                 />
               </>
             )}
-            <ContactButtons contacts={club.contacts || []} />
           </div>
         </div>
       </div>
