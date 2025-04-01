@@ -10,7 +10,7 @@ type Club = SelectClub & {
   tags: string[];
 };
 
-const ContactInformation = async ({ club }: { club: Club }) => {
+const ContactInformation = ({ club }: { club: Club }) => {
   return (
     <div className="relative">
       <div className="h-full w-full">
