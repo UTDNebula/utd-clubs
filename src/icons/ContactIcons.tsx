@@ -121,7 +121,6 @@ export const Email = ({ className }: IconProps) => {
   );
 };
 
-const logoStyling = 'fill-slate-800 transition-colors';
 const instagramStyling = 'fill-pink-500 transition-colors group-hover:fill-pink-800';
 const discordStyling = 'fill-indigo-600 transition-colors group-hover:fill-indigo-800';
 const youtubeStyling = 'fill-red-500 transition-colors group-hover:fill-red-300';

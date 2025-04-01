@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import ContactButtons from './ContactButtons';
+//import ContactButtons from './ContactButtons';
 import type {
   SelectClub,
   SelectContact as Contacts,
