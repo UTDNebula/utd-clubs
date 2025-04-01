@@ -82,6 +82,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors, dirtyFields, isDirty },
   } = useForm<z.infer<typeof editListedOfficerSchema>>({
     resolver: zodResolver(editListedOfficerSchema),
@@ -105,9 +106,9 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
     for (let i = 0; i < fields.length; i++) {
       if ((i == index) != fields[i]!.isPresident) {
         update(i, {
-          ...fields[i]!,
-          isPresident: i == index,
+          ...getValues(`officers.${i}`),
           position: i == index ? 'President' : 'Officer',
+          isPresident: i == index,
         });
       }
     }
