@@ -121,13 +121,19 @@ export const Email = ({ className }: IconProps) => {
   );
 };
 
-const instagramStyling = 'fill-pink-500 transition-colors group-hover:fill-pink-800';
-const discordStyling = 'fill-indigo-600 transition-colors group-hover:fill-indigo-800';
-const youtubeStyling = 'fill-red-500 transition-colors group-hover:fill-red-300';
-const facebookStyling = 'fill-blue-600 transition-colors group-hover:fill-blue-300';
-const twitterStyling = 'fill-sky-500 transition-colors group-hover:fill-sky-300';
+const instagramStyling =
+  'fill-pink-500 transition-colors group-hover:fill-pink-800';
+const discordStyling =
+  'fill-indigo-600 transition-colors group-hover:fill-indigo-800';
+const youtubeStyling =
+  'fill-red-500 transition-colors group-hover:fill-red-300';
+const facebookStyling =
+  'fill-blue-600 transition-colors group-hover:fill-blue-300';
+const twitterStyling =
+  'fill-sky-500 transition-colors group-hover:fill-sky-300';
 const emailStyling = 'fill-red-500 transition-colors group-hover:fill-red-300';
-const websiteStyling = 'fill-gray-500 transition-colors group-hover:fill-gray-300';
+const websiteStyling =
+  'fill-gray-500 transition-colors group-hover:fill-gray-300';
 
 export const logo: logoProps = {
   discord: <Discord className={discordStyling} />,

@@ -34,7 +34,6 @@ const ContactButtons = ({ contacts }: contentButtonProps) => {
                 <div className="relative h-8 w-8">{logo[item.platform]}</div>
               </Link>
             </button>
-            
           )}
         </div>
       ))}

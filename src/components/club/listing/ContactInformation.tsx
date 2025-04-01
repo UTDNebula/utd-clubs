@@ -28,13 +28,14 @@ const ContactInformation = ({ club }: { club: Club }) => {
         />
       </div>
 
-
-      <div className="absolute left-0 top-0 h-full w-full flex items-center justify-between p-6">
-        <div className="text-blue-700 font-bold text-2xl">Contact Information</div>
+      <div className="absolute left-0 top-0 flex h-full w-full items-center justify-between p-6">
+        <div className="text-2xl font-bold text-blue-700">
+          Contact Information
+        </div>
         <ContactButtons contacts={club.contacts || []} />
       </div>
     </div>
   );
-}
+};
 
 export default ContactInformation;
