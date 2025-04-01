@@ -4,15 +4,6 @@ import type {
   SelectClub,
   SelectContact as Contacts,
 } from '@src/server/db/models';
-/*
-import JoinButton from '../JoinButton';
-import { getServerAuthSession } from '@src/server/auth';
-import Link from 'next/link';
-import { api } from '@src/trpc/server';
-import { type FC } from 'react';
-
-import { type RouterOutputs } from '@src/trpc/shared';
-*/
 
 type Club = SelectClub & {
   contacts?: Contacts[];
