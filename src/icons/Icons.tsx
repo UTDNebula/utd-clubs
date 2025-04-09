@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+// Temporary change for JUP-138
 
 export type IconType = FC<{ fill?: string }>;
 const defaultFill = 'fill-slate-400';
