@@ -1,7 +1,7 @@
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
 import superjson from 'superjson';
-
 import { type AppRouter } from '@src/server/api/root';
+import { createTRPCContext } from '@trpc/tanstack-react-query';
 
 export const transformer = superjson;
 function getBaseUrl() {
@@ -12,6 +12,9 @@ function getBaseUrl() {
 export function getUrl() {
   return getBaseUrl() + '/api/trpc';
 }
+
+export const { TRPCProvider, useTRPC, useTRPCClient } =
+  createTRPCContext<AppRouter>();
 
 /**
  * Inference helper for inputs.
