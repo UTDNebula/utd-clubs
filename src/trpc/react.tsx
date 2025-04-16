@@ -1,23 +1,16 @@
 'use client';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createTRPCClient, loggerLink, httpBatchLink } from '@trpc/client';
 import { useState } from 'react';
 
 import { type AppRouter } from '@src/server/api/root';
-import { getUrl, transformer, TRPCProvider } from './shared';
+import { getUrl, makeQueryClient, transformer } from './shared';
+import { createTRPCContext } from '@trpc/tanstack-react-query';
 
-function makeQueryClient() {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000,
-      },
-    },
-  });
-}
+let browserQueryClient: QueryClient;
 
-let browserQueryClient: QueryClient | undefined = undefined;
+export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
 
 function getQueryClient() {
   if (typeof window === 'undefined') {
@@ -28,10 +21,7 @@ function getQueryClient() {
   }
 }
 
-export function TRPCReactProvider(props: {
-  children: React.ReactNode;
-  headers: Headers;
-}) {
+export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
 
   const [trpcClient] = useState(() =>
@@ -45,11 +35,6 @@ export function TRPCReactProvider(props: {
         httpBatchLink({
           transformer,
           url: getUrl(),
-          headers() {
-            const heads = new Headers(props.headers);
-            heads.set('x-trpc-source', 'react');
-            return heads;
-          },
         }),
       ],
     }),

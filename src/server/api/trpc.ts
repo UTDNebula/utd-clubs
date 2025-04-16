@@ -7,6 +7,7 @@
  * need to use are documented accordingly near the end.
  */
 
+import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
@@ -14,6 +15,7 @@ import { ZodError } from 'zod';
 import { getServerAuthSession } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { eq } from 'drizzle-orm';
+import { cache } from 'react';
 
 /**
  * 1. CONTEXT
@@ -29,15 +31,19 @@ import { eq } from 'drizzle-orm';
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
-  // Fetch stuff that depends on the request
-  const session = await getServerAuthSession();
-  return {
-    session,
-    db,
-    ...opts,
-  };
-};
+export const createTRPCContext = cache(
+  async (opts: FetchCreateContextFnOptions) => {
+    // Fetch stuff that depends on the request
+    const session = await getServerAuthSession();
+    return {
+      session,
+      db,
+      ...opts,
+    };
+  },
+);
+
+export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
 
 /**
  * 2. INITIALIZATION
@@ -47,7 +53,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * errors on the backend.
  */
 
-const t = initTRPC.context<typeof createTRPCContext>().create({
+const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
     return {
