@@ -48,7 +48,9 @@ export default function RootLayout({
           <Sidebar />
           <div className="max-h-screen overflow-y-scroll">{children}</div>
         </TRPCReactProvider>
-        <GoogleAnalytics gaId="G-FYTBHVKNG6" />
+        {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
+          <GoogleAnalytics gaId="G-FYTBHVKNG6" />
+        )}
       </body>
     </html>
   );
