@@ -1,11 +1,10 @@
 import Image from 'next/image';
 import { type FC } from 'react';
 import { type RouterOutputs } from '@src/trpc/shared';
-import { api } from '@src/trpc/server';
 
 const ClubInfoSegment: FC<{
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
-}> = async ({ club }) => {
+}> = ({ club }) => {
   return (
     <div className="w-full rounded-lg bg-slate-100 p-10">
       <div className="flex flex-col items-start justify-between md:flex-row">
