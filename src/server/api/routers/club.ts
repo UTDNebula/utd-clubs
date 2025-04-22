@@ -1,4 +1,4 @@
-import { eq, ilike, sql, and, notInArray, inArray, lt, gt } from 'drizzle-orm';
+import { eq, ilike, sql, and, inArray, lt, gt } from 'drizzle-orm';
 import {
   adminProcedure,
   createTRPCRouter,
