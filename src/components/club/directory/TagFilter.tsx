@@ -1,19 +1,16 @@
 'use client';
 import { useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { LeftArrowIcon, RightArrowIcon } from '@src/icons/Icons';
+import { useSearchStore } from '@src/utils/SearchStoreProvider';
 
 const scrollAmount = 300;
 
 const TagFilter = ({ tags }: { tags: string[] }) => {
-  const router = useRouter();
-  const params = useSearchParams();
-  const selectedTag = params.get('tag') || 'All';
+  const { tag: selectedTag, setTag } = useSearchStore((state) => state);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const setSelected = (tag: string) =>
-    router.replace(`/?tag=${tag}`, { scroll: false });
-  const deselect = () => router.replace(`/`, { scroll: false });
+  const setSelected = (tag: string) => setTag(tag);
+  const deselect = () => setTag('All');
 
   const handleScrollLeft = () => {
     const container = scrollContainerRef.current;
@@ -45,7 +42,7 @@ const TagFilter = ({ tags }: { tags: string[] }) => {
               className={`${
                 selectedTag === tag
                   ? 'bg-blue-primary text-white hover:bg-blue-700'
-                  : 'bg-gray-100 text-slate-600 hover:bg-gray-200'
+                  : 'bg-white text-slate-600 hover:bg-gray-200'
               } whitespace-nowrap rounded-3xl px-8 py-4 text-sm font-extrabold transition-colors duration-200 focus:outline-none md:text-xs`}
               onClick={() => {
                 selectedTag === tag ? deselect() : setSelected(tag);

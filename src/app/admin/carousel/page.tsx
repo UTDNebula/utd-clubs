@@ -6,7 +6,7 @@ export default async function Page() {
   const carouselItems = await api.club.getCarousel();
   const upcoming = await api.admin.upcomingCarousels();
   return (
-    <div className="m-5 md:pl-72">
+    <div className="m-5 ">
       <h1 className="mb-10 text-center text-4xl font-bold text-gray-800">
         Current Carousel Items
       </h1>

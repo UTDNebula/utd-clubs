@@ -20,7 +20,7 @@ const Page = async ({ params }: { params: { clubId: string } }) => {
   }
 
   return (
-    <main className="h-screen md:pl-72">
+    <main className="h-screen ">
       <Header />
       <div className="flex flex-row justify-between gap-20 px-5">
         <CreateEventForm clubId={currentClub.id} officerClubs={officerClubs} />

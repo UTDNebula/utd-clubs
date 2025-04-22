@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Page() {
   return (
-    <div className="m-5 md:pl-72">
+    <div className="m-5 ">
       <h1 className="text-center text-4xl font-bold text-black">
         Jupiter Dashboard
       </h1>

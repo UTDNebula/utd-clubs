@@ -38,7 +38,7 @@ export default async function EventsPage({ params }: Params) {
   const clubDetails = [club.name, event.location, 'No'];
 
   return (
-    <main className="w-full md:pl-72">
+    <main className="w-full ">
       <EventHeader />
       <section className="px-7">
         <section className="mb-5 flex flex-col space-y-6">

@@ -3,16 +3,18 @@ import { api } from '@src/trpc/react';
 import { type Session } from 'next-auth';
 import { useEffect, useRef } from 'react';
 import ClubCard, { ClubCardSkeleton } from '../ClubCard';
+import { useSearchStore } from '@src/utils/SearchStoreProvider';
 
 type Props = {
   session: Session | null;
   tag?: string;
 };
 
-export default function InfiniteScrollGrid({ session, tag }: Props) {
+export default function InfiniteScrollGrid({ session }: Props) {
+  const { search, tag } = useSearchStore((state) => state);
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     api.club.all.useInfiniteQuery(
-      { tag, limit: 9 },
+      { name: search, tag, limit: 9 },
       {
         getNextPageParam: (lastPage) =>
           lastPage.clubs.length < 9 ? undefined : lastPage.cursor,

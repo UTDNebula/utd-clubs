@@ -22,7 +22,7 @@ const Community = async () => {
 
   if (!session) {
     return (
-      <main className="h-full md:pl-72">
+      <main className="h-full ">
         <Header />
         <div className="flex w-full place-content-center items-center pt-20">
           <Image src="/nebula-logo.png" alt="" width={300} height={300} />
@@ -36,7 +36,7 @@ const Community = async () => {
     );
   }
   return (
-    <main className="h-full md:pl-72">
+    <main className="h-full ">
       <Header />
       <div className="mx-6 h-full p-2">
         <h1 className="text-2xl font-bold text-slate-500">Community Events</h1>

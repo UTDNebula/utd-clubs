@@ -13,7 +13,7 @@ export default async function Page() {
   }
   const clubs = await api.club.getOfficerClubs();
   return (
-    <main className="md:pl-72">
+    <main className="">
       <Header />
       <div className="px-5">
         <div className="flex flex-row">

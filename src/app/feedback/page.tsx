@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 const Feedback = () => {
   return (
-    <main className="h-full md:pl-72 ">
+    <main className="h-full  ">
       <Header />
 
       <div className="mb-20 flex h-full w-full flex-row ">

@@ -13,7 +13,7 @@ export default async function Page({ params: { id } }: Props) {
   if (!org) notFound();
 
   return (
-    <div className="m-5 h-screen md:pl-72">
+    <div className="m-5 h-screen ">
       <h1 className="text-center text-4xl font-bold">{org.name}</h1>
       {org.approved === 'approved' ? (
         <ApprovedClub club={org} />

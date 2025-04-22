@@ -17,7 +17,7 @@ export default async function Auth({
   const providers = await getProviders();
 
   return (
-    <main className="h-screen md:pl-72">
+    <main className="h-screen ">
       <div className="relative flex h-screen basis-full flex-col items-center justify-center">
         <div className="absolute inset-0 h-full w-full overflow-hidden">
           <Image src={'/banner.png'} alt="background" fill objectFit="cover" />

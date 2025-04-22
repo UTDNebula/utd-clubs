@@ -26,7 +26,7 @@ const Events = async ({
     date: parsed.date,
   });
   return (
-    <main className="pb-10 md:pl-72">
+    <main className="pb-10 ">
       <EventHeader />
       <EventView searchParams={parsed}>
         {events.map((event) => {

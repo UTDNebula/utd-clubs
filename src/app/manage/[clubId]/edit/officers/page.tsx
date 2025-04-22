@@ -26,7 +26,7 @@ export default async function Page({
   }));
 
   return (
-    <main className="h-full md:pl-72">
+    <main className="h-full ">
       <Header />
       <div className="flex flex-col gap-y-2 px-5">
         <BlueBackButton />

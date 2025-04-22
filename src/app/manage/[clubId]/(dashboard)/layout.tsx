@@ -19,14 +19,14 @@ const Layout = async ({
   if (!session) redirect(signInRoute(`manage/${params.clubId}`));
   const canAccess = await api.club.isOfficer({ id: params.clubId });
   if (!canAccess) {
-    return <div className="md:pl-72">You can&apos;t access this 😢</div>;
+    return <div className="">You can&apos;t access this 😢</div>;
   }
   const club = await api.club.byId({ id: params.clubId });
   if (!club) {
     notFound();
   }
   return (
-    <div className="md:pl-72">
+    <div className="">
       <Header />
       <main className="px-5">
         <div className="flex w-full flex-row gap-x-4 align-middle">
