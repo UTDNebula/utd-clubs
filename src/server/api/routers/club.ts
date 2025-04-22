@@ -88,31 +88,22 @@ export const clubRouter = createTRPCRouter({
     }
   }),
   all: publicProcedure.input(allSchema).query(async ({ ctx, input }) => {
-    const userID = ctx.session?.user.id;
     try {
-      let query = ctx.db
+      const query = ctx.db
         .select()
         .from(club)
         .limit(input.limit)
         .orderBy(club.name)
         .offset(input.cursor)
-        .where(eq(club.approved, 'approved'));
-
-      if (userID) {
-        const joinedClubs = ctx.db
-          .select({ clubId: userMetadataToClubs.clubId })
-          .from(userMetadataToClubs)
-          .where(eq(userMetadataToClubs.userId, userID));
-
-        query = query.where(notInArray(club.id, joinedClubs));
-      }
-
-      if (input.tag && input.tag !== 'All') {
-        query = query.where(sql`${input.tag} = ANY(${club.tags})`);
-      }
-      if (input.name) {
-        query = query.where(ilike(club.name, `%${input.name}%`));
-      }
+        .where(
+          and(
+            eq(club.approved, 'approved'),
+            input.tag && input.tag !== 'All'
+              ? sql`${input.tag} = ANY(${club.tags})`
+              : undefined,
+            input.name ? ilike(club.name, `%${input.name}%`) : undefined,
+          ),
+        );
 
       const res = await query.execute();
       const newOffset = input.cursor + res.length;
