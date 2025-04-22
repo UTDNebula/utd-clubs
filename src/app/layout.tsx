@@ -51,7 +51,9 @@ export default function RootLayout({
             </div>
           </div>
         </TRPCReactProvider>
-        <GoogleAnalytics gaId="G-FYTBHVKNG6" />
+        {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
+          <GoogleAnalytics gaId="G-FYTBHVKNG6" />
+        )}
       </body>
     </html>
   );
