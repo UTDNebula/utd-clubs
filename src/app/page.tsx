@@ -23,11 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-type Params = {
-  searchParams: { [key: string]: string | undefined };
-};
-
-const Home = async (props: Params) => {
+const Home = async () => {
   const tags = await api.club.distinctTags();
   // const featured = await api.club.getCarousel();
   // const onlyClubs = featured.map((item) => item.club);
@@ -88,7 +84,7 @@ const Home = async (props: Params) => {
           <section className="h-full w-full">
             <div className="px-2 md:px-5" id="content">
               <TagFilter tags={tags} />
-              <ClubDirectoryGrid tag={props.searchParams.tag} />
+              <ClubDirectoryGrid session={session} />
             </div>
           </section>
         </div>
