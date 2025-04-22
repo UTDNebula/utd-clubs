@@ -1,7 +1,6 @@
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
 import superjson from 'superjson';
 import { type AppRouter } from '@src/server/api/root';
-import { createTRPCContext } from '@trpc/tanstack-react-query';
 import {
   QueryClient,
   defaultShouldDehydrateQuery,

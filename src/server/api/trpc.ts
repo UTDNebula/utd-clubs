@@ -7,7 +7,6 @@
  * need to use are documented accordingly near the end.
  */
 
-import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
@@ -31,17 +30,14 @@ import { cache } from 'react';
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = cache(
-  async (opts: FetchCreateContextFnOptions) => {
-    // Fetch stuff that depends on the request
-    const session = await getServerAuthSession();
-    return {
-      session,
-      db,
-      ...opts,
-    };
-  },
-);
+export const createTRPCContext = cache(async () => {
+  // Fetch stuff that depends on the request
+  const session = await getServerAuthSession();
+  return {
+    session,
+    db,
+  };
+});
 
 export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
 
