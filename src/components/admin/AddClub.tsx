@@ -94,7 +94,7 @@ export default function AddClub() {
         />
       </div>
       <button
-        className="w-full rounded-lg bg-blue-600 px-4 py-3 text-lg font-bold text-white shadow-md transition duration-200 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-300 sm:w-auto"
+        className="w-full rounded-lg bg-blue-600 px-4 py-3 text-lg font-bold text-white shadow-md transition duration-200 ease-in-out hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-300 sm:w-auto"
         onClick={onClick}
         disabled={!addClub.orgId || !addClub.range.from || !addClub.range.to}
       >

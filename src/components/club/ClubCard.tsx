@@ -50,10 +50,10 @@ export const ClubCardSkeleton: FC = () => {
     <div className="flex h-full min-h-[600px] min-w-[300px] animate-pulse flex-col rounded-lg bg-white shadow-lg">
       <div className="h-48 bg-slate-300 sm:h-56 md:h-64 lg:h-72"></div>
       <div className="space-y-4 p-6">
-        <div className="h-6 rounded bg-slate-300"></div>
-        <div className="h-4 rounded bg-slate-300"></div>
-        <div className="h-4 w-3/4 rounded bg-slate-300"></div>
-        <div className="h-4 w-1/2 rounded bg-slate-300"></div>
+        <div className="h-6 rounded-sm bg-slate-300"></div>
+        <div className="h-4 rounded-sm bg-slate-300"></div>
+        <div className="h-4 w-3/4 rounded-sm bg-slate-300"></div>
+        <div className="h-4 w-1/2 rounded-sm bg-slate-300"></div>
       </div>
     </div>
   );

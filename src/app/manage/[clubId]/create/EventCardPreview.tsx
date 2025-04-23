@@ -10,7 +10,7 @@ interface Props {
 
 const EventCardPreview = ({ event }: Props) => {
   return (
-    <div className="container flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-lg">
+    <div className="container flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
       <div className="relative">
         <div className="h-40 w-96">
           <Image

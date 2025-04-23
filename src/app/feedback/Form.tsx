@@ -113,7 +113,7 @@ const Form = () => {
         <br></br>
         <button
           type="submit"
-          className="mx-auto my-5 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+          className="mx-auto my-5 rounded-sm bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
         >
           Submit
         </button>

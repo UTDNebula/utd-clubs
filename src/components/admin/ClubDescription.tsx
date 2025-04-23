@@ -9,7 +9,7 @@ type Props = {
 export default function ClubDescription({ club }: Props) {
   return (
     <Dialog.Root>
-      <Dialog.Trigger className="rounded-md bg-slate-300 px-3 py-2 font-medium text-blue-500 transition-colors hover:bg-slate-400 hover:text-blue-700 focus:outline-none focus:ring focus:ring-blue-300">
+      <Dialog.Trigger className="rounded-md bg-slate-300 px-3 py-2 font-medium text-blue-500 transition-colors hover:bg-slate-400 hover:text-blue-700 focus:outline-hidden focus:ring-3 focus:ring-blue-300">
         View Details
       </Dialog.Trigger>
       <Dialog.Overlay className="fixed inset-0 z-40 bg-black bg-opacity-40" />
@@ -35,7 +35,7 @@ export default function ClubDescription({ club }: Props) {
             </div>
           ))}
         </div>
-        <Dialog.Close className="rounded-md bg-blue-500 px-4 py-2 text-center text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
+        <Dialog.Close className="rounded-md bg-blue-500 px-4 py-2 text-center text-white transition-colors hover:bg-blue-600 focus:outline-hidden focus:ring-3 focus:ring-blue-300">
           Close
         </Dialog.Close>
       </Dialog.Content>

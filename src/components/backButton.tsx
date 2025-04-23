@@ -10,7 +10,7 @@ const BackButton = () => {
       <button
         onClick={() => router.back()}
         type="button"
-        className="group box-content h-fit w-fit rounded-full bg-white p-2.5 shadow-sm shadow-slate-700"
+        className="group box-content h-fit w-fit rounded-full bg-white p-2.5 shadow-xs shadow-slate-700"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

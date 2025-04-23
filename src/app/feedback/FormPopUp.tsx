@@ -13,7 +13,7 @@ const FormPopUp: React.FC<formPopUpProps> = ({ onClose, isOpen }) => {
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className=" fixed inset-0 z-20 bg-black bg-opacity-50 " />
-        <Dialog.Content className=" fixed inset-0 z-20 h-1/3 w-1/2 max-w-screen-sm  transform self-center justify-self-center rounded-md bg-white p-10 text-center shadow-lg">
+        <Dialog.Content className=" fixed inset-0 z-20 h-1/3 w-1/2 max-w-(--breakpoint-sm)  transform self-center justify-self-center rounded-md bg-white p-10 text-center shadow-lg">
           <Dialog.Title className=" mt-4 border-b-2 border-slate-200 pb-4 text-center font-bold text-slate-700 md:text-4xl">
             Form Submitted
           </Dialog.Title>

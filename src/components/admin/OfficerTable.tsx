@@ -33,7 +33,7 @@ export default function OfficerTable({ officers }: { officers: Officers }) {
 
   return (
     <div className="p-4">
-      <table className="min-w-full divide-y divide-gray-200 overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
+      <table className="min-w-full divide-y divide-gray-200 overflow-hidden border-b border-gray-200 shadow-sm sm:rounded-lg">
         <thead className="bg-gray-50">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>

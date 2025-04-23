@@ -40,12 +40,12 @@ const EditClubForm = ({
   return (
     <form onSubmit={submitForm}>
       <div className="flex h-full w-full flex-col gap-y-5">
-        <div className="w-full rounded-md bg-slate-100 p-5 shadow-sm">
+        <div className="w-full rounded-md bg-slate-100 p-5 shadow-xs">
           <h1 className="text-xl font-extrabold text-black">
             Edit information
           </h1>
           <div className="flex flex-col gap-y-2 rounded-lg bg-slate-300 p-2">
-            <div className="w-full rounded-md bg-slate-100 p-1 shadow-sm">
+            <div className="w-full rounded-md bg-slate-100 p-1 shadow-xs">
               <h2 className="text-lg font-extrabold">Organization name</h2>
               <input
                 type="text"
@@ -58,7 +58,7 @@ const EditClubForm = ({
                 <p className="text-red-500">{errors.name.message}</p>
               )}
             </div>
-            <div className="h-44 w-full rounded-md bg-slate-100 p-1 shadow-sm">
+            <div className="h-44 w-full rounded-md bg-slate-100 p-1 shadow-xs">
               <h2 className="text-lg font-extrabold">Description</h2>
               <textarea
                 id="desc"

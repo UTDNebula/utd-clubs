@@ -16,7 +16,7 @@ export const SearchBar = (props: SearchBarProps) => {
       <input
         {...goodProps}
         type="text"
-        className={`h-10 w-full rounded-full border pl-10 ${submitButton ? 'pr-[38px]' : 'pr-3'} focus:outline-none ${props.className}`}
+        className={`h-10 w-full rounded-full border pl-10 ${submitButton ? 'pr-[38px]' : 'pr-3'} focus:outline-hidden ${props.className}`}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && typeof submitLogic !== 'undefined') {
             submitLogic();

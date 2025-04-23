@@ -48,7 +48,7 @@ const Home = async () => {
             </section>
             <section
               title="blend"
-              className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-gradient-to-t from-white to-transparent"
+              className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"
             ></section>
           </div>
         </div>

@@ -43,7 +43,7 @@ export default function AddOfficer({ clubId }: { clubId: string }) {
               name: prev?.name ?? '',
             }))
           }
-          className="ml-3 rounded px-4 py-2 font-bold"
+          className="ml-3 rounded-sm px-4 py-2 font-bold"
         >
           <option value="President">President</option>
           <option value="Officer">Officer</option>
@@ -52,7 +52,7 @@ export default function AddOfficer({ clubId }: { clubId: string }) {
       </div>
       <div className="flex items-center p-3">
         <button
-          className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-sm bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => {
             if (!toAdd) return;
             mutate({ clubId, officerId: toAdd.id, role: toAdd.role });

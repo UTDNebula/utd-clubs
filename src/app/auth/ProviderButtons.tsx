@@ -16,7 +16,7 @@ const ProviderButton: FC<{ provider: Provider }> = ({ provider }) => (
     onClick={() => {
       void signIn(provider.id);
     }}
-    className="box-content flex w-min flex-row items-center space-x-4 rounded-3xl bg-white py-2.5 pl-5 pr-6 shadow-sm shadow-slate-700 md:w-fit"
+    className="box-content flex w-min flex-row items-center space-x-4 rounded-3xl bg-white py-2.5 pl-5 pr-6 shadow-xs shadow-slate-700 md:w-fit"
   >
     <div>{AuthIcons[provider.id]}</div>
     <h2

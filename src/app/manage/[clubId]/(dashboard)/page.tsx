@@ -3,7 +3,7 @@ import Link from 'next/link';
 const Page = ({ params }: { params: { clubId: string } }) => {
   return (
     <>
-      <div className="flex flex-row gap-x-1 rounded-lg bg-white p-2 shadow-sm">
+      <div className="flex flex-row gap-x-1 rounded-lg bg-white p-2 shadow-xs">
         <Link
           href={`/manage/${params.clubId}/edit`}
           className="rounded-md bg-blue-primary p-1 font-semibold text-white"

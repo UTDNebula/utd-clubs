@@ -91,7 +91,7 @@ export default async function EventsPage({ params }: Params) {
               ))}
             </div>
           </div>
-          <div className="flex-grow text-sm md:mx-12">
+          <div className="grow text-sm md:mx-12">
             <p className="mt-4 whitespace-pre-wrap text-gray-500">
               {event.description}
             </p>
