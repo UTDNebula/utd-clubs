@@ -61,7 +61,7 @@ const TimeSelect = ({
                   }
                   onChange(new Date(e.currentTarget.value));
                 }}
-                className="block w-full rounded-md p-2 text-xs text-[#7D8FB3] outline-hidden"
+                className="block w-full rounded-md bg-white p-2 text-xs text-[#7D8FB3] outline-hidden"
               />
             )}
             rules={{
@@ -102,7 +102,7 @@ const TimeSelect = ({
                     : ''
                 }
                 onChange={(e) => onChange(new Date(e.currentTarget.value))}
-                className="block w-full rounded-md p-2 text-xs text-[#7D8FB3] outline-hidden"
+                className="block w-full rounded-md bg-white p-2 text-xs text-[#7D8FB3] outline-hidden"
               />
             )}
             rules={{

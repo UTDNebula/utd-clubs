@@ -49,7 +49,7 @@ const CreateClubForm = ({ user }: { user: { id: string; name: string } }) => {
           <input
             type="text"
             id="name"
-            className="w-full rounded-sm border border-gray-300 p-2"
+            className="w-full rounded-sm border border-gray-300 bg-white p-2"
             {...register('name')}
             aria-invalid={errors.name ? 'true' : 'false'}
           />

@@ -48,14 +48,14 @@ const Form = () => {
       <FormPopUp onClose={handlePopup} isOpen={isPopupOpen} />
       <form
         onSubmit={submitForm}
-        className={`relative  z-0 text-slate-700 ${
+        className={`relative z-0 text-slate-700 ${
           showForm ? 'block' : 'hidden'
         }`}
       >
         <div className="absolute -top-3 left-0 hidden h-14 w-14 md:block">
           <Image src={nebulaPic} alt="Nebula" fill />
         </div>
-        <h1 className=" pb-2 text-4xl font-bold">Feedback</h1>
+        <h1 className="pb-2 text-4xl font-bold">Feedback</h1>
 
         <h3 className="text-md border-t-2 border-black py-4 text-slate-500">
           On a scale of 1-10, how would you rate your experience with Jupiter?
@@ -67,7 +67,7 @@ const Form = () => {
           max="10"
           onInput={handleRangeChange}
           {...register('rating', { valueAsNumber: true })}
-          className="h-15 w-4/5 rounded-md  border-2 text-left"
+          className="h-15 w-4/5 rounded-md border-2 bg-white text-left"
         />
         <output id="num" className="p-2 font-semibold">
           5
@@ -83,7 +83,7 @@ const Form = () => {
           rows={3}
           required
           {...register('likes')}
-          className=" h-15 w-4/5 resize-none overflow-auto rounded-md border-2  border-gray-500 p-1 text-left shadow-xl"
+          className="h-15 w-4/5 resize-none overflow-auto rounded-md border-2 border-gray-500 p-1 text-left shadow-xl"
         ></textarea>
         <br></br>
 
@@ -96,10 +96,10 @@ const Form = () => {
           rows={3}
           required
           {...register('dislikes')}
-          className=" w-4/5 resize-none rounded-md border-2  border-gray-500 p-1 text-left shadow-xl"
+          className="w-4/5 resize-none rounded-md border-2 border-gray-500 p-1 text-left shadow-xl"
         ></textarea>
 
-        <h3 className="text-md my-4 border-t-2 border-slate-200 pt-2 text-slate-500 ">
+        <h3 className="text-md my-4 border-t-2 border-slate-200 pt-2 text-slate-500">
           What features would you like to see in Jupiter?
         </h3>
 
@@ -108,7 +108,7 @@ const Form = () => {
           rows={3}
           required
           {...register('features')}
-          className="h-15 w-4/5 resize-none rounded-md border-2  border-gray-500 p-1 text-left shadow-xl"
+          className="h-15 w-4/5 resize-none rounded-md border-2 border-gray-500 p-1 text-left shadow-xl"
         ></textarea>
         <br></br>
         <button
