@@ -46,7 +46,7 @@ export default function ChangeClubStatus({ status: initial, clubId }: Props) {
   return (
     <div className="flex">
       <select
-        className={`rounded-lg border-2 border-gray-300 p-2 text-lg focus:border-blue-500 focus:outline-hidden focus:ring-2 focus:ring-blue-200 ${statusColor()}`}
+        className={`rounded-lg border-2 border-gray-300 p-2 text-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-hidden ${statusColor()}`}
         value={status}
         onChange={onChange}
       >

@@ -6,7 +6,7 @@ interface SearchResultsProps {
 
 export const SearchResults = ({ searchResults }: SearchResultsProps) => {
   return (
-    <div className="absolute left-0 right-0 top-full z-50 mt-1 rounded-xs shadow-lg">
+    <div className="absolute top-full right-0 left-0 z-50 mt-1 rounded-xs shadow-lg">
       {searchResults}
     </div>
   );

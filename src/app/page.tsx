@@ -68,7 +68,7 @@ const Home = async () => {
             </div>
           </div>
           <section className="h-screen w-screen">
-            <div className="pointer-events-none flex   h-full w-full flex-col items-center justify-center overflow-visible">
+            <div className="pointer-events-none flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="pointer-events-auto mb-2 max-w-xl text-lg text-white md:text-2xl">
                 Powered by nebula labs
               </h2>

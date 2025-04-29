@@ -17,11 +17,11 @@ export default async function Page() {
       <Header />
       <div className="px-5">
         <div className="flex flex-row">
-          <h1 className="bg-linear-to-br from-blue-primary to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent">
+          <h1 className="from-blue-primary bg-linear-to-br to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent">
             Select a Club
           </h1>
           <Link
-            className="ml-auto rounded-lg bg-blue-primary px-2.5 py-2 font-bold text-white shadow-xs"
+            className="bg-blue-primary ml-auto rounded-lg px-2.5 py-2 font-bold text-white shadow-xs"
             href={'/directory/create'}
           >
             create new club

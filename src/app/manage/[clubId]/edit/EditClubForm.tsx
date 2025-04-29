@@ -50,7 +50,7 @@ const EditClubForm = ({
               <input
                 type="text"
                 id="name"
-                className=" w-full bg-transparent"
+                className="w-full bg-transparent"
                 {...register('name')}
                 aria-invalid={!!errors.name}
               />

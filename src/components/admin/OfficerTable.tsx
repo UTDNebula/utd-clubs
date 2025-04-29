@@ -40,7 +40,7 @@ export default function OfficerTable({ officers }: { officers: Officers }) {
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
                 >
                   {header.isPlaceholder
                     ? null
@@ -57,7 +57,7 @@ export default function OfficerTable({ officers }: { officers: Officers }) {
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="whitespace-nowrap px-6 py-4">
+                <td key={cell.id} className="px-6 py-4 whitespace-nowrap">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

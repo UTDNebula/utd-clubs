@@ -8,7 +8,7 @@ const Events = async ({ params }: { params: { clubId: string } }) => {
   const events = await api.event.byClubId({ clubId: params.clubId });
   return (
     <div className="rounded-lg bg-white p-2 shadow-xs">
-      <h3 className="text-xl font-bold text-blue-primary">Events</h3>
+      <h3 className="text-blue-primary text-xl font-bold">Events</h3>
       <div className="flex flex-col">
         {events.map((event) => (
           <EventCard key={event.id} event={event} />
@@ -42,7 +42,7 @@ const EventCard = ({
         </div>
         <div className="ml-auto flex flex-row space-x-4">
           <Link
-            className=" h-10 w-10 rounded-full bg-blue-primary p-1.5 shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800"
+            className="bg-blue-primary h-10 w-10 rounded-full p-1.5 shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800"
             href={`/event/${event.id}`}
             passHref
           >

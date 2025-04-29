@@ -46,7 +46,7 @@ const EventCardPreview = ({ event }: Props) => {
           </h4>
         </div>
         <div className="mt-auto flex flex-row space-x-4">
-          <p className=" h-10 w-10 rounded-full bg-blue-primary p-1.5 shadow-lg transition-colors hover:cursor-pointer hover:bg-blue-700 active:bg-blue-800">
+          <p className="bg-blue-primary h-10 w-10 rounded-full p-1.5 shadow-lg transition-colors hover:cursor-pointer hover:bg-blue-700 active:bg-blue-800">
             <MoreIcon fill="fill-white" />
           </p>
           <div className="h-10 w-10 rounded-full bg-white p-1.5 shadow-lg hover:cursor-pointer">

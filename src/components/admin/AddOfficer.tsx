@@ -62,11 +62,7 @@ export default function AddOfficer({ clubId }: { clubId: string }) {
           Add
         </button>
         {toAdd && toAdd.id !== '' && toAdd.name !== '' && (
-          <span
-            className="text-bold
-            ml-3
-          "
-          >
+          <span className="text-bold ml-3">
             Adding <strong>{toAdd.name}</strong> as{' '}
             <strong>{toAdd.role}</strong>
           </span>

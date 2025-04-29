@@ -43,7 +43,7 @@ const TagFilter = ({ tags }: { tags: string[] }) => {
                 selectedTag === tag
                   ? 'bg-blue-primary text-white hover:bg-blue-700'
                   : 'bg-white text-slate-600 hover:bg-gray-200'
-              } whitespace-nowrap rounded-3xl px-8 py-4 text-sm font-extrabold transition-colors duration-200 focus:outline-hidden md:text-xs`}
+              } rounded-3xl px-8 py-4 text-sm font-extrabold whitespace-nowrap transition-colors duration-200 focus:outline-hidden md:text-xs`}
               onClick={() => {
                 selectedTag === tag ? deselect() : setSelected(tag);
               }}
