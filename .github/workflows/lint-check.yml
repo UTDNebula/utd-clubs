@@ -21,7 +21,7 @@ jobs:
         run: npm ci
 
       - name: Set up test environment file
-        run: echo "GOOGLE_CLIENT_ID=dummy" > .env.local && echo "GOOGLE_CLIENT_SECRET=dummy" >> .env.local && echo "NEXTAUTH_URL=http://localhost:3000" >> .env.local && echo "NEXTAUTH_SECRET=dummy" >> .env.local && echo "DATABASE_URL=dummy" >> .env.local && echo "DISCORD_CLIENT_ID=dummy" >> .env.local && echo "DISCORD_CLIENT_SECRET=dummy" >> .env.local
+        run: echo "GOOGLE_CLIENT_ID=dummy" > .env.local && echo "GOOGLE_CLIENT_SECRET=dummy" >> .env.local && echo "NEXTAUTH_URL=http://localhost:3000" >> .env.local && echo "NEXTAUTH_SECRET=dummy" >> .env.local && echo "DATABASE_URL=dummy" >> .env.local && echo "DISCORD_CLIENT_ID=dummy" >> .env.local && echo "DISCORD_CLIENT_SECRET=dummy" >> .env.local && echo "NEBULA_API_URL=dummy" >> .env.local && echo "NEBULA_API_KEY=dummy" >> .env.local
 
       - name: Run ESLint
         run: npm run lint:check
