@@ -43,14 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider headers={headers()}>
-          <div className="flex flex-row">
-            {/* <Sidebar /> */}
-            <div className="max-h-screen w-full overflow-y-scroll">
-              {children}
-            </div>
-          </div>
-        </TRPCReactProvider>
+        <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
         {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
           <GoogleAnalytics gaId="G-FYTBHVKNG6" />
         )}
