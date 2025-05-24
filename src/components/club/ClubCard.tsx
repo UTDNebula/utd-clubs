@@ -21,7 +21,7 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
           <Image
             src={club.profileImage}
             fill
-            alt={club.name}
+            alt={club.name + ' logo'}
             priority={priority}
             className="select-none object-cover"
           />
