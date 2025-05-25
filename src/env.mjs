@@ -22,6 +22,7 @@ const server = z.object({
   DATABASE_URL: z.string().min(1),
   DISCORD_CLIENT_ID: z.string().min(1),
   DISCORD_CLIENT_SECRET: z.string().min(1),
+  SENTRY_AUTH_TOKEN: z.string().min(1),
 });
 
 /**
@@ -47,6 +48,7 @@ const processEnv = {
   DATABASE_URL: process.env.DATABASE_URL,
   DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+  SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
 };
 
 // Don't touch the part below
