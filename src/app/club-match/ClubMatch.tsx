@@ -36,12 +36,15 @@ const ClubMatch = () => {
     setFormData((prev) => {
       if (type === 'checkbox') {
         const untypedPrevValues = prev[name as keyof FormData];
-        const prevValues: string[] = Array.isArray(untypedPrevValues) ? untypedPrevValues : [];
+        const prevValues: string[] = Array.isArray(untypedPrevValues)
+          ? untypedPrevValues
+          : [];
         return {
           ...prev,
-          [name]: 'checked' in e.target && e.target.checked
-            ? [...prevValues, value]
-            : prevValues.filter((v: string) => v !== value),
+          [name]:
+            'checked' in e.target && e.target.checked
+              ? [...prevValues, value]
+              : prevValues.filter((v: string) => v !== value),
         };
       }
 
