@@ -48,6 +48,8 @@ Jupiter uses an ORM called [Drizzle](https://orm.drizzle.team/) to interact with
 
 We're using Supabase as our database provider. You can create a supabase account [here](https://supabase.io/). Once you have created an account, you can create a new project and add the `DATABASE_URL` to your `.env` file. From a Supabase project, you can find the `DATABASE_URL` by navigating to the `Settings` tab and clicking on the `Database` tab.
 
+We use Google Gemini for our club recommendations. Ask the project lead for the `GEMINI_SERVICE_ACCOUNT` env variable if you want to work on club recommendations.
+
 #### Database Migrations
 
 In your SQL editor, you will have to run a couple commands in order to properly set up the database

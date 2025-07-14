@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.2",
+    "@google/genai": "^1.9.0",
     "@hookform/resolvers": "^3.3.2",
     "@neondatabase/serverless": "^0.10.2",
     "@next/third-parties": "^14.2.15",
