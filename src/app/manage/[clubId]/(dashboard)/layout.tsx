@@ -31,13 +31,13 @@ const Layout = async ({
       <main className="px-5">
         <div className="flex w-full flex-row gap-x-4 align-middle">
           <BlueBackButton />
-          <h1 className="bg-gradient-to-br from-blue-primary to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent">
+          <h1 className="from-blue-primary bg-linear-to-br to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent">
             {club.name}
           </h1>
         </div>
         <div className="flex w-full flex-col gap-4">
           {children}
-          <div className="flex w-full flex-row gap-4 ">{events}</div>
+          <div className="flex w-full flex-row gap-4">{events}</div>
         </div>
       </main>
     </div>

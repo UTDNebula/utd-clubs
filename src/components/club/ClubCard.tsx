@@ -15,14 +15,14 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
   const name =
     club.name.length > 20 ? club.name.slice(0, 30) + '...' : club.name;
   return (
-    <div className="flex h-full min-h-[400px] min-w-[300px] max-w-xs flex-col justify-between rounded-lg bg-white shadow-2xl md:min-h-[600px]">
+    <div className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between rounded-lg bg-white shadow-2xl md:min-h-[600px]">
       <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
         <Image
           src={club.profileImage ? club.profileImage : club.image}
           fill
           alt={club.name}
           priority={priority}
-          className="select-none object-cover"
+          className="object-cover select-none"
         />
       </div>
       <div className="flex flex-col space-y-2 p-6">
@@ -36,7 +36,7 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
         <JoinButton session={session} clubID={club.id} />
         <Link
           href={`/directory/${club.id}`}
-          className="rounded-2xl bg-blue-600 bg-opacity-10 px-4 py-2 text-xs font-extrabold text-blue-primary  transition-colors hover:bg-blue-200"
+          className="text-blue-primary rounded-2xl bg-blue-600/10 px-4 py-2 text-xs font-extrabold transition-colors hover:bg-blue-200"
         >
           Learn More
         </Link>
@@ -50,10 +50,10 @@ export const ClubCardSkeleton: FC = () => {
     <div className="flex h-full min-h-[600px] min-w-[300px] animate-pulse flex-col rounded-lg bg-white shadow-lg">
       <div className="h-48 bg-slate-300 sm:h-56 md:h-64 lg:h-72"></div>
       <div className="space-y-4 p-6">
-        <div className="h-6 rounded bg-slate-300"></div>
-        <div className="h-4 rounded bg-slate-300"></div>
-        <div className="h-4 w-3/4 rounded bg-slate-300"></div>
-        <div className="h-4 w-1/2 rounded bg-slate-300"></div>
+        <div className="h-6 rounded-sm bg-slate-300"></div>
+        <div className="h-4 rounded-sm bg-slate-300"></div>
+        <div className="h-4 w-3/4 rounded-sm bg-slate-300"></div>
+        <div className="h-4 w-1/2 rounded-sm bg-slate-300"></div>
       </div>
     </div>
   );

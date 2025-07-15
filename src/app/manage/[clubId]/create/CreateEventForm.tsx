@@ -102,15 +102,15 @@ const CreateEventForm = ({
       onSubmit={(e) => void onSubmit(e)}
       className="flex w-full flex-row flex-wrap justify-start gap-10 overflow-x-clip pb-4 text-[#4D5E80]"
     >
-      <div className="form-fields flex min-w-[320px] max-w-[830px] flex-1 flex-col gap-10">
-        <div className="create-dropdown flex max-w-full flex-row justify-start gap-1 whitespace-nowrap py-2 text-2xl font-bold">
+      <div className="form-fields flex max-w-[830px] min-w-[320px] flex-1 flex-col gap-10">
+        <div className="create-dropdown flex max-w-full flex-row justify-start gap-1 py-2 text-2xl font-bold whitespace-nowrap">
           <span>
             Create Club Event <span className="text-[#3361FF]">for</span>
           </span>
           <div className="flex-1">
             <select
               {...register('clubId')}
-              className="w-full overflow-hidden text-ellipsis whitespace-nowrap bg-inherit text-[#3361FF] outline-none"
+              className="w-full overflow-hidden bg-inherit text-ellipsis whitespace-nowrap text-[#3361FF] outline-hidden"
               defaultValue={clubId}
             >
               {officerClubs.map((club) => {
@@ -141,7 +141,7 @@ const CreateEventForm = ({
             </label>
             <input
               type="text"
-              className="w-full rounded-md p-2 text-xs shadow-sm outline-none placeholder:text-[#7D8FB3]"
+              className="w-full rounded-md p-2 text-xs shadow-xs outline-hidden placeholder:text-[#7D8FB3]"
               placeholder="Event name"
               {...register('name')}
             />
@@ -152,7 +152,7 @@ const CreateEventForm = ({
             </label>
             <input
               type="text"
-              className="w-full rounded-md p-2 text-xs shadow-sm outline-none placeholder:text-[#7D8FB3]"
+              className="w-full rounded-md p-2 text-xs shadow-xs outline-hidden placeholder:text-[#7D8FB3]"
               placeholder="123 Fun Street"
               {...register('location')}
             />
@@ -172,7 +172,7 @@ const CreateEventForm = ({
             </div>
             <textarea
               {...register('description')}
-              className="w-full rounded-md p-2 text-xs shadow-sm outline-none placeholder:text-[#7D8FB3]"
+              className="w-full rounded-md p-2 text-xs shadow-xs outline-hidden placeholder:text-[#7D8FB3]"
               placeholder="Event description"
             />
           </div>

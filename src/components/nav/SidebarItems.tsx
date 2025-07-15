@@ -34,8 +34,7 @@ const SidebarItems: FC<{ cat: allCats[number] }> = ({ cat }) => {
       onMouseOut={handleMouseOut}
     >
       <div
-        className=" 
-        flex h-full w-full cursor-pointer items-start rounded-lg bg-transparent px-5 text-base transition-transform md:w-64 md:text-sm"
+        className="flex h-full w-full cursor-pointer items-start rounded-lg bg-transparent px-5 text-base transition-transform md:w-64 md:text-sm"
         onClick={() => void router.push(route)}
       >
         <div className="flex items-center gap-x-4">

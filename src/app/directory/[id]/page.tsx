@@ -15,7 +15,7 @@ const ClubPage = async ({ params }: { params: { id: string } }) => {
   if (!club) return <NotFound elementType="Club" />;
 
   return (
-    <main className="w-full ">
+    <main className="w-full">
       <Header />
       <div className="mb-5 flex flex-col space-y-4 px-3">
         <ClubHeader club={club} />

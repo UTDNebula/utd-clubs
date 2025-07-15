@@ -30,7 +30,7 @@ const RegisterButton: FC<RegisterButtonProps> = ({ eventId, isRegistered }) => {
     <button
       onClick={onClick}
       disabled={leaveMutation.isPending || joinMutation.isPending}
-      className="mr-8 rounded-full bg-blue-primary px-8 py-4 text-xs font-extrabold text-white transition-colors hover:bg-blue-700"
+      className="bg-blue-primary mr-8 rounded-full px-8 py-4 text-xs font-extrabold text-white transition-colors hover:bg-blue-700"
     >
       {registered ? 'Registered' : 'Register'}
     </button>

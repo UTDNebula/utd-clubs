@@ -24,7 +24,7 @@ const HorizontalCard = async ({
 }) => {
   const session = await getServerAuthSession();
   return (
-    <div className="container flex h-40 flex-row overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-lg">
+    <div className="container flex h-40 flex-row overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
       <div className="relative h-[160px] w-1/3 max-w-[225px]">
         <div className="h-[160px]">
           <Image
@@ -41,7 +41,7 @@ const HorizontalCard = async ({
       <div className="flex w-full flex-row px-6 py-5">
         <div className="flex flex-col space-y-2.5">
           <h3 className="font-bold">{event.name}</h3>
-          <h4 className="whitespace-nowrap text-xs font-bold">
+          <h4 className="text-xs font-bold whitespace-nowrap">
             <Link
               href={`/directory/${event.clubId ?? ''}`}
               className="hover:text-blue-primary"
@@ -58,7 +58,7 @@ const HorizontalCard = async ({
             </span>
           </h4>
 
-          <p className="line-clamp-3 overflow-clip text-ellipsis text-xs font-bold">
+          <p className="line-clamp-3 overflow-clip text-xs font-bold text-ellipsis">
             {event.description}
           </p>
         </div>
@@ -67,7 +67,7 @@ const HorizontalCard = async ({
             <EventLikeButton liked={event.liked} eventId={event.id} />
           )}
           <Link
-            className=" h-10 w-10 rounded-full bg-blue-primary p-1.5 shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800"
+            className="bg-blue-primary h-10 w-10 rounded-full p-1.5 shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800"
             href={`/event/${event.id}`}
             passHref
           >
@@ -85,7 +85,7 @@ const VerticalCard = async ({
 }) => {
   const session = await getServerAuthSession();
   return (
-    <div className="container flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-lg">
+    <div className="container flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
       <div className="relative">
         <div className="h-40 w-96">
           <Image
@@ -122,7 +122,7 @@ const VerticalCard = async ({
         </div>
         <div className="mt-auto flex flex-row space-x-4">
           <Link
-            className=" h-10 w-10 rounded-full bg-blue-primary p-1.5 shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800"
+            className="bg-blue-primary h-10 w-10 rounded-full p-1.5 shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800"
             href={`/event/${event.id}`}
             passHref
           >

@@ -48,7 +48,7 @@ const Home = async () => {
             </section>
             <section
               title="blend"
-              className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-gradient-to-t from-white to-transparent"
+              className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"
             ></section>
           </div>
         </div>
@@ -68,7 +68,7 @@ const Home = async () => {
             </div>
           </div>
           <section className="h-screen w-screen">
-            <div className="pointer-events-none flex   h-full w-full flex-col items-center justify-center overflow-visible">
+            <div className="pointer-events-none flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="pointer-events-auto mb-2 max-w-xl text-lg text-white md:text-2xl">
                 Powered by nebula labs
               </h2>

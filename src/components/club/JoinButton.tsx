@@ -27,8 +27,7 @@ const JoinButton = ({
   if (!session) {
     return (
       <button
-        className={`text-xs font-extrabold text-white disabled:bg-slate-700
-        ${
+        className={`text-xs font-extrabold text-white disabled:bg-slate-700 ${
           isHeader
             ? 'rounded-full px-8 py-4'
             : 'mr-2 rounded-2xl border-solid px-4 py-2'
@@ -42,8 +41,7 @@ const JoinButton = ({
   return (
     <button
       onClick={handleJoin}
-      className={`bg-blue-primary text-xs font-extrabold text-white transition-colors hover:bg-blue-700 disabled:bg-blue-700
-      ${isHeader ? 'rounded-full  px-8 py-4 ' : 'mr-2 rounded-2xl px-4 py-2'}`}
+      className={`bg-blue-primary text-xs font-extrabold text-white transition-colors hover:bg-blue-700 disabled:bg-blue-700 ${isHeader ? 'rounded-full px-8 py-4' : 'mr-2 rounded-2xl px-4 py-2'}`}
     >
       {isDisabled ? 'Joined' : 'Join'}
     </button>
