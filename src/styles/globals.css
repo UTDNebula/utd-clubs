@@ -8,9 +8,10 @@
   margin-inline: auto;
   padding-inline: 2rem;
 }
-
+@theme inline {
+  --font-sans: var(--font-inter), sans-serif;
+}
 @theme {
-  --font-display: 'var(--font-inter)', sans-serif;
   --color-blue-primary: #3361ff;
   --color-events: #ff6633;
 }
