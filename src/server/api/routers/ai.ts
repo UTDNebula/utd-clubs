@@ -23,8 +23,7 @@ const formSchema = z.object({
   skills: z.array(z.string().min(1)).optional(),
 });
 
-/// TODO: get Vertex working, fix billing account
-/*const GEMINI_SERVICE_ACCOUNT = JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT)
+const GEMINI_SERVICE_ACCOUNT = JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT) as { client_email: string; private_key: string; };
 const ai = new GoogleGenAI({
   vertexai: true,
   project: 'jupiter-459023',
@@ -33,11 +32,8 @@ const ai = new GoogleGenAI({
     credentials: {
       client_email: GEMINI_SERVICE_ACCOUNT.client_email,
       private_key: GEMINI_SERVICE_ACCOUNT.private_key,
-    }
+    },
   },
-});*/
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_SERVICE_ACCOUNT,
 });
 
 export const aiRouter = createTRPCRouter({
