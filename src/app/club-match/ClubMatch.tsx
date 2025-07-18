@@ -7,6 +7,138 @@ import { useState } from 'react';
 
 type FormData = inferRouterInputs<AppRouter>['ai']['clubMatch'];
 
+const TextInput = ({
+  id,
+  label,
+  required,
+  disabled,
+  handleChange,
+}: {
+  id: string;
+  label?: string;
+  required?: boolean;
+  disabled?: boolean;
+  handleChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => void;
+}) => {
+  return (
+    <>
+      {label && (
+        <label htmlFor={id}>
+          {label}
+          {required ? <span className="text-red-600"> *</span> : null}
+        </label>
+      )}
+      <input
+        type="text"
+        id={id}
+        name={id}
+        data-name={id}
+        onChange={handleChange}
+        required={required}
+        disabled={disabled}
+      />
+    </>
+  );
+};
+
+const SelectInput = ({
+  id,
+  label,
+  options,
+  required,
+  handleChange,
+}: {
+  id: string;
+  label: string;
+  options: string[];
+  required?: boolean;
+  handleChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => void;
+}) => {
+  return (
+    <>
+      <label htmlFor={id}>
+        {label}
+        {required ? <span className="text-red-600"> *</span> : null}
+      </label>
+      <select
+        name={id}
+        data-name={id}
+        onChange={handleChange}
+        required={required}
+      >
+        <option value="">--Select--</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </>
+  );
+};
+
+const CheckboxRadioInput = ({
+  type = 'checkbox',
+  id,
+  label,
+  options,
+  required,
+  handleChange,
+  other,
+}: {
+  type: 'checkbox' | 'radio';
+  id: string;
+  label: string;
+  options: string[];
+  required?: boolean;
+  handleChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => void;
+  other?: {
+    id: string;
+    disabled: boolean;
+  };
+}) => {
+  return (
+    <fieldset>
+      <legend>
+        {label}
+        {required ? <span className="text-red-600"> *</span> : null}
+      </legend>
+      {options.map((option) => (
+        <div key={option}>
+          <input
+            type={type}
+            id={id + option}
+            name={id}
+            data-name={id}
+            value={option}
+            onChange={handleChange}
+          />
+          <label htmlFor={id + option}>{option}</label>
+          {typeof other !== 'undefined' && option === 'Other' && (
+            <TextInput
+              id={other.id}
+              disabled={other.disabled}
+              handleChange={handleChange}
+            />
+          )}
+        </div>
+      ))}
+    </fieldset>
+  );
+};
+
 const ClubMatch = () => {
   const [formData, setFormData] = useState<FormData>({
     major: 'unknown',
@@ -31,7 +163,15 @@ const ClubMatch = () => {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => {
-    const { name, value, type } = e.target;
+    const {
+      dataset: { name },
+      value,
+      type,
+    } = e.target;
+
+    if (typeof name === 'undefined') {
+      return;
+    }
 
     setFormData((prev) => {
       if (type === 'checkbox') {
@@ -67,54 +207,44 @@ const ClubMatch = () => {
           onSubmit={handleSubmit}
           className="mx-auto flex max-w-lg flex-col gap-4"
         >
-          <label>
-            What is your current or intended major? *
-            <input type="text" name="major" onChange={handleChange} required />
-          </label>
+          <TextInput
+            id="major"
+            label="What is your current or intended major?"
+            required
+            handleChange={handleChange}
+          />
 
-          <label>
-            What year are you? *
-            <select name="year" onChange={handleChange} required>
-              <option value="">--Select--</option>
-              <option value="A prospective student (not yet attending UTD)">
-                A prospective student (not yet attending UTD)
-              </option>
-              <option value="A first-year student (non-transfer">
-                A first-year student (non-transfer)
-              </option>
-              <option value="A first-year student (transfer)">
-                A first-year student (transfer)
-              </option>
-              <option value="A current student (2nd year+, non-transfer)">
-                A current student (2nd year+, non-transfer)
-              </option>
-              <option value="A current student (2nd year+, transfer)">
-                A current student (2nd year+, transfer)
-              </option>
-            </select>
-          </label>
+          <SelectInput
+            id="year"
+            label="What year are you?"
+            options={[
+              'A prospective student (not yet attending UTD)',
+              'A first-year student (non-transfer)',
+              'A first-year student (transfer)',
+              'A current student (2nd year+, non-transfer)',
+              'A current student (2nd year+, transfer)',
+            ]}
+            required
+            handleChange={handleChange}
+          />
 
-          <label>
-            How close do you live to campus? *
-            <select name="proximity" onChange={handleChange} required>
-              <option value="">--Select--</option>
-              <option value="Live on campus in the residence halls">
-                Live on campus in the residence halls
-              </option>
-              <option value="Live near campus in an apartment or houses">
-                Live near campus in an apartment or house
-              </option>
-              <option value="Live at home and commute">
-                Live at home and commute
-              </option>
-            </select>
-          </label>
+          <SelectInput
+            id="proximity"
+            label="How close do you live to campus?"
+            options={[
+              'Live on campus in the residence halls',
+              'Live near campus in an apartment or houses',
+              'Live at home and commute',
+            ]}
+            required
+            handleChange={handleChange}
+          />
 
-          <fieldset>
-            <legend>
-              What types of organizations are you interested in? *
-            </legend>
-            {[
+          <CheckboxRadioInput
+            type="checkbox"
+            id="categories"
+            label="What types of organizations are you interested in?"
+            options={[
               'Academic',
               'Art and Music',
               'Club Sports',
@@ -130,32 +260,22 @@ const ClubMatch = () => {
               'Special Interest',
               'Student Government',
               'Student Media',
-            ].map((type) => (
-              <label key={type}>
-                <input
-                  type="checkbox"
-                  name="categories"
-                  value={type}
-                  onChange={handleChange}
-                />
-                {type}
-              </label>
-            ))}
-          </fieldset>
+            ]}
+            required
+            handleChange={handleChange}
+          />
 
-          <label>
-            If you selected cultural or religious organizations, please list the
-            specific cultures or religions you are interested in.
-            <input
-              type="text"
-              name="specificCultures"
-              onChange={handleChange}
-            />
-          </label>
+          <TextInput
+            id="specificCultures"
+            label="If you selected cultural or religious organizations, please list the specific cultures or religions you are interested in."
+            handleChange={handleChange}
+          />
 
-          <fieldset>
-            <legend>What are your hobbies or areas of interest? *</legend>
-            {[
+          <CheckboxRadioInput
+            type="checkbox"
+            id="hobbies"
+            label="What are your hobbies or areas of interest?"
+            options={[
               'Gaming/Esports',
               'Outdoor Activities/Sports',
               'Reading/Writing',
@@ -168,76 +288,57 @@ const ClubMatch = () => {
               'Performing Arts',
               'Visual Arts',
               'Other',
-            ].map((hobby) => (
-              <label key={hobby}>
-                <input
-                  type="checkbox"
-                  name="hobbies"
-                  value={hobby}
-                  onChange={handleChange}
-                />
-                {hobby}
-                {hobby === 'Other' && (
-                  <input
-                    type="text"
-                    name="hobbiesOther"
-                    onChange={handleChange}
-                    disabled={
-                      typeof formData.hobbies === 'undefined' ||
-                      !formData.hobbies.includes('Other')
-                    }
-                  />
-                )}
-              </label>
-            ))}
-          </fieldset>
+            ]}
+            required
+            handleChange={handleChange}
+            other={{
+              id: 'hobbiesOther',
+              disabled: !formData.hobbies.includes('Other'),
+            }}
+          />
 
-          <label>
-            Please be specific about your selected hobbies.
-            <textarea name="hobbyDetails" onChange={handleChange} />
-          </label>
+          <TextInput
+            id="hobbyDetails"
+            label="Please be specific about your selected hobbies."
+            handleChange={handleChange}
+          />
 
-          <label>
-            Beyond your major, are there other academic topics or tracks
-            you&apos;re interested in?
-            <textarea name="otherAcademicInterests" onChange={handleChange} />
-          </label>
+          <TextInput
+            id="otherAcademicInterests"
+            label="Beyond your major, are there other academic topics or tracks you're interested in?"
+            handleChange={handleChange}
+          />
 
-          <fieldset>
-            <legend>Gender Identity *</legend>
-            {['Woman', 'Man', 'Non-binary', 'Prefer not to say', 'Other'].map(
-              (gender) => (
-                <label key={gender}>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value={gender}
-                    onChange={handleChange}
-                    required
-                  />
-                  {gender}
-                  {gender === 'Other' && (
-                    <input
-                      type="text"
-                      name="genderOther"
-                      onChange={handleChange}
-                      disabled={formData.gender !== 'Other'}
-                    />
-                  )}
-                </label>
-              ),
-            )}
-          </fieldset>
+          <CheckboxRadioInput
+            type="radio"
+            id="gender"
+            label="Gender Identity"
+            options={[
+              'Woman',
+              'Man',
+              'Non-binary',
+              'Prefer not to say',
+              'Other',
+            ]}
+            required
+            handleChange={handleChange}
+            other={{
+              id: 'genderOther',
+              disabled: formData.gender !== 'Other',
+            }}
+          />
 
-          <label>
-            UT Dallas Experiences: What new experiences, hobbies, or activities
-            would you be interested in while attending UT Dallas?
-            <textarea name="newExperiences" onChange={handleChange} />
-          </label>
+          <TextInput
+            id="newExperiences"
+            label="UT Dallas Experiences: What new experiences, hobbies, or activities would you be interested in while attending UT Dallas?"
+            handleChange={handleChange}
+          />
 
-          <fieldset>
-            <legend>Goals for Getting Involved</legend>
-            {[
+          <CheckboxRadioInput
+            type="checkbox"
+            id="involvementGoals"
+            label="Goals for Getting Involved"
+            options={[
               'Make Friends/Build Community',
               'Develop Leadership Skills',
               'Gain Experience for Resume/Career',
@@ -247,43 +348,29 @@ const ClubMatch = () => {
               'Learn New Skills',
               'Find Mentorship',
               'Simply Have Fun/De-stress',
-            ].map((goal) => (
-              <label key={goal}>
-                <input
-                  type="checkbox"
-                  name="involvementGoals"
-                  value={goal}
-                  onChange={handleChange}
-                />
-                {goal}
-              </label>
-            ))}
-          </fieldset>
+            ]}
+            handleChange={handleChange}
+          />
 
-          <fieldset>
-            <legend>Preferred Time Commitment *</legend>
-            {[
+          <CheckboxRadioInput
+            type="radio"
+            id="timeCommitment"
+            label="Preferred Time Commitment"
+            options={[
               'Low (e.g., < 2-3 hours/week, meetings optional)',
               'Medium (e.g., 3-5 hours/week, regular meetings/events)',
               'High (e.g., 5+ hours/week, significant responsibilities/practices)',
               "Don't care",
-            ].map((level) => (
-              <label key={level}>
-                <input
-                  type="radio"
-                  name="timeCommitment"
-                  value={level}
-                  onChange={handleChange}
-                  required
-                />
-                {level}
-              </label>
-            ))}
-          </fieldset>
+            ]}
+            required
+            handleChange={handleChange}
+          />
 
-          <fieldset>
-            <legend>Skills & Activities Interest</legend>
-            {[
+          <CheckboxRadioInput
+            type="checkbox"
+            id="skills"
+            label="Skills & Activities Interest"
+            options={[
               'Advocacy/Campaigning',
               'Building/Making Things',
               'Event Planning',
@@ -295,22 +382,22 @@ const ClubMatch = () => {
               'Tutoring/Mentoring',
               'Website/App Development',
               'Writing/Editing',
-            ].map((skill) => (
-              <label key={skill}>
-                <input
-                  type="checkbox"
-                  name="skills"
-                  value={skill}
-                  onChange={handleChange}
-                />
-                {skill}
-              </label>
-            ))}
-          </fieldset>
+            ]}
+            handleChange={handleChange}
+          />
 
           <button
             type="submit"
-            className="rounded bg-blue-500 px-4 py-2 text-white"
+            className="rounded bg-blue-500 px-4 py-2 text-white disabled:bg-blue-300"
+            disabled={
+              formData.major === 'unknown' ||
+              formData.year === 'unknown' ||
+              formData.proximity === 'unknown' ||
+              !formData.categories.length ||
+              !formData.hobbies.length ||
+              formData.gender === 'unknown' ||
+              formData.timeCommitment === 'unknown'
+            }
           >
             Find Clubs
           </button>
