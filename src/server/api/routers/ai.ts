@@ -23,7 +23,9 @@ const formSchema = z.object({
   skills: z.array(z.string().min(1)).optional(),
 });
 
-const GEMINI_SERVICE_ACCOUNT = JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT) as { client_email: string; private_key: string; };
+const GEMINI_SERVICE_ACCOUNT = JSON.parse(
+  process.env.GEMINI_SERVICE_ACCOUNT as string,
+) as { client_email: string; private_key: string };
 const ai = new GoogleGenAI({
   vertexai: true,
   project: 'jupiter-459023',
@@ -76,17 +78,16 @@ Recommendation Requirements:
 3. Consider all organizations equally regardless of their position in the list
 4. Highlight unique value propositions for similar organizations in the same category
 
-Format each recommendation as:
-Organization Name
-Match Reasoning: [concise 1-line explanation]
-Key Benefits: [2-3 comma-separated points]
-URL: [in format "https://jupiter.utdnebula.com/directory/<id>"]
+Format the recommendations as a JSON array and each recommendation as:
+name: Organization Name
+id: Organization ID
+reasoning: Match reasoning in concise 1-line explanation
+benefit: Key benefits in 2-3 comma-separated points
 
 Maintain strict formatting:
 - The ONLY output is the recommendations
 - No markdown or special characters
-- Separate recommendations with two newlines
-- Use only student's first name
+- Organize recommendations with the JSON format
 - Keep tone encouraging but professional
 `;
 
@@ -95,7 +96,20 @@ Maintain strict formatting:
         contents: prompt,
       });
 
-      return response.text;
+      if (typeof response.text === 'undefined') {
+        throw new Error('undefined response');
+      }
+
+      const result = JSON.parse(response.text) as {
+        name: string;
+        id: string;
+        reasoning: string;
+        benefit: string;
+      }[];
+
+      //TODO: save to profile
+
+      return result;
     } catch (e) {
       console.error('Gemini Error:', e);
       throw e;

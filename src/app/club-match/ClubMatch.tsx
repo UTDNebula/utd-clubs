@@ -321,7 +321,14 @@ const ClubMatch = () => {
 
       {data && (
         <div className="mt-4 rounded border bg-gray-100 p-4">
-          <p>{data}</p>
+          {data.map((club) => (
+            <div key={club.id}>
+              <p>{club.name}</p>
+              <p>{club.id}</p>
+              <p>{club.benefit}</p>
+              <p>{club.reasoning}</p>
+            </div>
+          ))}
         </div>
       )}
 
