@@ -60,7 +60,7 @@ export default function FormCard({ clubs, user }: Props) {
         });
       })}
     >
-      <div className="grid w-fit grid-cols-1 gap-3  lg:grid-cols-2">
+      <div className="grid w-fit grid-cols-1 gap-3 lg:grid-cols-2">
         <div className="flex flex-col space-y-2">
           <div className="grid grid-cols-2 space-x-2">
             <SettingsInput
@@ -115,7 +115,7 @@ export default function FormCard({ clubs, user }: Props) {
           </div>
         </div>
 
-        <div className="w-full ">
+        <div className="w-full">
           <h2 className="mb-2 font-medium text-slate-500">Clubs</h2>
           <div className="max-h-96 overflow-auto">
             <ClubSelector register={register} control={control} />
