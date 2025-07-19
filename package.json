@@ -11,8 +11,8 @@
     "lint": "next lint --fix",
     "lint:check": "next lint",
     "test": "NODE_OPTIONS=--experimental-vm-modules dotenv jest --detectOpenHandles --forceExit",
-    "drizzle:generate": "dotenv drizzle-kit generate:pg",
-    "drizzle:push": "dotenv drizzle-kit push:pg"
+    "drizzle:generate": "dotenv drizzle-kit generate",
+    "drizzle:push": "dotenv drizzle-kit push"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.2",

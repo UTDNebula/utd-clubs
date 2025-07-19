@@ -1,10 +1,8 @@
 {
-  "version": "5",
-  "dialect": "pg",
-  "id": "829b275c-a72c-4e19-9481-7e3dffc23d7d",
-  "prevId": "f2b17a86-7372-4ddf-b655-0758889c36ab",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "club": {
+    "public.club": {
       "name": "club",
       "schema": "",
       "columns": {
@@ -51,9 +49,12 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "contacts": {
+    "public.contacts": {
       "name": "contacts",
       "schema": "",
       "columns": {
@@ -81,15 +82,15 @@
         "contacts_club_id_club_id_fk": {
           "name": "contacts_club_id_club_id_fk",
           "tableFrom": "contacts",
-          "tableTo": "club",
           "columnsFrom": [
             "club_id"
           ],
+          "tableTo": "club",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -101,9 +102,12 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "events": {
+    "public.events": {
       "name": "events",
       "schema": "",
       "columns": {
@@ -157,21 +161,24 @@
         "events_club_id_club_id_fk": {
           "name": "events_club_id_club_id_fk",
           "tableFrom": "events",
-          "tableTo": "club",
           "columnsFrom": [
             "club_id"
           ],
+          "tableTo": "club",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "account": {
+    "public.account": {
       "name": "account",
       "schema": "",
       "columns": {
@@ -247,15 +254,15 @@
         "account_userId_user_id_fk": {
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -267,9 +274,12 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "session": {
+    "public.session": {
       "name": "session",
       "schema": "",
       "columns": {
@@ -297,21 +307,24 @@
         "session_userId_user_id_fk": {
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "user_metadata": {
+    "public.user_metadata": {
       "name": "user_metadata",
       "schema": "",
       "columns": {
@@ -367,9 +380,12 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "user_metadata_to_clubs": {
+    "public.user_metadata_to_clubs": {
       "name": "user_metadata_to_clubs",
       "schema": "",
       "columns": {
@@ -403,28 +419,28 @@
         "user_metadata_to_clubs_user_id_user_metadata_id_fk": {
           "name": "user_metadata_to_clubs_user_id_user_metadata_id_fk",
           "tableFrom": "user_metadata_to_clubs",
-          "tableTo": "user_metadata",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user_metadata",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "user_metadata_to_clubs_club_id_club_id_fk": {
           "name": "user_metadata_to_clubs_club_id_club_id_fk",
           "tableFrom": "user_metadata_to_clubs",
-          "tableTo": "club",
           "columnsFrom": [
             "club_id"
           ],
+          "tableTo": "club",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -436,9 +452,12 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "user_metadata_to_events": {
+    "public.user_metadata_to_events": {
       "name": "user_metadata_to_events",
       "schema": "",
       "columns": {
@@ -460,28 +479,28 @@
         "user_metadata_to_events_user_id_user_id_fk": {
           "name": "user_metadata_to_events_user_id_user_id_fk",
           "tableFrom": "user_metadata_to_events",
-          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "user_metadata_to_events_event_id_events_id_fk": {
           "name": "user_metadata_to_events_event_id_events_id_fk",
           "tableFrom": "user_metadata_to_events",
-          "tableTo": "events",
           "columnsFrom": [
             "event_id"
           ],
+          "tableTo": "events",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -493,9 +512,12 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "user": {
+    "public.user": {
       "name": "user",
       "schema": "",
       "columns": {
@@ -533,9 +555,12 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "verificationToken": {
+    "public.verificationToken": {
       "name": "verificationToken",
       "schema": "",
       "columns": {
@@ -569,46 +594,53 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     }
   },
   "enums": {
-    "career": {
+    "public.career": {
       "name": "career",
-      "values": {
-        "Healthcare": "Healthcare",
-        "Art and Music": "Art and Music",
-        "Engineering": "Engineering",
-        "Business": "Business",
-        "Sciences": "Sciences",
-        "Public Service": "Public Service"
-      }
+      "schema": "public",
+      "values": [
+        "Healthcare",
+        "Art and Music",
+        "Engineering",
+        "Business",
+        "Sciences",
+        "Public Service"
+      ]
     },
-    "member_type": {
+    "public.member_type": {
       "name": "member_type",
-      "values": {
-        "President": "President",
-        "Officer": "Officer",
-        "Member": "Member"
-      }
+      "schema": "public",
+      "values": [
+        "President",
+        "Officer",
+        "Member"
+      ]
     },
-    "role": {
+    "public.role": {
       "name": "role",
-      "values": {
-        "Student": "Student",
-        "Student Organizer": "Student Organizer",
-        "Administrator": "Administrator"
-      }
+      "schema": "public",
+      "values": [
+        "Student",
+        "Student Organizer",
+        "Administrator"
+      ]
     },
-    "year": {
+    "public.year": {
       "name": "year",
-      "values": {
-        "Freshman": "Freshman",
-        "Sophomore": "Sophomore",
-        "Junior": "Junior",
-        "Senior": "Senior",
-        "Grad Student": "Grad Student"
-      }
+      "schema": "public",
+      "values": [
+        "Freshman",
+        "Sophomore",
+        "Junior",
+        "Senior",
+        "Grad Student"
+      ]
     }
   },
   "schemas": {},
@@ -616,5 +648,11 @@
     "schemas": {},
     "tables": {},
     "columns": {}
-  }
+  },
+  "id": "829b275c-a72c-4e19-9481-7e3dffc23d7d",
+  "prevId": "f2b17a86-7372-4ddf-b655-0758889c36ab",
+  "sequences": {},
+  "policies": {},
+  "views": {},
+  "roles": {}
 }
