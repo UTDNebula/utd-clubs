@@ -4,7 +4,6 @@
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { feedbackFormSchema } from '@src/utils/formSchemas';
-import { api } from '@src/trpc/react';
 import { type z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type FormEventHandler } from 'react';
@@ -12,6 +11,8 @@ import FormPopUp from '@src/app/feedback/FormPopUp';
 import { useState } from 'react';
 
 import nebulaPic from 'public/android-chrome-192x192.png';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 
 const Form = () => {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
@@ -35,7 +36,8 @@ const Form = () => {
     resolver: zodResolver(feedbackFormSchema),
   });
 
-  const createForm = api.form.sendForm.useMutation();
+  const api = useTRPC();
+  const createForm = useMutation(api.form.sendForm.mutationOptions());
 
   const submitForm = handleSubmit((data) => {
     if (!createForm.isPending) createForm.mutate(data);

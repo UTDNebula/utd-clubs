@@ -1,9 +1,10 @@
 'use client';
 
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { UserSearchBar } from '../searchBar/UserSearchBar';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 type OfficerState = {
   id: string;
@@ -12,12 +13,15 @@ type OfficerState = {
 };
 
 export default function AddOfficer({ clubId }: { clubId: string }) {
-  const { mutate } = api.admin.addOfficer.useMutation({
-    onSuccess: () => {
-      router.refresh();
-      setToAdd(null);
-    },
-  });
+  const api = useTRPC();
+  const { mutate } = useMutation(
+    api.admin.addOfficer.mutationOptions({
+      onSuccess: () => {
+        router.refresh();
+        setToAdd(null);
+      },
+    }),
+  );
   const router = useRouter();
   const [toAdd, setToAdd] = useState<OfficerState | null>(null);
 

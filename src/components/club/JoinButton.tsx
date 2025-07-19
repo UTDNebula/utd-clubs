@@ -1,8 +1,9 @@
 'use client';
 import React from 'react';
 import { useState } from 'react';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { type Session } from 'next-auth';
+import { useMutation } from '@tanstack/react-query';
 
 type JoinButtonProps = {
   session: Session | null;
@@ -17,7 +18,8 @@ const JoinButton = ({
   isJoined,
   clubID,
 }: JoinButtonProps) => {
-  const mutation = api.club.joinLeave.useMutation();
+  const api = useTRPC();
+  const mutation = useMutation(api.club.joinLeave.mutationOptions());
   const clubId = clubID;
   const [isDisabled, setDisabled] = useState(isJoined ?? false);
   const handleJoin = () => {

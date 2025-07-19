@@ -8,9 +8,10 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ClubSelector from '@src/components/settings/ClubSelector';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import DeleteButton from './DeleteButton';
 import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 
 type Props = {
   clubs: SelectClub[];
@@ -42,12 +43,15 @@ export default function FormCard({ clubs, user }: Props) {
       role: user.role,
     },
   });
+  const api = useTRPC();
 
-  const { mutate } = api.userMetadata.updateById.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const { mutate } = useMutation(
+    api.userMetadata.updateById.mutationOptions({
+      onSuccess: () => {
+        router.refresh();
+      },
+    }),
+  );
 
   return (
     <form

@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { DayPicker, type DateRange } from 'react-day-picker';
 import ClubSearch from './ClubSearch';
 import 'react-day-picker/dist/style.css';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type AddClub = {
   range: DateRange;
@@ -20,16 +21,25 @@ export default function AddClub() {
     name: null,
   });
   const router = useRouter();
-  const utils = api.useContext();
-  const { mutate } = api.admin.addClubCarousel.useMutation({
-    onSuccess: async () => {
-      await utils.admin.upcomingCarousels.invalidate();
-      await utils.club.getCarousel.invalidate();
-      await utils.club.getCarousel.refetch();
-      await utils.admin.upcomingCarousels.refetch();
-      router.push('/admin/carousel');
-    },
-  });
+  const api = useTRPC();
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation(
+    api.admin.addClubCarousel.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          api.admin.upcomingCarousels.queryOptions(),
+        );
+        await queryClient.invalidateQueries(
+          api.club.getCarousel.queryOptions(),
+        );
+        await queryClient.refetchQueries(
+          api.admin.upcomingCarousels.queryOptions(),
+        );
+        await queryClient.refetchQueries(api.club.getCarousel.queryOptions());
+        router.push('/admin/carousel');
+      },
+    }),
+  );
 
   function onClick() {
     if (!addClub.orgId || !addClub.range.from || !addClub.range.to) return;

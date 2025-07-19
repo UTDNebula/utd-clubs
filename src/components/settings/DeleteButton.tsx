@@ -1,11 +1,15 @@
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { signOut } from 'next-auth/react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import { useMutation } from '@tanstack/react-query';
 
 export default function DeleteButton() {
-  const { mutate } = api.userMetadata.deleteById.useMutation({
-    onSuccess: async () => await signOut(),
-  });
+  const api = useTRPC();
+  const { mutate } = useMutation(
+    api.userMetadata.deleteById.mutationOptions({
+      onSuccess: async () => await signOut(),
+    }),
+  );
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
