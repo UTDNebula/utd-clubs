@@ -14,7 +14,7 @@ const CommunityEvents = async () => {
           You can check out new events{' '}
           <Link
             href={'/events'}
-            className="text-lg text-blue-primary transition-colors hover:text-blue-700"
+            className="text-blue-primary text-lg transition-colors hover:text-blue-700"
           >
             here
           </Link>

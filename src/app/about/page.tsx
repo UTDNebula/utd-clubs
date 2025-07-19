@@ -40,7 +40,7 @@ const About = () => {
     { name: 'Ved Mahant', position: 'Designer' },
   ];
   return (
-    <main className="h-full ">
+    <main className="h-full">
       <Header />
       <div className="mx-6 h-full">
         <div className="rounded-lg bg-slate-100 p-8 shadow-md">

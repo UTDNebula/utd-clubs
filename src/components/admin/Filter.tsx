@@ -29,7 +29,7 @@ export default function Filter<T>({ column, table }: Props<T>) {
               ? `(${column.getFacetedMinMaxValues()?.[0]})`
               : ''
           }`}
-          className="w-24 rounded border shadow"
+          className="w-24 rounded-sm border shadow-sm"
         />
         <DebouncedInput
           type="number"
@@ -44,7 +44,7 @@ export default function Filter<T>({ column, table }: Props<T>) {
               ? `(${column.getFacetedMinMaxValues()?.[1]})`
               : ''
           }`}
-          className="w-24 rounded border shadow"
+          className="w-24 rounded-sm border shadow-sm"
         />
       </div>
       <div className="h-1" />
@@ -56,7 +56,7 @@ export default function Filter<T>({ column, table }: Props<T>) {
         value={(columnFilterValue ?? '') as string}
         onChange={(value) => column.setFilterValue(value)}
         placeholder="Search"
-        className="rounded border shadow"
+        className="rounded-sm border shadow-sm"
         list={column.id + 'list'}
       />
       <div className="h-1" />

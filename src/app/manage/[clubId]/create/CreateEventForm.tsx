@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { type SelectClub } from '@src/server/db/models';
 import { createEventSchema } from '@src/utils/formSchemas';
 import { useForm } from 'react-hook-form';
-import { api } from '@src/trpc/react';
 import { type z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -12,6 +11,8 @@ import { UploadIcon } from '@src/icons/Icons';
 import EventCardPreview from './EventCardPreview';
 import TimeSelect from './TimeSelect';
 import { type RouterOutputs } from '@src/trpc/shared';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 
 const CreateEventForm = ({
   clubId,
@@ -79,16 +80,19 @@ const CreateEventForm = ({
     return () => subscription.unsubscribe();
   }, [router, watch, officerClubs]);
 
-  const createMutation = api.event.create.useMutation({
-    onSuccess: (data) => {
-      if (data) {
-        router.push(`/event/${data}`);
-      }
-    },
-    onError: () => {
-      setLoading(false);
-    },
-  });
+  const api = useTRPC();
+  const createMutation = useMutation(
+    api.event.create.mutationOptions({
+      onSuccess: (data) => {
+        if (data) {
+          router.push(`/event/${data}`);
+        }
+      },
+      onError: () => {
+        setLoading(false);
+      },
+    }),
+  );
 
   const onSubmit = handleSubmit((data: z.infer<typeof createEventSchema>) => {
     if (!createMutation.isPending && !loading) {
@@ -102,15 +106,15 @@ const CreateEventForm = ({
       onSubmit={(e) => void onSubmit(e)}
       className="flex w-full flex-row flex-wrap justify-start gap-10 overflow-x-clip pb-4 text-[#4D5E80]"
     >
-      <div className="form-fields flex min-w-[320px] max-w-[830px] flex-1 flex-col gap-10">
-        <div className="create-dropdown flex max-w-full flex-row justify-start gap-1 whitespace-nowrap py-2 text-2xl font-bold">
+      <div className="form-fields flex max-w-[830px] min-w-[320px] flex-1 flex-col gap-10">
+        <div className="create-dropdown flex max-w-full flex-row justify-start gap-1 py-2 text-2xl font-bold whitespace-nowrap">
           <span>
             Create Club Event <span className="text-[#3361FF]">for</span>
           </span>
           <div className="flex-1">
             <select
               {...register('clubId')}
-              className="w-full overflow-hidden text-ellipsis whitespace-nowrap bg-inherit text-[#3361FF] outline-none"
+              className="w-full overflow-hidden bg-inherit text-ellipsis whitespace-nowrap text-[#3361FF] outline-hidden"
               defaultValue={clubId}
             >
               {officerClubs.map((club) => {
@@ -141,7 +145,7 @@ const CreateEventForm = ({
             </label>
             <input
               type="text"
-              className="w-full rounded-md p-2 text-xs shadow-sm outline-none placeholder:text-[#7D8FB3]"
+              className="w-full rounded-md p-2 text-xs shadow-xs outline-hidden placeholder:text-[#7D8FB3]"
               placeholder="Event name"
               {...register('name')}
             />
@@ -152,7 +156,7 @@ const CreateEventForm = ({
             </label>
             <input
               type="text"
-              className="w-full rounded-md p-2 text-xs shadow-sm outline-none placeholder:text-[#7D8FB3]"
+              className="w-full rounded-md p-2 text-xs shadow-xs outline-hidden placeholder:text-[#7D8FB3]"
               placeholder="123 Fun Street"
               {...register('location')}
             />
@@ -172,7 +176,7 @@ const CreateEventForm = ({
             </div>
             <textarea
               {...register('description')}
-              className="w-full rounded-md p-2 text-xs shadow-sm outline-none placeholder:text-[#7D8FB3]"
+              className="w-full rounded-md p-2 text-xs shadow-xs outline-hidden placeholder:text-[#7D8FB3]"
               placeholder="Event description"
             />
           </div>

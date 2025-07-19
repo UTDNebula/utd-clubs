@@ -1,7 +1,8 @@
 'use client';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { useState } from 'react';
 import useDebounce from '@src/utils/useDebounce';
+import { useQuery } from '@tanstack/react-query';
 import { SearchResults, SearchResultsItem } from './SearchResults';
 import SearchBar from '.';
 
@@ -13,11 +14,14 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
   const [focused, setFocused] = useState(false);
   const debouncedFocused = useDebounce(focused, 300);
   const debouncedSearch = useDebounce(search, 300);
-  const userQuery = api.userMetadata.searchByName.useQuery(
-    { name: debouncedSearch },
-    {
-      enabled: !!debouncedSearch,
-    },
+  const api = useTRPC();
+  const userQuery = useQuery(
+    api.userMetadata.searchByName.queryOptions(
+      {
+        name: debouncedSearch,
+      },
+      { enabled: !!debouncedSearch },
+    ),
   );
   const formattedData = userQuery.isSuccess
     ? userQuery.data.map((val) => {

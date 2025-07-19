@@ -50,9 +50,9 @@ const MobileNavMenu = ({
         onClick={() => {
           setIsOpen(false);
         }}
-        className="fixed left-0 top-0 z-50 h-screen w-full bg-black bg-opacity-50"
+        className="fixed top-0 left-0 z-50 h-screen w-full bg-black/50"
       ></div>
-      <nav className="p-y md:hiidden fixed left-0 top-0 z-50 h-screen w-72 bg-slate-100">
+      <nav className="p-y md:hiidden fixed top-0 left-0 z-50 h-screen w-72 bg-slate-100">
         <NavMenu userCapabilites={userCapabilites} />
       </nav>
     </>

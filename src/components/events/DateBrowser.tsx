@@ -43,12 +43,12 @@ const DateBrowser = ({ filterState, setParams }: DateBrowserProps) => {
       </button>
       <Popover defaultOpen={false}>
         <PopoverTrigger>
-          <input name="date" {...inputProps} />
+          <input name="date" className="bg-white" {...inputProps} />
         </PopoverTrigger>
         <PopoverPortal>
           <PopoverContent className="flex items-center rounded-lg bg-white p-2 shadow-md">
             <DayPicker mode="default" {...dayPickerProps} />
-            <PopoverClose className="h-5 w-5 text-blue-primary" />
+            <PopoverClose className="text-blue-primary h-5 w-5" />
           </PopoverContent>
         </PopoverPortal>
       </Popover>

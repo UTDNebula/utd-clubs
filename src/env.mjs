@@ -23,6 +23,10 @@ const server = z.object({
   DISCORD_CLIENT_ID: z.string().min(1),
   DISCORD_CLIENT_SECRET: z.string().min(1),
   SENTRY_AUTH_TOKEN: z.string().min(1),
+  NEBULA_API_URL: z.string().min(1),
+  NEBULA_API_STORAGE_BUCKET: z.string().min(1),
+  NEBULA_API_KEY: z.string().min(1),
+  NEBULA_API_STORAGE_KEY: z.string().min(1),
 });
 
 /**
@@ -49,6 +53,10 @@ const processEnv = {
   DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
   SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+  NEBULA_API_URL: process.env.NEBULA_API_URL,
+  NEBULA_API_STORAGE_BUCKET: process.env.NEBULA_API_KEY,
+  NEBULA_API_KEY: process.env.NEBULA_API_KEY,
+  NEBULA_API_STORAGE_KEY: process.env.NEBULA_API_KEY,
 };
 
 // Don't touch the part below

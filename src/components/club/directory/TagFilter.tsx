@@ -27,7 +27,7 @@ const TagFilter = ({ tags }: { tags: string[] }) => {
     <div className="flex w-full justify-center py-9" id="top">
       <div className="relative flex w-full items-center space-x-1">
         <button
-          className="absolute left-0 cursor-pointer rounded-full bg-white px-1.5 py-1 opacity-80 shadow-md hover:bg-gray-100 focus:outline-none md:px-3 md:py-2"
+          className="absolute left-0 cursor-pointer rounded-full bg-white px-1.5 py-1 opacity-80 shadow-md hover:bg-gray-100 focus:outline-hidden md:px-3 md:py-2"
           onClick={handleScrollLeft}
         >
           <LeftArrowIcon fill="fill-slate-500" />
@@ -43,9 +43,10 @@ const TagFilter = ({ tags }: { tags: string[] }) => {
                 selectedTag === tag
                   ? 'bg-blue-primary text-white hover:bg-blue-700'
                   : 'bg-white text-slate-600 hover:bg-gray-200'
-              } whitespace-nowrap rounded-3xl px-8 py-4 text-sm font-extrabold transition-colors duration-200 focus:outline-none md:text-xs`}
+              } rounded-3xl px-8 py-4 text-sm font-extrabold whitespace-nowrap transition-colors duration-200 focus:outline-hidden md:text-xs`}
               onClick={() => {
-                selectedTag === tag ? deselect() : setSelected(tag);
+                if (selectedTag === tag) deselect();
+                else setSelected(tag);
               }}
             >
               {tag}
@@ -53,7 +54,7 @@ const TagFilter = ({ tags }: { tags: string[] }) => {
           ))}
         </div>
         <button
-          className="absolute right-0 cursor-pointer rounded-full bg-white px-1.5 py-1 opacity-80 shadow-md hover:bg-gray-100 focus:outline-none md:px-3 md:py-2"
+          className="absolute right-0 cursor-pointer rounded-full bg-white px-1.5 py-1 opacity-80 shadow-md hover:bg-gray-100 focus:outline-hidden md:px-3 md:py-2"
           onClick={handleScrollRight}
         >
           <RightArrowIcon fill="fill-slate-500" />
