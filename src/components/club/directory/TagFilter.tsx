@@ -45,7 +45,8 @@ const TagFilter = ({ tags }: { tags: string[] }) => {
                   : 'bg-white text-slate-600 hover:bg-gray-200'
               } rounded-3xl px-8 py-4 text-sm font-extrabold whitespace-nowrap transition-colors duration-200 focus:outline-hidden md:text-xs`}
               onClick={() => {
-                selectedTag === tag ? deselect() : setSelected(tag);
+                if (selectedTag === tag) deselect();
+                else setSelected(tag);
               }}
             >
               {tag}
