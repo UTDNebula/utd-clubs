@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { type SelectClub } from '@src/server/db/models';
 import { createEventSchema } from '@src/utils/formSchemas';
 import { useForm } from 'react-hook-form';
-import { api } from '@src/trpc/react';
 import { type z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -12,6 +11,8 @@ import { UploadIcon } from '@src/icons/Icons';
 import EventCardPreview from './EventCardPreview';
 import TimeSelect from './TimeSelect';
 import { type RouterOutputs } from '@src/trpc/shared';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 
 const CreateEventForm = ({
   clubId,
@@ -79,16 +80,19 @@ const CreateEventForm = ({
     return () => subscription.unsubscribe();
   }, [router, watch, officerClubs]);
 
-  const createMutation = api.event.create.useMutation({
-    onSuccess: (data) => {
-      if (data) {
-        router.push(`/event/${data}`);
-      }
-    },
-    onError: () => {
-      setLoading(false);
-    },
-  });
+  const api = useTRPC();
+  const createMutation = useMutation(
+    api.event.create.mutationOptions({
+      onSuccess: (data) => {
+        if (data) {
+          router.push(`/event/${data}`);
+        }
+      },
+      onError: () => {
+        setLoading(false);
+      },
+    }),
+  );
 
   const onSubmit = handleSubmit((data: z.infer<typeof createEventSchema>) => {
     if (!createMutation.isPending && !loading) {

@@ -1,11 +1,13 @@
 'use client';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 export default function TagSwapper() {
   const [oldTag, setOldTag] = useState('');
   const [newTag, setNewTag] = useState('');
-  const mutate = api.club.changeTags.useMutation();
+  const api = useTRPC();
+  const mutate = useMutation(api.club.changeTags.mutationOptions());
   return (
     <div className="rounded-lg bg-white p-5">
       <div>

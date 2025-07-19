@@ -1,9 +1,10 @@
 'use client';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { type Session } from 'next-auth';
 import { useEffect, useRef } from 'react';
 import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 type Props = {
   session: Session | null;
@@ -12,14 +13,17 @@ type Props = {
 
 export default function InfiniteScrollGrid({ session }: Props) {
   const { search, tag } = useSearchStore((state) => state);
+  const api = useTRPC();
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    api.club.all.useInfiniteQuery(
-      { name: search, tag, limit: 9 },
-      {
-        getNextPageParam: (lastPage) =>
-          lastPage.clubs.length < 9 ? undefined : lastPage.cursor,
-        initialCursor: 9,
-      },
+    useInfiniteQuery(
+      api.club.all.infiniteQueryOptions(
+        { name: search, tag, limit: 9 },
+        {
+          getNextPageParam: (lastPage) =>
+            lastPage.clubs.length < 9 ? undefined : lastPage.cursor,
+          initialCursor: 9,
+        },
+      ),
     );
 
   const observer = useRef<IntersectionObserver>();

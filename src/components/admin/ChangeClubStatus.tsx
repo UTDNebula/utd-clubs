@@ -1,6 +1,7 @@
 'use client';
 
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -9,9 +10,12 @@ type Props = { status: 'approved' | 'pending' | 'rejected'; clubId: string };
 export default function ChangeClubStatus({ status: initial, clubId }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState<Props['status']>(initial);
-  const { mutate } = api.admin.changeClubStatus.useMutation({
-    onSuccess: () => router.refresh(),
-  });
+  const api = useTRPC();
+  const { mutate } = useMutation(
+    api.admin.changeClubStatus.mutationOptions({
+      onSuccess: () => router.refresh(),
+    }),
+  );
 
   function onChange(e: React.ChangeEvent<HTMLSelectElement>) {
     switch (e.target.value) {

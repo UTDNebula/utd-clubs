@@ -5,7 +5,8 @@ import InfiniteScrollGrid from './InfiniteScrollGrid';
 import ScrollTop from './ScrollTop';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import { type Session } from 'next-auth';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
+import { useQuery } from '@tanstack/react-query';
 
 interface Props {
   session: Session | null;
@@ -13,7 +14,10 @@ interface Props {
 
 const ClubDirectoryGrid: FC<Props> = ({ session }) => {
   const { search, tag } = useSearchStore((state) => state);
-  const { data } = api.club.all.useQuery({ name: search, tag, limit: 9 });
+  const api = useTRPC();
+  const { data } = useQuery(
+    api.club.all.queryOptions({ name: search, tag, limit: 9 }),
+  );
 
   return (
     <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">

@@ -3,9 +3,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import EditContactSelector from '@src/app/manage/[clubId]/edit/EditContactSelector';
 import { type SelectClub, type SelectContact } from '@src/server/db/models';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { type contact } from '@src/utils/contact';
 import { editClubContactSchema } from '@src/utils/formSchemas';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
 import { useForm } from 'react-hook-form';
@@ -71,11 +72,14 @@ export default function EditContactForm({
     },
   });
   const router = useRouter();
-  const editContacts = api.club.edit.contacts.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const api = useTRPC();
+  const editContacts = useMutation(
+    api.club.edit.contacts.mutationOptions({
+      onSuccess: () => {
+        router.refresh();
+      },
+    }),
+  );
   const [deleted, modifyDeleted] = useReducer(deletedReducer, []);
   const submitForm = handleSubmit((data) => {
     if (dirtyFields.contacts !== undefined) {

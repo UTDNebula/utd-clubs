@@ -2,8 +2,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type SelectClub, type SelectContact } from '@src/server/db/models';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { editClubSchema } from '@src/utils/formSchemas';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
@@ -27,11 +28,14 @@ const EditClubForm = ({
     },
   });
   const router = useRouter();
-  const editData = api.club.edit.data.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const api = useTRPC();
+  const editData = useMutation(
+    api.club.edit.data.mutationOptions({
+      onSuccess: () => {
+        router.refresh();
+      },
+    }),
+  );
   const submitForm = handleSubmit((data) => {
     if (!editData.isPending) {
       editData.mutate(data);
