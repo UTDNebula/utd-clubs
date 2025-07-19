@@ -17,10 +17,10 @@ export const metadata: Metadata = {
 
 const Feedback = () => {
   return (
-    <main className="h-full md:pl-72 ">
+    <main className="h-full">
       <Header />
 
-      <div className="mb-20 flex h-full w-full flex-row ">
+      <div className="mb-20 flex h-full w-full flex-row">
         <section className="justift-center m-auto mt-3 items-center rounded-lg bg-white px-10 py-6 text-center shadow-lg">
           <Form />
         </section>

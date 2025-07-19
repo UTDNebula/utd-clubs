@@ -149,7 +149,7 @@ export default function ClubTable({ clubs }: { clubs: Club[] }) {
     <div ref={parentRef} className="container mx-auto p-4">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-left text-sm text-gray-500">
-          <thead className="bg-slate-100 text-xs uppercase text-slate-700">
+          <thead className="bg-slate-100 text-xs text-slate-700 uppercase">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

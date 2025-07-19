@@ -4,7 +4,6 @@ import { Inter } from 'next/font/google';
 import { headers } from 'next/headers';
 
 import { TRPCReactProvider } from '@src/trpc/react';
-import Sidebar from '@src/components/nav/Sidebar';
 import { type Metadata } from 'next';
 
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -45,10 +44,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider headers={headers()}>
-          <Sidebar />
-          <div className="max-h-screen overflow-y-scroll">{children}</div>
+          <div className="flex flex-row">
+            {/* <Sidebar /> */}
+            <div className="max-h-screen w-full overflow-y-scroll">
+              {children}
+            </div>
+          </div>
         </TRPCReactProvider>
-        <GoogleAnalytics gaId="G-FYTBHVKNG6" />
+        {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
+          <GoogleAnalytics gaId="G-FYTBHVKNG6" />
+        )}
       </body>
     </html>
   );

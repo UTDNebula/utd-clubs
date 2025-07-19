@@ -91,7 +91,7 @@ export default function EditContactForm({
     }
   });
   return (
-    <div className="container w-full rounded-md bg-slate-100 p-4 shadow-sm">
+    <div className="container w-full rounded-md bg-slate-100 p-4 shadow-xs">
       <form onSubmit={submitForm}>
         <EditContactSelector
           control={control}
