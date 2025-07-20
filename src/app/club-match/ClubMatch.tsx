@@ -1,7 +1,8 @@
 'use client';
 
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 import { type z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -138,12 +139,15 @@ const ClubMatch = () => {
     resolver: zodResolver(clubMatchFormSchema),
   });
 
+  const api = useTRPC();
   const router = useRouter();
-  const editData = api.ai.clubMatch.useMutation({
-    onSuccess: () => {
-      router.push('/club-match/results');
-    },
-  });
+  const editData = useMutation(
+    api.ai.clubMatch.mutationOptions({
+      onSuccess: () => {
+        router.push('/club-match/results');
+      },
+    }),
+  );
   const submitForm = handleSubmit((data) => {
     if (!editData.isPending) {
       editData.mutate(data);
