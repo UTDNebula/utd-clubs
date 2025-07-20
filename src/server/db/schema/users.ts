@@ -5,6 +5,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  jsonb,
 } from 'drizzle-orm/pg-core';
 import { type AdapterAccount } from 'next-auth/adapters';
 import { club } from './club';
@@ -61,6 +62,7 @@ export const userMetadata = pgTable('user_metadata', {
     .$default(() => 'Student')
     .notNull(),
   career: careerEnum('career').$default(() => 'Engineering'),
+  clubMatch: jsonb(),
 });
 
 export const accounts = pgTable(
