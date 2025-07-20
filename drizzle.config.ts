@@ -7,6 +7,5 @@ export default {
   dbCredentials: {
     url: process.env.DATABASE_URL || '',
   },
-  tablesFilter: ['test_*'],
   verbose: true,
 } satisfies Config;

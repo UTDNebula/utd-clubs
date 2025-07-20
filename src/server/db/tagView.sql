@@ -1,6 +1,7 @@
-select distinct UNNEST(tags) as tags,
-count(tags)
+select
+    UNNEST(tags) as tag,
+    COUNT(tags) as count
 from
-club
-group by unnest(tags)
+    club
+group by UNNEST(tags)
 order by count desc
