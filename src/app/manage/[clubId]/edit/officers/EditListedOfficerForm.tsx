@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { editListedOfficerSchema } from '@src/utils/formSchemas';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
 import {
@@ -114,11 +115,14 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
     }
   };
   const router = useRouter();
-  const editOfficers = api.club.edit.listedOfficers.useMutation({
-    onSuccess: () => {
-      router.push(`/directory/${clubId}`);
-    },
-  });
+  const api = useTRPC();
+  const editOfficers = useMutation(
+    api.club.edit.listedOfficers.mutationOptions({
+      onSuccess: () => {
+        router.push(`/directory/${clubId}`);
+      },
+    }),
+  );
   const submitForm = handleSubmit((data) => {
     if (dirtyFields.officers !== undefined) {
       const { modified, created } = modifiedFields(

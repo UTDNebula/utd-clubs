@@ -3,8 +3,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import ContactSelector from '@src/app/directory/create/CreateContactSelector';
 import OfficerSelector from '@src/app/directory/create/OfficerSelector';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { createClubSchema } from '@src/utils/formSchemas';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
@@ -30,9 +31,12 @@ const CreateClubForm = ({ user }: { user: { id: string; name: string } }) => {
     },
   });
   const router = useRouter();
-  const createClub = api.club.create.useMutation({
-    onSuccess: (id) => router.push(`/directory/${id}`),
-  });
+  const api = useTRPC();
+  const createClub = useMutation(
+    api.club.create.mutationOptions({
+      onSuccess: (id) => router.push(`/directory/${id}`),
+    }),
+  );
   const submitForm = handleSubmit((data) => {
     if (!createClub.isPending) createClub.mutate(data);
   });
