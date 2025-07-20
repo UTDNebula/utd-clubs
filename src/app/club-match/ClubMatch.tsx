@@ -39,9 +39,7 @@ const TextInput = ({
       {label && (
         <label htmlFor={id}>
           {label}
-          {required && (
-            <span className="text-red-600"> *</span>
-          )}
+          {required && <span className="text-red-600"> *</span>}
         </label>
       )}
       <input
@@ -69,9 +67,7 @@ const SelectInput = ({
     <>
       <label htmlFor={id}>
         {label}
-        {required && (
-          <span className="text-red-600"> *</span>
-        )}
+        {required && <span className="text-red-600"> *</span>}
       </label>
       <select required={required} {...register(id)}>
         <option value="">--Select--</option>
@@ -106,9 +102,7 @@ const CheckboxRadioInput = ({
     <fieldset>
       <legend>
         {label}
-        {required && (
-          <span className="text-red-600"> *</span>
-        )}
+        {required && <span className="text-red-600"> *</span>}
       </legend>
       {options.map((option) => (
         <div key={option}>
@@ -137,8 +131,9 @@ const CheckboxRadioInput = ({
 const ClubMatch = () => {
   const {
     register,
+    watch,
     handleSubmit,
-    formState: { isValid, errors },
+    formState: { errors },
   } = useForm<ClubMatchFormSchema>({
     resolver: zodResolver(clubMatchFormSchema),
   });
@@ -154,6 +149,9 @@ const ClubMatch = () => {
       editData.mutate(data);
     }
   });
+
+  const hobbiesOtherDisabled = !watch('hobbies')?.includes('Other');
+  const genderOtherDisabled = watch('gender') !== 'Other';
 
   return (
     <form
@@ -247,7 +245,7 @@ const ClubMatch = () => {
         errors={errors}
         other={{
           id: 'hobbiesOther',
-          disabled: false, //!formData.hobbies.includes('Other'),
+          disabled: hobbiesOtherDisabled,
         }}
       />
 
@@ -274,7 +272,7 @@ const ClubMatch = () => {
         errors={errors}
         other={{
           id: 'genderOther',
-          disabled: false, //formData.gender !== 'Other',
+          disabled: genderOtherDisabled,
         }}
       />
 
