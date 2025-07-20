@@ -23,7 +23,7 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
             fill
             alt={club.name + ' logo'}
             priority={priority}
-            className="select-none object-cover"
+            className="object-cover select-none"
           />
         ) : (
           <div className="absolute inset-0 h-full w-full bg-gray-200" />
