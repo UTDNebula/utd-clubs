@@ -17,13 +17,17 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
   return (
     <div className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between rounded-lg bg-white shadow-2xl md:min-h-[600px]">
       <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
-        <Image
-          src={club.profileImage ? club.profileImage : club.image}
-          fill
-          alt={club.name}
-          priority={priority}
-          className="object-cover select-none"
-        />
+        {club.profileImage ? (
+          <Image
+            src={club.profileImage}
+            fill
+            alt={club.name + ' logo'}
+            priority={priority}
+            className="object-cover select-none"
+          />
+        ) : (
+          <div className="absolute inset-0 h-full w-full bg-gray-200" />
+        )}
       </div>
       <div className="flex flex-col space-y-2 p-6">
         <h1 className="line-clamp-1 text-2xl font-medium text-slate-800 md:text-xl">
