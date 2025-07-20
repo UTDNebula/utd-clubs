@@ -8,12 +8,20 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type UseFormRegister, type FieldErrors } from 'react-hook-form';
 
+type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
+
+function isFieldRequired(fieldName: keyof ClubMatchFormSchema) {
+  const shape = clubMatchFormSchema.shape;
+  const field = shape[fieldName];
+  return !field.isOptional();
+}
+
 interface SharedInputProps {
-  id: keyof z.infer<typeof clubMatchFormSchema>;
+  id: keyof ClubMatchFormSchema;
   label?: string;
   disabled?: boolean;
-  register: UseFormRegister<z.infer<typeof clubMatchFormSchema>>;
-  errors: FieldErrors<z.infer<typeof clubMatchFormSchema>>;
+  register: UseFormRegister<ClubMatchFormSchema>;
+  errors: FieldErrors<ClubMatchFormSchema>;
 }
 
 const TextInput = ({
@@ -25,23 +33,23 @@ const TextInput = ({
 }: {
   disabled?: boolean;
 } & SharedInputProps) => {
-  const registerForId = register(id);
-  console.log(registerForId);
+  const required = isFieldRequired(id);
   return (
     <>
       {label && (
         <label htmlFor={id}>
           {label}
-          {registerForId.required ? (
+          {required && (
             <span className="text-red-600"> *</span>
-          ) : null}
+          )}
         </label>
       )}
       <input
         type="text"
         id={id}
         disabled={disabled}
-        {...registerForId}
+        required={required}
+        {...register(id)}
         aria-invalid={!!errors[id]}
       />
     </>
@@ -56,16 +64,16 @@ const SelectInput = ({
 }: {
   options: string[];
 } & SharedInputProps) => {
-  const registerForId = register(id);
+  const required = isFieldRequired(id);
   return (
     <>
       <label htmlFor={id}>
         {label}
-        {registerForId.required ? (
+        {required && (
           <span className="text-red-600"> *</span>
-        ) : null}
+        )}
       </label>
-      <select {...registerForId}>
+      <select required={required} {...register(id)}>
         <option value="">--Select--</option>
         {options.map((option) => (
           <option key={option} value={option}>
@@ -89,18 +97,18 @@ const CheckboxRadioInput = ({
   type: 'checkbox' | 'radio';
   options: string[];
   other?: {
-    id: keyof z.infer<typeof clubMatchFormSchema>;
+    id: keyof ClubMatchFormSchema;
     disabled: boolean;
   };
 } & SharedInputProps) => {
-  const registerForId = register(id);
+  const required = isFieldRequired(id);
   return (
     <fieldset>
       <legend>
         {label}
-        {registerForId.required ? (
+        {required && (
           <span className="text-red-600"> *</span>
-        ) : null}
+        )}
       </legend>
       {options.map((option) => (
         <div key={option}>
@@ -108,7 +116,8 @@ const CheckboxRadioInput = ({
             type={type}
             id={id + option}
             value={option}
-            {...registerForId}
+            required={required}
+            {...register(id)}
           />
           <label htmlFor={id + option}>{option}</label>
           {typeof other !== 'undefined' && option === 'Other' && (
@@ -130,7 +139,7 @@ const ClubMatch = () => {
     register,
     handleSubmit,
     formState: { isValid, errors },
-  } = useForm<z.infer<typeof clubMatchFormSchema>>({
+  } = useForm<ClubMatchFormSchema>({
     resolver: zodResolver(clubMatchFormSchema),
   });
 
@@ -333,7 +342,7 @@ const ClubMatch = () => {
       <button
         type="submit"
         className="rounded bg-blue-500 px-4 py-2 text-white disabled:bg-blue-300"
-        disabled={!isValid || editData.isPending}
+        disabled={editData.isPending}
       >
         {editData.isPending ? 'Loading' : 'Find Clubs'}
       </button>
