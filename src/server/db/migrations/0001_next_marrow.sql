@@ -1,1 +1,0 @@
-ALTER TABLE "club" ADD COLUMN "profile_image" text;

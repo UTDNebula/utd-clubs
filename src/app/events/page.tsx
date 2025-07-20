@@ -4,6 +4,7 @@ import EventView from './eventView';
 import { type Metadata } from 'next';
 import { eventParamsSchema } from '@src/utils/eventFilter';
 import EventCard from '@src/components/events/EventCard';
+import type z from 'zod';
 
 export const metadata: Metadata = {
   title: 'Events - Jupiter',
@@ -19,14 +20,14 @@ export const metadata: Metadata = {
 const Events = async ({
   searchParams,
 }: {
-  searchParams: (typeof eventParamsSchema)['_input'];
+  searchParams: z.input<typeof eventParamsSchema>;
 }) => {
   const parsed = eventParamsSchema.parse(searchParams);
   const { events } = await api.event.findByDate({
     date: parsed.date,
   });
   return (
-    <main className="pb-10 ">
+    <main className="pb-10">
       <EventHeader />
       <EventView searchParams={parsed}>
         {events.map((event) => {

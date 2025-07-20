@@ -16,7 +16,7 @@ type BaseProps = { children: ReactNode; className?: string };
 const Base = ({ children, className }: BaseProps) => {
   return (
     <div
-      className={` w-fit rounded-[.3125rem] bg-opacity-70 px-2.5 py-1.25 text-center text-xs font-extrabold text-white ${
+      className={`w-fit rounded-[.3125rem] px-2.5 py-1.25 text-center text-xs font-extrabold text-white ${
         className ?? ''
       }`}
     >
@@ -41,26 +41,26 @@ const EventTimeAlert = ({ event }: EventTimeAlertProps) => {
 
   if (event.startTime.getTime() < now) {
     if (event.endTime.getTime() < now) {
-      return <Base className="bg-red-600">over :(</Base>;
+      return <Base className="bg-red-600/70">over :(</Base>;
     } else {
-      return <Base className="bg-green-600">NOW</Base>;
+      return <Base className="bg-green-600/70">NOW</Base>;
     }
   } else {
     if (differenceInDays(start, now) < 1) {
       if (hourDiff < 1) {
         return (
-          <Base className="bg-red-600">
+          <Base className="bg-red-600/70">
             {differenceInMinutes(start, now)} minutes
           </Base>
         );
       } else if (hourDiff < 4) {
-        return <Base className="bg-yellow-600">{hourDiff} hours</Base>;
+        return <Base className="bg-yellow-600/70">{hourDiff} hours</Base>;
       } else {
-        return <Base className="bg-black">{hourDiff} hours</Base>;
+        return <Base className="bg-black/70">{hourDiff} hours</Base>;
       }
     } else {
       return (
-        <Base className="bg-black">{differenceInDays(start, now)} days</Base>
+        <Base className="bg-black/70">{differenceInDays(start, now)} days</Base>
       );
     }
   }
