@@ -1,3 +1,7 @@
+import { getServerAuthSession } from '@src/server/auth';
+import { redirect } from 'next/navigation';
+import { signInRoute } from '@src/utils/redirect';
+
 import Header from '@src/components/header/BaseHeader';
 import type { Metadata } from 'next';
 
@@ -16,7 +20,13 @@ export const metadata: Metadata = {
   },
 };
 
-const Page = () => {
+const Page = async () => {
+  const session = await getServerAuthSession();
+
+  if (!session) {
+    redirect(signInRoute('club-match'));
+  }
+
   return (
     <main className="h-full">
       <Header />

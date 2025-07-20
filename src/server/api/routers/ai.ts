@@ -1,27 +1,8 @@
 import { eq } from 'drizzle-orm';
 import { GoogleGenAI } from '@google/genai';
-///TODO: should probably be protectedProcedure
-import { createTRPCRouter, publicProcedure } from '../trpc';
-import { z } from 'zod';
+import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { club } from '@src/server/db/schema/club';
-
-const formSchema = z.object({
-  major: z.string().min(1),
-  year: z.string().min(1),
-  proximity: z.string().min(1),
-  categories: z.array(z.string().min(1)),
-  specificCultures: z.string().optional(),
-  hobbies: z.array(z.string().min(1)),
-  hobbiesOther: z.string().optional(),
-  hobbyDetails: z.string().optional(),
-  otherAcademicInterests: z.string().optional(),
-  gender: z.string().min(1),
-  genderOther: z.string().optional(),
-  newExperiences: z.string().optional(),
-  involvementGoals: z.array(z.string().min(1)).optional(),
-  timeCommitment: z.string().min(1),
-  skills: z.array(z.string().min(1)).optional(),
-});
+import { clubMatchFormSchema } from '@src/utils/formSchemas';
 
 const GEMINI_SERVICE_ACCOUNT = JSON.parse(
   process.env.GEMINI_SERVICE_ACCOUNT as string,
@@ -39,8 +20,9 @@ const ai = new GoogleGenAI({
 });
 
 export const aiRouter = createTRPCRouter({
-  clubMatch: publicProcedure.input(formSchema).query(async ({ ctx, input }) => {
-    try {
+  clubMatch: protectedProcedure
+    .input(clubMatchFormSchema)
+    .mutation(async ({ ctx, input }) => {
       const { categories, ...questions } = input;
 
       const query = ctx.db
@@ -108,11 +90,6 @@ Maintain strict formatting:
       }[];
 
       //TODO: save to profile
-
       return result;
-    } catch (e) {
-      console.error('Gemini Error:', e);
-      throw e;
-    }
-  }),
+    }),
 });
