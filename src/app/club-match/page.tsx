@@ -7,16 +7,17 @@ import type { Metadata } from 'next';
 
 import ClubMatch from './ClubMatch';
 
-///TODO: metadata
 export const metadata: Metadata = {
   title: 'Club Match - Jupiter',
-  //description: '',
+  description:
+    'Find your club match! Generate club recommendations based on a simple form.',
   alternates: {
     canonical: 'https://jupiter.utdnebula.com/club-match',
   },
   openGraph: {
     url: 'https://jupiter.utdnebula.com/club-match',
-    //description: '',
+    description:
+      'Find your club match! Generate club recommendations based on a simple form.',
   },
 };
 
@@ -28,10 +29,10 @@ const Page = async () => {
   }
 
   return (
-    <main className="h-full">
+    <>
       <Header />
       <ClubMatch />
-    </main>
+    </>
   );
 };
 
