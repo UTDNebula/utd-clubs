@@ -1,6 +1,8 @@
 import { getServerAuthSession } from '@src/server/auth';
 import { redirect } from 'next/navigation';
 import { signInRoute } from '@src/utils/redirect';
+import { db } from '@src/server/db';
+import { eq } from 'drizzle-orm';
 
 import Header from '@src/components/header/BaseHeader';
 import type { Metadata } from 'next';
@@ -26,35 +28,36 @@ const Page = async () => {
   }
 
   const user = session.user;
-  if (!user) return null;
-  ///TODO: get resilts from profile
-  ///TODO: if no results, redirect to club-match
+
+  const data = (
+    await db.query.userAiCache.findFirst({
+      where: (userAiCache) => eq(userAiCache.id, user.id),
+    })
+  )?.clubMatch;
+
+  if (data == null) {
+    redirect('/club-match');
+  }
 
   return (
     <main className="h-full">
       <Header />
-      {/*data.map((club) => (
+      <a href="/club-match">Redo club match</a>
+      {data.map((club) => (
         <div key={club.id}>
-          <a
-            href={'https://jupiter.utdnebula.com/directory/' + club.id}
-          >
+          <a href={'https://jupiter.utdnebula.com/directory/' + club.id}>
             {club.name}
           </a>
           <p>{club.reasoning}</p>
           <ul>
             {club.benefit.split(', ').map((benefit) => (
-              <li>{benefit}</li>
+              <li key={benefit}>
+                {benefit.charAt(0).toUpperCase() + benefit.slice(1)}
+              </li>
             ))}
           </ul>
         </div>
       ))}
-      <button
-        onClick={() => {
-          //TODO: clear user metadata for club match
-        }}
-      >
-        Redo club match
-      </button>*/}
     </main>
   );
 };

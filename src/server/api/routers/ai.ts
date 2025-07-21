@@ -3,6 +3,10 @@ import { GoogleGenAI } from '@google/genai';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { club } from '@src/server/db/schema/club';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
+import {
+  userAiCache,
+  type ClubMatchResults,
+} from '@src/server/db/schema/users';
 
 const GEMINI_SERVICE_ACCOUNT = JSON.parse(
   process.env.GEMINI_SERVICE_ACCOUNT as string,
@@ -82,14 +86,20 @@ Maintain strict formatting:
         throw new Error('undefined response');
       }
 
-      const result = JSON.parse(response.text) as {
-        name: string;
-        id: string;
-        reasoning: string;
-        benefit: string;
-      }[];
+      const result = JSON.parse(response.text) as ClubMatchResults;
 
-      //TODO: save to profile
-      return result;
+      //Save to profile
+      await ctx.db
+        .insert(userAiCache)
+        .values({
+          id: ctx.session.user.id,
+          clubMatch: result,
+        })
+        .onConflictDoUpdate({
+          target: userAiCache.id,
+          set: {
+            clubMatch: result,
+          },
+        });
     }),
 });

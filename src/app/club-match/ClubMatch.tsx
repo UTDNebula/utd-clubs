@@ -111,7 +111,6 @@ const CheckboxRadioInput = ({
             type={type}
             id={id + option}
             value={option}
-            required={required}
             {...register(id)}
           />
           <label htmlFor={id + option}>{option}</label>
@@ -137,6 +136,12 @@ const ClubMatch = () => {
     formState: { errors },
   } = useForm<ClubMatchFormSchema>({
     resolver: zodResolver(clubMatchFormSchema),
+    defaultValues: {
+      categories: [],
+      hobbies: [],
+      involvementGoals: [],
+      skills: [],
+    },
   });
 
   const api = useTRPC();
@@ -154,7 +159,8 @@ const ClubMatch = () => {
     }
   });
 
-  const hobbiesOtherDisabled = !watch('hobbies')?.includes('Other');
+  const hobbies = watch('hobbies');
+  const hobbiesOtherDisabled = hobbies ? !hobbies.includes('Other') : true;
   const genderOtherDisabled = watch('gender') !== 'Other';
 
   return (
