@@ -26,7 +26,7 @@ const Page = async () => {
   const session = await getServerAuthSession();
 
   if (!session) {
-    redirect(signInRoute('club-match'));
+    redirect(signInRoute('club-match/results'));
   }
 
   const user = session.user;
@@ -51,7 +51,7 @@ const Page = async () => {
             <Link
               key={club.id}
               href={'https://jupiter.utdnebula.com/directory/' + club.id}
-              className="flex flex-col gap-2 rounded-md border border-gray-200 bg-white px-6 py-4"
+              className="flex flex-col gap-2 rounded-2xl border border-gray-200 bg-white px-6 py-4"
             >
               <p className="text-lg font-bold">{club.name}</p>
               <p>{club.reasoning}</p>
@@ -65,12 +65,12 @@ const Page = async () => {
             </Link>
           ))}
         </div>
-        <a
+        <Link
           href="/club-match"
           className="bg-blue-primary self-center rounded-md px-4 py-2 text-white"
         >
           Redo club match
-        </a>
+        </Link>
       </main>
     </>
   );

@@ -5,6 +5,7 @@ import { api } from '@src/trpc/server';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import SignInButton from '@src/components/header/signInButton';
+import ClubMatchButton from '@src/components/header/ClubMatchButton';
 import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
 import { getServerAuthSession } from '@src/server/auth';
@@ -55,7 +56,8 @@ const Home = async () => {
         <div title="content" className="relative inset-0 z-20 bg-transparent">
           <div className="pointer-events-none fixed top-0 z-20 flex h-20 w-full flex-row items-center px-2.5 py-2.5 md:px-5">
             <Sidebar hamburger="black" />
-            <div className="pointer-events-auto ml-auto flex items-center justify-center">
+            <div className="pointer-events-auto ml-auto flex items-center justify-center gap-2">
+              <ClubMatchButton />
               {session !== null ? (
                 <div className="h-10 w-10 rounded-full">
                   <ProfileDropDown image={session.user.image || ''} />
