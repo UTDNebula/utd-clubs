@@ -182,7 +182,12 @@ const ClubMatch = () => {
         form.
       </p>
       <form
-        onSubmit={void submitForm}
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitForm().catch((err) => {
+            console.error('Form submission failed:', err);
+          });
+        }}
         className="mx-auto flex max-w-lg flex-col gap-4"
       >
         <TextInput
