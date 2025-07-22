@@ -1,6 +1,8 @@
 import { getServerAuthSession } from '@src/server/auth';
 import { redirect } from 'next/navigation';
 import { signInRoute } from '@src/utils/redirect';
+import { db } from '@src/server/db';
+import { eq } from 'drizzle-orm';
 
 import Header from '@src/components/header/BaseHeader';
 import type { Metadata } from 'next';
@@ -26,6 +28,14 @@ const Page = async () => {
 
   if (!session) {
     redirect(signInRoute('club-match'));
+  }
+
+  const data = await db.query.userAiCache.findFirst({
+    where: (userAiCache) => eq(userAiCache.id, session.user.id),
+  });
+
+  if (data?.clubMatchLimit != null && data.clubMatchLimit <= 0) {
+    redirect('/club-match/results');
   }
 
   return (

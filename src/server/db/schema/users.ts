@@ -73,7 +73,8 @@ export type ClubMatchResults = {
 
 export const userAiCache = pgTable('user_ai_cache', {
   id: text('id').notNull().primaryKey(),
-  clubMatch: jsonb().$type<ClubMatchResults>(),
+  clubMatch: jsonb('clubMatch').$type<ClubMatchResults>(),
+  clubMatchLimit: integer('clubMatchLimit').$default(() => 100),
 });
 
 export const accounts = pgTable(

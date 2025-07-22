@@ -29,15 +29,11 @@ const Page = async () => {
     redirect(signInRoute('club-match/results'));
   }
 
-  const user = session.user;
+  const data = await db.query.userAiCache.findFirst({
+    where: (userAiCache) => eq(userAiCache.id, session.user.id),
+  });
 
-  const data = (
-    await db.query.userAiCache.findFirst({
-      where: (userAiCache) => eq(userAiCache.id, user.id),
-    })
-  )?.clubMatch;
-
-  if (data == null) {
+  if (data?.clubMatch == null) {
     redirect('/club-match');
   }
 
@@ -47,7 +43,7 @@ const Page = async () => {
       <main className="flex flex-col gap-8 pb-8">
         <h1 className="text-center text-4xl font-bold">Club Match Results</h1>
         <div className="mx-auto flex max-w-lg flex-col gap-4">
-          {data.map((club) => (
+          {data.clubMatch.map((club) => (
             <Link
               key={club.id}
               href={'https://jupiter.utdnebula.com/directory/' + club.id}
@@ -65,12 +61,14 @@ const Page = async () => {
             </Link>
           ))}
         </div>
-        <Link
-          href="/club-match"
-          className="bg-blue-primary self-center rounded-md px-4 py-2 text-white"
-        >
-          Redo club match
-        </Link>
+        {(data.clubMatchLimit == null || data.clubMatchLimit > 0) && (
+          <Link
+            href="/club-match"
+            className="bg-blue-primary self-center rounded-md px-4 py-2 text-white"
+          >
+            Redo club match
+          </Link>
+        )}
       </main>
     </>
   );

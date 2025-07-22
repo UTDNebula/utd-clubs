@@ -27,15 +27,45 @@ export const aiRouter = createTRPCRouter({
   clubMatch: protectedProcedure
     .input(clubMatchFormSchema)
     .mutation(async ({ ctx, input }) => {
-      const { categories, ...questions } = input;
+      // Limit to 100 calls to avoid spam
+      if (process.env.NODE_ENV !== 'development') {
+        const existing = await ctx.db.query.userAiCache.findFirst({
+          where: eq(userAiCache.id, ctx.session.user.id),
+        });
 
-      const query = ctx.db
+        if (existing && existing.clubMatchLimit != null) {
+          if (existing.clubMatchLimit > 0) {
+            await ctx.db
+              .update(userAiCache)
+              .set({
+                clubMatchLimit: existing.clubMatchLimit - 1,
+              })
+              .where(eq(userAiCache.id, ctx.session.user.id));
+          } else {
+            return;
+          }
+        } else {
+          await ctx.db
+            .insert(userAiCache)
+            .values({
+              id: ctx.session.user.id,
+              clubMatchLimit: 100,
+            })
+            .onConflictDoUpdate({
+              target: userAiCache.id,
+              set: {
+                clubMatchLimit: 100,
+              },
+            });
+        }
+      }
+
+      // Get all clubs
+      const clubs = await ctx.db
         .select()
         .from(club)
         .orderBy(club.name)
         .where(eq(club.approved, 'approved'));
-
-      const clubs = await query.execute();
 
       const prompt = `Analyze this student's preferences and recommend 10 organizations,
 ensuring balanced coverage across all selected categories:
@@ -52,11 +82,8 @@ ${JSON.stringify(
   2,
 )}
 
-Student Profile:
-- Preferred Categories: ${categories.join(', ')}
-
-Filtered Q&A:
-${JSON.stringify(questions, null, 2)}
+Student Q&A:
+${JSON.stringify(input, null, 2)}
 
 Recommendation Requirements:
 1. Prioritize category distribution - include organizations from each selected category proportionally
