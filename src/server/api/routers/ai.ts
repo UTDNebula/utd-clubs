@@ -78,7 +78,7 @@ Maintain strict formatting:
 `;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-2.0-flash-lite',
         contents: prompt,
       });
 
@@ -86,7 +86,7 @@ Maintain strict formatting:
         throw new Error('undefined response');
       }
 
-      const result = JSON.parse(response.text) as ClubMatchResults;
+      const result = JSON.parse(response.text.replaceAll('```json', '').replaceAll('```', '')) as ClubMatchResults;
 
       //Save to profile
       await ctx.db
