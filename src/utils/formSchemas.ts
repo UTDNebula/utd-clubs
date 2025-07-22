@@ -64,20 +64,22 @@ export const feedbackFormSchema = z.object({
   submit_on: z.date().default(new Date()),
 });
 
+const characterLimitError = 'Input cannot exceed 500 characters';
+
 export const clubMatchFormSchema = z.object({
-  major: z.string().min(1),
-  year: z.string().min(1),
-  proximity: z.string().min(1),
-  categories: z.array(z.string().min(1)),
-  specificCultures: z.string().optional(),
-  hobbies: z.array(z.string().min(1)),
-  hobbiesOther: z.string().optional(),
-  hobbyDetails: z.string().optional(),
-  otherAcademicInterests: z.string().optional(),
-  gender: z.string().min(1),
-  genderOther: z.string().optional(),
-  newExperiences: z.string().optional(),
-  involvementGoals: z.array(z.string().min(1)).optional(),
-  timeCommitment: z.string().min(1),
-  skills: z.array(z.string().min(1)).optional(),
+  major: z.string().min(1).max(500, characterLimitError),
+  year: z.string().min(1).max(100),
+  proximity: z.string().min(1).max(100),
+  categories: z.array(z.string().min(1).max(100)).max(50),
+  specificCultures: z.string().max(500, characterLimitError).optional(),
+  hobbies: z.array(z.string().min(1).max(100)).max(50),
+  hobbiesOther: z.string().max(500, characterLimitError).optional(),
+  hobbyDetails: z.string().max(500, characterLimitError).optional(),
+  otherAcademicInterests: z.string().max(500, characterLimitError).optional(),
+  gender: z.string().min(1).max(100),
+  genderOther: z.string().max(500, characterLimitError).optional(),
+  newExperiences: z.string().max(500, characterLimitError).optional(),
+  involvementGoals: z.array(z.string().min(1).max(100)).max(50).optional(),
+  timeCommitment: z.string().min(1).max(100),
+  skills: z.array(z.string().min(1).max(100)).max(50).optional(),
 });

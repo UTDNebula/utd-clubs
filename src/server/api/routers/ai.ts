@@ -86,7 +86,9 @@ Maintain strict formatting:
         throw new Error('undefined response');
       }
 
-      const result = JSON.parse(response.text.replaceAll('```json', '').replaceAll('```', '')) as ClubMatchResults;
+      const result = JSON.parse(
+        response.text.replaceAll('```json', '').replaceAll('```', ''),
+      ) as ClubMatchResults;
 
       //Save to profile
       await ctx.db

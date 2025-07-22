@@ -1,20 +1,26 @@
 'use client';
 
+import { useState } from 'react';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
 import { useTRPC } from '@src/trpc/react';
 import { useMutation } from '@tanstack/react-query';
-import { type z } from 'zod';
+import { z, type ZodError } from 'zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type UseFormRegister, type FieldErrors } from 'react-hook-form';
+import { type UseFormRegister } from 'react-hook-form';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
+
+type Errors = {
+  errors: string[];
+  properties?: Record<keyof ClubMatchFormSchema, { errors: string[] }>;
+};
 
 function isFieldRequired(fieldName: keyof ClubMatchFormSchema) {
   const shape = clubMatchFormSchema.shape;
   const field = shape[fieldName];
-  return !field.isOptional();
+  return !field.safeParse(undefined).success;
 }
 
 interface SharedInputProps {
@@ -22,7 +28,7 @@ interface SharedInputProps {
   label?: string;
   disabled?: boolean;
   register: UseFormRegister<ClubMatchFormSchema>;
-  errors: FieldErrors<ClubMatchFormSchema>;
+  errors: Errors;
 }
 
 const TextInput = ({
@@ -43,13 +49,19 @@ const TextInput = ({
           {required && <span className="text-red-600"> *</span>}
         </label>
       )}
+      {errors.properties?.[id]?.errors &&
+        errors.properties?.[id].errors.map((error) => (
+          <span key={error} role="alert" className="text-red-600">
+            {error}
+          </span>
+        ))}
       <input
         type="text"
         id={id}
         disabled={disabled}
         required={required}
         {...register(id)}
-        aria-invalid={!!errors[id]}
+        aria-invalid={!!errors.properties?.[id]}
         className="rounded-md border border-gray-200 bg-white px-4 py-2 disabled:bg-gray-200"
       />
     </div>
@@ -61,6 +73,7 @@ const SelectInput = ({
   label,
   options,
   register,
+  errors,
 }: {
   options: string[];
 } & SharedInputProps) => {
@@ -71,6 +84,12 @@ const SelectInput = ({
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
+      {errors.properties?.[id]?.errors &&
+        errors.properties?.[id].errors.map((error) => (
+          <span key={error} role="alert" className="text-red-600">
+            {error}
+          </span>
+        ))}
       <select
         required={required}
         {...register(id)}
@@ -110,6 +129,12 @@ const CheckboxRadioInput = ({
         {label}
         {required && <span className="text-red-600"> *</span>}
       </legend>
+      {errors.properties?.[id]?.errors &&
+        errors.properties?.[id].errors.map((error) => (
+          <span key={error} role="alert" className="text-red-600">
+            {error}
+          </span>
+        ))}
       <div>
         {options.map((option) => (
           <div key={option}>
@@ -128,7 +153,7 @@ const CheckboxRadioInput = ({
                 id={other.id}
                 disabled={other.disabled}
                 {...register(other.id)}
-                aria-invalid={!!errors[other.id]}
+                aria-invalid={!!errors.properties?.[other.id]}
                 className="ml-2 rounded-md border border-gray-200 bg-white px-2 disabled:bg-gray-200"
               />
             )}
@@ -140,12 +165,7 @@ const CheckboxRadioInput = ({
 };
 
 const ClubMatch = () => {
-  const {
-    register,
-    watch,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ClubMatchFormSchema>({
+  const { register, watch, handleSubmit } = useForm<ClubMatchFormSchema>({
     resolver: zodResolver(clubMatchFormSchema),
     defaultValues: {
       categories: [],
@@ -154,6 +174,7 @@ const ClubMatch = () => {
       skills: [],
     },
   });
+  const [errors, setErrors] = useState<Errors>({ errors: [] });
 
   const api = useTRPC();
   const router = useRouter();
@@ -184,8 +205,8 @@ const ClubMatch = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          submitForm().catch((err) => {
-            console.error('Form submission failed:', err);
+          submitForm().catch((err: ZodError) => {
+            setErrors(z.treeifyError(err));
           });
         }}
         className="mx-auto flex max-w-lg flex-col gap-4"
