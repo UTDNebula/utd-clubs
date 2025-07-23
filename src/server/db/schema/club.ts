@@ -25,7 +25,6 @@ export const club = pgTable('club', {
     .primaryKey(),
   name: text('name').notNull(),
   description: text('description').notNull(),
-  image: text('image').default('/nebula-logo.png').notNull(),
   tags: text('tags')
     .array()
     .default(sql`'{}'::text[]`)
