@@ -11,8 +11,8 @@
     "lint": "next lint --fix",
     "lint:check": "next lint",
     "test": "NODE_OPTIONS=--experimental-vm-modules dotenv jest --detectOpenHandles --forceExit",
-    "drizzle:generate": "dotenv drizzle-kit generate:pg",
-    "drizzle:push": "dotenv drizzle-kit push:pg"
+    "drizzle:generate": "dotenv drizzle-kit generate",
+    "drizzle:push": "dotenv drizzle-kit push"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.2",
@@ -35,8 +35,8 @@
     "@trpc/tanstack-react-query": "^11.1.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.0.3",
-    "drizzle-orm": "^0.28.5",
-    "drizzle-zod": "^0.5.1",
+    "drizzle-orm": "^0.44.3",
+    "drizzle-zod": "^0.8.2",
     "next": "^14.2.2",
     "next-auth": "^4.23.0",
     "postgres": "^3.3.5",
@@ -46,7 +46,7 @@
     "react-hook-form": "^7.48.2",
     "sharp": "^0.33.5",
     "superjson": "^1.13.1",
-    "zod": "^3.22.4",
+    "zod": "^4.0.5",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
@@ -62,7 +62,7 @@
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv-cli": "^7.3.0",
-    "drizzle-kit": "^0.19.13",
+    "drizzle-kit": "^0.31.4",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.1",
     "eslint-config-prettier": "^8.5.0",
@@ -79,5 +79,10 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
+  },
+  "overrides": {
+    "drizzle-zod": {
+      "zod": "^4.0.5"
+    }
   }
 }
