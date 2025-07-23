@@ -1,5 +1,7 @@
+import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
 import { z } from 'zod';
+import { TRPCError } from '@trpc/server';
 
 const getDeleteSchema = z.object({
   objectID: z.string(),
@@ -7,69 +9,41 @@ const getDeleteSchema = z.object({
 
 const postSchema = z.object({
   objectID: z.string(),
-  data: z.string(),
+  data: z.file(),
 });
-
-interface GetPostResponse {
-  bucket: string;
-  name: string;
-  content_type: string;
-  size: number;
-  content_encoding: '';
-  md5: string;
-  media_link: string;
-  created: string;
-  updated: string;
-}
-
-type DeleteResponse = 1;
-
-type APIResponse<T> =
-  | {
-      message: 'success';
-      status: number;
-      data: T;
-    }
-  | {
-      message: 'error';
-      status: number;
-      data: string;
-    };
-
-async function callStorageAPI<T>(
-  method: 'GET' | 'POST' | 'DELETE',
-  objectID: string,
-  body?: string,
-): Promise<T> {
-  const res = await fetch(
-    `${process.env.NEBULA_API_URL}/storage/${process.env.NEBULA_API_STORAGE_BUCKET}/${objectID}`,
-    {
-      method,
-      headers: {
-        'x-api-key': process.env.NEBULA_API_KEY as string,
-        'x-storage-key': process.env.NEBULA_API_STORAGE_KEY as string,
-      },
-      ...(body && { body }),
-    },
-  );
-
-  const data = (await res.json()) as APIResponse<T>;
-
-  if (data.message !== 'success') {
-    throw new Error(data.data);
-  }
-
-  return data.data;
-}
 
 export const storageRouter = createTRPCRouter({
   get: publicProcedure.input(getDeleteSchema).query(async ({ input }) => {
-    return callStorageAPI<GetPostResponse>('GET', input.objectID);
+    const data = await callStorageAPI('GET', input.objectID);
+    if (data.message !== 'success') {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Nebula API errored on request',
+        cause: data,
+      });
+    }
+    return data;
   }),
   delete: protectedProcedure.input(getDeleteSchema).query(async ({ input }) => {
-    return callStorageAPI<GetPostResponse>('DELETE', input.objectID);
+    const data = await callStorageAPI('DELETE', input.objectID);
+    if (data.message !== 'success') {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Nebula API errored on request',
+        cause: data,
+      });
+    }
+    return data;
   }),
   post: protectedProcedure.input(postSchema).query(async ({ input }) => {
-    return callStorageAPI<DeleteResponse>('POST', input.objectID, input.data);
+    const data = await callStorageAPI('POST', input.objectID, input.data);
+    if (data.message !== 'success') {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Nebula API errored on request',
+        cause: data,
+      });
+    }
+    return data;
   }),
 });
