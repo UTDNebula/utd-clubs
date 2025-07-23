@@ -25,9 +25,9 @@ export default function ClubSelector({ control }: Props) {
             className="m-2 flex min-w-[10rem] items-center justify-center rounded-full border p-2"
             key={club.id}
           >
-            {club.image && (
+            {club.profileImage && (
               <Image
-                src={club.image}
+                src={club.profileImage}
                 alt={club.name + ' logo'}
                 width={40}
                 height={40}

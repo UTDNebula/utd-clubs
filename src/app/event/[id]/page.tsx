@@ -66,10 +66,10 @@ export default async function EventsPage({ params }: Params) {
         </section>
         <section className="mb-5 flex flex-col space-y-6 rounded-xl bg-slate-100 p-5 text-black shadow-lg md:flex-row md:p-10">
           <div className="h-full max-w-sm lg:min-w-fit">
-            {club.image && (
+            {club.profileImage && (
               <div className="relative mx-auto h-40 w-full overflow-hidden rounded-b-md">
                 <Image
-                  src={club.image}
+                  src={club.profileImage}
                   alt={club.name + ' logo'}
                   fill
                   className="object-cover"

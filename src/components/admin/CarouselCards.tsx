@@ -23,13 +23,16 @@ export default function CarouselCard({ item }: Props) {
       className="flex flex-col items-center rounded-lg bg-white p-5 shadow-lg"
       key={item.orgId}
     >
-      <Image
-        className="rounded-md"
-        src={item.club.image}
-        alt={item.club.name}
-        width={200}
-        height={200}
-      />
+      {item.club.profileImage ? (
+        <Image
+          src={item.club.profileImage}
+          fill
+          alt={item.club.name + ' logo'}
+          className="object-cover select-none"
+        />
+      ) : (
+        <div className="absolute inset-0 h-full w-full bg-gray-200" />
+      )}
       <p className="mt-2 text-center text-lg font-medium">{item.club.name}</p>
       <div className="mt-1 text-sm text-gray-600">
         From{' '}
