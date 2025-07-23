@@ -60,9 +60,9 @@ export default withSentryConfig(config, {
   automaticVercelMonitors: true,
 
   sourcemaps: {
-    disable: process.env.NODE_ENV !== 'production',
+    disable: process.env.VERCEL_ENV !== 'production',
   },
   release: {
-    create: process.env.NODE_ENV === 'production',
+    create: process.env.VERCEL_ENV === 'production',
   },
 });
