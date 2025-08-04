@@ -25,7 +25,7 @@ const settingsSchema = z.object({
   minor: z.string().nullable(),
   year: z.enum(['Freshman', 'Sophomore', 'Junior', 'Senior', 'Grad Student']),
   role: z.enum(['Student', 'Student Organizer', 'Administrator']),
-  clubs: selectClub.pick({ name: true, id: true, image: true }).array(),
+  clubs: selectClub.pick({ name: true, id: true, profileImage: true }).array(),
 });
 
 export type SettingSchema = z.infer<typeof settingsSchema>;

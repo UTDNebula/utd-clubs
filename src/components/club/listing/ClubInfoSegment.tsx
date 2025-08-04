@@ -49,7 +49,7 @@ const ClubInfoSegment: FC<{
                 {club.officers.map((officer) => (
                   <div className="mt-5 flex flex-row" key={officer.id}>
                     <Image
-                      src={club.image}
+                      src={club.profileImage ?? '/nebula-logo.png'}
                       alt="Picture of the author"
                       width={60}
                       height={60}

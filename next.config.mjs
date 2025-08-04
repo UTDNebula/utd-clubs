@@ -26,6 +26,12 @@ const config = {
         pathname: '**',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        pathname: '/download/storage/v1/b/utdnebula_jupiter/**',
+        port: '',
+      },
     ],
   },
 };

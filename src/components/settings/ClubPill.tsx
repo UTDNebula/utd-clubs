@@ -5,7 +5,7 @@ export default function ClubPill({ club }: { club: SelectClub }) {
   return (
     <div className="m-5 flex min-w-[10rem] items-center justify-center rounded-full border p-2">
       <Image
-        src={club.image}
+        src={club.profileImage ?? '/nebula-logo.png'}
         alt={club.name}
         width={40}
         height={40}
