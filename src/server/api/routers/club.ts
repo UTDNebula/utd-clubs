@@ -1,4 +1,13 @@
-import { eq, ilike, sql, and, inArray, lt, gt } from 'drizzle-orm';
+import {
+  eq,
+  ilike,
+  sql,
+  and,
+  inArray,
+  lt,
+  gt,
+  arrayOverlaps,
+} from 'drizzle-orm';
 import {
   adminProcedure,
   createTRPCRouter,
@@ -30,8 +39,16 @@ const tagReplaceSchema = z.object({
   newTag: z.string(),
 });
 const allSchema = z.object({
-  tag: z.string().nullish(),
+  tags: z.string().array().nullish(),
   name: z.string().nullish(),
+  cursor: z.number().min(0).default(0),
+  limit: z.number().min(1).max(50).default(10),
+  initialCursor: z.number().min(0).default(0),
+});
+
+const searchSchema = z.object({
+  tags: z.string().array().nullish(),
+  search: z.string().nullish(),
   cursor: z.number().min(0).default(0),
   limit: z.number().min(1).max(50).default(10),
   initialCursor: z.number().min(0).default(0),
@@ -45,6 +62,10 @@ const createClubSchema = baseClubSchema.omit({ officers: true }).extend({
     })
     .array()
     .min(1),
+});
+
+const searchTagSchema = z.object({
+  search: z.string(),
 });
 
 export const clubRouter = createTRPCRouter({
@@ -96,12 +117,13 @@ export const clubRouter = createTRPCRouter({
         .where(
           and(
             eq(club.approved, 'approved'),
-            input.tag && input.tag !== 'All'
-              ? sql`${input.tag} = ANY(${club.tags})`
+            input.tags && input.tags.length != 0
+              ? arrayOverlaps(club.tags, input.tags)
               : undefined,
             input.name ? ilike(club.name, `%${input.name}%`) : undefined,
           ),
         );
+      console.log(query.toSQL());
 
       const res = await query.execute();
       const newOffset = input.cursor + res.length;
@@ -120,8 +142,17 @@ export const clubRouter = createTRPCRouter({
   }),
   distinctTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = (await ctx.db.select().from(usedTags)).map(
-        (obj) => obj.tags,
+      const tags = (await ctx.db.select().from(usedTags)).map((obj) => obj.tag);
+      return tags;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }),
+  topTags: publicProcedure.query(async ({ ctx }) => {
+    try {
+      const tags = (await ctx.db.select().from(usedTags).limit(6)).map(
+        (obj) => obj.tag,
       );
       return tags;
     } catch (e) {
@@ -312,4 +343,55 @@ export const clubRouter = createTRPCRouter({
       await Promise.all(clubPromise);
       return { affected: clubsToChange.length };
     }),
+  tagSearch: publicProcedure
+    .input(searchTagSchema)
+    .query(async ({ input, ctx }) => {
+      const tags = await ctx.db
+        .select({ tag: usedTags.tag })
+        .from(usedTags)
+        .where(
+          sql`${usedTags.tagSearch} @@ websearch_to_tsquery('english', ${input.search})`,
+        );
+      return { tags: tags, clubs: [] };
+    }),
+  search: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
+    try {
+      const query = ctx.db
+        .select()
+        .from(club)
+        .limit(input.limit)
+        .offset(input.cursor)
+        .where(
+          and(
+            eq(club.approved, 'approved'),
+            input.tags && input.tags.length != 0
+              ? arrayOverlaps(club.tags, input.tags)
+              : undefined,
+            input.search
+              ? sql`${club.clubSearchVector} @@ websearch_to_tsquery('english',${input.search})`
+              : undefined,
+          ),
+        )
+        .orderBy(
+          input.search
+            ? sql`ts_rank_cd(${club.clubSearchVector},websearch_to_tsquery('english',${input.search}))`
+            : club.name,
+        );
+      console.log(query.toSQL());
+
+      const res = await query.execute();
+      const newOffset = input.cursor + res.length;
+
+      return {
+        clubs: res,
+        cursor: newOffset,
+      };
+    } catch (e) {
+      console.error(e);
+      return {
+        clubs: [],
+        cursor: 0,
+      };
+    }
+  }),
 });

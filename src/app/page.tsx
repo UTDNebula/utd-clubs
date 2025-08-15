@@ -1,16 +1,15 @@
-import TagFilter from '../components/club/directory/TagFilter';
 import ClubDirectoryGrid from '../components/club/directory/ClubDirectoryGrid';
 import type { Metadata } from 'next';
 import { api } from '@src/trpc/server';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import SignInButton from '@src/components/header/signInButton';
-import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
 import { getServerAuthSession } from '@src/server/auth';
 import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
+import { TagPill } from '@src/components/TagPill';
 export const metadata: Metadata = {
   title: 'Jupiter - Nebula',
   description: 'Get connected on campus.',
@@ -24,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 const Home = async () => {
-  const tags = await api.club.distinctTags();
+  const tags = await api.club.topTags();
   // const featured = await api.club.getCarousel();
   // const onlyClubs = featured.map((item) => item.club);
   const session = await getServerAuthSession();
@@ -33,17 +32,17 @@ const Home = async () => {
       <main className="relative bg-white">
         {/* <Header /> */}
         <div className="absolute inset-0 z-0">
-          <div className="relative h-[120vh] w-screen">
-            <section className="absolute inset-0 z-0 h-[120vh] w-screen">
+          <div className="relative h-[80vh] w-screen">
+            <section className="absolute inset-0 z-0 h-[100vh] w-screen">
               <Image
                 src={gradientBG}
                 fill
-                sizes="120vw"
+                sizes="100vw"
                 alt="Gradient Background for landing page"
                 className="bg-no-repeat object-cover"
               />
             </section>
-            <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"></section>
+            <section className="absolute top-[80vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"></section>
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
@@ -61,23 +60,25 @@ const Home = async () => {
               )}
             </div>
           </div>
-          <section className="h-screen w-screen">
+          <section className="h-[80vh] w-screen">
             <div className="pointer-events-none flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="pointer-events-auto mb-2 max-w-xl text-lg text-white md:text-2xl">
-                Powered by nebula labs
+                Powered by <a href="https://utdnebula.com/">Nebula Labs</a>
               </h2>
               <h1 className="pointer-events-auto mb-4 max-w-3xl px-5 text-center font-sans text-2xl font-semibold text-white md:px-0 md:text-6xl">
                 Discover the Best Clubs and Organizations at UTD
               </h1>
               <HomePageSearchBar />
+              <div className="pointer-events-auto mt-2 flex max-w-2xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
+                <div>Popular tags:</div>
+                {tags.map((tag) => (
+                  <TagPill name={tag} key={tag} />
+                ))}
+              </div>
             </div>
-          </section>
-          <section className="absolute left-1/2 -translate-x-1/2">
-            <ExploreButton />
           </section>
           <section className="h-full w-full">
             <div className="px-2 md:px-5" id="content">
-              <TagFilter tags={tags} />
               <ClubDirectoryGrid session={session} />
             </div>
           </section>

@@ -13,10 +13,10 @@ interface Props {
 }
 
 const ClubDirectoryGrid: FC<Props> = ({ session }) => {
-  const { search, tag } = useSearchStore((state) => state);
+  const { search, tags } = useSearchStore((state) => state);
   const api = useTRPC();
   const { data } = useQuery(
-    api.club.all.queryOptions({ name: search, tag, limit: 9 }),
+    api.club.search.queryOptions({ search: search, tags: tags, limit: 9 }),
   );
 
   return (
@@ -26,7 +26,7 @@ const ClubDirectoryGrid: FC<Props> = ({ session }) => {
           <ClubCard key={club.id} club={club} session={session} priority />
         ))}
       {data && data.clubs.length === 9 && (
-        <InfiniteScrollGrid tag={tag} session={session} />
+        <InfiniteScrollGrid tags={tags} session={session} />
       )}
       <ScrollTop />
     </div>
