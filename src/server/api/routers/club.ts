@@ -197,28 +197,28 @@ export const clubRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createClubSchema)
     .mutation(async ({ input, ctx }) => {
-      //Create unique id based on name
-      const baseId = input.name
+      //Create unique slug based on name
+      const baseSlug = input.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
       const existing = await ctx.db.query.club.findMany({
-        where: (club, { like }) => like(club.id, `${baseId}%`),
-        columns: { id: true },
+        where: (club, { like }) => like(club.slug, `${baseSlug}%`),
+        columns: { slug: true },
       });
-      const existingIds = new Set(existing.map((c) => c.id));
-      let id = baseId;
+      const existingSlugs = new Set(existing.map((c) => c.id));
+      let slug = baseSlug;
       let counter = 2;
-      while (existingIds.has(id)) {
-        id = `${baseId}-${counter++}`;
+      while (existingSlugs.has(slug)) {
+        slug = `${baseSlug}-${counter++}`;
       }
 
       const res = await ctx.db
         .insert(club)
         .values({
-          id: id,
           name: input.name,
           description: input.description,
+          slug,
         })
         .returning({ id: club.id });
 

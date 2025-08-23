@@ -23,6 +23,7 @@ export const club = pgTable('club', {
   id: text('id')
     .default(sql`nanoid(20)`)
     .primaryKey(),
+  slug: text('slug').notNull(),
   name: text('name').notNull(),
   description: text('description').notNull(),
   tags: text('tags')
