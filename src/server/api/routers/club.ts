@@ -36,18 +36,16 @@ const allSchema = z.object({
   limit: z.number().min(1).max(50).default(10),
   initialCursor: z.number().min(0).default(0),
 });
-const createClubSchema = baseClubSchema
-  .omit({ clubId: true, officers: true })
-  .extend({
-    officers: z
-      .object({
-        id: z.string().min(1),
-        position: z.string(),
-        president: z.boolean(),
-      })
-      .array()
-      .min(1),
-  });
+const createClubSchema = baseClubSchema.omit({ officers: true }).extend({
+  officers: z
+    .object({
+      id: z.string().min(1),
+      position: z.string(),
+      president: z.boolean(),
+    })
+    .array()
+    .min(1),
+});
 
 export const clubRouter = createTRPCRouter({
   edit: clubEditRouter,

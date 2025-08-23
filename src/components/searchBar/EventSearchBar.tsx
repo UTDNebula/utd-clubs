@@ -1,11 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import type { SelectEvent as Event } from '@src/server/db/models';
 import useDebounce from '@src/utils/useDebounce';
 import SearchBar from '.';
 import { SearchResults, SearchResultsItem } from './SearchResults';
+import { useQuery } from '@tanstack/react-query';
 
 export const EventSearchBar = () => {
   const router = useRouter();
@@ -13,13 +14,12 @@ export const EventSearchBar = () => {
   const debouncedSearch = useDebounce(input, 300);
   const [focused, setFocused] = useState(false);
   const debouncedFocused = useDebounce(focused, 300);
-
-  const { data } = api.event.byName.useQuery(
-    {
-      name: debouncedSearch,
-      sortByDate: true,
-    },
-    { enabled: !!input },
+  const api = useTRPC();
+  const { data } = useQuery(
+    api.event.byName.queryOptions(
+      { name: debouncedSearch, sortByDate: true },
+      { enabled: !!input },
+    ),
   );
   const onClickSearchResult = (event: Event) => {
     router.push(`/event/${event.id}`);

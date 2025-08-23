@@ -1,13 +1,17 @@
-import { headers } from 'next/headers';
+import 'server-only';
 
-import { createCaller } from '@src/server/api/root';
 import { createTRPCContext } from '@src/server/api/trpc';
 import { cache } from 'react';
+import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query';
+import { appRouter } from '@src/server/api/root';
+import { makeQueryClient } from './shared';
 
-const createContext = cache(() => {
-  const heads = new Headers(headers());
-  heads.set('x-trpc-source', 'rsc');
-  return createTRPCContext({ headers: heads });
+export const getQueryClient = cache(makeQueryClient);
+
+export const trpc = createTRPCOptionsProxy({
+  ctx: createTRPCContext,
+  router: appRouter,
+  queryClient: getQueryClient,
 });
 
-export const api = createCaller(createContext);
+export const api = appRouter.createCaller(createTRPCContext);

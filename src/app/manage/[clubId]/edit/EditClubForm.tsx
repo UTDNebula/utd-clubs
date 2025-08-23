@@ -2,8 +2,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type SelectClub, type SelectContact } from '@src/server/db/models';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { editClubSchema } from '@src/utils/formSchemas';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
@@ -27,11 +28,14 @@ const EditClubForm = ({
     },
   });
   const router = useRouter();
-  const editData = api.club.edit.data.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const api = useTRPC();
+  const editData = useMutation(
+    api.club.edit.data.mutationOptions({
+      onSuccess: () => {
+        router.refresh();
+      },
+    }),
+  );
   const submitForm = handleSubmit((data) => {
     if (!editData.isPending) {
       editData.mutate(data);
@@ -40,17 +44,17 @@ const EditClubForm = ({
   return (
     <form onSubmit={submitForm}>
       <div className="flex h-full w-full flex-col gap-y-5">
-        <div className="w-full rounded-md bg-slate-100 p-5 shadow-sm">
+        <div className="w-full rounded-md bg-slate-100 p-5 shadow-xs">
           <h1 className="text-xl font-extrabold text-black">
             Edit information
           </h1>
           <div className="flex flex-col gap-y-2 rounded-lg bg-slate-300 p-2">
-            <div className="w-full rounded-md bg-slate-100 p-1 shadow-sm">
+            <div className="w-full rounded-md bg-slate-100 p-1 shadow-xs">
               <h2 className="text-lg font-extrabold">Organization name</h2>
               <input
                 type="text"
                 id="name"
-                className=" w-full bg-transparent"
+                className="w-full bg-transparent"
                 {...register('name')}
                 aria-invalid={!!errors.name}
               />
@@ -58,7 +62,7 @@ const EditClubForm = ({
                 <p className="text-red-500">{errors.name.message}</p>
               )}
             </div>
-            <div className="h-44 w-full rounded-md bg-slate-100 p-1 shadow-sm">
+            <div className="h-44 w-full rounded-md bg-slate-100 p-1 shadow-xs">
               <h2 className="text-lg font-extrabold">Description</h2>
               <textarea
                 id="desc"

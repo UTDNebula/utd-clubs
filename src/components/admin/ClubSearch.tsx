@@ -1,11 +1,12 @@
 'use client';
 
-import { api } from '@src/trpc/react';
 import { useState } from 'react';
 import { type SelectClub } from '@src/server/db/models';
 import useDebounce from '@src/utils/useDebounce';
 import { SearchResults, SearchResultsItem } from '../searchBar/SearchResults';
 import SearchBar from '../searchBar';
+import { useTRPC } from '@src/trpc/react';
+import { useQuery } from '@tanstack/react-query';
 
 type Props = {
   setClub: ({ id, name }: { id: string; name: string }) => void;
@@ -16,9 +17,9 @@ export default function ClubSearch({ setClub }: Props) {
   const [focused, setFocused] = useState(false);
   const debouncedFocused = useDebounce(focused, 300);
   const debouncedSearch = useDebounce(search, 300);
-  const { data } = api.club.byName.useQuery(
-    { name: search },
-    { enabled: !!search },
+  const api = useTRPC();
+  const { data } = useQuery(
+    api.club.byName.queryOptions({ name: search }, { enabled: !!search }),
   );
 
   const onClickSearchResult = (club: SelectClub) => {

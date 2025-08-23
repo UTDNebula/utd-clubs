@@ -15,7 +15,7 @@ export const ProfileDropDown = ({ image }: Props) => {
         {image !== '' ? (
           <Image
             src={image}
-            className="h-10 w-10 rounded-full bg-gray-300 shadow-sm"
+            className="h-10 w-10 rounded-full bg-gray-300 shadow-xs"
             alt="Profile Image"
             height={40}
             width={40}

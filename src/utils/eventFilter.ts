@@ -11,7 +11,8 @@ export const eventParamsSchema = z.object({
     .string()
     .default('')
     .transform((s) => parseJSON(decodeURIComponent(s)))
-    .pipe(z.date().catch(startOfToday())),
+    .pipe(z.date())
+    .catch(startOfToday()),
 });
 
 export type eventParamsSchema = z.infer<typeof eventParamsSchema>;
