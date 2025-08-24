@@ -316,7 +316,7 @@ export const clubRouter = createTRPCRouter({
         const byId = await ctx.db.query.club.findFirst({
           where: (club) => eq(club.id, id),
         });
-        return byId.slug;
+        return byId?.slug;
       } catch (e) {
         console.error(e);
         throw e;

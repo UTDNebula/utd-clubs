@@ -35,7 +35,7 @@ export const adminRouter = createTRPCRouter({
     const orgs = await ctx.db.query.club.findMany({
       columns: {
         id: true,
-        slig: true,
+        slug: true,
         name: true,
         tags: true,
         approved: true,
