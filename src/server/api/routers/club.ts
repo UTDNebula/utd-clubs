@@ -210,7 +210,7 @@ export const clubRouter = createTRPCRouter({
         where: (club, { like }) => like(club.slug, `${baseSlug}%`),
         columns: { slug: true },
       });
-      const existingSlugs = new Set(existing.map((c) => c.id));
+      const existingSlugs = new Set(existing.map((c) => c.slug));
       let slug = baseSlug;
       let counter = 2;
       while (existingSlugs.has(slug)) {
