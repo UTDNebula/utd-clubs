@@ -9,10 +9,18 @@ import { db } from '@src/server/db';
 import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import NotFound from '@src/components/NotFound';
+import { redirect } from 'next/navigation'
 
 const ClubPage = async ({ params }: { params: { slug: string } }) => {
   const club = await api.club.getDirectoryInfo({ slug: params.slug });
-  if (!club) return <NotFound elementType="Club" />;
+  if (!club) {
+    // Backup: If using ID, redirect
+    const clubSlugById = await api.club.getSlug({ id: params.slug });
+    if (clubSlugById) {
+      redirect(`/directory/${clubSlugById}`)
+    }
+    return <NotFound elementType="Club" />;
+  }
 
   return (
     <main className="w-full">

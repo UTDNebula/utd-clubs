@@ -21,6 +21,10 @@ const byIdSchema = z.object({
   id: z.string().default(''),
 });
 
+const bySlugSchema = z.object({
+  slug: z.string().default(''),
+});
+
 const joinLeaveSchema = z.object({
   clubId: z.string().default(''),
 });
@@ -248,7 +252,7 @@ export const clubRouter = createTRPCRouter({
           };
         }),
       );
-      return clubId;
+      return slug;
     }),
   getOfficers: protectedProcedure
     .input(byIdSchema)
@@ -289,17 +293,30 @@ export const clubRouter = createTRPCRouter({
     return currentItems;
   }),
   getDirectoryInfo: publicProcedure
-    .input(byIdSchema)
-    .query(async ({ input: { id }, ctx }) => {
+    .input(bySlugSchema)
+    .query(async ({ input: { slug }, ctx }) => {
       try {
-        const byId = await ctx.db.query.club.findFirst({
-          where: (club) => eq(club.id, id),
+        const bySlug = await ctx.db.query.club.findFirst({
+          where: (club) => eq(club.slug, slug),
           with: {
             contacts: true,
             officers: true,
           },
         });
-        return byId;
+        return bySlug;
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    }),
+  getSlug: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input: { id }, ctx }) => {
+      try {
+        const byId = await ctx.db.query.club.findFirst({
+          where: (club) => eq(club.id, id),
+        });
+        return byId.slug;
       } catch (e) {
         console.error(e);
         throw e;

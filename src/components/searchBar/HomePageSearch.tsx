@@ -24,7 +24,7 @@ export const HomePageSearchBar = () => {
     ),
   );
   const onClickSearchResult = (club: Club) => {
-    router.push(`/directory/${club.id}`);
+    router.push(`/directory/${club.slug}`);
   };
   useEffect(() => {
     updateSearch(debouncedSearch);

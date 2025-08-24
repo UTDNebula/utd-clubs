@@ -101,7 +101,7 @@ export default async function EventsPage({ params }: Params) {
           <div className="flex flex-col">
             <CountdownTimer startTime={event.startTime} />
             <Link
-              href={`/directory/${club.id}`}
+              href={`/directory/${club.slug}`}
               className="border-blue-primary text-blue-primary mt-auto mr-8 block w-36 rounded-full border-2 py-4 text-center text-xs font-extrabold break-normal transition-colors hover:bg-blue-700 hover:text-white"
             >
               View Club
