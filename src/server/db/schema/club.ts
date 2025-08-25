@@ -6,6 +6,7 @@ import {
   pgTable,
   pgView,
   text,
+  unique,
 } from 'drizzle-orm/pg-core';
 import { events } from './events';
 import { userMetadataToClubs } from './users';
@@ -23,7 +24,7 @@ export const club = pgTable('club', {
   id: text('id')
     .default(sql`nanoid(20)`)
     .primaryKey(),
-  slug: text('slug'),
+  slug: text('slug').notNull().unique(),
   name: text('name').notNull(),
   description: text('description').notNull(),
   tags: text('tags')
