@@ -219,18 +219,21 @@ export const clubRouter = createTRPCRouter({
         );
       }
 
-      await ctx.db.insert(userMetadataToClubs).values(
-        input.officers.map((officer) => {
-          return {
-            userId: officer.id,
-            clubId: clubId,
-            memberType: officer.president
-              ? ('President' as const)
-              : ('Officer' as const),
-            title: officer.position,
-          };
-        }),
-      );
+      await ctx.db
+        .insert(userMetadataToClubs)
+        .values(
+          input.officers.map((officer) => {
+            return {
+              userId: officer.id,
+              clubId: clubId,
+              memberType: officer.president
+                ? ('President' as const)
+                : ('Officer' as const),
+              title: officer.position,
+            };
+          }),
+        )
+        .catch((e) => console.log(e));
       return clubId;
     }),
   getOfficers: protectedProcedure
