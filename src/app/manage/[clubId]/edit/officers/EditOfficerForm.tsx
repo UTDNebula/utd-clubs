@@ -2,8 +2,9 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { editOfficerSchema } from '@src/utils/formSchemas';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -88,11 +89,14 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
     remove(index);
   };
   const router = useRouter();
-  const editOfficers = api.club.edit.officers.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const api = useTRPC();
+  const editOfficers = useMutation(
+    api.club.edit.officers.mutationOptions({
+      onSuccess: () => {
+        router.refresh();
+      },
+    }),
+  );
   const submitForm = handleSubmit((data) => {
     if (dirtyFields.officers !== undefined) {
       const { modified, created } = modifiedFields(

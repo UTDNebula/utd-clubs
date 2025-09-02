@@ -16,7 +16,7 @@ const ClubUpcomingEvents: FC<{ clubId: string }> = async ({ clubId }) => {
   return (
     <div className="w-full rounded-lg bg-slate-100 p-6 md:p-10">
       <h1 className="text-2xl font-semibold text-gray-800">Upcoming Events</h1>
-      <div className="mt-4 flex flex-col space-y-4 md:mt-6 md:flex-row md:space-x-4 md:space-y-0">
+      <div className="mt-4 flex flex-col space-y-4 md:mt-6 md:flex-row md:space-y-0 md:space-x-4">
         {data.length > 0 ? (
           data.map((event) => (
             <Link

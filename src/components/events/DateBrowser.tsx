@@ -53,7 +53,7 @@ const DateBrowser = ({ filterState, setParams }: DateBrowserProps) => {
         <PopoverPortal>
           <PopoverContent className="flex items-center rounded-lg bg-white p-2 shadow-md">
             <DayPicker mode="default" {...dayPickerProps} />
-            <PopoverClose className="h-5 w-5 text-blue-primary" />
+            <PopoverClose className="text-blue-primary h-5 w-5" />
           </PopoverContent>
         </PopoverPortal>
       </Popover>

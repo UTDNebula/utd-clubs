@@ -23,11 +23,11 @@ const EventView = ({ children, searchParams }: Props) => {
 
   return (
     <div className="w-full px-6">
-      <div className="flex flex-col pt-4 md:flex-row md:items-end md:pb-12 md:pr-7.5">
+      <div className="flex flex-col pt-4 md:flex-row md:items-end md:pr-7.5 md:pb-12">
         <h1 className="h-min align-middle text-2xl font-bold text-[#4D5E80]">
           Events
         </h1>
-        <div className="relative z-0 mt-2.5 flex flex-row justify-center gap-x-16 md:ml-auto md:mt-0">
+        <div className="relative z-0 mt-2.5 flex flex-row justify-center gap-x-16 md:mt-0 md:ml-auto">
           {isMobile ? (
             <input
               type="date"
@@ -44,7 +44,7 @@ const EventView = ({ children, searchParams }: Props) => {
           )}
         </div>
       </div>
-      <div className="container flex w-full flex-col overflow-x-clip sm:flex-row sm:space-x-7.5 ">
+      <div className="container flex w-full flex-col overflow-x-clip sm:flex-row sm:space-x-7.5">
         <div
           data-view={'list'}
           className={
