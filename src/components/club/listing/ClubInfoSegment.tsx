@@ -36,7 +36,7 @@ const ClubInfoSegment: FC<{
             </p>
           </div>
         </div>
-        <div className="w-full">
+        <div className="w-full md:w-2/3">
           <p className="whitespace-pre-wrap text-slate-700">
             {club.description}
           </p>
@@ -48,13 +48,6 @@ const ClubInfoSegment: FC<{
               <div className="flex flex-col justify-center align-middle">
                 {club.officers.map((officer) => (
                   <div className="mt-5 flex flex-row" key={officer.id}>
-                    <Image
-                      src={club.profileImage ?? '/nebula-logo.png'}
-                      alt="Picture of the author"
-                      width={60}
-                      height={60}
-                      className="m-3 rounded-full"
-                    />
                     <div className="mx-5 flex flex-col justify-center align-middle">
                       <p className="text-left text-sm text-slate-600">
                         {officer.name}

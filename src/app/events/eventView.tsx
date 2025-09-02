@@ -2,7 +2,8 @@
 import DateBrowser from '@src/components/events/DateBrowser';
 import { type eventParamsSchema } from '@src/utils/eventFilter';
 import useSyncedSearchParams from '@src/utils/useSyncedSearchParams';
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
+
 type Props = {
   children: ReactNode;
   searchParams: eventParamsSchema;
@@ -10,6 +11,16 @@ type Props = {
 
 const EventView = ({ children, searchParams }: Props) => {
   const [params, setParams] = useSyncedSearchParams(searchParams, '/events');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () =>
+      setIsMobile(window.matchMedia('(max-width: 768px)').matches);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <div className="w-full px-6">
       <div className="flex flex-col pt-4 md:flex-row md:items-end md:pr-7.5 md:pb-12">
@@ -17,7 +28,20 @@ const EventView = ({ children, searchParams }: Props) => {
           Events
         </h1>
         <div className="relative z-0 mt-2.5 flex flex-row justify-center gap-x-16 md:mt-0 md:ml-auto">
-          <DateBrowser filterState={params} setParams={setParams} />
+          {isMobile ? (
+            <input
+              type="date"
+              value={
+                params.date
+                  ? new Date(params.date).toISOString().split('T')[0]
+                  : ''
+              }
+              onChange={(e) => setParams({ date: new Date(e.target.value) })}
+              className="rounded-md border px-3 py-2"
+            />
+          ) : (
+            <DateBrowser filterState={params} setParams={setParams} />
+          )}
         </div>
       </div>
       <div className="container flex w-full flex-col overflow-x-clip sm:flex-row sm:space-x-7.5">
