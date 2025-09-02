@@ -32,10 +32,11 @@ const ClubHeader = async ({ club }: { club: Club }) => {
           priority
         />
       </div>
-      <div className="absolute left-0 top-0 flex h-full w-full items-center p-8">
+      <div className="absolute top-0 left-0 flex h-full w-full items-center p-8">
         <h1
-          className={`font-bold text-slate-100 ${club.name.length > 10 ? 'text-3xl' : 'text-5xl'
-            }`}
+          className={`font-bold text-slate-100 ${
+            club.name.length > 10 ? 'text-3xl' : 'text-5xl'
+          }`}
         >
           {club.name}
         </h1>
@@ -43,7 +44,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
           {memberType === 'Officer' || memberType === 'President' ? (
             <Link
               href={`/manage/${club.id}`}
-              className="rounded-full bg-blue-primary p-2.5 text-white transition-colors hover:bg-blue-700"
+              className="bg-blue-primary rounded-full p-2.5 text-white transition-colors hover:bg-blue-700"
             >
               Manage
             </Link>
