@@ -2,7 +2,7 @@ import { relations } from 'drizzle-orm';
 import { pgEnum, pgTable, text, primaryKey } from 'drizzle-orm/pg-core';
 import { club } from './club';
 
-const platformEnum = pgEnum('platform', [
+export const platformEnum = pgEnum('platform', [
   'discord',
   'youtube',
   'twitch',

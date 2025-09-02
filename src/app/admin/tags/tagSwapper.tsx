@@ -1,11 +1,13 @@
 'use client';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 export default function TagSwapper() {
   const [oldTag, setOldTag] = useState('');
   const [newTag, setNewTag] = useState('');
-  const mutate = api.club.changeTags.useMutation();
+  const api = useTRPC();
+  const mutate = useMutation(api.club.changeTags.mutationOptions());
   return (
     <div className="rounded-lg bg-white p-5">
       <div>
@@ -38,7 +40,7 @@ export default function TagSwapper() {
       </div>
       <div className="mt-2 flex w-full">
         <button
-          className="ml-auto rounded-lg bg-blue-primary p-2 text-lg font-bold text-white disabled:opacity-50"
+          className="bg-blue-primary ml-auto rounded-lg p-2 text-lg font-bold text-white disabled:opacity-50"
           disabled={mutate.isPending}
           onClick={() => {
             mutate.mutate({ oldTag: oldTag, newTag: newTag });
@@ -48,7 +50,7 @@ export default function TagSwapper() {
         </button>
       </div>
       {mutate.isSuccess && (
-        <div className="mt-2 font-semibold text-blue-primary">
+        <div className="text-blue-primary mt-2 font-semibold">
           Modified the tags for {mutate.data.affected} clubs
         </div>
       )}

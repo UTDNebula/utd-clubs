@@ -13,18 +13,22 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import Link from 'next/link';
 import { useMemo, useRef, useState } from 'react';
 import Filter from './Filter';
-import { api } from '@src/trpc/react';
 import { useRouter } from 'next/navigation';
 import { type Club, fuzzyFilter } from '@src/utils/table';
 import StatusFilter from './StatusFilter';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 
 export default function ClubTable({ clubs }: { clubs: Club[] }) {
   const router = useRouter();
   const parentRef = useRef<HTMLDivElement>(null);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { mutate } = api.admin.deleteClub.useMutation({
-    onSuccess: () => router.refresh(),
-  });
+  const api = useTRPC();
+  const { mutate } = useMutation(
+    api.admin.deleteClub.mutationOptions({
+      onSuccess: () => router.refresh(),
+    }),
+  );
 
   const columns = useMemo<ColumnDef<Club>[]>(
     () => [
@@ -149,7 +153,7 @@ export default function ClubTable({ clubs }: { clubs: Club[] }) {
     <div ref={parentRef} className="container mx-auto p-4">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-left text-sm text-gray-500">
-          <thead className="bg-slate-100 text-xs uppercase text-slate-700">
+          <thead className="bg-slate-100 text-xs text-slate-700 uppercase">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

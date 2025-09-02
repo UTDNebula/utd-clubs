@@ -1,39 +1,43 @@
 'use client';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { type Session } from 'next-auth';
 import { useEffect, useRef } from 'react';
 import ClubCard, { ClubCardSkeleton } from '../ClubCard';
+import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 type Props = {
   session: Session | null;
   tag?: string;
 };
 
-export default function InfiniteScrollGrid({ session, tag }: Props) {
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    api.club.all.useInfiniteQuery(
-      { tag, limit: 9 },
-      {
-        getNextPageParam: (lastPage) =>
-          lastPage.clubs.length < 9 ? undefined : lastPage.cursor,
-        initialCursor: 9,
-      },
+export default function InfiniteScrollGrid({ session }: Props) {
+  const { search, tag } = useSearchStore((state) => state);
+  const api = useTRPC();
+  const { data, isLoading, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery(
+      api.club.all.infiniteQueryOptions(
+        { name: search, tag, limit: 9 },
+        {
+          getNextPageParam: (lastPage) =>
+            lastPage.clubs.length < 9 ? undefined : lastPage.cursor,
+          initialCursor: 9,
+        },
+      ),
     );
 
   const observer = useRef<IntersectionObserver>();
   const lastClubElementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isLoading || isFetchingNextPage) return;
-
-    if (observer.current) observer.current.disconnect();
-
-    observer.current = new IntersectionObserver((entries) => {
-      if (!entries[0]) return;
-      if (entries[0].isIntersecting) {
-        void fetchNextPage();
-      }
-    });
+    if (observer.current == undefined) {
+      observer.current = new IntersectionObserver((entries) => {
+        if (!entries[0]) return;
+        if (entries[0].isIntersecting) {
+          void fetchNextPage();
+        }
+      });
+    }
 
     if (lastClubElementRef.current) {
       observer.current.observe(lastClubElementRef.current);
@@ -42,7 +46,7 @@ export default function InfiniteScrollGrid({ session, tag }: Props) {
     return () => {
       if (observer.current) observer.current.disconnect();
     };
-  }, [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
+  }, [fetchNextPage, data]);
 
   return (
     <>

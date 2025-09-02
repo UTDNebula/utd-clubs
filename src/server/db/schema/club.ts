@@ -25,7 +25,6 @@ export const club = pgTable('club', {
     .primaryKey(),
   name: text('name').notNull(),
   description: text('description').notNull(),
-  image: text('image').default('/nebula-logo.png').notNull(),
   tags: text('tags')
     .array()
     .default(sql`'{}'::text[]`)
@@ -48,4 +47,6 @@ export const clubRelations = relations(club, ({ many }) => ({
 export const usedTags = pgView('used_tags', {
   tags: text('tags').notNull(),
   count: integer('count').notNull(),
-}).existing();
+}).as(
+  sql`select UNNEST(${club.tags}) as tags, COUNT(${club.tags}) as count from club group by UNNEST(${club.tags}) order by count desc`,
+);

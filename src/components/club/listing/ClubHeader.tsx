@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import ContactButtons from './ContactButtons';
 import type {
   SelectClub,
   SelectContact as Contacts,
@@ -8,6 +7,7 @@ import JoinButton from '../JoinButton';
 import { getServerAuthSession } from '@src/server/auth';
 import Link from 'next/link';
 import { api } from '@src/trpc/server';
+import ContactButtons from './ContactButtons';
 
 type Club = SelectClub & {
   contacts?: Contacts[];
@@ -34,9 +34,8 @@ const ClubHeader = async ({ club }: { club: Club }) => {
       </div>
       <div className="absolute left-0 top-0 flex h-full w-full items-center p-8">
         <h1
-          className={`font-bold text-slate-100 ${
-            club.name.length > 10 ? 'text-3xl' : 'text-5xl'
-          }`}
+          className={`font-bold text-slate-100 ${club.name.length > 10 ? 'text-3xl' : 'text-5xl'
+            }`}
         >
           {club.name}
         </h1>

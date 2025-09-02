@@ -1,7 +1,8 @@
 'use client';
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { CheckIcon, PlusIcon } from '@src/icons/Icons';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 type buttonProps = {
@@ -9,8 +10,9 @@ type buttonProps = {
   liked: boolean;
 };
 const EventLikeButton = ({ eventId, liked }: buttonProps) => {
-  const join = api.event.joinEvent.useMutation();
-  const leave = api.event.leaveEvent.useMutation();
+  const api = useTRPC();
+  const join = useMutation(api.event.joinEvent.mutationOptions());
+  const leave = useMutation(api.event.leaveEvent.mutationOptions());
   const router = useRouter();
   return (
     <button

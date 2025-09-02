@@ -2,6 +2,8 @@ import Header from '@src/components/header/BaseHeader';
 import ClubHeader from '@src/components/club/listing/ClubHeader';
 import ClubInfoSegment from '@src/components/club/listing/ClubInfoSegment';
 import ClubUpcomingEvents from '@src/components/club/listing/ClubUpcomingEvents';
+import ContactInformation from '@src/components/club/listing/ContactInformation';
+
 import { api } from '@src/trpc/server';
 import { db } from '@src/server/db';
 import { eq } from 'drizzle-orm';
@@ -13,12 +15,13 @@ const ClubPage = async ({ params }: { params: { id: string } }) => {
   if (!club) return <NotFound elementType="Club" />;
 
   return (
-    <main className="w-full md:pl-72">
+    <main className="w-full">
       <Header />
       <div className="mb-5 flex flex-col space-y-4 px-3">
         <ClubHeader club={club} />
         <ClubInfoSegment club={club} />
         <ClubUpcomingEvents clubId={club.id} />
+        <ContactInformation club={club} />
       </div>
     </main>
   );

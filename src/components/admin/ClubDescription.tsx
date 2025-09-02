@@ -9,11 +9,11 @@ type Props = {
 export default function ClubDescription({ club }: Props) {
   return (
     <Dialog.Root>
-      <Dialog.Trigger className="rounded-md bg-slate-300 px-3 py-2 font-medium text-blue-500 transition-colors hover:bg-slate-400 hover:text-blue-700 focus:outline-none focus:ring focus:ring-blue-300">
+      <Dialog.Trigger className="rounded-md bg-slate-300 px-3 py-2 font-medium text-blue-500 transition-colors hover:bg-slate-400 hover:text-blue-700 focus:ring-3 focus:ring-blue-300 focus:outline-hidden">
         View Details
       </Dialog.Trigger>
-      <Dialog.Overlay className="fixed inset-0 z-40 bg-black bg-opacity-40" />
-      <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-11/12 max-w-md -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-white p-6 shadow-xl">
+      <Dialog.Overlay className="fixed inset-0 z-40 bg-black/40" />
+      <Dialog.Content className="fixed top-1/2 left-1/2 z-50 w-11/12 max-w-md -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-white p-6 shadow-xl">
         <Dialog.Title className="mb-4 text-xl font-semibold text-gray-800">
           {club.name}
         </Dialog.Title>
@@ -35,7 +35,7 @@ export default function ClubDescription({ club }: Props) {
             </div>
           ))}
         </div>
-        <Dialog.Close className="rounded-md bg-blue-500 px-4 py-2 text-center text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
+        <Dialog.Close className="rounded-md bg-blue-500 px-4 py-2 text-center text-white transition-colors hover:bg-blue-600 focus:ring-3 focus:ring-blue-300 focus:outline-hidden">
           Close
         </Dialog.Close>
       </Dialog.Content>
