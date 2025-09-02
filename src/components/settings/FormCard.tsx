@@ -8,9 +8,10 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ClubSelector from '@src/components/settings/ClubSelector';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import DeleteButton from './DeleteButton';
 import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 
 type Props = {
   clubs: SelectClub[];
@@ -24,7 +25,7 @@ const settingsSchema = z.object({
   minor: z.string().nullable(),
   year: z.enum(['Freshman', 'Sophomore', 'Junior', 'Senior', 'Grad Student']),
   role: z.enum(['Student', 'Student Organizer', 'Administrator']),
-  clubs: selectClub.pick({ name: true, id: true, image: true }).array(),
+  clubs: selectClub.pick({ name: true, id: true, profileImage: true }).array(),
 });
 
 export type SettingSchema = z.infer<typeof settingsSchema>;
@@ -42,12 +43,15 @@ export default function FormCard({ clubs, user }: Props) {
       role: user.role,
     },
   });
+  const api = useTRPC();
 
-  const { mutate } = api.userMetadata.updateById.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const { mutate } = useMutation(
+    api.userMetadata.updateById.mutationOptions({
+      onSuccess: () => {
+        router.refresh();
+      },
+    }),
+  );
 
   return (
     <form
@@ -60,7 +64,7 @@ export default function FormCard({ clubs, user }: Props) {
         });
       })}
     >
-      <div className="grid w-fit grid-cols-1 gap-3  lg:grid-cols-2">
+      <div className="grid w-fit grid-cols-1 gap-3 lg:grid-cols-2">
         <div className="flex flex-col space-y-2">
           <div className="grid grid-cols-2 space-x-2">
             <SettingsInput
@@ -115,7 +119,7 @@ export default function FormCard({ clubs, user }: Props) {
           </div>
         </div>
 
-        <div className="w-full ">
+        <div className="w-full">
           <h2 className="mb-2 font-medium text-slate-500">Clubs</h2>
           <div className="max-h-96 overflow-auto">
             <ClubSelector register={register} control={control} />

@@ -1,5 +1,10 @@
-import { eq, ilike, sql, and, notInArray, inArray, lt, gt } from 'drizzle-orm';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { eq, ilike, sql, and, inArray, lt, gt } from 'drizzle-orm';
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from '../trpc';
 import { z } from 'zod';
 import { clubEditRouter } from './clubEdit';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
@@ -20,24 +25,27 @@ const joinLeaveSchema = z.object({
   clubId: z.string().default(''),
 });
 
+const tagReplaceSchema = z.object({
+  oldTag: z.string(),
+  newTag: z.string(),
+});
 const allSchema = z.object({
   tag: z.string().nullish(),
+  name: z.string().nullish(),
   cursor: z.number().min(0).default(0),
   limit: z.number().min(1).max(50).default(10),
   initialCursor: z.number().min(0).default(0),
 });
-const createClubSchema = baseClubSchema
-  .omit({ clubId: true, officers: true })
-  .extend({
-    officers: z
-      .object({
-        id: z.string().min(1),
-        position: z.string(),
-        president: z.boolean(),
-      })
-      .array()
-      .min(1),
-  });
+const createClubSchema = baseClubSchema.omit({ officers: true }).extend({
+  officers: z
+    .object({
+      id: z.string().min(1),
+      position: z.string(),
+      president: z.boolean(),
+    })
+    .array()
+    .min(1),
+});
 
 export const clubRouter = createTRPCRouter({
   edit: clubEditRouter,
@@ -78,28 +86,22 @@ export const clubRouter = createTRPCRouter({
     }
   }),
   all: publicProcedure.input(allSchema).query(async ({ ctx, input }) => {
-    const userID = ctx.session?.user.id;
     try {
-      let query = ctx.db
+      const query = ctx.db
         .select()
         .from(club)
         .limit(input.limit)
         .orderBy(club.name)
         .offset(input.cursor)
-        .where(eq(club.approved, 'approved'));
-
-      if (userID) {
-        const joinedClubs = ctx.db
-          .select({ clubId: userMetadataToClubs.clubId })
-          .from(userMetadataToClubs)
-          .where(eq(userMetadataToClubs.userId, userID));
-
-        query = query.where(notInArray(club.id, joinedClubs));
-      }
-
-      if (input.tag && input.tag !== 'All') {
-        query = query.where(sql`${input.tag} = ANY(${club.tags})`);
-      }
+        .where(
+          and(
+            eq(club.approved, 'approved'),
+            input.tag && input.tag !== 'All'
+              ? sql`${input.tag} = ANY(${club.tags})`
+              : undefined,
+            input.name ? ilike(club.name, `%${input.name}%`) : undefined,
+          ),
+        );
 
       const res = await query.execute();
       const newOffset = input.cursor + res.length;
@@ -285,5 +287,29 @@ export const clubRouter = createTRPCRouter({
         console.error(e);
         throw e;
       }
+    }),
+  changeTags: adminProcedure
+    .input(tagReplaceSchema)
+    .mutation(async ({ input, ctx }) => {
+      const clubsToChange = await ctx.db.query.club.findMany({
+        where: sql`${input.oldTag} = ANY(tags)`,
+      });
+      clubsToChange.map((club) => {
+        club.tags = club.tags.map((tag) =>
+          tag == input.oldTag ? input.newTag : tag,
+        );
+        return club;
+      });
+      const clubPromise: Promise<unknown>[] = [];
+      for (const clu of clubsToChange) {
+        clubPromise.push(
+          ctx.db
+            .update(club)
+            .set({ tags: clu.tags })
+            .where(eq(club.id, clu.id)),
+        );
+      }
+      await Promise.all(clubPromise);
+      return { affected: clubsToChange.length };
     }),
 });

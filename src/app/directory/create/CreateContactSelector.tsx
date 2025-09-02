@@ -161,6 +161,7 @@ const ContactInput = ({
       <div>
         <div>Link here</div>
         <input
+          className="bg-white"
           type="text"
           {...register(`contacts.${index}.url` as const)}
           aria-invalid={errors.contacts && !!errors.contacts[index]?.url}

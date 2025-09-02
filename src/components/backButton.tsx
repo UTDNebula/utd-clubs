@@ -10,7 +10,7 @@ const BackButton = () => {
       <button
         onClick={() => router.back()}
         type="button"
-        className="group box-content h-fit w-fit rounded-full bg-white p-2.5 shadow-sm shadow-slate-700"
+        className="group box-content h-fit w-fit rounded-full bg-white p-2.5 shadow-xs shadow-slate-700"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@ export const BlueBackButton = () => {
       <button
         onClick={() => router.back()}
         type="button"
-        className="box-content h-fit w-fit rounded-full bg-blue-primary p-2 hover:bg-blue-700 active:bg-blue-800"
+        className="bg-blue-primary box-content h-fit w-fit rounded-full p-2 hover:bg-blue-700 active:bg-blue-800"
       >
         <LeftArrowIcon />
       </button>

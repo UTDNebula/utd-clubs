@@ -38,15 +38,15 @@ export default async function EventsPage({ params }: Params) {
   const clubDetails = [club.name, event.location, 'No'];
 
   return (
-    <main className="w-full md:pl-72">
+    <main className="w-full">
       <EventHeader />
       <section className="px-7">
         <section className="mb-5 flex flex-col space-y-6">
-          <div className="relative flex h-full w-full flex-col justify-between gap-4 rounded-xl bg-[url('/images/wideWave.jpg')] bg-cover p-10 shadow-lg md:flex-row md:gap-0 ">
+          <div className="relative flex h-full w-full flex-col justify-between gap-4 rounded-xl bg-[url('/images/wideWave.jpg')] bg-cover p-10 shadow-lg md:flex-row md:gap-0">
             <section className="text-white">
               <div className="flex">
                 {club.tags.map((tag) => (
-                  <p key={tag} className=" mr-5 pb-12 pt-4 font-semibold ">
+                  <p key={tag} className="mr-5 pt-4 pb-12 font-semibold">
                     {tag}
                   </p>
                 ))}
@@ -66,14 +66,16 @@ export default async function EventsPage({ params }: Params) {
         </section>
         <section className="mb-5 flex flex-col space-y-6 rounded-xl bg-slate-100 p-5 text-black shadow-lg md:flex-row md:p-10">
           <div className="h-full max-w-sm lg:min-w-fit">
-            <div className="relative mx-auto h-40 w-full overflow-hidden rounded-b-md ">
-              <Image
-                src={club.image}
-                alt={club.name + ' logo'}
-                fill
-                className="object-cover"
-              />
-            </div>
+            {club.profileImage && (
+              <div className="relative mx-auto h-40 w-full overflow-hidden rounded-b-md">
+                <Image
+                  src={club.profileImage}
+                  alt={club.name + ' logo'}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
             <div className="mt-10 flex flex-col space-y-2 md:space-y-5">
               <h1 className="text-md font-semibold text-gray-700 md:text-sm">
                 Description
@@ -84,23 +86,23 @@ export default async function EventsPage({ params }: Params) {
                   className="flex justify-between text-sm text-slate-700 md:text-xs"
                 >
                   <p className="mr-5">{details}</p>
-                  <p className="text-right font-semibold ">
+                  <p className="text-right font-semibold">
                     {clubDetails[index]}
                   </p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="flex-grow text-sm md:mx-12">
+          <div className="grow text-sm md:mx-12">
             <p className="mt-4 whitespace-pre-wrap text-gray-500">
               {event.description}
             </p>
           </div>
-          <div className="flex flex-col ">
+          <div className="flex flex-col">
             <CountdownTimer startTime={event.startTime} />
             <Link
               href={`/directory/${club.id}`}
-              className="mr-8 mt-auto block w-36 break-normal rounded-full border-2 border-blue-primary py-4 text-center text-xs font-extrabold text-blue-primary transition-colors hover:bg-blue-700 hover:text-white"
+              className="border-blue-primary text-blue-primary mt-auto mr-8 block w-36 rounded-full border-2 py-4 text-center text-xs font-extrabold break-normal transition-colors hover:bg-blue-700 hover:text-white"
             >
               View Club
             </Link>

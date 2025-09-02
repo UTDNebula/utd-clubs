@@ -14,7 +14,7 @@ export default async function Page({
   if (!club) notFound();
   return (
     <main>
-      <div className="md:pl-72">
+      <div className="">
         <Header />
         <div className="flex h-full w-full flex-col gap-y-5 p-5">
           <BlueBackButton />

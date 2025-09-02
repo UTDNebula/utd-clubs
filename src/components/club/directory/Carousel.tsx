@@ -62,16 +62,21 @@ const Carousel = ({ clubs }: Props) => {
               style={getSlideStyle(key)}
             >
               <div className="relative h-full w-full">
-                <Image
-                  src={club.profileImage ? club.profileImage : club.image}
-                  alt="Picture of the club"
-                  width={1920}
-                  height={1080}
-                  className="h-full w-full rounded-lg object-cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-5">
-                  <div className="absolute bottom-4 left-4 right-4 rounded-lg bg-black bg-opacity-50 p-2 sm:p-4 md:p-6">
+                {club.profileImage ? (
+                  <Image
+                    src={club.profileImage}
+                    alt="Picture of the club"
+                    width={1920}
+                    height={1080}
+                    className="h-full w-full rounded-lg object-cover"
+                    priority
+                  />
+                ) : (
+                  <div className="absolute inset-0 h-full w-full bg-gray-200" />
+                )}
+                <div className="absolute inset-0 bg-black/5">
+                  {' '}
+                  <div className="absolute right-4 bottom-4 left-4 rounded-lg bg-black/50 p-2 sm:p-4 md:p-6">
                     <h1 className="text-lg font-bold text-white sm:text-xl md:text-3xl">
                       {club.name}
                     </h1>
@@ -80,7 +85,7 @@ const Carousel = ({ clubs }: Props) => {
                     </p>
                   </div>
                 </div>
-                <div className="absolute left-4 top-4 m-5 rounded-full bg-black bg-opacity-50 p-2 font-extrabold text-white sm:p-3">
+                <div className="absolute top-4 left-4 m-5 rounded-full bg-black/50 p-2 font-extrabold text-white sm:p-3">
                   FEATURED CLUB
                 </div>
               </div>
@@ -90,13 +95,13 @@ const Carousel = ({ clubs }: Props) => {
         {clubs.length > 1 && (
           <div className="pointer-events-none absolute inset-0 flex h-full w-full items-center justify-between px-4 sm:px-6 md:px-10">
             <button
-              className="pointer-events-auto flex items-center justify-center rounded-full bg-black bg-opacity-70 p-2 transition-all duration-300 hover:scale-110 hover:bg-opacity-80 sm:p-3 md:p-4"
+              className="pointer-events-auto flex items-center justify-center rounded-full bg-black/70 p-2 transition-all duration-300 hover:scale-110 hover:bg-black/80 sm:p-3 md:p-4"
               onClick={() => onClick(-1)}
             >
               <LeftArrowIcon />
             </button>
             <button
-              className="pointer-events-auto flex items-center justify-center rounded-full bg-black bg-opacity-70 p-2 transition-all duration-300 hover:scale-110 hover:bg-opacity-80 sm:p-3 md:p-4"
+              className="pointer-events-auto flex items-center justify-center rounded-full bg-black/70 p-2 transition-all duration-300 hover:scale-110 hover:bg-black/80 sm:p-3 md:p-4"
               onClick={() => onClick(1)}
             >
               <RightArrowIcon />

@@ -39,7 +39,7 @@ export default function StatusFilter<T>({ column }: Props<T>) {
     <select
       value={value}
       onChange={(e) => updateFilterValue(e.target.value)}
-      className="rounded border shadow"
+      className="rounded-sm border shadow-sm"
     >
       <option value="All">All</option>
       <option value="approved">Approved</option>

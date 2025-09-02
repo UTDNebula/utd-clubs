@@ -1,24 +1,33 @@
+'use client';
 import { type FC } from 'react';
 import ClubCard from '../ClubCard';
-import { api } from '@src/trpc/server';
-import { getServerAuthSession } from '@src/server/auth';
 import InfiniteScrollGrid from './InfiniteScrollGrid';
 import ScrollTop from './ScrollTop';
+import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import { type Session } from 'next-auth';
+import { useTRPC } from '@src/trpc/react';
+import { useQuery } from '@tanstack/react-query';
 
 interface Props {
-  tag?: string;
+  session: Session | null;
 }
 
-const ClubDirectoryGrid: FC<Props> = async ({ tag }) => {
-  const { clubs } = await api.club.all({ tag, limit: 9 });
-  const session = await getServerAuthSession();
+const ClubDirectoryGrid: FC<Props> = ({ session }) => {
+  const { search, tag } = useSearchStore((state) => state);
+  const api = useTRPC();
+  const { data } = useQuery(
+    api.club.all.queryOptions({ name: search, tag, limit: 9 }),
+  );
 
   return (
     <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">
-      {clubs.map((club) => (
-        <ClubCard key={club.id} club={club} session={session} priority />
-      ))}
-      {clubs.length === 9 && <InfiniteScrollGrid tag={tag} session={session} />}
+      {data &&
+        data.clubs.map((club) => (
+          <ClubCard key={club.id} club={club} session={session} priority />
+        ))}
+      {data && data.clubs.length === 9 && (
+        <InfiniteScrollGrid tag={tag} session={session} />
+      )}
       <ScrollTop />
     </div>
   );

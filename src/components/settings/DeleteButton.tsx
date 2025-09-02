@@ -1,11 +1,15 @@
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import { signOut } from 'next-auth/react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import { useMutation } from '@tanstack/react-query';
 
 export default function DeleteButton() {
-  const { mutate } = api.userMetadata.deleteById.useMutation({
-    onSuccess: async () => await signOut(),
-  });
+  const api = useTRPC();
+  const { mutate } = useMutation(
+    api.userMetadata.deleteById.mutationOptions({
+      onSuccess: async () => await signOut(),
+    }),
+  );
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
@@ -16,8 +20,8 @@ export default function DeleteButton() {
           Delete account
         </button>
       </AlertDialog.Trigger>
-      <AlertDialog.Overlay className="fixed inset-0 bg-black bg-opacity-30 " />
-      <AlertDialog.Content className="fixed left-1/2 top-1/2 flex h-80 max-h-[85vh] w-[90vw] max-w-3xl -translate-x-1/2 -translate-y-1/2 flex-col items-center space-y-8 rounded-3xl bg-white p-12 shadow focus:outline-none">
+      <AlertDialog.Overlay className="fixed inset-0 bg-black/30" />
+      <AlertDialog.Content className="fixed top-1/2 left-1/2 flex h-80 max-h-[85vh] w-[90vw] max-w-3xl -translate-x-1/2 -translate-y-1/2 flex-col items-center space-y-8 rounded-3xl bg-white p-12 shadow-sm focus:outline-hidden">
         <AlertDialog.Title className="m-0 text-center text-4xl font-bold">
           Are you sure?
         </AlertDialog.Title>

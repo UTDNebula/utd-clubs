@@ -2,7 +2,6 @@
 import { type FC, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { IconMap, type allCats, routeMap } from '@src/constants/categories';
-import { RightChevron } from '@src/icons/Icons';
 
 const SidebarItems: FC<{ cat: allCats[number] }> = ({ cat }) => {
   const Icon = IconMap[cat];
@@ -35,8 +34,7 @@ const SidebarItems: FC<{ cat: allCats[number] }> = ({ cat }) => {
       onMouseOut={handleMouseOut}
     >
       <div
-        className=" 
-        flex h-full w-full cursor-pointer items-start rounded-lg bg-transparent px-5 text-base transition-transform md:w-64 md:text-sm"
+        className="flex h-full w-full cursor-pointer items-start rounded-lg bg-transparent px-5 text-base transition-transform md:w-64 md:text-sm"
         onClick={() => void router.push(route)}
       >
         <div className="flex items-center gap-x-4">
@@ -54,9 +52,6 @@ const SidebarItems: FC<{ cat: allCats[number] }> = ({ cat }) => {
           >
             {cat}
           </h1>
-        </div>
-        <div className="ml-auto">
-          <RightChevron />
         </div>
       </div>
     </div>
