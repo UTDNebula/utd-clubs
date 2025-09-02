@@ -1,8 +1,9 @@
 'use client';
-import { api } from '@src/trpc/react';
 import type { SelectClub as Club } from '@src/server/db/models';
 import { type Session } from 'next-auth';
 import ClubCard from '@src/components/club/ClubCard';
+import { useTRPC } from '@src/trpc/react';
+import { useQuery } from '@tanstack/react-query';
 
 interface ClubSearchComponentProps {
   userSearch: string;
@@ -13,9 +14,12 @@ export const ClubSearchComponent = ({
   userSearch,
   session,
 }: ClubSearchComponentProps) => {
-  const { data } = api.club.byNameNoLimit.useQuery(
-    { name: userSearch },
-    { enabled: !!userSearch },
+  const api = useTRPC();
+  const { data } = useQuery(
+    api.club.byNameNoLimit.queryOptions(
+      { name: userSearch },
+      { enabled: !!userSearch },
+    ),
   );
 
   if (!data) {

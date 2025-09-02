@@ -25,18 +25,20 @@ export default function ClubSelector({ control }: Props) {
             className="m-2 flex min-w-[10rem] items-center justify-center rounded-full border p-2"
             key={club.id}
           >
-            <Image
-              src={club.image}
-              alt={club.name}
-              width={40}
-              height={40}
-              className="-pl-1 rounded-full pr-1"
-            />
+            {club.profileImage && (
+              <Image
+                src={club.profileImage}
+                alt={club.name + ' logo'}
+                width={40}
+                height={40}
+                className="-pl-1 rounded-full pr-1"
+              />
+            )}
             <h1 className="truncate p-1 text-xs font-bold">{club.name}</h1>
 
             <button
               type="button"
-              className="ml-2 rounded-full  px-1  text-xs font-bold text-black"
+              className="ml-2 rounded-full px-1 text-xs font-bold text-black"
               onClick={() => remove(i)}
             >
               X

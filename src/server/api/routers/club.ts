@@ -21,6 +21,10 @@ const byIdSchema = z.object({
   id: z.string().default(''),
 });
 
+const bySlugSchema = z.object({
+  slug: z.string().default(''),
+});
+
 const joinLeaveSchema = z.object({
   clubId: z.string().default(''),
 });
@@ -36,18 +40,16 @@ const allSchema = z.object({
   limit: z.number().min(1).max(50).default(10),
   initialCursor: z.number().min(0).default(0),
 });
-const createClubSchema = baseClubSchema
-  .omit({ clubId: true, officers: true })
-  .extend({
-    officers: z
-      .object({
-        id: z.string().min(1),
-        position: z.string(),
-        president: z.boolean(),
-      })
-      .array()
-      .min(1),
-  });
+const createClubSchema = baseClubSchema.omit({ officers: true }).extend({
+  officers: z
+    .object({
+      id: z.string().min(1),
+      position: z.string(),
+      president: z.boolean(),
+    })
+    .array()
+    .min(1),
+});
 
 export const clubRouter = createTRPCRouter({
   edit: clubEditRouter,
@@ -199,11 +201,28 @@ export const clubRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createClubSchema)
     .mutation(async ({ input, ctx }) => {
+      //Create unique slug based on name
+      const baseSlug = input.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      const existing = await ctx.db.query.club.findMany({
+        where: (club, { like }) => like(club.slug, `${baseSlug}%`),
+        columns: { slug: true },
+      });
+      const existingSlugs = new Set(existing.map((c) => c.slug));
+      let slug = baseSlug;
+      let counter = 2;
+      while (existingSlugs.has(slug)) {
+        slug = `${baseSlug}-${counter++}`;
+      }
+
       const res = await ctx.db
         .insert(club)
         .values({
           name: input.name,
           description: input.description,
+          slug,
         })
         .returning({ id: club.id });
 
@@ -221,19 +240,22 @@ export const clubRouter = createTRPCRouter({
         );
       }
 
-      await ctx.db.insert(userMetadataToClubs).values(
-        input.officers.map((officer) => {
-          return {
-            userId: officer.id,
-            clubId: clubId,
-            memberType: officer.president
-              ? ('President' as const)
-              : ('Officer' as const),
-            title: officer.position,
-          };
-        }),
-      );
-      return clubId;
+      await ctx.db
+        .insert(userMetadataToClubs)
+        .values(
+          input.officers.map((officer) => {
+            return {
+              userId: officer.id,
+              clubId: clubId,
+              memberType: officer.president
+                ? ('President' as const)
+                : ('Officer' as const),
+              title: officer.position,
+            };
+          }),
+        )
+        .catch((e) => console.log(e));
+      return slug;
     }),
   getOfficers: protectedProcedure
     .input(byIdSchema)
@@ -274,17 +296,30 @@ export const clubRouter = createTRPCRouter({
     return currentItems;
   }),
   getDirectoryInfo: publicProcedure
-    .input(byIdSchema)
-    .query(async ({ input: { id }, ctx }) => {
+    .input(bySlugSchema)
+    .query(async ({ input: { slug }, ctx }) => {
       try {
-        const byId = await ctx.db.query.club.findFirst({
-          where: (club) => eq(club.id, id),
+        const bySlug = await ctx.db.query.club.findFirst({
+          where: (club) => eq(club.slug, slug),
           with: {
             contacts: true,
             officers: true,
           },
         });
-        return byId;
+        return bySlug;
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    }),
+  getSlug: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input: { id }, ctx }) => {
+      try {
+        const byId = await ctx.db.query.club.findFirst({
+          where: (club) => eq(club.id, id),
+        });
+        return byId?.slug;
       } catch (e) {
         console.error(e);
         throw e;

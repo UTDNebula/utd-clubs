@@ -28,7 +28,7 @@ const ContactInformation = ({ club }: { club: Club }) => {
         />
       </div>
 
-      <div className="absolute left-0 top-0 flex h-full w-full items-center justify-between p-6">
+      <div className="absolute top-0 left-0 flex h-full w-full items-center justify-between p-6">
         <div className="text-2xl font-bold text-blue-700">
           Contact Information
         </div>

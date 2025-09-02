@@ -1,7 +1,6 @@
 import '@src/styles/globals.css';
 
 import { Inter } from 'next/font/google';
-import { headers } from 'next/headers';
 
 import { TRPCReactProvider } from '@src/trpc/react';
 import { type Metadata } from 'next';
@@ -43,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
+        <TRPCReactProvider>{children}</TRPCReactProvider>
         {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
           <GoogleAnalytics gaId="G-FYTBHVKNG6" />
         )}

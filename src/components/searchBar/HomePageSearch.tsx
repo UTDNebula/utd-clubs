@@ -2,11 +2,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { SelectClub as Club } from '@src/server/db/models';
-import { api } from '@src/trpc/react';
+import { useTRPC } from '@src/trpc/react';
 import SearchBar from '.';
 import useDebounce from '@src/utils/useDebounce';
 import { SearchResults, SearchResultsItem } from './SearchResults';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import { useQuery } from '@tanstack/react-query';
 
 export const HomePageSearchBar = () => {
   const router = useRouter();
@@ -15,12 +16,15 @@ export const HomePageSearchBar = () => {
   const debouncedFocused = useDebounce(focused, 300);
   const debouncedSearch = useDebounce(search, 300);
   const updateSearch = useSearchStore((state) => state.setSearch);
-  const { data } = api.club.byName.useQuery(
-    { name: debouncedSearch },
-    { enabled: !!debouncedSearch },
+  const api = useTRPC();
+  const { data } = useQuery(
+    api.club.byName.queryOptions(
+      { name: debouncedSearch },
+      { enabled: !!debouncedSearch },
+    ),
   );
   const onClickSearchResult = (club: Club) => {
-    router.push(`/directory/${club.id}`);
+    router.push(`/directory/${club.slug}`);
   };
   useEffect(() => {
     updateSearch(debouncedSearch);

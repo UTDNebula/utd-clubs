@@ -15,7 +15,7 @@ const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
 
   return (
     <Link
-      className={`group block flex flex items-center gap-x-4 rounded-full px-5 ${
+      className={`group block flex items-center gap-x-4 rounded-full px-5 ${
         active
           ? '-my-2.5 mb-2.5 bg-white py-2.5 shadow-md last:-mb-2.5'
           : 'mb-5'

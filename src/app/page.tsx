@@ -32,12 +32,9 @@ const Home = async () => {
     <SearchStoreProvider>
       <main className="relative bg-white">
         {/* <Header /> */}
-        <div title="background-shenanigans" className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0">
           <div className="relative h-[120vh] w-screen">
-            <section
-              title="gradient"
-              className="absolute inset-0 z-0 h-[120vh] w-screen"
-            >
+            <section className="absolute inset-0 z-0 h-[120vh] w-screen">
               <Image
                 src={gradientBG}
                 fill
@@ -46,13 +43,10 @@ const Home = async () => {
                 className="bg-no-repeat object-cover"
               />
             </section>
-            <section
-              title="blend"
-              className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-gradient-to-t from-white to-transparent"
-            ></section>
+            <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"></section>
           </div>
         </div>
-        <div title="content" className="relative inset-0 z-20 bg-transparent">
+        <div className="relative inset-0 z-20 bg-transparent">
           <div className="pointer-events-none fixed top-0 z-20 flex h-20 w-full flex-row items-center px-2.5 py-2.5 md:px-5">
             <Sidebar hamburger="black" />
             <div className="pointer-events-auto ml-auto flex items-center justify-center">
@@ -68,7 +62,7 @@ const Home = async () => {
             </div>
           </div>
           <section className="h-screen w-screen">
-            <div className="pointer-events-none flex   h-full w-full flex-col items-center justify-center overflow-visible">
+            <div className="pointer-events-none flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="pointer-events-auto mb-2 max-w-xl text-lg text-white md:text-2xl">
                 Powered by nebula labs
               </h2>
