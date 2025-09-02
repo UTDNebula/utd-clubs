@@ -34,7 +34,7 @@ const CreateClubForm = ({ user }: { user: { id: string; name: string } }) => {
   const api = useTRPC();
   const createClub = useMutation(
     api.club.create.mutationOptions({
-      onSuccess: (id) => router.push(`/directory/${id}`),
+      onSuccess: (slug) => router.push(`/directory/${slug}`),
     }),
   );
   const submitForm = handleSubmit((data) => {
