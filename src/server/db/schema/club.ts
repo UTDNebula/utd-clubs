@@ -55,8 +55,8 @@ export const clubRelations = relations(club, ({ many }) => ({
 }));
 
 export const usedTags = pgView('used_tags', {
-  tags: text('tags').notNull(),
+  tag: text('tag').notNull(),
   count: integer('count').notNull(),
 }).as(
-  sql`select UNNEST(${club.tags}) as tags, COUNT(${club.tags}) as count from club group by UNNEST(${club.tags}) order by count desc`,
+  sql`select UNNEST(${club.tags}) as tag, COUNT(${club.tags}) as count from club group by UNNEST(${club.tags}) order by count desc`,
 );

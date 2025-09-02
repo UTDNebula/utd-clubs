@@ -124,9 +124,7 @@ export const clubRouter = createTRPCRouter({
   }),
   distinctTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = (await ctx.db.select().from(usedTags)).map(
-        (obj) => obj.tags,
-      );
+      const tags = (await ctx.db.select().from(usedTags)).map((obj) => obj.tag);
       return tags;
     } catch (e) {
       console.error(e);
