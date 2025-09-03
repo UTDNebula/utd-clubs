@@ -43,7 +43,12 @@ const DateBrowser = ({ filterState, setParams }: DateBrowserProps) => {
       </button>
       <Popover defaultOpen={false}>
         <PopoverTrigger>
-          <input name="date" className="bg-white" {...inputProps} />
+          <input
+            name="date"
+            {...inputProps}
+            readOnly
+            className="focus:outline-none"
+          />
         </PopoverTrigger>
         <PopoverPortal>
           <PopoverContent className="flex items-center rounded-lg bg-white p-2 shadow-md">

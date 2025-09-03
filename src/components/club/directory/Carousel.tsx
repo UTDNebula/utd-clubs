@@ -58,7 +58,7 @@ const Carousel = ({ clubs }: Props) => {
             <Link
               className="absolute inset-0 h-full w-full"
               key={key}
-              href={`/directory/${club.id}`}
+              href={`/directory/${club.slug}`}
               style={getSlideStyle(key)}
             >
               <div className="relative h-full w-full">

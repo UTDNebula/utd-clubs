@@ -22,7 +22,7 @@ export const ClubSearchBar = () => {
     ),
   );
   const onClickSearchResult = (club: Club) => {
-    router.push(`/directory/${club.id}`);
+    router.push(`/directory/${club.slug}`);
   };
   return (
     <div className="relative mr-3 w-full max-w-xs md:max-w-sm lg:max-w-md">

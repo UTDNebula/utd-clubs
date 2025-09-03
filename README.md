@@ -5,15 +5,15 @@ _A tool to find ways to get involved on campus._
 ## Contributing
 
 We are always open to contributions to the project. If you would like to contribute and want some guidance on where to start,
-please join our [Discord](http://discord.utdnebula.com/) and ask for drop a message in the `#jupiter-chat` channel or
-DM Ruben for more details.
+please join our [Discord](http://discord.utdnebula.com/) and ask for drop a message in the `#jupiter-general` channel or
+DM Braedon for more details.
 
 Currently, we're tracking all issues via GitHub Issues. If you would like to work on an issue, please comment on the issue and we will assign it to you.
 If you see anything that you think could be improved, please create an issue and we will look into it.
 
 ### Getting Started
 
-Please make sure you have at least [NodeJS v18.0.0](https://nodejs.org/en) or greater installed before continuing.
+Please make sure you have at least [NodeJS v21.1.0](https://nodejs.org/en) or greater installed before continuing.
 
 Start by cloning the repository to your local machine.
 
@@ -44,71 +44,9 @@ or by running the following command in your terminal.
 openssl rand -hex 32
 ```
 
-Jupiter uses an ORM called [Drizzle](https://orm.drizzle.team/) to interact with the database. In order to connect to the database, you will need to add the `DATABASE_URL` variable to your `.env` file.
-
-We're using Supabase as our database provider. You can create a supabase account [here](https://supabase.io/). Once you have created an account, you can create a new project and add the `DATABASE_URL` to your `.env` file. From a Supabase project, you can find the `DATABASE_URL` by navigating to the `Settings` tab and clicking on the `Database` tab.
+Jupiter uses an ORM called [Drizzle](https://orm.drizzle.team/) to interact with the database. In order to connect to the database, you will need to add the `DATABASE_URL` variable to your `.env` file. Your project lead will give this to you upon request.
 
 The Nebula API is used for image storage. The `NEBULA_API_URL` variable should be set to `https://api.utdnebula.com/` and the `NEBULA_API_STORAGE_BUCKET` variable to `jupiter`. An API key and storage key should be requested from the project lead for the `NEBULA_API_KEY` and `NEBULA_API_STORAGE_KEY` variables.
-
-#### Database Migrations
-
-In your SQL editor, you will have to run a couple commands in order to properly set up the database
-
-<details>
-<summary>Nanoid</summary><br />
-
-Run the following command to install the nanoid extension.
-
-```sql
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
-CREATE OR REPLACE FUNCTION nanoid(size int DEFAULT 21, alphabet text DEFAULT '_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    RETURNS text
-    LANGUAGE plpgsql
-    volatile
-AS
-$$
-DECLARE
-    idBuilder text := '';
-    i int := 0;
-    bytes bytea;
-    alphabetIndex int;
-    mask int;
-    step int;
-BEGIN
-    mask := (2 << cast(floor(log(length(alphabet) - 1) / log(2)) as int)) - 1;
-    step := cast(ceil(1.6 * mask * size / length(alphabet)) AS int);
-
-    while true
-        loop
-            bytes := gen_random_bytes(size);
-            while i < size
-                loop
-                    alphabetIndex := (get_byte(bytes, i) & mask) + 1;
-                    if alphabetIndex <= length(alphabet) then
-                        idBuilder := idBuilder || substr(alphabet, alphabetIndex, 1);
-                        if length(idBuilder) = size then
-                            return idBuilder;
-                        end if;
-                    end if;
-                    i = i + 1;
-                end loop;
-
-            i := 0;
-        end loop;
-END
-$$;
-```
-
-</details>
-
-Once you have added the `DATABASE_URL` to your `.env` file, and have all the necessary extensions, you will need to run the following commands to create the tables in your database.
-
-```bash
-npm run drizzle:push
-```
-
-These commands will create the tables in your database based on the models defined in the `src/server/db/schema.ts` directory. You would also run these commands anytime there are changes to `schema.ts` in order to update the database.
 
 Finally, start the development server.
 

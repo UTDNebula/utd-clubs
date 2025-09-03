@@ -40,7 +40,7 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
       <div className="m-5 mt-auto flex flex-row space-x-2">
         <JoinButton session={session} clubID={club.id} />
         <Link
-          href={`/directory/${club.id}`}
+          href={`/directory/${club.slug}`}
           className="text-blue-primary rounded-2xl bg-blue-600/10 px-4 py-2 text-xs font-extrabold transition-colors hover:bg-blue-200"
         >
           Learn More

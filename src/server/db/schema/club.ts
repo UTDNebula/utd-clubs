@@ -8,6 +8,7 @@ import {
   pgMaterializedView,
   pgTable,
   text,
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
 import { events } from './events';
 import { userMetadataToClubs } from './users';
@@ -33,6 +34,7 @@ export const club = pgTable(
     id: text('id')
       .default(sql`nanoid(20)`)
       .primaryKey(),
+    slug: text('slug').notNull(),
     name: text('name').notNull(),
     description: text('description').notNull(),
     tags: text('tags')
@@ -50,7 +52,10 @@ export const club = pgTable(
                       setweight(to_tsvector('english', ${club.description}), 'C')`,
     ),
   },
-  (t) => [index('idx_club_search').using('gin', t.clubSearchVector)],
+  (t) => [
+    index('idx_club_search').using('gin', t.clubSearchVector),
+    uniqueIndex('club_slug_unique').on(t.slug),
+  ],
 );
 
 export const clubRelations = relations(club, ({ many }) => ({
