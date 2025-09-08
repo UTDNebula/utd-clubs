@@ -266,7 +266,11 @@ export const eventRouter = createTRPCRouter({
         .insert(events)
         .values({ ...input })
         .returning({ id: events.id });
-      if (res.length == 0) throw 'Failed to add event';
+      if (res.length == 0)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to add event',
+        });
       return res[0]?.id;
     }),
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {

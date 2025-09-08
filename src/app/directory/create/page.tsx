@@ -9,7 +9,7 @@ export default async function Page() {
   if (!session) redirect(signInRoute('directory/create'));
   return (
     <main>
-      <div className="md:pl-72">
+      <div className="">
         <Header />
         <CreateClubForm
           user={{
