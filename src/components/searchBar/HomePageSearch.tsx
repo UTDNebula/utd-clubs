@@ -24,9 +24,6 @@ export const HomePageSearchBar = () => {
       { enabled: !!debouncedSearch },
     ),
   );
-  const onClickSearchResult = (club: Club) => {
-    router.push(`/directory/${club.slug}`);
-  };
   useEffect(() => {
     updateSearch(debouncedSearch);
   }, [debouncedSearch, updateSearch]);
