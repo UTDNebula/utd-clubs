@@ -6,6 +6,7 @@ import NewSidebar from './Slide';
 const Sidebar = async ({ hamburger }: { hamburger?: 'white' | 'black' }) => {
   const userSidebarCapabilities =
     await api.userMetadata.getUserSidebarCapabilities();
+    console.log(userSidebarCapabilities)
   return (
     <NewSidebar
       userCapabilities={userSidebarCapabilities}
