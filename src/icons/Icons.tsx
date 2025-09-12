@@ -401,13 +401,14 @@ export const AdminIcon: IconType = ({ fill = defaultFill }) => (
     />
   </svg>
 );
-export const DownArrowIcon = () => (
+export const DownArrowIcon = ({ className }: { className: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="30"
     height="30"
     viewBox="0 0 30 30"
     fill="none"
+    className={className}
   >
     <path
       fill-rule="evenodd"

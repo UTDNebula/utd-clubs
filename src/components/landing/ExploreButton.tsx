@@ -13,8 +13,8 @@ const ExploreButton = () => {
           ?.scrollIntoView({ behavior: 'smooth' });
       }}
     >
-      <p className="text-center text-lg text-white">Explore Clubs</p>
-      <DownArrowIcon />
+      <p className="text-center text-lg text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">Explore Clubs</p>
+      <DownArrowIcon className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
     </button>
   );
 };
