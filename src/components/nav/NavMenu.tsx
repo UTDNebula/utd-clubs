@@ -16,7 +16,7 @@ const NavMenu = ({ userCapabilites }: NavMenuProps) => {
       <div className="flex w-full justify-center pt-10 pb-7">
         <Link className="flex items-center gap-1.5" href="/">
           <Image src="/nebula-logo.png" alt="" width={60} height={60} />
-          <h1 className="text-2xl font-display font-bold">Jupiter</h1>
+          <h1 className="font-display text-2xl font-bold">Jupiter</h1>
         </Link>
       </div>
       <div className="w-full px-5 py-5">

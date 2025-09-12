@@ -64,20 +64,22 @@ const Home = async () => {
           </div>
           <section className="h-screen w-screen">
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
-              <h2 className="text-sm font-semibold mb-3 text-white tracking-wider flex gap-1 items-center text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
+              <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
                 <span className="leading-none">POWERED BY</span>
                 {/*eslint-disable-next-line react/jsx-no-target-blank*/}
                 <a
                   href="https://www.utdnebula.com/"
                   target="_blank"
                   rel="noopener"
-                  className="group flex gap-1 items-center"
+                  className="group flex items-center gap-1"
                 >
                   <NebulaLogo className="h-4 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
-                  <span className="leading-none border-y-2 border-transparent group-hover:border-b-inherit group-hover:underline decoration-transparent transition">NEBULA LABS</span>
+                  <span className="border-y-2 border-transparent leading-none decoration-transparent transition group-hover:border-b-inherit group-hover:underline">
+                    NEBULA LABS
+                  </span>
                 </a>
               </h2>
-              <h1 className="mb-4 max-w-3xl px-5 text-center font-display text-2xl font-semibold text-white md:px-0 md:text-6xl text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)]">
+              <h1 className="font-display mb-4 max-w-3xl px-5 text-center text-2xl font-semibold text-white text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] md:px-0 md:text-6xl">
                 Discover the Best Clubs and Organizations at UTD
               </h1>
               <HomePageSearchBar />
