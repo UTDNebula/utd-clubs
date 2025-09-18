@@ -1,3 +1,5 @@
+import PillButton from '@src/components/PillButton';
+import { EyeIcon, PlusIcon } from '@src/icons/Icons';
 import Link from 'next/link';
 
 const Page = ({ params }: { params: { clubId: string } }) => {
@@ -19,12 +21,14 @@ const Page = ({ params }: { params: { clubId: string } }) => {
         <button className="bg-blue-primary rounded-md p-1 font-semibold text-white">
           View members
         </button>
-        <Link
+
+        <PillButton IconComponent={EyeIcon}>View Events</PillButton>
+        <PillButton
           href={`/manage/${params.clubId}/create`}
-          className="bg-blue-primary rounded-md p-1 font-semibold text-white"
+          IconComponent={PlusIcon}
         >
           Create Event
-        </Link>
+        </PillButton>
       </div>
     </>
   );
