@@ -1,8 +1,9 @@
 import { type FC } from 'react';
 
-export type IconType = FC<{ fill?: string }>;
+export type IconType = FC<{ fill?: string; size?: number }>;
 const defaultFill = 'fill-slate-400';
 const defaultHeartFill = 'fill-slate-800';
+const defaultSize = 24;
 
 export const HomeIcon: IconType = ({ fill = defaultFill }) => (
   <svg
@@ -415,6 +416,25 @@ export const DownArrowIcon = ({ className }: { className: string }) => (
       clip-rule="evenodd"
       d="M13.5925 8V19.17L8.7125 14.29C8.3225 13.9 7.6825 13.9 7.2925 14.29C6.9025 14.68 6.9025 15.31 7.2925 15.7L13.8825 22.29C14.2725 22.68 14.9025 22.68 15.2925 22.29L21.8825 15.7C22.2725 15.31 22.2725 14.68 21.8825 14.29C21.6957 14.1027 21.442 13.9975 21.1775 13.9975C20.913 13.9975 20.6593 14.1027 20.4725 14.29L15.5925 19.17V8C15.5925 7.45 15.1425 7 14.5925 7C14.0425 7 13.5925 7.45 13.5925 8Z"
       fill="#FFFFFF"
+    />
+  </svg>
+);
+export const EyeIcon: IconType = ({
+  fill = defaultFill,
+  size = defaultSize,
+}) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 16 16"
+    fill={fill}
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="m 8.000006,3.0000065 c -3.33333,0 -6.18,2.073337 -7.333332,4.999997 1.153332,2.9266705 4.000002,4.9999905 7.333332,4.9999905 3.33332,0 6.18002,-2.07332 7.33332,-4.9999905 -1.1533,-2.92666 -4,-4.999997 -7.33332,-4.999997 z m 0,8.3333375 c -1.84,0 -3.33333,-1.4933405 -3.33333,-3.3333405 0,-1.84 1.49333,-3.33333 3.33333,-3.33333 1.84,0 3.33332,1.49333 3.33332,3.33333 0,1.84 -1.49332,3.3333405 -3.33332,3.3333405 z m 0,-5.3333405 c -1.10667,0 -2,0.89334 -2,2 0,1.10667 0.89333,2.0000005 2,2.0000005 1.10667,0 2.00002,-0.8933305 2.00002,-2.0000005 0,-1.10666 -0.89335,-2 -2.00002,-2 z"
+      fill={fill}
     />
   </svg>
 );
