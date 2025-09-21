@@ -8,7 +8,7 @@ export default function SignInButton() {
       onClick={() => {
         void signIn();
       }}
-      className="rounded-full bg-white p-2.5 shadow-md"
+      className="rounded-full bg-white p-2.5 shadow-md drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
     >
       <AccountIcon />
     </button>

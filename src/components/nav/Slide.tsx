@@ -17,7 +17,7 @@ const NewSidebar = ({
       <Dialog.Trigger asChild>
         <button className="text-black-500 pointer-events-auto px-3 py-1">
           <svg
-            className={`h-7 w-7 fill-${hamburger}`}
+            className={`h-7 w-7 fill-${hamburger} drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]`}
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
           >

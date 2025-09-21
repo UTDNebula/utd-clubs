@@ -30,7 +30,7 @@ export const HomePageSearchBar = () => {
     updateSearch(debouncedSearch);
   }, [debouncedSearch, updateSearch]);
   return (
-    <div className="pointer-events-auto relative mr-3 w-full max-w-xs md:max-w-sm lg:max-w-md">
+    <div className="relative mr-3 w-full max-w-xs text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] md:max-w-sm lg:max-w-md">
       <SearchBar
         placeholder="Search for Clubs"
         tabIndex={0}

@@ -7,6 +7,7 @@ import gradientBG from 'public/images/landingGradient.png';
 import SignInButton from '@src/components/header/signInButton';
 import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
+import NebulaLogo from '@src/icons/NebulaLogo';
 import { getServerAuthSession } from '@src/server/auth';
 import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
@@ -30,11 +31,11 @@ const Home = async () => {
   const session = await getServerAuthSession();
   return (
     <SearchStoreProvider>
-      <main className="relative bg-white">
+      <main className="relative">
         {/* <Header /> */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0">
           <div className="relative h-[120vh] w-screen">
-            <section className="absolute inset-0 z-0 h-[120vh] w-screen">
+            <section className="absolute inset-0 h-[120vh] w-screen">
               <Image
                 src={gradientBG}
                 fill
@@ -48,7 +49,7 @@ const Home = async () => {
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
           <div className="pointer-events-none fixed top-0 z-20 flex h-20 w-full flex-row items-center px-2.5 py-2.5 md:px-5">
-            <Sidebar hamburger="black" />
+            <Sidebar hamburger="white" />
             <div className="pointer-events-auto ml-auto flex items-center justify-center">
               {session !== null ? (
                 <div className="h-10 w-10 rounded-full">
@@ -62,11 +63,23 @@ const Home = async () => {
             </div>
           </div>
           <section className="h-screen w-screen">
-            <div className="pointer-events-none flex h-full w-full flex-col items-center justify-center overflow-visible">
-              <h2 className="pointer-events-auto mb-2 max-w-xl text-lg text-white md:text-2xl">
-                Powered by nebula labs
+            <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
+              <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
+                <span className="leading-none">POWERED BY</span>
+                {/*eslint-disable-next-line react/jsx-no-target-blank*/}
+                <a
+                  href="https://www.utdnebula.com/"
+                  target="_blank"
+                  rel="noopener"
+                  className="group flex items-center gap-1"
+                >
+                  <NebulaLogo className="h-4 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
+                  <span className="border-y-2 border-transparent leading-none decoration-transparent transition group-hover:border-b-inherit group-hover:underline">
+                    NEBULA LABS
+                  </span>
+                </a>
               </h2>
-              <h1 className="pointer-events-auto mb-4 max-w-3xl px-5 text-center font-sans text-2xl font-semibold text-white md:px-0 md:text-6xl">
+              <h1 className="font-display mb-4 max-w-3xl px-5 text-center text-2xl font-semibold text-white text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] md:px-0 md:text-6xl">
                 Discover the Best Clubs and Organizations at UTD
               </h1>
               <HomePageSearchBar />
