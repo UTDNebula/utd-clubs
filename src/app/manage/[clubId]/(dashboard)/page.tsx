@@ -1,28 +1,28 @@
 import PillButton from '@src/components/PillButton';
-import { EyeIcon, PlusIcon } from '@src/icons/Icons';
-import Link from 'next/link';
+import { EyeIcon, PlusIcon, PencilIcon, GroupIcon, PersonIcon } from '@src/icons/Icons';
 
 const Page = ({ params }: { params: { clubId: string } }) => {
   return (
     <>
-      <div className="flex flex-row gap-x-1 rounded-lg bg-white p-2 shadow-xs">
-        <Link
+      <div className="flex flex-row gap-10 rounded-lg bg-white p-2 shadow-xs">
+        <PillButton
           href={`/manage/${params.clubId}/edit`}
-          className="bg-blue-primary rounded-md p-1 font-semibold text-white"
+          IconComponent={PencilIcon}
         >
           Edit Club Data
-        </Link>
-        <Link
+        </PillButton>
+        <PillButton
           href={`/manage/${params.clubId}/edit/officers`}
-          className="bg-blue-primary rounded-md p-1 font-semibold text-white"
+          IconComponent={PersonIcon}
         >
           Manage Officers
-        </Link>
-        <button className="bg-blue-primary rounded-md p-1 font-semibold text-white">
+        </PillButton>
+        <PillButton IconComponent={GroupIcon} disabled>
           View members
-        </button>
-
-        <PillButton IconComponent={EyeIcon}>View Events</PillButton>
+        </PillButton>
+        <PillButton IconComponent={EyeIcon} disabled>
+          View Events
+        </PillButton>
         <PillButton
           href={`/manage/${params.clubId}/create`}
           IconComponent={PlusIcon}

@@ -239,13 +239,16 @@ export const PlusIcon: IconType = ({ fill = defaultFill }) => (
     />
   </svg>
 );
-export const GroupIcon: IconType = () => (
+export const GroupIcon: IconType = ({
+  fill = defaultFill,
+  size = defaultSize,
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="auto"
-    height="auto"
+    width={size}
+    height={size}
     viewBox="0 0 30 30"
-    fill="none"
+    fill={fill}
   >
     <path
       fillRule="evenodd"
@@ -335,6 +338,10 @@ export const ExpandLess = () => (
     />
   </svg>
 );
+
+/**
+ * Note: AccountIcon is a less dynamic version of PersonIcon. Please replace all instances of AccountIcon with PersonIcon
+ */
 export const AccountIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -348,6 +355,23 @@ export const AccountIcon = () => (
       clipRule="evenodd"
       d="M15 15C17.21 15 19 13.21 19 11C19 8.79 17.21 7 15 7C12.79 7 11 8.79 11 11C11 13.21 12.79 15 15 15ZM15 17C12.33 17 7 18.34 7 21V22C7 22.55 7.45 23 8 23H22C22.55 23 23 22.55 23 22V21C23 18.34 17.67 17 15 17Z"
       fill="#C3CAD9"
+    />
+  </svg>
+);
+
+export const PersonIcon = ({ fill = defaultFill, size = defaultSize }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size * 1.5}
+    height={size * 1.5}
+    viewBox="0 0 30 30"
+    fill="none"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M15 15C17.21 15 19 13.21 19 11C19 8.79 17.21 7 15 7C12.79 7 11 8.79 11 11C11 13.21 12.79 15 15 15ZM15 17C12.33 17 7 18.34 7 21V22C7 22.55 7.45 23 8 23H22C22.55 23 23 22.55 23 22V21C23 18.34 17.67 17 15 17Z"
+      fill={fill}
     />
   </svg>
 );
@@ -434,6 +458,26 @@ export const EyeIcon: IconType = ({
       fill-rule="evenodd"
       clip-rule="evenodd"
       d="m 8.000006,3.0000065 c -3.33333,0 -6.18,2.073337 -7.333332,4.999997 1.153332,2.9266705 4.000002,4.9999905 7.333332,4.9999905 3.33332,0 6.18002,-2.07332 7.33332,-4.9999905 -1.1533,-2.92666 -4,-4.999997 -7.33332,-4.999997 z m 0,8.3333375 c -1.84,0 -3.33333,-1.4933405 -3.33333,-3.3333405 0,-1.84 1.49333,-3.33333 3.33333,-3.33333 1.84,0 3.33332,1.49333 3.33332,3.33333 0,1.84 -1.49332,3.3333405 -3.33332,3.3333405 z m 0,-5.3333405 c -1.10667,0 -2,0.89334 -2,2 0,1.10667 0.89333,2.0000005 2,2.0000005 1.10667,0 2.00002,-0.8933305 2.00002,-2.0000005 0,-1.10666 -0.89335,-2 -2.00002,-2 z"
+      fill={fill}
+    />
+  </svg>
+);
+
+export const PencilIcon: IconType = ({
+  fill = defaultFill,
+  size = defaultSize,
+}) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 27 28"
+    fill={fill}
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M0 22.1937V26.7537C0 27.1737 0.33 27.5037 0.75 27.5037H5.31C5.505 27.5037 5.7 27.4287 5.835 27.2787L22.215 10.9137L16.59 5.28873L0.225 21.6537C0.075 21.8037 0 21.9837 0 22.1937ZM26.565 6.56373C27.15 5.97873 27.15 5.03373 26.565 4.44873L23.055 0.938728C22.7748 0.657849 22.3943 0.5 21.9975 0.5C21.6007 0.5 21.2202 0.657849 20.94 0.938728L18.195 3.68373L23.82 9.30873L26.565 6.56373Z"
       fill={fill}
     />
   </svg>

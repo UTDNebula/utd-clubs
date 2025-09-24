@@ -50,11 +50,13 @@ type PillButtonPropsBase = {
 interface PillButtonPropsAsButton extends PillButtonPropsBase {
   onClick?: React.MouseEventHandler;
   href?: never;
+  disabled?: boolean;
 }
 
 interface PillButtonPropsAsLink extends PillButtonPropsBase {
   onClick?: never;
   href?: string;
+  disabled?: never;
 }
 
 type PillButtonProps = PillButtonPropsAsButton | PillButtonPropsAsLink;
@@ -85,6 +87,7 @@ const PillButton = ({
   IconComponent,
   color,
   size,
+  disabled,
 }: PillButtonProps) => {
   const childrenClasses = ` 
         rounded-full cursor-pointer transition-colors text-s font-bold 
@@ -102,7 +105,7 @@ const PillButton = ({
       }`}
     >
       {children ? (
-        <span className="px-2 pb-0.5 leading-7">{children}</span>
+        <span className="px-2 leading-8">{children}</span>
       ) : (
         ''
       )}
@@ -121,7 +124,7 @@ const PillButton = ({
       {contents}
     </Link>
   ) : (
-    <button className={childrenClasses} onClick={onClick}>
+    <button className={childrenClasses} onClick={onClick} disabled={disabled}>
       {contents}
     </button>
   );
