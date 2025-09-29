@@ -4,7 +4,7 @@ import { EyeIcon, PlusIcon, PencilIcon, GroupIcon, PersonIcon } from '@src/icons
 const Page = ({ params }: { params: { clubId: string } }) => {
   return (
     <>
-      <div className="flex flex-row gap-10 rounded-lg bg-white p-2 shadow-xs">
+      <div className="flex flex-row flex-wrap gap-x-10 gap-y-4 rounded-lg bg-white p-2 shadow-xs">
         <PillButton
           href={`/manage/${params.clubId}/edit`}
           IconComponent={PencilIcon}
