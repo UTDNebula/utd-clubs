@@ -4,6 +4,8 @@ import type { Metadata } from 'next';
 import { api } from '@src/trpc/server';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
+import starDoodle from 'public/images/StarDoodle.png';
+import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import SignInButton from '@src/components/header/signInButton';
 import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
@@ -42,6 +44,27 @@ const Home = async () => {
                 sizes="120vw"
                 alt="Gradient Background for landing page"
                 className="bg-no-repeat object-cover"
+              />
+              <Image
+                  src={planetsDoodle}
+                  //width={300}
+                  //height={300}
+                  alt="Planets Doodle for landing page"
+                  className="bg-no-repeat object-cover absolute bottom-[30%] right-[10%] w-[clamp(200px,20vw,300px)]"
+              />
+              <Image
+                  src={starDoodle}
+                  //width={170}
+                  //height={170}
+                  alt="Star Doodle (top right) for landing page"
+                  className="bg-no-repeat object-cover absolute top-[5%] right-[15%] w-[clamp(170px,20vw,200px)] animate-spin [animation-duration:77s] [animation-direction:reverse]"
+              />
+              <Image
+                  src={starDoodle}
+                  //width={140}
+                  //height={140}
+                  alt="Star Doodle (upper right) for landing page"
+                  className="bg-no-repeat object-cover absolute bottom-[35%] left-[7%] w-[clamp(70px,20vw,150px)] animate-spin [animation-duration:60s]"
               />
             </section>
             <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"></section>
