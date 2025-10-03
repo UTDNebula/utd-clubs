@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 const Home = async () => {
-  const tags = await api.club.distinctTags();
+  const tags = await api.club.mostUsedTags();
   // const featured = await api.club.getCarousel();
   // const onlyClubs = featured.map((item) => item.club);
   const session = await getServerAuthSession();

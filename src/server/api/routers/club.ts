@@ -131,6 +131,16 @@ export const clubRouter = createTRPCRouter({
       return [];
     }
   }),
+  mostUsedTags: publicProcedure.query(async ({ ctx }) => {
+    try{
+      const tags = await ctx.db.select().from(usedTags).limit(8);
+      return tags.map(t => t.tag);
+    }
+    catch(e){
+      console.error(e);
+      return [];
+    }
+  }),
   getOfficerClubs: protectedProcedure.query(async ({ ctx }) => {
     const results = await ctx.db.query.userMetadataToClubs.findMany({
       where: and(
