@@ -81,6 +81,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'officers',
+    keyName: 'fieldId',
   });
   const [deleted, modifyDeleted] = useReducer(deletedReducer, []);
   const removeItem = (index: number, userId: string) => {
@@ -124,7 +125,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
                 append({
                   userId: user.id,
                   name: user.name,
-                  title: '',
+                  title: 'Officer',
                   position: 'Officer',
                   locked: false,
                 });
@@ -139,7 +140,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
           <div className="space-y-2">
             {fields.map((field, index) => (
               <OfficerItem
-                key={field.id}
+                key={field.fieldId}
                 index={index}
                 id={field.userId}
                 remove={removeItem}
@@ -162,6 +163,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
               reset({
                 officers: officers,
               });
+              modifyDeleted({ type: 'reset' });
             }}
             disabled={!isDirty}
             className="group relative rounded-lg bg-slate-200 p-1 font-bold"
