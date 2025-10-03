@@ -132,11 +132,10 @@ export const clubRouter = createTRPCRouter({
     }
   }),
   mostUsedTags: publicProcedure.query(async ({ ctx }) => {
-    try{
+    try {
       const tags = await ctx.db.select().from(usedTags).limit(8);
-      return tags.map(t => t.tag);
-    }
-    catch(e){
+      return tags.map((t) => t.tag);
+    } catch (e) {
       console.error(e);
       return [];
     }
