@@ -42,17 +42,17 @@ const ClubInfoSegment: FC<{
           </p>
         </div>
         {club.officers.length != 0 && (
-          <div className="min-w-fit">
+          <div className="min-w-0 w-auto max-w-[320px]">
             <>
               <h1 className="text-center text-2xl font-medium">Leadership</h1>
               <div className="flex flex-col justify-center align-middle">
                 {club.officers.map((officer) => (
                   <div className="mt-5 flex flex-row" key={officer.id}>
                     <div className="mx-5 flex flex-col justify-center align-middle">
-                      <p className="text-left text-sm text-slate-600">
+                      <p className="text-left text-sm text-slate-600 break-words whitespace-normal">
                         {officer.name}
                       </p>
-                      <p className="mt-2 text-sm text-slate-400">
+                      <p className="mt-2 text-sm text-slate-400 break-words whitespace-normal">
                         {officer.position}
                       </p>
                     </div>
