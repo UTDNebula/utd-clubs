@@ -28,21 +28,21 @@ export const HomePageSearchBar = () => {
   };
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
-  const originalOffset = useRef<number>(0); 
+  const originalOffset = useRef<number>(0);
 
   useEffect(() => {
     updateSearch(debouncedSearch);
   }, [debouncedSearch, updateSearch]);
 
   useEffect(() => {
-    if (containerRef.current) { 
+    if (containerRef.current) {
       originalOffset.current =
         containerRef.current.getBoundingClientRect().top + window.scrollY;
     }
-  const handleScroll = () => {
-    const scrollY = window.scrollY;
-    setIsSticky(scrollY > (originalOffset.current)); 
-  };
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsSticky(scrollY > originalOffset.current);
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -50,10 +50,8 @@ export const HomePageSearchBar = () => {
   return (
     <div
       ref={containerRef}
-      className={`mr-3 w-full max-w-xs text-shadow-... md:max-w-sm lg:max-w-md transition-all ${
-        isSticky
-          ? 'fixed top-0 z-50 justify-center' 
-          : 'relative'
+      className={`text-shadow-... mr-3 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
+        isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
       }`}
     >
       <SearchBar
