@@ -105,11 +105,7 @@ const PillButton = ({
           : 'h-10.5 min-w-10.5 px-2.75 py-1.5'
       }`}
     >
-      {children ? (
-        <span className="px-2 leading-8">{children}</span>
-      ) : (
-        ''
-      )}
+      {children ? <span className="px-2 leading-8">{children}</span> : ''}
       {IconComponent ? (
         <div className="flex h-5 w-5 items-center justify-center">
           {IconComponent && <IconComponent fill={'white'} size={16} />}
