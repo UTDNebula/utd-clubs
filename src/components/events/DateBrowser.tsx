@@ -26,7 +26,7 @@ const DateBrowser = ({ filterState, setParams }: DateBrowserProps) => {
     if (dayPickerProps.selected != undefined) {
       setParams({ date: dayPickerProps.selected });
     }
-  }, [dayPickerProps.selected]);
+  }, [dayPickerProps.selected, setParams]);
   return (
     <div className="flex w-full flex-row justify-between rounded-3xl bg-white px-5 py-2.5 align-middle shadow-md md:w-fit">
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}

@@ -2,7 +2,7 @@ import '@src/styles/globals.css';
 
 import { Bai_Jamjuree, Inter } from 'next/font/google';
 
-import { TRPCReactProvider } from '@src/trpc/react';
+// import { TRPCReactProvider } from '@src/trpc/react';
 import Providers from '@src/components/Providers';
 import { type Metadata } from 'next';
 
