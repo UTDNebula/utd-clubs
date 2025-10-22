@@ -24,12 +24,6 @@ const config = {
       },
       {
         protocol: 'https',
-        hostname: 'jupiter.nlmc.workers.dev',
-        pathname: '**',
-        port: '',
-      },
-      {
-        protocol: 'https',
         hostname: 'storage.googleapis.com',
         pathname: '/download/storage/v1/b/utdnebula_jupiter/**',
         port: '',
@@ -43,7 +37,7 @@ export default withSentryConfig(config, {
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
   org: 'utdnebula',
-  project: 'jupiter',
+  project: 'clubs',
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,

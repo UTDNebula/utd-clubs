@@ -4,14 +4,12 @@ import { type Metadata } from 'next';
 import Form from '@src/app/feedback/Form';
 
 export const metadata: Metadata = {
-  title: 'Feedback - Jupiter',
-  description: 'Get connected on campus.',
+  title: 'Feedback',
   alternates: {
-    canonical: 'https://jupiter.utdnebula.com/feedback',
+    canonical: 'https://clubs.utdnebula.com/feedback',
   },
   openGraph: {
-    url: 'https://jupiter.utdnebula.com/feedback',
-    description: 'Get connected on campus.',
+    url: 'https://clubs.utdnebula.com/feedback',
   },
 };
 

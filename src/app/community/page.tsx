@@ -6,14 +6,13 @@ import React from 'react';
 import CommunityEvents from './communityEvents';
 
 export const metadata: Metadata = {
-  title: 'My Community - Jupiter',
+  title: 'My Community',
   description: 'Community Page',
   alternates: {
-    canonical: 'https://jupiter.utdnebula.com/community',
+    canonical: 'https://clubs.utdnebula.com/community',
   },
   openGraph: {
-    url: 'https://jupiter.utdnebula.com/community',
-    description: 'My Community - Jupiter',
+    url: 'https://clubs.utdnebula.com/community',
   },
 };
 

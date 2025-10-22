@@ -2,14 +2,12 @@ import Header from '@src/components/header/BaseHeader';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About - Jupiter',
-  description: 'About Jupiter',
+  title: 'About',
   alternates: {
-    canonical: 'https://jupiter.utdnebula.com/about',
+    canonical: 'https://clubs.utdnebula.com/about',
   },
   openGraph: {
-    url: 'https://jupiter.utdnebula.com/about',
-    description: 'About Jupiter',
+    url: 'https://clubs.utdnebula.com/about',
   },
 };
 
@@ -45,11 +43,11 @@ const About = () => {
       <div className="mx-6 h-full">
         <div className="rounded-lg bg-slate-100 p-8 shadow-md">
           <h2 className="mb-4 text-lg font-semibold text-slate-500">
-            About Jupiter
+            About UTD Clubs
           </h2>
 
           <p className="mt-2 space-y-4 text-sm font-light text-slate-500">
-            Jupiter is a platform being developed by nebula labs in order to
+            UTD CLubs is a platform being developed by nebula labs in order to
             help students find organizations and events on and around campus.
             <br />
             You&apos;re able to track organizations you&apos;re interested in,
@@ -61,7 +59,7 @@ const About = () => {
             about you and your events.
           </p>
           <p className="mt-2 space-y-4 text-sm font-light text-slate-500">
-            If you&apos;re interested in contributing to Jupiter check out the{' '}
+            If you&apos;re interested in contributing to UTD Clubs check out the{' '}
             <a
               href="https://discord.utdnebula.com/"
               className="text-blue-primary hover:underline"
@@ -70,7 +68,7 @@ const About = () => {
             </a>
             , or our{' '}
             <a
-              href="https://github.com/UTDNebula/jupiter"
+              href="https://github.com/UTDNebula/utd-clubs"
               className="text-blue-primary hover:underline"
             >
               Github
