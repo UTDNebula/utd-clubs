@@ -44,4 +44,3 @@ const NavMenu = ({ userCapabilites }: NavMenuProps) => {
 };
 
 export default NavMenu;
-

@@ -27,7 +27,7 @@ const JoinButton = ({ isHeader, isJoined, clubID }: JoinButtonProps) => {
   const handleJoin = () => {
     if (!session) return;
     mutation.mutate({ clubId });
-    setJoined(prev => !prev);
+    setJoined((prev) => !prev);
   };
 
   if (!session) {

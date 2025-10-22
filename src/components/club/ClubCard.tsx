@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { type FC } from 'react';
 import Image from 'next/image';
 import type { SelectClub as Club } from '@src/server/db/models';
