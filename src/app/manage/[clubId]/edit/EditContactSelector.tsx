@@ -22,6 +22,9 @@ import {
   Twitter,
   Website,
   Youtube,
+  Twitch,
+  Link,
+  LinkedIn,
   type logoProps,
 } from '@src/icons/ContactIcons';
 import { type modifyDeletedAction } from '@src/app/manage/[clubId]/edit/EditContactForm';
@@ -58,6 +61,10 @@ const startContacts: Array<Contact['platform']> = [
   'email',
   'twitter',
   'facebook',
+  'youtube',
+  'twitch',
+  'linkedIn',
+  'other',
 ];
 
 type ContactSelectorProps = {
@@ -148,14 +155,15 @@ export default ContactSelector;
 const styling = 'fill-black transition-colors group-hover:fill-blue-primary';
 const logo: logoProps = {
   discord: <Discord className={styling} />,
-  youtube: <Youtube className={styling} />,
-  twitch: '/nebula-logo.png',
-  facebook: <Facebook className={styling} />,
-  twitter: <Twitter className={styling} />,
   instagram: <Instagram className={styling} />,
   website: <Website className={styling} />,
   email: <Email className={styling} />,
-  other: '/Jupiter.png',
+  twitter: <Twitter className={styling} />,
+  facebook: <Facebook className={styling} />,
+  youtube: <Youtube className={styling} />,
+  twitch: <Twitch className={styling} />,
+  linkedIn: <LinkedIn className={styling} />,
+  other: <Link className={styling} />,
 };
 
 type ContactInputProps = {
