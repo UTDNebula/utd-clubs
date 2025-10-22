@@ -53,19 +53,19 @@ const Home = async () => {
               />
               <Image
                 src="/images/StarDoodle.svg"
-                // size: ~40×40px (mobile) → ~48×48px (desktop)
+                // size: ~56×56px (mobile) → ~72×72px (desktop)
                 alt="Star Doodle (top right) for landing page"
-                width={48}
-                height={48}
-                className="absolute top-[5%] right-[15%] w-[clamp(40px,5vw,48px)] animate-spin bg-no-repeat object-cover [animation-direction:reverse] [animation-duration:77s]"
+                width={72}
+                height={72}
+                className="absolute top-[15%] right-[15%] w-[clamp(56px,7vw,72px)] animate-spin bg-no-repeat object-cover [animation-direction:reverse] [animation-duration:77s]"
               />
               <Image
                 src="/images/StarDoodle.svg"
-                // size: ~24×24px (mobile) → ~32×32px (desktop)
+                // size: ~32×32px (mobile) → ~48×48px (desktop)
                 alt="Star Doodle (bottom left) for landing page"
-                width={32}
-                height={32}
-                className="absolute bottom-[35%] left-[7%] w-[clamp(24px,3vw,32px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
+                width={48}
+                height={48}
+                className="absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
               />
             </section>
             <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"></section>
