@@ -4,7 +4,6 @@ import type { Metadata } from 'next';
 import { api } from '@src/trpc/server';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
-import starDoodle from 'public/images/StarDoodle.svg';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import SignInButton from '@src/components/header/signInButton';
 import ExploreButton from '@src/components/landing/ExploreButton';
@@ -53,13 +52,13 @@ const Home = async () => {
                 className="absolute right-[10%] bottom-[30%] w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover"
               />
               <Image
-                src={starDoodle}
+                src="/images/StarDoodle.svg"
                 // size: ~40×40px (mobile) → ~48×48px (desktop)
                 alt="Star Doodle (top right) for landing page"
                 className="absolute top-[5%] right-[15%] w-[clamp(40px,5vw,48px)] animate-spin bg-no-repeat object-cover [animation-direction:reverse] [animation-duration:77s]"
               />
               <Image
-                src={starDoodle}
+                src="/images/StarDoodle.svg"
                 // size: ~24×24px (mobile) → ~32×32px (desktop)
                 alt="Star Doodle (bottom left) for landing page"
                 className="absolute bottom-[35%] left-[7%] w-[clamp(24px,3vw,32px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
