@@ -10,7 +10,7 @@ import { type FormEventHandler } from 'react';
 import FormPopUp from '@src/app/feedback/FormPopUp';
 import { useState } from 'react';
 
-import nebulaPic from 'public/android-chrome-192x192.png';
+import nebulaPic from 'public/nebula-logo.png';
 import { useTRPC } from '@src/trpc/react';
 import { useMutation } from '@tanstack/react-query';
 
@@ -55,7 +55,12 @@ const Form = () => {
         }`}
       >
         <div className="absolute -top-3 left-0 hidden h-14 w-14 md:block">
-          <Image src={nebulaPic} alt="Nebula" fill />
+          <Image
+            src={nebulaPic}
+            alt="Nebula Labs logo"
+            fill
+            className="object-contain"
+          />
         </div>
         <h1 className="pb-2 text-4xl font-bold">Feedback</h1>
 

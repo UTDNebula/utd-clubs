@@ -19,21 +19,26 @@ const baiJamjuree = Bai_Jamjuree({
 });
 
 export const metadata: Metadata = {
-  title: 'Jupiter',
-  icons: ['favicon-32x32.png', 'favicon-16x16.png', 'logoIcon.svg'],
-  manifest: 'site.webmanifest',
+  metadataBase: new URL('https://clubs.utdnebula.com'),
+  title: {
+    template: '%s - UTD CLUBS',
+    default: 'UTD CLUBS',
+  },
   description:
-    'A student organization portal to connect organizations on campus with interested students at UTD.',
+    'A student organization portal to connect interested students at UTD with organizations on campus.',
+  keywords: ['UT Dallas', 'clubs', 'organizations', 'events'],
   openGraph: {
-    title: 'Jupiter',
+    title: 'UTD Clubs',
     description:
-      'A student organization portal to connect organizations on campus with interested students at UTD.',
-    images: ['https://jupiter.utdnebula.com/logoIcon.png'],
+      'A student organization portal to connect interested students at UTD with organizations on campus.',
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    site: 'jupiter.utdnebula.com',
+  },
+  other: {
+    'geo.region': 'US-TX',
+    'geo.placename': 'Richardson',
   },
 };
 export const viewport = {
