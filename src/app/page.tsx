@@ -55,12 +55,16 @@ const Home = async () => {
                 src="/images/StarDoodle.svg"
                 // size: ~40×40px (mobile) → ~48×48px (desktop)
                 alt="Star Doodle (top right) for landing page"
+                width={48}
+                height={48}
                 className="absolute top-[5%] right-[15%] w-[clamp(40px,5vw,48px)] animate-spin bg-no-repeat object-cover [animation-direction:reverse] [animation-duration:77s]"
               />
               <Image
                 src="/images/StarDoodle.svg"
                 // size: ~24×24px (mobile) → ~32×32px (desktop)
                 alt="Star Doodle (bottom left) for landing page"
+                width={32}
+                height={32}
                 className="absolute bottom-[35%] left-[7%] w-[clamp(24px,3vw,32px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
               />
             </section>
