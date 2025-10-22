@@ -61,7 +61,7 @@ const Home = async () => {
               <Image
                 src={starDoodle}
                 // size: ~24×24px (mobile) → ~32×32px (desktop)
-                alt="Star Doodle (upper right) for landing page"
+                alt="Star Doodle (bottom left) for landing page"
                 className="absolute bottom-[35%] left-[7%] w-[clamp(24px,3vw,32px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
               />
             </section>
