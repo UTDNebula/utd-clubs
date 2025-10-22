@@ -163,7 +163,7 @@ export const clubRouter = createTRPCRouter({
           where: and(
             eq(userMetadataToClubs.clubId, input.id),
             eq(userMetadataToClubs.userId, ctx.session.user.id),
-            inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+            inArray(userMetadataToClubs.memberType, ['Member', 'Officer', 'President']),
           ),
         })
       )?.memberType;

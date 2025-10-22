@@ -4,7 +4,7 @@ import type {
   SelectContact as Contacts,
 } from '@src/server/db/models';
 import JoinButton from '../JoinButton';
-import { getServerAuthSession } from '@src/server/auth';
+// server-side; do not import client-only hooks here
 import Link from 'next/link';
 import { api } from '@src/trpc/server';
 import ContactButtons from './ContactButtons';
@@ -14,8 +14,8 @@ type Club = SelectClub & {
   tags: string[];
 };
 const ClubHeader = async ({ club }: { club: Club }) => {
-  const session = await getServerAuthSession();
   const memberType = await api.club.memberType({ id: club.id });
+  console.log('Member type in header:', memberType);
   return (
     <div className="relative">
       <div className="h-full w-full">
@@ -50,7 +50,6 @@ const ClubHeader = async ({ club }: { club: Club }) => {
             </Link>
           ) : (
             <JoinButton
-              session={session}
               isHeader
               clubID={club.id}
               isJoined={memberType !== undefined}

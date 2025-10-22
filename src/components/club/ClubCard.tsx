@@ -1,13 +1,20 @@
+"use client";
 import { type FC } from 'react';
 import Image from 'next/image';
 import type { SelectClub as Club } from '@src/server/db/models';
 import JoinButton from './JoinButton';
 import Link from 'next/link';
+import { useTRPC } from '@src/trpc/react';
+import { useQuery } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
 
 type Props = { club: Club; session: Session | null; priority: boolean };
 
 const ClubCard: FC<Props> = ({ club, session, priority }) => {
+  const api = useTRPC();
+  const { data: memberType } = useQuery(
+    api.club.memberType.queryOptions({ id: club.id }, { enabled: !!session }),
+  );
   const desc =
     club.description.length > 50
       ? club.description.slice(0, 150) + '...'
@@ -42,7 +49,7 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
         <p className="text-base text-slate-600 md:text-sm">{desc}</p>
       </div>
       <div className="m-5 mt-auto flex flex-row space-x-2">
-        <JoinButton session={session} clubID={club.id} />
+        <JoinButton isJoined={!!memberType} clubID={club.id} />
         <Link
           href={`/directory/${club.slug}`}
           className="text-blue-primary rounded-2xl bg-blue-600/10 px-4 py-2 text-xs font-extrabold transition-colors hover:bg-blue-200"
