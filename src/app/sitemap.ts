@@ -28,12 +28,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     {
-      url: 'https://clubs.utdnebula.com/about',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-    {
       url: 'https://clubs.utdnebula.com/community',
       lastModified: new Date(),
       changeFrequency: 'monthly',
