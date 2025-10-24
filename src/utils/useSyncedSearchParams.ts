@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
+
 import EncodeParams from './encodeParams';
 
 // not sure about the name, but basically makes updates to searchparams not overwrite themselves

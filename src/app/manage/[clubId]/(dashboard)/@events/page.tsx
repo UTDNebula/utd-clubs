@@ -1,8 +1,8 @@
+import { MoreIcon } from '@src/icons/Icons';
 import { api } from '@src/trpc/server';
 import { type RouterOutputs } from '@src/trpc/shared';
-import Link from 'next/link';
 import { format, isSameDay } from 'date-fns';
-import { MoreIcon } from '@src/icons/Icons';
+import Link from 'next/link';
 
 const Events = async ({ params }: { params: { clubId: string } }) => {
   const events = await api.event.byClubId({ clubId: params.clubId });

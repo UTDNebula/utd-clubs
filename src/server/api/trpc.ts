@@ -7,14 +7,13 @@
  * need to use are documented accordingly near the end.
  */
 
-import { initTRPC, TRPCError } from '@trpc/server';
-import superjson from 'superjson';
-import { ZodError } from 'zod';
-
 import { getServerAuthSession } from '@src/server/auth';
 import { db } from '@src/server/db';
+import { initTRPC, TRPCError } from '@trpc/server';
 import { eq } from 'drizzle-orm';
 import { cache } from 'react';
+import superjson from 'superjson';
+import { ZodError } from 'zod';
 
 /**
  * 1. CONTEXT

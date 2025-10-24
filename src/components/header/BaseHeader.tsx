@@ -1,11 +1,12 @@
-import type { ReactNode } from 'react';
-import { ProfileDropDown } from './ProfileDropDown';
 import { getServerAuthSession } from '@src/server/auth';
+import { api } from '@src/trpc/server';
+import type { ReactNode } from 'react';
+
+import NewSidebar from '../nav/Slide';
 import { ClubSearchBar } from '../searchBar/ClubSearchBar';
 import { EventSearchBar } from '../searchBar/EventSearchBar';
+import { ProfileDropDown } from './ProfileDropDown';
 import SignInButton from './signInButton';
-import { api } from '@src/trpc/server';
-import NewSidebar from '../nav/Slide';
 
 export const BaseHeader = async ({ children }: { children: ReactNode }) => {
   const session = await getServerAuthSession();

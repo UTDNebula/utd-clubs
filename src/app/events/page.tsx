@@ -1,10 +1,11 @@
+import EventCard from '@src/components/events/EventCard';
 import { EventHeader } from '@src/components/header/BaseHeader';
 import { api } from '@src/trpc/server';
-import EventView from './eventView';
-import { type Metadata } from 'next';
 import { eventParamsSchema } from '@src/utils/eventFilter';
-import EventCard from '@src/components/events/EventCard';
+import { type Metadata } from 'next';
 import type z from 'zod';
+
+import EventView from './eventView';
 
 export const metadata: Metadata = {
   title: 'Events - Jupiter',

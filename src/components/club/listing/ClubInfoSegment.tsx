@@ -1,7 +1,7 @@
+import { api } from '@src/trpc/server';
+import { type RouterOutputs } from '@src/trpc/shared';
 import Image from 'next/image';
 import { type FC } from 'react';
-import { type RouterOutputs } from '@src/trpc/shared';
-import { api } from '@src/trpc/server';
 
 const ClubInfoSegment: FC<{
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;

@@ -1,8 +1,8 @@
 'use client';
-import { signOut } from 'next-auth/react';
-import Image from 'next/image';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import Image from 'next/image';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
 
 type Props = {
   image: string;

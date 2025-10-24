@@ -1,7 +1,8 @@
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-import { userMetadata } from './users';
 import { relations } from 'drizzle-orm';
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+
 import { club } from './club';
+import { userMetadata } from './users';
 
 export const admin = pgTable('admin', {
   userId: text('userId')

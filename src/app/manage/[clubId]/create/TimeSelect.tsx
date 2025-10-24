@@ -1,11 +1,11 @@
 'use client';
+import type { createEventSchema } from '@src/utils/formSchemas';
 import type {
-  UseFormSetValue,
-  UseFormGetValues,
   Control,
+  UseFormGetValues,
+  UseFormSetValue,
 } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
-import type { createEventSchema } from '@src/utils/formSchemas';
 import type { z } from 'zod';
 
 interface Props {

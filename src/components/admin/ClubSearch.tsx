@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
 import { type SelectClub } from '@src/server/db/models';
-import useDebounce from '@src/utils/useDebounce';
-import { SearchResults, SearchResultsItem } from '../searchBar/SearchResults';
-import SearchBar from '../searchBar';
 import { useTRPC } from '@src/trpc/react';
+import useDebounce from '@src/utils/useDebounce';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+
+import SearchBar from '../searchBar';
+import { SearchResults, SearchResultsItem } from '../searchBar/SearchResults';
 
 type Props = {
   setClub: ({ id, name }: { id: string; name: string }) => void;
