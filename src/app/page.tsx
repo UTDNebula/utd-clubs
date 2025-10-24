@@ -1,5 +1,4 @@
 import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
-import SignInButton from '@src/components/header/signInButton';
 import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
@@ -76,15 +75,7 @@ const Home = async () => {
           <div className="pointer-events-none fixed top-0 z-20 flex h-20 w-full flex-row items-center px-2.5 py-2.5 md:px-5">
             <Sidebar hamburger="white" />
             <div className="pointer-events-auto ml-auto flex items-center justify-center">
-              {session !== null ? (
-                <div className="h-10 w-10 rounded-full">
-                  <ProfileDropDown image={session.user.image || ''} />
-                </div>
-              ) : (
-                <div className="mr-2">
-                  <SignInButton />
-                </div>
-              )}
+              <ProfileDropDown session={session} />
             </div>
           </div>
           <section className="h-screen w-screen">
