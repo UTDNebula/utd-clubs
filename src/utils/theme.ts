@@ -17,7 +17,7 @@ const lightPalette = {
     },
   },
 };
-const darkPalette = {
+/*const darkPalette = {
   palette: {
     //copied from globals.css
     primary: {
@@ -31,12 +31,12 @@ const darkPalette = {
       main: '#ff5743',
     },
   },
-};
+};*/
 const theme = createTheme({
   cssVariables: true,
   colorSchemes: {
     light: lightPalette,
-    dark: darkPalette,
+    //dark: darkPalette,
   },
   typography: {
     fontFamily: 'inherit',
