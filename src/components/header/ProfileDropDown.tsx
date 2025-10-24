@@ -1,20 +1,19 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
-import { signOut, signIn } from 'next-auth/react';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
   Avatar,
   Card,
-  Popover,
-  Fade,
-  MenuList,
-  MenuItem,
   ListItemIcon,
   ListItemText,
+  MenuItem,
+  MenuList,
+  Popover,
 } from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
+import Link from 'next/link';
 import { type Session } from 'next-auth';
+import { signIn, signOut } from 'next-auth/react';
+import { useEffect, useRef, useState } from 'react';
 
 type Props = {
   session: Session | null;
