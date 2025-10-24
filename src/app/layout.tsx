@@ -1,7 +1,9 @@
 import '@src/styles/globals.css';
 
+import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { TRPCReactProvider } from '@src/trpc/react';
+import theme from '@src/utils/theme';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
 
@@ -47,7 +49,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-main ${baiJamjuree.variable}`}>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </TRPCReactProvider>
         {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
           <GoogleAnalytics gaId="G-FYTBHVKNG6" />
         )}
