@@ -6,7 +6,7 @@ import {
   differenceInMinutes,
 } from 'date-fns';
 import { type ReactNode } from 'react';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type EventTimeAlertProps = {
   event: SelectEvent;

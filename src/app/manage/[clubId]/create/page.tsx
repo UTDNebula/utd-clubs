@@ -2,7 +2,7 @@ import Header from '@src/components/header/BaseHeader';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
-import { notFound,redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 import CreateEventForm from './CreateEventForm';
 
