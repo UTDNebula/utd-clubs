@@ -6,7 +6,6 @@ import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import starDoodle from 'public/images/StarDoodle.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
-import SignInButton from '@src/components/header/signInButton';
 import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
 import NebulaLogo from '@src/icons/NebulaLogo';
