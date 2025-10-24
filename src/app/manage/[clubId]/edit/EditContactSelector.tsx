@@ -5,9 +5,16 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
-import { type modifyDeletedAction } from '@src/app/manage/[clubId]/edit/EditContactForm';
+import { type SelectContact } from '@src/server/db/models';
+import { type Dispatch, useEffect, useReducer } from 'react';
 import {
-  type logoProps,
+  useFieldArray,
+  type Control,
+  type FieldErrors,
+  type UseFormRegister,
+} from 'react-hook-form';
+import { type z } from 'zod';
+import {
   Discord,
   Email,
   Facebook,
@@ -15,17 +22,10 @@ import {
   Twitter,
   Website,
   Youtube,
+  type logoProps,
 } from '@src/icons/ContactIcons';
-import { type SelectContact } from '@src/server/db/models';
+import { type modifyDeletedAction } from '@src/app/manage/[clubId]/edit/EditContactForm';
 import { type editClubContactSchema } from '@src/utils/formSchemas';
-import { type Dispatch, useEffect, useReducer } from 'react';
-import {
-  type Control,
-  type FieldErrors,
-  type UseFormRegister,
-  useFieldArray,
-} from 'react-hook-form';
-import { type z } from 'zod';
 
 type Contact = Omit<SelectContact, 'clubId'>;
 

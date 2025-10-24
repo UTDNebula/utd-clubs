@@ -1,27 +1,26 @@
+import {
+  eq,
+  gte,
+  lte,
+  and,
+  ilike,
+  or,
+  sql,
+  inArray,
+  type SQL,
+  between,
+} from 'drizzle-orm';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { z } from 'zod';
 import { selectEvent } from '@src/server/db/models';
-import { events } from '@src/server/db/schema/events';
+import { add, startOfDay } from 'date-fns';
 import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
 import { createEventSchema } from '@src/utils/formSchemas';
 import { TRPCError } from '@trpc/server';
-import { add, startOfDay } from 'date-fns';
-import {
-  type SQL,
-  and,
-  between,
-  eq,
-  gte,
-  ilike,
-  inArray,
-  lte,
-  or,
-  sql,
-} from 'drizzle-orm';
-import { z } from 'zod';
-
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { events } from '@src/server/db/schema/events';
 
 const byClubIdSchema = z.object({
   clubId: z.string().default(''),

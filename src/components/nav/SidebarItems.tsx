@@ -1,7 +1,7 @@
 'use client';
-import { type allCats, IconMap, routeMap } from '@src/constants/categories';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { IconMap, type allCats, routeMap } from '@src/constants/categories';
+import Link from 'next/link';
 
 const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
   const Icon = IconMap[cat];

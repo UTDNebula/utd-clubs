@@ -1,14 +1,14 @@
-import RegisterButton from '@src/app/event/[id]/RegisterButton';
 import { EventHeader } from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { and, eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
 
-import CountdownTimer from './CountdownTimer';
 import TimeComponent from './TimeComponent';
+import Image from 'next/image';
+import CountdownTimer from './CountdownTimer';
+import Link from 'next/link';
+import { getServerAuthSession } from '@src/server/auth';
+import RegisterButton from '@src/app/event/[id]/RegisterButton';
 
 type Params = { params: { id: string } };
 

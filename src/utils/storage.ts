@@ -1,6 +1,5 @@
-import 'server-only';
-
 import { addMinutes } from 'date-fns';
+import 'server-only';
 
 type GetPostResponse = {
   bucket: string;

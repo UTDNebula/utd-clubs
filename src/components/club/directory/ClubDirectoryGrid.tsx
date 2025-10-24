@@ -1,13 +1,12 @@
 'use client';
-import { useTRPC } from '@src/trpc/react';
-import { useSearchStore } from '@src/utils/SearchStoreProvider';
-import { useQuery } from '@tanstack/react-query';
-import { type Session } from 'next-auth';
 import { type FC } from 'react';
-
 import ClubCard from '../ClubCard';
 import InfiniteScrollGrid from './InfiniteScrollGrid';
 import ScrollTop from './ScrollTop';
+import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import { type Session } from 'next-auth';
+import { useTRPC } from '@src/trpc/react';
+import { useQuery } from '@tanstack/react-query';
 
 interface Props {
   session: Session | null;

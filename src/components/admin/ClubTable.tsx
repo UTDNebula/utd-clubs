@@ -1,24 +1,23 @@
 'use client';
-import { useTRPC } from '@src/trpc/react';
-import { type Club, fuzzyFilter } from '@src/utils/table';
-import { useMutation } from '@tanstack/react-query';
 import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  type Row,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
   useReactTable,
+  type ColumnDef,
+  getCoreRowModel,
+  getSortedRowModel,
+  flexRender,
+  type Row,
+  type ColumnFiltersState,
+  getFilteredRowModel,
 } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
-
 import Filter from './Filter';
+import { useRouter } from 'next/navigation';
+import { type Club, fuzzyFilter } from '@src/utils/table';
 import StatusFilter from './StatusFilter';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 
 export default function ClubTable({ clubs }: { clubs: Club[] }) {
   const router = useRouter();

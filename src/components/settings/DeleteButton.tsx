@@ -1,7 +1,7 @@
-import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { useTRPC } from '@src/trpc/react';
-import { useMutation } from '@tanstack/react-query';
 import { signOut } from 'next-auth/react';
+import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import { useMutation } from '@tanstack/react-query';
 
 export default function DeleteButton() {
   const api = useTRPC();

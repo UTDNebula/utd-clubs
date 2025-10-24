@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-
 import { LeftArrowIcon } from '../icons/Icons';
 
 const BackButton = () => {

@@ -4,7 +4,6 @@ import { type api as API } from '@src/trpc/server';
 import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
 type Feature = Awaited<ReturnType<typeof API.club.getCarousel>>[number];
 
 type Props = {

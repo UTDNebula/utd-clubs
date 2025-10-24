@@ -1,14 +1,13 @@
 'use server';
 
-import { MoreIcon } from '@src/icons/Icons';
-import { getServerAuthSession } from '@src/server/auth';
-import { type RouterOutputs } from '@src/trpc/shared';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
-
-import ClientEventTime from './ClientEventTime'; //importing new component
+import { MoreIcon } from '@src/icons/Icons';
+import { type RouterOutputs } from '@src/trpc/shared';
 import EventLikeButton from './EventLikeButton';
+import { getServerAuthSession } from '@src/server/auth';
+import dynamic from 'next/dynamic';
+import ClientEventTime from './ClientEventTime'; //importing new component
 
 const EventTimeAlert = dynamic(() => import('./EventTimeAlert'), {
   ssr: false,

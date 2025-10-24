@@ -1,9 +1,8 @@
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
-import { signInRoute } from '@src/utils/redirect';
-import { redirect } from 'next/navigation';
-
 import CreateClubForm from './createForm';
+import { getServerAuthSession } from '@src/server/auth';
+import { redirect } from 'next/navigation';
+import { signInRoute } from '@src/utils/redirect';
 
 export default async function Page() {
   const session = await getServerAuthSession();

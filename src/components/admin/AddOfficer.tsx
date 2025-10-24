@@ -1,11 +1,10 @@
 'use client';
 
 import { useTRPC } from '@src/trpc/react';
-import { useMutation } from '@tanstack/react-query';
+import { UserSearchBar } from '../searchBar/UserSearchBar';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-
-import { UserSearchBar } from '../searchBar/UserSearchBar';
+import { useMutation } from '@tanstack/react-query';
 
 type OfficerState = {
   id: string;

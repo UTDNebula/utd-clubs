@@ -1,10 +1,9 @@
 import { type SelectClub } from '@src/server/db/models';
-import { api } from '@src/trpc/server';
-
 import AddOfficer from './AddOfficer';
-import ChangeClubStatus from './ChangeClubStatus';
-import ClubDescription from './ClubDescription';
 import OfficerTable from './OfficerTable';
+import ClubDescription from './ClubDescription';
+import { api } from '@src/trpc/server';
+import ChangeClubStatus from './ChangeClubStatus';
 
 type Props = { club: SelectClub };
 export default async function AcceptedClub({ club: club }: Props) {

@@ -1,6 +1,5 @@
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { type z } from 'zod';
-
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { club } from './schema/club';
 import { contacts } from './schema/contacts';
 import { events } from './schema/events';

@@ -1,9 +1,8 @@
 'use client';
 
-import { type ReactNode, createContext, useContext,useRef } from 'react';
-import { useStore } from 'zustand';
-
+import { type ReactNode, createContext, useRef, useContext } from 'react';
 import { type SearchStore, createSearchStore } from './searchStore';
+import { useStore } from 'zustand';
 
 export type SearchStoreApi = ReturnType<typeof createSearchStore>;
 

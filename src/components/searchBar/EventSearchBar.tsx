@@ -1,13 +1,12 @@
 'use client';
-import type { SelectEvent as Event } from '@src/server/db/models';
-import { useTRPC } from '@src/trpc/react';
-import useDebounce from '@src/utils/useDebounce';
-import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-
+import { useRouter } from 'next/navigation';
+import { useTRPC } from '@src/trpc/react';
+import type { SelectEvent as Event } from '@src/server/db/models';
+import useDebounce from '@src/utils/useDebounce';
 import SearchBar from '.';
 import { SearchResults, SearchResultsItem } from './SearchResults';
+import { useQuery } from '@tanstack/react-query';
 
 export const EventSearchBar = () => {
   const router = useRouter();

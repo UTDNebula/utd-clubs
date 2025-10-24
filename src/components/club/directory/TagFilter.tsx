@@ -1,7 +1,7 @@
 'use client';
+import { useRef } from 'react';
 import { LeftArrowIcon, RightArrowIcon } from '@src/icons/Icons';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
-import { useRef } from 'react';
 
 const scrollAmount = 300;
 

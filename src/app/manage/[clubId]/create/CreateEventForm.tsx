@@ -1,19 +1,18 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { UploadIcon } from '@src/icons/Icons';
-import { type SelectClub } from '@src/server/db/models';
-import { useTRPC } from '@src/trpc/react';
-import { type RouterOutputs } from '@src/trpc/shared';
-import { createEventSchema } from '@src/utils/formSchemas';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { type SelectClub } from '@src/server/db/models';
+import { createEventSchema } from '@src/utils/formSchemas';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
-
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { UploadIcon } from '@src/icons/Icons';
 import EventCardPreview from './EventCardPreview';
 import TimeSelect from './TimeSelect';
+import { type RouterOutputs } from '@src/trpc/shared';
+import { useTRPC } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 
 const CreateEventForm = ({
   clubId,

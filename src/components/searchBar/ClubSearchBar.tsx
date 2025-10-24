@@ -1,13 +1,12 @@
 'use client';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { SelectClub as Club } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
-import useDebounce from '@src/utils/useDebounce';
-import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-
 import SearchBar from '.';
+import useDebounce from '@src/utils/useDebounce';
 import { SearchResults, SearchResultsItem } from './SearchResults';
+import { useQuery } from '@tanstack/react-query';
 
 export const ClubSearchBar = () => {
   const router = useRouter();

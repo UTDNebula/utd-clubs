@@ -2,11 +2,9 @@
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { type personalCats } from '@src/constants/categories';
 import { CloseIcon } from '@src/icons/Icons';
-
 import NavMenu from './NavMenu';
-
+import { type personalCats } from '@src/constants/categories';
 const NewSidebar = ({
   userCapabilities,
   hamburger,

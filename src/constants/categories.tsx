@@ -1,11 +1,11 @@
 import {
-  type IconType,
   AboutIcon,
-  AdminIcon,
-  CommunityIcon,
   EventsIcon,
   FeedbackIcon,
   HomeIcon,
+  type IconType,
+  CommunityIcon,
+  AdminIcon,
 } from '../icons/Icons';
 
 export const mainCats = ['Home', 'My Community', 'Events'] as const;

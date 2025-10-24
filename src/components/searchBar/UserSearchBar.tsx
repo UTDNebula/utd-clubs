@@ -1,11 +1,10 @@
 'use client';
 import { useTRPC } from '@src/trpc/react';
+import { useState } from 'react';
 import useDebounce from '@src/utils/useDebounce';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-
-import SearchBar from '.';
 import { SearchResults, SearchResultsItem } from './SearchResults';
+import SearchBar from '.';
 
 type UserSearchBarProps = {
   passUser: (user: { id: string; name: string }) => void;

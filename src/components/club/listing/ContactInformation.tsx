@@ -1,10 +1,9 @@
+import Image from 'next/image';
+import ContactButtons from './ContactButtons';
 import type {
   SelectClub,
   SelectContact as Contacts,
 } from '@src/server/db/models';
-import Image from 'next/image';
-
-import ContactButtons from './ContactButtons';
 
 type Club = SelectClub & {
   contacts?: Contacts[];
