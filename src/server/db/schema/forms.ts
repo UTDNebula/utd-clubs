@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { integer,pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 export const forms = pgTable('feedback_form', {
   id: text('id')
