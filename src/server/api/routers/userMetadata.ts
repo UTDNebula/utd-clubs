@@ -1,15 +1,15 @@
-import { z } from 'zod';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
-import { and, eq, or, sql } from 'drizzle-orm';
-
+import { type personalCats } from '@src/constants/categories';
 import { insertUserMetadata } from '@src/server/db/models';
+import { admin } from '@src/server/db/schema/admin';
 import {
   userMetadata,
   userMetadataToClubs,
   users,
 } from '@src/server/db/schema/users';
-import { type personalCats } from '@src/constants/categories';
-import { admin } from '@src/server/db/schema/admin';
+import { and, eq, or, sql } from 'drizzle-orm';
+import { z } from 'zod';
+
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byIdSchema = z.object({ id: z.string().uuid() });
 

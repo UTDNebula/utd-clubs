@@ -1,5 +1,6 @@
 import { relations } from 'drizzle-orm';
-import { pgEnum, pgTable, text, primaryKey } from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable, primaryKey,text } from 'drizzle-orm/pg-core';
+
 import { club } from './club';
 
 export const platformEnum = pgEnum('platform', [

@@ -1,4 +1,5 @@
 import { type Column, type Table } from '@tanstack/react-table';
+
 import DebouncedInput from './DebounceInput';
 
 type Props<T> = {

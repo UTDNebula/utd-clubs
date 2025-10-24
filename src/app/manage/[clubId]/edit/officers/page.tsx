@@ -1,11 +1,12 @@
-import Header from '@src/components/header/BaseHeader';
 import { BlueBackButton } from '@src/components/backButton';
-import EditOfficerForm from './EditOfficerForm';
-import { api } from '@src/trpc/server';
+import Header from '@src/components/header/BaseHeader';
 import { getServerAuthSession } from '@src/server/auth';
-import { redirect } from 'next/navigation';
+import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
+import { redirect } from 'next/navigation';
+
 import EditListedOfficerForm from './EditListedOfficerForm';
+import EditOfficerForm from './EditOfficerForm';
 
 export default async function Page({
   params: { clubId },

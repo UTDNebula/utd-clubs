@@ -1,11 +1,9 @@
 import '@src/styles/globals.css';
 
-import { Bai_Jamjuree, Inter } from 'next/font/google';
-
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { TRPCReactProvider } from '@src/trpc/react';
 import { type Metadata } from 'next';
-
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { Bai_Jamjuree, Inter } from 'next/font/google';
 
 const inter = Inter({
   subsets: ['latin'],

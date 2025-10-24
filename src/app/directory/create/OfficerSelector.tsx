@@ -1,13 +1,13 @@
+import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 import { type createClubSchema } from '@src/utils/formSchemas';
 import {
   type Control,
+  type FieldErrors,
   type UseFieldArrayRemove,
   type UseFormRegister,
   useFieldArray,
-  type FieldErrors,
 } from 'react-hook-form';
 import { type z } from 'zod';
-import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 
 type OfficerSelectorProps = {
   control: Control<z.infer<typeof createClubSchema>>;

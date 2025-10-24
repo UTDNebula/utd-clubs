@@ -1,12 +1,13 @@
-import Image from 'next/image';
+import { getServerAuthSession } from '@src/server/auth';
 import type {
   SelectClub,
   SelectContact as Contacts,
 } from '@src/server/db/models';
-import JoinButton from '../JoinButton';
-import { getServerAuthSession } from '@src/server/auth';
-import Link from 'next/link';
 import { api } from '@src/trpc/server';
+import Image from 'next/image';
+import Link from 'next/link';
+
+import JoinButton from '../JoinButton';
 import ContactButtons from './ContactButtons';
 
 type Club = SelectClub & {

@@ -1,11 +1,12 @@
 'use client';
-import { useState } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
-import { SearchResults, SearchResultsItem } from './SearchResults';
-import SearchBar from '.';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+
+import SearchBar from '.';
+import { SearchResults, SearchResultsItem } from './SearchResults';
 
 type EventClubSearchBarProps = {
   addClub: (value: string) => void;

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { LeftArrowIcon } from '@src/icons/Icons';
+import { useEffect,useState } from 'react';
 
 export default function ScrollTop() {
   const [visible, setVisible] = useState(false);

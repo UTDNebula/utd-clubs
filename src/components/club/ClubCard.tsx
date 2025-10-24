@@ -1,9 +1,10 @@
-import { type FC } from 'react';
-import Image from 'next/image';
 import type { SelectClub as Club } from '@src/server/db/models';
-import JoinButton from './JoinButton';
+import Image from 'next/image';
 import Link from 'next/link';
 import { type Session } from 'next-auth';
+import { type FC } from 'react';
+
+import JoinButton from './JoinButton';
 
 type Props = { club: Club; session: Session | null; priority: boolean };
 
