@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
 import React, { useState } from 'react';
 
+
 type JoinButtonProps = {
   session: Session | null;
   isHeader?: boolean;

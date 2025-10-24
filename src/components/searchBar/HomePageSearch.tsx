@@ -5,7 +5,7 @@ import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import useDebounce from '@src/utils/useDebounce';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef,useState } from 'react';
 
 import SearchBar from '.';
 import { SearchResults, SearchResultsItem } from './SearchResults';

@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgEnum, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable, primaryKey,text } from 'drizzle-orm/pg-core';
 
 import { club } from './club';
 

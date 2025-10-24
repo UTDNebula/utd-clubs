@@ -2,7 +2,7 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ClubSelector from '@src/components/settings/ClubSelector';
-import { type SelectClub, selectClub } from '@src/server/db/models';
+import { type SelectClub,selectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';

@@ -4,7 +4,7 @@ import { contacts } from '@src/server/db/schema/contacts';
 import { officers as officersTable } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
 import { createClubSchema as baseClubSchema } from '@src/utils/formSchemas';
-import { and, eq, gt, ilike, inArray, lt, sql } from 'drizzle-orm';
+import { and, eq, gt,ilike, inArray, lt, sql } from 'drizzle-orm';
 import { z } from 'zod';
 
 import {

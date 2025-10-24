@@ -2,7 +2,7 @@
 
 import { type AppRouter } from '@src/server/api/root';
 import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client';
+import { createTRPCClient, httpBatchLink,loggerLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import { useState } from 'react';
 

@@ -1,5 +1,5 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import { CheckIcon, CloseIcon } from '@src/icons/Icons';
+import { CheckIcon,CloseIcon  } from '@src/icons/Icons';
 import React from 'react';
 
 type formPopUpProps = {

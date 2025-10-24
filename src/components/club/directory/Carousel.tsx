@@ -3,7 +3,7 @@ import { LeftArrowIcon, RightArrowIcon } from '@src/icons/Icons';
 import { type SelectClub } from '@src/server/db/models';
 import Image from 'next/image';
 import Link from 'next/link';
-import { type TouchEventHandler, useState } from 'react';
+import { type TouchEventHandler,useState } from 'react';
 
 const minSwipeDistance = 50;
 

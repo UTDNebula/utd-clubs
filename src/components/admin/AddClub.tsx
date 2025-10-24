@@ -6,7 +6,7 @@ import { useTRPC } from '@src/trpc/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { type DateRange, DayPicker } from 'react-day-picker';
+import { type DateRange,DayPicker } from 'react-day-picker';
 
 import ClubSearch from './ClubSearch';
 
