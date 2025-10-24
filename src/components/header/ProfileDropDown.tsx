@@ -56,6 +56,7 @@ export const ProfileDropDown = ({ session }: Props) => {
         open={open}
         anchorEl={avatarRef.current}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ horizontal: 'left', vertical: -8 }}
         disableScrollLock={true}
         onClose={() => setOpen(false)}
       >
