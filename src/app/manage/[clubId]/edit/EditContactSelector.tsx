@@ -19,12 +19,12 @@ import {
   Email,
   Facebook,
   Instagram,
+  Link,
+  LinkedIn,
+  Twitch,
   Twitter,
   Website,
   Youtube,
-  Twitch,
-  Link,
-  LinkedIn,
   type logoProps,
 } from '@src/icons/ContactIcons';
 import { type SelectContact } from '@src/server/db/models';
