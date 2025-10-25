@@ -46,14 +46,13 @@ const Home = async () => {
               />
               <Image
                 src={planetsDoodle}
-                //width={300}
-                //height={300}
                 alt="Planets Doodle for landing page"
+                width={574}
+                height={200}
                 className="absolute right-[10%] bottom-[30%] w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover"
               />
               <Image
                 src="/images/StarDoodle.svg"
-                // size: ~56×56px (mobile) → ~72×72px (desktop)
                 alt="Star Doodle (top right) for landing page"
                 width={72}
                 height={72}
@@ -61,7 +60,6 @@ const Home = async () => {
               />
               <Image
                 src="/images/StarDoodle.svg"
-                // size: ~32×32px (mobile) → ~48×48px (desktop)
                 alt="Star Doodle (bottom left) for landing page"
                 width={48}
                 height={48}
