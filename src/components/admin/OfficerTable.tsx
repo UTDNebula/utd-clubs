@@ -1,12 +1,14 @@
 'use client';
-import { type api } from '@src/trpc/server';
+
 import {
-  getCoreRowModel,
-  type ColumnDef,
-  useReactTable,
   flexRender,
+  getCoreRowModel,
+  useReactTable,
+  type ColumnDef,
 } from '@tanstack/react-table';
+import { type api } from '@src/trpc/server';
 import RoleDropDown from './RoleDropDown';
+
 type Officers = Awaited<ReturnType<typeof api.club.getOfficers>>;
 
 const columns: ColumnDef<Officers[number]>[] = [

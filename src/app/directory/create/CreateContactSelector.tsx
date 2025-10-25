@@ -5,8 +5,14 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
-import { type SelectContact } from '@src/server/db/models';
 import { useReducer } from 'react';
+import {
+  useFieldArray,
+  type Control,
+  type FieldErrors,
+  type UseFormRegister,
+} from 'react-hook-form';
+import { type z } from 'zod';
 import {
   Discord,
   Email,
@@ -17,13 +23,7 @@ import {
   Youtube,
   type logoProps,
 } from '@src/icons/ContactIcons';
-import {
-  type Control,
-  type UseFormRegister,
-  useFieldArray,
-  type FieldErrors,
-} from 'react-hook-form';
-import { type z } from 'zod';
+import { type SelectContact } from '@src/server/db/models';
 import { type createClubSchema } from '@src/utils/formSchemas';
 
 type Contact = Omit<SelectContact, 'clubId'>;

@@ -1,10 +1,10 @@
 import PillButton from '@src/components/PillButton';
 import {
   EyeIcon,
-  PlusIcon,
-  PencilIcon,
   GroupIcon,
+  PencilIcon,
   PersonIcon,
+  PlusIcon,
 } from '@src/icons/Icons';
 
 const Page = ({ params }: { params: { clubId: string } }) => {

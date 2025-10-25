@@ -1,8 +1,8 @@
+import { eq } from 'drizzle-orm';
+import { notFound } from 'next/navigation';
 import ApprovedClub from '@src/components/admin/ApprovedClub';
 import OtherClubStatus from '@src/components/admin/OtherClubStatus';
 import { db } from '@src/server/db';
-import { eq } from 'drizzle-orm';
-import { notFound } from 'next/navigation';
 
 type Props = { params: { id: string } };
 

@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client';
+
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
-import { useTRPC } from '@src/trpc/react';
-import { editOfficerSchema } from '@src/utils/formSchemas';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { type z } from 'zod';
+import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
+import { useTRPC } from '@src/trpc/react';
+import { editOfficerSchema } from '@src/utils/formSchemas';
 
 type x = {
   userId?: boolean;

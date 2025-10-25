@@ -1,5 +1,5 @@
-import { type SelectClub } from '@src/server/db/models';
 import Image from 'next/image';
+import { type SelectClub } from '@src/server/db/models';
 
 export default function ClubPill({ club }: { club: SelectClub }) {
   return (
