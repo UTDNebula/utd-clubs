@@ -1,5 +1,5 @@
-import { RightArrowIcon, SearchIcon } from '@src/icons/Icons';
 import { type ComponentProps } from 'react';
+import { RightArrowIcon, SearchIcon } from '@src/icons/Icons';
 
 type SearchBarProps = Omit<ComponentProps<'input'>, 'type'> & {
   submitButton?: boolean;

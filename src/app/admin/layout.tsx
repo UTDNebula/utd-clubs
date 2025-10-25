@@ -1,8 +1,8 @@
-import { getServerAuthSession } from '@src/server/auth';
-import { db } from '@src/server/db';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import { type ReactNode } from 'react';
+import { getServerAuthSession } from '@src/server/auth';
+import { db } from '@src/server/db';
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await getServerAuthSession();

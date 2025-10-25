@@ -1,18 +1,19 @@
-import TagFilter from '../components/club/directory/TagFilter';
-import ClubDirectoryGrid from '../components/club/directory/ClubDirectoryGrid';
 import type { Metadata } from 'next';
-import { api } from '@src/trpc/server';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
-import starDoodle from 'public/images/StarDoodle.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
+import starDoodle from 'public/images/StarDoodle.png';
+import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
+import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import { getServerAuthSession } from '@src/server/auth';
-import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
+import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
-import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
+import ClubDirectoryGrid from '../components/club/directory/ClubDirectoryGrid';
+import TagFilter from '../components/club/directory/TagFilter';
+
 export const metadata: Metadata = {
   title: 'Jupiter - Nebula',
   description: 'Get connected on campus.',

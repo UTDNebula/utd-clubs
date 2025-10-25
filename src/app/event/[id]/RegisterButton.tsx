@@ -1,7 +1,8 @@
 'use client';
-import { useTRPC } from '@src/trpc/react';
+
 import { useMutation } from '@tanstack/react-query';
-import { type FC, useState } from 'react';
+import { useState, type FC } from 'react';
+import { useTRPC } from '@src/trpc/react';
 
 type RegisterButtonProps = {
   eventId: string;

@@ -1,8 +1,8 @@
 'use server';
 
+import Link from 'next/link';
 import EventCard from '@src/components/events/EventCard';
 import { api } from '@src/trpc/server';
-import Link from 'next/link';
 
 const CommunityEvents = async () => {
   const events = await api.userMetadata.getEvents();

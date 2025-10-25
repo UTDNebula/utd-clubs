@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@jest/globals';
+import { eq } from 'drizzle-orm';
 import { db } from '@src/server/db';
 import { type InsertClub } from '@src/server/db/models';
 import { club } from '@src/server/db/schema';
-import { eq } from 'drizzle-orm';
 
 describe('This should create a club on supabase', () => {
   test('Should create a new club', async () => {

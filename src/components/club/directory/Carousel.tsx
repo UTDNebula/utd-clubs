@@ -1,8 +1,9 @@
 'use client';
+
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState, type TouchEventHandler } from 'react';
 import { LeftArrowIcon, RightArrowIcon } from '@src/icons/Icons';
-import Link from 'next/link';
 import { type SelectClub } from '@src/server/db/models';
 
 const minSwipeDistance = 50;
