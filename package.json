@@ -16,11 +16,13 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.2",
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^3.3.2",
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.4",
+    "@mui/material-nextjs": "^7.3.3",
     "@neondatabase/serverless": "^0.10.2",
     "@next/third-parties": "^14.2.15",
     "@radix-ui/react-alert-dialog": "^1.0.5",

@@ -1,4 +1,5 @@
 import '@src/styles/globals.css';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
@@ -48,12 +49,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-main ${baiJamjuree.variable}`}>
-        <TRPCReactProvider>
-          <ThemeProvider theme={theme}>{children}</ThemeProvider>
-        </TRPCReactProvider>
-        {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
-          <GoogleAnalytics gaId="G-FYTBHVKNG6" />
-        )}
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <TRPCReactProvider>
+            <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          </TRPCReactProvider>
+          {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
+            <GoogleAnalytics gaId="G-FYTBHVKNG6" />
+          )}
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
