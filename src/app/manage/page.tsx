@@ -1,10 +1,10 @@
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import Header from '@src/components/header/BaseHeader';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
-import ClubCard from './ClubCard';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { signInRoute } from '@src/utils/redirect';
+import ClubCard from './ClubCard';
 
 export default async function Page() {
   const session = await getServerAuthSession();

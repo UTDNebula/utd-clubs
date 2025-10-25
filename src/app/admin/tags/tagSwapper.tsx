@@ -1,7 +1,8 @@
 'use client';
-import { useTRPC } from '@src/trpc/react';
+
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useTRPC } from '@src/trpc/react';
 
 export default function TagSwapper() {
   const [oldTag, setOldTag] = useState('');

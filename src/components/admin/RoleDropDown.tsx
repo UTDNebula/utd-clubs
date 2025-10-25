@@ -1,9 +1,9 @@
-import { type api as API } from '@src/trpc/server';
-import { useTRPC } from '@src/trpc/react';
-import { type Row, type RowData, type Table } from '@tanstack/react-table';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
+import { type Row, type RowData, type Table } from '@tanstack/react-table';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useTRPC } from '@src/trpc/react';
+import { type api as API } from '@src/trpc/server';
 
 type Officers = Awaited<ReturnType<typeof API.club.getOfficers>>;
 

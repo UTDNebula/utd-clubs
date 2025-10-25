@@ -1,4 +1,5 @@
 'use client';
+
 import { signIn, type ClientSafeProvider } from 'next-auth/react';
 import { type FC } from 'react';
 import AuthIcons from '@src/icons/AuthIcons';

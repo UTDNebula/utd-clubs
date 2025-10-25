@@ -1,10 +1,10 @@
-import Header from '@src/components/header/BaseHeader';
+import { notFound, redirect } from 'next/navigation';
+import { type ReactNode } from 'react';
 import { BlueBackButton } from '@src/components/backButton';
+import Header from '@src/components/header/BaseHeader';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
-import { notFound, redirect } from 'next/navigation';
-import { type ReactNode } from 'react';
 
 const Layout = async ({
   params,

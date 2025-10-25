@@ -1,18 +1,16 @@
 'use client';
+
 /* eslint-disable @typescript-eslint/no-misused-promises */
-
-import Image from 'next/image';
-import { useForm } from 'react-hook-form';
-import { feedbackFormSchema } from '@src/utils/formSchemas';
-import { type z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type FormEventHandler } from 'react';
-import FormPopUp from '@src/app/feedback/FormPopUp';
-import { useState } from 'react';
-
-import nebulaPic from 'public/nebula-logo.png';
-import { useTRPC } from '@src/trpc/react';
 import { useMutation } from '@tanstack/react-query';
+import Image from 'next/image';
+import nebulaPic from 'public/nebula-logo.png';
+import { useState, type FormEventHandler } from 'react';
+import { useForm } from 'react-hook-form';
+import { type z } from 'zod';
+import FormPopUp from '@src/app/feedback/FormPopUp';
+import { useTRPC } from '@src/trpc/react';
+import { feedbackFormSchema } from '@src/utils/formSchemas';
 
 const Form = () => {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);

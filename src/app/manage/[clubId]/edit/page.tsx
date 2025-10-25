@@ -1,9 +1,9 @@
+import { notFound } from 'next/navigation';
+import { BlueBackButton } from '@src/components/backButton';
+import Header from '@src/components/header/BaseHeader';
 import { api } from '@src/trpc/server';
 import EditClubForm from './EditClubForm';
-import Header from '@src/components/header/BaseHeader';
-import { notFound } from 'next/navigation';
 import EditContactForm from './EditContactForm';
-import { BlueBackButton } from '@src/components/backButton';
 
 export default async function Page({
   params: { clubId },

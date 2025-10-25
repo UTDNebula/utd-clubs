@@ -1,9 +1,9 @@
 'use client';
-import React from 'react';
-import { useState } from 'react';
-import { useTRPC } from '@src/trpc/react';
-import { type Session } from 'next-auth';
+
 import { useMutation } from '@tanstack/react-query';
+import { type Session } from 'next-auth';
+import React, { useState } from 'react';
+import { useTRPC } from '@src/trpc/react';
 
 type JoinButtonProps = {
   session: Session | null;

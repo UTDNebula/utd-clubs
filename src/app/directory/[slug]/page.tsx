@@ -1,15 +1,14 @@
-import Header from '@src/components/header/BaseHeader';
+import { eq } from 'drizzle-orm';
+import { type Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import ClubHeader from '@src/components/club/listing/ClubHeader';
 import ClubInfoSegment from '@src/components/club/listing/ClubInfoSegment';
 import ClubUpcomingEvents from '@src/components/club/listing/ClubUpcomingEvents';
 import ContactInformation from '@src/components/club/listing/ContactInformation';
-
-import { api } from '@src/trpc/server';
-import { db } from '@src/server/db';
-import { eq } from 'drizzle-orm';
-import { type Metadata } from 'next';
+import Header from '@src/components/header/BaseHeader';
 import NotFound from '@src/components/NotFound';
-import { redirect } from 'next/navigation';
+import { db } from '@src/server/db';
+import { api } from '@src/trpc/server';
 
 const ClubPage = async ({ params }: { params: { slug: string } }) => {
   const club = await api.club.getDirectoryInfo({ slug: params.slug });
