@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client';
-import { selectClub, type SelectClub } from '@src/server/db/models';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
-import SettingsDropdown from './SettingsDropdown';
-import SettingsInput from './SettingsInput';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 import ClubSelector from '@src/components/settings/ClubSelector';
+import { selectClub, type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import DeleteButton from './DeleteButton';
-import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import SettingsDropdown from './SettingsDropdown';
+import SettingsInput from './SettingsInput';
 
 type Props = {
   clubs: SelectClub[];

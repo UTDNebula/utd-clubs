@@ -1,9 +1,9 @@
 'use client';
 
-import { useTRPC } from '@src/trpc/react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useTRPC } from '@src/trpc/react';
 
 type Props = { status: 'approved' | 'pending' | 'rejected'; clubId: string };
 

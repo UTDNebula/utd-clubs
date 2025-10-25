@@ -1,6 +1,6 @@
 import Header from '@src/components/header/BaseHeader';
-import { ClubSearchComponent } from './ClubSearch';
 import { getServerAuthSession } from '@src/server/auth';
+import { ClubSearchComponent } from './ClubSearch';
 
 type Params = {
   searchParams: { [key: string]: string | undefined };

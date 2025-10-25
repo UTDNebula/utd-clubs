@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client';
+
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTRPC } from '@src/trpc/react';
-import { editListedOfficerSchema } from '@src/utils/formSchemas';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
 import {
-  type FieldErrors,
-  type UseFormRegister,
   useFieldArray,
   useForm,
+  type FieldErrors,
+  type UseFormRegister,
 } from 'react-hook-form';
 import { type z } from 'zod';
+import { useTRPC } from '@src/trpc/react';
+import { editListedOfficerSchema } from '@src/utils/formSchemas';
 
 type x = {
   id?: boolean;

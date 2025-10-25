@@ -1,6 +1,7 @@
 'use client';
-import { AccountIcon } from '@src/icons/Icons';
+
 import { signIn } from 'next-auth/react';
+import { AccountIcon } from '@src/icons/Icons';
 
 export default function SignInButton() {
   return (

@@ -1,12 +1,13 @@
 'use client';
-import SidebarItems from './SidebarItems';
+
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   mainCats,
   moreCats,
   type personalCats,
 } from '@src/constants/categories';
-import Link from 'next/link';
+import SidebarItems from './SidebarItems';
 
 type NavMenuProps = {
   userCapabilites: Array<(typeof personalCats)[number]>;
