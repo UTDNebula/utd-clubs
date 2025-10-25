@@ -5,7 +5,6 @@ import NewSidebar from '../nav/Slide';
 import { ClubSearchBar } from '../searchBar/ClubSearchBar';
 import { EventSearchBar } from '../searchBar/EventSearchBar';
 import { ProfileDropDown } from './ProfileDropDown';
-import SignInButton from './signInButton';
 
 export const BaseHeader = async ({ children }: { children: ReactNode }) => {
   const session = await getServerAuthSession();
@@ -15,15 +14,7 @@ export const BaseHeader = async ({ children }: { children: ReactNode }) => {
       <NewSidebar userCapabilities={userCapabilities} hamburger="black" />
       {children}
       <div className="ml-auto flex items-center justify-center">
-        {session !== null ? (
-          <div className="h-10 w-10 rounded-full">
-            <ProfileDropDown image={session.user.image || ''} />
-          </div>
-        ) : (
-          <div className="mr-2">
-            <SignInButton />
-          </div>
-        )}
+        <ProfileDropDown session={session} />
       </div>
     </div>
   );

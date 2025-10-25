@@ -1,3 +1,4 @@
+@layer theme, base, mui, components, utilities;
 @import 'tailwindcss';
 @plugin 'tailwindcss-animate';
 
@@ -9,7 +10,7 @@
   padding-inline: 2rem;
 }
 
-/*If changing be sure to update in layout.tsx too*/
+/*If changing be sure to update in theme.ts too*/
 @theme {
   --color-haiti: #090b2c;
   --color-persimmon-50: #ffe5de;
