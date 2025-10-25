@@ -5,7 +5,6 @@ import NewSidebar from '../nav/Slide';
 import { ClubSearchBar } from '../searchBar/ClubSearchBar';
 import { EventSearchBar } from '../searchBar/EventSearchBar';
 import { ProfileDropDown } from './ProfileDropDown';
-import SignInButton from './signInButton';
 
 export const BaseHeader = async ({ children }: { children: ReactNode }) => {
   const session = await getServerAuthSession();

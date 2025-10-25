@@ -11,9 +11,9 @@ import {
   MenuList,
   Popover,
 } from '@mui/material';
-import Link from 'next/link';
 import { type Session } from 'next-auth';
 import { signIn, signOut } from 'next-auth/react';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 type Props = {
