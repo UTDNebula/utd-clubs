@@ -28,6 +28,7 @@ export const club = pgTable(
       .primaryKey(),
     slug: text('slug').notNull(),
     name: text('name').notNull(),
+    foundingDate: text('founding_date'),
     description: text('description').notNull(),
     tags: text('tags')
       .array()
