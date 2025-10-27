@@ -1,17 +1,19 @@
-import TagFilter from '../components/club/directory/TagFilter';
-import ClubDirectoryGrid from '../components/club/directory/ClubDirectoryGrid';
 import type { Metadata } from 'next';
-import { api } from '@src/trpc/server';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
-import SignInButton from '@src/components/header/signInButton';
+import planetsDoodle from 'public/images/PlanetsDoodle.png';
+import starDoodle from 'public/images/StarDoodle.png';
+import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
+import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import { getServerAuthSession } from '@src/server/auth';
-import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
+import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
-import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
+import ClubDirectoryGrid from '../components/club/directory/ClubDirectoryGrid';
+import TagFilter from '../components/club/directory/TagFilter';
+
 export const metadata: Metadata = {
   title: 'Jupiter - Nebula',
   description: 'Get connected on campus.',
@@ -43,6 +45,27 @@ const Home = async () => {
                 alt="Gradient Background for landing page"
                 className="bg-no-repeat object-cover"
               />
+              <Image
+                src={planetsDoodle}
+                //width={300}
+                //height={300}
+                alt="Planets Doodle for landing page"
+                className="absolute right-[10%] bottom-[30%] w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover"
+              />
+              <Image
+                src={starDoodle}
+                //width={170}
+                //height={170}
+                alt="Star Doodle (top right) for landing page"
+                className="absolute top-[5%] right-[15%] w-[clamp(170px,20vw,200px)] animate-spin bg-no-repeat object-cover [animation-direction:reverse] [animation-duration:77s]"
+              />
+              <Image
+                src={starDoodle}
+                //width={140}
+                //height={140}
+                alt="Star Doodle (upper right) for landing page"
+                className="absolute bottom-[35%] left-[7%] w-[clamp(70px,20vw,150px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
+              />
             </section>
             <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"></section>
           </div>
@@ -51,15 +74,7 @@ const Home = async () => {
           <div className="pointer-events-none fixed top-0 z-20 flex h-20 w-full flex-row items-center px-2.5 py-2.5 md:px-5">
             <Sidebar hamburger="white" />
             <div className="pointer-events-auto ml-auto flex items-center justify-center">
-              {session !== null ? (
-                <div className="h-10 w-10 rounded-full">
-                  <ProfileDropDown image={session.user.image || ''} />
-                </div>
-              ) : (
-                <div className="mr-2">
-                  <SignInButton />
-                </div>
-              )}
+              <ProfileDropDown session={session} />
             </div>
           </div>
           <section className="h-screen w-screen">

@@ -1,6 +1,6 @@
+import Link from 'next/link';
 import CarouselCard from '@src/components/admin/CarouselCards';
 import { api } from '@src/trpc/server';
-import Link from 'next/link';
 
 export default async function Page() {
   const carouselItems = await api.club.getCarousel();

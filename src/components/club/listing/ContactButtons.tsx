@@ -1,6 +1,6 @@
-import type { SelectContact as Contacts } from '@src/server/db/models';
-import { logo } from '@src/icons/ContactIcons';
 import Link from 'next/link';
+import { logo } from '@src/icons/ContactIcons';
+import type { SelectContact as Contacts } from '@src/server/db/models';
 
 const EmailButton = ({ item }: { item: Contacts }) => {
   return (

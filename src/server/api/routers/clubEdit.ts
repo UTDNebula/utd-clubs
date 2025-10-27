@@ -1,14 +1,14 @@
-import { db } from '@src/server/db';
-import { createTRPCRouter, protectedProcedure } from '../trpc';
-import { and, eq, inArray } from 'drizzle-orm';
-import { editClubSchema } from '@src/utils/formSchemas';
 import { TRPCError } from '@trpc/server';
+import { and, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
+import { db } from '@src/server/db';
 import { selectContact } from '@src/server/db/models';
 import { club } from '@src/server/db/schema/club';
 import { contacts } from '@src/server/db/schema/contacts';
-import { userMetadataToClubs } from '@src/server/db/schema/users';
 import { officers } from '@src/server/db/schema/officers';
+import { userMetadataToClubs } from '@src/server/db/schema/users';
+import { editClubSchema } from '@src/utils/formSchemas';
+import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 async function isUserOfficer(userId: string, clubId: string) {
   const officer = await db.query.userMetadataToClubs.findFirst({

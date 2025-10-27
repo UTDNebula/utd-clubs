@@ -1,6 +1,6 @@
+import { and, eq } from 'drizzle-orm';
 import { db } from '@src/server/db';
 import { type SelectClub } from '@src/server/db/models';
-import { and, eq } from 'drizzle-orm';
 import ChangeClubStatus from './ChangeClubStatus';
 
 type Props = { club: SelectClub };

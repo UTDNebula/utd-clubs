@@ -1,6 +1,5 @@
+import React, { type FC } from 'react';
 import Header from '@src/components/header/BaseHeader';
-import React from 'react';
-import { type FC } from 'react';
 
 const NotFound: FC<{ elementType: string }> = ({ elementType }) => {
   return (
