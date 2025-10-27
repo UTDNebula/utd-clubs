@@ -122,13 +122,6 @@ export const eventRouter = createTRPCRouter({
       const endCT = add(startCT, { days: 1 });
       const startUTC = new Date(startCT.getTime());
       const endUTC = new Date(endCT.getTime());
-      console.log({
-        input: input.date,
-        startCT: startCT.toISOString(),
-        endCT: endCT.toISOString(),
-        startUTC: startUTC.toISOString(),
-        endUTC: endUTC.toISOString(),
-      });
       const events = await ctx.db.query.events.findMany({
         where: (event) => {
           return or(
