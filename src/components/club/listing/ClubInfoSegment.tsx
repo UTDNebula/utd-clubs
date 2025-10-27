@@ -27,8 +27,10 @@ const ClubInfoSegment: FC<{
           </div>
           {club.foundingDate && (
             <div className="mt-2 flex w-36 justify-between">
-              <p className="text-sm text-slate-400">Founded</p> 
-              <p className="text-right text-sm text-slate-600">{club.foundingDate}</p>
+              <p className="text-sm text-slate-400">Founded</p>
+              <p className="text-right text-sm text-slate-600">
+                {club.foundingDate}
+              </p>
             </div>
           )}
           <div className="mt-2 flex w-36 justify-between">
