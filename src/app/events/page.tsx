@@ -26,10 +26,11 @@ const Events = async ({
   const { events } = await api.event.findByDate({
     date: parsed.date,
   });
+
   return (
     <main className="pb-10">
       <EventHeader />
-      <EventView searchParams={parsed}>
+      <EventView date={parsed.date}>
         {events.map((event) => {
           return <EventCard key={event.id} event={event} />;
         })}

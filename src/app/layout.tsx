@@ -5,6 +5,7 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
 import { TRPCReactProvider } from '@src/trpc/react';
+import ClientLocalizationProvider from '@src/utils/localization';
 import theme from '@src/utils/theme';
 
 const inter = Inter({
@@ -51,7 +52,11 @@ export default function RootLayout({
       <body className={`${inter.variable} font-main ${baiJamjuree.variable}`}>
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <TRPCReactProvider>
-            <ThemeProvider theme={theme}>{children}</ThemeProvider>
+            <ThemeProvider theme={theme}>
+              <ClientLocalizationProvider>
+                {children}
+              </ClientLocalizationProvider>
+            </ThemeProvider>
           </TRPCReactProvider>
           {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
             <GoogleAnalytics gaId="G-FYTBHVKNG6" />
