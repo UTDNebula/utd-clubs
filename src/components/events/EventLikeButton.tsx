@@ -1,9 +1,10 @@
 'use client';
+
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { CheckIcon, PlusIcon } from '@src/icons/Icons';
-import { useTRPC } from '@src/trpc/react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { CheckIcon, PlusIcon } from '@src/icons/Icons';
+import { useTRPC } from '@src/trpc/react';
 
 type buttonProps = {
   eventId: string;

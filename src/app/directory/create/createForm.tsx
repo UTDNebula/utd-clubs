@@ -1,14 +1,15 @@
 'use client';
+
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
-import ContactSelector from '@src/app/directory/create/CreateContactSelector';
-import OfficerSelector from '@src/app/directory/create/OfficerSelector';
-import { useTRPC } from '@src/trpc/react';
-import { createClubSchema } from '@src/utils/formSchemas';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
+import ContactSelector from '@src/app/directory/create/CreateContactSelector';
+import OfficerSelector from '@src/app/directory/create/OfficerSelector';
+import { useTRPC } from '@src/trpc/react';
+import { createClubSchema } from '@src/utils/formSchemas';
 
 const CreateClubForm = ({ user }: { user: { id: string; name: string } }) => {
   const {

@@ -1,12 +1,12 @@
 'use client';
-import { useEffect, useState } from 'react';
+
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef, useState, type ComponentProps } from 'react';
+import { RightArrowIcon, SearchIcon } from '@src/icons/Icons';
 import { useTRPC } from '@src/trpc/react';
+import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import useDebounce from '@src/utils/useDebounce';
 import { SearchResults, SearchResultsItem } from './SearchResults';
-import { useSearchStore } from '@src/utils/SearchStoreProvider';
-import { useQuery } from '@tanstack/react-query';
-import { RightArrowIcon, SearchIcon } from '@src/icons/Icons';
-import { type ComponentProps } from 'react';
 
 export const HomePageSearchBar = () => {
   const [search, setSearch] = useState<string>('');
@@ -30,8 +30,29 @@ export const HomePageSearchBar = () => {
   const onSubmit = () => {
     document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' });
   };
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isSticky, setIsSticky] = useState(false);
+  const originalOffset = useRef<number>(0);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      originalOffset.current =
+        containerRef.current.getBoundingClientRect().top + window.scrollY;
+    }
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsSticky(scrollY > originalOffset.current);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   return (
-    <div className="pointer-events-auto relative w-full max-w-sm md:max-w-md lg:max-w-lg">
+    <div
+      ref={containerRef}
+      className={`text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] mr-3 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
+        isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
+      }`}
+    >
       <div
         className={`flex min-h-10 w-full flex-row flex-wrap items-center gap-x-2 gap-y-2 rounded-lg border border-gray-200 bg-white p-2 focus:outline-hidden`}
       >

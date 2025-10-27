@@ -1,5 +1,5 @@
-import type { SelectContact as Contacts } from '@src/server/db/models';
 import { type ReactNode } from 'react';
+import type { SelectContact as Contacts } from '@src/server/db/models';
 
 export type logoProps = {
   [Property in Contacts['platform']]: ReactNode;

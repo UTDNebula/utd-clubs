@@ -1,17 +1,17 @@
+import { DrizzleAdapter } from '@auth/drizzle-adapter';
+import { eq } from 'drizzle-orm';
+import { pgTable } from 'drizzle-orm/pg-core';
 import {
   getServerSession,
-  type NextAuthOptions,
   type DefaultSession,
+  type NextAuthOptions,
 } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
+import GoogleProvider from 'next-auth/providers/google';
 import { env } from '@src/env.mjs';
-import { DrizzleAdapter } from '@auth/drizzle-adapter';
-import { db } from './db';
-import { eq } from 'drizzle-orm';
-import { type InsertUserMetadata } from './db/models';
 import { type UserMetadata } from '@src/models/userMetadata';
-import { pgTable } from 'drizzle-orm/pg-core';
+import { db } from './db';
+import { type InsertUserMetadata } from './db/models';
 import { userMetadata } from './db/schema/users';
 
 /**

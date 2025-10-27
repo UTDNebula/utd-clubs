@@ -1,9 +1,9 @@
-import ProviderButton from '@src/app/auth/ProviderButtons';
-import { getServerAuthSession } from '@src/server/auth';
 import { getProviders } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
+import ProviderButton from '@src/app/auth/ProviderButtons';
 import BackButton from '@src/components/backButton';
+import { getServerAuthSession } from '@src/server/auth';
 
 export default async function Auth({
   searchParams,

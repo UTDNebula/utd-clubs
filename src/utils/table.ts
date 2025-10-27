@@ -1,6 +1,7 @@
-import { type SelectClub } from '@src/server/db/models';
 import { rankItem } from '@tanstack/match-sorter-utils';
 import { type FilterFn } from '@tanstack/react-table';
+import { type SelectClub } from '@src/server/db/models';
+
 export type Club = Omit<
   SelectClub,
   'description' | 'image' | 'clubSearchVector'

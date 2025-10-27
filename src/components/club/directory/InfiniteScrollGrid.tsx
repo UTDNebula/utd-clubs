@@ -1,10 +1,11 @@
 'use client';
-import { useTRPC } from '@src/trpc/react';
+
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
 import { useEffect, useRef } from 'react';
-import ClubCard, { ClubCardSkeleton } from '../ClubCard';
+import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 
 type Props = {
   session: Session | null;

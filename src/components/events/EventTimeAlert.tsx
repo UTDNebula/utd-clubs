@@ -1,12 +1,12 @@
 'use client';
-import { type SelectEvent } from '@src/server/db/models';
+
 import {
   differenceInDays,
   differenceInHours,
   differenceInMinutes,
 } from 'date-fns';
-import { type ReactNode } from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
+import { type SelectEvent } from '@src/server/db/models';
 
 type EventTimeAlertProps = {
   event: SelectEvent;

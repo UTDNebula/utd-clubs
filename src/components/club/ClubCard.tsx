@@ -1,9 +1,9 @@
-import { type FC } from 'react';
+import { type Session } from 'next-auth';
 import Image from 'next/image';
+import Link from 'next/link';
+import { type FC } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
 import JoinButton from './JoinButton';
-import Link from 'next/link';
-import { type Session } from 'next-auth';
 
 type Props = { club: Club; session: Session | null; priority: boolean };
 
@@ -14,6 +14,8 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
       : club.description;
   const name =
     club.name.length > 20 ? club.name.slice(0, 30) + '...' : club.name;
+  const placeholderImage =
+    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAQABADAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAABgf/xAAXEAEAAwAAAAAAAAAAAAAAAAAFACIx/8QAGAEAAgMAAAAAAAAAAAAAAAAABAUGBwj/xAAWEQADAAAAAAAAAAAAAAAAAAAAAgT/2gAMAwEAAhEDEQA/ALuYnlpkZHL4onFpieWhaOI6JySlqZaKEcnNMwtMTy0MRxFROf/Z';
   return (
     <div className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between rounded-lg bg-white shadow-2xl md:min-h-[600px]">
       <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
@@ -25,6 +27,8 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
             priority={priority}
             sizes="20rem"
             className="object-cover select-none"
+            placeholder="blur"
+            blurDataURL={placeholderImage}
           />
         ) : (
           <div className="absolute inset-0 h-full w-full bg-gray-200" />

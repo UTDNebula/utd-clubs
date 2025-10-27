@@ -1,4 +1,5 @@
 import { createStore } from 'zustand/vanilla';
+
 export type SearchState = {
   search: string;
   tags: string[];
