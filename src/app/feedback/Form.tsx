@@ -2,23 +2,20 @@
 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
+import Link from 'next/link';
 import nebulaPic from 'public/android-chrome-192x192.png';
 import { useState, type FormEventHandler } from 'react';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
-import FormPopUp from '@src/app/feedback/FormPopUp';
 import { useTRPC } from '@src/trpc/react';
 import { feedbackFormSchema } from '@src/utils/formSchemas';
 
 const Form = () => {
-  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [showForm, setShowForm] = useState<boolean>(true);
 
-  const handlePopup = () => {
-    setIsPopupOpen(!isPopupOpen);
-  };
   const handleShowForm = () => {
     setShowForm(!showForm);
   };
@@ -39,13 +36,11 @@ const Form = () => {
 
   const submitForm = handleSubmit((data) => {
     if (!createForm.isPending) createForm.mutate(data);
-    handlePopup();
     handleShowForm();
   });
 
   return (
     <main className="relative">
-      <FormPopUp onClose={handlePopup} isOpen={isPopupOpen} />
       <form
         onSubmit={submitForm}
         className={`relative z-0 text-slate-700 ${
@@ -118,8 +113,16 @@ const Form = () => {
           Submit
         </button>
       </form>
-      <div className={`${showForm ? 'hidden' : 'block'}`}>
+      <div className={`flex flex-col gap-4 ${showForm ? 'hidden' : 'block'}`}>
         The form has been submitted successfully!
+        <Button
+          component={Link}
+          href="/"
+          variant="contained"
+          className="normal-case"
+        >
+          Go Home
+        </Button>
       </div>
     </main>
   );
