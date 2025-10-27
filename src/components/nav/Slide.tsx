@@ -35,8 +35,7 @@ const NewSidebar = ({
         onClose={() => setOpen(false)}
         slotProps={{
           paper: {
-            className:
-              'w-3/4 gap-4 border-r bg-slate-100 py-6 shadow-lg sm:max-w-sm',
+            className: 'w-3/4 gap-4 bg-slate-100 py-6 shadow-lg sm:max-w-sm',
           },
         }}
       >
