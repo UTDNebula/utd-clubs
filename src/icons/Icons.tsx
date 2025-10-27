@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 
-export type IconType = FC<{ fill?: string; size?: number }>;
+export type IconType = FC<{ fill?: string; size?: number; className?: string }>;
 const defaultFill = 'fill-slate-400';
 const defaultHeartFill = 'fill-slate-800';
 const defaultSize = 24;
@@ -107,7 +107,7 @@ export const FeedbackIcon: IconType = ({ fill = defaultFill }) => (
   </svg>
 );
 
-export const RightChevron = () => (
+export const RightChevronIcon = () => (
   <svg
     width="30"
     height="30"
@@ -120,6 +120,26 @@ export const RightChevron = () => (
       clipRule="evenodd"
       d="M12.2925 9.29376C11.9025 9.68376 11.9025 10.3138 12.2925 10.7038L16.1725 14.5838L12.2925 18.4638C11.9025 18.8538 11.9025 19.4838 12.2925 19.8738C12.6825 20.2638 13.3125 20.2638 13.7025 19.8738L18.2925 15.2838C18.6825 14.8938 18.6825 14.2638 18.2925 13.8738L13.7025 9.28376C13.3225 8.90376 12.6825 8.90376 12.2925 9.29376Z"
       fill="#C3CAD9"
+    />
+  </svg>
+);
+
+export const LeftChevronIcon: IconType = ({
+  fill = defaultFill,
+  size = defaultSize,
+  // className,
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 30 30"
+    xmlns="http://www.w3.org/2000/svg"
+    className={fill}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="m 18.2925,9.29376 c 0.39,0.39 0.39,1.02004 0,1.41004 l -3.88,3.88 3.88,3.88 c 0.39,0.39 0.39,1.02 0,1.41 -0.39,0.39 -1.02,0.39 -1.41,0 l -4.59,-4.59 c -0.39,-0.39 -0.39,-1.02 0,-1.41 l 4.59,-4.59004 c 0.38,-0.38 1.02,-0.38 1.41,0.01 z"
     />
   </svg>
 );

@@ -2,7 +2,42 @@ import { format, isSameDay } from 'date-fns';
 import Link from 'next/link';
 import { MoreIcon } from '@src/icons/Icons';
 import { api } from '@src/trpc/server';
+// import Header from '@src/components/header/BaseHeader';
+import { notFound } from 'next/navigation';
+import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import PillButton from '@src/components/PillButton';
+import { PlusIcon } from '@src/icons/Icons';
 import { type RouterOutputs } from '@src/trpc/shared';
+
+export default async function Page({
+  params,
+  // events,
+}: {
+  params: { clubId: string };
+  // events: ReactNode;
+}) {
+  // TODO: might need to add code here to only allow officers?
+  const club = await api.club.byId({ id: params.clubId });
+  if (!club) notFound();
+
+  return (
+    <main>
+      {/* <Header /> */}
+      <ClubManageHeader club={club} path={[{ text: 'Events' }]}>
+        <PillButton
+          href={`/manage/${params.clubId}/create`}
+          IconComponent={PlusIcon}
+        >
+          Create Event
+        </PillButton>
+      </ClubManageHeader>
+      {/* <h1>Not implemented yet, sorry!</h1> */}
+      <div className="flex w-full flex-row gap-4">
+        <Events params={{ clubId: params.clubId }} />
+      </div>
+    </main>
+  );
+}
 
 const Events = async ({ params }: { params: { clubId: string } }) => {
   const events = await api.event.byClubId({ clubId: params.clubId });
@@ -17,7 +52,7 @@ const Events = async ({ params }: { params: { clubId: string } }) => {
     </div>
   );
 };
-export default Events;
+// export default Events;
 
 const EventCard = ({
   event,

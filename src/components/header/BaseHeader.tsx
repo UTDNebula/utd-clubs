@@ -6,7 +6,7 @@ import { ClubSearchBar } from '../searchBar/ClubSearchBar';
 import { EventSearchBar } from '../searchBar/EventSearchBar';
 import { ProfileDropDown } from './ProfileDropDown';
 
-export const BaseHeader = async ({ children }: { children: ReactNode }) => {
+export const BaseHeader = async ({ children }: { children?: ReactNode }) => {
   const session = await getServerAuthSession();
   const userCapabilities = await api.userMetadata.getUserSidebarCapabilities();
   return (
