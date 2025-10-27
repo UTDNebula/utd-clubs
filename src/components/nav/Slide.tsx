@@ -1,46 +1,54 @@
 'use client';
 
-import * as Dialog from '@radix-ui/react-dialog';
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import CloseIcon from '@mui/icons-material/Close';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Drawer, IconButton } from '@mui/material';
+import { useState } from 'react';
 import { type personalCats } from '@src/constants/categories';
-import { CloseIcon } from '@src/icons/Icons';
 import NavMenu from './NavMenu';
 
 const NewSidebar = ({
   userCapabilities,
-  hamburger,
+  hamburger = 'black',
+  shadow = false,
 }: {
   userCapabilities: Array<(typeof personalCats)[number]>;
-  hamburger: 'white' | 'black';
+  hamburger?: 'white' | 'black';
+  shadow?: boolean;
 }) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <button className="text-black-500 pointer-events-auto px-3 py-1">
-          <svg
-            className={`h-7 w-7 fill-${hamburger} drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]`}
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-          </svg>
-        </button>
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80" />
-        <Dialog.Content className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left fixed inset-y-0 left-0 z-50 h-full w-3/4 gap-4 border-r bg-slate-100 py-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 sm:max-w-sm">
-          <VisuallyHidden>
-            <Dialog.Title>Navigation</Dialog.Title>
-          </VisuallyHidden>
-          <NavMenu userCapabilites={userCapabilities} />
-          <Dialog.Close asChild>
-            <button className="absolute top-4 right-4">
-              <CloseIcon />
-            </button>
-          </Dialog.Close>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+    <>
+      <IconButton
+        onClick={() => setOpen(true)}
+        className={`z-50 ${shadow ? ' drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+        size="large"
+      >
+        <MenuIcon
+          fontSize="inherit"
+          className={hamburger === 'black' ? 'fill-black' : 'fill-white'}
+        />
+      </IconButton>
+      <Drawer
+        open={open}
+        onClose={() => setOpen(false)}
+        slotProps={{
+          paper: {
+            className:
+              'w-3/4 gap-4 border-r bg-slate-100 py-6 shadow-lg sm:max-w-sm',
+          },
+        }}
+      >
+        <NavMenu userCapabilites={userCapabilities} />
+        <IconButton
+          onClick={() => setOpen(false)}
+          className="absolute top-4 right-4"
+        >
+          <CloseIcon />
+        </IconButton>
+      </Drawer>
+    </>
   );
 };
 

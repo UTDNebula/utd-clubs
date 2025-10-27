@@ -71,11 +71,9 @@ const Home = async () => {
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
-          <div className="pointer-events-none fixed top-0 z-20 flex h-20 w-full flex-row items-center px-2.5 py-2.5 md:px-5">
-            <Sidebar hamburger="white" />
-            <div className="pointer-events-auto ml-auto flex items-center justify-center">
-              <ProfileDropDown session={session} />
-            </div>
+          <div className="pointer-events-none *:pointer-events-auto fixed top-0 z-20 flex w-full items-center justify-between p-2.5 md:p-5">
+            <Sidebar hamburger="white" shadow />
+            <ProfileDropDown session={session} />
           </div>
           <section className="h-screen w-screen">
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
