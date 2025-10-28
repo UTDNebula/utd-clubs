@@ -130,14 +130,14 @@ export async function generateMetadata({
     };
 
   return {
-    title: `${found.name} - Jupiter`,
-    description: found.description.slice(0, 30) + '...',
+    title: `${found.name}`,
+    description: `${found.name} from ${found.club.name} on UTD Clubs`,
     alternates: {
-      canonical: `https://jupiter.utdnebula.com/event/${found.id}`,
+      canonical: `https://clubs.utdnebula.com/event/${found.id}`,
     },
     openGraph: {
-      url: `https://jupiter.utdnebula.com/event/${found.id}`,
-      description: found.name + ' - Jupiter',
+      url: `https://clubs.utdnebula.com/event/${found.id}`,
+      description: `${found.name} from ${found.club.name} on UTD Clubs`,
     },
   };
 }
