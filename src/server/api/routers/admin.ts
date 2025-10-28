@@ -42,7 +42,6 @@ export const adminRouter = createTRPCRouter({
         approved: true,
         profileImage: true,
         soc: true,
-        clubSearchVector: false,
       },
     });
     return orgs;
