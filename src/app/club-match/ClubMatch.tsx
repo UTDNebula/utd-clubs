@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -8,7 +9,6 @@ import { useForm, type UseFormRegister } from 'react-hook-form';
 import { z, type ZodError } from 'zod';
 import { useTRPC } from '@src/trpc/react';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
-import { Button } from '@mui/material';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
 
