@@ -4,6 +4,7 @@ import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import starDoodle from 'public/images/StarDoodle.png';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
 import TagFilter from '@src/components/club/directory/TagFilter';
+import ClubMatchButton from '@src/components/header/ClubMatchButton';
 import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
@@ -60,7 +61,10 @@ const Home = async () => {
         <div className="relative inset-0 z-20 bg-transparent">
           <div className="pointer-events-none *:pointer-events-auto fixed top-0 z-20 flex w-full items-center justify-between p-2.5 md:p-5">
             <Sidebar hamburger="white" shadow />
-            <ProfileDropDown session={session} />
+            <div className="ml-auto flex items-center justify-center gap-2">
+              <ClubMatchButton />
+              <ProfileDropDown session={session} />
+            </div>
           </div>
           <section className="h-screen w-screen">
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
