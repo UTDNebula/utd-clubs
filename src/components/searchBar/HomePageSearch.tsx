@@ -6,6 +6,7 @@ import { RightArrowIcon, SearchIcon } from '@src/icons/Icons';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import useDebounce from '@src/utils/useDebounce';
+import { TagPill } from '../TagPill';
 import { SearchResults, SearchResultsItem } from './SearchResults';
 
 export const HomePageSearchBar = () => {
@@ -57,16 +58,7 @@ export const HomePageSearchBar = () => {
         className={`flex min-h-10 w-full flex-row flex-wrap items-center gap-x-2 gap-y-2 rounded-lg border border-gray-200 bg-white p-2 focus:outline-hidden`}
       >
         {tags.map((t) => (
-          <div
-            className="bg-blue-primary flex w-fit flex-row items-center gap-x-0.5 rounded-xl px-2 py-1 text-sm font-bold text-white"
-            key={t}
-          >
-            <div>#</div>
-            <div>{t} </div>
-            <button type="button" onClick={() => removeTag(t)}>
-              X
-            </button>
-          </div>
+          <TagPill removeTag={() => removeTag(t)} key={t} name={t} />
         ))}
         <input
           type="text"
