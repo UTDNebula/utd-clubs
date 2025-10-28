@@ -1,5 +1,6 @@
 'use client';
-import { type FC, useEffect, useState } from 'react';
+
+import { useEffect, useState, type FC } from 'react';
 
 const calculateTimeRemaining = (eventStartTime: number) => {
   const timeUntilStart = eventStartTime - Date.now();

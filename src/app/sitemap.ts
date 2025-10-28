@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
-import { api } from '@src/trpc/server';
 import type { SelectClub as Club } from '@src/server/db/models';
+import { api } from '@src/trpc/server';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   //Fetch all clubs
@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     ...allClubs.map((club) => ({
-      url: 'https://jupiter.utdnebula.com/directory/' + club.id,
+      url: 'https://jupiter.utdnebula.com/directory/' + club.slug,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.9,

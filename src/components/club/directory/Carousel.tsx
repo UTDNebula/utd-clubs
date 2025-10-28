@@ -1,8 +1,9 @@
 'use client';
+
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState, type TouchEventHandler } from 'react';
 import { LeftArrowIcon, RightArrowIcon } from '@src/icons/Icons';
-import Link from 'next/link';
 import { type SelectClub } from '@src/server/db/models';
 
 const minSwipeDistance = 50;
@@ -58,18 +59,22 @@ const Carousel = ({ clubs }: Props) => {
             <Link
               className="absolute inset-0 h-full w-full"
               key={key}
-              href={`/directory/${club.id}`}
+              href={`/directory/${club.slug}`}
               style={getSlideStyle(key)}
             >
               <div className="relative h-full w-full">
-                <Image
-                  src={club.profileImage ? club.profileImage : club.image}
-                  alt="Picture of the club"
-                  width={1920}
-                  height={1080}
-                  className="h-full w-full rounded-lg object-cover"
-                  priority
-                />
+                {club.profileImage ? (
+                  <Image
+                    src={club.profileImage}
+                    alt="Picture of the club"
+                    width={1920}
+                    height={1080}
+                    className="h-full w-full rounded-lg object-cover"
+                    priority
+                  />
+                ) : (
+                  <div className="absolute inset-0 h-full w-full bg-gray-200" />
+                )}
                 <div className="absolute inset-0 bg-black/5">
                   {' '}
                   <div className="absolute right-4 bottom-4 left-4 rounded-lg bg-black/50 p-2 sm:p-4 md:p-6">

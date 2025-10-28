@@ -1,5 +1,5 @@
-import { type SettingSchema } from './FormCard';
 import { type UseFormRegister } from 'react-hook-form';
+import { type SettingSchema } from './FormCard';
 
 type SettingsInputProps = {
   label: string;

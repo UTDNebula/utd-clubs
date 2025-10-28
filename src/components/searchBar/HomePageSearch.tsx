@@ -1,13 +1,14 @@
 'use client';
-import { useEffect, useState } from 'react';
+
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
-import SearchBar from '.';
-import useDebounce from '@src/utils/useDebounce';
-import { SearchResults, SearchResultsItem } from './SearchResults';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
-import { useQuery } from '@tanstack/react-query';
+import useDebounce from '@src/utils/useDebounce';
+import SearchBar from '.';
+import { SearchResults, SearchResultsItem } from './SearchResults';
 
 export const HomePageSearchBar = () => {
   const router = useRouter();
@@ -24,13 +25,36 @@ export const HomePageSearchBar = () => {
     ),
   );
   const onClickSearchResult = (club: Club) => {
-    router.push(`/directory/${club.id}`);
+    router.push(`/directory/${club.slug}`);
   };
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isSticky, setIsSticky] = useState(false);
+  const originalOffset = useRef<number>(0);
+
   useEffect(() => {
     updateSearch(debouncedSearch);
   }, [debouncedSearch, updateSearch]);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      originalOffset.current =
+        containerRef.current.getBoundingClientRect().top + window.scrollY;
+    }
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsSticky(scrollY > originalOffset.current);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="pointer-events-auto relative mr-3 w-full max-w-xs md:max-w-sm lg:max-w-md">
+    <div
+      ref={containerRef}
+      className={`text-shadow-... mr-3 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
+        isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
+      }`}
+    >
       <SearchBar
         placeholder="Search for Clubs"
         tabIndex={0}

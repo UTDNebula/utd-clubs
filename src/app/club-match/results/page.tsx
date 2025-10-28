@@ -1,12 +1,11 @@
-import { getServerAuthSession } from '@src/server/auth';
-import { redirect } from 'next/navigation';
-import { signInRoute } from '@src/utils/redirect';
-import { db } from '@src/server/db';
 import { eq } from 'drizzle-orm';
-import Link from 'next/link';
-
-import Header from '@src/components/header/BaseHeader';
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import Header from '@src/components/header/BaseHeader';
+import { getServerAuthSession } from '@src/server/auth';
+import { db } from '@src/server/db';
+import { signInRoute } from '@src/utils/redirect';
 
 export const metadata: Metadata = {
   title: 'Club Match Results - Jupiter',

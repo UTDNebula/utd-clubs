@@ -1,16 +1,16 @@
+import { relations } from 'drizzle-orm';
 import {
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   primaryKey,
   text,
   timestamp,
-  jsonb,
 } from 'drizzle-orm/pg-core';
 import { type AdapterAccount } from 'next-auth/adapters';
 import { club } from './club';
 import { events } from './events';
-import { relations } from 'drizzle-orm';
 
 export const yearEnum = pgEnum('year', [
   'Freshman',

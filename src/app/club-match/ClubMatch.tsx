@@ -1,14 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { clubMatchFormSchema } from '@src/utils/formSchemas';
-import { useTRPC } from '@src/trpc/react';
-import { useMutation } from '@tanstack/react-query';
-import { z, type ZodError } from 'zod';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type UseFormRegister } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm, type UseFormRegister } from 'react-hook-form';
+import { z, type ZodError } from 'zod';
+import { useTRPC } from '@src/trpc/react';
+import { clubMatchFormSchema } from '@src/utils/formSchemas';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
 

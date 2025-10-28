@@ -1,10 +1,10 @@
-import { type SettingSchema } from '@src/components/settings/FormCard';
-import {
-  type UseFormRegister,
-  type Control,
-  useFieldArray,
-} from 'react-hook-form';
 import Image from 'next/image';
+import {
+  useFieldArray,
+  type Control,
+  type UseFormRegister,
+} from 'react-hook-form';
+import { type SettingSchema } from '@src/components/settings/FormCard';
 
 type Props = {
   register: UseFormRegister<SettingSchema>;
@@ -25,9 +25,9 @@ export default function ClubSelector({ control }: Props) {
             className="m-2 flex min-w-[10rem] items-center justify-center rounded-full border p-2"
             key={club.id}
           >
-            {club.image && (
+            {club.profileImage && (
               <Image
-                src={club.image}
+                src={club.profileImage}
                 alt={club.name + ' logo'}
                 width={40}
                 height={40}

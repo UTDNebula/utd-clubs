@@ -1,14 +1,13 @@
-import { EventHeader } from '@src/components/header/BaseHeader';
-import { db } from '@src/server/db';
 import { and, eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
-
-import TimeComponent from './TimeComponent';
 import Image from 'next/image';
-import CountdownTimer from './CountdownTimer';
 import Link from 'next/link';
-import { getServerAuthSession } from '@src/server/auth';
 import RegisterButton from '@src/app/event/[id]/RegisterButton';
+import { EventHeader } from '@src/components/header/BaseHeader';
+import { getServerAuthSession } from '@src/server/auth';
+import { db } from '@src/server/db';
+import CountdownTimer from './CountdownTimer';
+import TimeComponent from './TimeComponent';
 
 type Params = { params: { id: string } };
 
@@ -66,10 +65,10 @@ export default async function EventsPage({ params }: Params) {
         </section>
         <section className="mb-5 flex flex-col space-y-6 rounded-xl bg-slate-100 p-5 text-black shadow-lg md:flex-row md:p-10">
           <div className="h-full max-w-sm lg:min-w-fit">
-            {club.image && (
+            {club.profileImage && (
               <div className="relative mx-auto h-40 w-full overflow-hidden rounded-b-md">
                 <Image
-                  src={club.image}
+                  src={club.profileImage}
                   alt={club.name + ' logo'}
                   fill
                   className="object-cover"
@@ -101,7 +100,7 @@ export default async function EventsPage({ params }: Params) {
           <div className="flex flex-col">
             <CountdownTimer startTime={event.startTime} />
             <Link
-              href={`/directory/${club.id}`}
+              href={`/directory/${club.slug}`}
               className="border-blue-primary text-blue-primary mt-auto mr-8 block w-36 rounded-full border-2 py-4 text-center text-xs font-extrabold break-normal transition-colors hover:bg-blue-700 hover:text-white"
             >
               View Club

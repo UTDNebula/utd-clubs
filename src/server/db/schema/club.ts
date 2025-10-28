@@ -6,12 +6,13 @@ import {
   pgTable,
   pgView,
   text,
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
-import { events } from './events';
-import { userMetadataToClubs } from './users';
-import { contacts } from './contacts';
 import { carousel } from './admin';
+import { contacts } from './contacts';
+import { events } from './events';
 import { officers } from './officers';
+import { userMetadataToClubs } from './users';
 
 export const approvedEnum = pgEnum('approved_enum', [
   'approved',
@@ -19,23 +20,31 @@ export const approvedEnum = pgEnum('approved_enum', [
   'pending',
 ]);
 
-export const club = pgTable('club', {
-  id: text('id')
-    .default(sql`nanoid(20)`)
-    .primaryKey(),
-  name: text('name').notNull(),
-  description: text('description').notNull(),
-  image: text('image').default('/nebula-logo.png').notNull(),
-  tags: text('tags')
-    .array()
-    .default(sql`'{}'::text[]`)
-    .notNull(),
-  // * Approved will be null by default and will be set to true when the club is approved or false when the club is rejected
-  // * This allows us to have a pending state for clubs and keep info about them in the database
-  approved: approvedEnum('approved').notNull().default('pending'),
-  profileImage: text('profile_image'),
-  soc: boolean('soc').notNull().default(false),
-});
+export const club = pgTable(
+  'club',
+  {
+    id: text('id')
+      .default(sql`nanoid(20)`)
+      .primaryKey(),
+    slug: text('slug').notNull(),
+    name: text('name').notNull(),
+    description: text('description').notNull(),
+    tags: text('tags')
+      .array()
+      .default(sql`'{}'::text[]`)
+      .notNull(),
+    // * Approved will be null by default and will be set to true when the club is approved or false when the club is rejected
+    // * This allows us to have a pending state for clubs and keep info about them in the database
+    approved: approvedEnum('approved').notNull().default('pending'),
+    profileImage: text('profile_image'),
+    soc: boolean('soc').notNull().default(false),
+  },
+  (table) => {
+    return {
+      slugUnique: uniqueIndex('club_slug_unique').on(table.slug),
+    };
+  },
+);
 
 export const clubRelations = relations(club, ({ many }) => ({
   contacts: many(contacts),
@@ -46,8 +55,8 @@ export const clubRelations = relations(club, ({ many }) => ({
 }));
 
 export const usedTags = pgView('used_tags', {
-  tags: text('tags').notNull(),
+  tag: text('tag').notNull(),
   count: integer('count').notNull(),
 }).as(
-  sql`select UNNEST(${club.tags}) as tags, COUNT(${club.tags}) as count from club group by UNNEST(${club.tags}) order by count desc`,
+  sql`select UNNEST(${club.tags}) as tag, COUNT(${club.tags}) as count from club group by UNNEST(${club.tags}) order by count desc`,
 );

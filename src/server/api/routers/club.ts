@@ -1,24 +1,29 @@
-import { eq, ilike, sql, and, inArray, lt, gt } from 'drizzle-orm';
+import { and, eq, gt, ilike, inArray, lt, sql } from 'drizzle-orm';
+import { z } from 'zod';
+import { carousel } from '@src/server/db/schema/admin';
+import { club, usedTags } from '@src/server/db/schema/club';
+import { contacts } from '@src/server/db/schema/contacts';
+import { officers as officersTable } from '@src/server/db/schema/officers';
+import { userMetadataToClubs } from '@src/server/db/schema/users';
+import { createClubSchema as baseClubSchema } from '@src/utils/formSchemas';
 import {
   adminProcedure,
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from '../trpc';
-import { z } from 'zod';
 import { clubEditRouter } from './clubEdit';
-import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { club, usedTags } from '@src/server/db/schema/club';
-import { contacts } from '@src/server/db/schema/contacts';
-import { carousel } from '@src/server/db/schema/admin';
-import { officers as officersTable } from '@src/server/db/schema/officers';
-import { createClubSchema as baseClubSchema } from '@src/utils/formSchemas';
+
 const byNameSchema = z.object({
   name: z.string().default(''),
 });
 
 const byIdSchema = z.object({
   id: z.string().default(''),
+});
+
+const bySlugSchema = z.object({
+  slug: z.string().default(''),
 });
 
 const joinLeaveSchema = z.object({
@@ -120,9 +125,7 @@ export const clubRouter = createTRPCRouter({
   }),
   distinctTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = (await ctx.db.select().from(usedTags)).map(
-        (obj) => obj.tags,
-      );
+      const tags = (await ctx.db.select().from(usedTags)).map((obj) => obj.tag);
       return tags;
     } catch (e) {
       console.error(e);
@@ -197,11 +200,28 @@ export const clubRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createClubSchema)
     .mutation(async ({ input, ctx }) => {
+      //Create unique slug based on name
+      const baseSlug = input.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      const existing = await ctx.db.query.club.findMany({
+        where: (club, { like }) => like(club.slug, `${baseSlug}%`),
+        columns: { slug: true },
+      });
+      const existingSlugs = new Set(existing.map((c) => c.slug));
+      let slug = baseSlug;
+      let counter = 2;
+      while (existingSlugs.has(slug)) {
+        slug = `${baseSlug}-${counter++}`;
+      }
+
       const res = await ctx.db
         .insert(club)
         .values({
           name: input.name,
           description: input.description,
+          slug,
         })
         .returning({ id: club.id });
 
@@ -219,19 +239,22 @@ export const clubRouter = createTRPCRouter({
         );
       }
 
-      await ctx.db.insert(userMetadataToClubs).values(
-        input.officers.map((officer) => {
-          return {
-            userId: officer.id,
-            clubId: clubId,
-            memberType: officer.president
-              ? ('President' as const)
-              : ('Officer' as const),
-            title: officer.position,
-          };
-        }),
-      );
-      return clubId;
+      await ctx.db
+        .insert(userMetadataToClubs)
+        .values(
+          input.officers.map((officer) => {
+            return {
+              userId: officer.id,
+              clubId: clubId,
+              memberType: officer.president
+                ? ('President' as const)
+                : ('Officer' as const),
+              title: officer.position,
+            };
+          }),
+        )
+        .catch((e) => console.log(e));
+      return slug;
     }),
   getOfficers: protectedProcedure
     .input(byIdSchema)
@@ -272,17 +295,30 @@ export const clubRouter = createTRPCRouter({
     return currentItems;
   }),
   getDirectoryInfo: publicProcedure
-    .input(byIdSchema)
-    .query(async ({ input: { id }, ctx }) => {
+    .input(bySlugSchema)
+    .query(async ({ input: { slug }, ctx }) => {
       try {
-        const byId = await ctx.db.query.club.findFirst({
-          where: (club) => eq(club.id, id),
+        const bySlug = await ctx.db.query.club.findFirst({
+          where: (club) => eq(club.slug, slug),
           with: {
             contacts: true,
             officers: true,
           },
         });
-        return byId;
+        return bySlug;
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    }),
+  getSlug: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input: { id }, ctx }) => {
+      try {
+        const byId = await ctx.db.query.club.findFirst({
+          where: (club) => eq(club.id, id),
+        });
+        return byId?.slug;
       } catch (e) {
         console.error(e);
         throw e;
