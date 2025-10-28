@@ -53,7 +53,9 @@ export const club = pgTable(
       .using('bm25', t.id, t.name, t.description, t.tags, t.approved)
       .with({
         key_field: 'id',
-        text_fields: '{"tags":{"tokenizer":{"type":"keyword"}}}',
+        text_fields:
+          '{"tags":{"tokenizer":{"type":"keyword"}},"name":{"tokenizer":{"type":"default","stemmer":"English"}}}',
+        numeric_fields: '{"approved":{"fast":true}}',
       }),
     uniqueIndex('club_slug_unique').on(t.slug),
   ],
@@ -72,5 +74,5 @@ export const usedTags = pgMaterializedView('used_tags', {
   count: integer('count').notNull(),
   tagSearch: tsvector('tag_search').notNull(),
 }).as(
-  sql`select UNNEST(${club.tags}) as tag, COUNT(${club.tags}) as count, to_tsvector('english', UNNEST(${club.tags})) as tag_search from club group by UNNEST(${club.tags}) order by count desc`,
+  sql`select UNNEST(${club.tags}) as tag, COUNT(${club.tags}) as count, from club order by count desc`,
 );

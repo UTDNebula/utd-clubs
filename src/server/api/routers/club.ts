@@ -401,20 +401,29 @@ export const clubRouter = createTRPCRouter({
         .offset(input.cursor)
         .where(
           and(
-            eq(club.approved, 'approved'),
+            sql`
+              id @@@ paradedb.const_score(0.0,
+                paradedb.term('approved','approved'::approved_enum))
+            `,
             input.tags && input.tags.length != 0
-              ? arrayOverlaps(club.tags, input.tags)
+              ? sql.raw(`
+                id @@@ paradedb.const_score(0.0,paradedb.term_set(
+                  terms => ARRAY[
+                    ${input.tags.map((tag) => `paradedb.term('tags','${tag}')`).join(',')}
+                  ]))`)
               : undefined,
             input.search
-              ? sql`${club.clubSearchVector} @@ websearch_to_tsquery('english',${input.search})`
+              ? sql`id @@@ 
+                paradedb.boolean(
+                  should =>ARRAY[
+                    paradedb.boost(2.0,paradedb.match('name',${input.search},distance=>1)),
+                    paradedb.boost(1,paradedb.match('description',${input.search},distance=>1)),
+                    paradedb.boost(1.5,paradedb.match('tags',${input.search},distance=>1))
+                  ])`
               : undefined,
           ),
         )
-        .orderBy(
-          input.search
-            ? sql`ts_rank_cd(${club.clubSearchVector},websearch_to_tsquery('english',${input.search}))`
-            : club.name,
-        );
+        .orderBy(input.search ? sql`paradedb.score(id) DESC` : club.name);
       console.log(query.toSQL());
 
       const res = await query.execute();
