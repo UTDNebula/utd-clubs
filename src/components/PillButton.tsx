@@ -47,11 +47,14 @@ type PillButtonPropsBase = {
   size?: 'default' | 'large';
 };
 
-interface PillButtonPropsAsButton extends PillButtonPropsBase {
+type PillButtonPropsAsButton = PillButtonPropsBase & {
   onClick?: React.MouseEventHandler;
   href?: never;
   disabled?: boolean;
-}
+} & Omit<
+    React.PropsWithChildren<React.ComponentPropsWithRef<'button'>>,
+    keyof PillButtonPropsBase
+  >;
 
 interface PillButtonPropsAsLink extends PillButtonPropsBase {
   onClick?: never;
@@ -95,7 +98,7 @@ const PillButton = ({
         ${colors[color ?? 'default']?.hover ?? 'hover:bg-blue-700'}
         ${colors[color ?? 'default']?.text ?? 'text-white'}
         disabled:bg-slate-700 disabled:text-white disabled:cursor-not-allowed
-        min-w-max`;
+        min-w-max w-min`;
 
   const contents = (
     <div

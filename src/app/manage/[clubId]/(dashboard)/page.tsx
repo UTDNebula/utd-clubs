@@ -12,7 +12,7 @@ import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 import { notFound, redirect } from 'next/navigation';
-// import ClubManageForm from './ClubManageForm';
+import ClubManageForm from './ClubManageForm';
 // import TestForm from './TestForm';
 
 const Page = async ({ params }: { params: { clubId: string } }) => {
@@ -50,7 +50,7 @@ const Page = async ({ params }: { params: { clubId: string } }) => {
 
       {/* <div className="flex w-full items-center justify-center">
         <main className="w-full max-w-6xl"> */}
-      {/* <ClubManageForm club={club} /> */}
+      <ClubManageForm club={club} />
 
       {/* <h2>Test Form</h2>
       <TestForm club={club} /> */}

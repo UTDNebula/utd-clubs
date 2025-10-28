@@ -22,8 +22,8 @@ export const editClubContactSchema = z.object({
 
 export const editClubSchema = z.object({
   id: z.string(),
-  name: z.string().min(3),
-  description: z.string().min(1),
+  name: z.string().min(3, { message: 'Name must be longer than 3 characters' }),
+  description: z.string().min(1, { message: 'Description is required' }),
 });
 export const editOfficerSchema = z.object({
   officers: z
