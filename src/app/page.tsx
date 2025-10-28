@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
-import starDoodle from 'public/images/StarDoodle.png';
+import starDoodle from 'public/images/StarDoodle.svg';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
 import TagFilter from '@src/components/club/directory/TagFilter';
 import ClubMatchButton from '@src/components/header/ClubMatchButton';
@@ -41,14 +41,14 @@ const Home = async () => {
                 className="absolute right-[10%] bottom-[30%] w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover"
               />
               <Image
-                src="/images/StarDoodle.svg"
+                src={starDoodle}
                 alt="Star Doodle (top right) for landing page"
                 width={72}
                 height={72}
                 className="absolute top-[15%] right-[15%] w-[clamp(56px,7vw,72px)] animate-spin bg-no-repeat object-cover [animation-direction:reverse] [animation-duration:77s]"
               />
               <Image
-                src="/images/StarDoodle.svg"
+                src={starDoodle}
                 alt="Star Doodle (bottom left) for landing page"
                 width={48}
                 height={48}
