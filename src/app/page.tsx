@@ -40,14 +40,14 @@ const Home = async () => {
                 className="absolute right-[10%] bottom-[30%] w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover"
               />
               <Image
-                src="public/images/StarDoodle.svg"
+                src="images/StarDoodle.svg"
                 alt="Star Doodle (top right) for landing page"
                 width={72}
                 height={72}
                 className="absolute top-[15%] right-[15%] w-[clamp(56px,7vw,72px)] animate-spin bg-no-repeat object-cover [animation-direction:reverse] [animation-duration:77s]"
               />
               <Image
-                src="public/images/StarDoodle.svg"
+                src="images/StarDoodle.svg"
                 alt="Star Doodle (bottom left) for landing page"
                 width={48}
                 height={48}
