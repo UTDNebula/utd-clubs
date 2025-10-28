@@ -72,7 +72,7 @@ export const clubRelations = relations(club, ({ many }) => ({
 export const usedTags = pgMaterializedView('used_tags', {
   tag: text('tag').notNull(),
   count: integer('count').notNull(),
-  tagSearch: tsvector('tag_search').notNull(),
+  id: integer('id').notNull(),
 }).as(
   sql`select UNNEST(${club.tags}) as tag, COUNT(${club.tags}) as count, from club order by count desc`,
 );

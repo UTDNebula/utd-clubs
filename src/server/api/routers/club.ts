@@ -387,9 +387,9 @@ export const clubRouter = createTRPCRouter({
       const tags = await ctx.db
         .select({ tag: usedTags.tag })
         .from(usedTags)
-        .where(
-          sql`${usedTags.tagSearch} @@ websearch_to_tsquery('english', ${input.search})`,
-        );
+        .where(sql`${usedTags.tag} @@@ ${input.search}`)
+        .orderBy(sql`paradedb.score(${usedTags.id})`)
+        .limit(5);
       return { tags: tags, clubs: [] };
     }),
   search: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
