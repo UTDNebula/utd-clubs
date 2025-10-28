@@ -8,11 +8,11 @@ import {
   text,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
-import { events } from './events';
-import { userMetadataToClubs } from './users';
-import { contacts } from './contacts';
 import { carousel } from './admin';
+import { contacts } from './contacts';
+import { events } from './events';
 import { officers } from './officers';
+import { userMetadataToClubs } from './users';
 
 export const approvedEnum = pgEnum('approved_enum', [
   'approved',
@@ -28,6 +28,7 @@ export const club = pgTable(
       .primaryKey(),
     slug: text('slug').notNull(),
     name: text('name').notNull(),
+    foundingDate: text('founding_date'),
     description: text('description').notNull(),
     tags: text('tags')
       .array()

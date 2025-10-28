@@ -1,9 +1,9 @@
-import { type FC } from 'react';
+import { type Session } from 'next-auth';
 import Image from 'next/image';
+import Link from 'next/link';
+import { type FC } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
 import JoinButton from './JoinButton';
-import Link from 'next/link';
-import { type Session } from 'next-auth';
 
 type Props = { club: Club; session: Session | null; priority: boolean };
 
@@ -38,7 +38,6 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
         <h1 className="line-clamp-1 text-2xl font-medium text-slate-800 md:text-xl">
           {name}
         </h1>
-        <p className="text-sm text-slate-500 md:text-xs">Description</p>
         <p className="text-base text-slate-600 md:text-sm">{desc}</p>
       </div>
       <div className="m-5 mt-auto flex flex-row space-x-2">

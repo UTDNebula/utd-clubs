@@ -1,10 +1,10 @@
-import { type SettingSchema } from '@src/components/settings/FormCard';
-import {
-  type UseFormRegister,
-  type Control,
-  useFieldArray,
-} from 'react-hook-form';
 import Image from 'next/image';
+import {
+  useFieldArray,
+  type Control,
+  type UseFormRegister,
+} from 'react-hook-form';
+import { type SettingSchema } from '@src/components/settings/FormCard';
 
 type Props = {
   register: UseFormRegister<SettingSchema>;

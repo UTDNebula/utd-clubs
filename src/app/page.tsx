@@ -1,19 +1,19 @@
-import TagFilter from '../components/club/directory/TagFilter';
-import ClubDirectoryGrid from '../components/club/directory/ClubDirectoryGrid';
 import type { Metadata } from 'next';
-import { api } from '@src/trpc/server';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
-import starDoodle from 'public/images/StarDoodle.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
-import SignInButton from '@src/components/header/signInButton';
+import starDoodle from 'public/images/StarDoodle.png';
+import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
+import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import { getServerAuthSession } from '@src/server/auth';
-import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
+import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
-import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
+import ClubDirectoryGrid from '../components/club/directory/ClubDirectoryGrid';
+import TagFilter from '../components/club/directory/TagFilter';
+
 export const metadata: Metadata = {
   title: 'Jupiter - Nebula',
   description: 'Get connected on campus.',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 const Home = async () => {
-  const tags = await api.club.distinctTags();
+  const tags = await api.club.mostUsedTags();
   // const featured = await api.club.getCarousel();
   // const onlyClubs = featured.map((item) => item.club);
   const session = await getServerAuthSession();
@@ -74,15 +74,7 @@ const Home = async () => {
           <div className="pointer-events-none fixed top-0 z-20 flex h-20 w-full flex-row items-center px-2.5 py-2.5 md:px-5">
             <Sidebar hamburger="white" />
             <div className="pointer-events-auto ml-auto flex items-center justify-center">
-              {session !== null ? (
-                <div className="h-10 w-10 rounded-full">
-                  <ProfileDropDown image={session.user.image || ''} />
-                </div>
-              ) : (
-                <div className="mr-2">
-                  <SignInButton />
-                </div>
-              )}
+              <ProfileDropDown session={session} />
             </div>
           </div>
           <section className="h-screen w-screen">

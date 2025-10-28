@@ -1,18 +1,19 @@
-import { eq, ilike, sql, and, inArray, lt, gt } from 'drizzle-orm';
+import { and, eq, gt, ilike, inArray, lt, sql } from 'drizzle-orm';
+import { z } from 'zod';
+import { carousel } from '@src/server/db/schema/admin';
+import { club, usedTags } from '@src/server/db/schema/club';
+import { contacts } from '@src/server/db/schema/contacts';
+import { officers as officersTable } from '@src/server/db/schema/officers';
+import { userMetadataToClubs } from '@src/server/db/schema/users';
+import { createClubSchema as baseClubSchema } from '@src/utils/formSchemas';
 import {
   adminProcedure,
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from '../trpc';
-import { z } from 'zod';
 import { clubEditRouter } from './clubEdit';
-import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { club, usedTags } from '@src/server/db/schema/club';
-import { contacts } from '@src/server/db/schema/contacts';
-import { carousel } from '@src/server/db/schema/admin';
-import { officers as officersTable } from '@src/server/db/schema/officers';
-import { createClubSchema as baseClubSchema } from '@src/utils/formSchemas';
+
 const byNameSchema = z.object({
   name: z.string().default(''),
 });
@@ -126,6 +127,15 @@ export const clubRouter = createTRPCRouter({
     try {
       const tags = (await ctx.db.select().from(usedTags)).map((obj) => obj.tag);
       return tags;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }),
+  mostUsedTags: publicProcedure.query(async ({ ctx }) => {
+    try {
+      const tags = await ctx.db.select().from(usedTags).limit(8);
+      return tags.map((t) => t.tag);
     } catch (e) {
       console.error(e);
       return [];

@@ -1,5 +1,5 @@
-import Header from '@src/components/header/BaseHeader';
 import type { Metadata } from 'next';
+import Header from '@src/components/header/BaseHeader';
 
 export const metadata: Metadata = {
   title: 'About - Jupiter',
