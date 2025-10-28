@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
-import starDoodle from 'public/images/StarDoodle.png';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
 import TagFilter from '@src/components/club/directory/TagFilter';
 import ClubMatchButton from '@src/components/header/ClubMatchButton';
