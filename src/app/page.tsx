@@ -1,8 +1,9 @@
-import type { Metadata } from 'next';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import starDoodle from 'public/images/StarDoodle.png';
+import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
+import TagFilter from '@src/components/club/directory/TagFilter';
 import ClubMatchButton from '@src/components/header/ClubMatchButton';
 import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import ExploreButton from '@src/components/landing/ExploreButton';
@@ -12,23 +13,9 @@ import NebulaLogo from '@src/icons/NebulaLogo';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
-import ClubDirectoryGrid from '../components/club/directory/ClubDirectoryGrid';
-import TagFilter from '../components/club/directory/TagFilter';
-
-export const metadata: Metadata = {
-  title: 'Jupiter - Nebula',
-  description: 'Get connected on campus.',
-  alternates: {
-    canonical: 'https://jupiter.utdnebula.com',
-  },
-  openGraph: {
-    url: 'https://jupiter.utdnebula.com',
-    description: 'Jupiter - Nebula Labs',
-  },
-};
 
 const Home = async () => {
-  const tags = await api.club.distinctTags();
+  const tags = await api.club.mostUsedTags();
   // const featured = await api.club.getCarousel();
   // const onlyClubs = featured.map((item) => item.club);
   const session = await getServerAuthSession();

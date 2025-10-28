@@ -54,14 +54,14 @@ export async function generateMetadata({
     };
 
   return {
-    title: `${found.name} - Jupiter`,
-    description: found.description.slice(0, 30) + '...',
+    title: `${found.name}`,
+    description: `${found.name} on UTD Clubs`,
     openGraph: {
-      url: `https://jupiter.utdnebula.com/directory/${found.slug}`,
-      description: found.name + ' - Jupiter',
+      url: `https://clubs.utdnebula.com/directory/${found.slug}`,
+      description: `${found.name} on UTD Clubs`,
     },
     alternates: {
-      canonical: `https://jupiter.utdnebula.com/directory/${found.slug}`,
+      canonical: `https://clubs.utdnebula.com/directory/${found.slug}`,
     },
   };
 }

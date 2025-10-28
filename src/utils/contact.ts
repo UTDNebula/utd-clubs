@@ -46,6 +46,12 @@ const websiteSchema = z.object({
   url: z.string().url('Valid url required'),
 });
 
+const linkedInSchema = z.object({
+  platform: z.literal('linkedIn'),
+  clubId: z.string().optional(),
+  url: z.string().url('Valid url required'),
+});
+
 const otherSchema = z.object({
   platform: z.literal('other'),
   clubId: z.string().optional(),
@@ -61,6 +67,7 @@ export const contactSchema = z.discriminatedUnion('platform', [
   twitterSchema,
   instagramSchema,
   websiteSchema,
+  linkedInSchema,
   otherSchema,
 ]);
 export type contact = z.infer<typeof contactSchema>;

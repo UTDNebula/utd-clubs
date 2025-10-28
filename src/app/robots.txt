@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://clubs.utdnebula.com/
+
+# Sitemaps
+Sitemap: https://clubs.utdnebula.com/sitemap.xml

@@ -4,7 +4,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
-import nebulaPic from 'public/android-chrome-192x192.png';
+import nebulaPic from 'public/nebula-logo.png';
 import { useState, type FormEventHandler } from 'react';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
@@ -53,12 +53,17 @@ const Form = () => {
         }`}
       >
         <div className="absolute -top-3 left-0 hidden h-14 w-14 md:block">
-          <Image src={nebulaPic} alt="Nebula" fill />
+          <Image
+            src={nebulaPic}
+            alt="Nebula Labs logo"
+            fill
+            className="object-contain"
+          />
         </div>
         <h1 className="pb-2 text-4xl font-bold">Feedback</h1>
 
         <h3 className="text-md border-t-2 border-black py-4 text-slate-500">
-          On a scale of 1-10, how would you rate your experience with Jupiter?
+          On a scale of 1-10, how would you rate your experience with UTD Clubs?
         </h3>
         <input
           id="rating"
@@ -76,7 +81,7 @@ const Form = () => {
         <br></br>
 
         <h3 className="text-md my-4 border-t-2 border-slate-200 pt-2 text-slate-500">
-          What do you like about Jupiter?
+          What do you like about UTD Clubs?
         </h3>
         <textarea
           id="likes"
@@ -88,7 +93,7 @@ const Form = () => {
         <br></br>
 
         <h3 className="text-md my-4 w-full border-t-2 border-slate-200 pt-2 text-slate-500">
-          What do you dislike about Jupiter?
+          What do you dislike about UTD Clubs?
         </h3>
 
         <textarea
@@ -100,7 +105,7 @@ const Form = () => {
         ></textarea>
 
         <h3 className="text-md my-4 border-t-2 border-slate-200 pt-2 text-slate-500">
-          What features would you like to see in Jupiter?
+          What features would you like to see in UTD Clubs?
         </h3>
 
         <textarea

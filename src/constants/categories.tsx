@@ -34,7 +34,7 @@ export const routeMap: {
   Home: '/',
   'My Community': '/community',
   Events: '/events',
-  About: '/about',
+  About: 'https://www.utdnebula.com/projects/clubs',
   Feedback: '/feedback',
   'Manage Clubs': '/manage',
   Admin: '/admin',
