@@ -9,7 +9,7 @@ export default function ClubMatchButton() {
       variant="contained"
       component={Link}
       href="/club-match/results"
-      className="normal-case drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
+      className="rounded-full normal-case drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
     >
       Club Match
     </Button>

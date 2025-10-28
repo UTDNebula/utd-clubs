@@ -124,7 +124,7 @@ const Form = () => {
           component={Link}
           href="/"
           variant="contained"
-          className="normal-case"
+          className="rounded-full normal-case"
         >
           Go Home
         </Button>

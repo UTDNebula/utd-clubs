@@ -9,7 +9,7 @@ const RedoClubMatchButton = () => {
       variant="contained"
       component={Link}
       href="/club-match"
-      className="w-fit normal-case"
+      className="rounded-full w-fit normal-case"
     >
       Redo club match
     </Button>
