@@ -67,7 +67,7 @@ const contactNames: { [key in Contact['platform']]: string } = {
   facebook: 'Facebook',
   youtube: 'YouTube',
   twitch: 'Twitch',
-  //'linkedIn': 'LinkedIn',
+  linkedIn: 'LinkedIn',
   other: 'Other',
 };
 
