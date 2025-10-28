@@ -12,8 +12,7 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
     club.description.length > 50
       ? club.description.slice(0, 150) + '...'
       : club.description;
-  const name =
-    club.name.length > 20 ? club.name.slice(0, 30) + '...' : club.name;
+  const name = club?.name ?? '';
   const placeholderImage =
     'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAQABADAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAABgf/xAAXEAEAAwAAAAAAAAAAAAAAAAAFACIx/8QAGAEAAgMAAAAAAAAAAAAAAAAABAUGBwj/xAAWEQADAAAAAAAAAAAAAAAAAAAAAgT/2gAMAwEAAhEDEQA/ALuYnlpkZHL4onFpieWhaOI6JySlqZaKEcnNMwtMTy0MRxFROf/Z';
   return (
@@ -35,7 +34,7 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
         )}
       </div>
       <div className="flex flex-col space-y-2 p-6">
-        <h1 className="line-clamp-1 text-2xl font-medium text-slate-800 md:text-xl">
+        <h1 className="line-clamp-2 text-2xl font-medium text-slate-800 md:text-xl">
           {name}
         </h1>
         <p className="text-base text-slate-600 md:text-sm">{desc}</p>
