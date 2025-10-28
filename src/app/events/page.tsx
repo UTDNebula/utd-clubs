@@ -7,14 +7,12 @@ import { eventParamsSchema } from '@src/utils/eventFilter';
 import EventView from './eventView';
 
 export const metadata: Metadata = {
-  title: 'Events - Jupiter',
-  description: 'Get connected on campus.',
+  title: 'Events',
   alternates: {
-    canonical: 'https://jupiter.utdnebula.com/events',
+    canonical: 'https://clubs.utdnebula.com/events',
   },
   openGraph: {
-    url: 'https://jupiter.utdnebula.com/events',
-    description: 'Get connected on campus.',
+    url: 'https://clubs.utdnebula.com/events',
   },
 };
 const Events = async ({
