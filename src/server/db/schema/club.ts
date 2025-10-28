@@ -1,4 +1,4 @@
-import { relations, type SQL, sql } from 'drizzle-orm';
+import { relations, sql, type SQL } from 'drizzle-orm';
 import {
   boolean,
   customType,
@@ -46,14 +46,14 @@ export const club = pgTable(
     approved: approvedEnum('approved').notNull().default('pending'),
     profileImage: text('profile_image'),
     soc: boolean('soc').notNull().default(false),
-    clubSearchVector: tsvector().generatedAlwaysAs(
-      (): SQL => sql` setweight(to_tsvector('english', ${club.name}), 'A') || ' ' ||
-                      setweight(array_to_tsvector( ${club.tags}), 'B') ||' ' ||
-                      setweight(to_tsvector('english', ${club.description}), 'C')`,
-    ),
   },
   (t) => [
-    index('idx_club_search').using('gin', t.clubSearchVector),
+    index('club_search_idx')
+      .using('bm25', t.id, t.name, t.description, t.tags, t.approved)
+      .with({
+        key_field: 'id',
+        text_fields: '{"tags":{"tokenizer":{"type":"keyword"}}}',
+      }),
     uniqueIndex('club_slug_unique').on(t.slug),
   ],
 );
