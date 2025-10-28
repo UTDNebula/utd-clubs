@@ -1,12 +1,17 @@
+'use client';
+
 import Link from 'next/link';
+import { Button } from '@mui/material';
 
 export default function ClubMatchButton() {
   return (
-    <Link
+    <Button
+      variant="contained"
+      component={Link}
       href="/club-match/results"
-      className="bg-blue-primary self-center rounded-full px-4 py-2 text-white shadow-md"
+      className="normal-case drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
     >
       Club Match
-    </Link>
+    </Button>
   );
 }

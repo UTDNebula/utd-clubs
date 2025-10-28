@@ -63,7 +63,7 @@ const Home = async () => {
             <Sidebar hamburger="white" shadow />
             <div className="ml-auto flex items-center justify-center gap-2">
               <ClubMatchButton />
-              <ProfileDropDown session={session} />
+              <ProfileDropDown session={session} shadow />
             </div>
           </div>
           <section className="h-screen w-screen">

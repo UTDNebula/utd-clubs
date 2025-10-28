@@ -8,6 +8,7 @@ import { useForm, type UseFormRegister } from 'react-hook-form';
 import { z, type ZodError } from 'zod';
 import { useTRPC } from '@src/trpc/react';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
+import { Button } from '@mui/material';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
 
@@ -389,13 +390,15 @@ const ClubMatch = () => {
           errors={errors}
         />
 
-        <button
+        <Button
+          variant="contained"
           type="submit"
-          className="bg-blue-primary rounded-md px-4 py-2 text-white disabled:bg-blue-300"
-          disabled={editData.isPending}
+          loading={editData.isPending}
+          loadingPosition="start"
+          className="normal-case"
         >
-          {editData.isPending ? 'Loading' : 'Find Clubs'}
-        </button>
+          Find Clubs
+        </Button>
       </form>
     </main>
   );
