@@ -25,10 +25,14 @@ const ClubInfoSegment: FC<{
             <p className="text-sm text-slate-400">Name</p>
             <p className="text-right text-sm text-slate-600">{club.name}</p>
           </div>
-          <div className="mt-2 flex w-36 justify-between">
-            <p className="text-sm text-slate-400">Founded</p>
-            <p className="text-right text-sm text-slate-600">May 2020</p>
-          </div>
+          {club.foundingDate && (
+            <div className="mt-2 flex w-36 justify-between">
+              <p className="text-sm text-slate-400">Founded</p>
+              <p className="text-right text-sm text-slate-600">
+                {club.foundingDate}
+              </p>
+            </div>
+          )}
           <div className="mt-2 flex w-36 justify-between">
             <p className="text-sm text-slate-400">Active</p>
             <p className="text-right text-sm text-slate-600">
