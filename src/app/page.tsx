@@ -69,7 +69,6 @@ const Home = async () => {
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
                 <span className="leading-none">POWERED BY</span>
-                {/*eslint-disable-next-line react/jsx-no-target-blank*/}
                 <a
                   href="https://www.utdnebula.com/"
                   target="_blank"

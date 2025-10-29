@@ -30,7 +30,6 @@ const DateBrowser = ({ filterState, setParams }: DateBrowserProps) => {
   }, [dayPickerProps.selected]);
   return (
     <div className="flex w-full flex-row justify-between rounded-3xl bg-white px-5 py-2.5 align-middle shadow-md md:w-fit">
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <button
         onClick={() => {
           setSelected(subDays(dayPickerProps.selected!, 1));

@@ -122,7 +122,7 @@ const ContactSelector = ({
                 {available.map((plat) => (
                   <DropdownMenuItem
                     key={plat}
-                    onSelect={(_e) => {
+                    onSelect={() => {
                       addNew(plat);
                     }}
                   >
