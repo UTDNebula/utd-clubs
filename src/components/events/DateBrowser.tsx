@@ -1,8 +1,6 @@
 'use client';
 
 import 'react-day-picker/dist/style.css';
-import { LeftArrowIcon, RightArrowIcon } from '@src/icons/Icons';
-import { DayPicker, useInput } from 'react-day-picker';
 import {
   Popover,
   PopoverClose,
@@ -12,8 +10,11 @@ import {
 } from '@radix-ui/react-popover';
 import { addDays, subDays } from 'date-fns';
 import { useEffect } from 'react';
+import { DayPicker, useInput } from 'react-day-picker';
+import { LeftArrowIcon, RightArrowIcon } from '@src/icons/Icons';
 import { type eventParamsSchema } from '@src/utils/eventFilter';
 import { type useSyncedSearchParamsDispatch } from '@src/utils/useSyncedSearchParams';
+
 type DateBrowserProps = {
   filterState: eventParamsSchema;
   setParams: useSyncedSearchParamsDispatch<eventParamsSchema>;

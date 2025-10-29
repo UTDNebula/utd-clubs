@@ -1,4 +1,5 @@
 'use client';
+
 import { DownArrowIcon } from '@src/icons/Icons';
 
 const ExploreButton = () => {

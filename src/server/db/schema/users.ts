@@ -1,5 +1,7 @@
+import { relations } from 'drizzle-orm';
 import {
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   primaryKey,
@@ -9,7 +11,6 @@ import {
 import { type AdapterAccount } from 'next-auth/adapters';
 import { club } from './club';
 import { events } from './events';
-import { relations } from 'drizzle-orm';
 
 export const yearEnum = pgEnum('year', [
   'Freshman',
@@ -61,6 +62,19 @@ export const userMetadata = pgTable('user_metadata', {
     .$default(() => 'Student')
     .notNull(),
   career: careerEnum('career').$default(() => 'Engineering'),
+});
+
+export type ClubMatchResults = {
+  name: string;
+  id: string;
+  reasoning: string;
+  benefit: string;
+}[];
+
+export const userAiCache = pgTable('user_ai_cache', {
+  id: text('id').notNull().primaryKey(),
+  clubMatch: jsonb('clubMatch').$type<ClubMatchResults>(),
+  clubMatchLimit: integer('clubMatchLimit').$default(() => 100),
 });
 
 export const accounts = pgTable(

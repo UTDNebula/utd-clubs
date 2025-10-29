@@ -1,31 +1,20 @@
-import TagFilter from '../components/club/directory/TagFilter';
-import ClubDirectoryGrid from '../components/club/directory/ClubDirectoryGrid';
-import type { Metadata } from 'next';
-import { api } from '@src/trpc/server';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
-import SignInButton from '@src/components/header/signInButton';
+import planetsDoodle from 'public/images/PlanetsDoodle.png';
+import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
+import TagFilter from '@src/components/club/directory/TagFilter';
+import ClubMatchButton from '@src/components/header/ClubMatchButton';
+import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import ExploreButton from '@src/components/landing/ExploreButton';
 import Sidebar from '@src/components/nav/Sidebar';
+import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import { getServerAuthSession } from '@src/server/auth';
-import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
+import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
-import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
-export const metadata: Metadata = {
-  title: 'Jupiter - Nebula',
-  description: 'Get connected on campus.',
-  alternates: {
-    canonical: 'https://jupiter.utdnebula.com',
-  },
-  openGraph: {
-    url: 'https://jupiter.utdnebula.com',
-    description: 'Jupiter - Nebula Labs',
-  },
-};
 
 const Home = async () => {
-  const tags = await api.club.distinctTags();
+  const tags = await api.club.mostUsedTags();
   // const featured = await api.club.getCarousel();
   // const onlyClubs = featured.map((item) => item.club);
   const session = await getServerAuthSession();
@@ -43,6 +32,27 @@ const Home = async () => {
                 alt="Gradient Background for landing page"
                 className="bg-no-repeat object-cover"
               />
+              <Image
+                src={planetsDoodle}
+                alt="Planets Doodle for landing page"
+                width={574}
+                height={200}
+                className="absolute right-[10%] bottom-[30%] w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover"
+              />
+              <Image
+                src="/images/StarDoodle.svg"
+                alt="Star Doodle (top right) for landing page"
+                width={72}
+                height={72}
+                className="absolute top-[15%] right-[15%] w-[clamp(56px,7vw,72px)] animate-spin bg-no-repeat object-cover [animation-direction:reverse] [animation-duration:77s]"
+              />
+              <Image
+                src="/images/StarDoodle.svg"
+                alt="Star Doodle (bottom left) for landing page"
+                width={48}
+                height={48}
+                className="absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
+              />
             </section>
             <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"></section>
           </div>
@@ -50,16 +60,9 @@ const Home = async () => {
         <div className="relative inset-0 z-20 bg-transparent">
           <div className="pointer-events-none fixed top-0 z-20 flex h-20 w-full flex-row items-center px-2.5 py-2.5 md:px-5">
             <Sidebar hamburger="white" />
-            <div className="pointer-events-auto ml-auto flex items-center justify-center">
-              {session !== null ? (
-                <div className="h-10 w-10 rounded-full">
-                  <ProfileDropDown image={session.user.image || ''} />
-                </div>
-              ) : (
-                <div className="mr-2">
-                  <SignInButton />
-                </div>
-              )}
+            <div className="pointer-events-auto ml-auto flex items-center justify-center gap-2">
+              <ClubMatchButton />
+              <ProfileDropDown session={session} />
             </div>
           </div>
           <section className="h-screen w-screen">

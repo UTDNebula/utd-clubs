@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client';
+
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
-import { useTRPC } from '@src/trpc/react';
-import { editOfficerSchema } from '@src/utils/formSchemas';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { type z } from 'zod';
+import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
+import { useTRPC } from '@src/trpc/react';
+import { editOfficerSchema } from '@src/utils/formSchemas';
 
 type x = {
   userId?: boolean;
@@ -81,6 +82,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'officers',
+    keyName: 'fieldId',
   });
   const [deleted, modifyDeleted] = useReducer(deletedReducer, []);
   const removeItem = (index: number, userId: string) => {
@@ -124,7 +126,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
                 append({
                   userId: user.id,
                   name: user.name,
-                  title: '',
+                  title: 'Officer',
                   position: 'Officer',
                   locked: false,
                 });
@@ -139,7 +141,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
           <div className="space-y-2">
             {fields.map((field, index) => (
               <OfficerItem
-                key={field.id}
+                key={field.fieldId}
                 index={index}
                 id={field.userId}
                 remove={removeItem}
@@ -162,6 +164,7 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
               reset({
                 officers: officers,
               });
+              modifyDeleted({ type: 'reset' });
             }}
             disabled={!isDirty}
             className="group relative rounded-lg bg-slate-200 p-1 font-bold"

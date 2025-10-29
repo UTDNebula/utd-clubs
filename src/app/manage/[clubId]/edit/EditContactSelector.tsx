@@ -5,8 +5,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
-import { type SelectContact } from '@src/server/db/models';
-import { type Dispatch, useEffect, useReducer } from 'react';
+import { useEffect, useReducer, type Dispatch } from 'react';
 import {
   useFieldArray,
   type Control,
@@ -14,17 +13,21 @@ import {
   type UseFormRegister,
 } from 'react-hook-form';
 import { type z } from 'zod';
+import { type modifyDeletedAction } from '@src/app/manage/[clubId]/edit/EditContactForm';
 import {
   Discord,
   Email,
   Facebook,
   Instagram,
+  Link,
+  LinkedIn,
+  Twitch,
   Twitter,
   Website,
   Youtube,
   type logoProps,
 } from '@src/icons/ContactIcons';
-import { type modifyDeletedAction } from '@src/app/manage/[clubId]/edit/EditContactForm';
+import { type SelectContact } from '@src/server/db/models';
 import { type editClubContactSchema } from '@src/utils/formSchemas';
 
 type Contact = Omit<SelectContact, 'clubId'>;
@@ -58,6 +61,10 @@ const startContacts: Array<Contact['platform']> = [
   'email',
   'twitter',
   'facebook',
+  'youtube',
+  'twitch',
+  'linkedIn',
+  'other',
 ];
 
 type ContactSelectorProps = {
@@ -148,14 +155,15 @@ export default ContactSelector;
 const styling = 'fill-black transition-colors group-hover:fill-blue-primary';
 const logo: logoProps = {
   discord: <Discord className={styling} />,
-  youtube: <Youtube className={styling} />,
-  twitch: '/nebula-logo.png',
-  facebook: <Facebook className={styling} />,
-  twitter: <Twitter className={styling} />,
   instagram: <Instagram className={styling} />,
   website: <Website className={styling} />,
   email: <Email className={styling} />,
-  other: '/Jupiter.png',
+  twitter: <Twitter className={styling} />,
+  facebook: <Facebook className={styling} />,
+  youtube: <Youtube className={styling} />,
+  twitch: <Twitch className={styling} />,
+  linkedIn: <LinkedIn className={styling} />,
+  other: <Link className={styling} />,
 };
 
 type ContactInputProps = {

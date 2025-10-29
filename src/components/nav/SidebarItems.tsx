@@ -1,7 +1,8 @@
 'use client';
-import { usePathname } from 'next/navigation';
-import { IconMap, type allCats, routeMap } from '@src/constants/categories';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { IconMap, routeMap, type allCats } from '@src/constants/categories';
 
 const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
   const Icon = IconMap[cat];
@@ -15,6 +16,7 @@ const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
     <Link
       className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white shadow-md' : ''} hover:bg-white hover:shadow-md`}
       href={route}
+      target={route.startsWith('http') ? '_blank' : ''}
     >
       {Icon && (
         <Icon

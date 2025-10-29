@@ -1,12 +1,14 @@
 'use client';
-import SidebarItems from './SidebarItems';
+
 import Image from 'next/image';
+import Link from 'next/link';
+import nebulaPic from 'public/nebula-logo.png';
 import {
   mainCats,
   moreCats,
   type personalCats,
 } from '@src/constants/categories';
-import Link from 'next/link';
+import SidebarItems from './SidebarItems';
 
 type NavMenuProps = {
   userCapabilites: Array<(typeof personalCats)[number]>;
@@ -18,8 +20,13 @@ const NavMenu = ({ userCapabilites }: NavMenuProps) => {
       {/* Logo Section */}
       <div className="flex w-full justify-center pt-14 pb-14">
         <Link className="flex items-center gap-2" href="/">
-          <Image src="/nebula-logo.png" alt="Logo" width={60} height={60} />
-          <h1 className="text-2xl font-semibold">Jupiter</h1>
+          <Image
+            src={nebulaPic}
+            alt="Nebula Labs logo"
+            width={60}
+            height={60}
+          />
+          <h1 className="font-display text-2xl font-bold">UTD CLUBS</h1>
         </Link>
       </div>
 

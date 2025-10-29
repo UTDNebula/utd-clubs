@@ -1,11 +1,11 @@
 import {
   AboutIcon,
+  AdminIcon,
+  CommunityIcon,
   EventsIcon,
   FeedbackIcon,
   HomeIcon,
   type IconType,
-  CommunityIcon,
-  AdminIcon,
 } from '../icons/Icons';
 
 export const mainCats = ['Home', 'My Community', 'Events'] as const;
@@ -34,7 +34,7 @@ export const routeMap: {
   Home: '/',
   'My Community': '/community',
   Events: '/events',
-  About: '/about',
+  About: 'https://www.utdnebula.com/projects/clubs',
   Feedback: '/feedback',
   'Manage Clubs': '/manage',
   Admin: '/admin',

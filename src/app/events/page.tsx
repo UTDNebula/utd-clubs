@@ -1,20 +1,18 @@
+import { type Metadata } from 'next';
+import type z from 'zod';
+import EventCard from '@src/components/events/EventCard';
 import { EventHeader } from '@src/components/header/BaseHeader';
 import { api } from '@src/trpc/server';
-import EventView from './eventView';
-import { type Metadata } from 'next';
 import { eventParamsSchema } from '@src/utils/eventFilter';
-import EventCard from '@src/components/events/EventCard';
-import type z from 'zod';
+import EventView from './eventView';
 
 export const metadata: Metadata = {
-  title: 'Events - Jupiter',
-  description: 'Get connected on campus.',
+  title: 'Events',
   alternates: {
-    canonical: 'https://jupiter.utdnebula.com/events',
+    canonical: 'https://clubs.utdnebula.com/events',
   },
   openGraph: {
-    url: 'https://jupiter.utdnebula.com/events',
-    description: 'Get connected on campus.',
+    url: 'https://clubs.utdnebula.com/events',
   },
 };
 const Events = async ({

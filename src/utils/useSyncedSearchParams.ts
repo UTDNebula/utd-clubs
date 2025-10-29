@@ -1,4 +1,5 @@
 'use client';
+
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
 import EncodeParams from './encodeParams';

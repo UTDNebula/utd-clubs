@@ -1,8 +1,8 @@
+import { format, isSameDay } from 'date-fns';
+import Image from 'next/image';
 import EventTimeAlert from '@src/components/events/EventTimeAlert';
 import { MoreIcon, PlusIcon } from '@src/icons/Icons';
 import type { RouterOutputs } from '@src/trpc/shared';
-import { format, isSameDay } from 'date-fns';
-import Image from 'next/image';
 
 interface Props {
   event: RouterOutputs['event']['findByFilters']['events'][number];

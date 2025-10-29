@@ -1,5 +1,5 @@
-import { type SelectClub } from '@src/server/db/models';
 import Link from 'next/link';
+import { type SelectClub } from '@src/server/db/models';
 
 const ClubCard = ({ club }: { club: SelectClub }) => {
   return (

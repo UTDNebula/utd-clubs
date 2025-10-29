@@ -1,10 +1,10 @@
-import { z } from 'zod';
-import { adminProcedure, createTRPCRouter } from '../trpc';
 import { and, eq, gt } from 'drizzle-orm';
+import { type DateRange } from 'react-day-picker';
+import { z } from 'zod';
+import { carousel } from '@src/server/db/schema/admin';
 import { club } from '@src/server/db/schema/club';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { type DateRange } from 'react-day-picker';
-import { carousel } from '@src/server/db/schema/admin';
+import { adminProcedure, createTRPCRouter } from '../trpc';
 
 function isDateRange(value: unknown): value is DateRange {
   return Boolean(value && typeof value === 'object' && 'from' in value);
@@ -37,6 +37,7 @@ export const adminRouter = createTRPCRouter({
         id: true,
         slug: true,
         name: true,
+        foundingDate: true,
         tags: true,
         approved: true,
         profileImage: true,

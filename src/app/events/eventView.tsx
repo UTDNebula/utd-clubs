@@ -1,8 +1,9 @@
 'use client';
+
+import { useEffect, useState, type ReactNode } from 'react';
 import DateBrowser from '@src/components/events/DateBrowser';
 import { type eventParamsSchema } from '@src/utils/eventFilter';
 import useSyncedSearchParams from '@src/utils/useSyncedSearchParams';
-import { type ReactNode, useEffect, useState } from 'react';
 
 type Props = {
   children: ReactNode;
