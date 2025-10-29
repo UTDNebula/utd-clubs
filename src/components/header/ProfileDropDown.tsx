@@ -12,9 +12,9 @@ import {
   Popover,
 } from '@mui/material';
 import { type Session } from 'next-auth';
-import { signIn, signOut } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import RegisterModal from '@src/components/RegisterModal';
 
@@ -40,7 +40,7 @@ export const ProfileDropDown = ({ session }: Props) => {
       };
     }
   }, [open]);
-  
+
   return (
     <>
       <Avatar
@@ -76,7 +76,9 @@ export const ProfileDropDown = ({ session }: Props) => {
             <MenuItem
               component="button"
               onClick={() => {
-                const target = pathname?.startsWith('/settings') ? '/' : pathname ?? '/';
+                const target = pathname?.startsWith('/settings')
+                  ? '/'
+                  : (pathname ?? '/');
                 void signOut({ callbackUrl: target });
               }}
             >
@@ -88,7 +90,10 @@ export const ProfileDropDown = ({ session }: Props) => {
           </MenuList>
         </Card>
       </Popover>
-      <RegisterModal open={showRegister} onClose={() => setShowRegister(false)} />
+      <RegisterModal
+        open={showRegister}
+        onClose={() => setShowRegister(false)}
+      />
     </>
   );
 };
