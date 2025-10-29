@@ -13,8 +13,10 @@ import {
 } from '@mui/material';
 import { type Session } from 'next-auth';
 import { signIn, signOut } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import RegisterModal from '@src/components/RegisterModal';
 
 type Props = {
   session: Session | null;
@@ -23,6 +25,8 @@ type Props = {
 export const ProfileDropDown = ({ session }: Props) => {
   const avatarRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const pathname = usePathname();
 
   // Close on scroll
   useEffect(() => {
@@ -36,7 +40,7 @@ export const ProfileDropDown = ({ session }: Props) => {
       };
     }
   }, [open]);
-
+  
   return (
     <>
       <Avatar
@@ -47,7 +51,7 @@ export const ProfileDropDown = ({ session }: Props) => {
           if (session !== null) {
             setOpen(!open);
           } else {
-            void signIn();
+            setShowRegister(true);
           }
         }}
         component="button"
@@ -69,7 +73,13 @@ export const ProfileDropDown = ({ session }: Props) => {
               </ListItemIcon>
               <ListItemText>Settings</ListItemText>
             </MenuItem>
-            <MenuItem component="button" onClick={() => void signOut()}>
+            <MenuItem
+              component="button"
+              onClick={() => {
+                const target = pathname?.startsWith('/settings') ? '/' : pathname ?? '/';
+                void signOut({ callbackUrl: target });
+              }}
+            >
               <ListItemIcon>
                 <LogoutIcon fontSize="small" />
               </ListItemIcon>
@@ -78,6 +88,7 @@ export const ProfileDropDown = ({ session }: Props) => {
           </MenuList>
         </Card>
       </Popover>
+      <RegisterModal open={showRegister} onClose={() => setShowRegister(false)} />
     </>
   );
 };
