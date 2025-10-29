@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
-import { type Session } from 'next-auth';
+// import { type Session } from 'next-auth';
 
 type JoinButtonProps = {
   isHeader?: boolean;
