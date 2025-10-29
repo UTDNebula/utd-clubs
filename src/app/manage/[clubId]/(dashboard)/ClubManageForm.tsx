@@ -41,11 +41,8 @@ const ClubManageForm = ({
     },
     // mode: 'onChange',
     // mode: 'all',
-    mode: 'onTouched',
+    mode: 'onSubmit',
   });
-
-  console.log('errors:');
-  console.log(errors);
 
   const router = useRouter();
   const api = useTRPC();
@@ -56,6 +53,9 @@ const ClubManageForm = ({
       },
     }),
   );
+
+  // console.log('errors:');
+  // console.log(errors);
 
   const submitForm = handleSubmit((data) => {
     window.alert(JSON.stringify(data));
@@ -108,8 +108,11 @@ const ClubManageForm = ({
             register={register}
             className="flex-1/2"
           />
+          {/* <span className="text-xs text-red-500">hi</span> */}
           {errors.name && (
-            <span className="text-xs text-red-500">{errors.name?.message}</span>
+            <span className="text-xs text-red-500">
+              hi{errors.name?.message}
+            </span>
           )}
           <FormInput
             type="text"
@@ -117,12 +120,12 @@ const ClubManageForm = ({
             // name="founded"
             register={register}
           />
-          <FormInput
+          {/* <FormInput
             type="text"
             label="Active"
             // name="active"
             register={register}
-          />
+          /> */}
         </div>
         <FormTextArea
           label="Description"
