@@ -1,10 +1,11 @@
 import React from 'react';
 import type { FieldValues } from 'react-hook-form';
 import {
-  type FormBaseProps,
-  formLabelBaseStyle,
   formComponentBaseStyle,
+  formComponentErrorBaseStyle,
+  formLabelBaseStyle,
   labelPositionStyle,
+  type FormBaseProps,
 } from './FormBase';
 
 // interface FormInputPropsBase<TFormValues extends FieldValues>
@@ -26,13 +27,15 @@ type FormTextAreaProps<TFormValues extends FieldValues> =
 export const FormTextArea = <TFormValues extends FieldValues>({
   children,
   register,
+  error,
   name,
   label,
   labelPosition,
   required,
   ...props
 }: FormTextAreaProps<TFormValues>) => {
-  const formProps = register && name ? register(name, {required}) : { name: name };
+  const formProps =
+    register && name ? register(name, { required }) : { name: name };
 
   return (
     <label
@@ -47,10 +50,12 @@ export const FormTextArea = <TFormValues extends FieldValues>({
       <textarea
         {...formProps}
         {...props}
-        className={formComponentBaseStyle + ' h-24 grow-1'}
+        className={`${error ? formComponentErrorBaseStyle : formComponentBaseStyle} h-24 grow-1`}
+        aria-invalid={!!error}
       >
         {children}
       </textarea>
+      {error && <span className="text-xs text-red-500">{error.message}</span>}
     </label>
   );
 };

@@ -1,11 +1,17 @@
 import { type ReactNode } from 'react';
-import type { UseFormRegister, FieldValues, Path } from 'react-hook-form';
+import type {
+  FieldError,
+  FieldValues,
+  Path,
+  UseFormRegister,
+} from 'react-hook-form';
 
 export type labelPositions = 'top' | 'left' | 'right' | 'bottom';
 
 export interface FormBaseProps<TFormValues extends FieldValues> {
   children?: ReactNode;
   register?: UseFormRegister<TFormValues>;
+  error?: FieldError;
   name?: Path<TFormValues>;
   label?: ReactNode;
   labelPosition?: labelPositions;
@@ -15,7 +21,9 @@ export interface FormBaseProps<TFormValues extends FieldValues> {
 export const formLabelBaseStyle =
   'text-s flex flex-col gap-2 p-2 font-bold w-fit';
 export const formComponentBaseStyle =
-  'rounded-lg border border-slate-600 bg-white px-3 py-2 text-xs font-medium text-slate-600';
+  'rounded-lg border border-slate-600 focus:outline-2 focus:outline-blue-primary bg-white px-3 py-2 text-xs font-medium text-slate-600';
+export const formComponentErrorBaseStyle =
+  'rounded-lg border border-red-500 focus:outline-2 focus:outline-red-500 bg-white px-3 py-2 text-xs font-medium text-slate-600';
 
 export function labelPositionStyle(position: labelPositions) {
   switch (position) {

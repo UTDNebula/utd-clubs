@@ -1,10 +1,11 @@
 import React from 'react';
 import type { FieldValues } from 'react-hook-form';
 import {
-  type FormBaseProps,
-  formLabelBaseStyle,
   formComponentBaseStyle,
+  formComponentErrorBaseStyle,
+  formLabelBaseStyle,
   labelPositionStyle,
+  type FormBaseProps,
 } from './FormBase';
 
 type HTMLInputTypes = 'checkbox' | 'color' | 'file' | 'text';
@@ -24,6 +25,7 @@ type FormInputProps<TFormValues extends FieldValues> =
 export const FormInput = <TFormValues extends FieldValues>({
   children,
   register,
+  error,
   type,
   name,
   label,
@@ -40,7 +42,7 @@ export const FormInput = <TFormValues extends FieldValues>({
           className={[
             formLabelBaseStyle,
             labelPositionStyle(labelPosition ?? 'right'),
-            'py-0 cursor-pointer',
+            'cursor-pointer items-center',
             props.className,
           ].join(' ')}
         >
@@ -49,7 +51,7 @@ export const FormInput = <TFormValues extends FieldValues>({
             {...formProps}
             {...props}
             type={type}
-            className={formComponentBaseStyle}
+            className={`formComponentBaseStyle`}
           >
             {children}
           </input>
@@ -72,10 +74,14 @@ export const FormInput = <TFormValues extends FieldValues>({
             {...formProps}
             {...props}
             type={type}
-            className={formComponentBaseStyle}
+            className={`${error ? formComponentErrorBaseStyle : formComponentBaseStyle}`}
+            aria-invalid={!!error}
           >
             {children}
           </input>
+          {error && (
+            <span className="text-xs text-red-500">{error.message}</span>
+          )}
         </label>
       );
   }

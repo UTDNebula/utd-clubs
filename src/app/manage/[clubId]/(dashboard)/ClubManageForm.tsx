@@ -1,26 +1,27 @@
 'use client';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from '@hookform/resolvers/zod';
-import FormTextArea from '@src/components/club/manage/components/FormTextArea';
-import {
-  FormInput,
-  FormFieldSet,
-  FormButtons,
-} from '@src/components/club/manage/FormComponents';
-import type { SelectClub, SelectContact } from '@src/server/db/models';
-import { editClubSchema } from '@src/utils/formSchemas';
-import { useTRPC } from '@src/trpc/react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { type SubmitHandler, useForm } from 'react-hook-form';
-import { type z } from 'zod';
 import { type FormEvent } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { type z } from 'zod';
 import {
   formComponentBaseStyle,
   formLabelBaseStyle,
   labelPositionStyle,
 } from '@src/components/club/manage/components/FormBase';
+import FormTextArea from '@src/components/club/manage/components/FormTextArea';
+import {
+  FormButtons,
+  FormFieldSet,
+  FormInput,
+} from '@src/components/club/manage/FormComponents';
 import PillButton from '@src/components/PillButton';
+import type { SelectClub, SelectContact } from '@src/server/db/models';
+import { useTRPC } from '@src/trpc/react';
+import { editClubSchema } from '@src/utils/formSchemas';
 
 const ClubManageForm = ({
   club,
@@ -39,9 +40,9 @@ const ClubManageForm = ({
       name: club.name,
       description: club.description,
     },
-    // mode: 'onChange',
+    mode: 'onTouched',
     // mode: 'all',
-    mode: 'onSubmit',
+    // mode: 'onSubmit',
   });
 
   const router = useRouter();
@@ -53,9 +54,6 @@ const ClubManageForm = ({
       },
     }),
   );
-
-  // console.log('errors:');
-  // console.log(errors);
 
   const submitForm = handleSubmit((data) => {
     window.alert(JSON.stringify(data));
@@ -99,6 +97,12 @@ const ClubManageForm = ({
             // name="banner"
             register={register}
           />
+          <FormInput
+            type="checkbox"
+            label="Checkbox"
+            labelPosition="top"
+            required
+          ></FormInput>
         </div>
         <div className="flex flex-wrap">
           <FormInput
@@ -106,39 +110,23 @@ const ClubManageForm = ({
             label="Name"
             name="name"
             register={register}
+            error={errors.name}
             className="flex-1/2"
           />
-          {/* <span className="text-xs text-red-500">hi</span> */}
-          {errors.name && (
-            <span className="text-xs text-red-500">
-              hi{errors.name?.message}
-            </span>
-          )}
           <FormInput
             type="text"
             label="Founded"
             // name="founded"
             register={register}
           />
-          {/* <FormInput
-            type="text"
-            label="Active"
-            // name="active"
-            register={register}
-          /> */}
         </div>
         <FormTextArea
           label="Description"
           name="description"
           register={register}
-          aria-invalid={!!errors.description}
+          error={errors.description}
           required
         />
-        {errors.description && (
-          <p className="text-red-500">{errors.description.message}</p>
-        )}
-        <p className="text-red-500">{errors.description?.message}</p>
-
         <FormButtons />
       </FormFieldSet>
       <FormFieldSet legend="Edit Officers"></FormFieldSet>
