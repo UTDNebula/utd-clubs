@@ -3,6 +3,7 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
 import Providers from '@src/components/Providers';
+
 // import { TRPCReactProvider } from '@src/trpc/react';
 // import theme from '@src/utils/theme';
 // import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';

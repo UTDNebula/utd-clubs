@@ -1,12 +1,13 @@
 'use client';
-import { type FC } from 'react';
+
+import { useQuery } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
+import { type FC } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
-import JoinButton from './JoinButton';
 import { useTRPC } from '@src/trpc/react';
-import { useQuery } from '@tanstack/react-query';
+import JoinButton from './JoinButton';
 
 type Props = { club: Club; session: Session | null; priority: boolean };
 

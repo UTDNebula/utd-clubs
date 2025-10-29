@@ -5,9 +5,9 @@ import type {
   SelectContact as Contacts,
   SelectClub,
 } from '@src/server/db/models';
-import JoinButton from '../JoinButton';
 // server-side; do not import client-only hooks here
 import { api } from '@src/trpc/server';
+import JoinButton from '../JoinButton';
 import ContactButtons from './ContactButtons';
 
 type Club = SelectClub & {
