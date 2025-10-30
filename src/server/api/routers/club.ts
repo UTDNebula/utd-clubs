@@ -1,6 +1,5 @@
-import { and, eq, gt, ilike, inArray, lt, sql } from 'drizzle-orm';
+import { and, eq, ilike, inArray, sql } from 'drizzle-orm';
 import { z } from 'zod';
-import { carousel } from '@src/server/db/schema/admin';
 import { club, usedTags } from '@src/server/db/schema/club';
 import { contacts } from '@src/server/db/schema/contacts';
 import { officers as officersTable } from '@src/server/db/schema/officers';
@@ -293,15 +292,6 @@ export const clubRouter = createTRPCRouter({
       ),
     });
     return !!hasPresident;
-  }),
-  getCarousel: publicProcedure.query(async ({ ctx }) => {
-    const now = new Date();
-    const currentItems = await ctx.db.query.carousel.findMany({
-      where: and(lt(carousel.startTime, now), gt(carousel.endTime, now)),
-      with: { club: true },
-    });
-
-    return currentItems;
   }),
   getDirectoryInfo: publicProcedure
     .input(bySlugSchema)

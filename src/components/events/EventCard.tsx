@@ -1,6 +1,5 @@
 'use server';
 
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MoreIcon } from '@src/icons/Icons';
