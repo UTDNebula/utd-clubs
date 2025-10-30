@@ -4,7 +4,8 @@ import { MoreIcon } from '@src/icons/Icons';
 import { api } from '@src/trpc/server';
 import { type RouterOutputs } from '@src/trpc/shared';
 
-const Events = async ({ params }: { params: { clubId: string } }) => {
+const Events = async (props: { params: Promise<{ clubId: string }> }) => {
+  const params = await props.params;
   const events = await api.event.byClubId({ clubId: params.clubId });
   return (
     <div className="rounded-lg bg-white p-2 shadow-xs">

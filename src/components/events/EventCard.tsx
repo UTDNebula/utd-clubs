@@ -8,10 +8,7 @@ import { getServerAuthSession } from '@src/server/auth';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
 import EventLikeButton from './EventLikeButton';
-
-const EventTimeAlert = dynamic(() => import('./EventTimeAlert'), {
-  ssr: false,
-});
+import EventTimeAlert from './EventTimeAlert';
 
 type EventCardProps = {
   event: RouterOutputs['event']['findByFilters']['events'][number];
