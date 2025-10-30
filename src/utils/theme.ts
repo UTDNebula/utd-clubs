@@ -51,6 +51,14 @@ const theme = createTheme({
       xl: 1280,
     },
   },
+  components: {
+    mergeClassNameAndStyle: true,
+    MuiButton: {
+      defaultProps: {
+        className: 'rounded-full',
+      },
+    },
+  },
 });
 
 export default theme;
