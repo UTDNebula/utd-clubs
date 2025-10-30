@@ -55,7 +55,6 @@ const createClubSchema = baseClubSchema.omit({ officers: true }).extend({
 
 export const clubRouter = createTRPCRouter({
   edit: clubEditRouter,
-
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
     const { name, limit } = input;
     const clubs = await ctx.db.query.club.findMany({
