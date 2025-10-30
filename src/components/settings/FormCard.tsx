@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
@@ -129,12 +130,9 @@ export default function FormCard({ clubs, user }: Props) {
 
       <div className="mt-6 flex justify-between gap-4">
         <DeleteButton />
-        <button
-          type="submit"
-          className="rounded-full bg-blue-500 px-4 py-2 text-white transition duration-300 hover:bg-blue-700"
-        >
+        <Button type="submit" variant="contained" className="normal-case">
           Apply Changes
-        </button>
+        </Button>
       </div>
     </form>
   );

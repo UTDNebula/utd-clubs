@@ -3,15 +3,17 @@
 import { Button } from '@mui/material';
 import Link from 'next/link';
 
-export default function ClubMatchButton() {
+const RedoClubMatchButton = () => {
   return (
     <Button
       variant="contained"
       component={Link}
-      href="/club-match/results"
-      className="rounded-full normal-case drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
+      href="/club-match"
+      className="rounded-full w-fit normal-case"
     >
-      Club Match
+      Redo club match
     </Button>
   );
-}
+};
+
+export default RedoClubMatchButton;
