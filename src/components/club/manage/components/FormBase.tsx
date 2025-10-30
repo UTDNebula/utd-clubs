@@ -8,10 +8,14 @@ import type {
 
 export type labelPositions = 'top' | 'left' | 'right' | 'bottom';
 
-export interface FormBaseProps<TFormValues extends FieldValues> {
-  children?: ReactNode;
+export interface ReactHookFormProps<TFormValues extends FieldValues> {
   register?: UseFormRegister<TFormValues>;
   error?: FieldError;
+}
+
+export interface FormBaseProps<TFormValues extends FieldValues>
+  extends ReactHookFormProps<TFormValues> {
+  children?: ReactNode;
   name?: Path<TFormValues>;
   label?: ReactNode;
   labelPosition?: labelPositions;

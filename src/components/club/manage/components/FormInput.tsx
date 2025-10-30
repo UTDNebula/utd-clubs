@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { HTMLInputTypeAttribute } from 'react';
 import type { FieldValues } from 'react-hook-form';
 import {
   formComponentBaseStyle,
@@ -8,7 +8,18 @@ import {
   type FormBaseProps,
 } from './FormBase';
 
-type HTMLInputTypes = 'checkbox' | 'color' | 'file' | 'text';
+// type HTMLSupportedInputTypes =
+//   | 'checkbox'
+//   | 'color'
+//   | 'file'
+//   | 'text'
+//   | 'date'
+//   | 'time';
+
+// type HTMLInputTypes = HTMLSupportedInputTypes &
+//   Omit<HTMLInputTypeAttribute, keyof HTMLSupportedInputTypes>;
+
+type HTMLInputTypes = HTMLInputTypeAttribute;
 
 interface FormInputPropsBase<TFormValues extends FieldValues>
   extends FormBaseProps<TFormValues> {
@@ -60,6 +71,8 @@ export const FormInput = <TFormValues extends FieldValues>({
     case 'color':
     case 'file':
     case 'text':
+    case 'date':
+    case 'time':
     default:
       return (
         <label
