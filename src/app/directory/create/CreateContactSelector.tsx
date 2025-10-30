@@ -1,11 +1,11 @@
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuTrigger,
-} from '@radix-ui/react-dropdown-menu';
-import { useReducer } from 'react';
+  Button,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from '@mui/material';
+import { useReducer, useRef, useState } from 'react';
 import {
   useFieldArray,
   type Control,
@@ -58,6 +58,19 @@ const startContacts: Array<Contact['platform']> = [
   'other',
 ];
 
+const contactNames: { [key in Contact['platform']]: string } = {
+  discord: 'Discord',
+  instagram: 'Instagram',
+  website: 'Website',
+  email: 'Email',
+  twitter: 'Twitter',
+  facebook: 'Facebook',
+  youtube: 'YouTube',
+  twitch: 'Twitch',
+  linkedIn: 'LinkedIn',
+  other: 'Other',
+};
+
 type ContactSelectorProps = {
   control: Control<z.infer<typeof createClubSchema>>;
   register: UseFormRegister<z.infer<typeof createClubSchema>>;
@@ -81,38 +94,22 @@ const ContactSelector = ({
     remove(index);
     dispatch({ type: 'add', target: platform });
   };
+
+  const addNewButtonRef = useRef(null);
+  const [open, setOpen] = useState(false);
+
   return (
-    <div>
-      <div className="flex flex-row py-1">
+    <>
+      <div className="flex justify-between items-center">
         <h2>Contacts</h2>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              className="ml-auto rounded-lg bg-slate-200 p-2"
-              type="button"
-            >
-              add new contact
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuContent>
-              <div className="mb-2 flex h-fit w-40 flex-wrap rounded-lg bg-slate-200 p-2 drop-shadow-md">
-                {available.map((plat) => (
-                  <DropdownMenuItem
-                    key={plat}
-                    onSelect={() => {
-                      takeFromAvailable(plat);
-                    }}
-                  >
-                    <div className="group h-8 w-8" title={plat}>
-                      {logo[plat]}
-                    </div>
-                  </DropdownMenuItem>
-                ))}
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenuPortal>
-        </DropdownMenu>
+        <Button
+          variant="contained"
+          className="normal-case"
+          onClick={() => setOpen(true)}
+          ref={addNewButtonRef}
+        >
+          Add New Contact
+        </Button>
       </div>
       <div className="space-y-2">
         {fields.map((field, index) => (
@@ -126,7 +123,25 @@ const ContactSelector = ({
           />
         ))}
       </div>
-    </div>
+      <Menu
+        anchorEl={addNewButtonRef.current}
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        {available.map((plat) => (
+          <MenuItem
+            key={plat}
+            onClick={() => {
+              setOpen(false);
+              takeFromAvailable(plat);
+            }}
+          >
+            <ListItemIcon>{logo[plat]}</ListItemIcon>
+            <ListItemText>{contactNames[plat]}</ListItemText>
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
   );
 };
 export default ContactSelector;
@@ -164,7 +179,7 @@ const ContactInput = ({
         <div className="box-content h-8 w-8">
           <div className="h-8 w-8">{logo[platform]}</div>
         </div>
-        <div className="text-xl">{platform}</div>
+        <div className="text-xl">{contactNames[platform]}</div>
       </div>
       <div>
         <div>Link here</div>

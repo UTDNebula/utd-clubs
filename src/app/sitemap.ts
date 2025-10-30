@@ -33,6 +33,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 1,
     },
+    {
+      url: 'https://clubs.utdnebula.com/club-match',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 1,
+    },
     ...allClubs.map((club) => ({
       url: 'https://clubs.utdnebula.com/directory/' + club.slug,
       lastModified: new Date(),

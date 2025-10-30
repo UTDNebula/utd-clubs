@@ -1,11 +1,11 @@
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuTrigger,
-} from '@radix-ui/react-dropdown-menu';
-import { useEffect, useReducer, type Dispatch } from 'react';
+  Button,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from '@mui/material';
+import { useEffect, useReducer, useRef, useState, type Dispatch } from 'react';
 import {
   useFieldArray,
   type Control,
@@ -67,6 +67,19 @@ const startContacts: Array<Contact['platform']> = [
   'other',
 ];
 
+const contactNames: { [key in Contact['platform']]: string } = {
+  discord: 'Discord',
+  instagram: 'Instagram',
+  website: 'Website',
+  email: 'Email',
+  twitter: 'Twitter',
+  facebook: 'Facebook',
+  youtube: 'YouTube',
+  twitch: 'Twitch',
+  linkedIn: 'LinkedIn',
+  other: 'Other',
+};
+
 type ContactSelectorProps = {
   control: Control<z.infer<typeof editClubContactSchema>>;
   register: UseFormRegister<z.infer<typeof editClubContactSchema>>;
@@ -103,38 +116,22 @@ const ContactSelector = ({
       used: fields.map((x) => x.platform),
     });
   }, [fields]);
+
+  const addNewButtonRef = useRef(null);
+  const [open, setOpen] = useState(false);
+
   return (
-    <div>
-      <div className="mb-2 flex flex-row items-center">
+    <>
+      <div className="mb-2 flex justify-between items-center">
         <h2 className="text-xl font-bold">Edit Contacts</h2>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              className="ml-auto rounded-lg bg-slate-200 p-2"
-              type="button"
-            >
-              add new contact
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuContent>
-              <div className="mb-2 flex h-fit w-40 flex-wrap rounded-lg bg-slate-200 p-2 drop-shadow-md">
-                {available.map((plat) => (
-                  <DropdownMenuItem
-                    key={plat}
-                    onSelect={(_e) => {
-                      addNew(plat);
-                    }}
-                  >
-                    <div className="group h-8 w-8" title={plat}>
-                      {logo[plat]}
-                    </div>
-                  </DropdownMenuItem>
-                ))}
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenuPortal>
-        </DropdownMenu>
+        <Button
+          variant="contained"
+          className="normal-case"
+          onClick={() => setOpen(true)}
+          ref={addNewButtonRef}
+        >
+          Add New Contact
+        </Button>
       </div>
       <div className="space-y-2 rounded-lg bg-slate-200 p-2">
         {fields.map((field, index) => (
@@ -148,7 +145,25 @@ const ContactSelector = ({
           />
         ))}
       </div>
-    </div>
+      <Menu
+        anchorEl={addNewButtonRef.current}
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        {available.map((plat) => (
+          <MenuItem
+            key={plat}
+            onClick={() => {
+              setOpen(false);
+              addNew(plat);
+            }}
+          >
+            <ListItemIcon>{logo[plat]}</ListItemIcon>
+            <ListItemText>{contactNames[plat]}</ListItemText>
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
   );
 };
 export default ContactSelector;
