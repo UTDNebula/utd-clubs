@@ -16,6 +16,7 @@ import { clubEditRouter } from './clubEdit';
 
 const byNameSchema = z.object({
   name: z.string().default(''),
+  limit: z.number().min(1).max(20).default(5),
 });
 
 const byIdSchema = z.object({
@@ -54,28 +55,18 @@ const createClubSchema = baseClubSchema.omit({ officers: true }).extend({
 
 export const clubRouter = createTRPCRouter({
   edit: clubEditRouter,
+
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
-    const { name } = input;
+    const { name, limit } = input;
     const clubs = await ctx.db.query.club.findMany({
       where: (club) =>
         and(ilike(club.name, `%${name}%`), eq(club.approved, 'approved')),
+      limit,
     });
 
-    if (name === '') return clubs;
-
-    return clubs.slice(0, 5);
+    return clubs;
   }),
-  byNameNoLimit: publicProcedure
-    .input(byNameSchema)
-    .query(async ({ input, ctx }) => {
-      const { name } = input;
-      const clubs = await ctx.db.query.club.findMany({
-        where: (club) =>
-          and(ilike(club.name, `%${name}%`), eq(club.approved, 'approved')),
-      });
 
-      return clubs;
-    }),
   byId: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     const { id } = input;
     try {
