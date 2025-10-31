@@ -25,6 +25,12 @@ const Page = ({ params }: { params: { clubId: string } }) => {
         >
           Create Event
         </Link>
+        <Link
+          href={`/manage/${params.clubId}/Uploads`}
+          className="bg-blue-primary rounded-md p-1 font-semibold text-white"
+        >
+          Upload Images
+        </Link>
       </div>
     </>
   );
