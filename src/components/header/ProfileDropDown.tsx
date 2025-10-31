@@ -18,9 +18,10 @@ import { useEffect, useRef, useState } from 'react';
 
 type Props = {
   session: Session | null;
+  shadow?: boolean;
 };
 
-export const ProfileDropDown = ({ session }: Props) => {
+export const ProfileDropDown = ({ session, shadow = false }: Props) => {
   const avatarRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -51,7 +52,7 @@ export const ProfileDropDown = ({ session }: Props) => {
           }
         }}
         component="button"
-        className="cursor-pointer"
+        className={`cursor-pointer ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
       />
       <Popover
         open={open}

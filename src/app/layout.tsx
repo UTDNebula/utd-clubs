@@ -1,13 +1,12 @@
 import '@src/styles/globals.css';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
-import Providers from '@src/components/Providers';
-
-// import { TRPCReactProvider } from '@src/trpc/react';
-// import theme from '@src/utils/theme';
-// import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-// import { ThemeProvider } from '@mui/material/styles';
+import { TRPCReactProvider } from '@src/trpc/react';
+import ClientLocalizationProvider from '@src/utils/localization';
+import theme from '@src/utils/theme';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -56,10 +55,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-main ${baiJamjuree.variable}`}>
-        <Providers>{children}</Providers>
-        {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
-          <GoogleAnalytics gaId="G-FYTBHVKNG6" />
-        )}
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <TRPCReactProvider>
+            <ThemeProvider theme={theme}>
+              <ClientLocalizationProvider>
+                {children}
+              </ClientLocalizationProvider>
+            </ThemeProvider>
+          </TRPCReactProvider>
+          {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
+            <GoogleAnalytics gaId="G-FYTBHVKNG6" />
+          )}
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

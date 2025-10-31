@@ -6,6 +6,7 @@ import Header from '@src/components/header/BaseHeader';
 import { getServerAuthSession } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { signInRoute } from '@src/utils/redirect';
+import RedoClubMatchButton from './RedoClubMatchButton';
 
 export const metadata: Metadata = {
   title: 'Club Match Results - Jupiter',
@@ -39,7 +40,7 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <main className="flex flex-col gap-8 pb-8">
+      <main className="flex flex-col gap-8 pb-8 items-center">
         <h1 className="text-center text-4xl font-bold">Club Match Results</h1>
         <div className="mx-auto flex max-w-lg flex-col gap-4">
           {data.clubMatch.map((club) => (
@@ -61,12 +62,7 @@ const Page = async () => {
           ))}
         </div>
         {(data.clubMatchLimit == null || data.clubMatchLimit > 0) && (
-          <Link
-            href="/club-match"
-            className="bg-blue-primary self-center rounded-md px-4 py-2 text-white"
-          >
-            Redo club match
-          </Link>
+          <RedoClubMatchButton />
         )}
       </main>
     </>

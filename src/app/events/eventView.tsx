@@ -1,48 +1,64 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
-import DateBrowser from '@src/components/events/DateBrowser';
-import { type eventParamsSchema } from '@src/utils/eventFilter';
-import useSyncedSearchParams from '@src/utils/useSyncedSearchParams';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { IconButton } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { add, format, parseISO, sub } from 'date-fns';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { type ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;
-  searchParams: eventParamsSchema;
+  date: string;
 };
 
-const EventView = ({ children, searchParams }: Props) => {
-  const [params, setParams] = useSyncedSearchParams(searchParams, '/events');
-  const [isMobile, setIsMobile] = useState(false);
+const EventView = ({ children, date }: Props) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
-  useEffect(() => {
-    const checkMobile = () =>
-      setIsMobile(window.matchMedia('(max-width: 768px)').matches);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  function setDate(newValue: Date) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('date', format(newValue, 'yyyy-MM-dd'));
+    router.replace(`${pathname}?${params.toString()}`);
+  }
 
   return (
     <div className="w-full px-6">
-      <div className="flex flex-col pt-4 md:flex-row md:items-end md:pr-7.5 md:pb-12">
-        <h1 className="h-min align-middle text-2xl font-bold text-[#4D5E80]">
-          Events
-        </h1>
-        <div className="relative z-0 mt-2.5 flex flex-row justify-center gap-x-16 md:mt-0 md:ml-auto">
-          {isMobile ? (
-            <input
-              type="date"
-              value={
-                params.date
-                  ? new Date(params.date).toISOString().split('T')[0]
-                  : ''
+      <div className="flex flex-col pt-4 md:flex-row justify-between items-center md:pb-12">
+        <h1 className="text-2xl font-bold text-haiti">Events</h1>
+        <div className="flex gap-2 items-center">
+          <IconButton
+            size="large"
+            onClick={() => {
+              setDate(sub(parseISO(date), { days: 1 }));
+            }}
+          >
+            <ArrowBackIcon fontSize="inherit" />
+          </IconButton>
+          <DatePicker
+            value={parseISO(date)}
+            onChange={(newValue, context) => {
+              if (context.validationError == null && newValue != null) {
+                setDate(newValue);
               }
-              onChange={(e) => setParams({ date: new Date(e.target.value) })}
-              className="rounded-md border px-3 py-2"
-            />
-          ) : (
-            <DateBrowser filterState={params} setParams={setParams} />
-          )}
+            }}
+            className="[&>.MuiInputBase-root]:bg-white"
+            slotProps={{
+              actionBar: {
+                actions: ['today', 'accept'],
+              },
+            }}
+          />
+          <IconButton
+            size="large"
+            onClick={() => {
+              setDate(add(parseISO(date), { days: 1 }));
+            }}
+          >
+            <ArrowForwardIcon fontSize="inherit" />
+          </IconButton>
         </div>
       </div>
       <div className="container flex w-full flex-col overflow-x-clip sm:flex-row sm:space-x-7.5">
