@@ -1,12 +1,12 @@
 'use client';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Skeleton } from '@mui/material';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
 import { type FC } from 'react';
+import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
-import type { SelectClub } from '@src/server/db/models';
 import ClubCard from '../ClubCard';
 import InfiniteScrollGrid from './InfiniteScrollGrid';
 import ScrollTop from './ScrollTop';
@@ -23,34 +23,34 @@ type ClubQueryData = {
 const ClubCardSkeleton = () => {
   return (
     <div className="h-[400px] w-[320px] rounded-lg">
-      <Skeleton 
-        variant="rectangular" 
-        width={320} 
+      <Skeleton
+        variant="rectangular"
+        width={320}
         height={180}
         sx={{ bgcolor: 'grey.300', borderRadius: '8px 8px 0 0' }}
       />
       <div className="p-4">
-        <Skeleton 
-          variant="text" 
-          width="80%" 
+        <Skeleton
+          variant="text"
+          width="80%"
           height={32}
           sx={{ bgcolor: 'grey.300' }}
         />
-        <Skeleton 
-          variant="text" 
-          width="100%" 
+        <Skeleton
+          variant="text"
+          width="100%"
           height={20}
           sx={{ bgcolor: 'grey.300', mt: 1 }}
         />
-        <Skeleton 
-          variant="text" 
-          width="100%" 
+        <Skeleton
+          variant="text"
+          width="100%"
           height={20}
           sx={{ bgcolor: 'grey.300' }}
         />
-        <Skeleton 
-          variant="text" 
-          width="60%" 
+        <Skeleton
+          variant="text"
+          width="60%"
           height={20}
           sx={{ bgcolor: 'grey.300' }}
         />
@@ -107,7 +107,7 @@ const ClubDirectoryGrid: FC<Props> = ({ session }) => {
           No clubs found matching your search
         </div>
       ) : null}
-      
+
       {/* Only scroll to top when there are actually no results, not during loading */}
       {showNoResults && <ScrollTop />}
     </div>

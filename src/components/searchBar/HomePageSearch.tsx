@@ -37,7 +37,7 @@ export const HomePageSearchBar = () => {
   const onClickSearchResult = (club: Club) => {
     router.push(`/directory/${club.slug}`);
   };
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const originalOffset = useRef<number>(0);

@@ -11,9 +11,9 @@ interface SearchResultsProps {
 const SearchResultsItemSkeleton = () => {
   return (
     <div className="w-full bg-gray-50 px-4 py-2">
-      <Skeleton 
-        variant="text" 
-        width="70%" 
+      <Skeleton
+        variant="text"
+        width="70%"
         height={24}
         sx={{ bgcolor: 'grey.300' }}
       />
@@ -21,17 +21,17 @@ const SearchResultsItemSkeleton = () => {
   );
 };
 
-export const SearchResults = ({ 
-  searchResults, 
+export const SearchResults = ({
+  searchResults,
   isLoadingResults = false,
   hasResults = false,
-  isVisible = true
+  isVisible = true,
 }: SearchResultsProps) => {
   // Determine how many skeletons to show (use existing results length or default to 5)
   const skeletonCount = searchResults.length > 0 ? searchResults.length : 5;
 
   return (
-    <div 
+    <div
       className={`absolute top-full right-0 left-0 z-50 mt-1 rounded-xs shadow-lg transition-opacity duration-200 ${
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
