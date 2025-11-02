@@ -85,7 +85,10 @@ const Home = async () => {
               <h1 className="font-display mb-4 max-w-3xl px-5 text-center text-2xl font-semibold text-white text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] md:px-0 md:text-6xl">
                 Discover the Best Clubs and Organizations at UTD
               </h1>
-              <HomePageSearchBar />
+              {/* Reserve space for search bar to prevent layout shift when it becomes sticky */}
+              <div className="relative flex h-[60px] w-full items-center justify-center">
+                <HomePageSearchBar />
+              </div>
             </div>
           </section>
           <section className="absolute left-1/2 -translate-x-1/2">
