@@ -7,11 +7,13 @@ import { signInRoute } from '@src/utils/redirect';
 import EditListedOfficerForm from './EditListedOfficerForm';
 import EditOfficerForm from './EditOfficerForm';
 
-export default async function Page({
-  params: { clubId },
-}: {
-  params: { clubId: string };
+export default async function Page(props: {
+  params: Promise<{ clubId: string }>;
 }) {
+  const params = await props.params;
+
+  const { clubId } = params;
+
   const session = await getServerAuthSession();
   if (!session) redirect(signInRoute(`manage/${clubId}/edit/officers`));
   const role = await api.club.memberType({ id: clubId });

@@ -7,7 +7,8 @@ import {
   PlusIcon,
 } from '@src/icons/Icons';
 
-const Page = ({ params }: { params: { clubId: string } }) => {
+const Page = async (props: { params: Promise<{ clubId: string }> }) => {
+  const params = await props.params;
   return (
     <>
       <div className="flex flex-row flex-wrap gap-x-10 gap-y-4 rounded-lg bg-white p-2 shadow-xs">

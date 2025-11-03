@@ -15,11 +15,10 @@ export const metadata: Metadata = {
     url: 'https://clubs.utdnebula.com/events',
   },
 };
-const Events = async ({
-  searchParams,
-}: {
-  searchParams: z.input<typeof eventParamsSchema>;
+const Events = async (props: {
+  searchParams: Promise<z.input<typeof eventParamsSchema>>;
 }) => {
+  const searchParams = await props.searchParams;
   const parsed = eventParamsSchema.parse(searchParams);
   const { events } = await api.event.findByDate({
     date: parsed.date,

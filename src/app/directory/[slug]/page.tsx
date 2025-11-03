@@ -10,7 +10,8 @@ import NotFound from '@src/components/NotFound';
 import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
 
-const ClubPage = async ({ params }: { params: { slug: string } }) => {
+const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
+  const params = await props.params;
   const club = await api.club.getDirectoryInfo({ slug: params.slug });
   if (!club) {
     // Backup: If using ID, redirect
@@ -36,11 +37,10 @@ const ClubPage = async ({ params }: { params: { slug: string } }) => {
 
 export default ClubPage;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const params = await props.params;
   const slug = params.slug;
 
   const found = await db.query.club.findFirst({

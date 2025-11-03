@@ -1,6 +1,5 @@
 'use client';
 
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { CheckIcon, PlusIcon } from '@src/icons/Icons';
