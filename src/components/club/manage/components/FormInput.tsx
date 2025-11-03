@@ -1,4 +1,4 @@
-import React, { HTMLInputTypeAttribute } from 'react';
+import React, { type HTMLInputTypeAttribute } from 'react';
 import type { FieldValues } from 'react-hook-form';
 import {
   formComponentBaseStyle,
