@@ -17,8 +17,8 @@ export const ClubSearchComponent = ({
 }: ClubSearchComponentProps) => {
   const api = useTRPC();
   const { data } = useQuery(
-    api.club.byNameNoLimit.queryOptions(
-      { name: userSearch },
+    api.club.byName.queryOptions(
+      { name: userSearch, limit: 20 },
       { enabled: !!userSearch },
     ),
   );
