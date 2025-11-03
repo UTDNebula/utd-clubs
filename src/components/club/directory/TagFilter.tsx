@@ -42,7 +42,7 @@ const TagFilter = ({ tags }: { tags: string[] }) => {
               key={key}
               className={`${
                 selectedTag === tag
-                  ? 'bg-blue-primary text-white hover:bg-blue-700'
+                  ? 'bg-royal text-white hover:bg-blue-700'
                   : 'bg-white text-slate-600 hover:bg-gray-200'
               } rounded-3xl px-8 py-4 text-sm font-extrabold whitespace-nowrap transition-colors duration-200 focus:outline-hidden md:text-xs`}
               onClick={() => {

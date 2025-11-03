@@ -44,7 +44,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
           {memberType === 'Officer' || memberType === 'President' ? (
             <Link
               href={`/manage/${club.id}`}
-              className="bg-blue-primary rounded-full p-2.5 text-white transition-colors hover:bg-blue-700"
+              className="bg-royal rounded-full p-2.5 text-white transition-colors hover:bg-blue-700"
             >
               Manage
             </Link>

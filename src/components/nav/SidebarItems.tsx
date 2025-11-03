@@ -21,12 +21,12 @@ const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
       {Icon && (
         <Icon
           fill={`${
-            active ? 'fill-blue-primary' : 'fill-slate-500'
-          } group-hover:fill-blue-primary`}
+            active ? 'fill-royal' : 'fill-slate-500'
+          } group-hover:fill-royal`}
         />
       )}
       <h1
-        className={`text-base font-medium capitalize md:text-sm ${active ? 'text-blue-primary' : 'text-slate-500'} group-hover:text-blue-primary`}
+        className={`text-base font-medium capitalize md:text-sm ${active ? 'text-royal' : 'text-slate-500'} group-hover:text-royal`}
       >
         {cat}
       </h1>
