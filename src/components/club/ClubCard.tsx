@@ -44,16 +44,7 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
         </div>
 
         <div className="m-5 mt-auto flex flex-row space-x-2">
-          <div onClick={(e) => e.stopPropagation()}>
-            <JoinButton
-              session={session}
-              clubID={club.id}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-              }}
-            />
-          </div>
+          <JoinButton session={session} clubID={club.id} />
         </div>
       </div>
     </Link>
