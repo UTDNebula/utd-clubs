@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { type ReactNode } from 'react';
-import { BlueBackButton } from '@src/components/backButton';
+import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
@@ -30,7 +30,7 @@ const Layout = async (props: {
       <Header />
       <main className="px-5 flex w-full flex-col gap-4">
         <div className="flex w-full flex-row gap-x-4 items-center">
-          <BlueBackButton />
+          <BackButton className="bg-royal [&>svg]:fill-white" />
           <h1 className="text-2xl font-extrabold text-haiti">{club.name}</h1>
         </div>
         <div className="flex w-full flex-col gap-4">
