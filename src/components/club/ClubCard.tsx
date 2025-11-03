@@ -1,13 +1,22 @@
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { type Session } from 'next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
-import { type FC } from 'react';
+import { useState, type FC } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
 import JoinButton from './JoinButton';
 
 type Props = { club: Club; session: Session | null; priority: boolean };
 
 const ClubCard: FC<Props> = ({ club, session, priority }) => {
+  const [liked, setLiked] = useState(false);
+
+  const toggleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setLiked(!liked);
+  };
+
   const desc =
     club.description.length > 50
       ? club.description.slice(0, 150) + '...'
@@ -20,6 +29,29 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
     <Link href={`/directory/${club.slug}`} className="block group">
       <div className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between rounded-lg bg-white shadow-2xl md:min-h-[600px]">
         <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
+          <button
+            onClick={toggleLike}
+            className="absolute top-3 right-3 z-10 p-2 transition hover:scale-105 active:scale-115"
+          >
+            {liked ? (
+              <Favorite
+                sx={{
+                  color: 'white',
+                  fontSize: 26,
+                  filter: 'drop-shadow(0 0 4px rgba(0,0,0,0.4))',
+                }}
+              />
+            ) : (
+              <FavoriteBorder
+                sx={{
+                  color: 'white',
+                  fontSize: 26,
+                  filter: 'drop-shadow(0 0 4px rgba(0,0,0,0.4))',
+                }}
+              />
+            )}
+          </button>
+
           {club.profileImage ? (
             <Image
               src={club.profileImage}
