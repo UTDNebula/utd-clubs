@@ -52,7 +52,7 @@ export const HomePageSearchBar = () => {
     <>
       <div
         ref={containerRef}
-        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-6 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
+        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-6 w-full max-w-52 transition-all sm:max-w-[300px] md:max-w-sm lg:max-w-md ${
           isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
         }`}
       >
