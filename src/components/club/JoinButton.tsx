@@ -24,7 +24,7 @@ const JoinButton = ({
   const mutation = useMutation(api.club.joinLeave.mutationOptions());
   const clubId = clubID;
   const [isDisabled, setDisabled] = useState(isJoined ?? false);
-  
+
   const handleJoin = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -32,7 +32,7 @@ const JoinButton = ({
     mutation.mutate({ clubId });
     setDisabled(!isDisabled);
   };
-  
+
   if (!session) {
     return (
       <button
