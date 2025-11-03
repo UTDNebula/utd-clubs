@@ -9,15 +9,17 @@ import ClientEventTime from './ClientEventTime'; //importing new component
 import EventLikeButton from './EventLikeButton';
 import EventTimeAlert from './EventTimeAlert';
 
-type EventCardProps = {
-  event: RouterOutputs['event']['findByFilters']['events'][number];
-};
+type EventCardProps =
+  | {
+      event: RouterOutputs['event']['findByFilters']['events'][number];
+      adminEvent?: false;
+    }
+  | {
+      event: RouterOutputs['event']['byClubId'][number];
+      adminEvent: true;
+    };
 
-const HorizontalCard = async ({
-  event,
-}: {
-  event: RouterOutputs['event']['findByFilters']['events'][number];
-}) => {
+const HorizontalCard = async ({ event, adminEvent }: EventCardProps) => {
   const session = await getServerAuthSession();
   return (
     <div className="container flex h-40 flex-row overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
@@ -38,14 +40,18 @@ const HorizontalCard = async ({
         <div className="flex flex-col space-y-2.5">
           <h3 className="font-bold">{event.name}</h3>
           <h4 className="text-xs font-bold whitespace-nowrap">
-            <Link
-              href={`/directory/${event.clubId ?? ''}`}
-              className="hover:text-blue-primary"
-              scroll
-            >
-              {event.club.name}
-            </Link>{' '}
-            • <wbr />
+            {!adminEvent && (
+              <>
+                <Link
+                  href={`/directory/${event.clubId ?? ''}`}
+                  className="hover:text-blue-primary"
+                  scroll
+                >
+                  {event.club.name}
+                </Link>{' '}
+                • <wbr />
+              </>
+            )}
             <span className="text-blue-primary">
               <ClientEventTime
                 startTime={event.startTime} //ClientEventTime logic
@@ -59,7 +65,7 @@ const HorizontalCard = async ({
           </p>
         </div>
         <div className="ml-auto flex flex-row space-x-4">
-          {session && (
+          {!adminEvent && session && (
             <EventLikeButton liked={event.liked} eventId={event.id} />
           )}
           <Link
@@ -74,11 +80,7 @@ const HorizontalCard = async ({
     </div>
   );
 };
-const VerticalCard = async ({
-  event,
-}: {
-  event: RouterOutputs['event']['findByFilters']['events'][number];
-}) => {
+const VerticalCard = async ({ event, adminEvent }: EventCardProps) => {
   const session = await getServerAuthSession();
   return (
     <div className="container flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
@@ -99,13 +101,15 @@ const VerticalCard = async ({
         <div className="space-y-2.5">
           <h3 className="font-bold">{event.name}</h3>
           <h4 className="text-xs font-bold">
-            <Link
-              href={`/directory/${event.clubId ?? ''}`}
-              className="hover:text-blue-primary"
-              scroll
-            >
-              {event.club.name}
-            </Link>
+            {!adminEvent && (
+              <Link
+                href={`/directory/${event.clubId ?? ''}`}
+                className="hover:text-blue-primary"
+                scroll
+              >
+                {event.club.name}
+              </Link>
+            )}
             <div>
               <span className="text-blue-primary">
                 <ClientEventTime
@@ -124,7 +128,7 @@ const VerticalCard = async ({
           >
             <MoreIcon fill="fill-white" />
           </Link>
-          {session && (
+          {!adminEvent && session && (
             <EventLikeButton liked={event.liked} eventId={event.id} />
           )}
         </div>
@@ -133,16 +137,16 @@ const VerticalCard = async ({
   );
 };
 
-const EventCard = ({ event }: EventCardProps) => {
+const EventCard = (props: EventCardProps) => {
   return (
-    <div>
+    <>
       <div className="hidden lg:group-data-[view=list]:contents">
-        <HorizontalCard event={event} />
+        <HorizontalCard {...props} />
       </div>
       <div className="contents lg:group-data-[view=list]:hidden">
-        <VerticalCard event={event} />
+        <VerticalCard {...props} />
       </div>
-    </div>
+    </>
   );
 };
 export default EventCard;

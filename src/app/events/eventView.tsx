@@ -63,10 +63,8 @@ const EventView = ({ children, date }: Props) => {
       </div>
       <div className="container flex w-full flex-col overflow-x-clip sm:flex-row sm:space-x-7.5">
         <div
-          data-view={'list'}
-          className={
-            'md:items-normal group flex w-full flex-col items-center space-y-7.5 pt-10'
-          }
+          data-view="list"
+          className="md:items-normal group flex w-full flex-col items-center space-y-7.5 pt-10"
         >
           {children}
         </div>

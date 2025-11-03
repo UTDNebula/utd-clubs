@@ -25,7 +25,7 @@ const CommunityEvents = async () => {
   return (
     <div
       className="group flex w-full flex-col items-center space-y-7.5 pt-10 sm:items-start"
-      data-view={'list'}
+      data-view="list"
     >
       {events.map((event) => (
         <EventCard key={event.id} event={event} />
