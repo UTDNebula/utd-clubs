@@ -8,8 +8,8 @@ const Events = async (props: { params: Promise<{ clubId: string }> }) => {
     <div className="rounded-lg bg-white p-4 shadow-xs w-full">
       <h3 className="text-haiti text-xl font-bold">Events</h3>
       <div
-        className="group flex flex-wrap w-full items-center pt-4 gap-4"
-        data-view={'list'}
+        className="group flex flex-wrap w-full justify-evenly items-center pt-4 gap-4"
+        data-view="list"
       >
         {events.map((event) => (
           <EventCard key={event.id} event={event} adminEvent />

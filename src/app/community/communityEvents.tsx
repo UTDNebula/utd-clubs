@@ -24,7 +24,7 @@ const CommunityEvents = async () => {
   }
   return (
     <div
-      className="group flex w-full flex-col items-center space-y-7.5 pt-10 sm:items-start"
+      className="group flex flex-wrap w-full justify-evenly items-center pt-10 gap-4"
       data-view="list"
     >
       {events.map((event) => (

@@ -61,13 +61,11 @@ const EventView = ({ children, date }: Props) => {
           </IconButton>
         </div>
       </div>
-      <div className="container flex w-full flex-col overflow-x-clip sm:flex-row sm:space-x-7.5">
-        <div
-          data-view="list"
-          className="md:items-normal group flex w-full flex-col items-center space-y-7.5 pt-10"
-        >
-          {children}
-        </div>
+      <div
+        data-view="list"
+        className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4"
+      >
+        {children}
       </div>
     </div>
   );

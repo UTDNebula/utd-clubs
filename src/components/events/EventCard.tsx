@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { MoreIcon } from '@src/icons/Icons';
 import { getServerAuthSession } from '@src/server/auth';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
@@ -22,7 +21,10 @@ type EventCardProps =
 const HorizontalCard = async ({ event, adminEvent }: EventCardProps) => {
   const session = await getServerAuthSession();
   return (
-    <div className="container flex h-40 flex-row overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
+    <Link
+      href={`/event/${event.id}`}
+      className="flex h-40 w-full flex-row overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg"
+    >
       <div className="relative h-[160px] w-1/3 max-w-[225px]">
         <div className="h-[160px]">
           <Image
@@ -42,17 +44,10 @@ const HorizontalCard = async ({ event, adminEvent }: EventCardProps) => {
           <h4 className="text-xs font-bold whitespace-nowrap">
             {!adminEvent && (
               <>
-                <Link
-                  href={`/directory/${event.clubId ?? ''}`}
-                  className="hover:text-blue-primary"
-                  scroll
-                >
-                  {event.club.name}
-                </Link>{' '}
-                • <wbr />
+                {event.club.name} • <wbr />
               </>
             )}
-            <span className="text-blue-primary">
+            <span className="text-royal">
               <ClientEventTime
                 startTime={event.startTime} //ClientEventTime logic
                 endTime={event.endTime}
@@ -64,26 +59,22 @@ const HorizontalCard = async ({ event, adminEvent }: EventCardProps) => {
             {event.description}
           </p>
         </div>
-        <div className="ml-auto flex flex-row space-x-4">
-          {!adminEvent && session && (
+        {!adminEvent && session && (
+          <div className="ml-auto flex flex-row space-x-4">
             <EventLikeButton liked={event.liked} eventId={event.id} />
-          )}
-          <Link
-            className="bg-blue-primary h-10 w-10 rounded-full p-1.5 shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800"
-            href={`/event/${event.id}`}
-            passHref
-          >
-            <MoreIcon fill="fill-white" />
-          </Link>
-        </div>
+          </div>
+        )}
       </div>
-    </div>
+    </Link>
   );
 };
 const VerticalCard = async ({ event, adminEvent }: EventCardProps) => {
   const session = await getServerAuthSession();
   return (
-    <div className="container flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
+    <Link
+      href={`/event/${event.id}`}
+      className="flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg"
+    >
       <div className="relative">
         <div className="h-40 w-96">
           <Image
@@ -101,17 +92,9 @@ const VerticalCard = async ({ event, adminEvent }: EventCardProps) => {
         <div className="space-y-2.5">
           <h3 className="font-bold">{event.name}</h3>
           <h4 className="text-xs font-bold">
-            {!adminEvent && (
-              <Link
-                href={`/directory/${event.clubId ?? ''}`}
-                className="hover:text-blue-primary"
-                scroll
-              >
-                {event.club.name}
-              </Link>
-            )}
+            {!adminEvent && event.club.name}
             <div>
-              <span className="text-blue-primary">
+              <span className="text-royal">
                 <ClientEventTime
                   startTime={event.startTime}
                   endTime={event.endTime}
@@ -120,20 +103,13 @@ const VerticalCard = async ({ event, adminEvent }: EventCardProps) => {
             </div>
           </h4>
         </div>
-        <div className="mt-auto flex flex-row space-x-4">
-          <Link
-            className="bg-blue-primary h-10 w-10 rounded-full p-1.5 shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800"
-            href={`/event/${event.id}`}
-            passHref
-          >
-            <MoreIcon fill="fill-white" />
-          </Link>
-          {!adminEvent && session && (
+        {!adminEvent && session && (
+          <div className="mt-auto">
             <EventLikeButton liked={event.liked} eventId={event.id} />
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    </div>
+    </Link>
   );
 };
 
