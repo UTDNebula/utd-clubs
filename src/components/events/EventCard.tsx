@@ -7,6 +7,9 @@ import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
 import EventLikeButton from './EventLikeButton';
 import EventTimeAlert from './EventTimeAlert';
+import { IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 type EventCardProps =
   | {
@@ -59,11 +62,21 @@ const HorizontalCard = async ({ event, adminEvent }: EventCardProps) => {
             {event.description}
           </p>
         </div>
-        {!adminEvent && session && (
-          <div className="ml-auto flex flex-row space-x-4">
+        <div className="ml-auto flex flex-row gap-2">
+          {!adminEvent && session && (
             <EventLikeButton liked={event.liked} eventId={event.id} />
-          </div>
-        )}
+          )}
+          {adminEvent && (
+            <>
+              <IconButton disabled>
+                <EditIcon />
+              </IconButton>
+              <IconButton color="error" disabled>
+                <DeleteIcon />
+              </IconButton>
+            </>
+          )}
+        </div>
       </div>
     </Link>
   );
@@ -103,11 +116,21 @@ const VerticalCard = async ({ event, adminEvent }: EventCardProps) => {
             </div>
           </h4>
         </div>
-        {!adminEvent && session && (
-          <div className="mt-auto">
+        <div className="mt-auto flex flex-row gap-2">
+          {!adminEvent && session && (
             <EventLikeButton liked={event.liked} eventId={event.id} />
-          </div>
-        )}
+          )}
+          {adminEvent && (
+            <>
+              <IconButton disabled>
+                <EditIcon />
+              </IconButton>
+              <IconButton color="error" disabled>
+                <DeleteIcon />
+              </IconButton>
+            </>
+          )}
+        </div>
       </div>
     </Link>
   );
