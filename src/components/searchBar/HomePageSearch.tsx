@@ -98,8 +98,24 @@ export const HomePageSearchBar = () => {
             </SearchResultsItem>
           ))}
         />
-      )}
-    </div>
+        {debouncedSearch && debouncedFocused && data && data.length > 0 && (
+          <SearchResults
+            searchResults={data.map((item) => (
+              <SearchResultsItem
+                key={item.id}
+                onClick={() => {
+                  onClickSearchResult(item);
+                }}
+              >
+                {item.name}
+              </SearchResultsItem>
+            ))}
+          />
+        )}
+      </div>
+      {/*Placeholder to avoid layout shift when search bar becomes sticky*/}
+      {isSticky && <div className="h-10 mt-6"></div>}
+    </>
   );
 };
 type SearchBarProps = Omit<ComponentProps<'input'>, 'type'> & {

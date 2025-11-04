@@ -4,9 +4,13 @@ import ApprovedClub from '@src/components/admin/ApprovedClub';
 import OtherClubStatus from '@src/components/admin/OtherClubStatus';
 import { db } from '@src/server/db';
 
-type Props = { params: { id: string } };
+type Props = { params: Promise<{ id: string }> };
 
-export default async function Page({ params: { id } }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
+
+  const { id } = params;
+
   const org = await db.query.club.findFirst({
     where: (club) => eq(club.id, id),
   });

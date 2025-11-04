@@ -64,6 +64,19 @@ export const userMetadata = pgTable('user_metadata', {
   career: careerEnum('career').$default(() => 'Engineering'),
 });
 
+export type ClubMatchResults = {
+  name: string;
+  id: string;
+  reasoning: string;
+  benefit: string;
+}[];
+
+export const userAiCache = pgTable('user_ai_cache', {
+  id: text('id').notNull().primaryKey(),
+  clubMatch: jsonb('clubMatch').$type<ClubMatchResults>(),
+  clubMatchLimit: integer('clubMatchLimit').$default(() => 100),
+});
+
 export const accounts = pgTable(
   'account',
   {

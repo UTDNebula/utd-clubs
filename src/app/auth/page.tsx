@@ -5,11 +5,10 @@ import ProviderButton from '@src/app/auth/ProviderButtons';
 import BackButton from '@src/components/backButton';
 import { getServerAuthSession } from '@src/server/auth';
 
-export default async function Auth({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string };
+export default async function Auth(props: {
+  searchParams: Promise<{ [key: string]: string }>;
 }) {
+  const searchParams = await props.searchParams;
   const session = await getServerAuthSession();
   if (session) {
     return redirect(searchParams['callbackUrl'] ?? '/');

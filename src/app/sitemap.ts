@@ -22,49 +22,49 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     {
-      url: 'https://jupiter.utdnebula.com',
+      url: 'https://clubs.utdnebula.com',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
     },
     {
-      url: 'https://jupiter.utdnebula.com/about',
+      url: 'https://clubs.utdnebula.com/community',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
     },
     {
-      url: 'https://jupiter.utdnebula.com/community',
+      url: 'https://clubs.utdnebula.com/club-match',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
     },
     ...allClubs.map((club) => ({
-      url: 'https://jupiter.utdnebula.com/directory/' + club.slug,
+      url: 'https://clubs.utdnebula.com/directory/' + club.slug,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.9,
     })),
     ...events.map((event) => ({
-      url: 'https://jupiter.utdnebula.com/event/' + event.id,
+      url: 'https://clubs.utdnebula.com/event/' + event.id,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.9,
     })),
     {
-      url: 'https://jupiter.utdnebula.com/events',
+      url: 'https://clubs.utdnebula.com/events',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
     },
     {
-      url: 'https://jupiter.utdnebula.com/feedback',
+      url: 'https://clubs.utdnebula.com/feedback',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
     },
     {
-      url: 'https://jupiter.utdnebula.com/settings',
+      url: 'https://clubs.utdnebula.com/settings',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,

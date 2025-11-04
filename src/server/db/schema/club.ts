@@ -10,7 +10,6 @@ import {
   text,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
-import { carousel } from './admin';
 import { contacts } from './contacts';
 import { events } from './events';
 import { officers } from './officers';
@@ -66,7 +65,6 @@ export const clubRelations = relations(club, ({ many }) => ({
   events: many(events),
   officers: many(officers),
   userMetadataToClubs: many(userMetadataToClubs),
-  carousel: many(carousel),
 }));
 
 export const usedTags = pgMaterializedView('used_tags', {

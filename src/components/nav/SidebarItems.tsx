@@ -14,8 +14,9 @@ const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
 
   return (
     <Link
-      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white shadow-md' : ''} hover:bg-white hover:shadow-md`}
+      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white shadow-md' : ''} hover:bg-blue-200 hover:shadow-md`}
       href={route}
+      target={route.startsWith('http') ? '_blank' : ''}
     >
       {Icon && (
         <Icon

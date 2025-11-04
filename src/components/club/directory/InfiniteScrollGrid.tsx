@@ -27,7 +27,7 @@ export default function InfiniteScrollGrid({ session }: Props) {
       ),
     );
 
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver>(undefined);
   const lastClubElementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -6,15 +6,15 @@ import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 
-const Layout = async ({
-  params,
-  children,
-  events,
-}: {
-  params: { clubId: string };
+const Layout = async (props: {
+  params: Promise<{ clubId: string }>;
   children: ReactNode;
   events: ReactNode;
 }) => {
+  const params = await props.params;
+
+  const { children, events } = props;
+
   const session = await getServerAuthSession();
   if (!session) redirect(signInRoute(`manage/${params.clubId}`));
   const canAccess = await api.club.isOfficer({ id: params.clubId });

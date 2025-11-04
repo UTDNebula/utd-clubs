@@ -12,17 +12,22 @@ import {
   Popover,
 } from '@mui/material';
 import { type Session } from 'next-auth';
-import { signIn, signOut } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import RegisterModal from '@src/components/RegisterModal';
 
 type Props = {
   session: Session | null;
+  shadow?: boolean;
 };
 
-export const ProfileDropDown = ({ session }: Props) => {
+export const ProfileDropDown = ({ session, shadow = false }: Props) => {
   const avatarRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const pathname = usePathname();
 
   // Close on scroll
   useEffect(() => {
@@ -47,11 +52,11 @@ export const ProfileDropDown = ({ session }: Props) => {
           if (session !== null) {
             setOpen(!open);
           } else {
-            void signIn();
+            setShowRegister(true);
           }
         }}
         component="button"
-        className="cursor-pointer"
+        className={`cursor-pointer ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
       />
       <Popover
         open={open}
@@ -69,7 +74,15 @@ export const ProfileDropDown = ({ session }: Props) => {
               </ListItemIcon>
               <ListItemText>Settings</ListItemText>
             </MenuItem>
-            <MenuItem component="button" onClick={() => void signOut()}>
+            <MenuItem
+              component="button"
+              onClick={() => {
+                const target = pathname?.startsWith('/settings')
+                  ? '/'
+                  : (pathname ?? '/');
+                void signOut({ callbackUrl: target });
+              }}
+            >
               <ListItemIcon>
                 <LogoutIcon fontSize="small" />
               </ListItemIcon>
@@ -78,6 +91,10 @@ export const ProfileDropDown = ({ session }: Props) => {
           </MenuList>
         </Card>
       </Popover>
+      <RegisterModal
+        open={showRegister}
+        onClose={() => setShowRegister(false)}
+      />
     </>
   );
 };

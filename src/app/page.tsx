@@ -1,8 +1,9 @@
-import type { Metadata } from 'next';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
-import starDoodle from 'public/images/StarDoodle.png';
+import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
+import TagFilter from '@src/components/club/directory/TagFilter';
+import ClubMatchButton from '@src/components/header/ClubMatchButton';
 import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import Sidebar from '@src/components/nav/Sidebar';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
@@ -46,41 +47,41 @@ const Home = async () => {
               />
               <Image
                 src={planetsDoodle}
-                //width={300}
-                //height={300}
                 alt="Planets Doodle for landing page"
+                width={574}
+                height={200}
                 className="absolute right-[10%] bottom-[30%] w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover"
               />
               <Image
-                src={starDoodle}
-                //width={170}
-                //height={170}
+                src="/images/StarDoodle.svg"
                 alt="Star Doodle (top right) for landing page"
-                className="absolute top-[5%] right-[15%] w-[clamp(170px,20vw,200px)] animate-spin bg-no-repeat object-cover [animation-direction:reverse] [animation-duration:77s]"
+                width={72}
+                height={72}
+                className="absolute top-[15%] right-[15%] w-[clamp(56px,7vw,72px)] animate-spin bg-no-repeat object-cover [animation-direction:reverse] [animation-duration:77s]"
               />
               <Image
-                src={starDoodle}
-                //width={140}
-                //height={140}
-                alt="Star Doodle (upper right) for landing page"
-                className="absolute bottom-[35%] left-[7%] w-[clamp(70px,20vw,150px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
+                src="/images/StarDoodle.svg"
+                alt="Star Doodle (bottom left) for landing page"
+                width={48}
+                height={48}
+                className="absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
               />
             </section>
-            <section className="absolute top-[80vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"></section>
+            <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-[#edeff2] to-transparent"></section>
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
-          <div className="pointer-events-none fixed top-0 z-20 flex h-20 w-full flex-row items-center px-2.5 py-2.5 md:px-5">
-            <Sidebar hamburger="white" />
-            <div className="pointer-events-auto ml-auto flex items-center justify-center">
-              <ProfileDropDown session={session} />
+          <div className="pointer-events-none *:pointer-events-auto fixed top-0 z-20 flex w-full items-center justify-between p-2.5 md:p-5">
+            <Sidebar hamburger="white" shadow />
+            <div className="ml-auto flex items-center justify-center gap-2">
+              <ClubMatchButton />
+              <ProfileDropDown session={session} shadow />
             </div>
           </div>
           <section className="h-screen w-screen">
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
                 <span className="leading-none">POWERED BY</span>
-                {/*eslint-disable-next-line react/jsx-no-target-blank*/}
                 <a
                   href="https://www.utdnebula.com/"
                   target="_blank"
