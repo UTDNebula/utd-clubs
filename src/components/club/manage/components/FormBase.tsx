@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { type ReactNode } from 'react';
 import type {
   FieldError,
+  FieldErrorsImpl,
   FieldValues,
+  Merge,
   Path,
   UseFormRegister,
 } from 'react-hook-form';
@@ -11,6 +14,7 @@ export type labelPositions = 'top' | 'left' | 'right' | 'bottom';
 export interface ReactHookFormProps<TFormValues extends FieldValues> {
   register?: UseFormRegister<TFormValues>;
   error?: FieldError;
+  // error?: Merge<FieldError, FieldErrorsImpl<TFormValues>>;
 }
 
 export interface FormBaseProps<TFormValues extends FieldValues>
