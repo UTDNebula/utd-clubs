@@ -97,7 +97,7 @@ const PillButton = ({
         ${colors[color ?? 'default']?.bg ?? 'bg-blue-primary'}
         ${colors[color ?? 'default']?.hover ?? 'hover:bg-blue-700'}
         ${colors[color ?? 'default']?.text ?? 'text-white'}
-        disabled:bg-slate-700 disabled:text-white disabled:cursor-not-allowed
+        disabled:bg-slate-500 disabled:text-slate-100 disabled:cursor-not-allowed
         min-w-max w-min`;
 
   const contents = (
