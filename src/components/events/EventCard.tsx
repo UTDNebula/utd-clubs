@@ -1,5 +1,8 @@
 'use server';
 
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { IconButton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getServerAuthSession } from '@src/server/auth';
@@ -7,9 +10,6 @@ import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
 import EventLikeButton from './EventLikeButton';
 import EventTimeAlert from './EventTimeAlert';
-import { IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 
 type EventCardProps =
   | {
@@ -63,9 +63,7 @@ const HorizontalCard = async ({ event, adminEvent }: EventCardProps) => {
           </p>
         </div>
         <div className="ml-auto flex flex-row gap-2">
-          {!adminEvent && session && (
-            <EventLikeButton liked={event.liked} eventId={event.id} />
-          )}
+          {!adminEvent && session && <EventLikeButton eventId={event.id} />}
           {adminEvent && (
             <>
               <IconButton disabled>
@@ -117,9 +115,7 @@ const VerticalCard = async ({ event, adminEvent }: EventCardProps) => {
           </h4>
         </div>
         <div className="mt-auto flex flex-row gap-2">
-          {!adminEvent && session && (
-            <EventLikeButton liked={event.liked} eventId={event.id} />
-          )}
+          {!adminEvent && session && <EventLikeButton eventId={event.id} />}
           {adminEvent && (
             <>
               <IconButton disabled>

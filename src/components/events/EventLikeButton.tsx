@@ -8,9 +8,8 @@ import { useTRPC } from '@src/trpc/react';
 
 type buttonProps = {
   eventId: string;
-  liked: boolean;
 };
-const EventLikeButton = ({ eventId, liked }: buttonProps) => {
+const EventLikeButton = ({ eventId }: buttonProps) => {
   const api = useTRPC();
   const queryClient = useQueryClient();
   const { data: joined, isPending } = useQuery(
