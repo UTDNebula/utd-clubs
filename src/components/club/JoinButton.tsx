@@ -10,7 +10,6 @@ type JoinButtonProps = {
   isHeader?: boolean;
   isJoined?: boolean;
   clubID: string;
-  onClick?: (e: React.MouseEvent) => void;
 };
 
 const JoinButton = ({
@@ -18,7 +17,6 @@ const JoinButton = ({
   session,
   isJoined,
   clubID,
-  onClick,
 }: JoinButtonProps) => {
   const api = useTRPC();
   const mutation = useMutation(api.club.joinLeave.mutationOptions());
@@ -28,7 +26,6 @@ const JoinButton = ({
   const handleJoin = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    onClick?.(e);
     mutation.mutate({ clubId });
     setDisabled(!isDisabled);
   };
