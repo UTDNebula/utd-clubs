@@ -5,11 +5,13 @@ import { api } from '@src/trpc/server';
 import EditClubForm from './EditClubForm';
 import EditContactForm from './EditContactForm';
 
-export default async function Page({
-  params: { clubId },
-}: {
-  params: { clubId: string };
+export default async function Page(props: {
+  params: Promise<{ clubId: string }>;
 }) {
+  const params = await props.params;
+
+  const { clubId } = params;
+
   const club = await api.club.byId({ id: clubId });
   if (!club) notFound();
   return (

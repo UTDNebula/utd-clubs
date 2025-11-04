@@ -3,11 +3,11 @@ import { getServerAuthSession } from '@src/server/auth';
 import { ClubSearchComponent } from './ClubSearch';
 
 type Params = {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 };
 
 const clubSearch = async (props: Params) => {
-  const { searchParams } = props;
+  const searchParams = await props.searchParams;
   const userSearch = searchParams['search'] || '';
   const session = await getServerAuthSession();
 

@@ -27,7 +27,7 @@ const server = z.object({
   NEBULA_API_STORAGE_BUCKET: z.string().min(1),
   NEBULA_API_KEY: z.string().min(1),
   NEBULA_API_STORAGE_KEY: z.string().min(1),
-  GEMINI_SERVICE_ACCOUNT: z.string().min(1),
+  GEMINI_SERVICE_ACCOUNT: z.string().optional(),
 });
 
 /**

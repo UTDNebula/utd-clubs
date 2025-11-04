@@ -54,7 +54,7 @@ const Home = async () => {
                 className="absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
               />
             </section>
-            <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-white to-transparent"></section>
+            <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-[#edeff2] to-transparent"></section>
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
@@ -69,7 +69,6 @@ const Home = async () => {
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
                 <span className="leading-none">POWERED BY</span>
-                {/*eslint-disable-next-line react/jsx-no-target-blank*/}
                 <a
                   href="https://www.utdnebula.com/"
                   target="_blank"
