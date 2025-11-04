@@ -15,12 +15,12 @@ const Layout = async (props: {
 
   const { children, events } = props;
 
-  const session = await getServerAuthSession();
+  /*const session = await getServerAuthSession();
   if (!session) redirect(signInRoute(`manage/${params.clubId}`));
   const canAccess = await api.club.isOfficer({ id: params.clubId });
   if (!canAccess) {
     return <div className="">You can&apos;t access this 😢</div>;
-  }
+  }*/
   const club = await api.club.byId({ id: params.clubId });
   if (!club) {
     notFound();
