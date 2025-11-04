@@ -12,7 +12,7 @@ const Events = async (props: { params: Promise<{ clubId: string }> }) => {
         data-view="list"
       >
         {events.map((event) => (
-          <EventCard key={event.id} event={event} adminEvent />
+          <EventCard key={event.id} event={event} manageView />
         ))}
       </div>
     </div>

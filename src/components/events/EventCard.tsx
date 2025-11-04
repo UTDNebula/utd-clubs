@@ -14,14 +14,14 @@ import EventTimeAlert from './EventTimeAlert';
 type EventCardProps =
   | {
       event: RouterOutputs['event']['findByFilters']['events'][number];
-      adminEvent?: false;
+      manageView?: false;
     }
   | {
       event: RouterOutputs['event']['byClubId'][number];
-      adminEvent: true;
+      manageView: true;
     };
 
-const HorizontalCard = async ({ event, adminEvent }: EventCardProps) => {
+const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
   const session = await getServerAuthSession();
   return (
     <Link
@@ -45,7 +45,7 @@ const HorizontalCard = async ({ event, adminEvent }: EventCardProps) => {
         <div className="flex flex-col space-y-2.5">
           <h3 className="font-bold">{event.name}</h3>
           <h4 className="text-xs font-bold whitespace-nowrap">
-            {!adminEvent && (
+            {!manageView && (
               <>
                 {event.club.name} • <wbr />
               </>
@@ -63,8 +63,8 @@ const HorizontalCard = async ({ event, adminEvent }: EventCardProps) => {
           </p>
         </div>
         <div className="ml-auto flex flex-row gap-2">
-          {!adminEvent && session && <EventLikeButton eventId={event.id} />}
-          {adminEvent && (
+          {!manageView && session && <EventLikeButton eventId={event.id} />}
+          {manageView && (
             <>
               <IconButton disabled>
                 <EditIcon />
@@ -79,7 +79,7 @@ const HorizontalCard = async ({ event, adminEvent }: EventCardProps) => {
     </Link>
   );
 };
-const VerticalCard = async ({ event, adminEvent }: EventCardProps) => {
+const VerticalCard = async ({ event, manageView }: EventCardProps) => {
   const session = await getServerAuthSession();
   return (
     <Link
@@ -103,7 +103,7 @@ const VerticalCard = async ({ event, adminEvent }: EventCardProps) => {
         <div className="space-y-2.5">
           <h3 className="font-bold">{event.name}</h3>
           <h4 className="text-xs font-bold">
-            {!adminEvent && event.club.name}
+            {!manageView && event.club.name}
             <div>
               <span className="text-royal">
                 <ClientEventTime
@@ -115,8 +115,8 @@ const VerticalCard = async ({ event, adminEvent }: EventCardProps) => {
           </h4>
         </div>
         <div className="mt-auto flex flex-row gap-2">
-          {!adminEvent && session && <EventLikeButton eventId={event.id} />}
-          {adminEvent && (
+          {!manageView && session && <EventLikeButton eventId={event.id} />}
+          {manageView && (
             <>
               <IconButton disabled>
                 <EditIcon />
