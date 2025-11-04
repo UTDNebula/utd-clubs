@@ -16,7 +16,8 @@ export const TagPill = ({
     <Chip
       label={`${name}`}
       icon={<TagIcon color="inherit" />}
-      className="bg-blue-primary rounded-full font-bold transition-colors hover:bg-blue-700 text-white"
+      className=" rounded-full font-bold transition-colors  text-white"
+      color="primary"
       onClick={() => addTag(name)}
       onDelete={removeTag}
     />

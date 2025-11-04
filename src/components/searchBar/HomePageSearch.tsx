@@ -1,8 +1,10 @@
 'use client';
 
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState, type ComponentProps } from 'react';
-import { RightArrowIcon, SearchIcon } from '@src/icons/Icons';
+import { RightArrowIcon } from '@src/icons/Icons';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import useDebounce from '@src/utils/useDebounce';
@@ -11,7 +13,7 @@ import { SearchResults, SearchResultsItem } from './SearchResults';
 
 export const HomePageSearchBar = () => {
   const [search, setSearch] = useState<string>('');
-  const [focused, setFocused] = useState(false);
+  const [focused] = useState(false);
   const debouncedFocused = useDebounce(focused, 300);
   const debouncedSearch = useDebounce(search, 300);
   const updateSearch = useSearchStore((state) => state.setSearch);
@@ -54,30 +56,34 @@ export const HomePageSearchBar = () => {
         isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
       }`}
     >
-      <div
-        className={`flex min-h-10 w-full flex-row flex-wrap items-center gap-x-2 gap-y-2 rounded-lg border border-gray-200 bg-white p-2 focus:outline-hidden`}
-      >
-        {tags.map((t) => (
-          <TagPill removeTag={() => removeTag(t)} key={t} name={t} />
-        ))}
-        <input
-          type="text"
-          className="grow-1 text-lg"
-          onChange={(e) => setSearch(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              onSubmit();
-            }
+      {tags.map((t) => (
+        <TagPill removeTag={() => removeTag(t)} key={t} name={t} />
+      ))}
+      <Autocomplete
+        freeSolo
+        multiple
+        aria-label="search"
+        options={data?.tags.map((t) => t.tag) ?? []}
+        renderInput={(params) => (
+          <TextField
+            variant="outlined"
+            placeholder="Search for Clubs or Tags"
+            {...params}
+            className="[&>.MuiInputBase-root]:bg-white"
+          />
+        )}
+        renderValue={(value: readonly string[], getItemProps) => {
+          return value.map((option: string, index: number) => {
+            const { key, ...itemProps } = getItemProps({ index });
+            return "s";
           }}
-          value={search}
-          placeholder="Search for clubs or tags"
-        />
-        <button type="button" onClick={onSubmit}>
-          <SearchIcon />
-        </button>
-      </div>
+        }
+        }
+        inputValue={search}
+        onInputChange={(e, value) => {
+          setSearch(value);
+        }}
+      />
       {debouncedSearch && debouncedFocused && data && data.tags.length > 0 && (
         <SearchResults
           searchResults={data.tags.map((item) => (
@@ -101,7 +107,7 @@ type SearchBarProps = Omit<ComponentProps<'input'>, 'type'> & {
   submitLogic?: () => void;
 };
 
-export const SearchBar = (props: SearchBarProps) => {
+export const OldSearchBar = (props: SearchBarProps) => {
   const { submitButton, submitLogic, ...goodProps } = props;
   return (
     <div className="relative">
@@ -134,4 +140,3 @@ export const SearchBar = (props: SearchBarProps) => {
     </div>
   );
 };
-export default SearchBar;
