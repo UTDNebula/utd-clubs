@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import Header from '@src/components/header/BaseHeader';
+import ClubManageHeader from '@src/components/header/ClubManageHeader';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
@@ -15,13 +15,19 @@ const Page = async ({ params }: { params: { clubId: string } }) => {
   const currentClub = officerClubs.filter((val) => {
     return val.id == params.clubId;
   })[0];
-  if (!currentClub) {
+  const club = currentClub;
+
+  if (!currentClub || !club) {
     notFound();
   }
 
   return (
     <main className="h-screen">
-      <Header />
+      {/* <Header /> */}
+      <ClubManageHeader
+        club={club}
+        path={[{ text: 'Events' }, { text: 'Create' }]}
+      ></ClubManageHeader>
       <div className="flex flex-row justify-between gap-20 px-5">
         <CreateEventForm clubId={currentClub.id} officerClubs={officerClubs} />
       </div>
