@@ -8,9 +8,13 @@ import {
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
-const GEMINI_SERVICE_ACCOUNT = JSON.parse(
-  process.env.GEMINI_SERVICE_ACCOUNT as string,
-) as { client_email: string; private_key: string };
+const GEMINI_SERVICE_ACCOUNT =
+  process.env.GEMINI_SERVICE_ACCOUNT !== ''
+    ? (JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT as string) as {
+        client_email: string;
+        private_key: string;
+      })
+    : { client_email: '', private_key: '' };
 const ai = new GoogleGenAI({
   vertexai: true,
   project: 'jupiter-459023',

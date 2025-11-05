@@ -60,45 +60,49 @@ export const HomePageSearchBar = () => {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className={`text-shadow-... mr-3 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
-        isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
-      }`}
-    >
-      <SearchBar
-        placeholder="Search for Clubs"
-        tabIndex={0}
-        onChange={(e) => setSearch(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        submitButton
-        submitLogic={() =>
-          document
-            .getElementById('content')
-            ?.scrollIntoView({ behavior: 'smooth' })
-        }
-      />
-      {debouncedSearch && debouncedFocused && (
-        <SearchResults
-          searchResults={
-            data && data.length > 0
-              ? data.map((item) => (
-                  <SearchResultsItem
-                    key={item.id}
-                    onClick={() => {
-                      onClickSearchResult(item);
-                    }}
-                  >
-                    {item.name}
-                  </SearchResultsItem>
-                ))
-              : []
+    <>
+      <div
+        ref={containerRef}
+        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-6 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
+          isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
+        }`}
+      >
+        <SearchBar
+          placeholder="Search for Clubs"
+          tabIndex={0}
+          onChange={(e) => setSearch(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          submitButton
+          submitLogic={() =>
+            document
+              .getElementById('content')
+              ?.scrollIntoView({ behavior: 'smooth' })
           }
-          isLoadingResults={isFetching || isPlaceholderData}
-          hasResults={data !== undefined && data.length > 0}
         />
-      )}
-    </div>
+        {debouncedSearch && debouncedFocused && (
+          <SearchResults
+            searchResults={
+              data && data.length > 0
+                ? data.map((item) => (
+                    <SearchResultsItem
+                      key={item.id}
+                      onClick={() => {
+                        onClickSearchResult(item);
+                      }}
+                    >
+                      {item.name}
+                    </SearchResultsItem>
+                  ))
+                : []
+            }
+            isLoadingResults={isFetching || isPlaceholderData}
+            hasResults={data !== undefined && data.length > 0}
+          />
+        )}
+      </div>
+      {/*Placeholder to avoid layout shift when search bar becomes sticky*/}
+      {isSticky && <div className="h-10 mt-6"></div>}
+    </>
   );
 };
