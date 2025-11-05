@@ -1,26 +1,22 @@
 'use client';
 
+import TagIcon from '@mui/icons-material/Tag';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState, type ComponentProps } from 'react';
-import { RightArrowIcon } from '@src/icons/Icons';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import useDebounce from '@src/utils/useDebounce';
-import { SearchResults, SearchResultsItem } from './SearchResults';
 
 export const HomePageSearchBar = () => {
   const [search, setSearch] = useState<string>('');
-  const [focused] = useState(false);
-  const debouncedFocused = useDebounce(focused, 300);
   const debouncedSearch = useDebounce(search, 300);
   const updateSearch = useSearchStore((state) => state.setSearch);
   const tags = useSearchStore((state) => state.tags);
   const setTags = useSearchStore((state) => state.setTags);
-  const addTag = useSearchStore((state) => state.addTag);
   const api = useTRPC();
   const { data } = useQuery(
     api.club.tagSearch.queryOptions(
@@ -34,6 +30,7 @@ export const HomePageSearchBar = () => {
   const onSubmit = () => {
     document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' });
   };
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const originalOffset = useRef<number>(0);
@@ -68,6 +65,13 @@ export const HomePageSearchBar = () => {
             variant="outlined"
             placeholder="Search for Clubs or Tags"
             className="[&>.MuiInputBase-root]:bg-white"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                onSubmit();
+              }
+            }}
             {...params}
           />
         )}
@@ -76,7 +80,13 @@ export const HomePageSearchBar = () => {
           return value.map((option: string, index: number) => {
             const { key, ...itemProps } = getItemProps({ index });
             return (
-              <Chip key={key} label={option} color="primary" {...itemProps} />
+              <Chip
+                key={key}
+                icon={<TagIcon color="inherit" />}
+                label={option}
+                color="primary"
+                {...itemProps}
+              />
             );
           });
         }}
