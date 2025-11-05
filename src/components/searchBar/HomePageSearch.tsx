@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
@@ -18,15 +18,26 @@ export const HomePageSearchBar = () => {
   const debouncedSearch = useDebounce(search, 300);
   const updateSearch = useSearchStore((state) => state.setSearch);
   const api = useTRPC();
-  const { data } = useQuery(
-    api.club.byName.queryOptions(
+  const queryClient = useQueryClient();
+
+  const { data, isFetching, isPlaceholderData } = useQuery({
+    ...api.club.byName.queryOptions(
       { name: debouncedSearch },
       { enabled: !!debouncedSearch },
     ),
-  );
+    placeholderData: (previousData) => {
+      if (previousData) {
+        return previousData;
+      }
+      const lastData = queryClient.getQueryData<Club[]>(['club', 'byName']);
+      return lastData;
+    },
+  });
+
   const onClickSearchResult = (club: Club) => {
     router.push(`/directory/${club.slug}`);
   };
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const originalOffset = useRef<number>(0);
@@ -69,18 +80,24 @@ export const HomePageSearchBar = () => {
               ?.scrollIntoView({ behavior: 'smooth' })
           }
         />
-        {debouncedSearch && debouncedFocused && data && data.length > 0 && (
+        {debouncedSearch && debouncedFocused && (
           <SearchResults
-            searchResults={data.map((item) => (
-              <SearchResultsItem
-                key={item.id}
-                onClick={() => {
-                  onClickSearchResult(item);
-                }}
-              >
-                {item.name}
-              </SearchResultsItem>
-            ))}
+            searchResults={
+              data && data.length > 0
+                ? data.map((item) => (
+                    <SearchResultsItem
+                      key={item.id}
+                      onClick={() => {
+                        onClickSearchResult(item);
+                      }}
+                    >
+                      {item.name}
+                    </SearchResultsItem>
+                  ))
+                : []
+            }
+            isLoadingResults={isFetching || isPlaceholderData}
+            hasResults={data !== undefined && data.length > 0}
           />
         )}
       </div>
