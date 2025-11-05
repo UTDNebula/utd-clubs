@@ -56,6 +56,7 @@ export const HomePageSearchBar = () => {
       className={`text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] mr-3 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
         isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
       }`}
+      suppressHydrationWarning
     >
       <Autocomplete
         freeSolo
@@ -96,59 +97,10 @@ export const HomePageSearchBar = () => {
           );
         }}
       />
-      {debouncedSearch && debouncedFocused && data && data.tags.length > 0 && (
-        <SearchResults
-          searchResults={data.tags.map((item) => (
-            <SearchResultsItem
-              key={item.tag}
-              onClick={() => {
-                addTag(item.tag);
-                setSearch('');
-              }}
-            >
-              # {item.tag}
-            </SearchResultsItem>
-          ))}
-        />
-      )}
     </div>
   );
 };
 type SearchBarProps = Omit<ComponentProps<'input'>, 'type'> & {
   submitButton?: boolean;
   submitLogic?: () => void;
-};
-
-export const OldSearchBar = (props: SearchBarProps) => {
-  const { submitButton, submitLogic, ...goodProps } = props;
-  return (
-    <div className="relative">
-      <input
-        {...goodProps}
-        type="text"
-        className={`h-10 w-full rounded-full border pl-10 ${submitButton ? 'pr-[38px]' : 'pr-3'} focus:outline-hidden ${props.className} border-gray-200 bg-white`}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && typeof submitLogic !== 'undefined') {
-            submitLogic();
-          }
-        }}
-      />
-      {submitButton && (
-        <button
-          type={typeof submitLogic !== 'undefined' ? 'button' : 'submit'}
-          onClick={
-            typeof submitLogic !== 'undefined'
-              ? (e) => {
-                  e.preventDefault();
-                  submitLogic();
-                }
-              : undefined
-          }
-          className="absolute inset-y-0 right-2 flex items-center"
-        >
-          <RightArrowIcon fill="fill-[#C3CAD9]" />
-        </button>
-      )}
-    </div>
-  );
 };

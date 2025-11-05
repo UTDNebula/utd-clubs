@@ -36,7 +36,7 @@ const Home = async () => {
         {/* <Header /> */}
         <div className="absolute inset-0 z-0">
           <div className="relative h-[80vh] w-screen">
-            <section className="absolute inset-0 z-0 h-[100vh] w-screen">
+            <section className="absolute inset-0 z-0 h-[80vh] w-screen">
               <Image
                 src={gradientBG}
                 fill
@@ -66,7 +66,7 @@ const Home = async () => {
                 className="absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
               />
             </section>
-            <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-[#edeff2] to-transparent"></section>
+            <section className="absolute top-[60vh] z-10 h-[20vh] w-screen bg-linear-to-t from-[#edeff2] to-transparent"></section>
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
@@ -77,7 +77,7 @@ const Home = async () => {
               <ProfileDropDown session={session} shadow />
             </div>
           </div>
-          <section className="h-screen w-screen">
+          <section className="h-[80vh] w-screen">
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
                 <span className="leading-none">POWERED BY</span>
@@ -98,7 +98,6 @@ const Home = async () => {
               </h1>
               <HomePageSearchBar />
               <div className="pointer-events-auto mt-2 flex max-w-2xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
-                <div>Popular tags:</div>
                 {tags.map((tag) => (
                   <TagPill name={tag} key={tag} />
                 ))}
