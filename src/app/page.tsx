@@ -1,8 +1,8 @@
+import { Metadata } from 'next';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
-import TagFilter from '@src/components/club/directory/TagFilter';
 import ClubMatchButton from '@src/components/header/ClubMatchButton';
 import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import Sidebar from '@src/components/nav/Sidebar';
@@ -12,7 +12,6 @@ import NebulaLogo from '@src/icons/NebulaLogo';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
-import ClubDirectoryGrid from '../components/club/directory/ClubDirectoryGrid';
 
 export const metadata: Metadata = {
   title: 'Jupiter - Nebula',

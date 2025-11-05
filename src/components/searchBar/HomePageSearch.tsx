@@ -1,14 +1,15 @@
 'use client';
 
 import Autocomplete from '@mui/material/Autocomplete';
+import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState, type ComponentProps } from 'react';
 import { RightArrowIcon } from '@src/icons/Icons';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import useDebounce from '@src/utils/useDebounce';
-import { TagPill } from '../TagPill';
 import { SearchResults, SearchResultsItem } from './SearchResults';
 
 export const HomePageSearchBar = () => {
@@ -18,7 +19,7 @@ export const HomePageSearchBar = () => {
   const debouncedSearch = useDebounce(search, 300);
   const updateSearch = useSearchStore((state) => state.setSearch);
   const tags = useSearchStore((state) => state.tags);
-  const removeTag = useSearchStore((state) => state.removeTag);
+  const setTags = useSearchStore((state) => state.setTags);
   const addTag = useSearchStore((state) => state.addTag);
   const api = useTRPC();
   const { data } = useQuery(
@@ -56,9 +57,6 @@ export const HomePageSearchBar = () => {
         isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
       }`}
     >
-      {tags.map((t) => (
-        <TagPill removeTag={() => removeTag(t)} key={t} name={t} />
-      ))}
       <Autocomplete
         freeSolo
         multiple
@@ -68,20 +66,34 @@ export const HomePageSearchBar = () => {
           <TextField
             variant="outlined"
             placeholder="Search for Clubs or Tags"
-            {...params}
             className="[&>.MuiInputBase-root]:bg-white"
+            {...params}
           />
         )}
-        renderValue={(value: readonly string[], getItemProps) => {
+        value={tags}
+        renderValue={(value, getItemProps) => {
           return value.map((option: string, index: number) => {
             const { key, ...itemProps } = getItemProps({ index });
-            return "s";
-          }}
-        }
-        }
+            return (
+              <Chip key={key} label={option} color="primary" {...itemProps} />
+            );
+          });
+        }}
+        filterOptions={(o) => o}
         inputValue={search}
         onInputChange={(e, value) => {
           setSearch(value);
+        }}
+        onChange={(e, value) => {
+          setTags(value);
+        }}
+        renderOption={(props, option) => {
+          const { key, ...otherProps } = props;
+          return (
+            <li key={key} {...otherProps}>
+              <Typography variant="body1">{option}</Typography>
+            </li>
+          );
         }}
       />
       {debouncedSearch && debouncedFocused && data && data.tags.length > 0 && (
@@ -98,24 +110,8 @@ export const HomePageSearchBar = () => {
             </SearchResultsItem>
           ))}
         />
-        {debouncedSearch && debouncedFocused && data && data.length > 0 && (
-          <SearchResults
-            searchResults={data.map((item) => (
-              <SearchResultsItem
-                key={item.id}
-                onClick={() => {
-                  onClickSearchResult(item);
-                }}
-              >
-                {item.name}
-              </SearchResultsItem>
-            ))}
-          />
-        )}
-      </div>
-      {/*Placeholder to avoid layout shift when search bar becomes sticky*/}
-      {isSticky && <div className="h-10 mt-6"></div>}
-    </>
+      )}
+    </div>
   );
 };
 type SearchBarProps = Omit<ComponentProps<'input'>, 'type'> & {
