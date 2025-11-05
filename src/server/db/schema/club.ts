@@ -52,9 +52,11 @@ export const club = pgTable(
       .using('bm25', t.id, t.name, t.description, t.tags, t.approved)
       .with({
         key_field: 'id',
-        text_fields:
-          '{"tags":{"tokenizer":{"type":"keyword"}},"name":{"tokenizer":{"type":"default","stemmer":"English"}}}',
-        numeric_fields: '{"approved":{"fast":true}}',
+        text_fields: `'${JSON.stringify({
+          tags: { tokenizer: { type: 'keyword' } },
+          name: { tokenizer: { type: 'default', stemmer: 'English' } },
+        })}'`,
+        numeric_fields: `'{"approved":{"fast":true}}'`,
       }),
     uniqueIndex('club_slug_unique').on(t.slug),
   ],
