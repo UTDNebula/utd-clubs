@@ -53,18 +53,36 @@ export const HomePageSearchBar = () => {
       className={`text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] mr-3 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
         isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
       }`}
-      suppressHydrationWarning
     >
       <Autocomplete
         freeSolo
         multiple
+        disableClearable
         aria-label="search"
+        inputValue={search}
+        value={tags}
         options={data?.tags.map((t) => t.tag) ?? []}
+        filterOptions={(o) => o}
+        onInputChange={(e, value) => {
+          setSearch(value);
+        }}
+        onChange={(e, value) => {
+          setTags(value);
+        }}
         renderInput={(params) => (
           <TextField
+            {...params}
             variant="outlined"
             placeholder="Search for Clubs or Tags"
-            className="[&>.MuiInputBase-root]:bg-white"
+            slotProps={{
+              input: {
+                ...params.InputProps,
+                sx: {
+                  background: 'white',
+                  borderRadius: 3,
+                },
+              },
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
@@ -72,10 +90,8 @@ export const HomePageSearchBar = () => {
                 onSubmit();
               }
             }}
-            {...params}
           />
         )}
-        value={tags}
         renderValue={(value, getItemProps) => {
           return value.map((option: string, index: number) => {
             const { key, ...itemProps } = getItemProps({ index });
@@ -89,14 +105,6 @@ export const HomePageSearchBar = () => {
               />
             );
           });
-        }}
-        filterOptions={(o) => o}
-        inputValue={search}
-        onInputChange={(e, value) => {
-          setSearch(value);
-        }}
-        onChange={(e, value) => {
-          setTags(value);
         }}
         renderOption={(props, option) => {
           const { key, ...otherProps } = props;
