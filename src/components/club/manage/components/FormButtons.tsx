@@ -5,7 +5,6 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export const FormSubmitButton = ({ ...props }) => {
-  // return <PillButton type="submit">Save Changes</PillButton>;
   return (
     <Button
       type="submit"
@@ -28,16 +27,6 @@ export const FormResetButton = ({
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }) => {
-  // return (
-  //   <PillButton
-  //     type="button"
-  //     color="red"
-  //     disabled={!!disabled}
-  //     onClick={onClick}
-  //   >
-  //     Discard Changes
-  //   </PillButton>
-  // );
   return (
     <Button
       onClick={onClick}

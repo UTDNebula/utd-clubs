@@ -22,8 +22,6 @@ import {
   FormTextArea,
 } from '@src/components/club/manage/FormComponents';
 import OfficerListItem from '@src/components/club/manage/OfficerListItem';
-import PillButton from '@src/components/PillButton';
-import { PlusIcon } from '@src/icons/Icons';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { editListedOfficerSchema } from '@src/utils/formSchemas';
