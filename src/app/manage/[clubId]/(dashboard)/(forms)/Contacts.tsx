@@ -6,11 +6,11 @@ import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useReducer } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useReducer, useRef, useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { type z } from 'zod';
-import EditContactSelector from '@src/app/manage/[clubId]/edit/EditContactSelector';
 import Form from '@src/components/club/manage/components/Form';
+import ContactListItem from '@src/components/club/manage/ContactListItem';
 import {
   FormButtons,
   FormFieldSet,
@@ -66,6 +66,59 @@ const deletedReducer = (
   }
 };
 
+type Contact = Omit<SelectContact, 'clubId'>;
+
+function Reducer(
+  state: Array<Contact['platform']>,
+  action:
+    | {
+        type: 'add' | 'remove';
+        target: Contact['platform'];
+      }
+    | {
+        type: 'reset';
+        used: Contact['platform'][];
+        base: Contact['platform'][];
+      },
+) {
+  switch (action.type) {
+    case 'remove':
+      return state.filter((x) => x != action.target);
+    case 'add':
+      return [...state, action.target];
+    case 'reset':
+      return action.base.filter((x) => !action.used.includes(x));
+  }
+}
+
+const startContacts: Array<Contact['platform']> = [
+  'discord',
+  'instagram',
+  'website',
+  'email',
+  'twitter',
+  'facebook',
+  'youtube',
+  'twitch',
+  'linkedIn',
+  'other',
+];
+
+const contactNames: { [key in Contact['platform']]: string } = {
+  discord: 'Discord',
+  instagram: 'Instagram',
+  website: 'Website',
+  email: 'Email',
+  twitter: 'Twitter',
+  facebook: 'Facebook',
+  youtube: 'YouTube',
+  twitch: 'Twitch',
+  linkedIn: 'LinkedIn',
+  other: 'Other',
+};
+
+// ---
+
 type ContactsProps = {
   club: SelectClub & { contacts: SelectContact[] };
 };
@@ -88,6 +141,35 @@ const Contacts = ({ club }: ContactsProps) => {
   } = methods;
 
   const [deleted, modifyDeleted] = useReducer(deletedReducer, []);
+
+  const { fields, append, remove } = useFieldArray({
+    control: control,
+    name: 'contacts',
+    keyName: 'fieldId',
+  });
+  const [available, dispatch] = useReducer(Reducer, startContacts);
+  const addNew = (platform: Contact['platform']) => {
+    dispatch({ type: 'remove', target: platform });
+    append({ platform: platform, url: '' });
+  };
+  const removeItem = (index: number, platform: Contact['platform']) => {
+    const field = fields[index];
+    if (field?.clubId) {
+      modifyDeleted({ type: 'add', target: field.platform });
+    }
+    remove(index);
+    dispatch({ type: 'add', target: platform });
+  };
+  useEffect(() => {
+    dispatch({
+      type: 'reset',
+      base: startContacts,
+      used: fields.map((x) => x.platform),
+    });
+  }, [fields]);
+
+  const addNewButtonRef = useRef(null);
+  const [open, setOpen] = useState(false);
 
   const router = useRouter();
   const api = useTRPC();
@@ -123,11 +205,25 @@ const Contacts = ({ club }: ContactsProps) => {
       onSubmit={submitForm}
     >
       <FormFieldSet legend="Edit Contacts">
-        <div className="flex flex-col gap-2">Placeholder</div>
+        <div className="flex flex-col gap-2">
+          {fields.map((field, index) => (
+            <ContactListItem
+              key={field.fieldId}
+              register={register}
+              index={index}
+              remove={removeItem}
+              errors={errors}
+              platform={field.platform}
+            />
+          ))}
+        </div>
         <Button
-          className="normal-case  my-2"
+          className="normal-case mb-2"
           startIcon={<AddIcon />}
           size="large"
+          onClick={() => {
+            append({ platform: 'website', url: '' });
+          }}
         >
           Add Contact
         </Button>
@@ -138,3 +234,7 @@ const Contacts = ({ club }: ContactsProps) => {
 };
 
 export default Contacts;
+
+// TODO: Remove button does not work
+// TODO: Make Platform input a dropdown selector list
+// NOTE: There can only be one of each platform, make sure the dropdown list reflects that
