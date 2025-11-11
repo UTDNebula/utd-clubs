@@ -192,7 +192,7 @@ const Officers = ({ club, officers }: OfficersProps) => {
           ))}
         </div>
         <Button
-          className="normal-case"
+          className="normal-case my-2"
           startIcon={<AddIcon />}
           size="large"
           onClick={() => {

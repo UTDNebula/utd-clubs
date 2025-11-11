@@ -125,10 +125,12 @@ const Contacts = ({ club }: ContactsProps) => {
       <FormFieldSet legend="Edit Contacts">
         <div className="flex flex-col gap-2">Placeholder</div>
         <Button
-          className="normal-case"
+          className="normal-case  my-2"
           startIcon={<AddIcon />}
           size="large"
-        >Add Contact</Button>
+        >
+          Add Contact
+        </Button>
         <FormButtons />
       </FormFieldSet>
     </Form>

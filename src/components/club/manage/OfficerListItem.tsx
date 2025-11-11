@@ -1,8 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import DeleteIcon from '@mui/icons-material/Delete';
+import PersonIcon from '@mui/icons-material/Person';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { IconButton } from '@mui/material';
 import { type FieldErrors, type UseFormRegister } from 'react-hook-form';
 import type z from 'zod';
-import { AccountIcon, CloseIcon, PersonIcon } from '@src/icons/Icons';
 import { type editListedOfficerSchema } from '@src/utils/formSchemas';
 import { FormInput } from './FormComponents';
 
@@ -58,7 +59,11 @@ export const OfficerListItem = ({
           className="self-center"
           onClick={() => makePresident(index)}
         >
-          <AccountIcon />
+          {isPresident ? (
+            <SupervisorAccountIcon color="primary" />
+          ) : (
+            <PersonIcon />
+          )}
         </IconButton>
         <IconButton
           aria-label="remove"
@@ -66,7 +71,7 @@ export const OfficerListItem = ({
           className="self-center"
           onClick={() => remove(index)}
         >
-          <CloseIcon />
+          <DeleteIcon />
         </IconButton>
       </div>
     </div>
