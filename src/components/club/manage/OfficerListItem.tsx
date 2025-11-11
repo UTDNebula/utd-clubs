@@ -28,14 +28,6 @@ export const OfficerListItem = ({
     <div className="flex flex-row items-center p-2">
       <div className="flex flex-row w-full flex-wrap">
         <FormInput
-          type="file"
-          // name="avatar"
-          register={register}
-          // error={errors.officers && errors?.officers[index]?.avatar}
-          // aria-invalid={errors.officers && !!errors.officers[index]?.avatar}
-          className="*:w-18 *:h-18 *:rounded-full"
-        ></FormInput>
-        <FormInput
           type="text"
           label="Name"
           name={`officers.${index}.name`}
