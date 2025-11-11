@@ -5,19 +5,14 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState, type ComponentProps } from 'react';
+import { type SelectClub, type SelectContact } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import useDebounce from '@src/utils/useDebounce';
-import { type SelectClub, type SelectContact } from '@src/server/db/models';
-import { useMutation } from '@tanstack/react-query';
 
-export const ClubTagEdit = ({
-  club,
-}: {
-  club: SelectClub;
-}) => {
+export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 300);
   // const updateSearch = useSearchStore((state) => state.setSearch);
@@ -51,7 +46,7 @@ export const ClubTagEdit = ({
   const onSubmit = () => {
     // document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' });
     // Add club here
-    console.log(club.tags)
+    console.log(club.tags);
   };
 
   const containerRef = useRef<HTMLDivElement>(null);

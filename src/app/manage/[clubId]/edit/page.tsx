@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation';
 import { BlueBackButton } from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
+import { ClubTagEdit } from '@src/components/searchBar/ClubTagEdit';
 import { api } from '@src/trpc/server';
+import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 import EditClubForm from './EditClubForm';
 import EditContactForm from './EditContactForm';
-import { ClubTagEdit } from '@src/components/searchBar/ClubTagEdit'
-import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
 export default async function Page(props: {
   params: Promise<{ clubId: string }>;
