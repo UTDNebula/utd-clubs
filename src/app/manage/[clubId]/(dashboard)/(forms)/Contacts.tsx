@@ -2,6 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from '@hookform/resolvers/zod';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
@@ -123,12 +125,12 @@ const Contacts = ({ club }: ContactsProps) => {
       onSubmit={submitForm}
     >
       <FormFieldSet legend="Edit Contacts">
-        <div className="flex flex-col gap-2">
-          Placeholder
-        </div>
-        <PillButton type="button" IconComponent={PlusIcon}>
-          Add Contact
-        </PillButton>
+        <div className="flex flex-col gap-2">Placeholder</div>
+        <Button
+          className="normal-case"
+          startIcon={<AddIcon />}
+          size="large"
+        >Add Contact</Button>
         <FormButtons />
       </FormFieldSet>
     </Form>

@@ -1,18 +1,20 @@
+import EventIcon from '@mui/icons-material/Event';
+// import {
+//   EyeIcon,
+//   // PlusIcon,
+//   // PencilIcon,
+//   GroupIcon,
+//   // PersonIcon,
+// } from '@src/icons/Icons';
+import PeopleIcon from '@mui/icons-material/People';
+import PreviewIcon from '@mui/icons-material/Preview';
+import Button from '@mui/material/Button';
 import { notFound, redirect } from 'next/navigation';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
-import PillButton from '@src/components/PillButton';
-import {
-  EyeIcon,
-  // PlusIcon,
-  // PencilIcon,
-  GroupIcon,
-  // PersonIcon,
-} from '@src/icons/Icons';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 import ClubManageForm from './ClubManageForm';
-
 
 // import TestForm from './TestForm';
 
@@ -30,23 +32,33 @@ const Page = async ({ params }: { params: { clubId: string } }) => {
   return (
     <>
       <ClubManageHeader club={club}>
-        <PillButton
+        <Button
           href={`/manage/${params.clubId}/members`}
-          IconComponent={GroupIcon}
+          variant="contained"
+          className="normal-case"
+          startIcon={<PeopleIcon />}
+          size="large"
         >
           View Members
-        </PillButton>
-        <PillButton
+        </Button>
+        <Button
           href={`/manage/${params.clubId}/events`}
-          IconComponent={EyeIcon}
+          variant="contained"
+          className="normal-case"
+          startIcon={<EventIcon />}
+          size="large"
         >
           View Events
-        </PillButton>
-
-        {/* This should open a modal that displays the ClubCard component for the club */}
-        <PillButton href={`/directory/${club.slug}`} IconComponent={EyeIcon}>
+        </Button>
+        <Button
+          href={`/directory/${club.slug}`}
+          variant="contained"
+          className="normal-case"
+          startIcon={<PreviewIcon />}
+          size="large"
+        >
           Preview Club Card
-        </PillButton>
+        </Button>
       </ClubManageHeader>
 
       {/* <div className="flex w-full items-center justify-center">

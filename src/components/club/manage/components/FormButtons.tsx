@@ -1,10 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import Button from '@mui/material/Button';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import PillButton from '@src/components/PillButton';
 
-export const FormSubmitButton = () => {
-  return <PillButton type="submit">Save Changes</PillButton>;
+export const FormSubmitButton = ({ ...props }) => {
+  // return <PillButton type="submit">Save Changes</PillButton>;
+  return (
+    <Button
+      type="submit"
+      variant="contained"
+      className="normal-case"
+      startIcon={<SaveIcon />}
+      size="large"
+      {...props}
+    >
+      Save Changes
+    </Button>
+  );
 };
 
 export const FormResetButton = ({
@@ -15,16 +28,29 @@ export const FormResetButton = ({
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }) => {
+  // return (
+  //   <PillButton
+  //     type="button"
+  //     color="red"
+  //     disabled={!!disabled}
+  //     onClick={onClick}
+  //   >
+  //     Discard Changes
+  //   </PillButton>
+  // );
   return (
-    // TODO: Add reset function for onClick
-    <PillButton
-      type="button"
-      color="red"
-      disabled={!!disabled}
+    <Button
       onClick={onClick}
+      variant="contained"
+      className="normal-case"
+      startIcon={<DeleteIcon />}
+      size="large"
+      disabled={!!disabled}
+      color="warning"
+      {...props}
     >
       Discard Changes
-    </PillButton>
+    </Button>
   );
 };
 
@@ -36,7 +62,7 @@ export const FormButtons = ({ onClickDiscard, ...props }: FormButtonsProps) => {
   const methods = useFormContext();
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2" {...props}>
       <FormSubmitButton />
       <FormResetButton
         disabled={!methods.formState.isDirty}

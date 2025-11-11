@@ -1,20 +1,22 @@
 'use client';
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import IconButton from '@mui/material/IconButton';
 import { useRouter } from 'next/navigation';
-import { LeftArrowIcon, LeftChevronIcon } from '../icons/Icons';
+import { LeftArrowIcon } from '../icons/Icons';
 
-export const BackButton = () => {
+export const BackButton = ({ ...props }) => {
   const router = useRouter();
   return (
     <div className="flex h-min flex-row align-middle">
-      <button
+      <IconButton
         onClick={() => router.back()}
-        type="button"
-        className="box-content h-fit w-fit rounded-full shadow-slate-500 hover:bg-white hover:shadow-xs transition-colors cursor-pointer"
-        // className="box-content h-fit w-fit rounded-full shadow-slate-700 hover:bg-white transition-colors"
+        size="large"
+        color="primary"
+        {...props}
       >
-        <LeftChevronIcon size={40} fill="fill-slate-500" />
-      </button>
+        <ArrowBackIcon />
+      </IconButton>
     </div>
   );
 };

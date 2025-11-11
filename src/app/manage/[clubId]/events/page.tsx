@@ -1,12 +1,12 @@
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
 import { format, isSameDay } from 'date-fns';
 import Link from 'next/link';
-import { MoreIcon } from '@src/icons/Icons';
-import { api } from '@src/trpc/server';
 // import Header from '@src/components/header/BaseHeader';
 import { notFound } from 'next/navigation';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
-import PillButton from '@src/components/PillButton';
-import { PlusIcon } from '@src/icons/Icons';
+import { MoreIcon } from '@src/icons/Icons';
+import { api } from '@src/trpc/server';
 import { type RouterOutputs } from '@src/trpc/shared';
 
 export default async function Page({
@@ -24,12 +24,15 @@ export default async function Page({
     <main>
       {/* <Header /> */}
       <ClubManageHeader club={club} path={[{ text: 'Events' }]}>
-        <PillButton
+        <Button
           href={`/manage/${params.clubId}/create`}
-          IconComponent={PlusIcon}
+          variant="contained"
+          className="normal-case"
+          startIcon={<AddIcon />}
+          size="large"
         >
           Create Event
-        </PillButton>
+        </Button>
       </ClubManageHeader>
       {/* <h1>Not implemented yet, sorry!</h1> */}
       <div className="flex w-full flex-row gap-4">

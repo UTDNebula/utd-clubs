@@ -2,6 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from '@hookform/resolvers/zod';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
@@ -191,15 +193,16 @@ const Officers = ({ club, officers }: OfficersProps) => {
             />
           ))}
         </div>
-        <PillButton
-          type="button"
-          IconComponent={PlusIcon}
+        <Button
+          className="normal-case"
+          startIcon={<AddIcon />}
+          size="large"
           onClick={() => {
             append({ name: '', position: '', isPresident: false });
           }}
         >
           Add Officer
-        </PillButton>
+        </Button>
         <FormButtons />
       </FormFieldSet>
     </Form>
