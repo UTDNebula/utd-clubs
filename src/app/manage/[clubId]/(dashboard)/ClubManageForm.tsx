@@ -6,6 +6,7 @@ import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 import Details from './(forms)/Details';
 import Officers from './(forms)/Officers';
+import Contacts from './(forms)/Contacts';
 
 const ClubManageForm = async ({
   club,
@@ -30,6 +31,7 @@ const ClubManageForm = async ({
     <div className="flex flex-col gap-8">
       <Details club={club} />
       <Officers club={club} officers={listedOfficers}/>
+      <Contacts club={club}></Contacts>
     </div>
   );
 };
