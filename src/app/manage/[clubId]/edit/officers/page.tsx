@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { BlueBackButton } from '@src/components/backButton';
+import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
@@ -29,7 +29,7 @@ export default async function Page({
     <main className="h-full">
       <Header />
       <div className="flex flex-col gap-y-2 px-5">
-        <BlueBackButton />
+        <BackButton />
         <h1 className="text-blue-primary text-2xl font-extrabold">
           Edit club Collaborators
         </h1>

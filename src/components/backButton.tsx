@@ -3,7 +3,6 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton';
 import { useRouter } from 'next/navigation';
-import { LeftArrowIcon } from '../icons/Icons';
 
 type BackButtonProps = {
   href?: string;
@@ -27,21 +26,6 @@ export const BackButton = ({ href, ...props }: BackButtonProps) => {
       >
         <ArrowBackIcon />
       </IconButton>
-    </div>
-  );
-};
-
-export const BlueBackButton = () => {
-  const router = useRouter();
-  return (
-    <div className="flex h-min flex-row align-middle">
-      <button
-        onClick={() => router.back()}
-        type="button"
-        className="bg-blue-primary box-content h-fit w-fit rounded-full p-2 hover:bg-blue-700 active:bg-blue-800"
-      >
-        <LeftArrowIcon />
-      </button>
     </div>
   );
 };
