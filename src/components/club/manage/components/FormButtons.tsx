@@ -4,7 +4,12 @@ import Button from '@mui/material/Button';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-export const FormSubmitButton = ({ ...props }) => {
+export const FormSubmitButton = ({
+  isDirty,
+  ...props
+}: {
+  isDirty?: boolean;
+}) => {
   return (
     <Button
       type="submit"
@@ -14,7 +19,7 @@ export const FormSubmitButton = ({ ...props }) => {
       size="large"
       {...props}
     >
-      Save Changes
+      <span>Save Changes{isDirty && '*'}</span>
     </Button>
   );
 };
@@ -52,7 +57,7 @@ export const FormButtons = ({ onClickDiscard, ...props }: FormButtonsProps) => {
 
   return (
     <div className="flex gap-2" {...props}>
-      <FormSubmitButton />
+      <FormSubmitButton isDirty={methods.formState.isDirty} />
       <FormResetButton
         disabled={!methods.formState.isDirty}
         onClick={

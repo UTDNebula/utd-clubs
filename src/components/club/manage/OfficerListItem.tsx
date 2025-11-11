@@ -25,7 +25,7 @@ export const OfficerListItem = ({
   makePresident,
 }: OfficerListItemProps) => {
   return (
-    <div className="flex flex-row items-center p-2">
+    <div className="flex flex-row items-center p-2 hover:bg-slate-100 transition-colors rounded-lg">
       <div className="flex flex-row w-full flex-wrap">
         <FormInput
           type="text"
