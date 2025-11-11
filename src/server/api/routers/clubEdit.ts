@@ -64,6 +64,7 @@ const editOfficerSchema = z.object({
       name: z.string(),
       position: z.string(),
       isPresident: z.boolean(),
+      image: z.union([z.url(), z.literal('')]).optional(),
     })
     .array(),
   created: z
@@ -71,6 +72,7 @@ const editOfficerSchema = z.object({
       name: z.string(),
       position: z.string(),
       isPresident: z.boolean(),
+      image: z.union([z.url(), z.literal('')]).optional(),
     })
     .array(),
 });
@@ -85,7 +87,14 @@ export const clubEditRouter = createTRPCRouter({
 
       const updatedClub = await ctx.db
         .update(club)
-        .set({ name: input.name, description: input.description })
+        .set({ 
+          name: input.name,
+          description: input.description, 
+          tags: input.tags,
+          profileImage: input.profileImage,
+          bannerImage: input.bannerImage,
+          foundingDate: input.foundingDate,
+         })
         .where(eq(club.id, input.id))
         .returning();
       return updatedClub;
@@ -215,7 +224,11 @@ export const clubEditRouter = createTRPCRouter({
       for (const modded of input.modified) {
         const prom = ctx.db
           .update(officers)
-          .set({ position: modded.position, isPresident: modded.isPresident })
+          .set({ 
+            position: modded.position, 
+            isPresident: modded.isPresident,
+            image: modded.image, 
+          })
           .where(
             and(eq(officers.id, modded.id), eq(officers.clubId, input.clubId)),
           );

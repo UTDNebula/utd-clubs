@@ -37,6 +37,7 @@ export const club = pgTable(
     // * This allows us to have a pending state for clubs and keep info about them in the database
     approved: approvedEnum('approved').notNull().default('pending'),
     profileImage: text('profile_image'),
+    bannerImage: text('banner_image'),
     soc: boolean('soc').notNull().default(false),
   },
   (table) => {
