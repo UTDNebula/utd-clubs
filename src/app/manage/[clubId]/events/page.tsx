@@ -22,8 +22,11 @@ export default async function Page({
 
   return (
     <main>
-      {/* <Header /> */}
-      <ClubManageHeader club={club} path={[{ text: 'Events' }]}>
+      <ClubManageHeader
+        club={club}
+        path={[{ text: 'Events' }]}
+        hrefBack={`/manage/${params.clubId}/`}
+      >
         <Button
           href={`/manage/${params.clubId}/create`}
           variant="contained"

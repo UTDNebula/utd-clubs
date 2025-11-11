@@ -5,12 +5,22 @@ import IconButton from '@mui/material/IconButton';
 import { useRouter } from 'next/navigation';
 import { LeftArrowIcon } from '../icons/Icons';
 
-export const BackButton = ({ ...props }) => {
+type BackButtonProps = {
+  href?: string;
+};
+
+export const BackButton = ({ href, ...props }: BackButtonProps) => {
   const router = useRouter();
   return (
     <div className="flex h-min flex-row align-middle">
       <IconButton
-        onClick={() => router.back()}
+        onClick={() => {
+          if (href) {
+            router.push(href);
+          } else {
+            router.back();
+          }
+        }}
         size="large"
         color="primary"
         {...props}

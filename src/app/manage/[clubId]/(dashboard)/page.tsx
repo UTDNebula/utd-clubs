@@ -22,7 +22,7 @@ const Page = async ({ params }: { params: { clubId: string } }) => {
   }
   return (
     <>
-      <ClubManageHeader club={club}>
+      <ClubManageHeader club={club} hrefBack="/manage/">
         <Button
           href={`/manage/${params.clubId}/members`}
           variant="contained"

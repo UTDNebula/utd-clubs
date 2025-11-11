@@ -12,6 +12,7 @@ export default async function Page({ params }: { params: { clubId: string } }) {
       <ClubManageHeader
         club={club}
         path={[{ text: 'Members' }]}
+        hrefBack={`/manage/${params.clubId}/`}
       ></ClubManageHeader>
       <h1>Not implemented yet, sorry!</h1>
     </main>
