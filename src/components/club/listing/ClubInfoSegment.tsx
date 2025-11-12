@@ -35,9 +35,6 @@ const ClubInfoSegment: FC<{
           )}
           <div className="mt-2 flex w-36 justify-between">
             <p className="text-sm text-slate-400">Active</p>
-            <p className="text-right text-sm text-slate-600">
-              {isActive ? 'Present' : 'Inactive'}
-            </p>
           </div>
         </div>
         <div className="w-full md:w-2/3">
