@@ -1,7 +1,7 @@
 'use client';
 
 import TagIcon from '@mui/icons-material/Tag';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -19,13 +19,17 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
   // const tags = useSearchStore((state) => state.tags);
   // const setTags = useSearchStore((state) => state.setTags);
   const api = useTRPC();
-  const { data } = useQuery(
-    api.club.tagSearch.queryOptions(
+  const { data } = useQuery({
+    placeholderData: (previousData, _previousQuery) => previousData,
+    ...api.club.tagSearch.queryOptions(
       { search: debouncedSearch },
       { enabled: !!debouncedSearch },
-    ),
-  );
+    )
+  });
 
+  const { data: distinctTags } = useQuery(
+    api.club.distinctTags.queryOptions(),
+  );
   // const editData = useMutation(
   //   api.club.edit.data.mutationOptions({
   //     onSuccess: () => {
@@ -46,7 +50,7 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
   const onSubmit = () => {
     // document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' });
     // Add club here
-    console.log(club.tags);
+    // console.log(club.tags);
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -65,6 +69,10 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+
+  // TODO: minor bug, when typing a brand new tag, each letter does a search, and theres no results during that time
+  // const filter = createFilterOptions<SelectClub>();
   return (
     <div
       ref={containerRef}
@@ -76,8 +84,8 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
       <Autocomplete
         freeSolo
         multiple
+        handleHomeEndKeys
         aria-label="search"
-        options={data?.tags.map((t) => t.tag) ?? []}
         renderInput={(params) => (
           <TextField
             variant="outlined"
@@ -93,6 +101,7 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
             {...params}
           />
         )}
+
         // value={tags}
         defaultValue={club.tags}
         renderValue={(value, getItemProps) => {
@@ -109,13 +118,27 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
             );
           });
         }}
-        filterOptions={(o) => o}
+        // options={distinctTags ?? []}
+        options={data?.tags.map((t) => t.tag) ?? distinctTags ?? []}
+        filterOptions={(options, params) => {
+
+          if (params.inputValue !== '' && options.length == 0) {
+            options.push(`Add "${params.inputValue}" tag`);
+          }
+
+          return options
+          // if () {
+          // }
+          // return o.filter((t) => data?.tags.map((t) => t.tag).includes(t))
+        }}
+        // filterOptions={(o) => o}
         inputValue={search}
         onInputChange={(_e, value) => {
           setSearch(value);
         }}
         onChange={(_e, value) => {
           // setTags(value);
+
         }}
         renderOption={(props, option) => {
           const { key, ...otherProps } = props;
