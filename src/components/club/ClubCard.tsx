@@ -19,7 +19,7 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
   return (
     <Link href={`/directory/${club.slug}`} className="block group">
       <div className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between rounded-lg bg-white shadow-2xl md:min-h-[600px]">
-        <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
+        <div className="relative aspect-square overflow-hidden rounded-t-lg">
           {club.profileImage ? (
             <Image
               src={club.profileImage}
