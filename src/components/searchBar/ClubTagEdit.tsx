@@ -1,57 +1,34 @@
 'use client';
 
 import TagIcon from '@mui/icons-material/Tag';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useEffect, useRef, useState, type ComponentProps } from 'react';
-import { type SelectClub, type SelectContact } from '@src/server/db/models';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef, useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
-import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import useDebounce from '@src/utils/useDebounce';
 
-export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
+export const ClubTagEdit = ({
+  tags,
+  setTagsAction,
+}: {
+  tags: string[];
+  setTagsAction: (value: string[]) => void;
+}) => {
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 300);
-  // const updateSearch = useSearchStore((state) => state.setSearch);
-  // const tags = useSearchStore((state) => state.tags);
-  // const setTags = useSearchStore((state) => state.setTags);
   const api = useTRPC();
   const { data } = useQuery({
     placeholderData: (previousData, _previousQuery) => previousData,
     ...api.club.tagSearch.queryOptions(
       { search: debouncedSearch },
       { enabled: !!debouncedSearch },
-    )
+    ),
   });
 
-  const { data: distinctTags } = useQuery(
-    api.club.distinctTags.queryOptions(),
-  );
-  // const editData = useMutation(
-  //   api.club.edit.data.mutationOptions({
-  //     onSuccess: () => {
-  //       router.refresh();
-  //     },
-  //   }),
-  // );
-  // const id = club.id;
-  // const tags = club.tags;
-
-  // api.club.tagSearch
-
-  //
-  // useEffect(() => {
-  //   updateSearch(debouncedSearch);
-  // }, [debouncedSearch, updateSearch]);
-
-  const onSubmit = () => {
-    // document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' });
-    // Add club here
-    // console.log(club.tags);
-  };
+  const { data: distinctTags } = useQuery(api.club.distinctTags.queryOptions());
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
@@ -70,9 +47,8 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-
-  // TODO: minor bug, when typing a brand new tag, each letter does a search, and theres no results during that time
   // const filter = createFilterOptions<SelectClub>();
+  // TODO: Clearing search after typing doesnt give results again
   return (
     <div
       ref={containerRef}
@@ -82,7 +58,8 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
       suppressHydrationWarning
     >
       <Autocomplete
-        freeSolo
+        disableCloseOnSelect
+        disableClearable
         multiple
         handleHomeEndKeys
         aria-label="search"
@@ -91,19 +68,11 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
             variant="outlined"
             placeholder="Search tags or add custom"
             className="[&>.MuiInputBase-root]:bg-white"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                // e.preventDefault();
-                // e.stopPropagation();
-                onSubmit();
-              }
-            }}
             {...params}
           />
         )}
-
         // value={tags}
-        defaultValue={club.tags}
+        defaultValue={tags}
         renderValue={(value, getItemProps) => {
           return value.map((option: string, index: number) => {
             const { key, ...itemProps } = getItemProps({ index });
@@ -121,24 +90,23 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
         // options={distinctTags ?? []}
         options={data?.tags.map((t) => t.tag) ?? distinctTags ?? []}
         filterOptions={(options, params) => {
-
           if (params.inputValue !== '' && options.length == 0) {
             options.push(`Add "${params.inputValue}" tag`);
           }
 
-          return options
-          // if () {
-          // }
-          // return o.filter((t) => data?.tags.map((t) => t.tag).includes(t))
+          return options;
         }}
-        // filterOptions={(o) => o}
         inputValue={search}
         onInputChange={(_e, value) => {
           setSearch(value);
         }}
-        onChange={(_e, value) => {
-          // setTags(value);
-
+        onChange={(e, value) => {
+          // TODO: Is there a better way to do this?
+          const last = value[value.length - 1];
+          if (typeof last === 'string' && last.startsWith('Add ')) {
+            value[value.length - 1] = last.substring(5, last.length - 5);
+          }
+          setTagsAction(value);
         }}
         renderOption={(props, option) => {
           const { key, ...otherProps } = props;
@@ -152,7 +120,3 @@ export const ClubTagEdit = ({ club }: { club: SelectClub }) => {
     </div>
   );
 };
-// type SearchBarProps = Omit<ComponentProps<'input'>, 'type'> & {
-//   submitButton?: boolean;
-//   submitLogic?: () => void;
-// };
