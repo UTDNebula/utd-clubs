@@ -18,15 +18,13 @@ import Form from '@src/components/club/manage/form/Form';
 import {
   FormButtons,
   FormFieldSet,
-  FormInput,
-  FormTextArea,
 } from '@src/components/club/manage/FormComponents';
 import OfficerListItem from '@src/components/club/manage/OfficerListItem';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { editOfficerSchema } from '@src/utils/formSchemas';
 
-type ManagersProps = {
+type CollaboratorsProps = {
   club: SelectClub & { contacts: SelectContact[] };
   officers: {
     userId: string;
@@ -36,7 +34,7 @@ type ManagersProps = {
   }[];
 };
 
-const Managers = ({ club, officers }: ManagersProps) => {
+const Collaborators = ({ club, officers }: CollaboratorsProps) => {
   const methods = useForm<z.infer<typeof editOfficerSchema>>({
     resolver: zodResolver(editOfficerSchema),
     defaultValues: { officers: officers },
@@ -103,7 +101,7 @@ const Managers = ({ club, officers }: ManagersProps) => {
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       onSubmit={submitForm}
     >
-      <FormFieldSet legend="Edit Club Managers">
+      <FormFieldSet legend="Edit Club Collaborators">
         <div className="flex flex-col gap-2">
           {fields.map((field, index) => 'Placeholder')}
         </div>
@@ -115,7 +113,7 @@ const Managers = ({ club, officers }: ManagersProps) => {
           //   append({});
           // }}
         >
-          Add Manager
+          Add Collaborator
         </Button>
         <FormButtons />
       </FormFieldSet>
@@ -123,4 +121,4 @@ const Managers = ({ club, officers }: ManagersProps) => {
   );
 };
 
-export default Managers;
+export default Collaborators;

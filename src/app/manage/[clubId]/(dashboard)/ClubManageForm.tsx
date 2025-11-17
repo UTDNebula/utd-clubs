@@ -7,7 +7,7 @@ import { signInRoute } from '@src/utils/redirect';
 import Details from './(forms)/Details';
 import Officers from './(forms)/Officers';
 import Contacts from './(forms)/Contacts';
-import Managers from './(forms)/Managers';
+import Collaborators from './(forms)/Collaborators';
 
 const ClubManageForm = async ({
   club,
@@ -33,7 +33,7 @@ const ClubManageForm = async ({
       <Details club={club} />
       <Officers club={club} officers={listedOfficers}/>
       <Contacts club={club}></Contacts>
-      <Managers club={club} officers={officersMapped}/>
+      <Collaborators club={club} officers={officersMapped}/>
     </div>
   );
 };
