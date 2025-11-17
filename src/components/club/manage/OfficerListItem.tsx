@@ -5,7 +5,9 @@ import { IconButton } from '@mui/material';
 import { type FieldErrors, type UseFormRegister } from 'react-hook-form';
 import type z from 'zod';
 import { type editListedOfficerSchema } from '@src/utils/formSchemas';
-import { FormInput } from './FormComponents';
+import FormTextField from './form/FormTextField';
+
+// import { FormInput } from './FormComponents';
 
 type OfficerListItemProps = {
   register: UseFormRegister<z.infer<typeof editListedOfficerSchema>>;
@@ -17,54 +19,44 @@ type OfficerListItemProps = {
 };
 
 export const OfficerListItem = ({
-  register,
+  // register,
   index,
   remove,
-  errors,
+  // errors,
   isPresident,
   makePresident,
 }: OfficerListItemProps) => {
   return (
-    <div className="flex flex-row items-center p-2 hover:bg-slate-100 transition-colors rounded-lg">
+    <div className="flex flex-row px-2 py-3 hover:bg-slate-100 transition-colors rounded-lg">
       <div className="flex flex-row w-full flex-wrap">
-        <FormInput
-          type="text"
-          label="Name"
+        <FormTextField
           name={`officers.${index}.name`}
-          register={register}
-          error={errors.officers && errors?.officers[index]?.name}
-          aria-invalid={errors.officers && !!errors.officers[index]?.name}
+          label="Name"
           className="grow-1"
-        ></FormInput>
-        <FormInput
-          type="text"
-          label="Position"
-          name={`officers.${index}.position`}
-          register={register}
-          error={errors.officers && errors?.officers[index]?.position}
-          aria-invalid={errors.officers && !!errors.officers[index]?.position}
-        ></FormInput>
-
-        <IconButton
-          aria-label="make president"
-          title="Make President"
-          className="self-center"
-          onClick={() => makePresident(index)}
-        >
-          {isPresident ? (
-            <SupervisorAccountIcon color="primary" />
-          ) : (
-            <PersonIcon />
-          )}
-        </IconButton>
-        <IconButton
-          aria-label="remove"
-          title="Remove"
-          className="self-center"
-          onClick={() => remove(index)}
-        >
-          <DeleteIcon />
-        </IconButton>
+        />
+        <FormTextField name={`officers.${index}.position`} label="Position" />
+        <div className="h-10 mt-2">
+          <IconButton
+            aria-label="make president"
+            title="Make President"
+            className="self-center"
+            onClick={() => makePresident(index)}
+          >
+            {isPresident ? (
+              <SupervisorAccountIcon color="primary" />
+            ) : (
+              <PersonIcon />
+            )}
+          </IconButton>
+          <IconButton
+            aria-label="remove"
+            title="Remove"
+            className="self-center"
+            onClick={() => remove(index)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
       </div>
     </div>
   );

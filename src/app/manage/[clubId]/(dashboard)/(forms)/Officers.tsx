@@ -178,7 +178,7 @@ const Officers = ({ club, officers }: OfficersProps) => {
       onSubmit={submitForm}
     >
       <FormFieldSet legend="Edit Officers">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col">
           {fields.map((field, index) => (
             <OfficerListItem
               key={field.fieldId}

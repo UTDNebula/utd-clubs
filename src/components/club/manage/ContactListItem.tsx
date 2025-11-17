@@ -18,6 +18,7 @@ import {
 } from '@src/icons/ContactIcons';
 import { type SelectContact } from '@src/server/db/models';
 import { type editClubContactSchema } from '@src/utils/formSchemas';
+import FormTextField from './form/FormTextField';
 import { FormInput } from './FormComponents';
 
 type Contact = Omit<SelectContact, 'clubId'>;
@@ -100,7 +101,7 @@ const ContactListItem = ({
   errors,
 }: ContactListItemProps) => {
   return (
-    <div className="flex flex-row items-center p-2 hover:bg-slate-100 transition-colors rounded-lg">
+    <div className="flex flex-row p-2 hover:bg-slate-100 transition-colors rounded-lg">
       <div className="flex flex-row w-full flex-wrap">
         {/* <div className="flex w-fit flex-row items-center rounded-md bg-slate-300 p-2">
         <div className="box-content h-8 w-8">
@@ -108,34 +109,23 @@ const ContactListItem = ({
         </div>
         <div className="text-xl">{platform}</div>
       </div> */}
-
-        <FormInput
-          type="text"
-          label="Platform"
-          name={`contacts.${index}.platform`}
-          register={register}
-          error={errors.contacts && errors?.contacts[index]?.platform}
-          aria-invalid={errors.contacts && !!errors.contacts[index]?.platform}
-        ></FormInput>
-
-        <FormInput
-          type="text"
-          label="URL"
+        <FormTextField name={`contacts.${index}.platform`} label="Platform" />
+        <FormTextField
           name={`contacts.${index}.url`}
-          register={register}
-          error={errors.contacts && errors?.contacts[index]?.url}
-          aria-invalid={errors.contacts && !!errors.contacts[index]?.url}
+          label="URL"
           className="grow-1"
-        ></FormInput>
+        />
 
-        <IconButton
-          aria-label="remove"
-          title="Remove"
-          className="self-center"
-          onClick={() => remove(index, platform)}
-        >
-          <DeleteIcon />
-        </IconButton>
+        <div className="h-10 mt-2">
+          <IconButton
+            aria-label="remove"
+            title="Remove"
+            className="self-center"
+            onClick={() => remove(index, platform)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
       </div>
     </div>
   );

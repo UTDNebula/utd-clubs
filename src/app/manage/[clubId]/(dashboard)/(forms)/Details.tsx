@@ -2,11 +2,15 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from '@hookform/resolvers/zod';
+import TextField from '@mui/material/TextField';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import type z from 'zod';
 import Form from '@src/components/club/manage/components/Form';
+import FormFileUpload from '@src/components/club/manage/components/FormFileUpload';
+import FormDatePicker from '@src/components/club/manage/form/FormDatePicker';
+import FormTextField from '@src/components/club/manage/form/FormTextField';
 import {
   FormButtons,
   FormFieldSet,
@@ -36,6 +40,7 @@ const Details = ({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isDirty },
   } = methods;
 
@@ -65,7 +70,25 @@ const Details = ({
     >
       <FormFieldSet legend="Edit Details">
         <div className="flex flex-wrap">
-          <FormInput
+          <FormTextField
+            name="logo"
+            label="Logo"
+            // {...{ control }}
+            slotProps={{
+              htmlInput: { type: 'file' },
+              inputLabel: { shrink: true },
+            }}
+          />
+          <FormTextField
+            name="banner"
+            label="Banner"
+            // {...{ control }}
+            slotProps={{
+              htmlInput: { type: 'file' },
+              inputLabel: { shrink: true },
+            }}
+          />
+          {/* <FormInput
             type="file"
             label="Logo"
             // name="logo"
@@ -76,31 +99,65 @@ const Details = ({
             label="Banner"
             // name="banner"
             register={register}
-          />
+          /> */}
         </div>
         <div className="flex flex-wrap">
-          <FormInput
+          <FormTextField
+            name="name"
+            label="Name"
+            className="flex-1/2"
+            {...{ control }}
+          />
+
+          {/* <Controller
+            name="name"
+            render={({ field }) => (
+              <TextField
+                id="outlined-basic"
+                label="Name"
+                variant="outlined"
+                size="small"
+                {...field}
+                required
+                error={!!errors.name}
+                helperText={errors.name && errors.name.message}
+              />
+            )}
+          /> */}
+          {/* <FormInput
             type="text"
             label="Name"
             name="name"
             register={register}
             error={errors.name}
             className="flex-1/2"
+          /> */}
+          <FormDatePicker
+            name="founded"
+            label="Date Founded"
+            // {...{ control }}
           />
-          <FormInput
+          {/* <FormInput
             type="date"
             label="Founded"
             // name="founded"
             register={register}
-          />
+          /> */}
         </div>
-        <FormTextArea
+        <FormTextField
+          name="description"
+          label="Description"
+          {...{ control }}
+          multiline
+          minRows={4}
+        />
+        {/* <FormTextArea
           label="Description"
           name="description"
           register={register}
           error={errors.description}
           required
-        />
+        /> */}
         <FormButtons />
       </FormFieldSet>
     </Form>
