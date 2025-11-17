@@ -102,8 +102,18 @@ const Collaborators = ({ club, officers }: CollaboratorsProps) => {
       onSubmit={submitForm}
     >
       <FormFieldSet legend="Edit Club Collaborators">
+        <div className="mx-4 text-slate-600 italic text-sm">
+          <p>
+            People in this list will have the ability to change settings, create
+            events, and view members for this club.
+          </p>
+          <p>
+            To add someone as a collaborator, they must have a UTD CLUBS
+            account.
+          </p>
+        </div>
         <div className="flex flex-col gap-2">
-          {fields.map((field, index) => 'Placeholder')}
+          {fields.map((field, index) => '')}
         </div>
         <Button
           className="normal-case mb-2"
@@ -112,6 +122,9 @@ const Collaborators = ({ club, officers }: CollaboratorsProps) => {
           // onClick={() => {
           //   append({});
           // }}
+          onClick={() => {
+            window.alert('Not implemented yet. Sorry!');
+          }}
         >
           Add Collaborator
         </Button>
