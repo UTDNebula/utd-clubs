@@ -16,7 +16,7 @@ type FormTextFieldProps<TFormValues extends FieldValues> = Omit<
     label?: ReactNode;
   };
 
-const FormTextField = <TFormValues extends FieldValues>({
+export const FormTextField = <TFormValues extends FieldValues>({
   name,
   control,
   label,

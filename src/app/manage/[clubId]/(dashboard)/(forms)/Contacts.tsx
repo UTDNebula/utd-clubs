@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { type z } from 'zod';
-import Form from '@src/components/club/manage/components/Form';
+import Form from '@src/components/club/manage/form/Form';
 import ContactListItem from '@src/components/club/manage/ContactListItem';
 import {
   FormButtons,

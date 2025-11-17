@@ -14,7 +14,7 @@ import {
   type UseFormRegister,
 } from 'react-hook-form';
 import type z from 'zod';
-import Form from '@src/components/club/manage/components/Form';
+import Form from '@src/components/club/manage/form/Form';
 import {
   FormButtons,
   FormFieldSet,

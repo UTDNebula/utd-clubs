@@ -1,25 +1,17 @@
 'use client';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from '@hookform/resolvers/zod';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
-import {
-  useFieldArray,
-  useForm,
-  type FieldErrors,
-  type UseFormRegister,
-} from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import type z from 'zod';
-import Form from '@src/components/club/manage/components/Form';
+import Form from '@src/components/club/manage/form/Form';
 import {
   FormButtons,
   FormFieldSet,
-  FormInput,
-  FormTextArea,
 } from '@src/components/club/manage/FormComponents';
 import OfficerListItem from '@src/components/club/manage/OfficerListItem';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
@@ -105,11 +97,9 @@ const Officers = ({ club, officers }: OfficersProps) => {
 
   const {
     control,
-    register,
     handleSubmit,
-    reset,
     getValues,
-    formState: { errors, dirtyFields, isDirty },
+    formState: { dirtyFields },
   } = methods;
 
   const { fields, append, remove, update } = useFieldArray({
@@ -182,12 +172,10 @@ const Officers = ({ club, officers }: OfficersProps) => {
           {fields.map((field, index) => (
             <OfficerListItem
               key={field.fieldId}
-              register={register}
               index={index}
               makePresident={makePresident}
               isPresident={field.isPresident}
               remove={removeItem}
-              errors={errors}
             />
           ))}
         </div>

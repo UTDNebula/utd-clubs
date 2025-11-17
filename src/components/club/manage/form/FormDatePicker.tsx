@@ -16,7 +16,7 @@ type FormDatePickerProps<TFormValues extends FieldValues> = Omit<
   label?: ReactNode;
 };
 
-const FormDateField = <TFormValues extends FieldValues>({
+export const FormDatePicker = <TFormValues extends FieldValues>({
   name,
   label,
   className,
@@ -63,4 +63,4 @@ const FormDateField = <TFormValues extends FieldValues>({
   );
 };
 
-export default FormDateField;
+export default FormDatePicker;

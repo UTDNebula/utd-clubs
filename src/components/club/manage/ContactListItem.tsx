@@ -19,7 +19,6 @@ import {
 import { type SelectContact } from '@src/server/db/models';
 import { type editClubContactSchema } from '@src/utils/formSchemas';
 import FormTextField from './form/FormTextField';
-import { FormInput } from './FormComponents';
 
 type Contact = Omit<SelectContact, 'clubId'>;
 

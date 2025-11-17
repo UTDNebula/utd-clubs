@@ -1,21 +1,16 @@
 'use client';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from '@hookform/resolvers/zod';
-import TextField from '@mui/material/TextField';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import type z from 'zod';
-import Form from '@src/components/club/manage/components/Form';
-import FormFileUpload from '@src/components/club/manage/components/FormFileUpload';
+import Form from '@src/components/club/manage/form/Form';
 import FormDatePicker from '@src/components/club/manage/form/FormDatePicker';
 import FormTextField from '@src/components/club/manage/form/FormTextField';
 import {
   FormButtons,
   FormFieldSet,
-  FormInput,
-  FormTextArea,
 } from '@src/components/club/manage/FormComponents';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -36,13 +31,7 @@ const Details = ({
     mode: 'onTouched',
   });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    formState: { errors, isDirty },
-  } = methods;
+  const { handleSubmit, control } = methods;
 
   const router = useRouter();
   const api = useTRPC();
@@ -88,18 +77,6 @@ const Details = ({
               inputLabel: { shrink: true },
             }}
           />
-          {/* <FormInput
-            type="file"
-            label="Logo"
-            // name="logo"
-            register={register}
-          />
-          <FormInput
-            type="file"
-            label="Banner"
-            // name="banner"
-            register={register}
-          /> */}
         </div>
         <div className="flex flex-wrap">
           <FormTextField
@@ -108,41 +85,11 @@ const Details = ({
             className="flex-1/2"
             {...{ control }}
           />
-
-          {/* <Controller
-            name="name"
-            render={({ field }) => (
-              <TextField
-                id="outlined-basic"
-                label="Name"
-                variant="outlined"
-                size="small"
-                {...field}
-                required
-                error={!!errors.name}
-                helperText={errors.name && errors.name.message}
-              />
-            )}
-          /> */}
-          {/* <FormInput
-            type="text"
-            label="Name"
-            name="name"
-            register={register}
-            error={errors.name}
-            className="flex-1/2"
-          /> */}
           <FormDatePicker
             name="founded"
             label="Date Founded"
             // {...{ control }}
           />
-          {/* <FormInput
-            type="date"
-            label="Founded"
-            // name="founded"
-            register={register}
-          /> */}
         </div>
         <FormTextField
           name="description"
@@ -151,13 +98,6 @@ const Details = ({
           multiline
           minRows={4}
         />
-        {/* <FormTextArea
-          label="Description"
-          name="description"
-          register={register}
-          error={errors.description}
-          required
-        /> */}
         <FormButtons />
       </FormFieldSet>
     </Form>
