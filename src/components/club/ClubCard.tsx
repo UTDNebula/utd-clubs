@@ -21,7 +21,6 @@ function useMemberType(clubId: string, enabled: boolean = true) {
 
   // Wrap queryFn to transform undefined to null before React Query processes it
   // Using type assertion to allow null return type
-  // type QueryContext = Parameters<NonNullable<typeof queryOptions.queryFn>>[0];
 
   const { data: memberType, ...queryResult } = useQuery({
     ...queryOptions,
