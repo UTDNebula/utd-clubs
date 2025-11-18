@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { UploadIcon } from '@src/icons/Icons';
+import { uploadImage } from '@/app/actions/uploadImage';
 
 interface UploadImageProps {
   clubId: string;
@@ -21,27 +22,32 @@ const UploadImage = ({ clubId, onUploadComplete }: UploadImageProps) => {
 
     try {
       const timestamp = Date.now();
-      const objectID = `${clubId}/events/${timestamp}-${selectedFile.name}`;
+      const fileName = `${timestamp}-${selectedFile.name}`;
       
-      // Simulate upload for now - you can add API integration later
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('clubId', clubId);
+      formData.append('fileName', fileName);
       
-      const finalImageUrl = objectID;
+      // Call the server action
+      const result = await uploadImage(formData);
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Upload failed');
+      }
       
       setUploadStatus('Upload successful!');
       
-      // Call the callback to update the parent form/database
-      if (onUploadComplete) {
-        onUploadComplete(finalImageUrl);
+      if (onUploadComplete && result.url) {
+        onUploadComplete(result.url);
       }
 
-      // Clear status after 2 seconds
       setTimeout(() => {
         setUploadStatus(null);
       }, 2000);
     } catch (error) {
       console.error('Error uploading file:', error);
-      setUploadStatus('Upload failed. Please try again.');
+      setUploadStatus(error instanceof Error ? error.message : 'Upload failed. Please try again.');
     } finally {
       setIsUploading(false);
     }
@@ -51,7 +57,6 @@ const UploadImage = ({ clubId, onUploadComplete }: UploadImageProps) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
       
-      // Validate file type
       if (!selectedFile.type.startsWith('image/')) {
         setUploadStatus('Please select an image file (JPEG, PNG, or SVG).');
         return;
@@ -60,11 +65,9 @@ const UploadImage = ({ clubId, onUploadComplete }: UploadImageProps) => {
       setFile(selectedFile);
       setUploadStatus(null);
       
-      // Create preview URL
       const objectUrl = URL.createObjectURL(selectedFile);
       setPreviewUrl(objectUrl);
 
-      // Automatically upload
       void uploadFile(selectedFile);
     }
   };
@@ -81,7 +84,6 @@ const UploadImage = ({ clubId, onUploadComplete }: UploadImageProps) => {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0];
       
-      // Check if it's an image
       if (droppedFile.type.startsWith('image/')) {
         setFile(droppedFile);
         setUploadStatus(null);
@@ -89,7 +91,6 @@ const UploadImage = ({ clubId, onUploadComplete }: UploadImageProps) => {
         const objectUrl = URL.createObjectURL(droppedFile);
         setPreviewUrl(objectUrl);
 
-        // Automatically upload
         void uploadFile(droppedFile);
       } else {
         setUploadStatus('Please select an image file (JPEG, PNG, or SVG).');
