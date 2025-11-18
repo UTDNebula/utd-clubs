@@ -56,6 +56,10 @@ export const createEventSchema = z.object({
   endTime: z.coerce.date(),
 });
 
+export const updateEventSchema = createEventSchema.extend({
+  id: z.string(),
+});
+
 export const feedbackFormSchema = z.object({
   rating: z.number().min(1).max(10),
   likes: z.string().default(''),
