@@ -14,18 +14,31 @@ import { createEventSchema } from '@src/utils/formSchemas';
 import EventCardPreview from './EventCardPreview';
 import TimeSelect from './TimeSelect';
 
-const CreateEventForm = ({
+const EventForm = ({
+  mode = 'create',
   clubId,
   officerClubs,
+  event,
 }: {
+  mode?: 'create' | 'edit';
   clubId: string;
   officerClubs: SelectClub[];
+  event?: RouterOutputs['event']['findByFilters']['events'][number];
 }) => {
   const { register, handleSubmit, watch, setValue, getValues, control } =
     useForm<z.infer<typeof createEventSchema>>({
       resolver: zodResolver(createEventSchema),
-      defaultValues: {
-        clubId: clubId,
+      defaultValues: mode === 'edit' && event
+        ? {
+            clubId: event.clubId,
+            name: event.name,
+            location: event.location,
+            description: event.description,
+            startTime: event.startTime,
+            endTime: event.endTime,
+          }
+        : {
+            clubId: clubId,
       },
       mode: 'onSubmit',
     });
@@ -35,19 +48,21 @@ const CreateEventForm = ({
     'startTime',
   ]);
   const [loading, setLoading] = useState(false);
-  const [eventPreview, setEventPreview] = useState<
-    RouterOutputs['event']['findByFilters']['events'][number]
-  >({
-    name: '',
-    clubId,
-    description: '',
-    location: '',
-    liked: false,
-    id: '',
-    startTime: new Date(Date.now()),
-    endTime: new Date(Date.now()),
-    club: officerClubs.filter((v) => v.id == clubId)[0]!,
-  });
+  const [eventPreview, setEventPreview] = useState(
+    mode === 'edit' && event
+      ? event
+      : ({
+          name: '',
+          clubId,
+          description: '',
+          location: '',
+          liked: false,
+          id: '',
+          startTime: new Date(Date.now()),
+          endTime: new Date(Date.now()),
+          club: officerClubs.filter((v) => v.id == clubId)[0]!,
+        })
+  );
   useEffect(() => {
     const subscription = watch((data, info) => {
       const { name, clubId, description, location, startTime, endTime } = data;
@@ -73,7 +88,7 @@ const CreateEventForm = ({
           club,
         });
       }
-      if (info.name == 'clubId') {
+      if (info.name === "clubId" && mode === 'create') {
         router.replace(`/manage/${data.clubId}/create`);
       }
     });
@@ -81,24 +96,32 @@ const CreateEventForm = ({
   }, [router, watch, officerClubs]);
 
   const api = useTRPC();
-  const createMutation = useMutation(
-    api.event.create.mutationOptions({
-      onSuccess: (data) => {
-        if (data) {
-          router.push(`/event/${data}`);
-        }
-      },
-      onError: () => {
-        setLoading(false);
-      },
-    }),
-  );
+  const createMutation = useMutation(api.event.create.mutationOptions());
+  const updateMutation = useMutation(api.event.update.mutationOptions());
 
-  const onSubmit = handleSubmit((data: z.infer<typeof createEventSchema>) => {
-    if (!createMutation.isPending && !loading) {
-      setLoading(true);
-      createMutation.mutate(data);
-    }
+  const mutation = mode === "edit" && event
+    ? updateMutation
+    : createMutation;
+
+  const onSubmit = handleSubmit((data) => {
+    if (mutation.isPending || loading) return;
+    
+    setLoading(true);
+    
+    const payload =
+      mode === 'edit' && event
+        ? { id: event.id, ...data }
+        : data;
+
+    mutation.mutate(payload as any, {
+      onSuccess: (newId) => {
+        const targetId = mode === 'edit' ? event?.id : (newId as string);
+        router.push(`/event/${targetId}`);
+        },
+        onError: () => {
+          setLoading(false);
+        },
+      });
   });
 
   return (
@@ -109,13 +132,15 @@ const CreateEventForm = ({
       <div className="form-fields flex max-w-[830px] min-w-[320px] flex-1 flex-col gap-10">
         <div className="create-dropdown flex max-w-full flex-row justify-start gap-1 py-2 text-2xl font-bold whitespace-nowrap">
           <span>
-            Create Club Event <span className="text-[#3361FF]">for</span>
+            {mode === 'edit' ? 'Edit Club Event' : 'Create Club Event'}{' '}
+            <span className="text-[#3361FF]">for</span>
           </span>
           <div className="flex-1">
             <select
               {...register('clubId')}
-              className="w-full overflow-hidden bg-inherit text-ellipsis whitespace-nowrap text-[#3361FF] outline-hidden"
               defaultValue={clubId}
+              disabled={mode === 'edit'}
+              className="w-full overflow-hidden bg-inherit text-ellipsis whitespace-nowrap text-[#3361FF] outline-hidden disabled:cursor-not-allowed"
             >
               {officerClubs.map((club) => {
                 return (
@@ -189,7 +214,7 @@ const CreateEventForm = ({
         />
         <input
           type="submit"
-          value="Create Event"
+          value={mode === 'edit' ? 'Save Changes' : 'Create'}
           className={`bg-[#3361FF] ${loading ? 'opacity-40' : ''} rounded-md py-6 text-xs font-black text-white hover:cursor-pointer`}
         />
       </div>
@@ -200,4 +225,4 @@ const CreateEventForm = ({
     </form>
   );
 };
-export default CreateEventForm;
+export default EventForm;
