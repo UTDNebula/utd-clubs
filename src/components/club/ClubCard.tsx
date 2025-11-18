@@ -17,16 +17,28 @@ type Props = { club: Club; session: Session | null; priority: boolean };
 function useMemberType(clubId: string, enabled: boolean = true) {
   const api = useTRPC();
   
-  const { data: memberType, ...queryResult } = useQuery(
-    api.club.memberType.queryOptions(
-      { id: clubId },
-      { enabled }
-    )
+  const queryOptions = api.club.memberType.queryOptions(
+    { id: clubId },
+    { enabled }
   );
+  
+  // Wrap queryFn to transform undefined to null before React Query processes it
+  // Using type assertion to allow null return type
+  const { data: memberType, ...queryResult } = useQuery({
+    ...queryOptions,
+    queryFn: async (context: any) => {
+      const originalFn = queryOptions.queryFn;
+      if (!originalFn) {
+        return null;
+      }
+      const result = await originalFn(context);
+      return result ?? null; // Transform undefined to null
+    },
+  } as any);
 
   return {
-    memberType,
-    isJoined: memberType !== undefined,
+    memberType: memberType ?? undefined, // Return undefined for backward compatibility
+    isJoined: memberType !== null, // If memberType is not null, user is joined
     ...queryResult,
   };
 }
