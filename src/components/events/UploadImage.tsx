@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { UploadIcon } from '@src/icons/Icons';
-import { uploadImage } from '@/app/actions/uploadImage';
+import { uploadImage } from 'src/utils/uploadImage';
 
 interface UploadImageProps {
   clubId: string;
@@ -29,7 +29,6 @@ const UploadImage = ({ clubId, onUploadComplete }: UploadImageProps) => {
       formData.append('clubId', clubId);
       formData.append('fileName', fileName);
       
-      // Call the server action
       const result = await uploadImage(formData);
       
       if (!result.success) {
