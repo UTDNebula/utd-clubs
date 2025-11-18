@@ -21,22 +21,15 @@ const JoinButton = ({
   const api = useTRPC();
   const queryClient = useQueryClient();
   const clubId = clubID;
-  
-  const mutation = useMutation(api.club.joinLeave.mutationOptions());
-  
-  const handleJoin = async () => {
-    try {
-      await mutation.mutateAsync({ clubId });
-      // Invalidate the memberType query to refetch after join/leave
-      const queryOptions = api.club.memberType.queryOptions({ id: clubId });
-      void queryClient.invalidateQueries({
-        queryKey: queryOptions.queryKey,
-      });
-    } catch (error) {
-      // Error handling is done by the mutation
-      console.error('Failed to join/leave club:', error);
-    }
+  const [isDisabled, setDisabled] = useState(isJoined ?? false);
+
+  const handleJoin = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    mutation.mutate({ clubId });
+    setDisabled(!isDisabled);
   };
+
   if (!session) {
     return (
       <button
