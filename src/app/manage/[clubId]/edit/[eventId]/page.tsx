@@ -21,9 +21,9 @@ const EditEventPage = async ({
         clubId={clubId}
         officerClubs={officerClubs}
         event={{
-            ...event,
-            liked: false,
-          }}
+          ...event,
+          liked: false,
+        }}
       />
     </div>
   );

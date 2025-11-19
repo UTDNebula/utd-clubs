@@ -1,9 +1,9 @@
 import { notFound, redirect } from 'next/navigation';
+import EventForm from '@src/components/events/EventForm';
 import Header from '@src/components/header/BaseHeader';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
-import EventForm from '@src/components/events/EventForm';
 
 const Page = async (props: { params: Promise<{ clubId: string }> }) => {
   const params = await props.params;

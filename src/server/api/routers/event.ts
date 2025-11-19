@@ -294,9 +294,9 @@ export const eventRouter = createTRPCRouter({
   update: protectedProcedure
     .input(updateEventSchema)
     .mutation(async ({ input, ctx }) => {
-      const { id, clubId, ...data} = input;
+      const { id, clubId, ...data } = input;
       const userId = ctx.session.user.id;
-      
+
       const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
         where: and(
           eq(userMetadataToClubs.userId, userId),
