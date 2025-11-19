@@ -1,9 +1,9 @@
 'use server';
 
-import { getUploadURL, callStorageAPI } from 'src/utils/storage';
+import { callStorageAPI, getUploadURL } from 'src/utils/storage';
 
 export async function uploadImage(
-  formData: FormData
+  formData: FormData,
 ): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
     const file = formData.get('file') as File;
