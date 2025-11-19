@@ -1,13 +1,13 @@
 'use client';
-/* eslint-disable @typescript-eslint/no-misused-promises */
+
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type SelectClub, type SelectContact } from '@src/server/db/models';
-import { useTRPC } from '@src/trpc/react';
-import { editClubSchema } from '@src/utils/formSchemas';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
+import { type SelectClub, type SelectContact } from '@src/server/db/models';
+import { useTRPC } from '@src/trpc/react';
+import { editClubSchema } from '@src/utils/formSchemas';
 
 const EditClubForm = ({
   club,

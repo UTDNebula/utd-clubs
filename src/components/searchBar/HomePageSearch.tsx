@@ -1,13 +1,14 @@
 'use client';
-import { useEffect, useState } from 'react';
+
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
-import SearchBar from '.';
-import useDebounce from '@src/utils/useDebounce';
-import { SearchResults, SearchResultsItem } from './SearchResults';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
-import { useQuery } from '@tanstack/react-query';
+import useDebounce from '@src/utils/useDebounce';
+import SearchBar from '.';
+import { SearchResults, SearchResultsItem } from './SearchResults';
 
 export const HomePageSearchBar = () => {
   const router = useRouter();
@@ -17,47 +18,91 @@ export const HomePageSearchBar = () => {
   const debouncedSearch = useDebounce(search, 300);
   const updateSearch = useSearchStore((state) => state.setSearch);
   const api = useTRPC();
-  const { data } = useQuery(
-    api.club.byName.queryOptions(
+  const queryClient = useQueryClient();
+
+  const { data, isFetching, isPlaceholderData } = useQuery({
+    ...api.club.byName.queryOptions(
       { name: debouncedSearch },
       { enabled: !!debouncedSearch },
     ),
-  );
+    placeholderData: (previousData) => {
+      if (previousData) {
+        return previousData;
+      }
+      const lastData = queryClient.getQueryData<Club[]>(['club', 'byName']);
+      return lastData;
+    },
+  });
+
   const onClickSearchResult = (club: Club) => {
     router.push(`/directory/${club.slug}`);
   };
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isSticky, setIsSticky] = useState(false);
+  const originalOffset = useRef<number>(0);
+
   useEffect(() => {
     updateSearch(debouncedSearch);
   }, [debouncedSearch, updateSearch]);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      originalOffset.current =
+        containerRef.current.getBoundingClientRect().top + window.scrollY;
+    }
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsSticky(scrollY > originalOffset.current);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="relative mr-3 w-full max-w-xs text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] md:max-w-sm lg:max-w-md">
-      <SearchBar
-        placeholder="Search for Clubs"
-        tabIndex={0}
-        onChange={(e) => setSearch(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        submitButton
-        submitLogic={() =>
-          document
-            .getElementById('content')
-            ?.scrollIntoView({ behavior: 'smooth' })
-        }
-      />
-      {debouncedSearch && debouncedFocused && data && data.length > 0 && (
-        <SearchResults
-          searchResults={data.map((item) => (
-            <SearchResultsItem
-              key={item.id}
-              onClick={() => {
-                onClickSearchResult(item);
-              }}
-            >
-              {item.name}
-            </SearchResultsItem>
-          ))}
+    <>
+      <div
+        ref={containerRef}
+        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-6 w-full max-w-52 transition-all sm:max-w-[300px] md:max-w-sm lg:max-w-md ${
+          isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
+        }`}
+      >
+        <SearchBar
+          placeholder="Search for Clubs"
+          tabIndex={0}
+          onChange={(e) => setSearch(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          submitButton
+          submitLogic={() =>
+            document
+              .getElementById('content')
+              ?.scrollIntoView({ behavior: 'smooth' })
+          }
         />
-      )}
-    </div>
+        {debouncedSearch && debouncedFocused && (
+          <SearchResults
+            searchResults={
+              data && data.length > 0
+                ? data.map((item) => (
+                    <SearchResultsItem
+                      key={item.id}
+                      onClick={() => {
+                        onClickSearchResult(item);
+                      }}
+                    >
+                      {item.name}
+                    </SearchResultsItem>
+                  ))
+                : []
+            }
+            isLoadingResults={isFetching || isPlaceholderData}
+            hasResults={data !== undefined && data.length > 0}
+          />
+        )}
+      </div>
+      {/*Placeholder to avoid layout shift when search bar becomes sticky*/}
+      {isSticky && <div className="h-10 mt-6"></div>}
+    </>
   );
 };

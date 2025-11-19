@@ -1,17 +1,18 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client';
-import { selectClub, type SelectClub } from '@src/server/db/models';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
-import SettingsDropdown from './SettingsDropdown';
-import SettingsInput from './SettingsInput';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 import ClubSelector from '@src/components/settings/ClubSelector';
+import { selectClub, type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import DeleteButton from './DeleteButton';
-import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import SettingsDropdown from './SettingsDropdown';
+import SettingsInput from './SettingsInput';
 
 type Props = {
   clubs: SelectClub[];
@@ -129,12 +130,9 @@ export default function FormCard({ clubs, user }: Props) {
 
       <div className="mt-6 flex justify-between gap-4">
         <DeleteButton />
-        <button
-          type="submit"
-          className="rounded-full bg-blue-500 px-4 py-2 text-white transition duration-300 hover:bg-blue-700"
-        >
+        <Button type="submit" variant="contained" className="normal-case">
           Apply Changes
-        </button>
+        </Button>
       </div>
     </form>
   );

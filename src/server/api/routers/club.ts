@@ -1,20 +1,21 @@
-import { eq, ilike, sql, and, inArray, lt, gt } from 'drizzle-orm';
+import { and, eq, ilike, inArray, sql } from 'drizzle-orm';
+import { z } from 'zod';
+import { club, usedTags } from '@src/server/db/schema/club';
+import { contacts } from '@src/server/db/schema/contacts';
+import { officers as officersTable } from '@src/server/db/schema/officers';
+import { userMetadataToClubs } from '@src/server/db/schema/users';
+import { createClubSchema as baseClubSchema } from '@src/utils/formSchemas';
 import {
   adminProcedure,
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from '../trpc';
-import { z } from 'zod';
 import { clubEditRouter } from './clubEdit';
-import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { club, usedTags } from '@src/server/db/schema/club';
-import { contacts } from '@src/server/db/schema/contacts';
-import { carousel } from '@src/server/db/schema/admin';
-import { officers as officersTable } from '@src/server/db/schema/officers';
-import { createClubSchema as baseClubSchema } from '@src/utils/formSchemas';
+
 const byNameSchema = z.object({
   name: z.string().default(''),
+  limit: z.number().min(1).max(20).default(5),
 });
 
 const byIdSchema = z.object({
@@ -54,27 +55,16 @@ const createClubSchema = baseClubSchema.omit({ officers: true }).extend({
 export const clubRouter = createTRPCRouter({
   edit: clubEditRouter,
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
-    const { name } = input;
+    const { name, limit } = input;
     const clubs = await ctx.db.query.club.findMany({
       where: (club) =>
         and(ilike(club.name, `%${name}%`), eq(club.approved, 'approved')),
+      limit,
     });
 
-    if (name === '') return clubs;
-
-    return clubs.slice(0, 5);
+    return clubs;
   }),
-  byNameNoLimit: publicProcedure
-    .input(byNameSchema)
-    .query(async ({ input, ctx }) => {
-      const { name } = input;
-      const clubs = await ctx.db.query.club.findMany({
-        where: (club) =>
-          and(ilike(club.name, `%${name}%`), eq(club.approved, 'approved')),
-      });
 
-      return clubs;
-    }),
   byId: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     const { id } = input;
     try {
@@ -126,6 +116,15 @@ export const clubRouter = createTRPCRouter({
     try {
       const tags = (await ctx.db.select().from(usedTags)).map((obj) => obj.tag);
       return tags;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }),
+  mostUsedTags: publicProcedure.query(async ({ ctx }) => {
+    try {
+      const tags = await ctx.db.select().from(usedTags).limit(8);
+      return tags.map((t) => t.tag);
     } catch (e) {
       console.error(e);
       return [];
@@ -283,15 +282,6 @@ export const clubRouter = createTRPCRouter({
       ),
     });
     return !!hasPresident;
-  }),
-  getCarousel: publicProcedure.query(async ({ ctx }) => {
-    const now = new Date();
-    const currentItems = await ctx.db.query.carousel.findMany({
-      where: and(lt(carousel.startTime, now), gt(carousel.endTime, now)),
-      with: { club: true },
-    });
-
-    return currentItems;
   }),
   getDirectoryInfo: publicProcedure
     .input(bySlugSchema)

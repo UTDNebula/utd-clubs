@@ -1,7 +1,7 @@
-import FormCard from './FormCard';
+import { eq } from 'drizzle-orm';
 import { type Session } from 'next-auth';
 import { db } from '@src/server/db';
-import { eq } from 'drizzle-orm';
+import FormCard from './FormCard';
 
 async function SettingsForm({ session }: { session: Session }) {
   const user = session.user;

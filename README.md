@@ -1,11 +1,11 @@
-# Jupiter
+# UTD Clubs
 
 _A tool to find ways to get involved on campus._
 
 ## Contributing
 
 We are always open to contributions to the project. If you would like to contribute and want some guidance on where to start,
-please join our [Discord](http://discord.utdnebula.com/) and ask for drop a message in the `#jupiter-general` channel or
+please join our [Discord](http://discord.utdnebula.com/) and ask for drop a message in the `#clubs-general` channel or
 DM Braedon for more details.
 
 Currently, we're tracking all issues via GitHub Issues. If you would like to work on an issue, please comment on the issue and we will assign it to you.
@@ -18,13 +18,13 @@ Please make sure you have at least [NodeJS v21.1.0](https://nodejs.org/en) or gr
 Start by cloning the repository to your local machine.
 
 ```bash
-git clone https://github.com/UTDNebula/jupiter.git
+git clone https://github.com/UTDNebula/utd-clubs.git
 ```
 
 Next, navigate to the project directory and install the dependencies.
 
 ```bash
-cd jupiter
+cd utd-clubs
 npm install
 ```
 
@@ -44,9 +44,11 @@ or by running the following command in your terminal.
 openssl rand -hex 32
 ```
 
-Jupiter uses an ORM called [Drizzle](https://orm.drizzle.team/) to interact with the database. In order to connect to the database, you will need to add the `DATABASE_URL` variable to your `.env` file. Your project lead will give this to you upon request.
+Clubs uses an ORM called [Drizzle](https://orm.drizzle.team/) to interact with the database. In order to connect to the database, you will need to add the `DATABASE_URL` variable to your `.env` file. Your project lead will give this to you upon request.
 
-The Nebula API is used for image storage. The `NEBULA_API_URL` variable should be set to `https://api.utdnebula.com/` and the `NEBULA_API_STORAGE_BUCKET` variable to `jupiter`. An API key and storage key should be requested from the project lead for the `NEBULA_API_KEY` and `NEBULA_API_STORAGE_KEY` variables.
+The Nebula API is used for image storage. The `NEBULA_API_URL` variable should be set to `https://api.utdnebula.com/` and the `NEBULA_API_STORAGE_BUCKET` variable to `clubs`. An API key and storage key should be requested from the project lead for the `NEBULA_API_KEY` and `NEBULA_API_STORAGE_KEY` variables.
+
+We use Google Gemini for our club recommendations. Ask the project lead for the `GEMINI_SERVICE_ACCOUNT` env variable if you want to work on club recommendations.
 
 Finally, start the development server.
 
@@ -62,5 +64,5 @@ When working on a new feature, please create a new branch with the following nam
 git checkout -b feature/<feature-name>
 ```
 
-When you are ready to merge your branch into the `develop` branch, please create a pull request and request a review from the Jupiter Dev Team.
+When you are ready to merge your branch into the `develop` branch, please create a pull request and request a review from the Clubs Dev Team.
 Please include details about what issue you are addressing with the pull request, what changes you made, and any other relevant information.

@@ -3,15 +3,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { MoreIcon } from '@src/icons/Icons';
-import { type RouterOutputs } from '@src/trpc/shared';
-import EventLikeButton from './EventLikeButton';
 import { getServerAuthSession } from '@src/server/auth';
-import dynamic from 'next/dynamic';
+import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
-
-const EventTimeAlert = dynamic(() => import('./EventTimeAlert'), {
-  ssr: false,
-});
+import EventLikeButton from './EventLikeButton';
+import EventTimeAlert from './EventTimeAlert';
 
 type EventCardProps = {
   event: RouterOutputs['event']['findByFilters']['events'][number];

@@ -1,11 +1,12 @@
+import { notFound, redirect } from 'next/navigation';
 import Header from '@src/components/header/BaseHeader';
 import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
-import { redirect, notFound } from 'next/navigation';
 import CreateEventForm from './CreateEventForm';
 
-const Page = async ({ params }: { params: { clubId: string } }) => {
+const Page = async (props: { params: Promise<{ clubId: string }> }) => {
+  const params = await props.params;
   const session = await getServerAuthSession();
   if (!session) {
     redirect(signInRoute(`manage/${params.clubId}/create`));

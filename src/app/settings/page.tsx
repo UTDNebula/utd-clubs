@@ -1,18 +1,19 @@
-import { getServerAuthSession } from '@src/server/auth';
-import SettingsForm from '@src/components/settings/SettingsForm';
 import { type Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Header from '@src/components/header/BaseHeader';
+import SettingsForm from '@src/components/settings/SettingsForm';
+import { getServerAuthSession } from '@src/server/auth';
 import { signInRoute } from '@src/utils/redirect';
+
 export const metadata: Metadata = {
-  title: 'Settings - Jupiter',
-  description: 'Settings for your Jupiter account',
+  title: 'Settings',
+  description: 'Settings for your UTD Clubs account.',
   alternates: {
-    canonical: 'https://jupiter.utdnebula.com/settings',
+    canonical: 'https://clubs.utdnebula.com/settings',
   },
   openGraph: {
-    url: 'https://jupiter.utdnebula.com/settings',
-    description: 'Settings - Jupiter',
+    url: 'https://clubs.utdnebula.com/settings',
+    description: 'Settings for your UTD Clubs account.',
   },
 };
 const Settings = async () => {

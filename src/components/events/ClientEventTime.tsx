@@ -1,4 +1,5 @@
 'use client';
+
 import { format, isSameDay } from 'date-fns';
 
 type ClientEventTimeProps = {

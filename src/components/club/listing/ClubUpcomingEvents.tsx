@@ -1,6 +1,6 @@
-import { api } from '@src/trpc/server';
 import Link from 'next/link';
 import { type FC } from 'react';
+import { api } from '@src/trpc/server';
 
 const MAX_DESCRIPTION_LENGTH = 150;
 

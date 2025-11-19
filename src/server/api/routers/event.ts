@@ -1,26 +1,28 @@
+import { TZDate } from '@date-fns/tz';
+import { TRPCError } from '@trpc/server';
+import { add, startOfDay } from 'date-fns';
 import {
+  and,
+  between,
   eq,
   gte,
-  lte,
-  and,
   ilike,
+  inArray,
+  lte,
   or,
   sql,
-  inArray,
   type SQL,
-  between,
 } from 'drizzle-orm';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { z } from 'zod';
 import { selectEvent } from '@src/server/db/models';
-import { add, startOfDay } from 'date-fns';
+import { events } from '@src/server/db/schema/events';
 import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
+import { dateSchema } from '@src/utils/eventFilter';
 import { createEventSchema } from '@src/utils/formSchemas';
-import { TRPCError } from '@trpc/server';
-import { events } from '@src/server/db/schema/events';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byClubIdSchema = z.object({
   clubId: z.string().default(''),
@@ -38,7 +40,7 @@ export const findByFilterSchema = z.object({
   club: z.string().array(),
 });
 export const findByDateSchema = z.object({
-  date: z.date(),
+  date: dateSchema,
 });
 
 const byIdSchema = z.object({
@@ -102,15 +104,31 @@ export const eventRouter = createTRPCRouter({
   findByDate: publicProcedure
     .input(findByDateSchema)
     .query(async ({ input, ctx }) => {
-      const startTime = startOfDay(input.date);
-      const endTime = add(startTime, { days: 1 });
+      const zone = 'America/Chicago';
+      const [year, month, day] = input.date.split('-').map(Number);
+      const backup = new Date();
+      const startCT = startOfDay(
+        new TZDate(
+          year ?? backup.getFullYear(),
+          (month ?? backup.getMonth()) - 1,
+          day ?? backup.getDate(),
+          0,
+          0,
+          0,
+          0,
+          zone,
+        ),
+      );
+      const endCT = add(startCT, { days: 1 });
+      const startUTC = new Date(startCT.getTime());
+      const endUTC = new Date(endCT.getTime());
       const events = await ctx.db.query.events.findMany({
         where: (event) => {
           return or(
-            between(event.startTime, startTime, endTime),
-            between(event.endTime, startTime, endTime),
-            and(lte(event.startTime, startTime), gte(event.endTime, startTime)),
-            and(lte(event.startTime, endTime), gte(event.endTime, endTime)),
+            between(event.startTime, startUTC, endUTC),
+            between(event.endTime, startUTC, endUTC),
+            and(lte(event.startTime, startUTC), gte(event.endTime, startUTC)),
+            and(lte(event.startTime, endUTC), gte(event.endTime, endUTC)),
           );
         },
 

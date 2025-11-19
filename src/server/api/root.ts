@@ -1,10 +1,11 @@
 import { createCallerFactory, createTRPCRouter } from '@src/server/api/trpc';
+import { adminRouter } from './routers/admin';
+import { aiRouter } from './routers/ai';
 import { clubRouter } from './routers/club';
 import { eventRouter } from './routers/event';
-import { userMetadataRouter } from './routers/userMetadata';
 import { formRouter } from './routers/form';
-import { adminRouter } from './routers/admin';
 import { storageRouter } from './routers/storage';
+import { userMetadataRouter } from './routers/userMetadata';
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   form: formRouter,
   admin: adminRouter,
   storage: storageRouter,
+  ai: aiRouter,
 });
 
 // export type definition of API

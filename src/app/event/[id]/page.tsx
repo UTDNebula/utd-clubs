@@ -1,18 +1,18 @@
-import { EventHeader } from '@src/components/header/BaseHeader';
-import { db } from '@src/server/db';
 import { and, eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
-
-import TimeComponent from './TimeComponent';
 import Image from 'next/image';
-import CountdownTimer from './CountdownTimer';
 import Link from 'next/link';
-import { getServerAuthSession } from '@src/server/auth';
 import RegisterButton from '@src/app/event/[id]/RegisterButton';
+import { EventHeader } from '@src/components/header/BaseHeader';
+import { getServerAuthSession } from '@src/server/auth';
+import { db } from '@src/server/db';
+import CountdownTimer from './CountdownTimer';
+import TimeComponent from './TimeComponent';
 
-type Params = { params: { id: string } };
+type Params = { params: Promise<{ id: string }> };
 
-export default async function EventsPage({ params }: Params) {
+export default async function EventsPage(props: Params) {
+  const params = await props.params;
   const session = await getServerAuthSession();
   const res = await db.query.events.findFirst({
     where: (events) => eq(events.id, params.id),
@@ -113,11 +113,10 @@ export default async function EventsPage({ params }: Params) {
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
+export async function generateMetadata(props: {
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
+  const params = await props.params;
   const id = params.id;
 
   const found = await db.query.events.findFirst({
@@ -131,14 +130,14 @@ export async function generateMetadata({
     };
 
   return {
-    title: `${found.name} - Jupiter`,
-    description: found.description.slice(0, 30) + '...',
+    title: `${found.name}`,
+    description: `${found.name} from ${found.club.name} on UTD Clubs`,
     alternates: {
-      canonical: `https://jupiter.utdnebula.com/event/${found.id}`,
+      canonical: `https://clubs.utdnebula.com/event/${found.id}`,
     },
     openGraph: {
-      url: `https://jupiter.utdnebula.com/event/${found.id}`,
-      description: found.name + ' - Jupiter',
+      url: `https://clubs.utdnebula.com/event/${found.id}`,
+      description: `${found.name} from ${found.club.name} on UTD Clubs`,
     },
   };
 }

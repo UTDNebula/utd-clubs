@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client';
+
 import { zodResolver } from '@hookform/resolvers/zod';
-import EditContactSelector from '@src/app/manage/[clubId]/edit/EditContactSelector';
-import { type SelectClub, type SelectContact } from '@src/server/db/models';
-import { useTRPC } from '@src/trpc/react';
-import { type contact } from '@src/utils/contact';
-import { editClubContactSchema } from '@src/utils/formSchemas';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useReducer } from 'react';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
+import EditContactSelector from '@src/app/manage/[clubId]/edit/EditContactSelector';
+import { type SelectClub, type SelectContact } from '@src/server/db/models';
+import { useTRPC } from '@src/trpc/react';
+import { type contact } from '@src/utils/contact';
+import { editClubContactSchema } from '@src/utils/formSchemas';
 
 type formData = z.infer<typeof editClubContactSchema>;
 type x = {
