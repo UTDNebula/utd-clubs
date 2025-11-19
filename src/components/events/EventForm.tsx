@@ -25,21 +25,24 @@ const EventForm = ({
   officerClubs: SelectClub[];
   event?: RouterOutputs['event']['findByFilters']['events'][number];
 }) => {
+  type FormType = z.infer<typeof createEventSchema>;
+
   const { register, handleSubmit, watch, setValue, getValues, control } =
-    useForm<z.infer<typeof createEventSchema>>({
+    useForm<FormType>({
       resolver: zodResolver(createEventSchema),
-      defaultValues: mode === 'edit' && event
-        ? {
-            clubId: event.clubId,
-            name: event.name,
-            location: event.location,
-            description: event.description,
-            startTime: event.startTime,
-            endTime: event.endTime,
-          }
-        : {
-            clubId: clubId,
-      },
+      defaultValues:
+        mode === 'edit' && event
+          ? {
+              clubId: event.clubId,
+              name: event.name,
+              location: event.location,
+              description: event.description,
+              startTime: event.startTime,
+              endTime: event.endTime,
+            }
+          : {
+              clubId: clubId,
+            },
       mode: 'onSubmit',
     });
   const router = useRouter();
@@ -51,7 +54,7 @@ const EventForm = ({
   const [eventPreview, setEventPreview] = useState(
     mode === 'edit' && event
       ? event
-      : ({
+      : {
           name: '',
           clubId,
           description: '',
@@ -61,7 +64,7 @@ const EventForm = ({
           startTime: new Date(Date.now()),
           endTime: new Date(Date.now()),
           club: officerClubs.filter((v) => v.id == clubId)[0]!,
-        })
+        },
   );
   useEffect(() => {
     const subscription = watch((data, info) => {
@@ -88,40 +91,46 @@ const EventForm = ({
           club,
         });
       }
-      if (info.name === "clubId" && mode === 'create') {
+      if (info.name === 'clubId' && mode === 'create') {
         router.replace(`/manage/${data.clubId}/create`);
       }
     });
     return () => subscription.unsubscribe();
-  }, [router, watch, officerClubs]);
+  }, [router, watch, officerClubs, mode]);
 
   const api = useTRPC();
   const createMutation = useMutation(api.event.create.mutationOptions());
   const updateMutation = useMutation(api.event.update.mutationOptions());
 
-  const mutation = mode === "edit" && event
-    ? updateMutation
-    : createMutation;
-
   const onSubmit = handleSubmit((data) => {
-    if (mutation.isPending || loading) return;
-    
+    if (loading) return;
     setLoading(true);
-    
-    const payload =
-      mode === 'edit' && event
-        ? { id: event.id, ...data }
-        : data;
 
-    mutation.mutate(payload as any, {
-      onSuccess: (newId) => {
-        const targetId = mode === 'edit' ? event?.id : (newId as string);
-        router.push(`/event/${targetId}`);
+    if (mode === 'edit' && event) {
+      updateMutation.mutate(
+        {
+          id: event.id,
+          ...data,
+        },
+        {
+          onSuccess: () => {
+            router.push(`/event/${event.id}`);
+          },
+          onError: () => {
+            setLoading(false);
+          },
+        },
+      );
+    } else {
+      createMutation.mutate(data, {
+        onSuccess: (newId) => {
+          router.push(`/event/${newId as string}`);
         },
         onError: () => {
           setLoading(false);
         },
       });
+    }
   });
 
   return (
