@@ -156,7 +156,7 @@ export const clubRouter = createTRPCRouter({
   memberType: publicProcedure
     .input(byIdSchema)
     .query(async ({ input, ctx }) => {
-      if (!ctx.session) return undefined;
+      if (!ctx.session) return null;
       return (
         (
           await ctx.db.query.userMetadataToClubs.findFirst({

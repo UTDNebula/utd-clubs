@@ -1,8 +1,10 @@
 'use client';
 
+import { Button } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
-import React, { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import React from 'react';
 import { useTRPC } from '@src/trpc/react';
 
 type JoinButtonProps = {
@@ -31,35 +33,28 @@ const JoinButton = ({ isHeader, session, clubID }: JoinButtonProps) => {
     }),
   );
 
-  if (!session) {
-    return (
-      <button
-        className={`text-xs font-extrabold text-white disabled:bg-slate-700 ${
-          isHeader
-            ? 'rounded-full px-8 py-4'
-            : 'mr-2 rounded-2xl border-solid px-4 py-2'
-        }`}
-        disabled
-      >
-        Join
-      </button>
-    );
-  }
   return (
-    <button
+    <Button
+      variant="contained"
+      size={isHeader ? 'large' : 'small'}
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
 
         if (isPending || joinLeave.isPending) return;
 
+        if (!session) {
+          signIn();
+          return;
+        }
+
         void joinLeave.mutateAsync({ clubId: clubID });
       }}
-      className={`bg-blue-primary text-xs font-extrabold text-white transition-colors hover:bg-blue-700 disabled:bg-blue-700 ${isHeader ? 'rounded-full px-8 py-4' : 'mr-2 rounded-2xl px-4 py-2'}`}
-      disabled={isPending || joinLeave.isPending}
+      className="normal-case"
+      loading={isPending || joinLeave.isPending}
     >
       {memberType ? 'Joined' : 'Join'}
-    </button>
+    </Button>
   );
 };
 
