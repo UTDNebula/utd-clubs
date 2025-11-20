@@ -49,12 +49,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
               Manage
             </Link>
           ) : (
-            <JoinButton
-              session={session}
-              isHeader
-              clubID={club.id}
-              isJoined={memberType !== undefined}
-            />
+            <JoinButton session={session} isHeader clubID={club.id} />
           )}
           <ContactButtons contacts={club.contacts || []} />
         </div>
