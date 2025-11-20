@@ -1,45 +1,11 @@
-'use client';
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type FC } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
 import JoinButton from './JoinButton';
-import { useTRPC } from '@src/trpc/react';
 
 type Props = { club: Club; session: Session | null; priority: boolean };
-
-function useMemberType(clubId: string, enabled: boolean = true) {
-  const api = useTRPC();
-
-  const queryOptions = api.club.memberType.queryOptions(
-    { id: clubId },
-    { enabled }
-  );
-
-  // Wrap queryFn to transform undefined to null before React Query processes it
-  // Using type assertion to allow null return type
-
-  const { data: memberType, ...queryResult } = useQuery({
-    ...queryOptions,
-    queryFn: async (context: any) => {
-      const originalFn = queryOptions.queryFn;
-      if (!originalFn) {
-        return null;
-      }
-      const result = await originalFn(context);
-      return result ?? null; // Transform undefined to null
-    },
-  } as any); // Type assertion to any to bypass strict type checks
-
-  return {
-    memberType: memberType ?? undefined, // Return undefined for backward compatibility
-    isJoined: memberType !== null, // If memberType is not null, user is joined
-    ...queryResult,
-  };
-}
 
 const ClubCard: FC<Props> = ({ club, session, priority }) => {
   const desc =
@@ -50,8 +16,6 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
   const placeholderImage =
     'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAQABADAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAABgf/xAAXEAEAAwAAAAAAAAAAAAAAAAAFACIx/8QAGAEAAgMAAAAAAAAAAAAAAAAABAUGBwj/xAAWEQADAAAAAAAAAAAAAAAAAAAAAgT/2gAMAwEAAhEDEQA/ALuYnlpkZHL4onFpieWhaOI6JySlqZaKEcnNMwtMTy0MRxFROf/Z';
 
-  const { isJoined } = useMemberType(club.id, !!session);
-  
   return (
     <Link href={`/directory/${club.slug}`} className="block group">
       <div className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between rounded-lg bg-white shadow-2xl md:min-h-[600px]">
@@ -80,12 +44,7 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
         </div>
 
         <div className="m-5 mt-auto flex flex-row space-x-2">
-          <JoinButton
-            session={session}
-            isHeader
-            clubID={club.id}
-            isJoined={isJoined}
-          />
+          <JoinButton session={session} clubID={club.id} />
         </div>
       </div>
     </Link>

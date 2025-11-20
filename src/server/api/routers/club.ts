@@ -158,14 +158,20 @@ export const clubRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       if (!ctx.session) return undefined;
       return (
-        await ctx.db.query.userMetadataToClubs.findFirst({
-          where: and(
-            eq(userMetadataToClubs.clubId, input.id),
-            eq(userMetadataToClubs.userId, ctx.session.user.id),
-            inArray(userMetadataToClubs.memberType, ['Member', 'Officer', 'President']),
-          ),
-        })
-      )?.memberType;
+        (
+          await ctx.db.query.userMetadataToClubs.findFirst({
+            where: and(
+              eq(userMetadataToClubs.clubId, input.id),
+              eq(userMetadataToClubs.userId, ctx.session.user.id),
+              inArray(userMetadataToClubs.memberType, [
+                'Member',
+                'Officer',
+                'President',
+              ]),
+            ),
+          })
+        )?.memberType ?? null
+      );
     }),
   joinLeave: protectedProcedure
     .input(joinLeaveSchema)
