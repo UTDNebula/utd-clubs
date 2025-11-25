@@ -65,20 +65,11 @@ const ClubDirectoryGrid: FC<Props> = ({ session }) => {
   const queryClient = useQueryClient();
 
   const { data, isFetching, isPlaceholderData } = useQuery(
-    api.club.all.queryOptions(
-      { name: search, tags, limit: 9 },
+    api.club.search.queryOptions(
+      { search: search, tags, limit: 9 },
       {
         placeholderData: (previousData) => {
-          // Keep showing previous data while fetching new results
-          if (previousData) {
-            return previousData;
-          }
-          // Try to get any cached club data
-          const cachedData = queryClient.getQueryData<ClubQueryData>([
-            'club',
-            'all',
-          ]);
-          return cachedData;
+          return previousData;
         },
       },
     ),

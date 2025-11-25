@@ -1,5 +1,6 @@
-import { relations, sql } from 'drizzle-orm';
+import { relations, SQL, sql } from 'drizzle-orm';
 import {
+  AnyPgColumn,
   boolean,
   customType,
   index,
@@ -58,6 +59,7 @@ export const club = pgTable(
         })}'`,
         numeric_fields: `'{"approved":{"fast":true}}'`,
       }),
+    index('club_name').on(t.name),
     uniqueIndex('club_slug_unique').on(t.slug),
   ],
 );
