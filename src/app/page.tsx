@@ -70,7 +70,7 @@ const Home = async () => {
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
-          <div className="pointer-events-none *:pointer-events-auto md:fixed md:top-0 md:z-20 flex w-full items center justify-between p-2.5 md:p-5">
+          <div className="pointer-events-none *:pointer-events-auto md:fixed md:top-0 md:z-20 flex w-full items-center justify-between p-2.5 md:p-5">
             <Sidebar hamburger="white" shadow />
             <div className="ml-auto flex items-center justify-center gap-2">
               <ClubMatchButton />
