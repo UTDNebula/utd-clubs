@@ -1,50 +1,39 @@
 'use client';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import type { SelectClub as Club } from '@src/server/db/models';
+import Autocomplete from '@mui/material/Autocomplete';
+import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef, useState, type ComponentProps } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import theme from '@src/utils/theme';
 import useDebounce from '@src/utils/useDebounce';
-import SearchBar from '.';
-import { SearchResults, SearchResultsItem } from './SearchResults';
 
 export const HomePageSearchBar = () => {
-  const router = useRouter();
   const [search, setSearch] = useState<string>('');
-  const [focused, setFocused] = useState(false);
-  const debouncedFocused = useDebounce(focused, 300);
   const debouncedSearch = useDebounce(search, 300);
   const updateSearch = useSearchStore((state) => state.setSearch);
+  const tags = useSearchStore((state) => state.tags);
+  const setTags = useSearchStore((state) => state.setTags);
   const api = useTRPC();
-  const queryClient = useQueryClient();
-
-  const { data, isFetching, isPlaceholderData } = useQuery({
-    ...api.club.byName.queryOptions(
-      { name: debouncedSearch },
+  const { data } = useQuery(
+    api.club.tagSearch.queryOptions(
+      { search: debouncedSearch },
       { enabled: !!debouncedSearch },
     ),
-    placeholderData: (previousData) => {
-      if (previousData) {
-        return previousData;
-      }
-      const lastData = queryClient.getQueryData<Club[]>(['club', 'byName']);
-      return lastData;
-    },
-  });
-
-  const onClickSearchResult = (club: Club) => {
-    router.push(`/directory/${club.slug}`);
+  );
+  useEffect(() => {
+    updateSearch(debouncedSearch);
+  }, [debouncedSearch, updateSearch]);
+  const onSubmit = () => {
+    document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const originalOffset = useRef<number>(0);
-
-  useEffect(() => {
-    updateSearch(debouncedSearch);
-  }, [debouncedSearch, updateSearch]);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -58,51 +47,82 @@ export const HomePageSearchBar = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
   return (
     <>
       <div
         ref={containerRef}
-        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-6 w-full max-w-52 transition-all sm:max-w-[300px] md:max-w-sm lg:max-w-md ${
+        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-4 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
           isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
         }`}
       >
-        <SearchBar
-          placeholder="Search for Clubs"
-          tabIndex={0}
-          onChange={(e) => setSearch(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          submitButton
-          submitLogic={() =>
-            document
-              .getElementById('content')
-              ?.scrollIntoView({ behavior: 'smooth' })
-          }
+        <Autocomplete
+          freeSolo
+          multiple
+          disableClearable
+          aria-label="search"
+          inputValue={search}
+          value={tags}
+          options={data?.tags.map((t) => t.tag) ?? []}
+          filterOptions={(o) => o}
+          onInputChange={(e, value) => {
+            setSearch(value);
+          }}
+          onChange={(e, value) => {
+            setTags(value);
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              placeholder="Search for Clubs or Tags"
+              slotProps={{
+                input: {
+                  ...params.InputProps,
+                  sx: {
+                    background: 'white',
+                    borderRadius: theme.shape.borderRadius,
+                  },
+                },
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSubmit();
+                }
+              }}
+            />
+          )}
+          renderValue={(value, getItemProps) => {
+            return value.map((option: string, index: number) => {
+              const { key, ...itemProps } = getItemProps({ index });
+              return (
+                <Chip key={key} label={option} color="primary" {...itemProps} />
+              );
+            });
+          }}
+          renderOption={(props, option) => {
+            const { key, ...otherProps } = props;
+            return (
+              <li key={key} {...otherProps}>
+                <Typography variant="body1">{option}</Typography>
+              </li>
+            );
+          }}
         />
-        {debouncedSearch && debouncedFocused && (
-          <SearchResults
-            searchResults={
-              data && data.length > 0
-                ? data.map((item) => (
-                    <SearchResultsItem
-                      key={item.id}
-                      onClick={() => {
-                        onClickSearchResult(item);
-                      }}
-                    >
-                      {item.name}
-                    </SearchResultsItem>
-                  ))
-                : []
-            }
-            isLoadingResults={isFetching || isPlaceholderData}
-            hasResults={data !== undefined && data.length > 0}
-          />
-        )}
       </div>
       {/*Placeholder to avoid layout shift when search bar becomes sticky*/}
-      {isSticky && <div className="h-10 mt-6"></div>}
+      {isSticky && (
+        <Autocomplete
+          className="pt-4 opacity-0"
+          options={[]}
+          renderInput={(params) => <TextField {...params}></TextField>}
+        ></Autocomplete>
+      )}
     </>
   );
+};
+type SearchBarProps = Omit<ComponentProps<'input'>, 'type'> & {
+  submitButton?: boolean;
+  submitLogic?: () => void;
 };
