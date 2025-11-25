@@ -13,18 +13,6 @@ import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
-export const metadata: Metadata = {
-  title: 'Jupiter - Nebula',
-  description: 'Get connected on campus.',
-  alternates: {
-    canonical: 'https://jupiter.utdnebula.com',
-  },
-  openGraph: {
-    url: 'https://jupiter.utdnebula.com',
-    description: 'Jupiter - Nebula Labs',
-  },
-};
-
 const Home = async () => {
   const tags = await api.club.topTags();
   // const featured = await api.club.getCarousel();
