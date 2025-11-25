@@ -1,6 +1,8 @@
 import {
   and,
   arrayOverlaps,
+  asc,
+  desc,
   eq,
   gt,
   ilike,
@@ -117,7 +119,6 @@ export const clubRouter = createTRPCRouter({
             input.name ? ilike(club.name, `%${input.name}%`) : undefined,
           ),
         );
-      console.log(query.toSQL());
 
       const res = await query.execute();
       const newOffset = input.cursor + res.length;
@@ -145,7 +146,7 @@ export const clubRouter = createTRPCRouter({
   }),
   topTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = (await ctx.db.select().from(usedTags).limit(6)).map(
+      const tags = (await ctx.db.select().from(usedTags).limit(7)).map(
         (obj) => obj.tag,
       );
       return tags;
@@ -381,30 +382,31 @@ export const clubRouter = createTRPCRouter({
         .offset(input.cursor)
         .where(
           and(
+            input.search !== ''
+              ? sql`id @@@ 
+                paradedb.boolean(
+                  should =>ARRAY[
+                    paradedb.boost(10,paradedb.match('name',${input.search},distance=>1)),
+                    paradedb.boost(1,paradedb.match('description',${input.search},distance=>1)),
+                    paradedb.boost(5,paradedb.match('tags',${input.search},distance=>1))
+                  ])`
+              : undefined,
             sql`
               id @@@ paradedb.const_score(0.0,
                 paradedb.term('approved','approved'::approved_enum))
             `,
             input.tags && input.tags.length != 0
               ? sql.raw(`
-                id @@@ paradedb.const_score(0.0,paradedb.term_set(
-                  terms => ARRAY[
+                id @@@ paradedb.const_score(0.0,paradedb.boolean(
+                  must => ARRAY[
                     ${input.tags.map((tag) => `paradedb.term('tags','${tag}')`).join(',')}
                   ]))`)
               : undefined,
-            input.search
-              ? sql`id @@@ 
-                paradedb.boolean(
-                  should =>ARRAY[
-                    paradedb.boost(2.0,paradedb.match('name',${input.search},distance=>1)),
-                    paradedb.boost(1,paradedb.match('description',${input.search},distance=>1)),
-                    paradedb.boost(1.5,paradedb.match('tags',${input.search},distance=>1))
-                  ])`
-              : undefined,
           ),
         )
-        .orderBy(input.search ? sql`paradedb.score(id) DESC` : club.name);
-      console.log(query.toSQL());
+        .orderBy(
+          input.search !== '' ? sql`paradedb.score(id) DESC` : asc(club.name),
+        );
 
       const res = await query.execute();
       const newOffset = input.cursor + res.length;
