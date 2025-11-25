@@ -10,14 +10,14 @@ import { signInRoute } from '@src/utils/redirect';
 import RedoClubMatchButton from './RedoClubMatchButton';
 
 export const metadata: Metadata = {
-  title: 'Club Match Results - Jupiter',
+  title: 'Club Match Results',
   description:
     'Find your club match! Generate club recommendations based on a simple form.',
   alternates: {
-    canonical: 'https://jupiter.utdnebula.com/club-match/results',
+    canonical: 'https://clubs.utdnebula.com/club-match/results',
   },
   openGraph: {
-    url: 'https://jupiter.utdnebula.com/club-match/results',
+    url: 'https://clubs.utdnebula.com/club-match/results',
     description:
       'Find your club match! Generate club recommendations based on a simple form.',
   },
@@ -47,7 +47,7 @@ const Page = async () => {
           {data.clubMatch.map((club) => (
             <Link
               key={club.id}
-              href={'https://jupiter.utdnebula.com/directory/' + club.id}
+              href={'/directory/' + club.id}
               className="flex flex-col gap-2 rounded-lg bg-white shadow-2xl p-6"
             >
               <p className="line-clamp-2 text-2xl font-medium text-slate-800 md:text-xl">

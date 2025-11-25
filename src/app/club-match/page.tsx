@@ -8,14 +8,14 @@ import { signInRoute } from '@src/utils/redirect';
 import ClubMatch from './ClubMatch';
 
 export const metadata: Metadata = {
-  title: 'Club Match - Jupiter',
+  title: 'Club Match',
   description:
     'Find your club match! Generate club recommendations based on a simple form.',
   alternates: {
-    canonical: 'https://jupiter.utdnebula.com/club-match',
+    canonical: 'https://clubs.utdnebula.com/club-match',
   },
   openGraph: {
-    url: 'https://jupiter.utdnebula.com/club-match',
+    url: 'https://clubs.utdnebula.com/club-match',
     description:
       'Find your club match! Generate club recommendations based on a simple form.',
   },
