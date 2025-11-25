@@ -44,18 +44,6 @@ export const HomePageSearchBar = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const firstInteracted = useSearchStore((s) => s.firstInteracted);
-  const setFirstInteracted = useSearchStore((s) => s.setFirstInteracted);
-  function scrollOnce() {
-    if (!firstInteracted) {
-      setFirstInteracted();
-      document
-        .getElementById('content')
-        ?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
   return (
     <>
       <div
@@ -75,11 +63,9 @@ export const HomePageSearchBar = () => {
           filterOptions={(o) => o}
           onInputChange={(e, value) => {
             setSearch(value);
-            scrollOnce();
           }}
           onChange={(e, value) => {
             setTags(value);
-            scrollOnce();
           }}
           renderInput={(params) => (
             <TextField
@@ -120,7 +106,6 @@ export const HomePageSearchBar = () => {
               </li>
             );
           }}
-          onFocus={scrollOnce}
         />
       </div>
       {/*Placeholder to avoid layout shift when search bar becomes sticky*/}
