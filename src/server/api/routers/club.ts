@@ -2,12 +2,9 @@ import {
   and,
   arrayOverlaps,
   asc,
-  desc,
   eq,
-  gt,
   ilike,
   inArray,
-  lt,
   sql,
 } from 'drizzle-orm';
 import { z } from 'zod';
