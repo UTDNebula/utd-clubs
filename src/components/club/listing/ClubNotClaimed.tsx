@@ -1,14 +1,4 @@
-import type {
-  SelectContact as Contacts,
-  SelectClub,
-} from '@src/server/db/models';
-
-type Club = SelectClub & {
-  contacts?: Contacts[];
-  tags: string[];
-};
-
-// component with info for
+// component with info for clubs not on the platform
 export const ClubNotClaimed = () => {
   return (
     <div className="w-full rounded-lg bg-blue-100 p-6 md:p-10">

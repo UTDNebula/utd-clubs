@@ -2,7 +2,6 @@ import Chip from '@mui/material/Chip';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { type FC } from 'react';
-import { api } from '@src/trpc/server';
 import { type RouterOutputs } from '@src/trpc/shared';
 
 const ClubInfoSegment: FC<{
