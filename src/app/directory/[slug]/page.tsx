@@ -3,6 +3,7 @@ import { type Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import ClubHeader from '@src/components/club/listing/ClubHeader';
 import ClubInfoSegment from '@src/components/club/listing/ClubInfoSegment';
+import { ClubNotClaimed } from '@src/components/club/listing/ClubNotClaimed';
 import ClubUpcomingEvents from '@src/components/club/listing/ClubUpcomingEvents';
 import ContactInformation from '@src/components/club/listing/ContactInformation';
 import Header from '@src/components/header/BaseHeader';
@@ -28,8 +29,9 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
       <div className="mb-5 flex flex-col space-y-4 px-3">
         <ClubHeader club={club} />
         <ClubInfoSegment club={club} />
-        <ClubUpcomingEvents clubId={club.id} />
-        <ContactInformation club={club} />
+        {club.contacts.length > 0 && <ContactInformation club={club} />}
+        {!club.soc && <ClubUpcomingEvents clubId={club.id} />}
+        {club.soc && <ClubNotClaimed />}
       </div>
     </main>
   );
