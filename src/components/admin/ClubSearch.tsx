@@ -30,7 +30,6 @@ export default function ClubSearch({ setClub }: Props) {
     <div className="relative mr-3 w-full max-w-xs md:max-w-sm lg:max-w-md">
       <SearchBar
         placeholder="Search for Clubs"
-        tabIndex={0}
         onChange={(e) => setSearch(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
