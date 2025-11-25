@@ -60,25 +60,20 @@ const ClubCardSkeleton = () => {
 };
 
 const ClubDirectoryGrid: FC<Props> = ({ session }) => {
-  const { search, tag } = useSearchStore((state) => state);
+  const { search, tags } = useSearchStore((state) => state);
   const api = useTRPC();
   const queryClient = useQueryClient();
 
-  const { data, isFetching, isPlaceholderData } = useQuery({
-    ...api.club.all.queryOptions({ name: search, tag, limit: 9 }),
-    placeholderData: (previousData) => {
-      // Keep showing previous data while fetching new results
-      if (previousData) {
-        return previousData;
-      }
-      // Try to get any cached club data
-      const cachedData = queryClient.getQueryData<ClubQueryData>([
-        'club',
-        'all',
-      ]);
-      return cachedData;
-    },
-  });
+  const { data, isFetching, isPlaceholderData } = useQuery(
+    api.club.search.queryOptions(
+      { search: search, tags, limit: 9 },
+      {
+        placeholderData: (previousData) => {
+          return previousData;
+        },
+      },
+    ),
+  );
 
   const isLoading = isFetching || isPlaceholderData;
   const hasResults = data && data.clubs && data.clubs.length > 0;
@@ -99,7 +94,7 @@ const ClubDirectoryGrid: FC<Props> = ({ session }) => {
             <ClubCard key={club.id} club={club} session={session} priority />
           ))}
           {data.clubs.length === 9 && (
-            <InfiniteScrollGrid tag={tag} session={session} />
+            <InfiniteScrollGrid tags={tags} session={session} />
           )}
         </>
       ) : showNoResults ? (
