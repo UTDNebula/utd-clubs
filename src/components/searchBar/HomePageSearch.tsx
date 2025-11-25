@@ -48,68 +48,78 @@ export const HomePageSearchBar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   return (
-    <div
-      ref={containerRef}
-      className={`text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] mr-3 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
-        isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
-      }`}
-    >
-      <Autocomplete
-        freeSolo
-        multiple
-        disableClearable
-        aria-label="search"
-        inputValue={search}
-        value={tags}
-        options={data?.tags.map((t) => t.tag) ?? []}
-        filterOptions={(o) => o}
-        onInputChange={(e, value) => {
-          setSearch(value);
-        }}
-        onChange={(e, value) => {
-          setTags(value);
-        }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            placeholder="Search for Clubs or Tags"
-            slotProps={{
-              input: {
-                ...params.InputProps,
-                sx: {
-                  background: 'white',
-                  borderRadius: theme.shape.borderRadius,
+    <>
+      <div
+        ref={containerRef}
+        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-4 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
+          isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
+        }`}
+      >
+        <Autocomplete
+          freeSolo
+          multiple
+          disableClearable
+          aria-label="search"
+          inputValue={search}
+          value={tags}
+          options={data?.tags.map((t) => t.tag) ?? []}
+          filterOptions={(o) => o}
+          onInputChange={(e, value) => {
+            setSearch(value);
+          }}
+          onChange={(e, value) => {
+            setTags(value);
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              placeholder="Search for Clubs or Tags"
+              slotProps={{
+                input: {
+                  ...params.InputProps,
+                  sx: {
+                    background: 'white',
+                    borderRadius: theme.shape.borderRadius,
+                  },
                 },
-              },
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                e.stopPropagation();
-                onSubmit();
-              }
-            }}
-          />
-        )}
-        renderValue={(value, getItemProps) => {
-          return value.map((option: string, index: number) => {
-            const { key, ...itemProps } = getItemProps({ index });
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSubmit();
+                }
+              }}
+            />
+          )}
+          renderValue={(value, getItemProps) => {
+            return value.map((option: string, index: number) => {
+              const { key, ...itemProps } = getItemProps({ index });
+              return (
+                <Chip key={key} label={option} color="primary" {...itemProps} />
+              );
+            });
+          }}
+          renderOption={(props, option) => {
+            const { key, ...otherProps } = props;
             return (
-              <Chip key={key} label={option} color="primary" {...itemProps} />
+              <li key={key} {...otherProps}>
+                <Typography variant="body1">{option}</Typography>
+              </li>
             );
-          });
-        }}
-        renderOption={(props, option) => {
-          const { key, ...otherProps } = props;
-          return (
-            <li key={key} {...otherProps}>
-              <Typography variant="body1">{option}</Typography>
-            </li>
-          );
-        }}
-      />
-    </div>
+          }}
+        />
+      </div>
+      {/*Placeholder to avoid layout shift when search bar becomes sticky*/}
+      {isSticky && (
+        <Autocomplete
+          className="pt-4 opacity-0"
+          options={[]}
+          renderInput={(params) => <TextField {...params}></TextField>}
+        ></Autocomplete>
+      )}
+    </>
   );
 };
 type SearchBarProps = Omit<ComponentProps<'input'>, 'type'> & {

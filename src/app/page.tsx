@@ -70,7 +70,7 @@ const Home = async () => {
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
-          <div className="pointer-events-none *:pointer-events-auto fixed top-0 z-20 flex w-full items-center justify-between p-2.5 md:p-5">
+          <div className="pointer-events-none *:pointer-events-auto md:fixed md:top-0 md:z-20 flex w-full items-center justify-between p-2.5 md:p-5">
             <Sidebar hamburger="white" shadow />
             <div className="ml-auto flex items-center justify-center gap-2">
               <ClubMatchButton />
@@ -99,7 +99,11 @@ const Home = async () => {
               <HomePageSearchBar />
               <div className="pointer-events-auto mt-2 flex max-w-2xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
                 {tags.map((tag) => (
-                  <TagPill name={tag} key={tag} />
+                  <TagPill
+                    name={tag}
+                    key={tag}
+                    className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
+                  />
                 ))}
               </div>
             </div>
