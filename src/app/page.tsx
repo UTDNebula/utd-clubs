@@ -99,7 +99,11 @@ const Home = async () => {
               <HomePageSearchBar />
               <div className="pointer-events-auto mt-2 flex max-w-2xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
                 {tags.map((tag) => (
-                  <TagPill name={tag} key={tag} />
+                  <TagPill
+                    name={tag}
+                    key={tag}
+                    className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
+                  />
                 ))}
               </div>
             </div>
