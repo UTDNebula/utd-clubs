@@ -2,16 +2,18 @@ import { createStore } from 'zustand/vanilla';
 
 export type SearchState = {
   search: string;
-  tag: string;
+  tags: string[];
 };
 
 export type SearchAction = {
   setSearch: (search: SearchState['search']) => void;
-  setTag: (tag: SearchState['tag']) => void;
+  setTags: (tags: SearchState['tags']) => void;
+  addTag: (tag: string) => void;
+  removeTag: (tag: string) => void;
 };
 export const defaultInitState: SearchState = {
   search: '',
-  tag: 'All',
+  tags: [],
 };
 export type SearchStore = SearchState & SearchAction;
 export const createSearchStore = (
@@ -20,6 +22,10 @@ export const createSearchStore = (
   return createStore<SearchStore>((set) => ({
     ...initState,
     setSearch: (search: string) => set(() => ({ search: search })),
-    setTag: (tag: string) => set(() => ({ tag: tag })),
+    addTag: (tag: string) =>
+      set(({ tags }) => ({ tags: tags.includes(tag) ? tags : [...tags, tag] })),
+    removeTag: (tag: string) =>
+      set(({ tags }) => ({ tags: [...tags.filter((t) => t != tag)] })),
+    setTags: (tags: string[]) => set(() => ({ tags: tags })),
   }));
 };

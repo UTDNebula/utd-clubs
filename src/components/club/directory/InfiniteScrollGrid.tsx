@@ -9,16 +9,16 @@ import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 
 type Props = {
   session: Session | null;
-  tag?: string;
+  tags?: string[];
 };
 
 export default function InfiniteScrollGrid({ session }: Props) {
-  const { search, tag } = useSearchStore((state) => state);
+  const { search, tags } = useSearchStore((state) => state);
   const api = useTRPC();
   const { data, isLoading, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery(
-      api.club.all.infiniteQueryOptions(
-        { name: search, tag, limit: 9 },
+      api.club.search.infiniteQueryOptions(
+        { search: search, tags: tags, limit: 9 },
         {
           getNextPageParam: (lastPage) =>
             lastPage.clubs.length < 9 ? undefined : lastPage.cursor,
