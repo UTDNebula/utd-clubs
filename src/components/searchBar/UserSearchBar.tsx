@@ -1,70 +1,87 @@
 'use client';
 
+import { Autocomplete, TextField, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
-import SearchBar from '.';
-import { SearchResults, SearchResultsItem } from './SearchResults';
+
+function getFullName(user: { firstName: string; lastName: string }) {
+  return user.firstName + ' ' + user.lastName;
+}
 
 type UserSearchBarProps = {
   passUser: (user: { id: string; name: string }) => void;
 };
+
 export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
-  const [search, setSearch] = useState('');
-  const [focused, setFocused] = useState(false);
-  const debouncedFocused = useDebounce(focused, 300);
-  const debouncedSearch = useDebounce(search, 300);
+  const [input, setInput] = useState('');
+  const debouncedSearch = useDebounce(input, 300);
   const api = useTRPC();
-  const userQuery = useQuery(
+  const { data } = useQuery(
     api.userMetadata.searchByName.queryOptions(
-      {
-        name: debouncedSearch,
-      },
+      { name: debouncedSearch },
       { enabled: !!debouncedSearch },
     ),
   );
-  const formattedData = userQuery.isSuccess
-    ? userQuery.data.map((val) => {
-        return { name: val.firstName + ' ' + val.lastName, ...val };
-      })
-    : [];
+
   return (
-    <>
-      <div className="relative mr-3 w-full max-w-xs md:max-w-sm lg:max-w-md">
-        <SearchBar
-          placeholder="Search for Someone"
-          tabIndex={0}
-          onChange={(e) => setSearch(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          submitLogic={() => {
-            if (formattedData && formattedData[0]) {
-              const user = formattedData[0];
-              passUser({ id: user.id, name: user.name });
-              setSearch('');
-            }
+    <Autocomplete
+      freeSolo
+      disableClearable
+      className="w-full max-w-xs md:max-w-sm lg:max-w-md"
+      aria-label="search"
+      inputValue={input}
+      options={data ?? []}
+      filterOptions={(o) => o}
+      onInputChange={(e, value) => {
+        setInput(value);
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          size="small"
+          className="w-full"
+          slotProps={{
+            input: {
+              ...params.InputProps,
+              type: 'search',
+              sx: {
+                background: 'white',
+                borderRadius: 'calc(infinity * 1px)',
+              },
+            },
           }}
+          placeholder="Search for Someone"
         />
-        {debouncedSearch &&
-          debouncedFocused &&
-          userQuery.data &&
-          userQuery.data.length > 0 && (
-            <SearchResults
-              searchResults={formattedData.map((item) => (
-                <SearchResultsItem
-                  key={item.id}
-                  onClick={() => {
-                    passUser({ id: item.id, name: item.name });
-                    setSearch('');
-                  }}
-                >
-                  {item.name}
-                </SearchResultsItem>
-              ))}
-            />
-          )}
-      </div>
-    </>
+      )}
+      renderOption={(props, option) => {
+        const { key, ...otherProps } = props;
+        return (
+          <li
+            key={key}
+            {...otherProps}
+            onClick={() => {
+              passUser({ id: option.id, name: getFullName(option) });
+              setInput('');
+            }}
+          >
+            <Typography variant="body1">{getFullName(option)}</Typography>
+          </li>
+        );
+      }}
+      getOptionLabel={(option) => {
+        if (typeof option === 'string') {
+          return option;
+        }
+        return getFullName(option);
+      }}
+      getOptionKey={(option) => {
+        if (typeof option === 'string') {
+          return option;
+        }
+        return option.id;
+      }}
+    />
   );
 };

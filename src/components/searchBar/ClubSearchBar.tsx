@@ -8,7 +8,7 @@ import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
 
 export const ClubSearchBar = () => {
-  const [input, setInput] = useState<string>('');
+  const [input, setInput] = useState('');
   const debouncedSearch = useDebounce(input, 300);
   const api = useTRPC();
   const { data } = useQuery(
