@@ -1,6 +1,5 @@
 'use client';
 
-import TagIcon from '@mui/icons-material/Tag';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
@@ -9,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState, type ComponentProps } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import theme from '@src/utils/theme';
 import useDebounce from '@src/utils/useDebounce';
 
 export const HomePageSearchBar = () => {
@@ -79,7 +79,7 @@ export const HomePageSearchBar = () => {
                 ...params.InputProps,
                 sx: {
                   background: 'white',
-                  borderRadius: 3,
+                  borderRadius: theme.shape.borderRadius,
                 },
               },
             }}
@@ -96,13 +96,7 @@ export const HomePageSearchBar = () => {
           return value.map((option: string, index: number) => {
             const { key, ...itemProps } = getItemProps({ index });
             return (
-              <Chip
-                key={key}
-                icon={<TagIcon color="inherit" />}
-                label={option}
-                color="primary"
-                {...itemProps}
-              />
+              <Chip key={key} label={option} color="primary" {...itemProps} />
             );
           });
         }}
