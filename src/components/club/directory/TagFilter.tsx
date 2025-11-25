@@ -7,11 +7,14 @@ import { useSearchStore } from '@src/utils/SearchStoreProvider';
 const scrollAmount = 300;
 
 const TagFilter = ({ tags }: { tags: string[] }) => {
-  const { tag: selectedTag, setTag } = useSearchStore((state) => state);
+  const {
+    tags: selectedTags,
+    addTag,
+    removeTag,
+  } = useSearchStore((state) => state);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const setSelected = (tag: string) => setTag(tag);
-  const deselect = () => setTag('All');
+  const setSelected = (tag: string) => addTag(tag);
 
   const handleScrollLeft = () => {
     const container = scrollContainerRef.current;
@@ -41,12 +44,12 @@ const TagFilter = ({ tags }: { tags: string[] }) => {
             <button
               key={key}
               className={`${
-                selectedTag === tag
+                selectedTags.includes(tag)
                   ? 'bg-blue-primary text-white hover:bg-blue-700'
                   : 'bg-white text-slate-600 hover:bg-gray-200'
               } rounded-3xl px-8 py-4 text-sm font-extrabold whitespace-nowrap transition-colors duration-200 focus:outline-hidden md:text-xs`}
               onClick={() => {
-                if (selectedTag === tag) deselect();
+                if (selectedTags.includes(tag)) removeTag(tag);
                 else setSelected(tag);
               }}
             >
