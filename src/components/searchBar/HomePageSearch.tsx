@@ -27,9 +27,6 @@ export const HomePageSearchBar = () => {
   useEffect(() => {
     updateSearch(debouncedSearch);
   }, [debouncedSearch, updateSearch]);
-  const onSubmit = () => {
-    document.getElementById('content')?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
@@ -48,15 +45,11 @@ export const HomePageSearchBar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const firstInteracted = useSearchStore((s) => s.firstInteracted);
-  const setFirstInteracted = useSearchStore((s) => s.setFirstInteracted);
-  function scrollOnce() {
-    if (!firstInteracted) {
-      setFirstInteracted();
-      document
-        .getElementById('content')
-        ?.scrollIntoView({ behavior: 'smooth' });
-    }
+  function scroll() {
+    window.scrollTo({
+      top: window.innerHeight * 0.85,
+      behavior: 'smooth',
+    });
   }
 
   return (
@@ -78,11 +71,11 @@ export const HomePageSearchBar = () => {
           filterOptions={(o) => o}
           onInputChange={(e, value) => {
             setSearch(value);
-            scrollOnce();
+            scroll();
           }}
           onChange={(e, value) => {
             setTags(value);
-            scrollOnce();
+            scroll();
           }}
           renderInput={(params) => (
             <TextField
@@ -102,7 +95,7 @@ export const HomePageSearchBar = () => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
                   e.stopPropagation();
-                  onSubmit();
+                  scroll();
                 }
               }}
             />
@@ -123,7 +116,6 @@ export const HomePageSearchBar = () => {
               </li>
             );
           }}
-          onFocus={scrollOnce}
         />
       </div>
       {/*Placeholder to avoid layout shift when search bar becomes sticky*/}

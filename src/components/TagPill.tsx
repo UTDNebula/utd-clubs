@@ -14,20 +14,16 @@ export const TagPill = ({
 }) => {
   const addTag = useSearchStore((state) => state.addTag);
 
-  const firstInteracted = useSearchStore((s) => s.firstInteracted);
-  const setFirstInteracted = useSearchStore((s) => s.setFirstInteracted);
-  function scrollOnce() {
-    if (!firstInteracted) {
-      setFirstInteracted();
-      document
-        .getElementById('content')
-        ?.scrollIntoView({ behavior: 'smooth' });
-    }
+  function scroll() {
+    window.scrollTo({
+      top: window.innerHeight * 0.85,
+      behavior: 'smooth',
+    });
   }
 
   return (
     <Chip
-      label={`${name}`}
+      label={name}
       className={
         'rounded-full font-bold transition-colors text-white ' +
         (className ?? '')
@@ -35,7 +31,7 @@ export const TagPill = ({
       color="primary"
       onClick={() => {
         addTag(name);
-        scrollOnce();
+        scroll();
       }}
       onDelete={removeTag}
     />

@@ -3,7 +3,6 @@ import { createStore } from 'zustand/vanilla';
 export type SearchState = {
   search: string;
   tags: string[];
-  firstInteracted: boolean;
 };
 
 export type SearchAction = {
@@ -11,12 +10,10 @@ export type SearchAction = {
   setTags: (tags: SearchState['tags']) => void;
   addTag: (tag: string) => void;
   removeTag: (tag: string) => void;
-  setFirstInteracted: () => void;
 };
 export const defaultInitState: SearchState = {
   search: '',
   tags: [],
-  firstInteracted: false,
 };
 export type SearchStore = SearchState & SearchAction;
 export const createSearchStore = (
@@ -30,6 +27,5 @@ export const createSearchStore = (
     removeTag: (tag: string) =>
       set(({ tags }) => ({ tags: [...tags.filter((t) => t != tag)] })),
     setTags: (tags: string[]) => set(() => ({ tags: tags })),
-    setFirstInteracted: () => set(() => ({ firstInteracted: true })),
   }));
 };
