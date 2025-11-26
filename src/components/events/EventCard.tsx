@@ -39,17 +39,17 @@ const HorizontalCard = async ({
           <h3 className="font-bold">{event.name}</h3>
           <h4 className="text-xs font-bold whitespace-nowrap">
             <Link
-                href={`/directory/${event.clubId ?? ''}`}
-                className="hover:text-blue-primary"
-                scroll
+              href={`/directory/${event.clubId ?? ''}`}
+              className="hover:text-blue-primary"
+              scroll
             >
               {event.club.name}
             </Link>{' '}
-            • <wbr/>
+            • <wbr />
             <span className="text-blue-primary">
               <ClientEventTime
-                  startTime={event.startTime} //ClientEventTime logic
-                  endTime={event.endTime}
+                startTime={event.startTime} //ClientEventTime logic
+                endTime={event.endTime}
               />
             </span>
           </h4>
@@ -60,7 +60,7 @@ const HorizontalCard = async ({
         </div>
         <div className="ml-auto flex flex-row space-x-4">
           {session && (
-              <EventLikeButton liked={event.liked} eventId={event.id} />
+            <EventLikeButton liked={event.liked} eventId={event.id} />
           )}
           <Link
             className="bg-blue-primary h-10 w-10 rounded-full p-1.5 shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800"

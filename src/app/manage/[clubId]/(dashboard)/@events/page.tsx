@@ -1,14 +1,14 @@
 import { format, isSameDay } from 'date-fns';
+import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
+import EventDeleteButton from '@src/components/events/EventDeleteButton';
 import { MoreIcon } from '@src/icons/Icons';
 import { api } from '@src/trpc/server';
 import { type RouterOutputs } from '@src/trpc/shared';
-import { revalidatePath } from "next/cache";
-import EventDeleteButton from "@src/components/events/EventDeleteButton";
 
 export async function deleteEventAction(eventId: string) {
-    await api.event.delete({id: eventId});
-    revalidatePath("/events", "page");
+  await api.event.delete({ id: eventId });
+  revalidatePath('/events', 'page');
 }
 
 const Events = async (props: { params: Promise<{ clubId: string }> }) => {
@@ -50,10 +50,10 @@ const EventCard = ({
         </div>
         <div className="ml-auto flex-1 flex justify-center pl-6 items-center">
           <EventDeleteButton
-              deleteAction={async () => {
-                  "use server";
-                  await deleteEventAction(event.id); // or the page route events live on
-              }}
+            deleteAction={async () => {
+              'use server';
+              await deleteEventAction(event.id); // or the page route events live on
+            }}
           />
         </div>
       </div>
