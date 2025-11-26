@@ -291,6 +291,35 @@ export const eventRouter = createTRPCRouter({
         });
       return res[0]?.id;
     }),
+    delete: protectedProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(async ({ input, ctx }) => {
+            //const { clubId } = input;
+            const userId = ctx.session.user.id;
+
+            const event = await ctx.db.query.events.findFirst({
+                where: (e) => eq(e.id, input.id),
+            });
+
+            if (!event) {
+                throw new TRPCError({ code: "NOT_FOUND", message: "Event not found" });
+            }
+
+            const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
+                where: and(
+                    eq(userMetadataToClubs.userId, userId),
+                    eq(userMetadataToClubs.clubId, event.clubId),
+                    inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+                ),
+            });
+            if (!isOfficer) {
+                throw new TRPCError({ code: 'UNAUTHORIZED' });
+            }
+
+            await ctx.db.delete(events).where(eq(events.id, input.id));
+
+            return { success: true };
+        }),
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
     const { name, sortByDate } = input;
     try {

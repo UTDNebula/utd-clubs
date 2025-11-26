@@ -28,9 +28,9 @@ const Layout = async (props: {
   return (
     <div className="">
       <Header />
-      <main className="px-5">
-        <div className="flex w-full flex-row gap-x-4 align-middle">
-          <BlueBackButton />
+      <main className="px-5 space-y-3">
+        <div className="flex w-full flex-row gap-x-4 gap-y-4 items-center">
+          <BlueBackButton/>
           <h1 className="from-blue-primary bg-linear-to-br to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent">
             {club.name}
           </h1>
