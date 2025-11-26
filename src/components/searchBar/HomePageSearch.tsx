@@ -52,6 +52,8 @@ export const HomePageSearchBar = () => {
     });
   }
 
+  const [open, setOpen] = useState(false);
+
   return (
     <>
       <div
@@ -77,6 +79,9 @@ export const HomePageSearchBar = () => {
             setTags(value);
             scroll();
           }}
+          open={open}
+          onOpen={() => setOpen(true)}
+          onClose={() => setOpen(false)}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -95,6 +100,7 @@ export const HomePageSearchBar = () => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
                   e.stopPropagation();
+                  setOpen(false);
                   scroll();
                 }
               }}
