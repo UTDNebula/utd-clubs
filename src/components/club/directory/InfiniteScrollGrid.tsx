@@ -9,7 +9,6 @@ import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 
 type Props = {
   session: Session | null;
-  tags?: string[];
 };
 
 export default function InfiniteScrollGrid({ session }: Props) {
@@ -18,7 +17,7 @@ export default function InfiniteScrollGrid({ session }: Props) {
   const { data, isLoading, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery(
       api.club.search.infiniteQueryOptions(
-        { search: search, tags: tags, limit: 9 },
+        { search, tags: tags, limit: 9 },
         {
           getNextPageParam: (lastPage) =>
             lastPage.clubs.length < 9 ? undefined : lastPage.cursor,
@@ -67,11 +66,11 @@ export default function InfiniteScrollGrid({ session }: Props) {
               );
             }),
           )
-        : Array.from({ length: 4 }, (_, index) => (
+        : Array.from({ length: 6 }, (_, index) => (
             <ClubCardSkeleton key={index} />
           ))}
       {isFetchingNextPage &&
-        Array.from({ length: 4 }, (_, index) => (
+        Array.from({ length: 3 }, (_, index) => (
           <ClubCardSkeleton key={index} />
         ))}
     </>

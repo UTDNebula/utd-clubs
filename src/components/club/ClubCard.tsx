@@ -1,9 +1,10 @@
+import { Skeleton } from '@mui/material';
 import { type Session } from 'next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type FC } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
-import JoinButton from './JoinButton';
+import JoinButton, { JoinButtonSkeleton } from './JoinButton';
 
 type Props = { club: Club; session: Session | null; priority: boolean };
 
@@ -51,15 +52,28 @@ const ClubCard: FC<Props> = ({ club, session, priority }) => {
   );
 };
 
-export const ClubCardSkeleton: FC = () => {
+export const ClubCardSkeleton = () => {
   return (
-    <div className="flex h-full min-h-[600px] min-w-[300px] animate-pulse flex-col rounded-lg bg-white shadow-lg">
-      <div className="h-48 bg-slate-300 sm:h-56 md:h-64 lg:h-72"></div>
-      <div className="space-y-4 p-6">
-        <div className="h-6 rounded-sm bg-slate-300"></div>
-        <div className="h-4 rounded-sm bg-slate-300"></div>
-        <div className="h-4 w-3/4 rounded-sm bg-slate-300"></div>
-        <div className="h-4 w-1/2 rounded-sm bg-slate-300"></div>
+    <div className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between rounded-lg bg-white shadow-2xl md:min-h-[600px]">
+      <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
+        <Skeleton
+          variant="rectangular"
+          className="absolute inset-0 h-full w-full bg-gray-200"
+        />
+      </div>
+      <div className="flex flex-col space-y-2 p-6">
+        <Skeleton variant="text" className="text-2xl font-medium md:text-xl" />
+        <Skeleton
+          variant="text"
+          className="text-2xl font-medium md:text-xl w-1/2"
+        />
+        <Skeleton variant="text" className="text-base md:text-sm" />
+        <Skeleton variant="text" className="text-base md:text-sm" />
+        <Skeleton variant="text" className="text-base md:text-sm" />
+        <Skeleton variant="text" className="text-base md:text-sm w-1/4" />
+      </div>
+      <div className="m-5 mt-auto flex flex-row space-x-2">
+        <JoinButtonSkeleton />
       </div>
     </div>
   );
