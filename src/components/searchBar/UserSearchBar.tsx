@@ -6,8 +6,11 @@ import { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
 
-function getFullName(user: { firstName: string; lastName: string }) {
-  return user.firstName + ' ' + user.lastName;
+function getFullName(user: {
+  firstName: string | null;
+  lastName: string | null;
+}) {
+  return `${user.firstName ?? ''} ${user.lastName ?? ''}`;
 }
 
 type UserSearchBarProps = {
@@ -19,8 +22,8 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
   const debouncedSearch = useDebounce(input, 300);
   const api = useTRPC();
   const { data } = useQuery(
-    api.userMetadata.searchByName.queryOptions(
-      { name: debouncedSearch },
+    api.userMetadata.searchByNameOrEmail.queryOptions(
+      { search: debouncedSearch },
       { enabled: !!debouncedSearch },
     ),
   );
@@ -66,7 +69,10 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
               setInput('');
             }}
           >
-            <Typography variant="body1">{getFullName(option)}</Typography>
+            <div>
+              <Typography variant="body1">{getFullName(option)}</Typography>
+              <Typography variant="caption">{option.email}</Typography>
+            </div>
           </li>
         );
       }}
