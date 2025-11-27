@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
+import { useEffect } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import ClubCard, { ClubCardSkeleton } from '../ClubCard';
@@ -12,7 +13,9 @@ interface Props {
 }
 
 const ClubDirectoryGrid = ({ session }: Props) => {
-  const { search, tags } = useSearchStore((state) => state);
+  const { search, tags, shouldFocus, setShouldFocus } = useSearchStore(
+    (state) => state,
+  );
   const api = useTRPC();
 
   const { data, isFetching } = useQuery(
@@ -20,6 +23,19 @@ const ClubDirectoryGrid = ({ session }: Props) => {
   );
 
   const showNoResults = !isFetching && data && data.clubs.length === 0;
+
+  useEffect(() => {
+    // Focus on the first club card after the user hits Enter and the results load
+    if (shouldFocus && !isFetching && !showNoResults) {
+      setShouldFocus(false);
+      const firstClubCard = document.querySelector('[data-club-result]');
+      if (firstClubCard instanceof HTMLElement) {
+        firstClubCard.focus({
+          preventScroll: true,
+        });
+      }
+    }
+  }, [shouldFocus, isFetching, showNoResults, setShouldFocus]);
 
   return (
     <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">

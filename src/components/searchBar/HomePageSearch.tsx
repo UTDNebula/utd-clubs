@@ -14,9 +14,12 @@ import useDebounce from '@src/utils/useDebounce';
 export const HomePageSearchBar = () => {
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 300);
-  const updateSearch = useSearchStore((state) => state.setSearch);
-  const tags = useSearchStore((state) => state.tags);
-  const setTags = useSearchStore((state) => state.setTags);
+  const {
+    setSearch: updateSearch,
+    tags,
+    setTags,
+    setShouldFocus,
+  } = useSearchStore((state) => state);
   const api = useTRPC();
   const { data } = useQuery(
     api.club.tagSearch.queryOptions(
@@ -41,6 +44,7 @@ export const HomePageSearchBar = () => {
       const scrollY = window.scrollY;
       setIsSticky(scrollY > originalOffset.current);
     };
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -50,6 +54,21 @@ export const HomePageSearchBar = () => {
       top: window.innerHeight * 0.85,
       behavior: 'smooth',
     });
+  }
+  function handleInteraction(shouldScroll: boolean = true) {
+    // When we interact again after pressing enter, don't tab to the results once they load
+    setShouldFocus(false);
+    if (shouldScroll) {
+      scroll();
+    }
+  }
+  const inputRef = useRef<HTMLInputElement>(null);
+  function onSubmit() {
+    setOpen(false);
+    // Blur the input while results load
+    inputRef.current?.blur();
+    scroll();
+    setShouldFocus(true);
   }
 
   const [open, setOpen] = useState(false);
@@ -73,11 +92,11 @@ export const HomePageSearchBar = () => {
           filterOptions={(o) => o}
           onInputChange={(e, value) => {
             setSearch(value);
-            scroll();
+            handleInteraction();
           }}
           onChange={(e, value) => {
             setTags(value);
-            scroll();
+            handleInteraction();
           }}
           open={open}
           onOpen={() => setOpen(true)}
@@ -87,6 +106,7 @@ export const HomePageSearchBar = () => {
               {...params}
               variant="outlined"
               placeholder="Search for Clubs or Tags"
+              inputRef={inputRef}
               slotProps={{
                 input: {
                   ...params.InputProps,
@@ -97,13 +117,16 @@ export const HomePageSearchBar = () => {
                 },
               }}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' || e.key === 'Tab') {
                   e.preventDefault();
                   e.stopPropagation();
-                  setOpen(false);
-                  scroll();
+                  onSubmit();
+                } else if (e.key.length === 1) {
+                  // A character not something like Shift
+                  handleInteraction();
                 }
               }}
+              onFocus={() => handleInteraction(false)}
             />
           )}
           renderValue={(value, getItemProps) => {
