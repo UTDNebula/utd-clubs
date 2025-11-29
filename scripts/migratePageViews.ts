@@ -1,7 +1,7 @@
 /*
 Get page views for directory pages from Google Analytics and push them to Neon.
 To allow sorting on homepage by popularity.
-Requires GOOGLE_ANALYTICS_PROPERTY_ID and GOOGLE_ANALYTICS_SERVICE_ACCOUNT environment variables.
+Requires GOOGLE_ANALYTICS_PROPERTY_ID, GOOGLE_ANALYTICS_SERVICE_ACCOUNT, and DATABASE_URL environment variables.
 */
 import { resolve } from 'path';
 import { BetaAnalyticsDataClient, protos } from '@google-analytics/data';
@@ -12,6 +12,14 @@ import { club } from '../src/server/db/schema/club';
 
 const envPath = resolve(__dirname, '../.env');
 config({ path: envPath });
+
+if (
+  typeof process.env.GOOGLE_ANALYTICS_PROPERTY_ID === 'undefined' ||
+  typeof process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT === 'undefined' ||
+  typeof process.env.DATABASE_URL === 'undefined'
+) {
+  throw new Error('Required environment variables are not set.');
+}
 
 const GOOGLE_ANALYTICS_SERVICE_ACCOUNT =
   process.env.GEMINI_SERVICE_ACCOUNT !== ''
