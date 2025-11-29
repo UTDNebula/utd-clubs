@@ -4,7 +4,7 @@ import { type SelectClub } from '@src/server/db/models';
 
 export type Club = Omit<
   SelectClub,
-  'description' | 'image' | 'clubSearchVector'
+  'description' | 'image' | 'pageViews'
 >;
 
 export const fuzzyFilter: FilterFn<Club> = (row, columnId, value, addMeta) => {
