@@ -3,12 +3,12 @@ Get page views for directory pages from Google Analytics and push them to Neon.
 To allow sorting on homepage by popularity.
 Requires GOOGLE_ANALYTICS_PROPERTY_ID and GOOGLE_ANALYTICS_SERVICE_ACCOUNT environment variables.
 */
+import { resolve } from 'path';
 import { BetaAnalyticsDataClient, protos } from '@google-analytics/data';
 import { config } from 'dotenv';
-import { resolve } from 'path';
+import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { club } from '../src/server/db/schema/club';
-import { eq } from 'drizzle-orm';
 
 const envPath = resolve(__dirname, '../.env');
 config({ path: envPath });
@@ -40,25 +40,38 @@ async function getPageViews() {
         stringFilter: { matchType: 'BEGINS_WITH', value: '/directory/' },
       },
     },
-    metricAggregations: [protos.google.analytics.data.v1beta.MetricAggregation.TOTAL],
+    metricAggregations: [
+      protos.google.analytics.data.v1beta.MetricAggregation.TOTAL,
+    ],
   });
 
   if (response.rows == null) {
     throw new Error('Response rows undefined.');
   }
 
-  return Object.fromEntries(response.rows.map((row) => {
-    if (row.dimensionValues == null || row.dimensionValues[0] == null || row.metricValues == null || row.metricValues[0] == null || row.metricValues[0].value == null) {
-      throw new Error('Row in response undefined.');
-    }
-    if (!row.dimensionValues[0].value?.startsWith('/directory/')) {
-      throw new Error('Response does not match filter.');
-    }
-    return [row.dimensionValues[0].value.replace('/directory/', ''), parseInt(row.metricValues[0].value)];
-  }));
+  return Object.fromEntries(
+    response.rows.map((row) => {
+      if (
+        row.dimensionValues == null ||
+        row.dimensionValues[0] == null ||
+        row.metricValues == null ||
+        row.metricValues[0] == null ||
+        row.metricValues[0].value == null
+      ) {
+        throw new Error('Row in response undefined.');
+      }
+      if (!row.dimensionValues[0].value?.startsWith('/directory/')) {
+        throw new Error('Response does not match filter.');
+      }
+      return [
+        row.dimensionValues[0].value.replace('/directory/', ''),
+        parseInt(row.metricValues[0].value),
+      ];
+    }),
+  );
 }
 
-async function pushToDatabase(pageViews: { [key: string]: number; }) {
+async function pushToDatabase(pageViews: { [key: string]: number }) {
   console.log('Updating page views in database...');
 
   const schema = {
@@ -77,7 +90,9 @@ async function pushToDatabase(pageViews: { [key: string]: number; }) {
 
   try {
     await Promise.all(updatePromises);
-    console.log(`Successfully updated page views for ${updatePromises.length} clubs.`);
+    console.log(
+      `Successfully updated page views for ${updatePromises.length} clubs.`,
+    );
   } catch (error) {
     console.error('Error updating page views:', error);
     throw error;
