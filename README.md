@@ -64,5 +64,7 @@ When working on a new feature, please create a new branch with the following nam
 git checkout -b feature/<feature-name>
 ```
 
+If your changes involve any changes to the database schema please read `/docs/db_migrations.md`
+
 When you are ready to merge your branch into the `develop` branch, please create a pull request and request a review from the Clubs Dev Team.
 Please include details about what issue you are addressing with the pull request, what changes you made, and any other relevant information.
