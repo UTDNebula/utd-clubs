@@ -13,6 +13,8 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules dotenv jest --detectOpenHandles --forceExit",
     "drizzle:generate": "dotenv drizzle-kit generate",
     "drizzle:push": "dotenv drizzle-kit push",
+    "drizzle:migrate": "dotenv drizzle-kit migrate",
+    "drizzle:check": "dotenv drizzle-kit check",
     "migratePageViews": "ts-node -O \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/migratePageViews.ts"
   },
   "dependencies": {
