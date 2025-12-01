@@ -8,6 +8,13 @@
       "when": 1764200141214,
       "tag": "20251126233541_kind_eternals",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764625622732,
+      "tag": "20251201214702_dapper_pestilence",
+      "breakpoints": true
     }
   ]
 }
