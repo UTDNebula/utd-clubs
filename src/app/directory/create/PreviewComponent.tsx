@@ -61,7 +61,9 @@ const PreviewComponent = ({ formData }: PreviewComponentProps) => {
             </div>
 
             <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Upcoming Events</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                Upcoming Events
+              </h2>
               <p className="text-gray-600">There are no upcoming events</p>
             </div>
           </div>
@@ -88,13 +90,18 @@ const PreviewComponent = ({ formData }: PreviewComponentProps) => {
 
             {officers.length > 0 && (
               <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-                <h3 className="text-xl font-bold text-blue-900 mb-4">Officers</h3>
+                <h3 className="text-xl font-bold text-blue-900 mb-4">
+                  Officers
+                </h3>
                 <ul className="space-y-2">
                   {officers.map((officer, index) => (
                     <li key={officer.id || index} className="text-gray-700">
                       <span className="font-semibold">{officer.name}</span>
                       {officer.position && (
-                        <span className="text-gray-600"> - {officer.position}</span>
+                        <span className="text-gray-600">
+                          {' '}
+                          - {officer.position}
+                        </span>
                       )}
                     </li>
                   ))}
@@ -104,7 +111,9 @@ const PreviewComponent = ({ formData }: PreviewComponentProps) => {
 
             {contacts.length > 0 && (
               <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-                <h3 className="text-xl font-bold text-blue-900 mb-4">Contacts</h3>
+                <h3 className="text-xl font-bold text-blue-900 mb-4">
+                  Contacts
+                </h3>
                 <ul className="space-y-2">
                   {contacts.map((contact, index) => (
                     <li key={index} className="text-gray-700">
