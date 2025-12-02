@@ -3,11 +3,8 @@ import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
 import { insertUserMetadata } from '@src/server/db/models';
 import { admin } from '@src/server/db/schema/admin';
-import {
-  userMetadata,
-  userMetadataToClubs,
-  users,
-} from '@src/server/db/schema/users';
+import { user as users } from '@src/server/db/schema/auth';
+import { userMetadata, userMetadataToClubs } from '@src/server/db/schema/users';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byIdSchema = z.object({ id: z.string().uuid() });

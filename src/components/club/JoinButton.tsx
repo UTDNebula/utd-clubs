@@ -1,12 +1,12 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import { type Session } from 'next-auth';
 import React, { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
+import { authClient } from '@src/utils/auth-client';
 
 type JoinButtonProps = {
-  session: Session | null;
+  session: typeof authClient.$Infer.Session | null;
   isHeader?: boolean;
   isJoined?: boolean;
   clubID: string;

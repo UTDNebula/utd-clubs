@@ -1,7 +1,8 @@
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { BlueBackButton } from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 import EditListedOfficerForm from './EditListedOfficerForm';
@@ -14,8 +15,8 @@ export default async function Page(props: {
 
   const { clubId } = params;
 
-  const session = await getServerAuthSession();
-  if (!session) redirect(signInRoute(`manage/${clubId}/edit/officers`));
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect(await signInRoute(`manage/${clubId}/edit/officers`));
   const role = await api.club.memberType({ id: clubId });
   const officers = await api.club.getOfficers({ id: clubId });
   const listedOfficers = await api.club.getListedOfficers({ id: clubId });

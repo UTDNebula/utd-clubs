@@ -32,12 +32,12 @@ Make sure you have a `.env` file in the root of the project. If you do not, copy
 
 #### Environment Variables
 
-This project uses [NextAuth](https://next-auth.js.org/) for authentication. NextAuth, with their built-in [providers](https://next-auth.js.org/providers/), makes it easy for users to use preexisting logins. Currently, we are using Discord and Google as OAuth Providers, so you will need to create a Client ID and Client Secret for [Google](https://next-auth.js.org/providers/google) and [Discord](https://next-auth.js.org/providers/discord) respectively (or remove the providers if you'd like).
+This project uses [Better Auth](https://www.better-auth.com/) for authentication. Better Auth, with their built-in [providers](https://www.better-auth.com/docs/authentication/google), makes it easy for users to use preexisting logins. Currently, we are using Discord and Google as OAuth Providers, so you will need to create a Client ID and Client Secret for [Google](https://www.better-auth.com/docs/authentication/google) and [Discord](https://www.better-auth.com/docs/authentication/discord) respectively (or remove the providers if you'd like).
 
 Once you have your Client ID and Client Secrets, add them to your `.env` file.
 
-The `NEXTAUTH_URL` variable should be set to `http://localhost:3000` for local development.
-The `NEXTAUTH_SECRET` variable should be set to a random string of characters. You can generate one [here](https://randomkeygen.com/).
+The `BETTER_AUTH_URL` variable should be set to `http://localhost:3000` for local development.
+The `BETTER_AUTH_SECRET` variable should be set to a random string of characters. You can generate one [here](https://randomkeygen.com/).
 or by running the following command in your terminal.
 
 ```bash

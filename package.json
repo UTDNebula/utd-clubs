@@ -12,6 +12,7 @@
     "lint:check": "next lint",
     "test": "NODE_OPTIONS=--experimental-vm-modules dotenv jest --detectOpenHandles --forceExit",
     "drizzle:generate": "dotenv drizzle-kit generate",
+    "auth-schema:generate": "dotenv -- npx @better-auth/cli@latest generate --output src/server/db/schema/auth.ts --config src/server/auth.ts",
     "drizzle:migrate": "dotenv drizzle-kit migrate",
     "drizzle:check": "dotenv drizzle-kit check"
   },
@@ -38,6 +39,7 @@
     "@trpc/client": "^11.1.0",
     "@trpc/server": "^11.1.0",
     "@trpc/tanstack-react-query": "^11.1.0",
+    "better-auth": "^1.4.4",
     "date-fns": "^4.1.0",
     "dotenv": "^16.0.3",
     "drizzle-orm": "^0.44.3",

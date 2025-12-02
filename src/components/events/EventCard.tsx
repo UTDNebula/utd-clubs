@@ -1,9 +1,10 @@
 'use server';
 
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MoreIcon } from '@src/icons/Icons';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
 import EventLikeButton from './EventLikeButton';
@@ -18,7 +19,7 @@ const HorizontalCard = async ({
 }: {
   event: RouterOutputs['event']['findByFilters']['events'][number];
 }) => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   return (
     <div className="container flex h-40 flex-row overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
       <div className="relative h-[160px] w-1/3 max-w-[225px]">
@@ -79,7 +80,7 @@ const VerticalCard = async ({
 }: {
   event: RouterOutputs['event']['findByFilters']['events'][number];
 }) => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   return (
     <div className="container flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
       <div className="relative">

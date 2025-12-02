@@ -8,15 +8,15 @@ import {
   DialogTitle,
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
-import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
+import { authClient } from '@src/utils/auth-client';
 
 export default function DeleteButton() {
   const api = useTRPC();
   const { mutate } = useMutation(
     api.userMetadata.deleteById.mutationOptions({
-      onSuccess: async () => await signOut(),
+      onSuccess: async () => await authClient.signOut(),
     }),
   );
   const [open, setOpen] = useState(false);
