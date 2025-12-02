@@ -9,6 +9,8 @@ import Link from 'next/link';
 import { auth } from '@src/server/auth';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
+
+import { EventCardEditButton } from './EventCardEditButton';
 import EventLikeButton from './EventLikeButton';
 import EventTimeAlert from './EventTimeAlert';
 
@@ -67,9 +69,7 @@ const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
           {!manageView && session && <EventLikeButton eventId={event.id} />}
           {manageView && (
             <>
-              <IconButton disabled>
-                <EditIcon />
-              </IconButton>
+              <EventCardEditButton clubId={event.clubId} eventId={event.id} />
               <IconButton color="error" disabled>
                 <DeleteIcon />
               </IconButton>
@@ -119,7 +119,7 @@ const VerticalCard = async ({ event, manageView }: EventCardProps) => {
           {!manageView && session && <EventLikeButton eventId={event.id} />}
           {manageView && (
             <>
-              <IconButton disabled>
+              <IconButton>
                 <EditIcon />
               </IconButton>
               <IconButton color="error" disabled>
