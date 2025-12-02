@@ -89,23 +89,6 @@ export const AboutIcon: IconType = ({ fill = defaultFill }) => (
   </svg>
 );
 
-export const FeedbackIcon: IconType = ({ fill = defaultFill }) => (
-  <svg
-    width="30"
-    height="30"
-    viewBox="0 0 30 30"
-    className={fill}
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M22 7H17.82C17.4 5.84 16.3 5 15 5C13.7 5 12.6 5.84 12.18 7H8C6.9 7 6 7.9 6 9V23C6 24.1 6.9 25 8 25H22C23.1 25 24 24.1 24 23V9C24 7.9 23.1 7 22 7ZM15 7C15.55 7 16 7.45 16 8C16 8.55 15.55 9 15 9C14.45 9 14 8.55 14 8C14 7.45 14.45 7 15 7ZM16 21H11C10.45 21 10 20.55 10 20C10 19.45 10.45 19 11 19H16C16.55 19 17 19.45 17 20C17 20.55 16.55 21 16 21ZM19 17H11C10.45 17 10 16.55 10 16C10 15.45 10.45 15 11 15H19C19.55 15 20 15.45 20 16C20 16.55 19.55 17 19 17ZM19 13H11C10.45 13 10 12.55 10 12C10 11.45 10.45 11 11 11H19C19.55 11 20 11.45 20 12C20 12.55 19.55 13 19 13Z"
-      className={fill}
-    />
-  </svg>
-);
-
 export const RightChevron = () => (
   <svg
     width="30"
