@@ -1,12 +1,22 @@
+'use server';
+
 import { eq } from 'drizzle-orm';
-import { type Session } from 'next-auth';
+import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
+import { userMetadata } from '@src/server/db/schema/users';
 import FormCard from './FormCard';
 
-async function SettingsForm({ session }: { session: Session }) {
+async function SettingsForm({
+  session,
+}: {
+  session: typeof auth.$Infer.Session;
+}) {
   const user = session.user;
-  if (!user) return null;
 
+  const userData = await db.query.userMetadata.findFirst({
+    where: eq(userMetadata.id, user.id),
+  });
+  if (!userData) return null;
   const clubs = await db.query.userMetadataToClubs.findMany({
     where: (joinTable) => eq(joinTable.userId, user.id),
     with: { club: true },
@@ -24,7 +34,7 @@ async function SettingsForm({ session }: { session: Session }) {
         <div className="h-24 rounded-t-3xl bg-linear-to-r from-[#5A49F7] from-[4.36%] via-[#9403D8] via-[49.74%] to-[#FD9365] p-6" />
         <div className="bg-white p-6">
           <h1 className="py-2 text-3xl font-semibold">Settings</h1>
-          <FormCard user={session.user} clubs={formatted} />
+          <FormCard user={userData} clubs={formatted} />
         </div>
       </div>
     </div>

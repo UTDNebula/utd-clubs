@@ -1,8 +1,9 @@
+import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { type ReactNode } from 'react';
 import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 
@@ -15,8 +16,8 @@ const Layout = async (props: {
 
   const { children, events } = props;
 
-  const session = await getServerAuthSession();
-  if (!session) redirect(signInRoute(`manage/${params.clubId}`));
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect(await signInRoute(`manage/${params.clubId}`));
   const canAccess = await api.club.isOfficer({ id: params.clubId });
   if (!canAccess) {
     return <div className="">You can&apos;t access this 😢</div>;

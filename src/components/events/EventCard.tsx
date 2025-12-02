@@ -3,9 +3,10 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton } from '@mui/material';
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
 import EventLikeButton from './EventLikeButton';
@@ -22,7 +23,7 @@ type EventCardProps =
     };
 
 const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   return (
     <Link
       href={`/event/${event.id}`}
@@ -80,7 +81,7 @@ const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
   );
 };
 const VerticalCard = async ({ event, manageView }: EventCardProps) => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   return (
     <Link
       href={`/event/${event.id}`}
