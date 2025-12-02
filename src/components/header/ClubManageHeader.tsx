@@ -47,16 +47,16 @@ const ClubManageHeader = ({
         {/* <h1 className="from-blue-primary bg-linear-to-br to-blue-700 bg-clip-text text-2xl font-bold text-transparent"> */}
         <h1 className="text-xl font-bold text-slate-800">{club.name}</h1>
         {/* TODO: Add key prop to elements somehow, for React */}
-        {path?.map((pathItem) => {
+        {path?.map((pathItem, index) => {
           return (
-            <>
+            <span key={index}>
               <span className="text-xl font-bold text-slate-500 select-none">
-                /
+                /&nbsp;
               </span>
               <span className="text-xl font-bold text-slate-800">
                 {pathItem.text}
               </span>
-            </>
+            </span>
           );
         })}
       </div>

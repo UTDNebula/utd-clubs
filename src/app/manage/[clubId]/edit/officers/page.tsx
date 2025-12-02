@@ -1,7 +1,6 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import BackButton from '@src/components/backButton';
-import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
