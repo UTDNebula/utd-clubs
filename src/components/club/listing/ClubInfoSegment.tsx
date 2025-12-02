@@ -1,5 +1,8 @@
 import Image from 'next/image';
 import { type FC } from 'react';
+import Markdown from 'react-markdown';
+import rehypeExternalLinks from 'rehype-external-links';
+import remarkGfm from 'remark-gfm';
 import { api } from '@src/trpc/server';
 import { type RouterOutputs } from '@src/trpc/shared';
 
@@ -37,10 +40,16 @@ const ClubInfoSegment: FC<{
             <p className="text-sm text-slate-400">Active</p>
           </div>
         </div>
-        <div className="w-full md:w-2/3">
-          <p className="whitespace-pre-wrap text-slate-700">
-            {club.description}
-          </p>
+        <div className="w-full md:w-2/3 text-slate-700 markdown">
+          <Markdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[
+              [
+                rehypeExternalLinks,
+                { rel: ['noreferrer'], target: ['_blank'] },
+              ],
+            ]}
+          >{club.description}</Markdown>
         </div>
         {club.officers.length != 0 && (
           <div className="w-auto max-w-[320px] min-w-0">
