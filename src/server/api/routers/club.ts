@@ -1,4 +1,15 @@
-import { and, eq, ilike, inArray, sql } from 'drizzle-orm';
+import {
+  and,
+  arrayOverlaps,
+  asc,
+  desc,
+  eq,
+  gt,
+  ilike,
+  inArray,
+  lt,
+  sql,
+} from 'drizzle-orm';
 import { z } from 'zod';
 import { club, usedTags } from '@src/server/db/schema/club';
 import { contacts } from '@src/server/db/schema/contacts';
@@ -35,8 +46,16 @@ const tagReplaceSchema = z.object({
   newTag: z.string(),
 });
 const allSchema = z.object({
-  tag: z.string().nullish(),
+  tags: z.string().array().nullish(),
   name: z.string().nullish(),
+  cursor: z.number().min(0).default(0),
+  limit: z.number().min(1).max(50).default(10),
+  initialCursor: z.number().min(0).default(0),
+});
+
+const searchSchema = z.object({
+  tags: z.string().array().nullish(),
+  search: z.string().nullish(),
   cursor: z.number().min(0).default(0),
   limit: z.number().min(1).max(50).default(10),
   initialCursor: z.number().min(0).default(0),
@@ -50,6 +69,10 @@ const createClubSchema = baseClubSchema.omit({ officers: true }).extend({
     })
     .array()
     .min(1),
+});
+
+const searchTagSchema = z.object({
+  search: z.string(),
 });
 
 export const clubRouter = createTRPCRouter({
@@ -90,8 +113,8 @@ export const clubRouter = createTRPCRouter({
         .where(
           and(
             eq(club.approved, 'approved'),
-            input.tag && input.tag !== 'All'
-              ? sql`${input.tag} = ANY(${club.tags})`
+            input.tags && input.tags.length != 0
+              ? arrayOverlaps(club.tags, input.tags)
               : undefined,
             input.name ? ilike(club.name, `%${input.name}%`) : undefined,
           ),
@@ -121,10 +144,12 @@ export const clubRouter = createTRPCRouter({
       return [];
     }
   }),
-  mostUsedTags: publicProcedure.query(async ({ ctx }) => {
+  topTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = await ctx.db.select().from(usedTags).limit(8);
-      return tags.map((t) => t.tag);
+      const tags = (await ctx.db.select().from(usedTags).limit(7)).map(
+        (obj) => obj.tag,
+      );
+      return tags;
     } catch (e) {
       console.error(e);
       return [];
@@ -219,6 +244,7 @@ export const clubRouter = createTRPCRouter({
         .values({
           name: input.name,
           description: input.description,
+          updatedAt: new Date(),
           slug,
         })
         .returning({ id: club.id });
@@ -337,4 +363,65 @@ export const clubRouter = createTRPCRouter({
       await Promise.all(clubPromise);
       return { affected: clubsToChange.length };
     }),
+  tagSearch: publicProcedure
+    .input(searchTagSchema)
+    .query(async ({ input, ctx }) => {
+      const tags = await ctx.db
+        .select({ tag: usedTags.tag })
+        .from(usedTags)
+        .where(sql`${usedTags.tag} @@@ ${input.search}`)
+        .orderBy(sql`paradedb.score(${usedTags.id})`)
+        .limit(5);
+      return { tags: tags, clubs: [] };
+    }),
+  search: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
+    try {
+      const query = ctx.db
+        .select()
+        .from(club)
+        .limit(input.limit)
+        .offset(input.cursor)
+        .where(
+          and(
+            input.search !== ''
+              ? sql`id @@@ 
+                paradedb.boolean(
+                  should =>ARRAY[
+                    paradedb.boost(10,paradedb.match('name',${input.search},distance=>1)),
+                    paradedb.boost(1,paradedb.match('description',${input.search},distance=>1)),
+                    paradedb.boost(5,paradedb.match('tags',${input.search},distance=>1))
+                  ])`
+              : undefined,
+            sql`
+              id @@@ paradedb.const_score(0.0,
+                paradedb.term('approved','approved'::approved_enum))
+            `,
+            input.tags && input.tags.length != 0
+              ? sql.raw(`
+                id @@@ paradedb.const_score(0.0,paradedb.boolean(
+                  must => ARRAY[
+                    ${input.tags.map((tag) => `paradedb.term('tags','${tag}')`).join(',')}
+                  ]))`)
+              : undefined,
+          ),
+        )
+        .orderBy(
+          input.search !== '' ? sql`paradedb.score(id) DESC` : asc(club.name),
+        );
+
+      const res = await query.execute();
+      const newOffset = input.cursor + res.length;
+
+      return {
+        clubs: res,
+        cursor: newOffset,
+      };
+    } catch (e) {
+      console.error(e);
+      return {
+        clubs: [],
+        cursor: 0,
+      };
+    }
+  }),
 });

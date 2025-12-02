@@ -7,7 +7,7 @@ const ClubCard = ({ club }: { club: SelectClub }) => {
       className="flex w-fit flex-col rounded-lg bg-white p-4 shadow-xs"
       href={`/manage/${club.id}`}
     >
-      <h2 className="text-blue-primary text-lg font-bold">{club.name}</h2>
+      <h2 className="text-royal text-lg font-bold">{club.name}</h2>
     </Link>
   );
 };

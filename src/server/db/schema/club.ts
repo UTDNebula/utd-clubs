@@ -1,17 +1,27 @@
-import { relations, sql } from 'drizzle-orm';
+import { relations, SQL, sql } from 'drizzle-orm';
 import {
+  AnyPgColumn,
   boolean,
+  customType,
+  index,
   integer,
   pgEnum,
+  pgMaterializedView,
   pgTable,
-  pgView,
   text,
+  timestamp,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
 import { contacts } from './contacts';
 import { events } from './events';
 import { officers } from './officers';
 import { userMetadataToClubs } from './users';
+
+export const tsvector = customType<{ data: string }>({
+  dataType() {
+    return `tsvector`;
+  },
+});
 
 export const approvedEnum = pgEnum('approved_enum', [
   'approved',
@@ -28,6 +38,7 @@ export const club = pgTable(
     slug: text('slug').notNull(),
     name: text('name').notNull(),
     foundingDate: text('founding_date'),
+    updatedAt: timestamp('updated_at'),
     description: text('description').notNull(),
     tags: text('tags')
       .array()
@@ -39,11 +50,20 @@ export const club = pgTable(
     profileImage: text('profile_image'),
     soc: boolean('soc').notNull().default(false),
   },
-  (table) => {
-    return {
-      slugUnique: uniqueIndex('club_slug_unique').on(table.slug),
-    };
-  },
+  (t) => [
+    index('club_search_idx')
+      .using('bm25', t.id, t.name, t.description, t.tags, t.approved)
+      .with({
+        key_field: 'id',
+        text_fields: `'${JSON.stringify({
+          tags: { tokenizer: { type: 'keyword' } },
+          name: { tokenizer: { type: 'default', stemmer: 'English' } },
+        })}'`,
+        numeric_fields: `'{"approved":{"fast":true}}'`,
+      }),
+    index('club_name').on(t.name),
+    uniqueIndex('club_slug_unique').on(t.slug),
+  ],
 );
 
 export const clubRelations = relations(club, ({ many }) => ({
@@ -53,9 +73,10 @@ export const clubRelations = relations(club, ({ many }) => ({
   userMetadataToClubs: many(userMetadataToClubs),
 }));
 
-export const usedTags = pgView('used_tags', {
+export const usedTags = pgMaterializedView('used_tags', {
   tag: text('tag').notNull(),
   count: integer('count').notNull(),
+  id: integer('id').notNull(),
 }).as(
-  sql`select UNNEST(${club.tags}) as tag, COUNT(${club.tags}) as count from club group by UNNEST(${club.tags}) order by count desc`,
+  sql`select UNNEST(${club.tags}) as tag, COUNT(${club.tags}) as count, from club order by count desc`,
 );
