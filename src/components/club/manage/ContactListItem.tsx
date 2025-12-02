@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton } from '@mui/material';
+import { IconButton, MenuItem } from '@mui/material';
 import { type FieldErrors, type UseFormRegister } from 'react-hook-form';
 import type z from 'zod';
 import {
@@ -18,6 +18,7 @@ import {
 } from '@src/icons/ContactIcons';
 import { type SelectContact } from '@src/server/db/models';
 import { type editClubContactSchema } from '@src/utils/formSchemas';
+import { FormSelect } from './form/FormSelect';
 import FormTextField from './form/FormTextField';
 
 type Contact = Omit<SelectContact, 'clubId'>;
@@ -90,6 +91,7 @@ type ContactListItemProps = {
   platform: Contact['platform'];
   index: number;
   errors: FieldErrors<z.infer<typeof editClubContactSchema>>;
+  available?: typeof startContacts;
 };
 
 const ContactListItem = ({
@@ -98,17 +100,23 @@ const ContactListItem = ({
   platform,
   index,
   errors,
+  available,
 }: ContactListItemProps) => {
   return (
     <div className="flex flex-row p-2 hover:bg-slate-100 transition-colors rounded-lg">
       <div className="flex flex-row w-full flex-wrap">
-        {/* <div className="flex w-fit flex-row items-center rounded-md bg-slate-300 p-2">
-        <div className="box-content h-8 w-8">
-          <div className="h-8 w-8">{logo[platform]}</div>
-        </div>
-        <div className="text-xl">{platform}</div>
-      </div> */}
-        <FormTextField name={`contacts.${index}.platform`} label="Platform" />
+        <FormSelect name={`contacts.${index}.platform`} label="Platform">
+          {available &&
+            available.map((platform, index) => (
+              <MenuItem key={index} value={platform}>
+                {contactNames[platform]}
+                {/* <div className="box-content h-8 w-8">
+                  <div className="h-8 w-8">{logo[platform]}</div>
+                </div>
+                <div className="text-xl">{contactNames[platform]}</div> */}
+              </MenuItem>
+            ))}
+        </FormSelect>
         <FormTextField
           name={`contacts.${index}.url`}
           label="URL"
