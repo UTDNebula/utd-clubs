@@ -225,7 +225,6 @@ export const clubEditRouter = createTRPCRouter({
           .set({
             position: modded.position,
             isPresident: modded.isPresident,
-            image: modded.image,
           })
           .where(
             and(eq(officers.id, modded.id), eq(officers.clubId, input.clubId)),
