@@ -11,14 +11,14 @@ export const ClubNotClaimed = () => {
           reach out on our{' '}
           <a
             href="https://discord.utdnebula.com/"
-            className="text-blue-primary hover:underline hover:border-b-inherit"
+            className="text-royal hover:underline"
           >
             Discord
           </a>{' '}
           or{' '}
           <a
             href="https://www.instagram.com/utdnebula/"
-            className="text-blue-primary hover:underline hover:border-b-inherit"
+            className="text-royal hover:underline"
           >
             {' '}
             Instagram
