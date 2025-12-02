@@ -23,6 +23,10 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
     return <NotFound elementType="Club" />;
   }
 
+  const now = new Date();
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(now.getFullYear() - 1);
+
   return (
     <main className="w-full">
       <Header />
@@ -30,8 +34,10 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
         <ClubHeader club={club} />
         <ClubInfoSegment club={club} />
         {club.contacts.length > 0 && <ContactInformation club={club} />}
-        {!club.soc && <ClubUpcomingEvents clubId={club.id} />}
-        {club.soc && <ClubNotClaimed />}
+        {club.updatedAt && <ClubUpcomingEvents clubId={club.id} />}
+        {(club.updatedAt == null || club.updatedAt < oneYearAgo) && (
+          <ClubNotClaimed />
+        )}
       </div>
     </main>
   );
