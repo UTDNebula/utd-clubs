@@ -49,7 +49,9 @@ const ClubInfoSegment: FC<{
                 { rel: ['noreferrer'], target: ['_blank'] },
               ],
             ]}
-          >{club.description}</Markdown>
+          >
+            {club.description}
+          </Markdown>
         </div>
         {club.officers.length != 0 && (
           <div className="w-auto max-w-[320px] min-w-0">
