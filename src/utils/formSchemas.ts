@@ -56,6 +56,18 @@ export const createEventSchema = z.object({
   endTime: z.coerce.date(),
 });
 
+export const updateEventSchema = createEventSchema.extend({
+  id: z.string(),
+});
+
+export const feedbackFormSchema = z.object({
+  rating: z.number().min(1).max(10),
+  likes: z.string().default(''),
+  dislikes: z.string().default(''),
+  features: z.string().default(''),
+  submit_on: z.date().default(new Date()),
+});
+
 const characterLimitError = 'Input cannot exceed 500 characters';
 
 export const clubMatchFormSchema = z.object({
