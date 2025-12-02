@@ -1,6 +1,7 @@
 import { and, eq, or, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
+import { auth } from '@src/server/auth';
 import { insertUserMetadata } from '@src/server/db/models';
 import { admin } from '@src/server/db/schema/admin';
 import { user as users } from '@src/server/db/schema/auth';
@@ -52,6 +53,11 @@ export const userMetadataRouter = createTRPCRouter({
           sql`${userMetadataToClubs.clubId} NOT IN (${clubs})`,
         ),
       );
+      if (user.name != updateUser.firstName + ' ' + updateUser.lastName) {
+        await auth.api.updateUser({
+          body: { name: updateUser.firstName + ' ' + updateUser.lastName },
+        });
+      }
     }),
   deleteById: protectedProcedure.mutation(async ({ ctx }) => {
     const { user } = ctx.session;
