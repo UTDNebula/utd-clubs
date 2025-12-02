@@ -65,7 +65,7 @@ const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
             {event.description}
           </p>
         </div>
-        <div className="ml-auto flex flex-row gap-2">
+        <div className="ml-auto flex flex-row gap-2 h-fit self-center">
           {!manageView && session && <EventLikeButton eventId={event.id} />}
           {manageView && (
             <>
