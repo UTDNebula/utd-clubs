@@ -145,7 +145,7 @@ const ContactSelector = ({
   );
 };
 export default ContactSelector;
-const styling = 'fill-black transition-colors group-hover:fill-blue-primary';
+const styling = 'fill-black transition-colors group-hover:fill-royal';
 const logo: logoProps = {
   discord: <Discord className={styling} />,
   instagram: <Instagram className={styling} />,

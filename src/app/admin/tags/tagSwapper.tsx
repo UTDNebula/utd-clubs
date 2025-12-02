@@ -41,7 +41,7 @@ export default function TagSwapper() {
       </div>
       <div className="mt-2 flex w-full">
         <button
-          className="bg-blue-primary ml-auto rounded-lg p-2 text-lg font-bold text-white disabled:opacity-50"
+          className="bg-royal ml-auto rounded-lg p-2 text-lg font-bold text-white disabled:opacity-50"
           disabled={mutate.isPending}
           onClick={() => {
             mutate.mutate({ oldTag: oldTag, newTag: newTag });
@@ -51,7 +51,7 @@ export default function TagSwapper() {
         </button>
       </div>
       {mutate.isSuccess && (
-        <div className="text-blue-primary mt-2 font-semibold">
+        <div className="text-royal mt-2 font-semibold">
           Modified the tags for {mutate.data.affected} clubs
         </div>
       )}
