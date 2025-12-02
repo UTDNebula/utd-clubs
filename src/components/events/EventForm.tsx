@@ -142,14 +142,14 @@ const EventForm = ({
         <div className="create-dropdown flex max-w-full flex-row justify-start gap-1 py-2 text-2xl font-bold whitespace-nowrap">
           <span>
             {mode === 'edit' ? 'Edit Club Event' : 'Create Club Event'}{' '}
-            <span className="text-[#3361FF]">for</span>
+            <span className="text-royal">for</span>
           </span>
           <div className="flex-1">
             <select
               {...register('clubId')}
               defaultValue={clubId}
               disabled={mode === 'edit'}
-              className="w-full overflow-hidden bg-inherit text-ellipsis whitespace-nowrap text-[#3361FF] outline-hidden disabled:cursor-not-allowed"
+              className="w-full overflow-hidden bg-inherit text-ellipsis whitespace-nowrap text-royal outline-hidden disabled:cursor-not-allowed"
             >
               {officerClubs.map((club) => {
                 return (
@@ -224,7 +224,7 @@ const EventForm = ({
         <input
           type="submit"
           value={mode === 'edit' ? 'Save Changes' : 'Create'}
-          className={`bg-[#3361FF] ${loading ? 'opacity-40' : ''} rounded-md py-6 text-xs font-black text-white hover:cursor-pointer`}
+          className={`bg-royal ${loading ? 'opacity-40' : ''} rounded-md py-6 text-xs font-black text-white hover:cursor-pointer`}
         />
       </div>
       <div className="form-preview flex w-64 flex-col gap-14">

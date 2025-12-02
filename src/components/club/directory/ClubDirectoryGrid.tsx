@@ -2,7 +2,6 @@
 
 import { Skeleton } from '@mui/material';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { type Session } from 'next-auth';
 import { type FC } from 'react';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -10,10 +9,6 @@ import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import ClubCard from '../ClubCard';
 import InfiniteScrollGrid from './InfiniteScrollGrid';
 import ScrollTop from './ScrollTop';
-
-interface Props {
-  session: Session | null;
-}
 
 type ClubQueryData = {
   clubs: SelectClub[];
@@ -59,26 +54,20 @@ const ClubCardSkeleton = () => {
   );
 };
 
-const ClubDirectoryGrid: FC<Props> = ({ session }) => {
-  const { search, tag } = useSearchStore((state) => state);
+const ClubDirectoryGrid: FC = () => {
+  const { search, tags } = useSearchStore((state) => state);
   const api = useTRPC();
-  const queryClient = useQueryClient();
 
-  const { data, isFetching, isPlaceholderData } = useQuery({
-    ...api.club.all.queryOptions({ name: search, tag, limit: 9 }),
-    placeholderData: (previousData) => {
-      // Keep showing previous data while fetching new results
-      if (previousData) {
-        return previousData;
-      }
-      // Try to get any cached club data
-      const cachedData = queryClient.getQueryData<ClubQueryData>([
-        'club',
-        'all',
-      ]);
-      return cachedData;
-    },
-  });
+  const { data, isFetching, isPlaceholderData } = useQuery(
+    api.club.search.queryOptions(
+      { search: search, tags, limit: 9 },
+      {
+        placeholderData: (previousData) => {
+          return previousData;
+        },
+      },
+    ),
+  );
 
   const isLoading = isFetching || isPlaceholderData;
   const hasResults = data && data.clubs && data.clubs.length > 0;
@@ -96,11 +85,9 @@ const ClubDirectoryGrid: FC<Props> = ({ session }) => {
       ) : hasResults ? (
         <>
           {data.clubs.map((club) => (
-            <ClubCard key={club.id} club={club} session={session} priority />
+            <ClubCard key={club.id} club={club} priority />
           ))}
-          {data.clubs.length === 9 && (
-            <InfiniteScrollGrid tag={tag} session={session} />
-          )}
+          {data.clubs.length === 9 && <InfiniteScrollGrid />}
         </>
       ) : showNoResults ? (
         <div className="col-span-full text-center text-4xl font-bold text-slate-500">

@@ -1,8 +1,9 @@
 import { type Metadata } from 'next';
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import React from 'react';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import CommunityEvents from './communityEvents';
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 const Community = async () => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
     return (

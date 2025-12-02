@@ -239,6 +239,21 @@ export const eventRouter = createTRPCRouter({
       throw e;
     }
   }),
+  joinedEvent: protectedProcedure
+    .input(joinLeaveSchema)
+    .query(async ({ input, ctx }) => {
+      const eventId = input.id;
+      const userId = ctx.session.user.id;
+      return Boolean(
+        await ctx.db.query.userMetadataToEvents.findFirst({
+          where: (userMetadataToEvents) =>
+            and(
+              eq(userMetadataToEvents.userId, userId),
+              eq(userMetadataToEvents.eventId, eventId),
+            ),
+        }),
+      );
+    }),
   joinEvent: protectedProcedure
     .input(joinLeaveSchema)
     .mutation(async ({ input, ctx }) => {

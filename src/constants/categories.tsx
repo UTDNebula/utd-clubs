@@ -3,13 +3,12 @@ import {
   AdminIcon,
   CommunityIcon,
   EventsIcon,
-  FeedbackIcon,
   HomeIcon,
   type IconType,
 } from '../icons/Icons';
 
 export const mainCats = ['Home', 'My Community', 'Events'] as const;
-export const moreCats = ['About', 'Feedback'] as const;
+export const moreCats = ['About'] as const;
 export const personalCats = ['Manage Clubs', 'Admin'] as const;
 
 export type allCats =
@@ -23,7 +22,6 @@ export const IconMap: {
   'My Community': CommunityIcon,
   Events: EventsIcon,
   About: AboutIcon,
-  Feedback: FeedbackIcon,
   'Manage Clubs': HomeIcon,
   Admin: AdminIcon,
 };
@@ -35,7 +33,6 @@ export const routeMap: {
   'My Community': '/community',
   Events: '/events',
   About: 'https://www.utdnebula.com/projects/clubs',
-  Feedback: '/feedback',
   'Manage Clubs': '/manage',
   Admin: '/admin',
 };
