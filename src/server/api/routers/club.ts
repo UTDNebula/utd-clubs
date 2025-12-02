@@ -244,6 +244,7 @@ export const clubRouter = createTRPCRouter({
         .values({
           name: input.name,
           description: input.description,
+          updatedAt: new Date(),
           slug,
         })
         .returning({ id: club.id });

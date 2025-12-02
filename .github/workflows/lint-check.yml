@@ -20,9 +20,6 @@ jobs:
       - name: Run npm install
         run: npm ci
 
-      - name: Set up test environment file
-        run: echo "GOOGLE_CLIENT_ID=dummy" > .env && echo "GOOGLE_CLIENT_SECRET=dummy" >> .env && echo "NEXTAUTH_URL=http://localhost:3000" >> .env && echo "NEXTAUTH_SECRET=dummy" >> .env && echo "DATABASE_URL=dummy" >> .env && echo "DISCORD_CLIENT_ID=dummy" >> .env && echo "DISCORD_CLIENT_SECRET=dummy" >> .env && echo "NEBULA_API_URL=dummy" >> .env && echo "NEBULA_API_STORAGE_BUCKET=dummy" >> .env && echo "NEBULA_API_KEY=dummy" >> .env && echo "NEBULA_API_STORAGE_KEY=dummy" >> .env && echo "GEMINI_SERVICE_ACCOUNT=dummy" >> .env && echo "SENTRY_AUTH_TOKEN=dummy" >> .env
-
       - name: Run ESLint
         run: npm run lint:check
 
