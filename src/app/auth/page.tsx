@@ -23,7 +23,7 @@ export default async function Auth(props: {
         </div>
         <div className="flex flex-col gap-16">
           <div className="absolute inset-5 z-10 flex w-fit sm:static">
-            <BackButton />
+            <BackButton className="bg-white" />
           </div>
           <div className="z-10 flex flex-col items-center justify-center space-y-12">
             <h1 className="text-center text-6xl font-bold text-white sm:text-left">
