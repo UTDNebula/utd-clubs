@@ -15,7 +15,7 @@
     "auth-schema:generate": "dotenv -- npx @better-auth/cli@latest generate --output src/server/db/schema/auth.ts --config src/server/auth.ts",
     "drizzle:migrate": "dotenv drizzle-kit migrate",
     "drizzle:check": "dotenv drizzle-kit check",
-    "migratePageViews": "ts-node -O \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/migratePageViews.ts"
+    "migratePageViews": "dotenv -- ts-node -O \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/migratePageViews.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.2",

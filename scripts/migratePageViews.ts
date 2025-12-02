@@ -3,35 +3,23 @@ Get page views for directory pages from Google Analytics and push them to Neon.
 To allow sorting on homepage by popularity.
 Requires GOOGLE_ANALYTICS_PROPERTY_ID, GOOGLE_ANALYTICS_SERVICE_ACCOUNT, and DATABASE_URL environment variables.
 */
-import { resolve } from 'path';
 import { BetaAnalyticsDataClient, protos } from '@google-analytics/data';
-import { config } from 'dotenv';
 import { eq } from 'drizzle-orm';
-import { drizzle } from 'drizzle-orm/neon-http';
+import { db } from '../src/server/db';
 import { club } from '../src/server/db/schema/club';
-
-const envPath = resolve(__dirname, '../.env');
-config({ path: envPath });
 
 if (
   typeof process.env.GOOGLE_ANALYTICS_PROPERTY_ID === 'undefined' ||
-  typeof process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT === 'undefined' ||
-  typeof process.env.DATABASE_URL === 'undefined'
+  typeof process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT === 'undefined'
 ) {
   throw new Error('Required environment variables are not set.');
 }
 
-const GOOGLE_ANALYTICS_SERVICE_ACCOUNT =
-  process.env.GEMINI_SERVICE_ACCOUNT !== ''
-    ? (JSON.parse(process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT as string) as {
-        client_email: string;
-        private_key: string;
-      })
-    : { client_email: '', private_key: '' };
+const serviceAccount = JSON.parse(process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT);
 const analyticsDataClient = new BetaAnalyticsDataClient({
   credentials: {
-    client_email: GOOGLE_ANALYTICS_SERVICE_ACCOUNT.client_email,
-    private_key: GOOGLE_ANALYTICS_SERVICE_ACCOUNT.private_key,
+    client_email: serviceAccount.client_email,
+    private_key: serviceAccount.private_key,
   },
 });
 
@@ -81,16 +69,6 @@ async function getPageViews() {
 
 async function pushToDatabase(pageViews: { [key: string]: number }) {
   console.log('Updating page views in database...');
-
-  const schema = {
-    ...club,
-  };
-  if (typeof process.env.DATABASE_URL === 'undefined') {
-    throw new Error('DATABASE_URL is undefined.');
-  }
-  const db = drizzle(process.env.DATABASE_URL, {
-    schema,
-  });
 
   const updatePromises = Object.entries(pageViews).map(([slug, count]) => {
     return db.update(club).set({ pageViews: count }).where(eq(club.slug, slug));
