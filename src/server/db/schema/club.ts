@@ -9,6 +9,7 @@ import {
   pgMaterializedView,
   pgTable,
   text,
+  timestamp,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
 import { contacts } from './contacts';
@@ -37,6 +38,7 @@ export const club = pgTable(
     slug: text('slug').notNull(),
     name: text('name').notNull(),
     foundingDate: text('founding_date'),
+    updatedAt: timestamp('updated_at'),
     description: text('description').notNull(),
     tags: text('tags')
       .array()
@@ -47,6 +49,7 @@ export const club = pgTable(
     approved: approvedEnum('approved').notNull().default('pending'),
     profileImage: text('profile_image'),
     soc: boolean('soc').notNull().default(false),
+    pageViews: integer('page_views').notNull().default(0),
   },
   (t) => [
     index('club_search_idx')

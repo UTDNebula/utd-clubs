@@ -1,41 +1,64 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { CheckIcon, PlusIcon } from '@src/icons/Icons';
+import AddIcon from '@mui/icons-material/Add';
+import CheckIcon from '@mui/icons-material/Check';
+import { IconButton } from '@mui/material';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@src/trpc/react';
 
 type buttonProps = {
   eventId: string;
-  liked: boolean;
 };
-const EventLikeButton = ({ eventId, liked }: buttonProps) => {
+const EventLikeButton = ({ eventId }: buttonProps) => {
   const api = useTRPC();
-  const join = useMutation(api.event.joinEvent.mutationOptions());
-  const leave = useMutation(api.event.leaveEvent.mutationOptions());
-  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { data: joined, isPending } = useQuery(
+    api.event.joinedEvent.queryOptions({ id: eventId }),
+  );
+
+  const join = useMutation({
+    ...api.event.joinEvent.mutationOptions(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          ['event', 'joinedEvent'],
+          { input: { id: eventId }, type: 'query' },
+        ],
+      });
+    },
+  });
+
+  const leave = useMutation({
+    ...api.event.leaveEvent.mutationOptions(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          ['event', 'joinedEvent'],
+          { input: { id: eventId }, type: 'query' },
+        ],
+      });
+    },
+  });
+
   return (
-    <button
-      type="submit"
-      className="h-10 w-10 rounded-full bg-white p-1.5 shadow-lg"
-      onClick={() => {
-        if (!liked) {
-          void join.mutateAsync({ id: eventId }).then(() => {
-            router.refresh();
-          });
+    <IconButton
+      className="bg-royal [&:not(.MuiIconButton-loading)>svg]:fill-white"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (isPending || join.isPending || leave.isPending) return;
+
+        if (!joined) {
+          void join.mutateAsync({ id: eventId });
         } else {
-          void leave.mutateAsync({ id: eventId }).then(() => {
-            router.refresh();
-          });
+          void leave.mutateAsync({ id: eventId });
         }
       }}
+      loading={isPending || join.isPending || leave.isPending}
     >
-      {liked ? (
-        <CheckIcon fill="fill-slate-800" />
-      ) : (
-        <PlusIcon fill="fill-slate-800" />
-      )}
-    </button>
+      {joined ? <CheckIcon /> : <AddIcon />}
+    </IconButton>
   );
 };
 export default EventLikeButton;

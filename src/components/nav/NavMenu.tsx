@@ -46,6 +46,22 @@ const NavMenu = ({ userCapabilites }: NavMenuProps) => {
           ))}
         </div>
       </div>
+
+      {/* Privacy Policy */}
+      <div className="w-full mt-auto px-6 py-2 flex flex-wrap gap-2 justify-evenly text-base font-medium capitalize md:text-sm text-slate-500">
+        <Link
+          className="underline decoration-transparent hover:decoration-inherit transition"
+          href="https://www.utdnebula.com/legal/privacy-policy.txt"
+        >
+          Privacy Policy
+        </Link>
+        <Link
+          className="underline decoration-transparent hover:decoration-inherit transition"
+          href="/sitemap.xml"
+        >
+          Sitemap
+        </Link>
+      </div>
     </>
   );
 };

@@ -1,8 +1,9 @@
 import { type Metadata } from 'next';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Header from '@src/components/header/BaseHeader';
 import SettingsForm from '@src/components/settings/SettingsForm';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { signInRoute } from '@src/utils/redirect';
 
 export const metadata: Metadata = {
@@ -17,10 +18,10 @@ export const metadata: Metadata = {
   },
 };
 const Settings = async () => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect(signInRoute('settings'));
+    redirect(await signInRoute('settings'));
   }
 
   return (

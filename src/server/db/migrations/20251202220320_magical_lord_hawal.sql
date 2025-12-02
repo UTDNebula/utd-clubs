@@ -1,0 +1,1 @@
+DROP TABLE "feedback_form" CASCADE;
