@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { type ReactNode } from 'react';
-import { BlueBackButton } from '@src/components/backButton';
+import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
@@ -27,21 +27,19 @@ const Layout = async (props: {
     notFound();
   }
   return (
-    <div className="">
+    <>
       <Header />
-      <main className="px-5">
-        <div className="flex w-full flex-row gap-x-4 align-middle">
-          <BlueBackButton />
-          <h1 className="from-blue-primary bg-linear-to-br to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent">
-            {club.name}
-          </h1>
+      <main className="px-5 flex w-full flex-col gap-4">
+        <div className="flex w-full flex-row gap-x-4 items-center">
+          <BackButton className="bg-royal [&>svg]:fill-white" />
+          <h1 className="text-2xl font-extrabold text-haiti">{club.name}</h1>
         </div>
         <div className="flex w-full flex-col gap-4">
           {children}
           <div className="flex w-full flex-row gap-4">{events}</div>
         </div>
       </main>
-    </div>
+    </>
   );
 };
 

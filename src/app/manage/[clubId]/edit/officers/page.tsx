@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { BlueBackButton } from '@src/components/backButton';
+import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
@@ -32,12 +32,12 @@ export default async function Page(props: {
     <main className="h-full">
       <Header />
       <div className="flex flex-col gap-y-2 px-5">
-        <BlueBackButton />
-        <h1 className="text-blue-primary text-2xl font-extrabold">
+        <BackButton className="bg-royal [&>svg]:fill-white" />
+        <h1 className="text-royal text-2xl font-extrabold">
           Edit club Collaborators
         </h1>
         <EditOfficerForm clubId={clubId} officers={mapped} />
-        <h1 className="text-blue-primary text-2xl font-extrabold">
+        <h1 className="text-royal text-2xl font-extrabold">
           Edit club officers
         </h1>
         <EditListedOfficerForm clubId={clubId} officers={listedOfficers} />
