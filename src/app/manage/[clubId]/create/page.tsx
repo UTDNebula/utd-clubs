@@ -1,14 +1,16 @@
+import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import Header from '@src/components/header/BaseHeader';
+import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 import CreateEventForm from './CreateEventForm';
 
-const Page = async ({ params }: { params: { clubId: string } }) => {
-  const session = await getServerAuthSession();
+const Page = async (props: { params: Promise<{ clubId: string }> }) => {
+  const params = await props.params;
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
-    redirect(signInRoute(`manage/${params.clubId}/create`));
+    redirect(await signInRoute(`manage/${params.clubId}/create`));
   }
 
   const officerClubs = await api.club.getOfficerClubs();

@@ -1,18 +1,20 @@
 import { and, eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import RegisterButton from '@src/app/event/[id]/RegisterButton';
 import { EventHeader } from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import CountdownTimer from './CountdownTimer';
 import TimeComponent from './TimeComponent';
 
-type Params = { params: { id: string } };
+type Params = { params: Promise<{ id: string }> };
 
-export default async function EventsPage({ params }: Params) {
-  const session = await getServerAuthSession();
+export default async function EventsPage(props: Params) {
+  const params = await props.params;
+  const session = await auth.api.getSession({ headers: await headers() });
   const res = await db.query.events.findFirst({
     where: (events) => eq(events.id, params.id),
     with: { club: true },
@@ -101,7 +103,7 @@ export default async function EventsPage({ params }: Params) {
             <CountdownTimer startTime={event.startTime} />
             <Link
               href={`/directory/${club.slug}`}
-              className="border-blue-primary text-blue-primary mt-auto mr-8 block w-36 rounded-full border-2 py-4 text-center text-xs font-extrabold break-normal transition-colors hover:bg-blue-700 hover:text-white"
+              className="border-royal text-royal mt-auto mr-8 block w-36 rounded-full border-2 py-4 text-center text-xs font-extrabold break-normal transition-colors hover:bg-blue-700 hover:text-white"
             >
               View Club
             </Link>
@@ -112,11 +114,10 @@ export default async function EventsPage({ params }: Params) {
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
+export async function generateMetadata(props: {
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
+  const params = await props.params;
   const id = params.id;
 
   const found = await db.query.events.findFirst({

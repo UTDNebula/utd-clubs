@@ -14,19 +14,19 @@ const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
 
   return (
     <Link
-      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white shadow-md' : ''} hover:bg-white hover:shadow-md`}
+      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white shadow-md' : ''} hover:bg-blue-200 hover:shadow-md`}
       href={route}
       target={route.startsWith('http') ? '_blank' : ''}
     >
       {Icon && (
         <Icon
           fill={`${
-            active ? 'fill-blue-primary' : 'fill-slate-500'
-          } group-hover:fill-blue-primary`}
+            active ? 'fill-royal' : 'fill-slate-500'
+          } group-hover:fill-royal`}
         />
       )}
       <h1
-        className={`text-base font-medium capitalize md:text-sm ${active ? 'text-blue-primary' : 'text-slate-500'} group-hover:text-blue-primary`}
+        className={`text-base font-medium capitalize md:text-sm ${active ? 'text-royal' : 'text-slate-500'} group-hover:text-royal`}
       >
         {cat}
       </h1>

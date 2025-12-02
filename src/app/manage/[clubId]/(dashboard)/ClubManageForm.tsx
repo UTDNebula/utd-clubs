@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
+import Collaborators from './(forms)/Collaborators';
+import Contacts from './(forms)/Contacts';
 import Details from './(forms)/Details';
 import Officers from './(forms)/Officers';
-import Contacts from './(forms)/Contacts';
-import Collaborators from './(forms)/Collaborators';
 
 const ClubManageForm = async ({
   club,
@@ -16,8 +17,8 @@ const ClubManageForm = async ({
 }) => {
   const clubId = club.id;
 
-  const session = await getServerAuthSession();
-  if (!session) redirect(signInRoute(`manage/${clubId}/edit/officers`));
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect(await signInRoute(`manage/${clubId}/edit/officers`));
   const role = await api.club.memberType({ id: clubId });
   const officers = await api.club.getOfficers({ id: clubId });
   const listedOfficers = await api.club.getListedOfficers({ id: clubId });
@@ -31,9 +32,9 @@ const ClubManageForm = async ({
   return (
     <div className="flex flex-col gap-8">
       <Details club={club} />
-      <Officers club={club} officers={listedOfficers}/>
+      <Officers club={club} officers={listedOfficers} />
       <Contacts club={club}></Contacts>
-      <Collaborators club={club} officers={officersMapped}/>
+      <Collaborators club={club} officers={officersMapped} />
     </div>
   );
 };

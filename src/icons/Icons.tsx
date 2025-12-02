@@ -193,6 +193,7 @@ export const MoreIcon: IconType = ({ fill = defaultFill }) => (
     />
   </svg>
 );
+
 export const SearchIcon: IconType = () => (
   <svg
     width="18"
@@ -243,41 +244,6 @@ export const RightArrowIcon: IconType = ({ fill }) => {
     </svg>
   );
 };
-export const PlusIcon: IconType = ({ fill = defaultFill }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="28"
-    height="29"
-    viewBox="0 0 28 29"
-    fill={fill}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M19.6 15.4333H14.9333V20.1C14.9333 20.6133 14.5133 21.0333 14 21.0333C13.4867 21.0333 13.0667 20.6133 13.0667 20.1V15.4333H8.40001C7.88667 15.4333 7.46667 15.0133 7.46667 14.5C7.46667 13.9867 7.88667 13.5667 8.40001 13.5667H13.0667V8.9C13.0667 8.38667 13.4867 7.96667 14 7.96667C14.5133 7.96667 14.9333 8.38667 14.9333 8.9V13.5667H19.6C20.1133 13.5667 20.5333 13.9867 20.5333 14.5C20.5333 15.0133 20.1133 15.4333 19.6 15.4333Z"
-      fill={fill}
-    />
-  </svg>
-);
-export const GroupIcon: IconType = ({
-  fill = defaultFill,
-  size = defaultSize,
-}) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 30 30"
-    fill={fill}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M19 14C20.66 14 21.99 12.66 21.99 11C21.99 9.34 20.66 8 19 8C17.34 8 16 9.34 16 11C16 12.66 17.34 14 19 14ZM11 14C12.66 14 13.99 12.66 13.99 11C13.99 9.34 12.66 8 11 8C9.34 8 8 9.34 8 11C8 12.66 9.34 14 11 14ZM11 16C8.67 16 4 17.17 4 19.5V21C4 21.55 4.45 22 5 22H17C17.55 22 18 21.55 18 21V19.5C18 17.17 13.33 16 11 16ZM19 16C18.71 16 18.38 16.02 18.03 16.05C18.05 16.06 18.06 16.08 18.07 16.09C19.21 16.92 20 18.03 20 19.5V21C20 21.35 19.93 21.69 19.82 22H25C25.55 22 26 21.55 26 21V19.5C26 17.17 21.33 16 19 16Z"
-      fill="currentColor"
-    />
-  </svg>
-);
 export const ListIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -310,22 +276,6 @@ export const GridIcon = () => (
     />
   </svg>
 );
-export const CheckIcon: IconType = ({ fill = defaultFill }) => (
-  <svg
-    width="auto"
-    height="auto"
-    viewBox="0 0 30 30"
-    fill={fill}
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M12.1725 19.1625L8.7025 15.6925C8.51567 15.5052 8.26202 15.4 7.9975 15.4C7.73298 15.4 7.47933 15.5052 7.2925 15.6925C6.9025 16.0825 6.9025 16.7125 7.2925 17.1025L11.4725 21.2825C11.8625 21.6725 12.4925 21.6725 12.8825 21.2825L23.4625 10.7025C23.8525 10.3125 23.8525 9.68249 23.4625 9.29249C23.2757 9.10523 23.022 9 22.7575 9C22.493 9 22.2393 9.10523 22.0525 9.29249L12.1725 19.1625Z"
-      fill={fill}
-    />
-  </svg>
-);
 export const ExpandMore = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -355,43 +305,6 @@ export const ExpandLess = () => (
       clipRule="evenodd"
       d="M13.8825 12.2925L9.2925 16.8825C8.9025 17.2725 8.9025 17.9025 9.2925 18.2925C9.6825 18.6825 10.3125 18.6825 10.7025 18.2925L14.5925 14.4125L18.4725 18.2925C18.8625 18.6825 19.4925 18.6825 19.8825 18.2925C20.2725 17.9025 20.2725 17.2725 19.8825 16.8825L15.2925 12.2925C14.9125 11.9025 14.2725 11.9025 13.8825 12.2925Z"
       className="fill-slate-500"
-    />
-  </svg>
-);
-
-/**
- * Note: AccountIcon is a less dynamic version of PersonIcon. Please replace all instances of AccountIcon with PersonIcon
- */
-export const AccountIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="30"
-    height="30"
-    viewBox="0 0 30 30"
-    fill="none"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M15 15C17.21 15 19 13.21 19 11C19 8.79 17.21 7 15 7C12.79 7 11 8.79 11 11C11 13.21 12.79 15 15 15ZM15 17C12.33 17 7 18.34 7 21V22C7 22.55 7.45 23 8 23H22C22.55 23 23 22.55 23 22V21C23 18.34 17.67 17 15 17Z"
-      fill="#C3CAD9"
-    />
-  </svg>
-);
-
-export const PersonIcon = ({ fill = defaultFill, size = defaultSize }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size * 1.5}
-    height={size * 1.5}
-    viewBox="0 0 30 30"
-    fill="none"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M15 15C17.21 15 19 13.21 19 11C19 8.79 17.21 7 15 7C12.79 7 11 8.79 11 11C11 13.21 12.79 15 15 15ZM15 17C12.33 17 7 18.34 7 21V22C7 22.55 7.45 23 8 23H22C22.55 23 23 22.55 23 22V21C23 18.34 17.67 17 15 17Z"
-      fill={fill}
     />
   </svg>
 );
@@ -460,45 +373,6 @@ export const DownArrowIcon = ({ className }: { className: string }) => (
       clipRule="evenodd"
       d="M13.5925 8V19.17L8.7125 14.29C8.3225 13.9 7.6825 13.9 7.2925 14.29C6.9025 14.68 6.9025 15.31 7.2925 15.7L13.8825 22.29C14.2725 22.68 14.9025 22.68 15.2925 22.29L21.8825 15.7C22.2725 15.31 22.2725 14.68 21.8825 14.29C21.6957 14.1027 21.442 13.9975 21.1775 13.9975C20.913 13.9975 20.6593 14.1027 20.4725 14.29L15.5925 19.17V8C15.5925 7.45 15.1425 7 14.5925 7C14.0425 7 13.5925 7.45 13.5925 8Z"
       fill="#FFFFFF"
-    />
-  </svg>
-);
-export const EyeIcon: IconType = ({
-  fill = defaultFill,
-  size = defaultSize,
-}) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 16 16"
-    fill={fill}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="m 8.000006,3.0000065 c -3.33333,0 -6.18,2.073337 -7.333332,4.999997 1.153332,2.9266705 4.000002,4.9999905 7.333332,4.9999905 3.33332,0 6.18002,-2.07332 7.33332,-4.9999905 -1.1533,-2.92666 -4,-4.999997 -7.33332,-4.999997 z m 0,8.3333375 c -1.84,0 -3.33333,-1.4933405 -3.33333,-3.3333405 0,-1.84 1.49333,-3.33333 3.33333,-3.33333 1.84,0 3.33332,1.49333 3.33332,3.33333 0,1.84 -1.49332,3.3333405 -3.33332,3.3333405 z m 0,-5.3333405 c -1.10667,0 -2,0.89334 -2,2 0,1.10667 0.89333,2.0000005 2,2.0000005 1.10667,0 2.00002,-0.8933305 2.00002,-2.0000005 0,-1.10666 -0.89335,-2 -2.00002,-2 z"
-      fill={fill}
-    />
-  </svg>
-);
-
-export const PencilIcon: IconType = ({
-  fill = defaultFill,
-  size = defaultSize,
-}) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 27 28"
-    fill={fill}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M0 22.1937V26.7537C0 27.1737 0.33 27.5037 0.75 27.5037H5.31C5.505 27.5037 5.7 27.4287 5.835 27.2787L22.215 10.9137L16.59 5.28873L0.225 21.6537C0.075 21.8037 0 21.9837 0 22.1937ZM26.565 6.56373C27.15 5.97873 27.15 5.03373 26.565 4.44873L23.055 0.938728C22.7748 0.657849 22.3943 0.5 21.9975 0.5C21.6007 0.5 21.2202 0.657849 20.94 0.938728L18.195 3.68373L23.82 9.30873L26.565 6.56373Z"
-      fill={fill}
     />
   </svg>
 );

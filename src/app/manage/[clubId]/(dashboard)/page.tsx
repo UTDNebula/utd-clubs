@@ -4,14 +4,15 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import Button from '@mui/material/Button';
 import { notFound, redirect } from 'next/navigation';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 import ClubManageForm from './ClubManageForm';
+import { headers } from 'next/headers';
 
 const Page = async ({ params }: { params: { clubId: string } }) => {
-  const session = await getServerAuthSession();
-  if (!session) redirect(signInRoute(`manage/${params.clubId}`));
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect(await signInRoute(`manage/${params.clubId}`));
   const canAccess = await api.club.isOfficer({ id: params.clubId });
   if (!canAccess) {
     return <div className="">You can&apos;t access this 😢</div>;

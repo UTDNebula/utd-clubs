@@ -20,12 +20,6 @@ export default function Page() {
           Manage Users
         </Link>
         <Link
-          href="/admin/carousel"
-          className="rounded-md bg-slate-300 px-2 py-1 text-blue-500 transition-colors hover:bg-slate-400 hover:text-blue-600"
-        >
-          Manage Carousel
-        </Link>
-        <Link
           href="/admin/tags"
           className="rounded-md bg-slate-300 px-2 py-1 text-blue-500 transition-colors hover:bg-slate-400 hover:text-blue-600"
         >

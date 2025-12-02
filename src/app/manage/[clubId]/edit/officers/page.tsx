@@ -1,19 +1,23 @@
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import BackButton from '@src/components/backButton';
+import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 import EditListedOfficerForm from './EditListedOfficerForm';
 import EditOfficerForm from './EditOfficerForm';
 
-export default async function Page({
-  params: { clubId },
-}: {
-  params: { clubId: string };
+export default async function Page(props: {
+  params: Promise<{ clubId: string }>;
 }) {
-  const session = await getServerAuthSession();
-  if (!session) redirect(signInRoute(`manage/${clubId}/edit/officers`));
+  const params = await props.params;
+
+  const { clubId } = params;
+
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect(await signInRoute(`manage/${clubId}/edit/officers`));
   const role = await api.club.memberType({ id: clubId });
   const officers = await api.club.getOfficers({ id: clubId });
   const listedOfficers = await api.club.getListedOfficers({ id: clubId });
@@ -34,7 +38,7 @@ export default async function Page({
           Edit club Collaborators
         </h1>
         <EditOfficerForm clubId={clubId} officers={mapped} />
-        <h1 className="text-blue-primary text-2xl font-extrabold">
+        <h1 className="text-royal text-2xl font-extrabold">
           Edit club officers
         </h1>
         <EditListedOfficerForm clubId={clubId} officers={listedOfficers} />

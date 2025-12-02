@@ -11,19 +11,20 @@ import {
   MenuList,
   Popover,
 } from '@mui/material';
-import { type Session } from 'next-auth';
-import { signIn, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import RegisterModal from '@src/components/RegisterModal';
+import { authClient } from '@src/utils/auth-client';
 
 type Props = {
-  session: Session | null;
   shadow?: boolean;
 };
 
-export const ProfileDropDown = ({ session, shadow = false }: Props) => {
+export const ProfileDropDown = ({ shadow = false }: Props) => {
+  const { data: session } = authClient.useSession();
   const avatarRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
 
   // Close on scroll
   useEffect(() => {
@@ -48,7 +49,7 @@ export const ProfileDropDown = ({ session, shadow = false }: Props) => {
           if (session !== null) {
             setOpen(!open);
           } else {
-            void signIn();
+            setShowRegister(true);
           }
         }}
         component="button"
@@ -70,7 +71,13 @@ export const ProfileDropDown = ({ session, shadow = false }: Props) => {
               </ListItemIcon>
               <ListItemText>Settings</ListItemText>
             </MenuItem>
-            <MenuItem component="button" onClick={() => void signOut()}>
+            <MenuItem
+              component="button"
+              onClick={async () => {
+                await authClient.signOut();
+                setOpen(false);
+              }}
+            >
               <ListItemIcon>
                 <LogoutIcon fontSize="small" />
               </ListItemIcon>
@@ -79,6 +86,10 @@ export const ProfileDropDown = ({ session, shadow = false }: Props) => {
           </MenuList>
         </Card>
       </Popover>
+      <RegisterModal
+        open={showRegister}
+        onClose={() => setShowRegister(false)}
+      />
     </>
   );
 };

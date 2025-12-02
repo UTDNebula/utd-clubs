@@ -45,14 +45,18 @@ export default async function Page({
   );
 }
 
-const Events = async ({ params }: { params: { clubId: string } }) => {
+const Events = async (props: { params: Promise<{ clubId: string }> }) => {
+  const params = await props.params;
   const events = await api.event.byClubId({ clubId: params.clubId });
   return (
-    <div className="rounded-lg bg-white p-2 shadow-xs">
-      <h3 className="text-blue-primary text-xl font-bold">Events</h3>
-      <div className="flex flex-col">
+    <div className="rounded-lg bg-white p-4 shadow-xs w-full">
+      <h3 className="text-haiti text-xl font-bold">Events</h3>
+      <div
+        className="group flex flex-wrap w-full justify-evenly items-center pt-4 gap-4"
+        data-view="list"
+      >
         {events.map((event) => (
-          <EventCard key={event.id} event={event} />
+          <EventCard key={event.id} event={event} manageView />
         ))}
       </div>
     </div>
