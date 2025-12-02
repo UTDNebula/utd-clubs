@@ -1,4 +1,3 @@
-import 'server-only';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as admin from './schema/admin';
 import * as auth from './schema/auth';

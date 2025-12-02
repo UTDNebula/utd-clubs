@@ -406,7 +406,9 @@ export const clubRouter = createTRPCRouter({
           ),
         )
         .orderBy(
-          input.search !== '' ? sql`paradedb.score(id) DESC` : asc(club.name),
+          ...(input.search !== ''
+            ? [sql`paradedb.score(id) DESC`]
+            : [desc(club.pageViews), asc(club.name)]),
         );
 
       const res = await query.execute();

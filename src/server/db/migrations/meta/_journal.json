@@ -36,6 +36,13 @@
       "when": 1764713000714,
       "tag": "20251202220320_magical_lord_hawal",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1764716486332,
+      "tag": "20251202230126_cultured_loki",
+      "breakpoints": true
     }
   ]
 }
