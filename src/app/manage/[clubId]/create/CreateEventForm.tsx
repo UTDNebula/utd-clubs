@@ -109,12 +109,12 @@ const CreateEventForm = ({
       <div className="form-fields flex max-w-[830px] min-w-[320px] flex-1 flex-col gap-10">
         <div className="create-dropdown flex max-w-full flex-row justify-start gap-1 py-2 text-2xl font-bold whitespace-nowrap">
           <span>
-            Create Club Event <span className="text-[#3361FF]">for</span>
+            Create Club Event <span className="text-royal">for</span>
           </span>
           <div className="flex-1">
             <select
               {...register('clubId')}
-              className="w-full overflow-hidden bg-inherit text-ellipsis whitespace-nowrap text-[#3361FF] outline-hidden"
+              className="w-full overflow-hidden bg-inherit text-ellipsis whitespace-nowrap text-royal outline-hidden"
               defaultValue={clubId}
             >
               {officerClubs.map((club) => {
@@ -190,7 +190,7 @@ const CreateEventForm = ({
         <input
           type="submit"
           value="Create Event"
-          className={`bg-[#3361FF] ${loading ? 'opacity-40' : ''} rounded-md py-6 text-xs font-black text-white hover:cursor-pointer`}
+          className={`bg-royal ${loading ? 'opacity-40' : ''} rounded-md py-6 text-xs font-black text-white hover:cursor-pointer`}
         />
       </div>
       <div className="form-preview flex w-64 flex-col gap-14">

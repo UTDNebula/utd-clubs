@@ -8,11 +8,13 @@
     "start": "next start",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "next lint --fix",
-    "lint:check": "next lint",
+    "lint": "eslint --fix .",
+    "lint:check": "eslint .",
     "test": "NODE_OPTIONS=--experimental-vm-modules dotenv jest --detectOpenHandles --forceExit",
     "drizzle:generate": "dotenv drizzle-kit generate",
-    "drizzle:push": "dotenv drizzle-kit push"
+    "auth-schema:generate": "dotenv -- npx @better-auth/cli@latest generate --output src/server/db/schema/auth.ts --config src/server/auth.ts",
+    "drizzle:migrate": "dotenv drizzle-kit migrate",
+    "drizzle:check": "dotenv drizzle-kit check"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.2",
@@ -37,12 +39,12 @@
     "@trpc/client": "^11.1.0",
     "@trpc/server": "^11.1.0",
     "@trpc/tanstack-react-query": "^11.1.0",
+    "better-auth": "^1.4.4",
     "date-fns": "^4.1.0",
     "dotenv": "^16.0.3",
     "drizzle-orm": "^0.44.3",
     "drizzle-zod": "^0.8.2",
     "next": "^15.5.6",
-    "next-auth": "^4.24.11",
     "postgres": "^3.3.5",
     "react": "19.2.0",
     "react-dom": "19.2.0",
@@ -53,6 +55,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
     "@tailwindcss/postcss": "^4.1.4",
     "@tailwindcss/typography": "^0.5.9",

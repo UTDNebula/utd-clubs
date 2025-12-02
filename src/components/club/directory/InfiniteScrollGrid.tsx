@@ -1,18 +1,12 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { type Session } from 'next-auth';
 import { useEffect, useRef } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 
-type Props = {
-  session: Session | null;
-  tags?: string[];
-};
-
-export default function InfiniteScrollGrid({ session }: Props) {
+export default function InfiniteScrollGrid() {
   const { search, tags } = useSearchStore((state) => state);
   const api = useTRPC();
   const { data, isLoading, isFetchingNextPage, fetchNextPage } =
@@ -62,7 +56,7 @@ export default function InfiniteScrollGrid({ session }: Props) {
                   ref={isLastElement ? lastClubElementRef : null}
                   key={club.id}
                 >
-                  <ClubCard club={club} session={session} priority={false} />
+                  <ClubCard club={club} priority={false} />
                 </div>
               );
             }),

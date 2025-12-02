@@ -1,6 +1,7 @@
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import type {
   SelectContact as Contacts,
   SelectClub,
@@ -13,7 +14,7 @@ type Club = SelectClub & {
   tags: string[];
 };
 const ClubHeader = async ({ club }: { club: Club }) => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   const memberType = await api.club.memberType({ id: club.id });
   return (
     <div className="relative">
@@ -43,7 +44,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
           {memberType === 'Officer' || memberType === 'President' ? (
             <Link
               href={`/manage/${club.id}`}
-              className="bg-blue-primary rounded-full p-2.5 text-white transition-colors hover:bg-blue-700"
+              className="bg-royal rounded-full p-2.5 text-white transition-colors hover:bg-blue-700"
             >
               Manage
             </Link>

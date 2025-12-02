@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1764200141214,
+      "tag": "20251126233541_kind_eternals",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764644843153,
+      "tag": "20251202030723_robust_menace",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764649556522,
+      "tag": "20251202042556_fix-access-token-expiration",
+      "breakpoints": true
+    }
+  ]
+}
