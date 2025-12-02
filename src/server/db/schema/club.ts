@@ -9,6 +9,7 @@ import {
   pgMaterializedView,
   pgTable,
   text,
+  timestamp,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
 import { contacts } from './contacts';
@@ -37,6 +38,7 @@ export const club = pgTable(
     slug: text('slug').notNull(),
     name: text('name').notNull(),
     foundingDate: text('founding_date'),
+    updatedAt: timestamp('updated_at'),
     description: text('description').notNull(),
     tags: text('tags')
       .array()

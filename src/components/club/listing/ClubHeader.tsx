@@ -8,7 +8,6 @@ import type {
 } from '@src/server/db/models';
 import { api } from '@src/trpc/server';
 import JoinButton from '../JoinButton';
-import ContactButtons from './ContactButtons';
 
 type Club = SelectClub & {
   contacts?: Contacts[];
@@ -33,7 +32,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
           priority
         />
       </div>
-      <div className="absolute top-0 left-0 flex h-full w-full items-center p-8">
+      <div className="absolute top-0 left-0 flex h-full w-full items-center p-4 md:p-20">
         <h1
           className={`font-bold text-slate-100 ${
             club.name.length > 10 ? 'text-3xl' : 'text-5xl'
@@ -57,7 +56,6 @@ const ClubHeader = async ({ club }: { club: Club }) => {
               isJoined={memberType !== undefined}
             />
           )}
-          <ContactButtons contacts={club.contacts || []} />
         </div>
       </div>
     </div>
