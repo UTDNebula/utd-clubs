@@ -62,6 +62,7 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
                   {item.name}
                 </SearchResultsItem>
               ))}
+              hasResults
             />
           )}
       </div>

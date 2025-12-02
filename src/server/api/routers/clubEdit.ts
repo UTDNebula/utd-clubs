@@ -43,14 +43,12 @@ const editCollaboratorSchema = z.object({
   modified: z
     .object({
       userId: z.string(),
-      title: z.string(),
       position: z.enum(['President', 'Officer']),
     })
     .array(),
   created: z
     .object({
       userId: z.string(),
-      title: z.string(),
     })
     .array(),
 });
@@ -181,7 +179,6 @@ export const clubEditRouter = createTRPCRouter({
             userId: officer.userId,
             clubId: input.clubId,
             officerType: 'Officer' as const,
-            title: officer.title,
           })),
         )
         .onConflictDoUpdate({
