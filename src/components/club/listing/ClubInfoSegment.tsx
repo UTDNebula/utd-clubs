@@ -1,12 +1,12 @@
+import Chip from '@mui/material/Chip';
+import { format } from 'date-fns';
 import Image from 'next/image';
 import { type FC } from 'react';
-import { api } from '@src/trpc/server';
 import { type RouterOutputs } from '@src/trpc/shared';
 
 const ClubInfoSegment: FC<{
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }> = async ({ club }) => {
-  const isActive = await api.club.isActive({ id: club.id });
   return (
     <div className="w-full rounded-lg bg-slate-100 p-10">
       <div className="flex flex-col items-start justify-between md:flex-row">
@@ -21,10 +21,6 @@ const ClubInfoSegment: FC<{
             />
           )}
           <h1 className="text-2xl font-medium">Description</h1>
-          <div className="mt-5 flex w-36 justify-between">
-            <p className="text-sm text-slate-400">Name</p>
-            <p className="text-right text-sm text-slate-600">{club.name}</p>
-          </div>
           {club.foundingDate && (
             <div className="mt-2 flex w-36 justify-between">
               <p className="text-sm text-slate-400">Founded</p>
@@ -33,11 +29,25 @@ const ClubInfoSegment: FC<{
               </p>
             </div>
           )}
-          <div className="mt-2 flex w-36 justify-between">
-            <p className="text-sm text-slate-400">Active</p>
-            <p className="text-right text-sm text-slate-600">
-              {isActive ? 'Yes' : 'No'}
-            </p>
+          {club.updatedAt && (
+            <div className="mt-2 flex w-36 justify-between">
+              <p className="text-sm text-slate-400">Updated</p>
+              <p className="text-right text-sm text-slate-600">
+                {format(club.updatedAt, 'LLL yyyy')}
+              </p>
+            </div>
+          )}
+          <div className="flex flex-wrap gap-1 mt-2">
+            {club.tags.map((tag) => {
+              return (
+                <Chip
+                  label={tag}
+                  key={tag}
+                  className=" rounded-full font-bold transition-colors text-white"
+                  color="primary"
+                />
+              );
+            })}
           </div>
         </div>
         <div className="w-full md:w-2/3">
