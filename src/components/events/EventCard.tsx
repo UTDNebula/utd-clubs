@@ -118,9 +118,7 @@ const VerticalCard = async ({ event, manageView }: EventCardProps) => {
           {!manageView && session && <EventRegisterButton eventId={event.id} />}
           {manageView && (
             <>
-              <IconButton>
-                <EditIcon />
-              </IconButton>
+              <EventCardEditButton clubId={event.clubId} eventId={event.id} />
               <IconButton color="error" disabled>
                 <DeleteIcon />
               </IconButton>
