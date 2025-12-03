@@ -32,12 +32,14 @@ export default async function Page(props: {
     <main className="h-full">
       <Header />
       <div className="flex flex-col gap-y-2 px-5">
-        <BackButton className="bg-royal [&>svg]:fill-white" />
-        <p className="text-royal text-2xl font-extrabold">
+        <BackButton />
+        <h1 className="text-blue-primary text-2xl font-extrabold">
           Edit club Collaborators
-        </p>
+        </h1>
         <EditOfficerForm clubId={clubId} officers={mapped} />
-        <p className="text-royal text-2xl font-extrabold">Edit club officers</p>
+        <h1 className="text-royal text-2xl font-extrabold">
+          Edit club officers
+        </h1>
         <EditListedOfficerForm clubId={clubId} officers={listedOfficers} />
       </div>
     </main>

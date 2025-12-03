@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import BackButton from '@src/components/backButton';
+import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
 import { api } from '@src/trpc/server';
 import EditClubForm from './EditClubForm';
@@ -7,7 +8,13 @@ import EditContactForm from './EditContactForm';
 
 export default async function Page(props: {
   params: Promise<{ clubId: string }>;
+export default async function Page(props: {
+  params: Promise<{ clubId: string }>;
 }) {
+  const params = await props.params;
+
+  const { clubId } = params;
+
   const params = await props.params;
 
   const { clubId } = params;
@@ -19,7 +26,7 @@ export default async function Page(props: {
       <div className="">
         <Header />
         <div className="flex h-full w-full flex-col gap-y-5 p-5">
-          <BackButton className="bg-royal [&>svg]:fill-white" />
+          <BackButton />
           <EditClubForm club={club} />
           <EditContactForm club={club} />
         </div>

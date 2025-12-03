@@ -1,55 +1,59 @@
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
+import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
-import PersonIcon from '@mui/icons-material/Person';
-import { Button } from '@mui/material';
-import Link from 'next/link';
+import PreviewIcon from '@mui/icons-material/Preview';
+import Button from '@mui/material/Button';
+import { notFound, redirect } from 'next/navigation';
+import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import { auth } from '@src/server/auth';
+import { api } from '@src/trpc/server';
+import { signInRoute } from '@src/utils/redirect';
+import ClubManageForm from './ClubManageForm';
+import { headers } from 'next/headers';
 
-const Page = async (props: { params: Promise<{ clubId: string }> }) => {
-  const params = await props.params;
+const Page = async ({ params }: { params: { clubId: string } }) => {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect(await signInRoute(`manage/${params.clubId}`));
+  const canAccess = await api.club.isOfficer({ id: params.clubId });
+  if (!canAccess) {
+    return <div className="">You can&apos;t access this 😢</div>;
+  }
+  const club = await api.club.byId({ id: params.clubId });
+  if (!club) {
+    notFound();
+  }
   return (
     <>
-      <div className="flex flex-row flex-wrap gap-x-10 gap-y-4 rounded-lg bg-white p-2 shadow-xs">
-        <Link href={`/manage/${params.clubId}/edit`}>
-          <Button
-            variant="contained"
-            className="normal-case"
-            startIcon={<EditIcon />}
-            size="large"
-          >
-            Edit Club Data
-          </Button>
-        </Link>
-        <Link href={`/manage/${params.clubId}/edit/officers`}>
-          <Button
-            variant="contained"
-            className="normal-case"
-            startIcon={<PersonIcon />}
-            size="large"
-          >
-            Manage Officers
-          </Button>
-        </Link>
+      <ClubManageHeader club={club} hrefBack="/manage/">
         <Button
+          href={`/manage/${params.clubId}/members`}
           variant="contained"
           className="normal-case"
           startIcon={<PeopleIcon />}
           size="large"
-          disabled
         >
           View Members
         </Button>
-        <Link href={`/manage/${params.clubId}/create`}>
-          <Button
-            variant="contained"
-            className="normal-case"
-            startIcon={<AddIcon />}
-            size="large"
-          >
-            Create Event
-          </Button>
-        </Link>
-      </div>
+        <Button
+          href={`/manage/${params.clubId}/events`}
+          variant="contained"
+          className="normal-case"
+          startIcon={<EventIcon />}
+          size="large"
+        >
+          View Events
+        </Button>
+        <Button
+          href={`/directory/${club.slug}`}
+          variant="contained"
+          className="normal-case"
+          startIcon={<PreviewIcon />}
+          size="large"
+        >
+          Preview Club Card
+        </Button>
+      </ClubManageHeader>
+
+      <ClubManageForm club={club} />
     </>
   );
 };
