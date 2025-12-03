@@ -1,6 +1,5 @@
-import { relations, SQL, sql } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import {
-  AnyPgColumn,
   boolean,
   customType,
   index,
