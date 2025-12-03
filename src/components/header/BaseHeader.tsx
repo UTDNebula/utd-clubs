@@ -4,14 +4,39 @@ import NewSidebar from '../nav/Slide';
 import { ClubSearchBar } from '../searchBar/ClubSearchBar';
 import { EventSearchBar } from '../searchBar/EventSearchBar';
 import { ProfileDropDown } from './ProfileDropDown';
+import gradientBG from 'public/images/landingGradient.png';
+import Image from 'next/image';
+import Link from 'next/link';
+import NebulaLogo from '@src/icons/NebulaLogo';
 
 export const BaseHeader = async ({ children }: { children: ReactNode }) => {
   const userCapabilities = await api.userMetadata.getUserSidebarCapabilities();
   return (
-    <div className="sticky top-0 z-50 flex w-full shrink justify-between items-center bg-[#edeff2] px-5 py-2.5">
-      <NewSidebar userCapabilities={userCapabilities} hamburger="black" />
-      {children}
-      <ProfileDropDown />
+    <div className="sticky top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-1 md:py-2 px-4 bg-lighten dark:bg-darken flex-wrap sm:flex-nowrap">
+      <Image
+        src={gradientBG}
+        alt="gradient background"
+        fill
+        className="object-cover -z-20"
+        sizes="120vw"
+      />
+      <div className="absolute inset-0 bg-lighten -z-10"></div>
+      <div className="grow basis-0 flex gap-4">
+        <NewSidebar userCapabilities={userCapabilities} hamburger="black" />
+        <Link
+          href="/"
+          className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center"
+        >
+          <NebulaLogo className="h-6 w-auto fill-haiti" />
+          UTD CLUBS
+        </Link>
+      </div>
+      <div className="grow order-last basis-full sm:order-none sm:basis-auto">
+        {children}
+      </div>
+      <div className="grow basis-0 flex flex-row-reverse">
+        <ProfileDropDown />
+      </div>
     </div>
   );
 };
@@ -26,11 +51,9 @@ const Header = () => {
 
 export const EventHeader = () => {
   return (
-    <>
-      <BaseHeader>
-        <EventSearchBar />
-      </BaseHeader>
-    </>
+    <BaseHeader>
+      <EventSearchBar />
+    </BaseHeader>
   );
 };
 
