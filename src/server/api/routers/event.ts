@@ -352,6 +352,9 @@ export const eventRouter = createTRPCRouter({
         orderBy: sortByDate
           ? (event, { desc }) => [desc(event.startTime)]
           : undefined,
+        with: {
+          club: true,
+        },
       });
 
       return events;
