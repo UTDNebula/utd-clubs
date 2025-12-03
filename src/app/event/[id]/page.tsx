@@ -95,9 +95,11 @@ export default async function EventsPage(props: Params) {
               {event.description}
             </p>
           </div>
-          <div className="flex flex-col">
-            <CountdownTimer startTime={event.startTime} />
-            <Link href={`/directory/${club.slug}`}>
+          <div className="flex flex-col gap-4">
+            <div>
+              <CountdownTimer startTime={event.startTime} />
+            </div>
+            <Link href={`/directory/${club.slug}`} className="mt-auto self-end">
               <Button variant="contained" className="normal-case" size="large">
                 View Club
               </Button>
