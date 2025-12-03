@@ -125,7 +125,6 @@ const EditOfficerForm = ({ clubId, officers }: EditOfficerFormProps) => {
                 append({
                   userId: user.id,
                   name: user.name,
-                  title: 'Officer',
                   position: 'Officer',
                   locked: false,
                 });

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { BlueBackButton } from '@src/components/backButton';
+import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
 import { api } from '@src/trpc/server';
 import EditClubForm from './EditClubForm';
@@ -19,7 +19,7 @@ export default async function Page(props: {
       <div className="">
         <Header />
         <div className="flex h-full w-full flex-col gap-y-5 p-5">
-          <BlueBackButton />
+          <BackButton className="bg-royal [&>svg]:fill-white" />
           <EditClubForm club={club} />
           <EditContactForm club={club} />
         </div>

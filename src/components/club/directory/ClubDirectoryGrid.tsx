@@ -1,18 +1,13 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { type Session } from 'next-auth';
 import { useEffect } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 import InfiniteScrollGrid from './InfiniteScrollGrid';
 
-interface Props {
-  session: Session | null;
-}
-
-const ClubDirectoryGrid = ({ session }: Props) => {
+const ClubDirectoryGrid = () => {
   const { search, tags, shouldFocus, setShouldFocus } = useSearchStore(
     (state) => state,
   );
@@ -52,9 +47,9 @@ const ClubDirectoryGrid = ({ session }: Props) => {
       ) : (
         <>
           {data?.clubs.map((club) => (
-            <ClubCard key={club.id} club={club} session={session} priority />
+            <ClubCard key={club.id} club={club} priority />
           ))}
-          {data?.clubs.length === 9 && <InfiniteScrollGrid session={session} />}
+          {data?.clubs.length === 9 && <InfiniteScrollGrid />}
         </>
       )}
     </div>
