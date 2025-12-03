@@ -64,7 +64,6 @@ const editOfficerSchema = z.object({
       name: z.string(),
       position: z.string(),
       isPresident: z.boolean(),
-      image: z.union([z.url(), z.literal('')]).optional(),
     })
     .array(),
   created: z
@@ -72,7 +71,6 @@ const editOfficerSchema = z.object({
       name: z.string(),
       position: z.string(),
       isPresident: z.boolean(),
-      image: z.union([z.url(), z.literal('')]).optional(),
     })
     .array(),
 });
@@ -240,7 +238,6 @@ export const clubEditRouter = createTRPCRouter({
           .set({
             position: modded.position,
             isPresident: modded.isPresident,
-            image: modded.image,
           })
           .where(
             and(eq(officers.id, modded.id), eq(officers.clubId, input.clubId)),

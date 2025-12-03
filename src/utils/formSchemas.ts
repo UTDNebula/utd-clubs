@@ -24,9 +24,9 @@ export const editClubSchema = z.object({
   id: z.string(),
   name: z.string().min(3),
   description: z.string().min(1),
-  tags: z.array(z.string()),
-  profileImage: z.union([z.url(), z.literal('')]).optional(),
-  bannerImage: z.union([z.url(), z.literal('')]).optional(),
+  tags: z.array(z.string()).optional(),
+  profileImage: z.string().url().optional(),
+  bannerImage: z.string().url().optional(),
   foundingDate: z.string().optional(),
 });
 export const editOfficerSchema = z.object({
@@ -47,7 +47,6 @@ export const editListedOfficerSchema = z.object({
       name: z.string(),
       position: z.string().min(1),
       isPresident: z.boolean(),
-      image: z.union([z.url(), z.literal('')]).optional(),
     })
     .array(),
 });
