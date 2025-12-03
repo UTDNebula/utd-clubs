@@ -4,10 +4,8 @@ import {
   asc,
   desc,
   eq,
-  gt,
   ilike,
   inArray,
-  lt,
   sql,
 } from 'drizzle-orm';
 import { z } from 'zod';
@@ -181,16 +179,22 @@ export const clubRouter = createTRPCRouter({
   memberType: publicProcedure
     .input(byIdSchema)
     .query(async ({ input, ctx }) => {
-      if (!ctx.session) return undefined;
+      if (!ctx.session) return null;
       return (
-        await ctx.db.query.userMetadataToClubs.findFirst({
-          where: and(
-            eq(userMetadataToClubs.clubId, input.id),
-            eq(userMetadataToClubs.userId, ctx.session.user.id),
-            inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
-          ),
-        })
-      )?.memberType;
+        (
+          await ctx.db.query.userMetadataToClubs.findFirst({
+            where: and(
+              eq(userMetadataToClubs.clubId, input.id),
+              eq(userMetadataToClubs.userId, ctx.session.user.id),
+              inArray(userMetadataToClubs.memberType, [
+                'Member',
+                'Officer',
+                'President',
+              ]),
+            ),
+          })
+        )?.memberType ?? null
+      );
     }),
   joinLeave: protectedProcedure
     .input(joinLeaveSchema)

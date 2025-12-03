@@ -21,7 +21,7 @@ import {
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
 import { dateSchema } from '@src/utils/eventFilter';
-import { createEventSchema } from '@src/utils/formSchemas';
+import { createEventSchema, updateEventSchema } from '@src/utils/formSchemas';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byClubIdSchema = z.object({
@@ -303,6 +303,43 @@ export const eventRouter = createTRPCRouter({
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to add event',
+        });
+      return res[0]?.id;
+    }),
+  update: protectedProcedure
+    .input(updateEventSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { id, clubId, ...data } = input;
+      const userId = ctx.session.user.id;
+
+      const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
+        where: and(
+          eq(userMetadataToClubs.userId, userId),
+          eq(userMetadataToClubs.clubId, clubId),
+          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+        ),
+      });
+
+      if (!isOfficer) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+      }
+
+      const res = await ctx.db
+        .update(events)
+        .set({
+          name: data.name,
+          location: data.location,
+          description: data.description,
+          startTime: data.startTime,
+          endTime: data.endTime,
+        })
+        .where(eq(events.id, id))
+        .returning({ id: events.id });
+
+      if (res.length == 0)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to update event',
         });
       return res[0]?.id;
     }),
