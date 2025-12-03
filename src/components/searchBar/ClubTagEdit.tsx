@@ -52,7 +52,7 @@ export const ClubTagEdit = ({
   return (
     <div
       ref={containerRef}
-      className={`text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] mr-3 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
+      className={`text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] mr-3 w-full transition-all ${
         isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
       }`}
       suppressHydrationWarning
@@ -71,7 +71,7 @@ export const ClubTagEdit = ({
             {...params}
           />
         )}
-        // value={tags}
+        value={tags}
         defaultValue={tags}
         renderValue={(value, getItemProps) => {
           return value.map((option: string, index: number) => {
