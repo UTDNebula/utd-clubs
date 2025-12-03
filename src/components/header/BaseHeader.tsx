@@ -8,6 +8,7 @@ import gradientBG from 'public/images/landingGradient.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import NebulaLogo from '@src/icons/NebulaLogo';
+import ClubMatchButton from '@src/components/header/ClubMatchButton';
 
 export const BaseHeader = async ({ children }: { children: ReactNode }) => {
   const userCapabilities = await api.userMetadata.getUserSidebarCapabilities();
@@ -21,7 +22,7 @@ export const BaseHeader = async ({ children }: { children: ReactNode }) => {
         sizes="120vw"
       />
       <div className="absolute inset-0 bg-lighten -z-10"></div>
-      <div className="grow basis-0 flex gap-4">
+      <div className="grow basis-0 flex gap-x-2 md:gap-x-4 lg:gap-x-8">
         <NewSidebar userCapabilities={userCapabilities} hamburger="black" />
         <Link
           href="/"
@@ -31,10 +32,11 @@ export const BaseHeader = async ({ children }: { children: ReactNode }) => {
           UTD CLUBS
         </Link>
       </div>
-      <div className="grow order-last basis-full sm:order-none sm:basis-auto">
+      <div className="grow order-last basis-full sm:order-none sm:basis-auto gap-x-2 md:gap-x-4 lg:gap-x-8">
         {children}
       </div>
-      <div className="grow basis-0 flex flex-row-reverse">
+      <div className="grow basis-0 flex justify-end items-center gap-x-2">
+        <ClubMatchButton />
         <ProfileDropDown />
       </div>
     </div>
