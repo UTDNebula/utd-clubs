@@ -9,16 +9,16 @@ export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect(await signInRoute('directory/create'));
   return (
-    <main>
-      <div className="">
+    <>
         <Header />
+        <main className="p-4">
         <CreateClubForm
           user={{
             id: session.user.id,
             name: session.user.name,
           }}
         />
-      </div>
-    </main>
+        </main>
+    </>
   );
 }

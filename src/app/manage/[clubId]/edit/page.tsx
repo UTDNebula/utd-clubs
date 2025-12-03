@@ -15,15 +15,13 @@ export default async function Page(props: {
   const club = await api.club.byId({ id: clubId });
   if (!club) notFound();
   return (
-    <main>
-      <div className="">
-        <Header />
-        <div className="flex h-full w-full flex-col gap-y-5 p-5">
-          <BackButton className="bg-royal [&>svg]:fill-white" />
-          <EditClubForm club={club} />
-          <EditContactForm club={club} />
-        </div>
-      </div>
-    </main>
+    <>
+      <Header />
+      <main className="flex h-full w-full flex-col gap-y-5 p-4">
+        <BackButton className="bg-royal [&>svg]:fill-white" />
+        <EditClubForm club={club} />
+        <EditContactForm club={club} />
+      </main>
+    </>
   );
 }

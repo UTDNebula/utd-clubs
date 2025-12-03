@@ -13,12 +13,10 @@ import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
 const Home = async () => {
   const tags = await api.club.topTags();
-  // const featured = await api.club.getCarousel();
-  // const onlyClubs = featured.map((item) => item.club);
+
   return (
     <SearchStoreProvider>
       <main className="relative">
-        {/* <Header /> */}
         <div className="absolute inset-0 z-0">
           <div className="relative h-[120vh] w-screen">
             <section className="absolute inset-0 z-0 h-[120vh] w-screen">

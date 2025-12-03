@@ -14,17 +14,17 @@ const EditEventPage = async (props: {
   const officerClubs = await api.club.getOfficerClubs();
 
   return (
-    <main className="h-screen">
+    <>
       <Header />
-      <div className="flex flex-row justify-between gap-20 px-5">
+      <main className="flex flex-row justify-between gap-20 p-4">
         <EventForm
           mode="edit"
           clubId={clubId}
           officerClubs={officerClubs}
           event={{ ...event, liked: false }}
         />
-      </div>
-    </main>
+      </main>
+    </>
   );
 };
 
