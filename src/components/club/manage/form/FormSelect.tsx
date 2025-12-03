@@ -50,7 +50,7 @@ export const FormSelect = <TFormValues extends FieldValues>({
       {...{ control }}
       render={({ field }) => (
         <FormControl
-          sx={{ m: 1, minWidth: 120 }}
+          sx={{ m: 1, minWidth: 180 }}
           size="small"
           className={className + ' m-2 [&>.MuiInputBase-root]:bg-white'}
         >
@@ -59,7 +59,11 @@ export const FormSelect = <TFormValues extends FieldValues>({
             labelId={`select-label-${key}`}
             id="outlined-basic"
             label={label}
-            value={methods.getValues(name)}
+            // value={methods.getValues(name)}
+            // value={methods.getFieldState(name)}
+            // value={methods}
+            // value={<MenuItem value="discord">Discord</MenuItem>}
+            // value={}
             onChange={handleChange}
           >
             {children}

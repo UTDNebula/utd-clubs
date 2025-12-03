@@ -110,6 +110,7 @@ const ContactListItem = ({
             available.map((platform, index) => (
               <MenuItem key={index} value={platform}>
                 {contactNames[platform]}
+                {/* foo */}
                 {/* <div className="box-content h-8 w-8">
                   <div className="h-8 w-8">{logo[platform]}</div>
                 </div>

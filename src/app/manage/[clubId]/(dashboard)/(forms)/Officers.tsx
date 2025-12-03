@@ -92,6 +92,7 @@ const Officers = ({ club, officers }: OfficersProps) => {
   const methods = useForm<z.infer<typeof editListedOfficerSchema>>({
     resolver: zodResolver(editListedOfficerSchema),
     defaultValues: { officers: officers },
+    // defaultValues: { officers: [{ name: 'God', position: 'Almighty' }] },
     mode: 'onTouched',
   });
 

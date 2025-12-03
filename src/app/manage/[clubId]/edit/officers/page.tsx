@@ -1,25 +1,13 @@
 import { headers } from 'next/headers';
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import BackButton from '@src/components/backButton';
-import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
-import { auth } from '@src/server/auth';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 import EditListedOfficerForm from './EditListedOfficerForm';
 import EditOfficerForm from './EditOfficerForm';
 
-export default async function Page(props: {
-  params: Promise<{ clubId: string }>;
-}) {
-  const params = await props.params;
-
-  const { clubId } = params;
-
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) redirect(await signInRoute(`manage/${clubId}/edit/officers`));
 export default async function Page(props: {
   params: Promise<{ clubId: string }>;
 }) {
@@ -49,7 +37,6 @@ export default async function Page(props: {
           Edit club Collaborators
         </h1>
         <EditOfficerForm clubId={clubId} officers={mapped} />
-        <h1 className="text-royal text-2xl font-extrabold">
         <h1 className="text-royal text-2xl font-extrabold">
           Edit club officers
         </h1>

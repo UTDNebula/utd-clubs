@@ -126,8 +126,14 @@ type ContactsProps = {
 const Contacts = ({ club }: ContactsProps) => {
   const methods = useForm<z.infer<typeof editClubContactSchema>>({
     resolver: zodResolver(editClubContactSchema),
+    // defaultValues: {
+    //   contacts: club.contacts,
+    // },
     defaultValues: {
-      contacts: club.contacts,
+      contacts: [
+        { platform: 'discord', url: 'https://example.com' },
+        ...club.contacts,
+      ],
     },
     mode: 'onTouched',
   });
@@ -223,7 +229,8 @@ const Contacts = ({ club }: ContactsProps) => {
           startIcon={<AddIcon />}
           size="large"
           onClick={() => {
-            append({ platform: 'website', url: '' });
+            // @ts-expect-error Blank is allowed but only when creating it for the first time. YAY!
+            append({ platform: '', url: '' });
           }}
         >
           Add Contact
