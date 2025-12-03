@@ -33,13 +33,11 @@ export default async function Page(props: {
       <Header />
       <div className="flex flex-col gap-y-2 px-5">
         <BackButton className="bg-royal [&>svg]:fill-white" />
-        <h1 className="text-royal text-2xl font-extrabold">
+        <p className="text-royal text-2xl font-extrabold">
           Edit club Collaborators
-        </h1>
+        </p>
         <EditOfficerForm clubId={clubId} officers={mapped} />
-        <h1 className="text-royal text-2xl font-extrabold">
-          Edit club officers
-        </h1>
+        <p className="text-royal text-2xl font-extrabold">Edit club officers</p>
         <EditListedOfficerForm clubId={clubId} officers={listedOfficers} />
       </div>
     </main>

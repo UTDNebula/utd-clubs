@@ -54,7 +54,7 @@ const ClubInfoSegment: FC<{
       {club.officers.length != 0 && (
         <div className="w-auto max-w-[320px] min-w-0">
           <>
-            <h1 className="text-center text-2xl font-medium">Leadership</h1>
+            <h3 className="text-center text-2xl font-medium">Leadership</h3>
             <div className="flex flex-col justify-center align-middle">
               {club.officers.map((officer) => (
                 <div className="mt-5 flex flex-row" key={officer.id}>

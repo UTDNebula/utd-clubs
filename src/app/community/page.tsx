@@ -28,7 +28,7 @@ const Community = async () => {
           <Image src="/nebula-logo.png" alt="" width={300} height={300} />
         </div>
         <div className="h-full">
-          <h1 className="text-black-500 pt-5 pb-1 text-center text-3xl font-bold">
+          <h1 className="font-display text-black-500 pt-5 pb-1 text-center text-3xl font-bold">
             Please Sign in to Use the Community Page.
           </h1>
         </div>
@@ -39,7 +39,9 @@ const Community = async () => {
     <main className="h-full">
       <Header />
       <div className="mx-6 h-full p-2">
-        <h1 className="text-2xl font-bold text-haiti">Community Events</h1>
+        <h1 className="font-display text-2xl font-bold text-haiti">
+          Community Events
+        </h1>
         <CommunityEvents />
       </div>
     </main>

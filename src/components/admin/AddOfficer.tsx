@@ -28,7 +28,7 @@ export default function AddOfficer({ clubId }: { clubId: string }) {
 
   return (
     <div className="container">
-      <h1>Add Officer</h1>
+      <p>Add Officer</p>
       <div className="flex p-3">
         <UserSearchBar
           passUser={(user) =>

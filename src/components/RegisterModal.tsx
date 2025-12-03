@@ -35,7 +35,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ open, onClose }) => {
 
           {/* <div className="flex flex-col items-start gap-6 pl-12 sm:pl-16"> */}
           <div className="flex flex-col items-center gap-6">
-            <h1 className="text-left text-2xl font-bold font-[Roboto,Arial,sans-serif] text-[#4D5E80]">
+            <h1 className="font-display text-left text-2xl font-bold font-[Roboto,Arial,sans-serif] text-[#4D5E80]">
               Sign In / Sign Up
             </h1>
 

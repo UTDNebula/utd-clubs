@@ -25,11 +25,11 @@ const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
           } group-hover:fill-royal`}
         />
       )}
-      <h1
+      <h2
         className={`text-base font-medium capitalize md:text-sm ${active ? 'text-royal' : 'text-slate-500'} group-hover:text-royal`}
       >
         {cat}
-      </h1>
+      </h2>
     </Link>
   );
 };

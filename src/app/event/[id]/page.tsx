@@ -41,7 +41,7 @@ export default async function EventsPage(props: Params) {
           />
           <div className="relative z-10 flex h-full inset-0 flex-col justify-between gap-4 p-10 md:flex-row md:gap-0">
             <div className="text-white">
-              <h1 className="mb-4 text-4xl font-bold text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)]">
+              <h1 className="font-display mb-4 text-4xl font-bold text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)]">
                 {event.name}
               </h1>
               <TimeComponent date={event.startTime.toISOString()} />

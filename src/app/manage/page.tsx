@@ -19,7 +19,9 @@ export default async function Page() {
       <Header />
       <div className="px-5">
         <div className="flex items-center">
-          <h1 className="text-2xl font-extrabold text-haiti">Select a Club</h1>
+          <h1 className="font-display text-2xl font-extrabold text-haiti">
+            Select a Club
+          </h1>
           <Link className="ml-auto" href="/directory/create">
             <Button variant="contained" className="normal-case">
               Create New Club

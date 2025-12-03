@@ -27,7 +27,7 @@ export default async function Auth(props: {
             <BackButton className="bg-white" />
           </div>
           <div className="z-10 flex flex-col items-center justify-center space-y-12">
-            <h1 className="text-center text-6xl font-bold text-white sm:text-left">
+            <h1 className="font-display text-center text-6xl font-bold text-white sm:text-left">
               Sign In /<br className="sm:hidden" /> Sign Up
             </h1>
             <div className="flex w-full flex-col items-center justify-center space-y-4 gap-x-4 py-2.5 sm:flex-row sm:space-y-0">

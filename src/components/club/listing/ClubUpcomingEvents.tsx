@@ -13,7 +13,7 @@ const ClubUpcomingEvents: FC<{ clubId: string }> = async ({ clubId }) => {
 
   return (
     <div className="w-full rounded-lg bg-slate-100 p-6 md:p-10">
-      <h1 className="text-2xl font-semibold text-gray-800">Upcoming Events</h1>
+      <h2 className="text-2xl font-semibold text-gray-800">Upcoming Events</h2>
       <div
         className="mt-4 md:mt-6 group flex flex-wrap w-full justify-evenly items-center gap-4"
         data-view="list"

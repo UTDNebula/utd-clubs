@@ -164,7 +164,7 @@ const EventForm = ({
           </div>
         </div>
         <div className="event-pic w-full">
-          <h1 className="mb-4 font-bold">Event Picture</h1>
+          <h2 className="mb-4 font-bold">Event Picture</h2>
           <p className="upload-label mb-11 text-xs font-bold">
             Drag or choose file to upload
           </p>
@@ -174,7 +174,7 @@ const EventForm = ({
           </div>
         </div>
         <div className="event-details flex w-full flex-col gap-4">
-          <h1 className="font-bold">Event Details</h1>
+          <h2 className="font-bold">Event Details</h2>
           <div className="event-name">
             <label className="mb-2 block text-xs font-bold" htmlFor="name">
               Event Name
@@ -230,7 +230,7 @@ const EventForm = ({
         />
       </div>
       <div className="form-preview flex w-64 flex-col gap-14">
-        <h1 className="text-lg font-bold">Preview</h1>
+        <h2 className="text-lg font-bold">Preview</h2>
         {eventPreview && <EventCardPreview event={eventPreview} />}
       </div>
     </form>

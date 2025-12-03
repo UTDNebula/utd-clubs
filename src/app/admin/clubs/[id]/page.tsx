@@ -18,7 +18,7 @@ export default async function Page(props: Props) {
 
   return (
     <div className="m-5">
-      <h1 className="text-center text-4xl font-bold text-haiti mb-20">
+      <h1 className="font-display text-center text-4xl font-bold text-haiti mb-20">
         {org.name}
       </h1>
       {org.approved === 'approved' ? (
