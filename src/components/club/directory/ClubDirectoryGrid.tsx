@@ -1,19 +1,13 @@
 'use client';
 
 import { Skeleton } from '@mui/material';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { type FC } from 'react';
-import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import ClubCard from '../ClubCard';
 import InfiniteScrollGrid from './InfiniteScrollGrid';
 import ScrollTop from './ScrollTop';
-
-type ClubQueryData = {
-  clubs: SelectClub[];
-  cursor: number;
-};
 
 const ClubCardSkeleton = () => {
   return (
