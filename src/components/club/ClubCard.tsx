@@ -11,8 +11,6 @@ type Props = { club: Club; priority?: boolean; manageView?: boolean };
 const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
   const desc = club.description;
   const name = club.name;
-  const placeholderImage =
-    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAQABADAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAABgf/xAAXEAEAAwAAAAAAAAAAAAAAAAAFACIx/8QAGAEAAgMAAAAAAAAAAAAAAAAABAUGBwj/xAAWEQADAAAAAAAAAAAAAAAAAAAAAgT/2gAMAwEAAhEDEQA/ALuYnlpkZHL4onFpieWhaOI6JySlqZaKEcnNMwtMTy0MRxFROf/Z';
 
   return (
     <Link
@@ -21,7 +19,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
       data-club-result
     >
       <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
-        {club.profileImage ? (
+        {club.profileImage && (
           <Image
             src={club.profileImage}
             fill
@@ -29,12 +27,9 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
             priority={priority}
             sizes="20rem"
             className="object-cover select-none"
-            placeholder="blur"
-            blurDataURL={placeholderImage}
           />
-        ) : (
-          <div className="absolute inset-0 h-full w-full bg-gray-200" />
         )}
+        <div className="absolute inset-0 h-full w-full bg-gray-200" />
       </div>
 
       <div className="flex flex-col space-y-2 p-6">

@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
@@ -11,18 +10,6 @@ import { TagPill } from '@src/components/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
-
-export const metadata: Metadata = {
-  title: 'Jupiter - Nebula',
-  description: 'Get connected on campus.',
-  alternates: {
-    canonical: 'https://jupiter.utdnebula.com',
-  },
-  openGraph: {
-    url: 'https://jupiter.utdnebula.com',
-    description: 'Jupiter - Nebula Labs',
-  },
-};
 
 const Home = async () => {
   const tags = await api.club.topTags();
