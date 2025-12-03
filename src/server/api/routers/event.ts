@@ -68,10 +68,12 @@ export const eventRouter = createTRPCRouter({
               ? and(eq(event.clubId, clubId), gte(event.startTime, currentTime))
               : eq(event.clubId, clubId),
           orderBy: sortByDate ? (event) => [event.startTime] : undefined,
+          with: {
+            club: true,
+          },
         });
 
-        const parsed = events.map((e) => selectEvent.parse(e));
-        return parsed;
+        return events;
       } catch (e) {
         console.error(e);
 
@@ -131,7 +133,6 @@ export const eventRouter = createTRPCRouter({
             and(lte(event.startTime, endUTC), gte(event.endTime, endUTC)),
           );
         },
-
         with: {
           club: true,
         },

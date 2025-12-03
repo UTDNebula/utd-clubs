@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import type {
@@ -39,11 +40,10 @@ const ClubHeader = async ({ club }: { club: Club }) => {
         </h1>
         <div className="ml-auto flex items-center gap-x-6">
           {memberType === 'Officer' || memberType === 'President' ? (
-            <Link
-              href={`/manage/${club.id}`}
-              className="bg-royal rounded-full p-2.5 text-white transition-colors hover:bg-blue-700"
-            >
-              Manage
+            <Link href={`/manage/${club.id}`}>
+              <Button variant="contained" size="large" className="normal-case">
+                Manage
+              </Button>
             </Link>
           ) : (
             <JoinButton isHeader clubID={club.id} />

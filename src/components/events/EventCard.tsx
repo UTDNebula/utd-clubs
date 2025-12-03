@@ -14,15 +14,10 @@ import { EventCardEditButton } from './EventCardEditButton';
 import EventRegisterButton from './EventRegisterButton';
 import EventTimeAlert from './EventTimeAlert';
 
-type EventCardProps =
-  | {
-      event: RouterOutputs['event']['findByFilters']['events'][number];
-      manageView?: false;
-    }
-  | {
-      event: RouterOutputs['event']['byClubId'][number];
-      manageView: true;
-    };
+interface EventCardProps {
+  event: RouterOutputs['event']['byClubId'][number];
+  manageView?: boolean;
+}
 
 const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
   const session = await auth.api.getSession({ headers: await headers() });
