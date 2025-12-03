@@ -1,16 +1,13 @@
 'use client';
 
 import TagIcon from '@mui/icons-material/Tag';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useTRPC } from '@src/trpc/react';
-import useDebounce from '@src/utils/useDebounce';
-
 
 export const ClubTagEdit = ({
   tags,
@@ -19,20 +16,13 @@ export const ClubTagEdit = ({
   tags: string[];
   setTagsAction: (value: string[]) => void;
 }) => {
-  const [search, setSearch] = useState<string>('');
-  const debouncedSearch = useDebounce(search, 300);
   const api = useTRPC();
-  const { data, isFetching } = useQuery({
-    placeholderData: (previousData, _previousQuery) => previousData,
-    ...api.club.tagSearch.queryOptions(
-      { search: debouncedSearch },
-      { enabled: !!debouncedSearch },
-    ),
-  });
 
-  const { data: distinctTags } = useQuery(api.club.distinctTags.queryOptions());
+  const { data: allTags, isFetching } = useQuery(api.club.distinctTags.queryOptions());
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const filter = createFilterOptions<string>({});
 
   return (
     <div
@@ -45,13 +35,18 @@ export const ClubTagEdit = ({
         disableClearable
         multiple
         handleHomeEndKeys
+        selectOnFocus
+        clearOnBlur
         aria-label="search"
+        value={tags}
+        defaultValue={tags}
+        options={allTags ?? []}
         renderInput={(params) => (
           <TextField
             {...params}
-            placeholder={"Search tags or add custom"}
-            className="[&>.MuiInputBase-root]:bg-white"
+            placeholder="Search tags or add custom"
             label="Tags"
+            className="[&>.MuiInputBase-root]:bg-white"
             slotProps={{
               input: {
                 ...params.InputProps,
@@ -65,8 +60,6 @@ export const ClubTagEdit = ({
             }}
           />
         )}
-        value={tags}
-        defaultValue={tags}
         renderValue={(value, getItemProps) => {
           return value.map((option: string, index: number) => {
             const { key, ...itemProps } = getItemProps({ index });
@@ -81,35 +74,21 @@ export const ClubTagEdit = ({
             );
           });
         }}
-        options={data && search.length>0 ? data?.tags.map((t) => t.tag) : distinctTags ?? []}
         filterOptions={(options, params) => {
-          if (isFetching) {
-            return options;
-          }
-          options.push(`Add "${params.inputValue}" tag`);
+          const filtered = filter(options, params);
 
-          return options;
-        }}
-        // loading={isLoading}
-        inputValue={search}
-        onInputChange={(_e, value) => {
-          setSearch(value);
+          if (!isFetching && params.inputValue != "") {
+            filtered.push(`Add "${params.inputValue}" tag`);
+          }
+
+          return filtered;
         }}
         onChange={(e, value) => {
-
           const last = value[value.length - 1];
           if (typeof last === 'string' && last.startsWith('Add ')) {
             value[value.length - 1] = last.substring(5, last.length - 5);
           }
           setTagsAction(value);
-        }}
-        renderOption={(props, option) => {
-          const { key, ...otherProps } = props;
-          return (
-            <li key={key} {...otherProps}>
-              <Typography variant="body1">{option}</Typography>
-            </li>
-          );
         }}
       />
     </div>
