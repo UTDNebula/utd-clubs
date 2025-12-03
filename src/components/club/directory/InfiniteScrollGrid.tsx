@@ -12,7 +12,7 @@ export default function InfiniteScrollGrid() {
   const { data, isLoading, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery(
       api.club.search.infiniteQueryOptions(
-        { search: search, tags: tags, limit: 9 },
+        { search, tags: tags, limit: 9 },
         {
           getNextPageParam: (lastPage) =>
             lastPage.clubs.length < 9 ? undefined : lastPage.cursor,
@@ -61,11 +61,11 @@ export default function InfiniteScrollGrid() {
               );
             }),
           )
-        : Array.from({ length: 4 }, (_, index) => (
+        : Array.from({ length: 6 }, (_, index) => (
             <ClubCardSkeleton key={index} />
           ))}
       {isFetchingNextPage &&
-        Array.from({ length: 4 }, (_, index) => (
+        Array.from({ length: 3 }, (_, index) => (
           <ClubCardSkeleton key={index} />
         ))}
     </>

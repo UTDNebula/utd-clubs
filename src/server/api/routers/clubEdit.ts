@@ -43,14 +43,12 @@ const editCollaboratorSchema = z.object({
   modified: z
     .object({
       userId: z.string(),
-      title: z.string(),
       position: z.enum(['President', 'Officer']),
     })
     .array(),
   created: z
     .object({
       userId: z.string(),
-      title: z.string(),
     })
     .array(),
 });
@@ -88,6 +86,10 @@ export const clubEditRouter = createTRPCRouter({
         .set({
           name: input.name,
           description: input.description,
+          tags: input.tags,
+          profileImage: input.profileImage,
+          bannerImage: input.bannerImage,
+          foundingDate: input.foundingDate,
           updatedAt: new Date(),
         })
         .where(eq(club.id, input.id))
@@ -191,7 +193,6 @@ export const clubEditRouter = createTRPCRouter({
             userId: officer.userId,
             clubId: input.clubId,
             officerType: 'Officer' as const,
-            title: officer.title,
           })),
         )
         .onConflictDoUpdate({
@@ -231,7 +232,10 @@ export const clubEditRouter = createTRPCRouter({
       for (const modded of input.modified) {
         const prom = ctx.db
           .update(officers)
-          .set({ position: modded.position, isPresident: modded.isPresident })
+          .set({
+            position: modded.position,
+            isPresident: modded.isPresident,
+          })
           .where(
             and(eq(officers.id, modded.id), eq(officers.clubId, input.clubId)),
           );
