@@ -31,30 +31,12 @@ export const ClubTagEdit = ({
   const { data: distinctTags } = useQuery(api.club.distinctTags.queryOptions());
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isSticky, setIsSticky] = useState(false);
-  const originalOffset = useRef<number>(0);
 
-  useEffect(() => {
-    if (containerRef.current) {
-      originalOffset.current =
-        containerRef.current.getBoundingClientRect().top + window.scrollY;
-    }
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsSticky(scrollY > originalOffset.current);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // const filter = createFilterOptions<SelectClub>();
   // TODO: Clearing search after typing doesnt give results again
   return (
     <div
       ref={containerRef}
-      className={`text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] mr-3 w-full transition-all ${
-        isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
-      }`}
+      className={`text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] mr-3 w-full transition-all`}
       suppressHydrationWarning
     >
       <Autocomplete
