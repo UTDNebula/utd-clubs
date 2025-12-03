@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { headers } from 'next/headers';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
@@ -10,7 +9,6 @@ import Sidebar from '@src/components/nav/Sidebar';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';
-import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
@@ -30,7 +28,6 @@ const Home = async () => {
   const tags = await api.club.topTags();
   // const featured = await api.club.getCarousel();
   // const onlyClubs = featured.map((item) => item.club);
-  const session = await auth.api.getSession({ headers: await headers() });
   return (
     <SearchStoreProvider>
       <main className="relative">
