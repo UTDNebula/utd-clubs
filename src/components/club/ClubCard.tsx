@@ -1,7 +1,6 @@
 'use client';
 
-import { Button } from '@mui/material';
-import { Skeleton } from '@mui/material';
+import { Button, Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { SelectClub as Club } from '@src/server/db/models';
