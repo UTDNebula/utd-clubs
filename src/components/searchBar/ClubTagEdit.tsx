@@ -18,7 +18,9 @@ export const ClubTagEdit = ({
 }) => {
   const api = useTRPC();
 
-  const { data: allTags, isFetching } = useQuery(api.club.distinctTags.queryOptions());
+  const { data: allTags, isFetching } = useQuery(
+    api.club.distinctTags.queryOptions(),
+  );
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -52,7 +54,9 @@ export const ClubTagEdit = ({
                 ...params.InputProps,
                 endAdornment: (
                   <>
-                    {isFetching ? <CircularProgress color="inherit" size={20} /> : null}
+                    {isFetching ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
                     {params.InputProps.endAdornment}
                   </>
                 ),
@@ -77,7 +81,7 @@ export const ClubTagEdit = ({
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
 
-          if (!isFetching && params.inputValue != "") {
+          if (!isFetching && params.inputValue != '') {
             filtered.push(`Add "${params.inputValue}" tag`);
           }
 
