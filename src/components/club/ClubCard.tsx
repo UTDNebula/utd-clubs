@@ -19,6 +19,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
       data-club-result
     >
       <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
+        <div className="absolute inset-0 h-full w-full bg-gray-200" />
         {club.profileImage && (
           <Image
             src={club.profileImage}
@@ -29,7 +30,6 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
             className="object-cover select-none"
           />
         )}
-        <div className="absolute inset-0 h-full w-full bg-gray-200" />
       </div>
 
       <div className="flex flex-col space-y-2 p-6">
