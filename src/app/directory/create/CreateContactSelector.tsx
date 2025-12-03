@@ -27,6 +27,7 @@ import {
   type logoProps,
 } from '@src/icons/ContactIcons';
 import { type SelectContact } from '@src/server/db/models';
+import { contactNames, startContacts } from '@src/server/db/schema/contacts';
 import { type createClubSchema } from '@src/utils/formSchemas';
 
 type Contact = Omit<SelectContact, 'clubId'>;
@@ -45,31 +46,6 @@ function Reducer(
       return [...state, action.target];
   }
 }
-const startContacts: Array<Contact['platform']> = [
-  'discord',
-  'instagram',
-  'website',
-  'email',
-  'twitter',
-  'facebook',
-  'youtube',
-  'twitch',
-  'linkedIn',
-  'other',
-];
-
-const contactNames: { [key in Contact['platform']]: string } = {
-  discord: 'Discord',
-  instagram: 'Instagram',
-  website: 'Website',
-  email: 'Email',
-  twitter: 'Twitter',
-  facebook: 'Facebook',
-  youtube: 'YouTube',
-  twitch: 'Twitch',
-  linkedIn: 'LinkedIn',
-  other: 'Other',
-};
 
 type ContactSelectorProps = {
   control: Control<z.infer<typeof createClubSchema>>;
