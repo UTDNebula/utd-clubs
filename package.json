@@ -1,6 +1,5 @@
 {
   "name": "nebula-clubs",
-  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev --turbopack",

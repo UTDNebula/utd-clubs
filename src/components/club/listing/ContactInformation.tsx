@@ -13,9 +13,9 @@ const ContactInformation = ({ club }: { club: Club }) => {
   return (
     <div className="w-full rounded-lg bg-cornflower-50 p-6 md:p-10">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full">
-        <h1 className="text-2xl font-semibold text-cornflower-700">
+        <h2 className="text-2xl font-semibold text-cornflower-700">
           Contact Information
-        </h1>
+        </h2>
 
         <div className="flex flex-wrap gap-4 mt-4 md:mt-0">
           <ContactButtons contacts={club.contacts || []} />

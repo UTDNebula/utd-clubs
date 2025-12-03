@@ -53,7 +53,10 @@ export const EventSearchBar = () => {
         return (
           <Link key={key} href={`/event/${option.id}`}>
             <li {...otherProps}>
-              <Typography variant="body1">{option.name}</Typography>
+              <div>
+                <Typography variant="body1">{option.name}</Typography>
+                <Typography variant="caption">{option.club.name}</Typography>
+              </div>
             </li>
           </Link>
         );

@@ -15,7 +15,11 @@ const TimeComponent = (props: Props) => {
     minute: '2-digit',
   });
 
-  return <p className="text-sm">{dateString}</p>;
+  return (
+    <p className="text-sm text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
+      {dateString}
+    </p>
+  );
 };
 
 export default TimeComponent;

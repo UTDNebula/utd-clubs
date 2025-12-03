@@ -32,7 +32,9 @@ const Layout = async (props: {
       <main className="px-5 flex w-full flex-col gap-4">
         <div className="flex w-full flex-row gap-x-4 items-center">
           <BackButton className="bg-royal [&>svg]:fill-white" />
-          <h1 className="text-2xl font-extrabold text-haiti">{club.name}</h1>
+          <h1 className="font-display text-2xl font-extrabold text-haiti">
+            {club.name}
+          </h1>
         </div>
         <div className="flex w-full flex-col gap-4">
           {children}
