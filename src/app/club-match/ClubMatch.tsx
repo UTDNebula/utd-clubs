@@ -1,11 +1,26 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, TextField, Select, MenuItem, Box, Chip, RadioGroup, OutlinedInput, Radio} from '@mui/material';
+import {
+  Box,
+  Button,
+  Chip,
+  MenuItem,
+  OutlinedInput,
+  Radio,
+  RadioGroup,
+  Select,
+  TextField,
+} from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useForm, Controller, type UseFormRegister, type Control} from 'react-hook-form';
+import {
+  Controller,
+  useForm,
+  type Control,
+  type UseFormRegister,
+} from 'react-hook-form';
 import { z, type ZodError } from 'zod';
 import { useTRPC } from '@src/trpc/react';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
@@ -42,7 +57,6 @@ const MenuProps = {
     },
   },
 };
-
 
 const TextInput = ({
   id,
@@ -107,19 +121,22 @@ const SelectInput = ({
             {error}
           </span>
         ))}
-        <Select
-          id={id}
-          required={required}
-          size="small"
-          {...register(id)}
-        >
-          <MenuItem disabled value=""><em>--Select--</em></MenuItem>
-          {options.map((option) => (
-            <MenuItem key={option} value={option}>
-              {option}
-            </MenuItem>
-          ))}
-        </Select>
+      <Select
+        id={id}
+        required={required}
+        size="small"
+        defaultValue=""
+        {...register(id)}
+      >
+        <MenuItem disabled value="">
+          <em>--Select--</em>
+        </MenuItem>
+        {options.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </Select>
     </div>
   );
 };
@@ -194,7 +211,7 @@ const SelectMultipleInput = ({
   label: string;
   options: string[];
   control: Control<ClubMatchFormSchema>;
-  errors: Errors; 
+  errors: Errors;
 }) => {
   const required = isFieldRequired(id);
   return (
@@ -234,7 +251,7 @@ const SelectMultipleInput = ({
             renderValue={(selected) => (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {(selected as string[]).map((value) => (
-                  <Chip key={value} label={value} />
+                  <Chip key={value} label={value} color="primary" />
                 ))}
               </Box>
             )}
@@ -256,15 +273,16 @@ const SelectMultipleInput = ({
 };
 
 const ClubMatch = () => {
-  const { register, watch, handleSubmit, control} = useForm<ClubMatchFormSchema>({
-    resolver: zodResolver(clubMatchFormSchema),
-    defaultValues: {
-      categories: [],
-      hobbies: [],
-      involvementGoals: [],
-      skills: [],
-    },
-  });
+  const { register, watch, handleSubmit, control } =
+    useForm<ClubMatchFormSchema>({
+      resolver: zodResolver(clubMatchFormSchema),
+      defaultValues: {
+        categories: [],
+        hobbies: [],
+        involvementGoals: [],
+        skills: [],
+      },
+    });
   const [errors, setErrors] = useState<Errors>({ errors: [] });
 
   const api = useTRPC();
@@ -282,16 +300,20 @@ const ClubMatch = () => {
     }
   });
 
+  const categories = watch('categories') || [];
+  const showSpecificCultures =
+    categories.includes('Cultural') || categories.includes('Religious');
   const hobbies = watch('hobbies');
   const hobbiesOtherDisabled = hobbies ? !hobbies.includes('Other') : true;
   const genderOtherDisabled = watch('gender') !== 'Other';
 
   return (
     <main className="pb-8">
-      <h1 className="mb-2 text-center text-4xl font-bold text-[#4B4EFC]">Club Match</h1>
+      <h1 className="mb-2 text-center text-4xl font-bold text-haiti">
+        Club Match
+      </h1>
       <p className="mb-8 text-center">
-        Find your club match! Generate club recommendations based on a simple
-        form.
+        Generate club recommendations based on a simple form.
       </p>
       <form
         onSubmit={(e) => {
@@ -302,44 +324,45 @@ const ClubMatch = () => {
         }}
         className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4"
       >
-        <div className="flex flex-col gap-4 md:flex-row">
-          <div className="flex-1">
-          <TextInput
-            id="major"
-            label="What is your current or intended major?"
-            register={register}
-            errors={errors}
-          />
+        <div className="bg-white p-8 shadow-xl rounded-4xl flex flex-col gap-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="flex-1">
+              <TextInput
+                id="major"
+                label="What is your current or intended major?"
+                register={register}
+                errors={errors}
+              />
+            </div>
+            <div className="flex-1">
+              <SelectInput
+                id="year"
+                label="What year are you?"
+                options={[
+                  'A prospective student (not yet attending UTD)',
+                  'A first-year student (non-transfer)',
+                  'A first-year student (transfer)',
+                  'A current student (2nd year+, non-transfer)',
+                  'A current student (2nd year+, transfer)',
+                ]}
+                register={register}
+                errors={errors}
+              />
+            </div>
+            <div className="flex-1">
+              <SelectInput
+                id="proximity"
+                label="How close do you live to campus?"
+                options={[
+                  'Live on campus in the residence halls',
+                  'Live near campus in an apartment or houses',
+                  'Live at home and commute',
+                ]}
+                register={register}
+                errors={errors}
+              />
+            </div>
           </div>
-          <div className="flex-1">
-          <SelectInput
-            id="year"
-            label="What year are you?"
-            options={[
-              'A prospective student (not yet attending UTD)',
-              'A first-year student (non-transfer)',
-              'A first-year student (transfer)',
-              'A current student (2nd year+, non-transfer)',
-              'A current student (2nd year+, transfer)',
-            ]}
-            register={register}
-            errors={errors}
-          />
-          </div>
-          <div className="flex-1">
-          <SelectInput
-            id="proximity"
-            label="How close do you live to campus?"
-            options={[
-              'Live on campus in the residence halls',
-              'Live near campus in an apartment or houses',
-              'Live at home and commute',
-            ]}
-            register={register}
-            errors={errors}
-          />
-          </div>
-        </div>
           <SelectMultipleInput
             id="categories"
             label="What types of organizations are you interested in?"
@@ -363,14 +386,14 @@ const ClubMatch = () => {
             control={control}
             errors={errors}
           />
-
-          <TextInput
-            id="specificCultures"
-            label="If you selected cultural or religious organizations, please list the specific cultures or religions you are interested in."
-            register={register}
-            errors={errors}
-          />
-
+          {showSpecificCultures && (
+            <TextInput
+              id="specificCultures"
+              label="Please list the specific cultures or religions you are interested in."
+              register={register}
+              errors={errors}
+            />
+          )}
           <SelectMultipleInput
             id="hobbies"
             label="What are your hobbies or areas of interest?"
@@ -405,21 +428,9 @@ const ClubMatch = () => {
             errors={errors}
           />
 
-          <RadioInput
-            id="gender"
-            label="Gender Identity"
-            options={['Female', 'Male', 'Non-binary', 'Prefer not to say', 'Other']}
-            register={register}
-            errors={errors}
-            other={{
-              id: 'genderOther',
-              disabled: genderOtherDisabled,
-            }}
-          />
-
           <TextInput
             id="newExperiences"
-            label="UT Dallas Experiences: What new experiences, hobbies, or activities would you be interested in while attending UT Dallas?"
+            label="What new experiences, hobbies, or activities would you be interested in?"
             register={register}
             errors={errors}
           />
@@ -442,19 +453,6 @@ const ClubMatch = () => {
             errors={errors}
           />
 
-          <RadioInput
-            id="timeCommitment"
-            label="Preferred Time Commitment"
-            options={[
-              'Low (e.g., < 2-3 hours/week, meetings optional)',
-              'Medium (e.g., 3-5 hours/week, regular meetings/events)',
-              'High (e.g., 5+ hours/week, significant responsibilities/practices)',
-              "Don't care",
-            ]}
-            register={register}
-            errors={errors}
-          />
-
           <SelectMultipleInput
             id="skills"
             label="Skills & Activities Interest"
@@ -474,16 +472,48 @@ const ClubMatch = () => {
             control={control}
             errors={errors}
           />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <RadioInput
+              id="gender"
+              label="Gender Identity"
+              options={[
+                'Female',
+                'Male',
+                'Non-binary',
+                'Prefer not to say',
+                'Other',
+              ]}
+              register={register}
+              errors={errors}
+              other={{
+                id: 'genderOther',
+                disabled: genderOtherDisabled,
+              }}
+            />
 
-          <Button
-            variant="contained"
-            type="submit"
-            loading={editData.isPending}
-            loadingPosition="start"
-            className="normal-case"
-          >
-            Find Clubs
-          </Button>
+            <RadioInput
+              id="timeCommitment"
+              label="Preferred Time Commitment"
+              options={[
+                'Low (e.g., < 2-3 hours/week, meetings optional)',
+                'Medium (e.g., 3-5 hours/week, regular meetings/events)',
+                'High (e.g., 5+ hours/week, significant responsibilities/practices)',
+                "Don't care",
+              ]}
+              register={register}
+              errors={errors}
+            />
+          </div>
+        </div>
+        <Button
+          variant="contained"
+          type="submit"
+          loading={editData.isPending}
+          loadingPosition="start"
+          className="normal-case"
+        >
+          Find Clubs
+        </Button>
       </form>
     </main>
   );
