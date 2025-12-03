@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import EventRegisterButton from '@src/components/events/EventRegisterButton';
 import { EventHeader } from '@src/components/header/BaseHeader';
+import MarkdownText from '@src/components/MarkdownText';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import CountdownTimer from './CountdownTimer';
@@ -84,10 +85,8 @@ export default async function EventsPage(props: Params) {
               })}
             </div>
           </div>
-          <div className="grow text-sm md:mx-12">
-            <p className="mt-4 whitespace-pre-wrap text-gray-500">
-              {event.description}
-            </p>
+          <div className="grow text-sm md:mx-12 text-slate-700 pt-4">
+            <MarkdownText text={event.description} />
           </div>
           <div className="flex flex-col gap-4">
             <div>

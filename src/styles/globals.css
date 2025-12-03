@@ -1,6 +1,7 @@
 @layer theme, base, mui, components, utilities;
 @import 'tailwindcss';
 @plugin 'tailwindcss-animate';
+@plugin "@tailwindcss/typography";
 
 @utility items-normal {
   align-items: normal;
