@@ -1,7 +1,7 @@
 // component with info for clubs not on the platform
 export const ClubNotClaimed = () => {
   return (
-    <div className="w-full rounded-lg bg-blue-100 p-6 md:p-10">
+    <div className="w-full rounded-lg bg-cornflower-50 p-6 md:p-10">
       <h1 className="text-2xl font-semibold text-gray-800">
         Is this your Club or Organization?
       </h1>
