@@ -63,6 +63,7 @@ const EventForm = ({
           id: '',
           startTime: new Date(Date.now()),
           endTime: new Date(Date.now()),
+          image: null,
           club: officerClubs.filter((v) => v.id == clubId)[0]!,
         },
   );
@@ -88,6 +89,7 @@ const EventForm = ({
             !endTime
               ? new Date(Date.now())
               : new Date(endTime),
+          image: null,
           club,
         });
       }

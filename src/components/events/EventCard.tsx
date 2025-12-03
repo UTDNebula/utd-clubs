@@ -21,20 +21,22 @@ interface EventCardProps {
 
 const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
   const session = await auth.api.getSession({ headers: await headers() });
+  const src = event.image ?? event.club.profileImage;
   return (
     <Link
       href={`/event/${event.id}`}
       className="flex h-40 w-full flex-row overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg"
     >
       <div className="relative h-[160px] w-1/3 max-w-[225px]">
-        <div className="h-[160px]">
+        <div className="absolute inset-0 h-full w-full bg-gray-200" />
+        {src && (
           <Image
             fill
-            src={'/event_default.jpg'}
+            src={src}
             alt="event image"
             className="object-cover object-left"
           />
-        </div>
+        )}
         <div className="absolute inset-0 p-2 text-white">
           <EventTimeAlert event={event} />
         </div>
@@ -77,22 +79,24 @@ const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
 };
 const VerticalCard = async ({ event, manageView }: EventCardProps) => {
   const session = await auth.api.getSession({ headers: await headers() });
+  const src = event.image ?? event.club.profileImage;
   return (
     <Link
       href={`/event/${event.id}`}
       className="flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg"
     >
-      <div className="relative">
-        <div className="h-40 w-96">
+      <div className="relative h-40 shrink-0 w-full">
+        <div className="absolute inset-0 h-full w-full bg-gray-200" />
+        {src && (
           <Image
-            src={'/event_default.jpg'}
-            alt="event image"
             fill
-            objectFit="cover"
+            src={src}
+            alt="event image"
+            className="object-cover object-left"
           />
-          <div className="absolute inset-0 p-2">
-            <EventTimeAlert event={event} />
-          </div>
+        )}
+        <div className="absolute inset-0 p-2">
+          <EventTimeAlert event={event} />
         </div>
       </div>
       <div className="flex h-full flex-col p-5">
