@@ -6,9 +6,10 @@ import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
+
 
 export const ClubTagEdit = ({
   tags,
@@ -32,7 +33,6 @@ export const ClubTagEdit = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // TODO: Clearing search after typing doesnt give results again
   return (
     <div
       ref={containerRef}
@@ -69,8 +69,7 @@ export const ClubTagEdit = ({
             );
           });
         }}
-        // options={distinctTags ?? []}
-        options={data?.tags.map((t) => t.tag) ?? distinctTags ?? []}
+        options={data && search.length>0 ? data?.tags.map((t) => t.tag) : distinctTags ?? []}
         filterOptions={(options, params) => {
           if (params.inputValue !== '' && options.length == 0) {
             options.push(`Add "${params.inputValue}" tag`);
