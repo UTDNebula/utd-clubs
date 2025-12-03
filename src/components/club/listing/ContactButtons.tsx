@@ -2,19 +2,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Link from 'next/link';
 import { logo } from '@src/icons/ContactIcons';
 import type { SelectContact as Contacts } from '@src/server/db/models';
-
-const platformLabel: Record<string, string> = {
-  discord: 'Discord',
-  instagram: 'Instagram',
-  website: 'Website',
-  email: 'Email',
-  twitter: 'Twitter',
-  facebook: 'Facebook',
-  youtube: 'YouTube',
-  twitch: 'Twitch',
-  linkedIn: 'LinkedIn',
-  other: 'Other',
-};
+import { contactNames } from '@src/server/db/schema/contacts';
 
 const EmailButton = ({ item }: { item: Contacts }) => {
   return (
@@ -39,7 +27,7 @@ const ContactButtons = ({ contacts }: contentButtonProps) => {
               <EmailButton item={item} />
             </Tooltip>
           ) : (
-            <Tooltip title={platformLabel[item.platform]}>
+            <Tooltip title={contactNames[item.platform]}>
               <button className="group relative h-min self-center rounded-full bg-slate-100 p-2.5 transition-colors">
                 <Link href={item.url} target="_blank">
                   <div className="relative h-8 w-8">{logo[item.platform]}</div>
