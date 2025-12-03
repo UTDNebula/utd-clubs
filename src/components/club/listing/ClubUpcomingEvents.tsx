@@ -1,9 +1,6 @@
-import Link from 'next/link';
 import { type FC } from 'react';
 import EventCard from '@src/components/events/EventCard';
 import { api } from '@src/trpc/server';
-
-const MAX_DESCRIPTION_LENGTH = 150;
 
 const ClubUpcomingEvents: FC<{ clubId: string }> = async ({ clubId }) => {
   const cur_time = new Date();

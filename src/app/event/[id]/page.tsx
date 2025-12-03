@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import { headers } from 'next/headers';
 import Image from 'next/image';
@@ -24,17 +24,6 @@ export default async function EventsPage(props: Params) {
   if (!res) return <div>Event Not Found.</div>;
 
   const { club, ...event } = res;
-
-  const isRegistered =
-    (session &&
-      (await db.query.userMetadataToEvents.findFirst({
-        where: (userMetadataToEvents) =>
-          and(
-            eq(userMetadataToEvents.eventId, event.id),
-            eq(userMetadataToEvents.userId, session.user.id),
-          ),
-      })) !== undefined) ||
-    false;
 
   const clubDescription = ['Club', 'Location', 'Multi-Day'];
   const clubDetails = [club.name, event.location, 'No'];
