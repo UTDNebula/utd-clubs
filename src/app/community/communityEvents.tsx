@@ -9,16 +9,17 @@ const CommunityEvents = async () => {
   if (events.length == 0) {
     return (
       <div className="font-bold text-slate-500">
-        <div>You haven&apos;t added any community events yet 😭</div>
-        <div>
+        <p className="mt-2">You haven&apos;t added any community events yet.</p>
+        <p className="mt-2">
           You can check out new events{' '}
           <Link
-            href={'/events'}
-            className="text-royal text-lg transition-colors hover:text-blue-700"
+            href="/events"
+            className="text-royal hover:text-royalDark underline decoration-transparent hover:decoration-inherit transition"
           >
             here
           </Link>
-        </div>
+          .
+        </p>
       </div>
     );
   }

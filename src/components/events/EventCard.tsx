@@ -11,7 +11,7 @@ import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
 
 import { EventCardEditButton } from './EventCardEditButton';
-import EventLikeButton from './EventLikeButton';
+import EventRegisterButton from './EventRegisterButton';
 import EventTimeAlert from './EventTimeAlert';
 
 type EventCardProps =
@@ -66,7 +66,7 @@ const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
           </p>
         </div>
         <div className="ml-auto flex flex-row gap-2 h-fit self-center">
-          {!manageView && session && <EventLikeButton eventId={event.id} />}
+          {!manageView && session && <EventRegisterButton eventId={event.id} />}
           {manageView && (
             <>
               <EventCardEditButton clubId={event.clubId} eventId={event.id} />
@@ -116,7 +116,7 @@ const VerticalCard = async ({ event, manageView }: EventCardProps) => {
           </h4>
         </div>
         <div className="mt-auto flex flex-row gap-2">
-          {!manageView && session && <EventLikeButton eventId={event.id} />}
+          {!manageView && session && <EventRegisterButton eventId={event.id} />}
           {manageView && (
             <>
               <IconButton>

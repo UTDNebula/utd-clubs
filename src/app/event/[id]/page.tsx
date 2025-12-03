@@ -1,9 +1,10 @@
+import { Button } from '@mui/material';
 import { and, eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import RegisterButton from '@src/app/event/[id]/RegisterButton';
+import EventRegisterButton from '@src/components/events/EventRegisterButton';
 import { EventHeader } from '@src/components/header/BaseHeader';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
@@ -56,12 +57,7 @@ export default async function EventsPage(props: Params) {
               <TimeComponent date={event.startTime.toISOString()} />
             </section>
             <section className="flex md:float-right md:my-auto">
-              {session && (
-                <RegisterButton
-                  eventId={event.id}
-                  isRegistered={isRegistered}
-                />
-              )}
+              {session && <EventRegisterButton isHeader eventId={event.id} />}
             </section>
           </div>
         </section>
@@ -101,11 +97,10 @@ export default async function EventsPage(props: Params) {
           </div>
           <div className="flex flex-col">
             <CountdownTimer startTime={event.startTime} />
-            <Link
-              href={`/directory/${club.slug}`}
-              className="border-royal text-royal mt-auto mr-8 block w-36 rounded-full border-2 py-4 text-center text-xs font-extrabold break-normal transition-colors hover:bg-blue-700 hover:text-white"
-            >
-              View Club
+            <Link href={`/directory/${club.slug}`}>
+              <Button variant="contained" className="normal-case" size="large">
+                View Club
+              </Button>
             </Link>
           </div>
         </section>
