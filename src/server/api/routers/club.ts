@@ -1,4 +1,13 @@
-import { and, arrayOverlaps, asc, eq, ilike, inArray, sql } from 'drizzle-orm';
+import {
+  and,
+  arrayOverlaps,
+  asc,
+  desc,
+  eq,
+  ilike,
+  inArray,
+  sql,
+} from 'drizzle-orm';
 import { z } from 'zod';
 import { club, usedTags } from '@src/server/db/schema/club';
 import { contacts } from '@src/server/db/schema/contacts';
