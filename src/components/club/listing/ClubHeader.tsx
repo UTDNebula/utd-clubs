@@ -1,7 +1,5 @@
-import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import { auth } from '@src/server/auth';
 import type {
   SelectContact as Contacts,
   SelectClub,
@@ -14,7 +12,6 @@ type Club = SelectClub & {
   tags: string[];
 };
 const ClubHeader = async ({ club }: { club: Club }) => {
-  const session = await auth.api.getSession({ headers: await headers() });
   const memberType = await api.club.memberType({ id: club.id });
   return (
     <div className="relative">
@@ -49,7 +46,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
               Manage
             </Link>
           ) : (
-            <JoinButton session={session} isHeader clubID={club.id} />
+            <JoinButton isHeader clubID={club.id} />
           )}
         </div>
       </div>

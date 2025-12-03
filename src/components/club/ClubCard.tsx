@@ -1,29 +1,23 @@
 'use client';
 
-import { Skeleton } from '@mui/material';
+import { Button, Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { type FC } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
-import { authClient } from '@src/utils/auth-client';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
 
-type Props = { club: Club; priority: boolean };
+type Props = { club: Club; priority?: boolean; manageView?: boolean };
 
-const ClubCard: FC<Props> = ({ club, priority }) => {
-  const { data: session } = authClient.useSession();
-  const desc =
-    club.description.length > 50
-      ? club.description.slice(0, 150) + '...'
-      : club.description;
-  const name = club?.name ?? '';
+const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
+  const desc = club.description;
+  const name = club.name;
   const placeholderImage =
     'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAQABADAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAABgf/xAAXEAEAAwAAAAAAAAAAAAAAAAAFACIx/8QAGAEAAgMAAAAAAAAAAAAAAAAABAUGBwj/xAAWEQADAAAAAAAAAAAAAAAAAAAAAgT/2gAMAwEAAhEDEQA/ALuYnlpkZHL4onFpieWhaOI6JySlqZaKEcnNMwtMTy0MRxFROf/Z';
 
   return (
     <Link
-      href={`/directory/${club.slug}`}
-      className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between rounded-lg bg-white shadow-2xl md:min-h-[600px]"
+      href={manageView ? `/manage/${club.id}` : `/directory/${club.slug}`}
+      className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col rounded-lg bg-white shadow-2xl md:min-h-[600px]"
       data-club-result
     >
       <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
@@ -47,11 +41,21 @@ const ClubCard: FC<Props> = ({ club, priority }) => {
         <h1 className="line-clamp-2 text-2xl font-medium text-slate-800 md:text-xl">
           {name}
         </h1>
-        <p className="text-base text-slate-600 md:text-sm">{desc}</p>
+        <p className="line-clamp-9 text-base text-slate-600 md:text-sm">
+          {desc}
+        </p>
       </div>
 
       <div className="m-5 mt-auto flex flex-row space-x-2">
-        <JoinButton session={session} clubID={club.id} />
+        {!manageView ? (
+          <div onClick={(e) => e.stopPropagation()}>
+            <JoinButton clubID={club.id} />
+          </div>
+        ) : (
+          <Button variant="contained" className="normal-case">
+            Manage
+          </Button>
+        )}
       </div>
     </Link>
   );
