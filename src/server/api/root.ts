@@ -3,7 +3,6 @@ import { adminRouter } from './routers/admin';
 import { aiRouter } from './routers/ai';
 import { clubRouter } from './routers/club';
 import { eventRouter } from './routers/event';
-import { formRouter } from './routers/form';
 import { storageRouter } from './routers/storage';
 import { userMetadataRouter } from './routers/userMetadata';
 
@@ -16,7 +15,6 @@ export const appRouter = createTRPCRouter({
   club: clubRouter,
   event: eventRouter,
   userMetadata: userMetadataRouter,
-  form: formRouter,
   admin: adminRouter,
   storage: storageRouter,
   ai: aiRouter,

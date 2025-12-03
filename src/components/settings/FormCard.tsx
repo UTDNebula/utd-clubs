@@ -3,12 +3,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
-import { type Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import ClubSelector from '@src/components/settings/ClubSelector';
-import { selectClub, type SelectClub } from '@src/server/db/models';
+import {
+  selectClub,
+  SelectUserMetadata,
+  type SelectClub,
+} from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import DeleteButton from './DeleteButton';
 import SettingsDropdown from './SettingsDropdown';
@@ -16,7 +19,7 @@ import SettingsInput from './SettingsInput';
 
 type Props = {
   clubs: SelectClub[];
-  user: Session['user'];
+  user: SelectUserMetadata;
 };
 
 const settingsSchema = z.object({

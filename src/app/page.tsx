@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
@@ -9,7 +10,7 @@ import Sidebar from '@src/components/nav/Sidebar';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
@@ -29,7 +30,7 @@ const Home = async () => {
   const tags = await api.club.topTags();
   // const featured = await api.club.getCarousel();
   // const onlyClubs = featured.map((item) => item.club);
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   return (
     <SearchStoreProvider>
       <main className="relative">
@@ -74,7 +75,7 @@ const Home = async () => {
             <Sidebar hamburger="white" shadow />
             <div className="ml-auto flex items-center justify-center gap-2">
               <ClubMatchButton />
-              <ProfileDropDown session={session} shadow />
+              <ProfileDropDown shadow />
             </div>
           </div>
           <section className="h-[80vh] w-screen">
@@ -110,7 +111,7 @@ const Home = async () => {
           </section>
           <section className="h-full w-full">
             <div className="px-2 md:px-5" id="content">
-              <ClubDirectoryGrid session={session} />
+              <ClubDirectoryGrid />
             </div>
           </section>
         </div>
