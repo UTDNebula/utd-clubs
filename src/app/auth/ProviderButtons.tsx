@@ -23,7 +23,7 @@ const ProviderButton: FC<{
     onClick={() => {
       void authClient.signIn.social({
         provider: provider,
-        callbackURL: callbackUrl,
+        callbackURL: callbackUrl ?? window.location.href,
       });
     }}
     className="box-content flex w-min flex-row items-center space-x-4 rounded-3xl bg-white py-2.5 pr-6 pl-5 shadow-xs shadow-slate-700 md:w-fit"
