@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';

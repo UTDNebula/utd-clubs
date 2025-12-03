@@ -68,7 +68,7 @@ const Page = async () => {
                 ))}
               </ul>
               <div className="mt-auto flex flex-row space-x-2">
-                <JoinButton session={session} clubID={club.id} />
+                <JoinButton clubID={club.id} />
               </div>
             </Link>
           ))}
