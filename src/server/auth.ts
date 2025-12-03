@@ -20,11 +20,13 @@ export const auth = betterAuth({
     google: {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+      redirectURI: 'https://clubs.utdnebula.com/api/auth/callback/google',
       accessType: 'offline',
     },
     discord: {
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+      redirectURI: 'https://clubs.utdnebula.com/api/auth/callback/discord',
     },
   },
   databaseHooks: {
