@@ -3,6 +3,7 @@
 import TagIcon from '@mui/icons-material/Tag';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
@@ -21,7 +22,7 @@ export const ClubTagEdit = ({
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 300);
   const api = useTRPC();
-  const { data } = useQuery({
+  const { data, isFetching } = useQuery({
     placeholderData: (previousData, _previousQuery) => previousData,
     ...api.club.tagSearch.queryOptions(
       { search: debouncedSearch },
@@ -47,10 +48,21 @@ export const ClubTagEdit = ({
         aria-label="search"
         renderInput={(params) => (
           <TextField
-            variant="outlined"
-            placeholder="Search tags or add custom"
-            className="[&>.MuiInputBase-root]:bg-white"
             {...params}
+            placeholder={"Search tags or add custom"}
+            className="[&>.MuiInputBase-root]:bg-white"
+            label="Tags"
+            slotProps={{
+              input: {
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {isFetching ? <CircularProgress color="inherit" size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              },
+            }}
           />
         )}
         value={tags}
@@ -71,18 +83,20 @@ export const ClubTagEdit = ({
         }}
         options={data && search.length>0 ? data?.tags.map((t) => t.tag) : distinctTags ?? []}
         filterOptions={(options, params) => {
-          if (params.inputValue !== '' && options.length == 0) {
-            options.push(`Add "${params.inputValue}" tag`);
+          if (isFetching) {
+            return options;
           }
+          options.push(`Add "${params.inputValue}" tag`);
 
           return options;
         }}
+        // loading={isLoading}
         inputValue={search}
         onInputChange={(_e, value) => {
           setSearch(value);
         }}
         onChange={(e, value) => {
-          // TODO: Is there a better way to do this?
+
           const last = value[value.length - 1];
           if (typeof last === 'string' && last.startsWith('Add ')) {
             value[value.length - 1] = last.substring(5, last.length - 5);
