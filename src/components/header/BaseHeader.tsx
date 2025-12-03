@@ -1,14 +1,14 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import gradientBG from 'public/images/landingGradient.png';
 import type { ReactNode } from 'react';
+import ClubMatchButton from '@src/components/header/ClubMatchButton';
+import NebulaLogo from '@src/icons/NebulaLogo';
 import { api } from '@src/trpc/server';
 import NewSidebar from '../nav/Slide';
 import { ClubSearchBar } from '../searchBar/ClubSearchBar';
 import { EventSearchBar } from '../searchBar/EventSearchBar';
 import { ProfileDropDown } from './ProfileDropDown';
-import gradientBG from 'public/images/landingGradient.png';
-import Image from 'next/image';
-import Link from 'next/link';
-import NebulaLogo from '@src/icons/NebulaLogo';
-import ClubMatchButton from '@src/components/header/ClubMatchButton';
 
 export const BaseHeader = async ({ children }: { children: ReactNode }) => {
   const userCapabilities = await api.userMetadata.getUserSidebarCapabilities();

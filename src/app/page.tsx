@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
@@ -10,7 +11,6 @@ import { TagPill } from '@src/components/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
-import Link from 'next/link';
 
 const Home = async () => {
   const tags = await api.club.topTags();

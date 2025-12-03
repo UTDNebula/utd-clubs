@@ -10,15 +10,15 @@ export default async function Page() {
   if (!session) redirect(await signInRoute('directory/create'));
   return (
     <>
-        <Header />
-        <main className="p-4">
+      <Header />
+      <main className="p-4">
         <CreateClubForm
           user={{
             id: session.user.id,
             name: session.user.name,
           }}
         />
-        </main>
+      </main>
     </>
   );
 }
