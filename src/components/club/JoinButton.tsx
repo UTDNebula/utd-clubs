@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@mui/material';
+import { Button, Skeleton } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -63,3 +63,21 @@ const JoinButton = ({ isHeader, session, clubID }: JoinButtonProps) => {
 };
 
 export default JoinButton;
+
+type JoinButtonSkeletonProps = {
+  isHeader?: boolean;
+};
+
+export const JoinButtonSkeleton = ({ isHeader }: JoinButtonSkeletonProps) => {
+  return (
+    <Skeleton variant="rounded" className="rounded-full">
+      <Button
+        variant="contained"
+        size={isHeader ? 'large' : 'small'}
+        className="normal-case"
+      >
+        Join
+      </Button>
+    </Skeleton>
+  );
+};
