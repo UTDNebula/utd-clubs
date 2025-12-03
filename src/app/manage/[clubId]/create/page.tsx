@@ -1,15 +1,16 @@
+import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
+import EventForm from '@src/components/events/EventForm';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
-import CreateEventForm from './CreateEventForm';
 
 const Page = async (props: { params: Promise<{ clubId: string }> }) => {
   const params = await props.params;
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
-    redirect(signInRoute(`manage/${params.clubId}/create`));
+    redirect(await signInRoute(`manage/${params.clubId}/create`));
   }
 
   const officerClubs = await api.club.getOfficerClubs();
@@ -24,7 +25,7 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
     <main className="h-screen">
       <Header />
       <div className="flex flex-row justify-between gap-20 px-5">
-        <CreateEventForm clubId={currentClub.id} officerClubs={officerClubs} />
+        <EventForm clubId={currentClub.id} officerClubs={officerClubs} />
       </div>
     </main>
   );

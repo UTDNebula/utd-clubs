@@ -1,13 +1,16 @@
-import { type Session } from 'next-auth';
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { type FC } from 'react';
 import type { SelectClub as Club } from '@src/server/db/models';
+import { authClient } from '@src/utils/auth-client';
 import JoinButton from './JoinButton';
 
-type Props = { club: Club; session: Session | null; priority: boolean };
+type Props = { club: Club; priority: boolean };
 
-const ClubCard: FC<Props> = ({ club, session, priority }) => {
+const ClubCard: FC<Props> = ({ club, priority }) => {
+  const { data: session } = authClient.useSession();
   const desc =
     club.description.length > 50
       ? club.description.slice(0, 150) + '...'

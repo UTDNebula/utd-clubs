@@ -1,13 +1,11 @@
 import { and, eq, or, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
+import { auth } from '@src/server/auth';
 import { insertUserMetadata } from '@src/server/db/models';
 import { admin } from '@src/server/db/schema/admin';
-import {
-  userMetadata,
-  userMetadataToClubs,
-  users,
-} from '@src/server/db/schema/users';
+import { user as users } from '@src/server/db/schema/auth';
+import { userMetadata, userMetadataToClubs } from '@src/server/db/schema/users';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byIdSchema = z.object({ id: z.string().uuid() });
@@ -55,6 +53,11 @@ export const userMetadataRouter = createTRPCRouter({
           sql`${userMetadataToClubs.clubId} NOT IN (${clubs})`,
         ),
       );
+      if (user.name != updateUser.firstName + ' ' + updateUser.lastName) {
+        await auth.api.updateUser({
+          body: { name: updateUser.firstName + ' ' + updateUser.lastName },
+        });
+      }
     }),
   deleteById: protectedProcedure.mutation(async ({ ctx }) => {
     const { user } = ctx.session;

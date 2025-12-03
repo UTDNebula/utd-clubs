@@ -1,0 +1,1 @@
+ALTER TABLE "club" ADD COLUMN "banner_image" text;
