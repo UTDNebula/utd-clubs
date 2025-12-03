@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Chip } from '@mui/material';
 import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import { headers } from 'next/headers';
@@ -31,27 +31,28 @@ export default async function EventsPage(props: Params) {
   return (
     <main className="w-full">
       <EventHeader />
-      <section className="px-7">
-        <section className="mb-5 flex flex-col space-y-6">
-          <div className="relative flex h-full w-full flex-col justify-between gap-4 rounded-xl bg-[url('/images/wideWave.jpg')] bg-cover p-10 shadow-lg md:flex-row md:gap-0">
-            <section className="text-white">
-              <div className="flex">
-                {club.tags.map((tag) => (
-                  <p key={tag} className="mr-5 pt-4 pb-12 font-semibold">
-                    {tag}
-                  </p>
-                ))}
-              </div>
-              <h1 className="mb-4 text-4xl font-bold">{event.name}</h1>
+      <div className="mb-5 flex flex-col space-y-4 px-3">
+        <section className="mb-5 relative rounded-xl shadow-lg overflow-hidden">
+          <Image
+            src={club.bannerImage ?? '/images/wideWave.jpg'}
+            alt={club.name + ' banner'}
+            fill
+            className="object-cover"
+          />
+          <div className="relative z-10 flex h-full inset-0 flex-col justify-between gap-4 p-10 md:flex-row md:gap-0">
+            <div className="text-white">
+              <h1 className="mb-4 text-4xl font-bold text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)]">
+                {event.name}
+              </h1>
               <TimeComponent date={event.startTime.toISOString()} />
-            </section>
-            <section className="flex md:float-right md:my-auto">
+            </div>
+            <div className="flex md:float-right md:my-auto">
               {session && <EventRegisterButton isHeader eventId={event.id} />}
-            </section>
+            </div>
           </div>
         </section>
-        <section className="mb-5 flex flex-col space-y-6 rounded-xl bg-slate-100 p-5 text-black shadow-lg md:flex-row md:p-10">
-          <div className="h-full max-w-sm lg:min-w-fit">
+        <section className="w-full rounded-lg bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
+          <div>
             {club.profileImage && (
               <div className="relative mx-auto h-40 w-full overflow-hidden rounded-b-md">
                 <Image
@@ -62,21 +63,25 @@ export default async function EventsPage(props: Params) {
                 />
               </div>
             )}
-            <div className="mt-10 flex flex-col space-y-2 md:space-y-5">
-              <h1 className="text-md font-semibold text-gray-700 md:text-sm">
-                Description
-              </h1>
-              {clubDescription.map((details, index) => (
-                <div
-                  key={details}
-                  className="flex justify-between text-sm text-slate-700 md:text-xs"
-                >
-                  <p className="mr-5">{details}</p>
-                  <p className="text-right font-semibold">
-                    {clubDetails[index]}
-                  </p>
-                </div>
-              ))}
+            {clubDescription.map((details, index) => (
+              <div key={details} className="mt-2 flex w-36 justify-between">
+                <p className="text-sm text-slate-400">{details}</p>
+                <p className="text-right text-sm text-slate-600">
+                  {clubDetails[index]}
+                </p>
+              </div>
+            ))}
+            <div className="flex flex-wrap gap-1 mt-2">
+              {club.tags.map((tag) => {
+                return (
+                  <Chip
+                    label={tag}
+                    key={tag}
+                    className=" rounded-full font-bold transition-colors text-white"
+                    color="primary"
+                  />
+                );
+              })}
             </div>
           </div>
           <div className="grow text-sm md:mx-12">
@@ -95,7 +100,7 @@ export default async function EventsPage(props: Params) {
             </Link>
           </div>
         </section>
-      </section>
+      </div>
     </main>
   );
 }
