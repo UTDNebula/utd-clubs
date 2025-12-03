@@ -24,6 +24,10 @@ export const editClubSchema = z.object({
   id: z.string(),
   name: z.string().min(3),
   description: z.string().min(1),
+  tags: z.array(z.string()).optional(),
+  profileImage: z.string().url().optional(),
+  bannerImage: z.string().url().optional(),
+  foundingDate: z.string().optional(),
 });
 export const editOfficerSchema = z.object({
   officers: z
@@ -54,6 +58,10 @@ export const createEventSchema = z.object({
   description: z.string().max(1000),
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
+});
+
+export const updateEventSchema = createEventSchema.extend({
+  id: z.string(),
 });
 
 export const feedbackFormSchema = z.object({
