@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -55,8 +56,9 @@ export default function AddOfficer({ clubId }: { clubId: string }) {
         </select>
       </div>
       <div className="flex items-center p-3">
-        <button
-          className="rounded-sm bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        <Button
+          variant="contained"
+          className="normal-case"
           onClick={() => {
             if (!toAdd) return;
             mutate({ clubId, officerId: toAdd.id, role: toAdd.role });
@@ -64,7 +66,7 @@ export default function AddOfficer({ clubId }: { clubId: string }) {
           disabled={!toAdd || !toAdd.id || !toAdd.role}
         >
           Add
-        </button>
+        </Button>
         {toAdd && toAdd.id !== '' && toAdd.name !== '' && (
           <span className="text-bold ml-3">
             Adding <strong>{toAdd.name}</strong> as{' '}
