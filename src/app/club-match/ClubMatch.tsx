@@ -46,18 +46,6 @@ interface SharedInputProps {
   errors: Errors;
 }
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 const TextInput = ({
   id,
   label,
@@ -71,12 +59,10 @@ const TextInput = ({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <div className="min-h-[3rem] flex items-end">
-          <label htmlFor={id}>
-            {label}
-            {required && <span className="text-red-600"> *</span>}
-          </label>
-        </div>
+        <label htmlFor={id} className="min-h-[3rem] flex items-end">
+          {label}
+          {required && <span className="text-red-600"> *</span>}
+        </label>
       )}
       {errors.properties?.[id]?.errors &&
         errors.properties?.[id].errors.map((error) => (
@@ -109,12 +95,10 @@ const SelectInput = ({
   const required = isFieldRequired(id);
   return (
     <div className="flex flex-col gap-1">
-      <div className="min-h-[3rem] flex items-end">
-        <label htmlFor={id}>
-          {label}
-          {required && <span className="text-red-600"> *</span>}
-        </label>
-      </div>
+      <label htmlFor={id} className="min-h-[3rem] flex items-end">
+        {label}
+        {required && <span className="text-red-600"> *</span>}
+      </label>
       {errors.properties?.[id]?.errors &&
         errors.properties?.[id].errors.map((error) => (
           <span key={error} role="alert" className="text-red-600">
@@ -159,12 +143,10 @@ const RadioInput = ({
   const required = isFieldRequired(id);
   return (
     <fieldset className="flex flex-col gap-1">
-      <div className="min-h-[3rem] flex items-end">
-        <label htmlFor={id}>
-          {label}
-          {required && <span className="text-red-600"> *</span>}
-        </label>
-      </div>
+      <label htmlFor={id} className="min-h-[3rem] flex items-end">
+        {label}
+        {required && <span className="text-red-600"> *</span>}
+      </label>
       {errors.properties?.[id]?.errors &&
         errors.properties?.[id].errors.map((error) => (
           <span key={error} role="alert" className="text-red-600">
@@ -216,12 +198,10 @@ const SelectMultipleInput = ({
   const required = isFieldRequired(id);
   return (
     <fieldset className="flex flex-col gap-1">
-      <div className="min-h-[3rem] flex items-end">
-        <label htmlFor={id}>
-          {label}
-          {required && <span className="text-red-600"> *</span>}
-        </label>
-      </div>
+      <label htmlFor={id} className="min-h-[3rem] flex items-end">
+        {label}
+        {required && <span className="text-red-600"> *</span>}
+      </label>
       {errors.properties?.[id]?.errors &&
         errors.properties?.[id].errors.map((error) => (
           <span key={error} role="alert" className="text-red-600">
@@ -255,7 +235,7 @@ const SelectMultipleInput = ({
                 ))}
               </Box>
             )}
-            MenuProps={MenuProps}
+            MenuProps={{ PaperProps: { className: 'max-h-60' } }}
           >
             <MenuItem disabled value="">
               <em>--Select one or multiple--</em>
@@ -303,8 +283,6 @@ const ClubMatch = () => {
   const categories = watch('categories') || [];
   const showSpecificCultures =
     categories.includes('Cultural') || categories.includes('Religious');
-  const hobbies = watch('hobbies');
-  const hobbiesOtherDisabled = hobbies ? !hobbies.includes('Other') : true;
   const genderOtherDisabled = watch('gender') !== 'Other';
 
   return (
@@ -409,6 +387,7 @@ const ClubMatch = () => {
               'Fitness/Wellness',
               'Performing Arts',
               'Visual Arts',
+              'Other',
             ]}
             control={control}
             errors={errors}
