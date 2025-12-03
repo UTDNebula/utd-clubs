@@ -14,7 +14,7 @@ const CommunityEvents = async () => {
           You can check out new events{' '}
           <Link
             href={'/events'}
-            className="text-blue-primary text-lg transition-colors hover:text-blue-700"
+            className="text-royal text-lg transition-colors hover:text-blue-700"
           >
             here
           </Link>
@@ -24,8 +24,8 @@ const CommunityEvents = async () => {
   }
   return (
     <div
-      className="group flex w-full flex-col items-center space-y-7.5 pt-10 sm:items-start"
-      data-view={'list'}
+      className="group flex flex-wrap w-full justify-evenly items-center pt-10 gap-4"
+      data-view="list"
     >
       {events.map((event) => (
         <EventCard key={event.id} event={event} />

@@ -1,11 +1,8 @@
 'use client';
 
-import Autocomplete from '@mui/material/Autocomplete';
-import Chip from '@mui/material/Chip';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import { Autocomplete, Chip, TextField, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useRef, useState, type ComponentProps } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import theme from '@src/utils/theme';
@@ -121,8 +118,4 @@ export const HomePageSearchBar = () => {
       )}
     </>
   );
-};
-type SearchBarProps = Omit<ComponentProps<'input'>, 'type'> & {
-  submitButton?: boolean;
-  submitLogic?: () => void;
 };

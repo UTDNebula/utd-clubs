@@ -1,0 +1,30 @@
+name: Migrate Page Views
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0' # Every week
+
+jobs:
+  main:
+    name: Migrate Page Views
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Run npm install
+        run: npm ci
+
+      - name: Set up test environment file
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env && echo "GOOGLE_ANALYTICS_SERVICE_ACCOUNT=${{ secrets.GOOGLE_ANALYTICS_SERVICE_ACCOUNT }}" >> .env && echo "GOOGLE_ANALYTICS_PROPERTY_ID=${{ secrets.GOOGLE_ANALYTICS_PROPERTY_ID }}" >> .env
+
+      - name: Run Migrate Page Views Script
+        run: npm run migratePageViews

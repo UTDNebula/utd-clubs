@@ -1,0 +1,1 @@
+ALTER TABLE "club" ADD COLUMN "updated_at" timestamp;
