@@ -7,11 +7,14 @@ import { useForm } from 'react-hook-form';
 import type z from 'zod';
 import Form from '@src/components/club/manage/form/Form';
 import FormDatePicker from '@src/components/club/manage/form/FormDatePicker';
+import FormImageUpload from '@src/components/club/manage/form/FormImageUpload';
 import FormTextField from '@src/components/club/manage/form/FormTextField';
-import {
-  FormButtons,
-  FormFieldSet,
-} from '@src/components/club/manage/FormComponents';
+// import {
+//   FormButtons,
+//   FormFieldSet,
+// } from '@src/components/club/manage/FormComponents';
+import FormFieldSet from "@src/components/club/manage/form/FormFieldSet"
+import FormButtons from "@src/components/club/manage/form/FormButtons"
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { editClubSchema } from '@src/utils/formSchemas';
@@ -58,6 +61,9 @@ const Details = ({
       onSubmit={submitForm}
     >
       <FormFieldSet legend="Edit Details">
+        {/* <UploadImage clubId={club.id} /> */}
+        {/* <UploadImage clubId={club.id} /> */}
+        <FormImageUpload name="profileImage" {...{ control }} label="Logo" clubId={club.id} />
         <div className="flex flex-wrap">
           <FormTextField
             name="logo"
