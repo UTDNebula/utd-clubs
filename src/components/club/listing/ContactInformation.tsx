@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import type {
   SelectContact as Contacts,
   SelectClub,
@@ -12,27 +11,15 @@ type Club = SelectClub & {
 
 const ContactInformation = ({ club }: { club: Club }) => {
   return (
-    <div className="relative">
-      <div className="h-full w-full">
-        <Image
-          src={'/images/lightBlue.png'}
-          alt="Just some background color"
-          style={{
-            width: '100%',
-            height: '50%',
-          }}
-          height={100}
-          width={450}
-          className="rounded-lg object-cover"
-          priority
-        />
-      </div>
-
-      <div className="absolute top-0 left-0 flex h-full w-full items-center justify-between p-6">
-        <div className="text-2xl font-bold text-blue-700">
+    <div className="w-full rounded-lg bg-cornflower-50 p-6 md:p-10">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full">
+        <h1 className="text-2xl font-semibold text-cornflower-700">
           Contact Information
+        </h1>
+
+        <div className="flex flex-wrap gap-4 mt-4 md:mt-0">
+          <ContactButtons contacts={club.contacts || []} />
         </div>
-        <ContactButtons contacts={club.contacts || []} />
       </div>
     </div>
   );
