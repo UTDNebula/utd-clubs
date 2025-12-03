@@ -1,10 +1,11 @@
 import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import JoinButton from '@src/components/club/JoinButton';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { signInRoute } from '@src/utils/redirect';
 import RedoClubMatchButton from './RedoClubMatchButton';
@@ -24,10 +25,10 @@ export const metadata: Metadata = {
 };
 
 const Page = async () => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect(signInRoute('club-match/results'));
+    redirect(await signInRoute('club-match/results'));
   }
 
   const data = await db.query.userAiCache.findFirst({

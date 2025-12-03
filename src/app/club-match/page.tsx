@@ -1,8 +1,9 @@
 import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { signInRoute } from '@src/utils/redirect';
 import ClubMatch from './ClubMatch';
@@ -22,10 +23,10 @@ export const metadata: Metadata = {
 };
 
 const Page = async () => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect(signInRoute('club-match'));
+    redirect(await signInRoute('club-match'));
   }
 
   const data = await db.query.userAiCache.findFirst({

@@ -13,15 +13,26 @@ export const TagPill = ({
   className?: string;
 }) => {
   const addTag = useSearchStore((state) => state.addTag);
+
+  function scroll() {
+    window.scrollTo({
+      top: window.innerHeight * 0.85,
+      behavior: 'smooth',
+    });
+  }
+
   return (
     <Chip
-      label={`${name}`}
+      label={name}
       className={
         'rounded-full font-bold transition-colors text-white ' +
         (className ?? '')
       }
       color="primary"
-      onClick={() => addTag(name)}
+      onClick={() => {
+        addTag(name);
+        scroll();
+      }}
       onDelete={removeTag}
     />
   );

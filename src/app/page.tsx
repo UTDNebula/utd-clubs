@@ -9,7 +9,6 @@ import Sidebar from '@src/components/nav/Sidebar';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';
-import { getServerAuthSession } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
@@ -17,18 +16,17 @@ const Home = async () => {
   const tags = await api.club.topTags();
   // const featured = await api.club.getCarousel();
   // const onlyClubs = featured.map((item) => item.club);
-  const session = await getServerAuthSession();
   return (
     <SearchStoreProvider>
       <main className="relative">
         {/* <Header /> */}
         <div className="absolute inset-0 z-0">
-          <div className="relative h-[80vh] w-screen">
-            <section className="absolute inset-0 z-0 h-[80vh] w-screen">
+          <div className="relative h-[120vh] w-screen">
+            <section className="absolute inset-0 z-0 h-[120vh] w-screen">
               <Image
                 src={gradientBG}
                 fill
-                sizes="100vw"
+                sizes="120vw"
                 alt="Gradient Background for landing page"
                 className="bg-no-repeat object-cover"
               />
@@ -37,7 +35,7 @@ const Home = async () => {
                 alt="Planets Doodle for landing page"
                 width={574}
                 height={200}
-                className="absolute right-[10%] bottom-[30%] w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover"
+                className="hidden md:block absolute right-[10%] bottom-[30%] w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover"
               />
               <Image
                 src="/images/StarDoodle.svg"
@@ -51,10 +49,10 @@ const Home = async () => {
                 alt="Star Doodle (bottom left) for landing page"
                 width={48}
                 height={48}
-                className="absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
+                className="hidden md:block absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
               />
             </section>
-            <section className="absolute top-[60vh] z-10 h-[20vh] w-screen bg-linear-to-t from-[#edeff2] to-transparent"></section>
+            <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-[#edeff2] to-transparent"></section>
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
@@ -62,10 +60,10 @@ const Home = async () => {
             <Sidebar hamburger="white" shadow />
             <div className="ml-auto flex items-center justify-center gap-2">
               <ClubMatchButton />
-              <ProfileDropDown session={session} shadow />
+              <ProfileDropDown shadow />
             </div>
           </div>
-          <section className="h-[80vh] w-screen">
+          <section className="h-screen w-screen">
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
                 <span className="leading-none">POWERED BY</span>
@@ -98,7 +96,7 @@ const Home = async () => {
           </section>
           <section className="h-full w-full">
             <div className="px-2 md:px-5" id="content">
-              <ClubDirectoryGrid session={session} />
+              <ClubDirectoryGrid />
             </div>
           </section>
         </div>

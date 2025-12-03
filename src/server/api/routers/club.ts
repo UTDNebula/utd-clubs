@@ -4,10 +4,8 @@ import {
   asc,
   desc,
   eq,
-  gt,
   ilike,
   inArray,
-  lt,
   sql,
 } from 'drizzle-orm';
 import { z } from 'zod';
@@ -181,16 +179,22 @@ export const clubRouter = createTRPCRouter({
   memberType: publicProcedure
     .input(byIdSchema)
     .query(async ({ input, ctx }) => {
-      if (!ctx.session) return undefined;
+      if (!ctx.session) return null;
       return (
-        await ctx.db.query.userMetadataToClubs.findFirst({
-          where: and(
-            eq(userMetadataToClubs.clubId, input.id),
-            eq(userMetadataToClubs.userId, ctx.session.user.id),
-            inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
-          ),
-        })
-      )?.memberType;
+        (
+          await ctx.db.query.userMetadataToClubs.findFirst({
+            where: and(
+              eq(userMetadataToClubs.clubId, input.id),
+              eq(userMetadataToClubs.userId, ctx.session.user.id),
+              inArray(userMetadataToClubs.memberType, [
+                'Member',
+                'Officer',
+                'President',
+              ]),
+            ),
+          })
+        )?.memberType ?? null
+      );
     }),
   joinLeave: protectedProcedure
     .input(joinLeaveSchema)
@@ -244,6 +248,7 @@ export const clubRouter = createTRPCRouter({
         .values({
           name: input.name,
           description: input.description,
+          updatedAt: new Date(),
           slug,
         })
         .returning({ id: club.id });
@@ -405,7 +410,9 @@ export const clubRouter = createTRPCRouter({
           ),
         )
         .orderBy(
-          input.search !== '' ? sql`paradedb.score(id) DESC` : asc(club.name),
+          ...(input.search !== ''
+            ? [sql`paradedb.score(id) DESC`]
+            : [desc(club.pageViews), asc(club.name)]),
         );
 
       const res = await query.execute();
