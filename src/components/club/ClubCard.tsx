@@ -7,9 +7,9 @@ import Link from 'next/link';
 import type { SelectClub as Club } from '@src/server/db/models';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
 
-type Props = { club: Club; priority: boolean; manageView: boolean };
+type Props = { club: Club; priority?: boolean; manageView: boolean };
 
-const ClubCard = ({ club, priority, manageView }: Props) => {
+const ClubCard = ({ club, priority = false, manageView }: Props) => {
   const desc = club.description;
   const name = club.name;
   const placeholderImage =
