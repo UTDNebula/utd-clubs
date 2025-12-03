@@ -10,10 +10,10 @@ import {
   DialogTitle,
   IconButton,
 } from '@mui/material';
-import { useState } from 'react';
-import { type RouterOutputs } from '@src/trpc/shared';
 import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
+import { type RouterOutputs } from '@src/trpc/shared';
 
 export default function EventDeleteButton({
   event,
@@ -23,17 +23,18 @@ export default function EventDeleteButton({
   const [open, setOpen] = useState(false);
 
   const api = useTRPC();
-  const { mutate } = useMutation(
-    api.event.delete.mutationOptions(),
-  );
+  const { mutate } = useMutation(api.event.delete.mutationOptions());
 
   return (
     <>
-      <IconButton color="error" onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setOpen(true)
-      }}>
+      <IconButton
+        color="error"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen(true);
+        }}
+      >
         <DeleteIcon />
       </IconButton>
       <Dialog

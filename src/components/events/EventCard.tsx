@@ -7,8 +7,8 @@ import { auth } from '@src/server/auth';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
 
-import EventEditButton from './EventEditButton';
 import EventDeleteButton from './EventDeleteButton';
+import EventEditButton from './EventEditButton';
 import EventRegisterButton from './EventRegisterButton';
 import EventTimeAlert from './EventTimeAlert';
 
