@@ -32,3 +32,31 @@ export const contacts = pgTable(
 export const contactsRelation = relations(contacts, ({ one }) => ({
   club: one(club, { fields: [contacts.clubId], references: [club.id] }),
 }));
+
+export const startContacts: Array<(typeof platformEnum.enumValues)[number]> = [
+  'discord',
+  'instagram',
+  'website',
+  'email',
+  'twitter',
+  'facebook',
+  'youtube',
+  'twitch',
+  'linkedIn',
+  'other',
+];
+
+export const contactNames: {
+  [key in (typeof platformEnum.enumValues)[number]]: string;
+} = {
+  discord: 'Discord',
+  instagram: 'Instagram',
+  website: 'Website',
+  email: 'Email',
+  twitter: 'Twitter',
+  facebook: 'Facebook',
+  youtube: 'YouTube',
+  twitch: 'Twitch',
+  linkedIn: 'LinkedIn',
+  other: 'Other',
+};

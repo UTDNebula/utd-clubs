@@ -27,7 +27,7 @@ const EventView = ({ children, date }: Props) => {
   return (
     <div className="w-full px-6">
       <div className="flex flex-col pt-4 md:flex-row justify-between items-center md:pb-12">
-        <h1 className="text-2xl font-bold text-haiti">Events</h1>
+        <h1 className="font-display text-2xl font-bold text-haiti">Events</h1>
         <div className="flex gap-2 items-center">
           <IconButton
             size="large"
@@ -61,15 +61,11 @@ const EventView = ({ children, date }: Props) => {
           </IconButton>
         </div>
       </div>
-      <div className="container flex w-full flex-col overflow-x-clip sm:flex-row sm:space-x-7.5">
-        <div
-          data-view={'list'}
-          className={
-            'md:items-normal group flex w-full flex-col items-center space-y-7.5 pt-10'
-          }
-        >
-          {children}
-        </div>
+      <div
+        data-view="list"
+        className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4"
+      >
+        {children}
       </div>
     </div>
   );

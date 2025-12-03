@@ -1,20 +1,15 @@
 'use client';
 
+import { Autocomplete, TextField, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useState } from 'react';
-import type { SelectEvent as Event } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
-import SearchBar from '.';
-import { SearchResults, SearchResultsItem } from './SearchResults';
 
 export const EventSearchBar = () => {
-  const router = useRouter();
-  const [input, setInput] = useState<string>('');
+  const [input, setInput] = useState('');
   const debouncedSearch = useDebounce(input, 300);
-  const [focused, setFocused] = useState(false);
-  const debouncedFocused = useDebounce(focused, 300);
   const api = useTRPC();
   const { data } = useQuery(
     api.event.byName.queryOptions(
@@ -22,38 +17,62 @@ export const EventSearchBar = () => {
       { enabled: !!input },
     ),
   );
-  const onClickSearchResult = (event: Event) => {
-    router.push(`/event/${event.id}`);
-  };
+
   return (
-    <div className="relative mr-3 w-full max-w-xs md:max-w-sm lg:max-w-md">
-      <SearchBar
-        placeholder="Search for Events"
-        tabIndex={0}
-        onChange={(e) => setInput(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        submitButton
-        submitLogic={() => {
-          if (data && data[0]) {
-            onClickSearchResult(data[0]);
-          }
-        }}
-      />
-      {debouncedSearch && debouncedFocused && data && data.length > 0 && (
-        <SearchResults
-          searchResults={data.map((item) => (
-            <SearchResultsItem
-              key={item.id}
-              onClick={() => {
-                onClickSearchResult(item);
-              }}
-            >
-              {item.name}
-            </SearchResultsItem>
-          ))}
+    <Autocomplete
+      freeSolo
+      disableClearable
+      className="w-full max-w-xs md:max-w-sm lg:max-w-md"
+      aria-label="search"
+      inputValue={input}
+      options={data ?? []}
+      filterOptions={(o) => o}
+      onInputChange={(e, value) => {
+        setInput(value);
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          size="small"
+          className="w-full"
+          slotProps={{
+            input: {
+              ...params.InputProps,
+              type: 'search',
+              sx: {
+                background: 'white',
+                borderRadius: 'calc(infinity * 1px)',
+              },
+            },
+          }}
+          placeholder="Search for Events"
         />
       )}
-    </div>
+      renderOption={(props, option) => {
+        const { key, ...otherProps } = props;
+        return (
+          <Link key={key} href={`/event/${option.id}`}>
+            <li {...otherProps}>
+              <div>
+                <Typography variant="body1">{option.name}</Typography>
+                <Typography variant="caption">{option.club.name}</Typography>
+              </div>
+            </li>
+          </Link>
+        );
+      }}
+      getOptionLabel={(option) => {
+        if (typeof option === 'string') {
+          return option;
+        }
+        return option.name;
+      }}
+      getOptionKey={(option) => {
+        if (typeof option === 'string') {
+          return option;
+        }
+        return option.id;
+      }}
+    />
   );
 };

@@ -1,8 +1,9 @@
+import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { type ReactNode } from 'react';
-import { BlueBackButton } from '@src/components/backButton';
+import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 
@@ -15,8 +16,8 @@ const Layout = async (props: {
 
   const { children, events } = props;
 
-  const session = await getServerAuthSession();
-  if (!session) redirect(signInRoute(`manage/${params.clubId}`));
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect(await signInRoute(`manage/${params.clubId}`));
   const canAccess = await api.club.isOfficer({ id: params.clubId });
   if (!canAccess) {
     return <div className="">You can&apos;t access this 😢</div>;
@@ -26,12 +27,12 @@ const Layout = async (props: {
     notFound();
   }
   return (
-    <div className="">
+    <>
       <Header />
-      <main className="px-5 space-y-3">
-        <div className="flex w-full flex-row gap-x-4 gap-y-4 items-center">
-          <BlueBackButton />
-          <h1 className="from-blue-primary bg-linear-to-br to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent">
+      <main className="px-5 flex w-full flex-col gap-4">
+        <div className="flex w-full flex-row gap-x-4 items-center">
+          <BackButton className="bg-royal [&>svg]:fill-white" />
+          <h1 className="font-display text-2xl font-extrabold text-haiti">
             {club.name}
           </h1>
         </div>
@@ -40,7 +41,7 @@ const Layout = async (props: {
           <div className="flex w-full flex-row gap-4">{events}</div>
         </div>
       </main>
-    </div>
+    </>
   );
 };
 

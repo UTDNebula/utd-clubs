@@ -68,7 +68,7 @@ const CountdownTimer: FC<{ startTime: Date }> = ({ startTime }) => {
 
   return (
     <>
-      <h1 className="text-sm font-semibold text-gray-600">Starts in</h1>
+      <p className="text-sm font-semibold text-gray-600">Starts in</p>
       <div className="mt-5 flex justify-start"></div>
       <div className="flex text-3xl font-medium text-gray-600">
         <p className="mr-6">{timeRemaining.days}</p>
