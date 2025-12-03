@@ -1,0 +1,1 @@
+ALTER TABLE "club" ADD COLUMN "page_views" integer DEFAULT 0 NOT NULL;

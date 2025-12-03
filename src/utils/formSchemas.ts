@@ -24,6 +24,10 @@ export const editClubSchema = z.object({
   id: z.string(),
   name: z.string().min(3, { message: 'Name must be longer than 3 characters' }),
   description: z.string().min(1, { message: 'Description is required' }),
+  tags: z.array(z.string()).optional(),
+  profileImage: z.string().url().optional(),
+  bannerImage: z.string().url().optional(),
+  foundingDate: z.string().optional(),
 });
 export const editOfficerSchema = z.object({
   officers: z
@@ -54,6 +58,18 @@ export const createEventSchema = z.object({
   description: z.string().max(1000),
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
+});
+
+export const updateEventSchema = createEventSchema.extend({
+  id: z.string(),
+});
+
+export const feedbackFormSchema = z.object({
+  rating: z.number().min(1).max(10),
+  likes: z.string().default(''),
+  dislikes: z.string().default(''),
+  features: z.string().default(''),
+  submit_on: z.date().default(new Date()),
 });
 
 const characterLimitError = 'Input cannot exceed 500 characters';

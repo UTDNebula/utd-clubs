@@ -6,7 +6,7 @@ const EmailButton = ({ item }: { item: Contacts }) => {
   return (
     <button
       key={item.url}
-      className="group relative h-min self-center rounded-full bg-slate-100 p-2.5 transition-colors hover:bg-blue-700"
+      className="group relative h-min self-center rounded-full bg-slate-100 p-2.5 transition-colors hover:color-red-100"
     >
       <Link href={`mailto:${item.url}`}>
         <div className="relative h-8 w-8">{logo[item.platform]}</div>

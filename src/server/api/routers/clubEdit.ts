@@ -88,6 +88,10 @@ export const clubEditRouter = createTRPCRouter({
         .set({
           name: input.name,
           description: input.description,
+          tags: input.tags,
+          profileImage: input.profileImage,
+          bannerImage: input.bannerImage,
+          foundingDate: input.foundingDate,
           updatedAt: new Date(),
         })
         .where(eq(club.id, input.id))
@@ -231,7 +235,10 @@ export const clubEditRouter = createTRPCRouter({
       for (const modded of input.modified) {
         const prom = ctx.db
           .update(officers)
-          .set({ position: modded.position, isPresident: modded.isPresident })
+          .set({
+            position: modded.position,
+            isPresident: modded.isPresident,
+          })
           .where(
             and(eq(officers.id, modded.id), eq(officers.clubId, input.clubId)),
           );

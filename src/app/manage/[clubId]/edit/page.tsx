@@ -8,7 +8,13 @@ import EditContactForm from './EditContactForm';
 
 export default async function Page(props: {
   params: Promise<{ clubId: string }>;
+export default async function Page(props: {
+  params: Promise<{ clubId: string }>;
 }) {
+  const params = await props.params;
+
+  const { clubId } = params;
+
   const params = await props.params;
 
   const { clubId } = params;

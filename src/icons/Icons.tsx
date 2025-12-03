@@ -3,7 +3,6 @@ import { type FC } from 'react';
 export type IconType = FC<{ fill?: string; size?: number; className?: string }>;
 const defaultFill = 'fill-slate-400';
 const defaultHeartFill = 'fill-slate-800';
-const defaultSize = 24;
 
 export const HomeIcon: IconType = ({ fill = defaultFill }) => (
   <svg
