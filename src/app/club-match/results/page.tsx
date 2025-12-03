@@ -43,7 +43,9 @@ const Page = async () => {
     <>
       <Header />
       <main className="flex flex-col gap-8 pb-8 px-6">
-        <h1 className="text-4xl font-bold">Your Top Club Matches</h1>
+        <h1 className="font-display text-4xl font-bold">
+          Your Top Club Matches
+        </h1>
         <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">
           {data.clubMatch.map((club) => (
             <Link

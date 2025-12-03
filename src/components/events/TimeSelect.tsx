@@ -26,7 +26,7 @@ const TimeSelect = ({
     <>
       <div className="event-duration flex gap-32">
         <div className="flex flex-1 flex-col justify-end">
-          <h1 className="mb-2 block font-bold">Duration</h1>
+          <p className="mb-2 block font-bold">Duration</p>
           <label htmlFor="startTime" className="mb-2 text-xs font-bold">
             Start Time
           </label>

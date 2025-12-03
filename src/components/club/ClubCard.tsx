@@ -33,9 +33,9 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
       </div>
 
       <div className="flex flex-col space-y-2 p-6">
-        <h1 className="line-clamp-2 text-2xl font-medium text-slate-800 md:text-xl">
+        <p className="line-clamp-2 text-2xl font-medium text-slate-800 md:text-xl">
           {name}
-        </h1>
+        </p>
         <p className="line-clamp-9 text-base text-slate-600 md:text-sm">
           {desc}
         </p>

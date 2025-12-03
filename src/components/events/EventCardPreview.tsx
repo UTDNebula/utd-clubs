@@ -10,19 +10,21 @@ interface Props {
 }
 
 const EventCardPreview = ({ event }: Props) => {
+  const src = event.image ?? event.club.profileImage;
   return (
     <div className="flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
-      <div className="relative">
-        <div className="h-40 w-96">
+      <div className="relative h-40 shrink-0 w-full">
+        <div className="absolute inset-0 h-full w-full bg-gray-200" />
+        {src && (
           <Image
-            src={'/event_default.jpg'}
-            alt="event image"
             fill
-            objectFit="cover"
+            src={src}
+            alt="event image"
+            className="object-cover object-left"
           />
-          <div className="absolute inset-0 p-2">
-            <EventTimeAlert event={event} />
-          </div>
+        )}
+        <div className="absolute inset-0 p-2">
+          <EventTimeAlert event={event} />
         </div>
       </div>
       <div className="flex h-full flex-col p-5">
