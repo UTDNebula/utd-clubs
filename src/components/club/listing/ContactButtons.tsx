@@ -20,7 +20,7 @@ type contentButtonProps = {
 };
 const ContactButtons = ({ contacts }: contentButtonProps) => {
   return (
-    <div className="flex flex-row content-center gap-x-4">
+    <div className="flex flex-wrap gap-x-4">
       {contacts.map((item) => (
         <div key={item.url}>
           {item.platform === 'email' ? (
