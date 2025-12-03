@@ -1,11 +1,5 @@
 import EventCard from '@src/components/events/EventCard';
 import { api } from '@src/trpc/server';
-import { revalidatePath } from 'next/cache';
-
-export async function deleteEventAction(eventId: string) {
-  await api.event.delete({ id: eventId });
-  revalidatePath('/events', 'page');
-}
 
 const Events = async (props: { params: Promise<{ clubId: string }> }) => {
   const params = await props.params;

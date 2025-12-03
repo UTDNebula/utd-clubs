@@ -1,8 +1,5 @@
 'use server';
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { IconButton } from '@mui/material';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,7 +7,8 @@ import { auth } from '@src/server/auth';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
 
-import { EventCardEditButton } from './EventCardEditButton';
+import EventEditButton from './EventEditButton';
+import EventDeleteButton from './EventDeleteButton';
 import EventRegisterButton from './EventRegisterButton';
 import EventTimeAlert from './EventTimeAlert';
 
@@ -66,10 +64,8 @@ const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
           {!manageView && session && <EventRegisterButton eventId={event.id} />}
           {manageView && (
             <>
-              <EventCardEditButton clubId={event.clubId} eventId={event.id} />
-              <IconButton color="error" disabled>
-                <DeleteIcon />
-              </IconButton>
+              <EventEditButton clubId={event.clubId} eventId={event.id} />
+              <EventDeleteButton event={event} />
             </>
           )}
         </div>
@@ -118,10 +114,8 @@ const VerticalCard = async ({ event, manageView }: EventCardProps) => {
           {!manageView && session && <EventRegisterButton eventId={event.id} />}
           {manageView && (
             <>
-              <EventCardEditButton clubId={event.clubId} eventId={event.id} />
-              <IconButton color="error" disabled>
-                <DeleteIcon />
-              </IconButton>
+              <EventEditButton clubId={event.clubId} eventId={event.id} />
+              <EventDeleteButton event={event} />
             </>
           )}
         </div>

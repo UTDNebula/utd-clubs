@@ -1,35 +1,67 @@
 'use client';
 
+import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+} from '@mui/material';
 import { useState } from 'react';
+import { type RouterOutputs } from '@src/trpc/shared';
+import { useMutation } from '@tanstack/react-query';
+import { useTRPC } from '@src/trpc/react';
 
 export default function EventDeleteButton({
-  deleteAction,
+  event,
 }: {
-  deleteAction: () => Promise<void>;
+  event: RouterOutputs['event']['byClubId'][number];
 }) {
-  const [status, setStatus] = useState<'idle' | 'deleted'>('idle');
+  const [open, setOpen] = useState(false);
 
-  async function handleClick() {
-    const ok = confirm('Are you sure you want to delete this event?');
-
-    if (!ok) return;
-
-    await deleteAction(); // calls your server action
-    setStatus('deleted');
-  }
+  const api = useTRPC();
+  const { mutate } = useMutation(
+    api.event.delete.mutationOptions(),
+  );
 
   return (
-    <div className="flex flex-col">
-      <button
-        onClick={handleClick}
-        className="bg-blue-primary h-10 w-10 rounded-full p-1 shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800 text-white text-sm"
+    <>
+      <IconButton color="error" onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setOpen(true)
+      }}>
+        <DeleteIcon />
+      </IconButton>
+      <Dialog
+        onClose={() => setOpen(false)}
+        open={open}
+        onClick={(e) => e.stopPropagation()}
       >
-        X
-      </button>
-
-      {status === 'deleted' && (
-        <p className="text-xs text-blue-primary mt-2">Event deleted</p>
-      )}
-    </div>
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This will permenantly delete {event.name}.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              mutate({ id: event.id });
+              setOpen(false);
+            }}
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
