@@ -96,11 +96,7 @@ const Collaborators = ({ club, officers }: CollaboratorsProps) => {
   });
 
   return (
-    <Form
-      methods={methods}
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      onSubmit={submitForm}
-    >
+    <Form methods={methods} onSubmit={submitForm}>
       <FormFieldSet legend="Edit Club Collaborators">
         <div className="mx-4 text-slate-600 italic text-sm">
           <p>

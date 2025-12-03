@@ -1,10 +1,10 @@
 'use client';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import IconButton from '@mui/material/IconButton';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { useRouter } from 'next/navigation';
 
-type BackButtonProps = {
+type BackButtonProps = IconButtonProps & {
   href?: string;
 };
 

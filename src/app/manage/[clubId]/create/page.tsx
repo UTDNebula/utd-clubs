@@ -1,11 +1,10 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import EventForm from '@src/components/events/EventForm';
-import Header from '@src/components/header/BaseHeader';
+import ClubManageHeader from '@src/components/header/ClubManageHeader';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
 
 const Page = async (props: { params: Promise<{ clubId: string }> }) => {
   const params = await props.params;
@@ -26,7 +25,6 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
 
   return (
     <main className="h-screen">
-      {/* <Header /> */}
       <ClubManageHeader
         club={club}
         path={[{ text: 'Events' }, { text: 'Create' }]}

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { uploadImage } from '@src/utils/uploadImage';
 import { UploadIcon } from '@src/icons/Icons';
+import { uploadImage } from '@src/utils/uploadImage';
 
 interface UploadImageProps {
   clubId: string;

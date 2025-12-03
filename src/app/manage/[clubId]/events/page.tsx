@@ -6,11 +6,16 @@ import EventCard from '@src/components/events/EventCard';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
 import { api } from '@src/trpc/server';
 
-// import { type RouterOutputs } from '@src/trpc/shared';
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ clubId: string }>;
+}) {
+  const { clubId } = await params;
 
-export default async function Page({ params }: { params: { clubId: string } }) {
   // TODO: might need to add code here to only allow officers?
-  const club = await api.club.byId({ id: params.clubId });
+
+  const club = await api.club.byId({ id: clubId });
   if (!club) notFound();
 
   return (
@@ -18,10 +23,10 @@ export default async function Page({ params }: { params: { clubId: string } }) {
       <ClubManageHeader
         club={club}
         path={[{ text: 'Events' }]}
-        hrefBack={`/manage/${params.clubId}/`}
+        hrefBack={`/manage/${clubId}/`}
       >
         <Button
-          href={`/manage/${params.clubId}/create`}
+          href={`/manage/${clubId}/create`}
           variant="contained"
           className="normal-case"
           startIcon={<AddIcon />}
@@ -31,16 +36,14 @@ export default async function Page({ params }: { params: { clubId: string } }) {
         </Button>
       </ClubManageHeader>
       <FormFieldSet legend="Events">
-        {/* I dunno how to solve this, it works without but tbh somebody should fix this /shrug */}
-        <Events params={{ clubId: params.clubId }} />
+        <Events clubId={clubId} />
       </FormFieldSet>
     </main>
   );
 }
 
-const Events = async (props: { params: Promise<{ clubId: string }> }) => {
-  const params = await props.params;
-  const events = await api.event.byClubId({ clubId: params.clubId });
+const Events = async (props: { clubId: string }) => {
+  const events = await api.event.byClubId({ clubId: props.clubId });
   return (
     <div
       className="group flex flex-wrap w-full justify-evenly items-center pt-4 gap-4"

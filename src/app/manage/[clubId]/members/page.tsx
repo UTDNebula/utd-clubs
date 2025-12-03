@@ -2,9 +2,16 @@ import { notFound } from 'next/navigation';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
 import { api } from '@src/trpc/server';
 
-export default async function Page({ params }: { params: { clubId: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ clubId: string }>;
+}) {
+  const { clubId } = await params;
+
   // TODO: might need to add code here to only allow officers?
-  const club = await api.club.byId({ id: params.clubId });
+
+  const club = await api.club.byId({ id: clubId });
   if (!club) notFound();
 
   return (
@@ -12,7 +19,7 @@ export default async function Page({ params }: { params: { clubId: string } }) {
       <ClubManageHeader
         club={club}
         path={[{ text: 'Members' }]}
-        hrefBack={`/manage/${params.clubId}/`}
+        hrefBack={`/manage/${clubId}/`}
       ></ClubManageHeader>
       <h1>Not implemented yet, sorry!</h1>
     </main>

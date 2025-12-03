@@ -2,22 +2,26 @@ import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import PreviewIcon from '@mui/icons-material/Preview';
 import Button from '@mui/material/Button';
+import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 import ClubManageForm from './ClubManageForm';
-import { headers } from 'next/headers';
 
-const Page = async ({ params }: { params: { clubId: string } }) => {
+// const Page = async ({ params }: { params: Promise<{ clubId: string }> }) => {
+//   const { clubId } = await params;
+const Page = async (props: { params: Promise<{ clubId: string }> }) => {
+  const { clubId } = await props.params;
+
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) redirect(await signInRoute(`manage/${params.clubId}`));
-  const canAccess = await api.club.isOfficer({ id: params.clubId });
+  if (!session) redirect(await signInRoute(`manage/${clubId}`));
+  const canAccess = await api.club.isOfficer({ id: clubId });
   if (!canAccess) {
     return <div className="">You can&apos;t access this 😢</div>;
   }
-  const club = await api.club.byId({ id: params.clubId });
+  const club = await api.club.byId({ id: clubId });
   if (!club) {
     notFound();
   }
@@ -25,7 +29,7 @@ const Page = async ({ params }: { params: { clubId: string } }) => {
     <>
       <ClubManageHeader club={club} hrefBack="/manage/">
         <Button
-          href={`/manage/${params.clubId}/members`}
+          href={`/manage/${clubId}/members`}
           variant="contained"
           className="normal-case"
           startIcon={<PeopleIcon />}
@@ -34,7 +38,7 @@ const Page = async ({ params }: { params: { clubId: string } }) => {
           View Members
         </Button>
         <Button
-          href={`/manage/${params.clubId}/events`}
+          href={`/manage/${clubId}/events`}
           variant="contained"
           className="normal-case"
           startIcon={<EventIcon />}

@@ -205,11 +205,7 @@ const Contacts = ({ club }: ContactsProps) => {
   });
 
   return (
-    <Form
-      methods={methods}
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      onSubmit={submitForm}
-    >
+    <Form methods={methods} onSubmit={submitForm}>
       <FormFieldSet legend="Edit Contacts">
         <div className="flex flex-col gap-2">
           {fields.map((field, index) => (
