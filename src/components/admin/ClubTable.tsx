@@ -125,7 +125,7 @@ export default function ClubTable({ clubs }: { clubs: Club[] }) {
       },
     ],
 
-    [],
+    [mutate],
   );
 
   const table = useReactTable({

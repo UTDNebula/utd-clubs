@@ -1,7 +1,6 @@
 'use client';
 
-import { getProviders, type ClientSafeProvider } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { LeftArrowIcon } from 'src/icons/Icons';
 import ProviderButton from '@src/app/auth/ProviderButtons';
 
@@ -9,21 +8,9 @@ type RegisterModalProps = {
   open: boolean;
   onClose: () => void;
 };
+const providers = ['google', 'discord'] as const;
 
 const RegisterModal: React.FC<RegisterModalProps> = ({ open, onClose }) => {
-  const [providers, setProviders] = useState<Record<
-    string,
-    ClientSafeProvider
-  > | null>(null);
-
-  useEffect(() => {
-    async function loadProviders() {
-      const prov = await getProviders();
-      setProviders(prov ?? null);
-    }
-    void loadProviders();
-  }, []);
-
   if (!open) return null;
 
   return (
@@ -53,11 +40,9 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ open, onClose }) => {
             </h1>
 
             <div className="flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
-              {Object.values(providers ?? {}).map(
-                (provider: ClientSafeProvider) => (
-                  <ProviderButton key={provider.id} provider={provider} />
-                ),
-              )}
+              {providers.map((provider) => (
+                <ProviderButton key={provider} provider={provider} />
+              ))}
             </div>
           </div>
         </div>

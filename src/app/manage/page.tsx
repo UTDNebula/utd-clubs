@@ -1,16 +1,17 @@
 import { Button } from '@mui/material';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import ClubCard from '@src/components/club/ClubCard';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 
 export default async function Page() {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
-    redirect(signInRoute('manage'));
+    redirect(await signInRoute('manage'));
   }
   const clubs = await api.club.getOfficerClubs();
   return (

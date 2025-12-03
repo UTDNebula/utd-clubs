@@ -3,11 +3,14 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton } from '@mui/material';
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime'; //importing new component
+
+import { EventCardEditButton } from './EventCardEditButton';
 import EventLikeButton from './EventLikeButton';
 import EventTimeAlert from './EventTimeAlert';
 
@@ -22,7 +25,7 @@ type EventCardProps =
     };
 
 const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   return (
     <Link
       href={`/event/${event.id}`}
@@ -62,13 +65,11 @@ const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
             {event.description}
           </p>
         </div>
-        <div className="ml-auto flex flex-row gap-2">
+        <div className="ml-auto flex flex-row gap-2 h-fit self-center">
           {!manageView && session && <EventLikeButton eventId={event.id} />}
           {manageView && (
             <>
-              <IconButton disabled>
-                <EditIcon />
-              </IconButton>
+              <EventCardEditButton clubId={event.clubId} eventId={event.id} />
               <IconButton color="error" disabled>
                 <DeleteIcon />
               </IconButton>
@@ -80,7 +81,7 @@ const HorizontalCard = async ({ event, manageView }: EventCardProps) => {
   );
 };
 const VerticalCard = async ({ event, manageView }: EventCardProps) => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   return (
     <Link
       href={`/event/${event.id}`}
@@ -118,7 +119,7 @@ const VerticalCard = async ({ event, manageView }: EventCardProps) => {
           {!manageView && session && <EventLikeButton eventId={event.id} />}
           {manageView && (
             <>
-              <IconButton disabled>
+              <IconButton>
                 <EditIcon />
               </IconButton>
               <IconButton color="error" disabled>
