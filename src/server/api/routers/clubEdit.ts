@@ -83,7 +83,15 @@ export const clubEditRouter = createTRPCRouter({
 
       const updatedClub = await ctx.db
         .update(club)
-        .set({ name: input.name, description: input.description })
+        .set({
+          name: input.name,
+          description: input.description,
+          tags: input.tags,
+          profileImage: input.profileImage,
+          bannerImage: input.bannerImage,
+          foundingDate: input.foundingDate,
+          updatedAt: new Date(),
+        })
         .where(eq(club.id, input.id))
         .returning();
       return updatedClub;
@@ -134,6 +142,12 @@ export const clubEditRouter = createTRPCRouter({
           })),
         )
         .onConflictDoNothing();
+      await ctx.db
+        .update(club)
+        .set({
+          updatedAt: new Date(),
+        })
+        .where(eq(club.id, input.clubId));
     }),
   officers: protectedProcedure
     .input(editCollaboratorSchema)
@@ -186,6 +200,12 @@ export const clubEditRouter = createTRPCRouter({
           set: { memberType: 'Officer' as const },
           where: eq(userMetadataToClubs.memberType, 'Member'),
         });
+      await ctx.db
+        .update(club)
+        .set({
+          updatedAt: new Date(),
+        })
+        .where(eq(club.id, input.clubId));
     }),
   listedOfficers: protectedProcedure
     .input(editOfficerSchema)
@@ -212,7 +232,10 @@ export const clubEditRouter = createTRPCRouter({
       for (const modded of input.modified) {
         const prom = ctx.db
           .update(officers)
-          .set({ position: modded.position, isPresident: modded.isPresident })
+          .set({
+            position: modded.position,
+            isPresident: modded.isPresident,
+          })
           .where(
             and(eq(officers.id, modded.id), eq(officers.clubId, input.clubId)),
           );
@@ -229,6 +252,12 @@ export const clubEditRouter = createTRPCRouter({
           isPresident: officer.isPresident,
         })),
       );
+      await ctx.db
+        .update(club)
+        .set({
+          updatedAt: new Date(),
+        })
+        .where(eq(club.id, input.clubId));
     }),
   delete: protectedProcedure
     .input(deleteSchema)
