@@ -71,7 +71,7 @@ export const aiRouter = createTRPCRouter({
         .orderBy(club.name)
         .where(eq(club.approved, 'approved'));
 
-      const prompt = `Analyze this student's preferences and recommend 10 organizations,
+      const prompt = `Analyze this student's preferences and recommend 9 organizations,
 ensuring balanced coverage across all selected categories:
 
 Available Organizations:
