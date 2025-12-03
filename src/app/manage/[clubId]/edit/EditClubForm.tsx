@@ -81,7 +81,6 @@ const EditClubForm = ({
             </div>
           </div>
           <ClubTagEdit tags={tags} setTagsAction={setTags} />
-          <div>{tags}</div>
           <div className="flex flex-row justify-end gap-x-4 py-2">
             <button
               className="rounded-lg bg-slate-200 p-1 font-bold"
