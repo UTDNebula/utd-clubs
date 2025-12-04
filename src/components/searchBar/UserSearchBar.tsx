@@ -1,8 +1,13 @@
 'use client';
 
-import { Autocomplete, TextField, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  CircularProgress,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
 
@@ -15,10 +20,16 @@ function getFullName(user: {
 
 type UserSearchBarProps = {
   passUser: (user: { id: string; name: string }) => void;
+  placeholder?: string;
 };
 
-export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
+export const UserSearchBar = ({
+  passUser,
+  placeholder,
+}: UserSearchBarProps) => {
   const [input, setInput] = useState('');
+  const [loading, setLoading] = React.useState(false);
+
   const debouncedSearch = useDebounce(input, 300);
   const api = useTRPC();
   const { data } = useQuery(
@@ -27,6 +38,10 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
       { enabled: !!debouncedSearch },
     ),
   );
+
+  useEffect(() => {
+    setLoading(false);
+  }, [data]);
 
   return (
     <Autocomplete
@@ -45,6 +60,9 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
           {...params}
           size="small"
           className="w-full"
+          onChange={() => {
+            setLoading(true);
+          }}
           slotProps={{
             input: {
               ...params.InputProps,
@@ -53,9 +71,17 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
                 background: 'white',
                 borderRadius: 'calc(infinity * 1px)',
               },
+              endAdornment: (
+                <>
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
             },
           }}
-          placeholder="Search for Someone"
+          placeholder={placeholder ?? 'Search for Someone'}
         />
       )}
       renderOption={(props, option) => {
