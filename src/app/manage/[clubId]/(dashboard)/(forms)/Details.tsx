@@ -1,17 +1,16 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import Alert from '@mui/material/Alert';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import type z from 'zod';
 import Form from '@src/components/club/manage/form/Form';
 import FormButtons from '@src/components/club/manage/form/FormButtons';
 import FormDatePicker from '@src/components/club/manage/form/FormDatePicker';
-// import {
-//   FormButtons,
-//   FormFieldSet,
-// } from '@src/components/club/manage/FormComponents';
 import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
 import FormImageUpload from '@src/components/club/manage/form/FormImageUpload';
 import FormTextField from '@src/components/club/manage/form/FormTextField';
@@ -30,6 +29,10 @@ const Details = ({
       id: club.id,
       name: club.name,
       description: club.description,
+      profileImage: club.profileImage ?? undefined,
+      bannerImage: club.bannerImage ?? undefined,
+      foundingDate: club.foundingDate ?? undefined,
+      tags: club.tags,
     },
     mode: 'onTouched',
   });
@@ -54,9 +57,18 @@ const Details = ({
     }
   });
 
+  const [dateFounded, setDateFounded] = useState('');
+
   return (
     <Form methods={methods} onSubmit={submitForm}>
       <FormFieldSet legend="Edit Details">
+        {/* Error Display */}
+        {editData.isError && (
+          <Alert severity="error" className="mb-4">
+            {editData.error?.message ??
+              'An error occurred while saving details.'}
+          </Alert>
+        )}
         {/* <UploadImage clubId={club.id} /> */}
         {/* <UploadImage clubId={club.id} /> */}
         <FormImageUpload
@@ -93,10 +105,51 @@ const Details = ({
             {...{ control }}
           />
           <FormDatePicker
-            name="founded"
+            name="foundingDate"
             label="Date Founded"
             // {...{ control }}
           />
+          {/* <DatePicker
+            onChange={(newValue, context) => {
+              if (context.validationError == null && newValue != null) {
+                // setDate(newValue);
+                setDateFounded(String(newValue.getTime()));
+                console.log(dateFounded);
+              }
+            }}
+            // className="[&>.MuiInputBase-root]:bg-white"
+            slotProps={{
+              actionBar: {
+                actions: ['today', 'accept'],
+              },
+              textField: {
+                id: 'outlined-basic',
+                variant: 'outlined',
+                size: 'small',
+                label: 'TEST INPUT',
+              },
+            }}
+          /> */}
+
+          {/* <Controller
+            name="foundingDate"
+            render={({ field }) => (
+              <DatePicker
+                slotProps={{
+                  actionBar: {
+                    actions: ['today', 'accept'],
+                  },
+                  textField: {
+                    id: 'outlined-basic',
+                    variant: 'outlined',
+                    size: 'small',
+                    label: 'TEST INPUT',
+                    ...field,
+                  },
+                }}
+              />
+            )}
+          /> */}
         </div>
         <FormTextField
           name="description"
