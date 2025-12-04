@@ -25,8 +25,8 @@ export const editClubSchema = z.object({
   name: z.string().min(3),
   description: z.string().min(1),
   tags: z.array(z.string()).optional(),
-  profileImage: z.string().url().optional(),
-  bannerImage: z.string().url().optional(),
+  profileImage: z.url().optional(),
+  bannerImage: z.url().optional(),
   foundingDate: z.string().optional(),
 });
 export const editOfficerSchema = z.object({

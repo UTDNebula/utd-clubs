@@ -60,9 +60,9 @@ export const UserSearchBar = ({
       }}
       renderInput={(params) => (
         <TextField
-        {...params}
-        size="small"
-        className={'w-full' + ' ' + className}
+          {...params}
+          size="small"
+          className={'w-full' + ' ' + className}
           onChange={() => {
             setLoading(true);
           }}
