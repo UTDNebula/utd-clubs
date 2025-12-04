@@ -1,7 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import FormTextField from './form/FormTextField';
 
 type OfficerListItemProps = {
@@ -27,26 +27,34 @@ export const OfficerListItem = ({
         />
         <FormTextField name={`officers.${index}.position`} label="Position" />
         <div className="h-10 mt-2">
-          <IconButton
-            aria-label="make president"
-            title="Make President"
-            className="self-center"
-            onClick={() => makePresident(index)}
+          <Tooltip
+            title={isPresident ? 'This user is President' : 'Make President'}
           >
-            {isPresident ? (
-              <SupervisorAccountIcon color="primary" />
-            ) : (
-              <PersonIcon />
-            )}
-          </IconButton>
-          <IconButton
-            aria-label="remove"
-            title="Remove"
-            className="self-center"
-            onClick={() => remove(index)}
-          >
-            <DeleteIcon />
-          </IconButton>
+            {/* This span is required to ensure the locked tooltip shows when the IconButton is disabled */}
+            <span>
+              <IconButton
+                aria-label="make president"
+                className="self-center"
+                onClick={() => makePresident(index)}
+                disabled={isPresident}
+              >
+                {isPresident ? (
+                  <SupervisorAccountIcon color="primary" />
+                ) : (
+                  <PersonIcon />
+                )}
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Remove">
+            <IconButton
+              aria-label="remove"
+              className="self-center"
+              onClick={() => remove(index)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </div>
       </div>
     </div>

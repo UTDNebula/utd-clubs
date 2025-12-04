@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton, MenuItem } from '@mui/material';
+import { IconButton, MenuItem, Tooltip } from '@mui/material';
 import { type FieldErrors, type UseFormRegister } from 'react-hook-form';
 import type z from 'zod';
 import {
@@ -125,14 +125,15 @@ const ContactListItem = ({
         />
 
         <div className="h-10 mt-2">
-          <IconButton
-            aria-label="remove"
-            title="Remove"
-            className="self-center"
-            onClick={() => remove(index, platform)}
-          >
-            <DeleteIcon />
-          </IconButton>
+          <Tooltip title="Remove">
+            <IconButton
+              aria-label="remove"
+              className="self-center"
+              onClick={() => remove(index, platform)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </div>
       </div>
     </div>
