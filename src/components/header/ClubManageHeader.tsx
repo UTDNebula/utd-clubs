@@ -40,7 +40,11 @@ const ClubManageHeader = ({
             {club.name}
           </Link>
           {path?.slice(0, -1).map((pathItem) => {
-            return <Link key={pathItem.href} href={pathItem.href}>{pathItem.text}</Link>;
+            return (
+              <Link key={pathItem.href} href={pathItem.href}>
+                {pathItem.text}
+              </Link>
+            );
           })}
           {path?.length && (
             <Typography>{path[path.length - 1]?.text}</Typography>
