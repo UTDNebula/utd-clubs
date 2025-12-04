@@ -15,9 +15,10 @@ export function EventCardEditButton({
   return (
     <IconButton
       onClick={(e) => {
+        console.log('clicked edit');
         e.stopPropagation();
         e.preventDefault();
-        router.push(`/manage/${clubId}/edit/${eventId}`);
+        router.push(`/manage/${clubId}/events/edit/${eventId}`);
       }}
     >
       <EditIcon />

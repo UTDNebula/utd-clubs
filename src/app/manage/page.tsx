@@ -15,9 +15,9 @@ export default async function Page() {
   }
   const clubs = await api.club.getOfficerClubs();
   return (
-    <main className="">
+    <>
       <Header />
-      <div className="px-5">
+      <main className="p-4">
         <div className="flex items-center">
           <h1 className="font-display text-2xl font-extrabold text-haiti">
             Select a Club
@@ -33,7 +33,7 @@ export default async function Page() {
             <ClubCard key={club.id} club={club} manageView />
           ))}
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

@@ -1,38 +1,35 @@
+import { headers } from 'next/headers';
+import { notFound, redirect } from 'next/navigation';
 import { type ReactNode } from 'react';
 import { BaseHeader } from '@src/components/header/BaseHeader';
+import { auth } from '@src/server/auth';
+import { api } from '@src/trpc/server';
+import { signInRoute } from '@src/utils/redirect';
 
-const Layout = ({
-  // params,
+const Layout = async ({
+  params,
   children,
-  // events,
 }: {
-  // params: { clubId: string };
+  params: Promise<{ clubId: string }>;
   children: ReactNode;
-  // events: ReactNode;
 }) => {
-  // const session = await getServerAuthSession();
-  // if (!session) redirect(signInRoute(`manage/${params.clubId}`));
-  // const canAccess = await api.club.isOfficer({ id: params.clubId });
-  // if (!canAccess) {
-  //   return <div className="">You can&apos;t access this 😢</div>;
-  // }
-  // const club = await api.club.byId({ id: params.clubId });
-  // if (!club) {
-  //   notFound();
-  // }
-  return (
-    <div className="">
-      {/* <ClubSearchBar />
-        create new club */}
-      {/* <BaseHeader>{null}</BaseHeader> */}
-      <BaseHeader>{/* <span>Club Management</span> */}</BaseHeader>
+  const { clubId } = await params;
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect(await signInRoute(`manage/${clubId}`));
+  const canAccess = await api.club.isOfficer({ id: clubId });
+  if (!canAccess) {
+    return <div className="">You can&apos;t access this 😢</div>;
+  }
+  const club = await api.club.byId({ id: clubId });
+  if (!club) {
+    notFound();
+  }
 
-      <div className="flex w-full items-center justify-center">
-        <main className="w-full max-w-6xl">
-          <div className="px-5">{children}</div>
-        </main>
-      </div>
-    </div>
+  return (
+    <>
+      <BaseHeader />
+      <main className="p-4">{children}</main>
+    </>
   );
 };
 

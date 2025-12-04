@@ -9,16 +9,16 @@ export default async function Page({
 }) {
   const { clubId } = await params;
 
-  // TODO: might need to add code here to only allow officers?
-
   const club = await api.club.byId({ id: clubId });
-  if (!club) notFound();
+  if (!club) {
+    notFound();
+  }
 
   return (
     <main>
       <ClubManageHeader
         club={club}
-        path={[{ text: 'Members' }]}
+        path={[{ text: 'Members', href: `/manage/${clubId}/members` }]}
         hrefBack={`/manage/${clubId}/`}
       ></ClubManageHeader>
       <h1>Not implemented yet, sorry!</h1>

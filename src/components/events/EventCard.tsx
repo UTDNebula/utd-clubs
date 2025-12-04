@@ -1,7 +1,6 @@
 'use server';
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import { IconButton } from '@mui/material';
 import { headers } from 'next/headers';
 import Image from 'next/image';
@@ -118,9 +117,7 @@ const VerticalCard = async ({ event, manageView }: EventCardProps) => {
           {!manageView && session && <EventRegisterButton eventId={event.id} />}
           {manageView && (
             <>
-              <IconButton>
-                <EditIcon />
-              </IconButton>
+              <EventCardEditButton clubId={event.clubId} eventId={event.id} />
               <IconButton color="error" disabled>
                 <DeleteIcon />
               </IconButton>

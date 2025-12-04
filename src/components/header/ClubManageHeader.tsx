@@ -1,3 +1,5 @@
+import { Breadcrumbs, Typography } from '@mui/material';
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 // import { notFound } from 'next/navigation';
 import type {
@@ -13,7 +15,7 @@ type Club = SelectClub & {
 
 type PathItem = {
   text: string;
-  href?: string;
+  href: string;
 };
 
 type ClubManageHeaderProps = {
@@ -29,36 +31,21 @@ const ClubManageHeader = ({
   path,
   hrefBack,
 }: ClubManageHeaderProps) => {
-  // const session = await getServerAuthSession();
-  // if (!session) redirect(signInRoute(`manage/${club.id}`));
-  // const canAccess = await api.club.isOfficer({ id: club.id });
-  // if (!canAccess) {
-  //   return <div className="">You can&apos;t access this 😢</div>;
-  // }
-  // const club = await api.club.byId({ id: club.id });
-  // if (!club) {
-  //   notFound();
-  // }
-
   return (
     <div className="mb-8 flex w-full flex-row flex-wrap items-center gap-x-10 gap-y-2">
-      <div className="flex min-h-10.5 flex-row items-center gap-x-2">
+      <div className="flex min-h-10.5 flex-row items-center gap-2">
         <BackButton href={hrefBack} />
-        {/* <h1 className="from-blue-primary bg-linear-to-br to-blue-700 bg-clip-text text-2xl font-bold text-transparent"> */}
-        <h1 className="text-xl font-bold text-slate-800">{club.name}</h1>
-        {/* TODO: Add key prop to elements somehow, for React */}
-        {path?.map((pathItem, index) => {
-          return (
-            <span key={index}>
-              <span className="text-xl font-bold text-slate-500 select-none">
-                /&nbsp;
-              </span>
-              <span className="text-xl font-bold text-slate-800">
-                {pathItem.text}
-              </span>
-            </span>
-          );
-        })}
+        <Breadcrumbs aria-label="breadcrumb">
+          <Link className="font-bold" href={`/manage/${club.id}`}>
+            {club.name}
+          </Link>
+          {path?.slice(0, -1).map((pathItem) => {
+            return <Link key={pathItem.href} href={pathItem.href}>{pathItem.text}</Link>;
+          })}
+          {path?.length && (
+            <Typography>{path[path.length - 1]?.text}</Typography>
+          )}
+        </Breadcrumbs>
       </div>
       {children}
     </div>
