@@ -21,11 +21,13 @@ function getFullName(user: {
 type UserSearchBarProps = {
   passUser: (user: { id: string; name: string }) => void;
   placeholder?: string;
+  className?: string;
 };
 
 export const UserSearchBar = ({
   passUser,
   placeholder,
+  className,
 }: UserSearchBarProps) => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = React.useState(false);
@@ -47,7 +49,8 @@ export const UserSearchBar = ({
     <Autocomplete
       freeSolo
       disableClearable
-      className="w-full max-w-xs md:max-w-sm lg:max-w-md"
+      // className="w-full max-w-xs md:max-w-sm lg:max-w-md"
+      className="w-full"
       aria-label="search"
       inputValue={input}
       options={data ?? []}
@@ -57,9 +60,9 @@ export const UserSearchBar = ({
       }}
       renderInput={(params) => (
         <TextField
-          {...params}
-          size="small"
-          className="w-full"
+        {...params}
+        size="small"
+        className={'w-full' + ' ' + className}
           onChange={() => {
             setLoading(true);
           }}

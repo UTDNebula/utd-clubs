@@ -207,7 +207,7 @@ const Contacts = ({ club }: ContactsProps) => {
   return (
     <Form methods={methods} onSubmit={submitForm}>
       <FormFieldSet legend="Edit Contacts">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col">
           {fields.map((field, index) => (
             <ContactListItem
               key={field.fieldId}
