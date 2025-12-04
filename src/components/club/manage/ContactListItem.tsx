@@ -8,7 +8,7 @@ import {
   TextField,
   Tooltip,
 } from '@mui/material';
-import { Controller, type Control, type FieldErrors } from 'react-hook-form';
+import { Controller, type Control } from 'react-hook-form';
 import type z from 'zod';
 import { type SelectContact } from '@src/server/db/models';
 import { contactNames, startContacts } from '@src/server/db/schema/contacts';
@@ -16,12 +16,19 @@ import { type editClubContactSchema } from '@src/utils/formSchemas';
 
 type Contact = Omit<SelectContact, 'clubId'>;
 
+type Errors = {
+  errors: string[];
+  properties?: {
+    contacts?: { items?: { properties?: { url?: { errors?: string[] } } }[] };
+  };
+};
+
 type ContactListItemProps = {
   control: Control<z.infer<typeof editClubContactSchema>>;
-  remove: (index: number, platform: Contact['platform']) => void;
+  remove: (index: number) => void;
   platform: Contact['platform'];
   index: number;
-  errors: FieldErrors<z.infer<typeof editClubContactSchema>>;
+  errors: Errors;
   available?: typeof startContacts;
 };
 
@@ -33,7 +40,8 @@ const ContactListItem = ({
   errors,
   available,
 }: ContactListItemProps) => {
-  const fieldError = errors.contacts?.[index]?.url;
+  const fieldErrors =
+    errors.properties?.contacts?.items?.[index]?.properties?.url?.errors;
 
   return (
     <div className="flex items-center gap-2 p-2 hover:bg-slate-100 transition-colors rounded-lg">
@@ -78,19 +86,15 @@ const ContactListItem = ({
             label={platform === 'email' ? 'Email Address' : 'URL'}
             className="grow-1 [&>.MuiInputBase-root]:bg-white"
             size="small"
-            error={!!fieldError}
-            helperText={fieldError?.message}
+            error={fieldErrors && fieldErrors.length > 0}
+            helperText={fieldErrors?.join('. ')}
           />
         )}
       />
 
       <div className="h-10">
         <Tooltip title="Remove">
-          <IconButton
-            aria-label="remove"
-            title="Remove"
-            onClick={() => remove(index, platform)}
-          >
+          <IconButton aria-label="remove" onClick={() => remove(index)}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>

@@ -3,7 +3,7 @@ import { z } from 'zod';
 const emailSchema = z.object({
   platform: z.literal('email'),
   clubId: z.string().optional(),
-  url: z.email('Must be a valid email'),
+  url: z.email('Valid email required'),
 });
 const discordSchema = z.object({
   platform: z.literal('discord'),
@@ -55,7 +55,7 @@ const linkedInSchema = z.object({
 const otherSchema = z.object({
   platform: z.literal('other'),
   clubId: z.string().optional(),
-  url: z.url('must be a valid url'),
+  url: z.url('Valid url required'),
 });
 
 export const contactSchema = z.discriminatedUnion('platform', [
