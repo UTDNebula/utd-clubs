@@ -186,7 +186,7 @@ const Officers = ({ club, officers }: OfficersProps) => {
         >
           Add Officer
         </Button>
-        <FormButtons />
+        <FormButtons isPending={editOfficers.isPending} />
       </FormFieldSet>
     </Form>
   );

@@ -1,10 +1,7 @@
-import { headers } from 'next/headers';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import EventForm from '@src/components/events/EventForm';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
-import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
-import { signInRoute } from '@src/utils/redirect';
 
 const Page = async (props: { params: Promise<{ clubId: string }> }) => {
   const { clubId } = await props.params;

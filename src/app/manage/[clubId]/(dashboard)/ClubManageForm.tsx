@@ -1,9 +1,5 @@
-import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { auth } from '@src/server/auth';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { api } from '@src/trpc/server';
-import { signInRoute } from '@src/utils/redirect';
 import Collaborators from './(forms)/Collaborators';
 import Contacts from './(forms)/Contacts';
 import Details from './(forms)/Details';
@@ -30,7 +26,7 @@ const ClubManageForm = async ({
     <div className="flex flex-col gap-8">
       <Details club={club} />
       <Officers club={club} officers={listedOfficers} />
-      <Contacts club={club}></Contacts>
+      <Contacts club={club} />
       <Collaborators club={club} officers={officersMapped} />
     </div>
   );

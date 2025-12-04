@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Button, { type ButtonProps } from '@mui/material/Button';
 import { styled } from '@mui/material/styles';

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { type ReactNode } from 'react';
 import {

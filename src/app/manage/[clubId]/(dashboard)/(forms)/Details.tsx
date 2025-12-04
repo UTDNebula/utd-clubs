@@ -105,7 +105,7 @@ const Details = ({
           multiline
           minRows={4}
         />
-        <FormButtons />
+        <FormButtons isPending={editData.isPending} />
       </FormFieldSet>
     </Form>
   );

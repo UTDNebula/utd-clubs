@@ -1,6 +1,5 @@
 'use client';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from '@hookform/resolvers/zod';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
@@ -124,7 +123,7 @@ const Collaborators = ({ club, officers }: CollaboratorsProps) => {
         >
           Add Collaborator
         </Button>
-        <FormButtons />
+        <FormButtons isPending={editOfficers.isPending} />
       </FormFieldSet>
     </Form>
   );

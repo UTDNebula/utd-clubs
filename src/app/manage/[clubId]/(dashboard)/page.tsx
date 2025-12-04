@@ -2,12 +2,9 @@ import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import PreviewIcon from '@mui/icons-material/Preview';
 import Button from '@mui/material/Button';
-import { headers } from 'next/headers';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
-import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
-import { signInRoute } from '@src/utils/redirect';
 import ClubManageForm from './ClubManageForm';
 
 const Page = async (props: { params: Promise<{ clubId: string }> }) => {

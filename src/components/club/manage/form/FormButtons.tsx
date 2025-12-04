@@ -5,10 +5,11 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export const FormSubmitButton = ({
-  isDirty,
-  ...props
+  disabled,
+  loading,
 }: {
-  isDirty?: boolean;
+  disabled?: boolean;
+  loading?: boolean;
 }) => {
   return (
     <Button
@@ -16,10 +17,11 @@ export const FormSubmitButton = ({
       variant="contained"
       className="normal-case"
       startIcon={<SaveIcon />}
-      size="large"
-      {...props}
+      disabled={disabled}
+      loading={loading}
+      loadingPosition="start"
     >
-      <span>Save Changes{isDirty && '*'}</span>
+      <span>Save Changes</span>
     </Button>
   );
 };
@@ -27,7 +29,6 @@ export const FormSubmitButton = ({
 export const FormResetButton = ({
   disabled,
   onClick,
-  ...props
 }: {
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -35,13 +36,11 @@ export const FormResetButton = ({
   return (
     <Button
       onClick={onClick}
-      variant="contained"
+      variant="text"
       className="normal-case"
       startIcon={<DeleteIcon />}
-      size="large"
-      disabled={!!disabled}
+      disabled={disabled}
       color="warning"
-      {...props}
     >
       Discard Changes
     </Button>
@@ -50,22 +49,29 @@ export const FormResetButton = ({
 
 type FormButtonsProps = {
   onClickDiscard?: React.MouseEventHandler<HTMLButtonElement>;
+  isPending: boolean;
 };
 
-export const FormButtons = ({ onClickDiscard, ...props }: FormButtonsProps) => {
+export const FormButtons = ({
+  onClickDiscard,
+  isPending,
+}: FormButtonsProps) => {
   const methods = useFormContext();
 
   return (
-    <div className="flex gap-2" {...props}>
-      <FormSubmitButton isDirty={methods.formState.isDirty} />
+    <div className="flex flex-wrap justify-end items-center gap-2">
       <FormResetButton
-        disabled={!methods.formState.isDirty}
+        disabled={!methods.formState.isDirty || isPending}
         onClick={
           onClickDiscard ??
           (() => {
             methods.reset();
           })
         }
+      />
+      <FormSubmitButton
+        disabled={!methods.formState.isDirty}
+        loading={isPending}
       />
     </div>
   );
