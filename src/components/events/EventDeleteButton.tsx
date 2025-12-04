@@ -10,7 +10,8 @@ import {
   DialogTitle,
   IconButton,
 } from '@mui/material';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
@@ -21,18 +22,13 @@ export default function EventDeleteButton({
   event: RouterOutputs['event']['byClubId'][number];
 }) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const api = useTRPC();
-  const queryClient = useQueryClient();
   const { mutate } = useMutation(
     api.event.delete.mutationOptions({
       onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: [
-            ['event', 'byClubId'],
-            { input: { clubId: event.clubId }, type: 'query' },
-          ],
-        });
+        router.refresh();
       },
     }),
   );

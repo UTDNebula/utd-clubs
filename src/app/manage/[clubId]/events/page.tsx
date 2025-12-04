@@ -1,9 +1,9 @@
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import { notFound } from 'next/navigation';
+import EventCard from '@src/components/events/EventCard';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
 import { api } from '@src/trpc/server';
-import Events from './Events';
 
 export default async function Page({
   params,
@@ -16,6 +16,8 @@ export default async function Page({
   if (!club) {
     notFound();
   }
+
+  const events = await api.event.byClubId({ clubId });
 
   return (
     <main>
@@ -34,7 +36,14 @@ export default async function Page({
           Create Event
         </Button>
       </ClubManageHeader>
-      <Events clubId={clubId} />
+      <div
+        className="group flex flex-wrap w-full justify-evenly items-center pt-4 gap-4"
+        data-view="list"
+      >
+        {events?.map((event) => (
+          <EventCard key={event.id} event={event} manageView />
+        ))}
+      </div>
     </main>
   );
 }

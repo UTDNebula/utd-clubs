@@ -2,13 +2,11 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import AddIcon from '@mui/icons-material/Add';
-import Alert from '@mui/material/Alert'; // Added for error display
 import Button from '@mui/material/Button';
 import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { type z } from 'zod';
+import { z, type ZodError } from 'zod';
 import ContactListItem from '@src/components/club/manage/ContactListItem';
 import Form from '@src/components/club/manage/form/Form';
 import {
@@ -26,6 +24,13 @@ type ContactsProps = {
 
 type FormData = z.infer<typeof editClubContactSchema>;
 
+type Errors = {
+  errors: string[];
+  properties?: {
+    contacts?: { items?: { properties?: { url?: { errors?: string[] } } }[] };
+  };
+};
+
 const Contacts = ({ club }: ContactsProps) => {
   const [deletedIds, setDeletedIds] = useState<
     FormData['contacts'][number]['platform'][]
@@ -38,37 +43,25 @@ const Contacts = ({ club }: ContactsProps) => {
     },
   });
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors, dirtyFields },
-  } = methods;
-
   const { fields, append, remove } = useFieldArray({
-    control,
+    control: methods.control,
     name: 'contacts',
     keyName: 'fieldId',
   });
 
-  const router = useRouter();
   const api = useTRPC();
-
   const editContacts = useMutation(
     api.club.edit.contacts.mutationOptions({
-      onSuccess: () => {
-        router.refresh();
+      onSuccess: (updated) => {
+        methods.reset({ contacts: updated });
         setDeletedIds([]);
-        methods.reset({ contacts: methods.getValues().contacts });
-      },
-      onError: (error) => {
-        console.error('Error editing contacts:', error);
+        setErrors({ errors: [] });
       },
     }),
   );
 
   // Available platforms
-  const currentContacts = watch('contacts') || [];
+  const currentContacts = methods.watch('contacts') || [];
   const available = startContacts.filter(
     (p) => !currentContacts.map((c) => c.platform).includes(p),
   );
@@ -82,9 +75,9 @@ const Contacts = ({ club }: ContactsProps) => {
     remove(index);
   };
 
-  const submitForm = handleSubmit((data) => {
-    console.log('Submitting:', JSON.stringify(data));
+  const [errors, setErrors] = useState<Errors>({ errors: [] });
 
+  const submitForm = methods.handleSubmit((data) => {
     // Separate created vs modified
     const created: FormData['contacts'] = [];
     const modified: SelectContact[] = [];
@@ -96,7 +89,7 @@ const Contacts = ({ club }: ContactsProps) => {
       }
       // If it has an ID, check if it was actually changed
       else {
-        const isDirty = dirtyFields.contacts?.[index];
+        const isDirty = methods.formState.dirtyFields.contacts?.[index];
         if (isDirty) {
           modified.push(contact as SelectContact);
         }
@@ -113,28 +106,26 @@ const Contacts = ({ club }: ContactsProps) => {
     }
   });
 
-  console.log(errors);
-
   return (
-    <Form methods={methods} onSubmit={submitForm}>
-      <FormFieldSet legend="Edit Contacts">
-        {/* Error Display */}
-        {editContacts.isError && (
-          <Alert severity="error" className="mb-4">
-            {editContacts.error.message ||
-              'An error occurred while saving contacts.'}
-          </Alert>
-        )}
-
+    <Form
+      methods={methods}
+      onSubmit={(e) => {
+        e.preventDefault();
+        submitForm().catch((err: ZodError) => {
+          setErrors(z.treeifyError(err));
+        });
+      }}
+    >
+      <FormFieldSet legend="Edit Contact Information">
         <div className="flex flex-col gap-2">
           {fields.map((field, index) => (
             <ContactListItem
               key={field.fieldId}
-              control={control}
-              index={index}
-              remove={() => removeItem(index)}
-              errors={errors}
+              control={methods.control}
+              remove={removeItem}
               platform={field.platform}
+              index={index}
+              errors={errors}
               available={available}
             />
           ))}
@@ -156,7 +147,14 @@ const Contacts = ({ club }: ContactsProps) => {
           </Button>
         )}
 
-        <FormButtons isPending={editContacts.isPending} />
+        <FormButtons
+          isPending={editContacts.isPending}
+          onClickDiscard={() => {
+            setDeletedIds([]);
+            setErrors({ errors: [] });
+            methods.reset();
+          }}
+        />
       </FormFieldSet>
     </Form>
   );

@@ -3,6 +3,7 @@ import { type z } from 'zod';
 import { club } from './schema/club';
 import { contacts } from './schema/contacts';
 import { events } from './schema/events';
+import { officers } from './schema/officers';
 import { userMetadata } from './schema/users';
 
 // Schema definition for club table
@@ -26,9 +27,16 @@ export const selectEvent = createSelectSchema(events);
 export type InsertEvent = z.infer<typeof insertEvent>;
 export type SelectEvent = z.infer<typeof selectEvent>;
 
-// Schema types for userMetadata
+// Schema definition for userMetadata table
 export const insertUserMetadata = createInsertSchema(userMetadata);
 export const selectUserMetadata = createSelectSchema(userMetadata);
 
 export type InsertUserMetadata = z.infer<typeof insertUserMetadata>;
 export type SelectUserMetadata = z.infer<typeof selectUserMetadata>;
+
+// Schema definition for officers table
+export const insertOfficers = createInsertSchema(officers);
+export const selectOfficers = createSelectSchema(officers);
+
+export type InsertOfficers = z.infer<typeof insertOfficers>;
+export type SelectOfficers = z.infer<typeof selectOfficers>;
