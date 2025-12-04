@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { IconButton } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
-export function EventCardEditButton({
+export default function EventEditButton({
   clubId,
   eventId,
 }: {
