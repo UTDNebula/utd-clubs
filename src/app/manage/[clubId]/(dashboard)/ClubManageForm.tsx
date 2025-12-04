@@ -16,8 +16,6 @@ const ClubManageForm = async ({
 }) => {
   const clubId = club.id;
 
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) redirect(await signInRoute(`manage/${clubId}/edit/officers`));
   const role = await api.club.memberType({ id: clubId });
   const officers = await api.club.getOfficers({ id: clubId });
   const listedOfficers = await api.club.getListedOfficers({ id: clubId });

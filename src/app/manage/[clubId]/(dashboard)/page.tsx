@@ -49,8 +49,11 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
           Preview Club Card
         </Button>
       </ClubManageHeader>
-
-      <ClubManageForm club={club} />
+      <div className="flex w-full flex-col items-center">
+        <main className="w-full max-w-6xl">
+          <ClubManageForm club={club} />
+        </main>
+      </div>
     </>
   );
 };
