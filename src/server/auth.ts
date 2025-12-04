@@ -1,6 +1,5 @@
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { betterAuth } from 'better-auth/minimal';
-import { oAuthProxy } from 'better-auth/plugins';
 import { eq } from 'drizzle-orm';
 import { env } from '@src/env.mjs';
 import { db } from './db';
@@ -58,11 +57,6 @@ export const auth = betterAuth({
       enabled: true,
     },
   },
-  plugins: [
-    oAuthProxy({
-      productionURL: 'https://clubs.utdnebula.com',
-    }),
-  ],
   trustedOrigins: [
     'http://localhost:3000',
     'https://clubs.utdnebula.com',
