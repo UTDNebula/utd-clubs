@@ -1,62 +1,77 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonIcon from '@mui/icons-material/Person';
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
-import { IconButton, Tooltip } from '@mui/material';
-import FormTextField from './form/FormTextField';
+import { IconButton, TextField, Tooltip } from '@mui/material';
+import { Controller, type Control } from 'react-hook-form';
+import type z from 'zod';
+import { editListedOfficerSchema } from '@src/utils/formSchemas';
+
+type Errors = {
+  errors: string[];
+  properties?: {
+    officers?: {
+      items?: {
+        properties?: { [key in 'name' | 'position']?: { errors?: string[] } };
+      }[];
+    };
+  };
+};
 
 type OfficerListItemProps = {
+  control: Control<z.infer<typeof editListedOfficerSchema>>;
   remove: (index: number) => void;
   index: number;
-  isPresident: boolean;
-  makePresident: (index: number) => void;
+  errors: Errors;
 };
 
 export const OfficerListItem = ({
-  index,
+  control,
   remove,
-  isPresident,
-  makePresident,
+  index,
+  errors,
 }: OfficerListItemProps) => {
+  const nameFieldErrors =
+    errors.properties?.officers?.items?.[index]?.properties?.name?.errors;
+  const positionFieldErrors =
+    errors.properties?.officers?.items?.[index]?.properties?.position?.errors;
+
   return (
-    <div className="flex flex-row px-2 py-3 hover:bg-slate-100 transition-colors rounded-lg">
-      <div className="flex flex-row w-full flex-wrap">
-        <FormTextField
-          name={`officers.${index}.name`}
-          label="Name"
-          className="grow-1"
-        />
-        <FormTextField name={`officers.${index}.position`} label="Position" />
-        <div className="h-10 mt-2">
-          <Tooltip
-            title={isPresident ? 'This user is President' : 'Make President'}
-          >
-            {/* This span is required to ensure the locked tooltip shows when the IconButton is disabled */}
-            <span>
-              <IconButton
-                aria-label="make president"
-                className="self-center"
-                onClick={() => makePresident(index)}
-                disabled={isPresident}
-              >
-                {isPresident ? (
-                  <SupervisorAccountIcon color="primary" />
-                ) : (
-                  <PersonIcon />
-                )}
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title="Remove">
-            <IconButton
-              aria-label="remove"
-              className="self-center"
-              onClick={() => remove(index)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        </div>
-      </div>
+    <div className="flex items-center gap-2 p-2 hover:bg-slate-100 transition-colors rounded-lg">
+      <Controller
+        control={control}
+        name={`officers.${index}.name`}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextField
+            onChange={onChange}
+            onBlur={onBlur}
+            value={value}
+            label="Name"
+            className="grow-1 [&>.MuiInputBase-root]:bg-white"
+            size="small"
+            error={nameFieldErrors && nameFieldErrors.length > 0}
+            helperText={nameFieldErrors?.join('. ')}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name={`officers.${index}.position`}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextField
+            onChange={onChange}
+            onBlur={onBlur}
+            value={value}
+            label="Position"
+            className="grow-1 [&>.MuiInputBase-root]:bg-white"
+            size="small"
+            error={positionFieldErrors && positionFieldErrors.length > 0}
+            helperText={positionFieldErrors?.join('. ')}
+          />
+        )}
+      />
+      <Tooltip title="Remove">
+        <IconButton aria-label="remove" onClick={() => remove(index)}>
+          <DeleteIcon />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 };

@@ -24,7 +24,7 @@ export const FormFieldSet = ({
         props.className
       }
     >
-      <legend className="float-left gap-2 pl-2 text-xl font-bold text-slate-600">
+      <legend className="float-left ml-2 text-xl font-bold text-haiti">
         {legend}
       </legend>
       {children}

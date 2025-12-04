@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z, type ZodError } from 'zod';
@@ -44,34 +43,25 @@ const Contacts = ({ club }: ContactsProps) => {
     },
   });
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { dirtyFields },
-  } = methods;
-
   const { fields, append, remove } = useFieldArray({
-    control,
+    control: methods.control,
     name: 'contacts',
     keyName: 'fieldId',
   });
 
-  const router = useRouter();
   const api = useTRPC();
-
   const editContacts = useMutation(
     api.club.edit.contacts.mutationOptions({
-      onSuccess: () => {
-        router.refresh();
+      onSuccess: (updated) => {
+        methods.reset({ contacts: updated });
         setDeletedIds([]);
-        methods.reset({ contacts: methods.getValues().contacts });
+        setErrors({ errors: [] });
       },
     }),
   );
 
   // Available platforms
-  const currentContacts = watch('contacts') || [];
+  const currentContacts = methods.watch('contacts') || [];
   const available = startContacts.filter(
     (p) => !currentContacts.map((c) => c.platform).includes(p),
   );
@@ -87,7 +77,7 @@ const Contacts = ({ club }: ContactsProps) => {
 
   const [errors, setErrors] = useState<Errors>({ errors: [] });
 
-  const submitForm = handleSubmit((data) => {
+  const submitForm = methods.handleSubmit((data) => {
     // Separate created vs modified
     const created: FormData['contacts'] = [];
     const modified: SelectContact[] = [];
@@ -99,7 +89,7 @@ const Contacts = ({ club }: ContactsProps) => {
       }
       // If it has an ID, check if it was actually changed
       else {
-        const isDirty = dirtyFields.contacts?.[index];
+        const isDirty = methods.formState.dirtyFields.contacts?.[index];
         if (isDirty) {
           modified.push(contact as SelectContact);
         }
@@ -131,11 +121,11 @@ const Contacts = ({ club }: ContactsProps) => {
           {fields.map((field, index) => (
             <ContactListItem
               key={field.fieldId}
-              control={control}
-              index={index}
+              control={methods.control}
               remove={removeItem}
-              errors={errors}
               platform={field.platform}
+              index={index}
+              errors={errors}
               available={available}
             />
           ))}

@@ -40,7 +40,7 @@ const ContactListItem = ({
   errors,
   available,
 }: ContactListItemProps) => {
-  const fieldErrors =
+  const urlFieldErrors =
     errors.properties?.contacts?.items?.[index]?.properties?.url?.errors;
 
   return (
@@ -86,19 +86,17 @@ const ContactListItem = ({
             label={platform === 'email' ? 'Email Address' : 'URL'}
             className="grow-1 [&>.MuiInputBase-root]:bg-white"
             size="small"
-            error={fieldErrors && fieldErrors.length > 0}
-            helperText={fieldErrors?.join('. ')}
+            error={urlFieldErrors && urlFieldErrors.length > 0}
+            helperText={urlFieldErrors?.join('. ')}
           />
         )}
       />
 
-      <div className="h-10">
-        <Tooltip title="Remove">
-          <IconButton aria-label="remove" onClick={() => remove(index)}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      </div>
+      <Tooltip title="Remove">
+        <IconButton aria-label="remove" onClick={() => remove(index)}>
+          <DeleteIcon />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 };

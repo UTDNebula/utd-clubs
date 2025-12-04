@@ -61,14 +61,12 @@ const editOfficerSchema = z.object({
       id: z.string(),
       name: z.string(),
       position: z.string(),
-      isPresident: z.boolean(),
     })
     .array(),
   created: z
     .object({
       name: z.string(),
       position: z.string(),
-      isPresident: z.boolean(),
     })
     .array(),
 });
@@ -148,6 +146,12 @@ export const clubEditRouter = createTRPCRouter({
           updatedAt: new Date(),
         })
         .where(eq(club.id, input.clubId));
+
+      // Return new contacts
+      const newContacts = await ctx.db.query.contacts.findMany({
+        where: eq(contacts.clubId, input.clubId),
+      });
+      return newContacts;
     }),
   officers: protectedProcedure
     .input(editCollaboratorSchema)
@@ -234,7 +238,6 @@ export const clubEditRouter = createTRPCRouter({
           .update(officers)
           .set({
             position: modded.position,
-            isPresident: modded.isPresident,
           })
           .where(
             and(eq(officers.id, modded.id), eq(officers.clubId, input.clubId)),
@@ -249,7 +252,6 @@ export const clubEditRouter = createTRPCRouter({
           clubId: input.clubId,
           name: officer.name,
           position: officer.position,
-          isPresident: officer.isPresident,
         })),
       );
       await ctx.db
@@ -258,6 +260,12 @@ export const clubEditRouter = createTRPCRouter({
           updatedAt: new Date(),
         })
         .where(eq(club.id, input.clubId));
+
+      // Return new officers
+      const newOfficers = await ctx.db.query.officers.findMany({
+        where: eq(officers.clubId, input.clubId),
+      });
+      return newOfficers;
     }),
   delete: protectedProcedure
     .input(deleteSchema)
