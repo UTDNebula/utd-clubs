@@ -6,6 +6,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Tooltip,
 } from '@mui/material';
 import { Controller, type Control, type FieldErrors } from 'react-hook-form';
 import type z from 'zod';
@@ -84,13 +85,15 @@ const ContactListItem = ({
       />
 
       <div className="h-10">
-        <IconButton
-          aria-label="remove"
-          title="Remove"
-          onClick={() => remove(index, platform)}
-        >
-          <DeleteIcon />
-        </IconButton>
+        <Tooltip title="Remove">
+          <IconButton
+            aria-label="remove"
+            title="Remove"
+            onClick={() => remove(index, platform)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
       </div>
     </div>
   );

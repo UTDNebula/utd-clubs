@@ -1,8 +1,13 @@
 'use client';
 
-import { Autocomplete, TextField, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  CircularProgress,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
 
@@ -15,10 +20,18 @@ function getFullName(user: {
 
 type UserSearchBarProps = {
   passUser: (user: { id: string; name: string }) => void;
+  placeholder?: string;
+  className?: string;
 };
 
-export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
+export const UserSearchBar = ({
+  passUser,
+  placeholder,
+  className,
+}: UserSearchBarProps) => {
   const [input, setInput] = useState('');
+  const [loading, setLoading] = React.useState(false);
+
   const debouncedSearch = useDebounce(input, 300);
   const api = useTRPC();
   const { data } = useQuery(
@@ -28,11 +41,16 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
     ),
   );
 
+  useEffect(() => {
+    setLoading(false);
+  }, [data]);
+
   return (
     <Autocomplete
       freeSolo
       disableClearable
-      className="w-full max-w-xs md:max-w-sm lg:max-w-md"
+      // className="w-full max-w-xs md:max-w-sm lg:max-w-md"
+      className="w-full"
       aria-label="search"
       inputValue={input}
       options={data ?? []}
@@ -42,9 +60,12 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
       }}
       renderInput={(params) => (
         <TextField
-          {...params}
-          size="small"
-          className="w-full"
+        {...params}
+        size="small"
+        className={'w-full' + ' ' + className}
+          onChange={() => {
+            setLoading(true);
+          }}
           slotProps={{
             input: {
               ...params.InputProps,
@@ -53,9 +74,17 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
                 background: 'white',
                 borderRadius: 'calc(infinity * 1px)',
               },
+              endAdornment: (
+                <>
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
             },
           }}
-          placeholder="Search for Someone"
+          placeholder={placeholder ?? 'Search for Someone'}
         />
       )}
       renderOption={(props, option) => {
