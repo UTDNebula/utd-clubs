@@ -20,7 +20,7 @@ export default async function Page({
         club={club}
         path={[{ text: 'Members', href: `/manage/${clubId}/members` }]}
         hrefBack={`/manage/${clubId}/`}
-      ></ClubManageHeader>
+      />
       <h1>Not implemented yet, sorry!</h1>
     </main>
   );
