@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import BackButton from '@src/components/backButton';
 import Header from '@src/components/header/BaseHeader';
 import { api } from '@src/trpc/server';
-import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 import EditClubForm from './EditClubForm';
 import EditContactForm from './EditContactForm';
 
