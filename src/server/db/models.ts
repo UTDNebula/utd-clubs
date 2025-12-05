@@ -4,7 +4,7 @@ import { club } from './schema/club';
 import { contacts } from './schema/contacts';
 import { events } from './schema/events';
 import { officers } from './schema/officers';
-import { userMetadata } from './schema/users';
+import { userMetadata, userMetadataToClubs } from './schema/users';
 
 // Schema definition for club table
 export const insertClub = createInsertSchema(club);
@@ -35,8 +35,31 @@ export type InsertUserMetadata = z.infer<typeof insertUserMetadata>;
 export type SelectUserMetadata = z.infer<typeof selectUserMetadata>;
 
 // Schema definition for officers table
-export const insertOfficers = createInsertSchema(officers);
-export const selectOfficers = createSelectSchema(officers);
+export const insertOfficer = createInsertSchema(officers);
+export const selectOfficer = createSelectSchema(officers);
 
-export type InsertOfficers = z.infer<typeof insertOfficers>;
-export type SelectOfficers = z.infer<typeof selectOfficers>;
+export type InsertOfficer = z.infer<typeof insertOfficer>;
+export type SelectOfficer = z.infer<typeof selectOfficer>;
+
+// Schema definition for userMetadataToClubs table
+export const insertUserMetadataToClubs =
+  createInsertSchema(userMetadataToClubs);
+export const selectUserMetadataToClubs =
+  createSelectSchema(userMetadataToClubs);
+
+export type InsertUserMetadataToClubs = z.infer<
+  typeof insertUserMetadataToClubs
+>;
+export type SelectUserMetadataToClubs = z.infer<
+  typeof selectUserMetadataToClubs
+>;
+
+// With userMetadata
+export const selectUserMetadataToClubsWithUserMetadata =
+  selectUserMetadataToClubs.extend({
+    userMetadata: selectUserMetadata.nullable(),
+  });
+
+export type SelectUserMetadataToClubsWithUserMetadata = z.infer<
+  typeof selectUserMetadataToClubsWithUserMetadata
+>;

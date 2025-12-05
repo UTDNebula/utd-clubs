@@ -84,7 +84,7 @@ const ContactListItem = ({
             onBlur={onBlur}
             value={value}
             label={platform === 'email' ? 'Email Address' : 'URL'}
-            className="grow-1 [&>.MuiInputBase-root]:bg-white"
+            className="grow [&>.MuiInputBase-root]:bg-white"
             size="small"
             error={urlFieldErrors && urlFieldErrors.length > 0}
             helperText={urlFieldErrors?.join('. ')}

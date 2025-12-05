@@ -13,13 +13,13 @@ import {
   FormFieldSet,
 } from '@src/components/club/manage/FormComponents';
 import OfficerListItem from '@src/components/club/manage/OfficerListItem';
-import type { SelectClub, SelectOfficers } from '@src/server/db/models';
+import type { SelectClub, SelectOfficer } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { editListedOfficerSchema } from '@src/utils/formSchemas';
 
 type OfficersProps = {
   club: SelectClub;
-  officers: SelectOfficers[];
+  listedOfficers: SelectOfficer[];
 };
 
 type FormData = z.infer<typeof editListedOfficerSchema>;
@@ -35,13 +35,13 @@ type Errors = {
   };
 };
 
-const Officers = ({ club, officers }: OfficersProps) => {
+const Officers = ({ club, listedOfficers }: OfficersProps) => {
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
 
   const methods = useForm<FormData>({
     resolver: zodResolver(editListedOfficerSchema),
     defaultValues: {
-      officers: officers,
+      officers: listedOfficers,
     },
   });
 
@@ -77,7 +77,7 @@ const Officers = ({ club, officers }: OfficersProps) => {
   const submitForm = methods.handleSubmit((data) => {
     // Separate created vs modified
     const created: FormData['officers'] = [];
-    const modified: SelectOfficers[] = [];
+    const modified: SelectOfficer[] = [];
 
     data.officers.forEach((officer, index) => {
       // If it has no ID, it's created
@@ -87,8 +87,9 @@ const Officers = ({ club, officers }: OfficersProps) => {
       // If it has an ID, check if it was actually changed
       else {
         const isDirty = methods.formState.dirtyFields.officers?.[index];
-        if (isDirty) {
-          modified.push(officer as SelectOfficers);
+        const isAnyDirty = isDirty && Object.values(isDirty).some((v) => v);
+        if (isAnyDirty) {
+          modified.push(officer as SelectOfficer);
         }
       }
     });

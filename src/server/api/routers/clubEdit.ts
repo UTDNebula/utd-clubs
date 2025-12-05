@@ -163,7 +163,19 @@ export const clubEditRouter = createTRPCRouter({
           code: 'UNAUTHORIZED',
         });
       }
-      if (input.deleted.length > 0) {
+      const isPresident = await isUserPresident(
+        ctx.session.user.id,
+        input.clubId,
+      );
+      if (!isPresident && (input.deleted.length || input.modified.length)) {
+        throw new TRPCError({
+          message: 'only a president can remove or modify people',
+          code: 'UNAUTHORIZED',
+        });
+      }
+
+      // Deleted
+      if (input.deleted.length) {
         await ctx.db
           .delete(userMetadataToClubs)
           .where(
@@ -173,43 +185,58 @@ export const clubEditRouter = createTRPCRouter({
             ),
           );
       }
-      // TODO: link to officers table
-      // const promises: Promise<unknown>[] = [];
-      // for (const modded of input.modified) {
-      //   const prom = ctx.db
-      //     .update(userMetadataToClubs)
-      //     .set({ title: modded.title })
-      //     .where(
-      //       and(
-      //         eq(userMetadataToClubs.userId, modded.userId),
-      //         eq(userMetadataToClubs.clubId, input.clubId),
-      //       ),
-      //     );
-      //   promises.push(prom);
-      // }
-      // await Promise.allSettled(promises);
-      if (input.created.length === 0) return;
 
-      await ctx.db
-        .insert(userMetadataToClubs)
-        .values(
-          input.created.map((officer) => ({
-            userId: officer.userId,
-            clubId: input.clubId,
-            officerType: 'Officer' as const,
-          })),
-        )
-        .onConflictDoUpdate({
-          target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
-          set: { memberType: 'Officer' as const },
-          where: eq(userMetadataToClubs.memberType, 'Member'),
-        });
-      await ctx.db
-        .update(club)
-        .set({
-          updatedAt: new Date(),
-        })
-        .where(eq(club.id, input.clubId));
+      // Modified
+      const promises: Promise<unknown>[] = [];
+      for (const modded of input.modified) {
+        const prom = ctx.db
+          .update(userMetadataToClubs)
+          .set({
+            memberType: modded.position,
+          })
+          .where(
+            and(
+              eq(userMetadataToClubs.userId, modded.userId),
+              eq(userMetadataToClubs.clubId, input.clubId),
+            ),
+          );
+        promises.push(prom);
+      }
+      await Promise.allSettled(promises);
+
+      // Created
+      if (input.created.length) {
+        await ctx.db
+          .insert(userMetadataToClubs)
+          .values(
+            input.created.map((officer) => ({
+              userId: officer.userId,
+              clubId: input.clubId,
+              officerType: 'Officer' as const,
+            })),
+          )
+          .onConflictDoUpdate({
+            target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
+            set: { memberType: 'Officer' as const },
+            where: eq(userMetadataToClubs.memberType, 'Member'),
+          });
+        await ctx.db
+          .update(club)
+          .set({
+            updatedAt: new Date(),
+          })
+          .where(eq(club.id, input.clubId));
+      }
+
+      // Return new officers
+      const newOfficers = await ctx.db.query.userMetadataToClubs.findMany({
+        where: and(
+          eq(userMetadataToClubs.clubId, input.clubId),
+          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+        ),
+        with: { userMetadata: true },
+      });
+      return newOfficers;
     }),
   listedOfficers: protectedProcedure
     .input(editOfficerSchema)
@@ -222,7 +249,8 @@ export const clubEditRouter = createTRPCRouter({
         });
       }
 
-      if (input.deleted.length > 0) {
+      // Deleted
+      if (input.deleted.length) {
         await ctx.db
           .delete(officers)
           .where(
@@ -232,6 +260,8 @@ export const clubEditRouter = createTRPCRouter({
             ),
           );
       }
+
+      // Modified
       const promises: Promise<unknown>[] = [];
       for (const modded of input.modified) {
         const prom = ctx.db
@@ -245,27 +275,29 @@ export const clubEditRouter = createTRPCRouter({
         promises.push(prom);
       }
       await Promise.allSettled(promises);
-      if (input.created.length === 0) return;
 
-      await ctx.db.insert(officers).values(
-        input.created.map((officer) => ({
-          clubId: input.clubId,
-          name: officer.name,
-          position: officer.position,
-        })),
-      );
-      await ctx.db
-        .update(club)
-        .set({
-          updatedAt: new Date(),
-        })
-        .where(eq(club.id, input.clubId));
+      // Created
+      if (input.created.length) {
+        await ctx.db.insert(officers).values(
+          input.created.map((officer) => ({
+            clubId: input.clubId,
+            name: officer.name,
+            position: officer.position,
+          })),
+        );
+        await ctx.db
+          .update(club)
+          .set({
+            updatedAt: new Date(),
+          })
+          .where(eq(club.id, input.clubId));
+      }
 
       // Return new officers
-      const newOfficers = await ctx.db.query.officers.findMany({
+      const newListedOfficers = await ctx.db.query.officers.findMany({
         where: eq(officers.clubId, input.clubId),
       });
-      return newOfficers;
+      return newListedOfficers;
     }),
   delete: protectedProcedure
     .input(deleteSchema)
