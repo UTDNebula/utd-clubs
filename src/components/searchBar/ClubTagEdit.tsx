@@ -73,15 +73,20 @@ export const ClubTagEdit = ({
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
 
-        if (!isFetching && params.inputValue != '') {
-          filtered.push(`Add "${params.inputValue}" tag`);
+        // Trim user specified tag
+        const input = params.inputValue.trim();
+
+        // Wait for fetching, and don't allow blank tags
+        if (!isFetching && input != '') {
+          filtered.push(`Add "${input}" tag`);
         }
 
         return filtered;
       }}
-      onChange={(e, value) => {
+      onChange={(_e, value) => {
         const last = value[value.length - 1];
         if (typeof last === 'string' && last.startsWith('Add ')) {
+          // Trim the (Add ) and the ( tag) part of the
           value[value.length - 1] = last.substring(5, last.length - 5);
         }
         setTagsAction(value);
