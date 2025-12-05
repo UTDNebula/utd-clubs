@@ -6,7 +6,6 @@ import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import { useQuery } from '@tanstack/react-query';
-import { useRef } from 'react';
 import { useTRPC } from '@src/trpc/react';
 
 export const ClubTagEdit = ({
@@ -22,79 +21,71 @@ export const ClubTagEdit = ({
     api.club.distinctTags.queryOptions(),
   );
 
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const filter = createFilterOptions<string>({});
 
   return (
-    <div
-      ref={containerRef}
-      className={`text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] mr-3 w-full transition-all`}
-      suppressHydrationWarning
-    >
-      <Autocomplete
-        disableCloseOnSelect
-        disableClearable
-        multiple
-        handleHomeEndKeys
-        selectOnFocus
-        clearOnBlur
-        aria-label="search"
-        value={tags}
-        defaultValue={tags}
-        options={allTags ?? []}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            placeholder="Search tags or add custom"
-            label="Tags"
-            className="[&>.MuiInputBase-root]:bg-white"
-            slotProps={{
-              input: {
-                ...params.InputProps,
-                endAdornment: (
-                  <>
-                    {isFetching ? (
-                      <CircularProgress color="inherit" size={20} />
-                    ) : null}
-                    {params.InputProps.endAdornment}
-                  </>
-                ),
-              },
-            }}
-          />
-        )}
-        renderValue={(value, getItemProps) => {
-          return value.map((option: string, index: number) => {
-            const { key, ...itemProps } = getItemProps({ index });
-            return (
-              <Chip
-                key={key}
-                icon={<TagIcon color="inherit" />}
-                label={option}
-                color="primary"
-                {...itemProps}
-              />
-            );
-          });
-        }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params);
+    <Autocomplete
+      disableCloseOnSelect
+      disableClearable
+      multiple
+      handleHomeEndKeys
+      selectOnFocus
+      clearOnBlur
+      aria-label="search"
+      value={tags}
+      defaultValue={tags}
+      options={allTags ?? []}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          placeholder="Search tags or add custom"
+          label="Tags"
+          className="[&>.MuiInputBase-root]:bg-white"
+          slotProps={{
+            input: {
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {isFetching ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            },
+          }}
+        />
+      )}
+      renderValue={(value, getItemProps) => {
+        return value.map((option: string, index: number) => {
+          const { key, ...itemProps } = getItemProps({ index });
+          return (
+            <Chip
+              key={key}
+              icon={<TagIcon color="inherit" />}
+              label={option}
+              color="primary"
+              {...itemProps}
+            />
+          );
+        });
+      }}
+      filterOptions={(options, params) => {
+        const filtered = filter(options, params);
 
-          if (!isFetching && params.inputValue != '') {
-            filtered.push(`Add "${params.inputValue}" tag`);
-          }
+        if (!isFetching && params.inputValue != '') {
+          filtered.push(`Add "${params.inputValue}" tag`);
+        }
 
-          return filtered;
-        }}
-        onChange={(e, value) => {
-          const last = value[value.length - 1];
-          if (typeof last === 'string' && last.startsWith('Add ')) {
-            value[value.length - 1] = last.substring(5, last.length - 5);
-          }
-          setTagsAction(value);
-        }}
-      />
-    </div>
+        return filtered;
+      }}
+      onChange={(e, value) => {
+        const last = value[value.length - 1];
+        if (typeof last === 'string' && last.startsWith('Add ')) {
+          value[value.length - 1] = last.substring(5, last.length - 5);
+        }
+        setTagsAction(value);
+      }}
+    />
   );
 };
