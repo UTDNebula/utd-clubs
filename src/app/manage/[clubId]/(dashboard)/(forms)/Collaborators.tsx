@@ -137,7 +137,9 @@ const Collaborators = ({
     >
       <FormFieldSet legend="Edit Collaborators">
         <div className="ml-2 mb-4 text-slate-600 text-sm">
-          <p>Users in this list can edit your club&apos;s information and events.</p>
+          <p>
+            Users in this list can edit your club&apos;s information and events.
+          </p>
           <p>Admins in this list can manage other collaborators.</p>
           <p>
             To add someone as a collaborator, they must have a UTD Clubs
