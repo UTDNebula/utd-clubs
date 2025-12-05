@@ -33,7 +33,6 @@ export const ClubTagEdit = ({
       clearOnBlur
       aria-label="search"
       value={tags}
-      defaultValue={tags}
       options={allTags ?? []}
       renderInput={(params) => (
         <TextField
