@@ -1,5 +1,13 @@
 'use client';
 
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import {
   flexRender,
@@ -30,18 +38,17 @@ export default function ClubTable({ clubs }: { clubs: Club[] }) {
       onSuccess: () => router.refresh(),
     }),
   );
+  const [deleteDialogClub, setDeleteDialogClub] = useState<Club | null>(null);
 
   const columns = useMemo<ColumnDef<Club>[]>(
     () => [
       {
         id: 'view',
         cell: ({ row }) => (
-          <Link
-            href={`clubs/${row.original.id}`}
-            className="rounded-md bg-slate-300 px-2 py-1 text-blue-500 transition-colors hover:bg-slate-400 hover:text-blue-600"
-            target="_blank"
-          >
-            View
+          <Link href={`clubs/${row.original.id}`}>
+            <Button variant="contained" className="normal-case" size="small">
+              View
+            </Button>
           </Link>
         ),
         size: 25,
@@ -77,12 +84,15 @@ export default function ClubTable({ clubs }: { clubs: Club[] }) {
       {
         id: 'delete',
         cell: ({ row }) => (
-          <button
-            onClick={() => mutate({ id: row.original.id })}
-            className="rounded-md bg-slate-300 px-2 py-1 text-red-600 transition-colors hover:bg-slate-400 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+          <Button
+            variant="contained"
+            className="normal-case"
+            size="small"
+            color="error"
+            onClick={() => setDeleteDialogClub(row.original)}
           >
             Delete
-          </button>
+          </Button>
         ),
         size: 25,
       },
@@ -125,7 +135,7 @@ export default function ClubTable({ clubs }: { clubs: Club[] }) {
       },
     ],
 
-    [mutate],
+    [],
   );
 
   const table = useReactTable({
@@ -151,91 +161,124 @@ export default function ClubTable({ clubs }: { clubs: Club[] }) {
   });
 
   return (
-    <div ref={parentRef} className="container mx-auto p-4">
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-left text-sm text-gray-500">
-          <thead className="bg-slate-100 text-xs text-slate-700 uppercase">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      className="px-6 py-3"
-                      style={{ width: header.getSize() }}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <>
-                          <div
-                            {...{
-                              className: `font-semibold ${
-                                header.column.getCanSort()
-                                  ? 'cursor-pointer select-none'
-                                  : ''
-                              }`,
-                              onClick: header.column.getToggleSortingHandler(),
-                            }}
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                            {{
-                              asc: ' 🔼',
-                              desc: ' 🔽',
-                            }[header.column.getIsSorted() as string] ?? null}
-                          </div>
-                          {header.column.getCanFilter() ? (
-                            <div className="flex w-full justify-center">
-                              {header.column.id !== 'status' ? (
-                                <Filter column={header.column} table={table} />
-                              ) : (
-                                <StatusFilter
-                                  column={header.column}
-                                  table={table}
-                                />
-                              )}
-                            </div>
-                          ) : null}
-                        </>
-                      )}
-                    </th>
-                  );
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {virtualizer.getVirtualItems().map((virtualRow, index) => {
-              const row = rows[virtualRow.index] as Row<Club>;
-              return (
-                <tr
-                  key={row.id}
-                  className="bg-slate border-b transition-colors hover:bg-slate-100"
-                  style={{
-                    height: `${virtualRow.size}px`,
-                    transform: `translateY(${
-                      virtualRow.start - index * virtualRow.size
-                    }px)`,
-                  }}
-                >
-                  {row.getVisibleCells().map((cell) => {
+    <>
+      <div ref={parentRef} className="container mx-auto p-4">
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table className="w-full text-left text-sm text-gray-500">
+            <thead className="bg-slate-100 text-xs text-slate-700 uppercase">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
                     return (
-                      <td key={cell.id} className="px-6 py-4">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
+                      <th
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        className="px-6 py-3"
+                        style={{ width: header.getSize() }}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <>
+                            <div
+                              {...{
+                                className: `font-semibold ${
+                                  header.column.getCanSort()
+                                    ? 'cursor-pointer select-none'
+                                    : ''
+                                }`,
+                                onClick:
+                                  header.column.getToggleSortingHandler(),
+                              }}
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                              {{
+                                asc: ' 🔼',
+                                desc: ' 🔽',
+                              }[header.column.getIsSorted() as string] ?? null}
+                            </div>
+                            {header.column.getCanFilter() ? (
+                              <div className="flex w-full justify-center">
+                                {header.column.id !== 'status' ? (
+                                  <Filter
+                                    column={header.column}
+                                    table={table}
+                                  />
+                                ) : (
+                                  <StatusFilter
+                                    column={header.column}
+                                    table={table}
+                                  />
+                                )}
+                              </div>
+                            ) : null}
+                          </>
                         )}
-                      </td>
+                      </th>
                     );
                   })}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody>
+              {virtualizer.getVirtualItems().map((virtualRow, index) => {
+                const row = rows[virtualRow.index] as Row<Club>;
+                return (
+                  <tr
+                    key={row.id}
+                    className="bg-slate border-b transition-colors hover:bg-slate-100"
+                    style={{
+                      height: `${virtualRow.size}px`,
+                      transform: `translateY(${
+                        virtualRow.start - index * virtualRow.size
+                      }px)`,
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <td key={cell.id} className="px-6 py-4">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+      <Dialog
+        onClose={() => setDeleteDialogClub(null)}
+        open={deleteDialogClub !== null}
+      >
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This will permenantly delete {deleteDialogClub?.name}.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogClub(null)}>Cancel</Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              if (deleteDialogClub !== null) {
+                mutate({ id: deleteDialogClub.id });
+                setDeleteDialogClub(null);
+              }
+            }}
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }

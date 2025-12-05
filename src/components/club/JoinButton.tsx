@@ -8,12 +8,12 @@ import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 
 type JoinButtonProps = {
-  session: typeof authClient.$Infer.Session | null;
   isHeader?: boolean;
   clubID: string;
 };
 
-const JoinButton = ({ isHeader, session, clubID }: JoinButtonProps) => {
+const JoinButton = ({ isHeader, clubID }: JoinButtonProps) => {
+  const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
   const { data: memberType, isPending } = useQuery(

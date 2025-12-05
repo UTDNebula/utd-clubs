@@ -1,10 +1,12 @@
-import { and, eq } from 'drizzle-orm';
+import { Button, Chip } from '@mui/material';
+import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import RegisterButton from '@src/app/event/[id]/RegisterButton';
+import EventRegisterButton from '@src/components/events/EventRegisterButton';
 import { EventHeader } from '@src/components/header/BaseHeader';
+import MarkdownText from '@src/components/MarkdownText';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import CountdownTimer from './CountdownTimer';
@@ -24,49 +26,34 @@ export default async function EventsPage(props: Params) {
 
   const { club, ...event } = res;
 
-  const isRegistered =
-    (session &&
-      (await db.query.userMetadataToEvents.findFirst({
-        where: (userMetadataToEvents) =>
-          and(
-            eq(userMetadataToEvents.eventId, event.id),
-            eq(userMetadataToEvents.userId, session.user.id),
-          ),
-      })) !== undefined) ||
-    false;
-
   const clubDescription = ['Club', 'Location', 'Multi-Day'];
   const clubDetails = [club.name, event.location, 'No'];
 
   return (
     <main className="w-full">
       <EventHeader />
-      <section className="px-7">
-        <section className="mb-5 flex flex-col space-y-6">
-          <div className="relative flex h-full w-full flex-col justify-between gap-4 rounded-xl bg-[url('/images/wideWave.jpg')] bg-cover p-10 shadow-lg md:flex-row md:gap-0">
-            <section className="text-white">
-              <div className="flex">
-                {club.tags.map((tag) => (
-                  <p key={tag} className="mr-5 pt-4 pb-12 font-semibold">
-                    {tag}
-                  </p>
-                ))}
-              </div>
-              <h1 className="mb-4 text-4xl font-bold">{event.name}</h1>
+      <div className="mb-5 flex flex-col space-y-4 px-3">
+        <section className="mb-5 relative rounded-xl shadow-lg overflow-hidden">
+          <Image
+            src={club.bannerImage ?? '/images/wideWave.jpg'}
+            alt={club.name + ' banner'}
+            fill
+            className="object-cover"
+          />
+          <div className="relative z-10 flex h-full inset-0 flex-col justify-between gap-4 p-10 md:flex-row md:gap-0">
+            <div className="text-white">
+              <h1 className="font-display mb-4 text-4xl font-bold text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)]">
+                {event.name}
+              </h1>
               <TimeComponent date={event.startTime.toISOString()} />
-            </section>
-            <section className="flex md:float-right md:my-auto">
-              {session && (
-                <RegisterButton
-                  eventId={event.id}
-                  isRegistered={isRegistered}
-                />
-              )}
-            </section>
+            </div>
+            <div className="flex md:float-right md:my-auto">
+              {session && <EventRegisterButton isHeader eventId={event.id} />}
+            </div>
           </div>
         </section>
-        <section className="mb-5 flex flex-col space-y-6 rounded-xl bg-slate-100 p-5 text-black shadow-lg md:flex-row md:p-10">
-          <div className="h-full max-w-sm lg:min-w-fit">
+        <section className="w-full rounded-lg bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
+          <div>
             {club.profileImage && (
               <div className="relative mx-auto h-40 w-full overflow-hidden rounded-b-md">
                 <Image
@@ -77,39 +64,42 @@ export default async function EventsPage(props: Params) {
                 />
               </div>
             )}
-            <div className="mt-10 flex flex-col space-y-2 md:space-y-5">
-              <h1 className="text-md font-semibold text-gray-700 md:text-sm">
-                Description
-              </h1>
-              {clubDescription.map((details, index) => (
-                <div
-                  key={details}
-                  className="flex justify-between text-sm text-slate-700 md:text-xs"
-                >
-                  <p className="mr-5">{details}</p>
-                  <p className="text-right font-semibold">
-                    {clubDetails[index]}
-                  </p>
-                </div>
-              ))}
+            {clubDescription.map((details, index) => (
+              <div key={details} className="mt-2 flex w-36 justify-between">
+                <p className="text-sm text-slate-400">{details}</p>
+                <p className="text-right text-sm text-slate-600">
+                  {clubDetails[index]}
+                </p>
+              </div>
+            ))}
+            <div className="flex flex-wrap gap-1 mt-2">
+              {club.tags.map((tag) => {
+                return (
+                  <Chip
+                    label={tag}
+                    key={tag}
+                    className=" rounded-full font-bold transition-colors text-white"
+                    color="primary"
+                  />
+                );
+              })}
             </div>
           </div>
-          <div className="grow text-sm md:mx-12">
-            <p className="mt-4 whitespace-pre-wrap text-gray-500">
-              {event.description}
-            </p>
+          <div className="grow text-sm md:mx-12 text-slate-700 pt-4">
+            <MarkdownText text={event.description} />
           </div>
-          <div className="flex flex-col">
-            <CountdownTimer startTime={event.startTime} />
-            <Link
-              href={`/directory/${club.slug}`}
-              className="border-royal text-royal mt-auto mr-8 block w-36 rounded-full border-2 py-4 text-center text-xs font-extrabold break-normal transition-colors hover:bg-blue-700 hover:text-white"
-            >
-              View Club
+          <div className="flex flex-col gap-4">
+            <div>
+              <CountdownTimer startTime={event.startTime} />
+            </div>
+            <Link href={`/directory/${club.slug}`} className="mt-auto self-end">
+              <Button variant="contained" className="normal-case" size="large">
+                View Club
+              </Button>
             </Link>
           </div>
         </section>
-      </section>
+      </div>
     </main>
   );
 }

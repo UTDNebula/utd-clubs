@@ -50,7 +50,7 @@ const EditClubForm = ({
     <form onSubmit={submitForm}>
       <div className="flex h-full w-full flex-col gap-y-5">
         <div className="w-full rounded-md bg-slate-100 p-5 shadow-xs">
-          <h1 className="text-xl font-extrabold text-black">
+          <h1 className="font-display text-xl font-extrabold text-black">
             Edit information
           </h1>
           <div className="flex flex-col gap-y-2 rounded-lg bg-slate-300 p-2">
