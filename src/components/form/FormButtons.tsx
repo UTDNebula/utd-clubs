@@ -18,7 +18,7 @@ export const FormSubmitButton = () => {
       loading={isSubmitting}
       loadingPosition="start"
     >
-      <span>Save Changes</span>
+      Save
     </Button>
   );
 };
@@ -39,7 +39,7 @@ export const FormResetButton = () => {
         disabled={isDefaultValue || isSubmitting}
         color="warning"
       >
-        Discard Changes
+        Discard
       </Button>
     </form.Subscribe>
   );
