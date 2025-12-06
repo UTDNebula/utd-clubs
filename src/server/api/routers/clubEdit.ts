@@ -92,7 +92,7 @@ export const clubEditRouter = createTRPCRouter({
         })
         .where(eq(club.id, input.id))
         .returning();
-      return updatedClub;
+      return updatedClub[0];
     }),
   contacts: protectedProcedure
     .input(editContactSchema)

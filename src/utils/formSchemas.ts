@@ -22,8 +22,8 @@ export const editClubContactSchema = z.object({
 
 export const editClubSchema = z.object({
   id: z.string(),
-  name: z.string().min(3),
-  description: z.string().min(1),
+  name: z.string().min(3, { message: 'Name is required.' }),
+  description: z.string().min(1, { message: 'Description is required.' }),
   tags: z.array(z.string()).optional(),
   profileImage: z.url().optional(),
   bannerImage: z.url().optional(),
