@@ -24,10 +24,10 @@ export const editClubSchema = z.object({
   id: z.string(),
   name: z.string().min(3, { message: 'Name is required.' }),
   description: z.string().min(1, { message: 'Description is required.' }),
-  tags: z.array(z.string()).optional(),
-  profileImage: z.url().optional(),
-  bannerImage: z.url().optional(),
-  foundingDate: z.date().optional(),
+  tags: z.array(z.string()),
+  profileImage: z.url().nullable(),
+  bannerImage: z.url().nullable(),
+  foundingDate: z.date().nullable(),
 });
 export const editOfficerSchema = z.object({
   officers: z

@@ -152,6 +152,7 @@ const Collaborators = ({
               name={field.name}
               canRemove={field.canRemove}
               canTogglePresident={field.canTogglePresident}
+              self={field.userId == userId}
             />
           ))}
         </div>
