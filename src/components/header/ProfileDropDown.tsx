@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import RegisterModal from '@src/components/RegisterModal';
+import RegisterModal from '@src/components/account/RegisterModal';
 import { authClient } from '@src/utils/auth-client';
 
 type Props = {
