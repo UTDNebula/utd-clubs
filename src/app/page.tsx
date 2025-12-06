@@ -19,8 +19,8 @@ const Home = async () => {
     <SearchStoreProvider>
       <main className="relative">
         <div className="absolute inset-0 z-0">
-          <div className="relative h-[120vh] w-screen">
-            <section className="absolute inset-0 z-0 h-[120vh] w-screen">
+          <div className="relative h-[120vh]">
+            <section className="absolute inset-0 z-0 h-[120vh]">
               <Image
                 src={gradientBG}
                 fill
@@ -50,11 +50,11 @@ const Home = async () => {
                 className="hidden md:block absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
               />
             </section>
-            <section className="absolute top-[100vh] z-10 h-[20vh] w-screen bg-linear-to-t from-[#edeff2] to-transparent"></section>
+            <section className="absolute top-[100vh] z-10 h-[20vh] bg-linear-to-t from-[#edeff2] to-transparent"></section>
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
-          <div className="pointer-events-none *:pointer-events-auto lg:fixed lg:top-0 lg:z-20 flex w-full items-center justify-between py-1 md:py-2 px-4 gap-x-2 md:gap-x-4 lg:gap-x-8">
+          <div className="pointer-events-none *:pointer-events-auto lg:fixed lg:top-0 lg:z-20 flex w-full items-center max-sm:justify-between py-1 md:py-2 px-4 gap-x-2 md:gap-x-4 lg:gap-x-8">
             <Sidebar hamburger="white" shadow />
             <Link
               href="/"
@@ -63,12 +63,14 @@ const Home = async () => {
               <NebulaLogo className="h-6 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
               UTD CLUBS
             </Link>
-            <div className="ml-auto flex items-center justify-center gap-2">
-              <ClubMatchButton shadow />
-              <ProfileDropDown shadow />
+            <div className="sm:ml-auto flex items-center justify-center gap-2">
+              <div className="max-sm:hidden">
+                <ClubMatchButton shadow />
+              </div>
+              <ProfileDropDown shadow showClubMatchOnSmallScreens />
             </div>
           </div>
-          <section className="h-screen w-screen">
+          <section className="h-screen">
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
                 <span className="leading-none">POWERED BY</span>
