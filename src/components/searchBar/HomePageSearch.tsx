@@ -74,7 +74,7 @@ export const HomePageSearchBar = () => {
     <>
       <div
         ref={containerRef}
-        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-4 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
+        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-2 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
           isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
         }`}
       >
@@ -147,7 +147,7 @@ export const HomePageSearchBar = () => {
       {/*Placeholder to avoid layout shift when search bar becomes sticky*/}
       {isSticky && (
         <Autocomplete
-          className="pt-4 opacity-0"
+          className="pt-2 opacity-0"
           options={[]}
           renderInput={(params) => <TextField {...params}></TextField>}
         ></Autocomplete>

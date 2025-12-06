@@ -28,9 +28,9 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
   oneYearAgo.setFullYear(now.getFullYear() - 1);
 
   return (
-    <main className="w-full">
+    <>
       <Header />
-      <div className="mb-5 flex flex-col space-y-4 px-3">
+      <main className="mb-5 flex flex-col space-y-4 p-4">
         <ClubHeader club={club} />
         <ClubInfoSegment club={club} />
         {club.contacts.length > 0 && <ContactInformation club={club} />}
@@ -38,8 +38,8 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
         {(club.updatedAt == null || club.updatedAt < oneYearAgo) && (
           <ClubNotClaimed />
         )}
-      </div>
-    </main>
+      </main>
+    </>
   );
 };
 

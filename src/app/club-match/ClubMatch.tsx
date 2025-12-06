@@ -286,7 +286,7 @@ const ClubMatch = () => {
   const genderOtherDisabled = watch('gender') !== 'Other';
 
   return (
-    <main className="pb-8">
+    <main className="p-4">
       <h1 className="font-display mb-2 text-center text-4xl font-bold text-haiti">
         Club Match
       </h1>
@@ -300,7 +300,7 @@ const ClubMatch = () => {
             setErrors(z.treeifyError(err));
           });
         }}
-        className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4"
+        className="mx-auto flex w-full max-w-3xl flex-col gap-4"
       >
         <div className="bg-white p-8 shadow-xl rounded-4xl flex flex-col gap-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
