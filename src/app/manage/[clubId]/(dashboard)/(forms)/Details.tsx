@@ -1,129 +1,78 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import z, { ZodError } from 'zod';
+import z from 'zod';
 import { ClubTagEdit } from '@src/components/club/manage/form/ClubTagEdit';
-import Form from '@src/components/club/manage/form/Form';
-import FormButtons from '@src/components/club/manage/form/FormButtons';
 import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
+import { useAppForm } from '@src/utils/form';
 import { editClubSchema } from '@src/utils/formSchemas';
 
 type DetailsProps = {
   club: SelectClub;
 };
 
-type FormData = z.infer<typeof editClubSchema>;
-
-type Errors = {
-  errors: string[];
-  properties?: {
-    [key in keyof FormData]?: {
-      errors?: string[];
-    };
-  };
-};
-
-function nullClubDataToUndefined(club: SelectClub) {
-  return {
-    ...club,
-    ...{
-      profileImage: club.profileImage ?? undefined,
-      bannerImage: club.bannerImage ?? undefined,
-      foundingDate: club.foundingDate ?? undefined,
-    },
-  };
-}
-
 const Details = ({ club }: DetailsProps) => {
-  const methods = useForm<FormData>({
-    // resolver: zodResolver(editClubSchema),
-    resolver: async (data, context, options) => {
-      // you can debug your validation schema here
-      console.log('formData', data);
-      console.log(
-        'validation result',
-        await zodResolver(editClubSchema)(data, context, options),
-      );
-      console.log('return');
-      return zodResolver(editClubSchema)(data, context, options);
-    },
-    defaultValues: nullClubDataToUndefined(club),
-    mode: 'onTouched',
-  });
-
-  const { formState } = methods;
-
   const api = useTRPC();
-  const editData = useMutation(
-    api.club.edit.data.mutationOptions({
-      onSuccess: (updated) => {
-        if (typeof updated !== 'undefined') {
-          methods.reset(nullClubDataToUndefined(updated));
-        }
-      },
-    }),
-  );
+  const editData = useMutation(api.club.edit.data.mutationOptions({}));
 
-  // const [errors, setErrors] = useState<Errors>({ errors: [] });
-
-  const submitForm = methods.handleSubmit((data) => {
-    if (!editData.isPending) {
-      editData.mutate(data);
-    }
+  const form = useAppForm({
+    defaultValues: {
+      id: club.id,
+      name: club.name,
+      description: club.description,
+      foundingDate: club.foundingDate,
+      tags: club.tags,
+      profileImage: club.profileImage,
+      bannerImage: club.bannerImage,
+    },
+    onSubmit: async ({ value }) => {
+      await editData.mutateAsync(value);
+    },
+    validators: {
+      onChange: editClubSchema,
+    },
   });
-
-  // const nameFieldErrors = errors.properties?.name?.errors;
-  // const foundingDateFieldErrors = errors.properties?.foundingDate?.errors;
-  // const descriptionFieldErrors = errors.properties?.description?.errors;
 
   return (
-    <Form
-      methods={methods}
+    <form
       onSubmit={(e) => {
-        console.log('formState', formState);
-        console.log('errors', formState.errors);
         e.preventDefault();
-        // submitForm().catch((err: ZodError) => {
-        // setErrors(z.treeifyError(err));
-        // });
+        e.stopPropagation();
+        form.handleSubmit();
       }}
     >
       <FormFieldSet legend="Edit Details">
         <div className="m-2 flex flex-col gap-4">
           <div className="flex flex-wrap gap-4">
-            <Controller
-              control={methods.control}
-              name="name"
-              render={({ field: { onChange, onBlur, value } }) => (
+            <form.Field name="name">
+              {(field) => (
                 <TextField
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  label="Name"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
                   className="grow [&>.MuiInputBase-root]:bg-white"
                   size="small"
-                  // error={nameFieldErrors && nameFieldErrors.length > 0}
-                  // error={!!methods.getFieldState('name').error}
-                  error={!!methods.formState.errors['name']}
-                  // helperText={nameFieldErrors?.join('. ')}
-                  // helperText={methods.getFieldState('name').error ?? 'none'}
+                  error={!field.state.meta.isValid}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ')
+                      : undefined
+                  }
+                  label="Name"
                 />
               )}
-            />
-            <Controller
-              control={methods.control}
-              name="foundingDate"
-              render={({ field: { onChange, value } }) => (
+            </form.Field>
+            <form.Field name="foundingDate">
+              {(field) => (
                 <DatePicker
-                  onChange={onChange}
-                  value={value ?? null}
+                  onChange={(value) => field.handleChange(value)}
+                  value={field.state.value}
                   label="Date Founded"
                   className="[&>.MuiInputBase-root]:bg-white"
                   slotProps={{
@@ -132,67 +81,77 @@ const Details = ({ club }: DetailsProps) => {
                     },
                     textField: {
                       size: 'small',
-                      // error:
-                      //   foundingDateFieldErrors &&
-                      //   foundingDateFieldErrors.length > 0,
-                      // helperText: foundingDateFieldErrors?.join('. '),
+                      error: !field.state.meta.isValid,
+                      helperText: field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ')
+                        : undefined,
                     },
                   }}
                 />
               )}
-            />
+            </form.Field>
           </div>
           <div className="flex flex-col gap-2">
-            <Controller
-              control={methods.control}
-              name="description"
-              render={({ field: { onChange, onBlur, value } }) => (
+            <form.Field name="description">
+              {(field) => (
                 <TextField
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  value={value}
+                  onChange={(e) => {
+                    field.handleChange(e.target.value);
+                  }}
+                  onBlur={field.handleBlur}
+                  value={field.state.value}
                   label="Description"
                   className="[&>.MuiInputBase-root]:bg-white"
                   multiline
                   minRows={4}
-                  // error={
-                  // descriptionFieldErrors && descriptionFieldErrors.length > 0
-                  // }
+                  error={!field.state.meta.isValid}
                   helperText={
-                    /* descriptionFieldErrors?.join('. ') ?? */ <span>
-                      We support{' '}
-                      <a
-                        href="https://www.markdownguide.org/basic-syntax/"
-                        rel="noreferrer"
-                        target="_blank"
-                        className="text-royal underline"
-                      >
-                        Markdown
-                      </a>
-                      !
-                    </span>
+                    !field.state.meta.isValid ? (
+                      field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ')
+                    ) : (
+                      <span>
+                        We support{' '}
+                        <a
+                          href="https://www.markdownguide.org/basic-syntax/"
+                          rel="noreferrer"
+                          target="_blank"
+                          className="text-royal underline"
+                        >
+                          Markdown
+                        </a>
+                        !
+                      </span>
+                    )
                   }
                 />
               )}
-            />
+            </form.Field>
           </div>
-          <Controller
-            control={methods.control}
-            name="tags"
-            render={({ field: { onChange, value } }) => (
-              <ClubTagEdit value={value ?? []} onChange={onChange} />
+          <form.Field name="tags">
+            {(field) => (
+              <ClubTagEdit
+                value={field.state.value}
+                onChange={(value) => {
+                  field.handleChange(value);
+                }}
+              />
             )}
-          />
+          </form.Field>
         </div>
-        <FormButtons
-          isPending={editData.isPending}
-          onClickDiscard={() => {
-            // setErrors({ errors: [] });
-            methods.reset();
-          }}
-        />
+        <div className="flex flex-wrap justify-end items-center gap-2">
+          <form.AppForm>
+            <form.FormResetButton />
+          </form.AppForm>
+          <form.AppForm>
+            <form.FormSubmitButton />
+          </form.AppForm>
+        </div>
       </FormFieldSet>
-    </Form>
+    </form>
   );
 };
 
