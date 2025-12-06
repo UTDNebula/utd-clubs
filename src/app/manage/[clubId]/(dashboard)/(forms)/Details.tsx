@@ -143,6 +143,20 @@ const Details = ({ club }: DetailsProps) => {
               />
             )}
           />
+          <div className="ml-2 text-slate-600 text-sm">
+            <p>
+              We support{' '}
+              <a
+                href="https://www.markdownguide.org/basic-syntax/"
+                rel="noreferrer"
+                target="_blank"
+                className="text-royal underline"
+              >
+                Markdown
+              </a>
+              !
+            </p>
+          </div>
         </div>
         <FormButtons
           isPending={editData.isPending}
