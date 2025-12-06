@@ -1,6 +1,5 @@
 import { TRPCError } from '@trpc/server';
 import { and, eq, inArray } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { db } from '@src/server/db';
 import { selectContact } from '@src/server/db/models';
@@ -93,7 +92,7 @@ export const clubEditRouter = createTRPCRouter({
         })
         .where(eq(club.id, input.id))
         .returning();
-      revalidatePath(`/manage/${input.id}`);
+
       return updatedClub[0];
     }),
   contacts: protectedProcedure
@@ -269,6 +268,7 @@ export const clubEditRouter = createTRPCRouter({
         const prom = ctx.db
           .update(officers)
           .set({
+            name: modded.name,
             position: modded.position,
           })
           .where(

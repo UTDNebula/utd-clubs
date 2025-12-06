@@ -3,7 +3,7 @@
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
-import z from 'zod';
+import { useState } from 'react';
 import { ClubTagEdit } from '@src/components/club/manage/form/ClubTagEdit';
 import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
 import type { SelectClub } from '@src/server/db/models';
@@ -19,18 +19,24 @@ const Details = ({ club }: DetailsProps) => {
   const api = useTRPC();
   const editData = useMutation(api.club.edit.data.mutationOptions({}));
 
+  const [defaultValues, setDefaultValues] = useState({
+    id: club.id,
+    name: club.name,
+    description: club.description,
+    foundingDate: club.foundingDate,
+    tags: club.tags,
+    profileImage: club.profileImage,
+    bannerImage: club.bannerImage,
+  });
+
   const form = useAppForm({
-    defaultValues: {
-      id: club.id,
-      name: club.name,
-      description: club.description,
-      foundingDate: club.foundingDate,
-      tags: club.tags,
-      profileImage: club.profileImage,
-      bannerImage: club.bannerImage,
-    },
-    onSubmit: async ({ value }) => {
-      await editData.mutateAsync(value);
+    defaultValues,
+    onSubmit: async ({ value, formApi }) => {
+      const updated = await editData.mutateAsync(value);
+      if (updated) {
+        setDefaultValues(updated);
+        formApi.reset(updated);
+      }
     },
     validators: {
       onChange: editClubSchema,
