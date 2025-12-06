@@ -70,7 +70,6 @@ const Collaborators = ({
   const editOfficers = useMutation(
     api.club.edit.officers.mutationOptions({
       onSuccess: (updated) => {
-        console.log(updated);
         const mappedOfficers = mapOfficersToFormData(updated, role, userId);
         methods.reset({
           officers: mappedOfficers,
@@ -99,7 +98,6 @@ const Collaborators = ({
     const created: FormData['officers'] = [];
     const modified: FormData['officers'] = [];
 
-    console.log(data.officers);
     data.officers.forEach((officer, index) => {
       // If it was marked as new from append call
       if (officer.new) {
@@ -109,13 +107,11 @@ const Collaborators = ({
       else {
         const isDirty = methods.formState.dirtyFields.officers?.[index];
         const isAnyDirty = isDirty && Object.values(isDirty).some((v) => v);
-        console.log(methods.formState.dirtyFields, isDirty, isAnyDirty);
         if (isAnyDirty) {
           modified.push(officer);
         }
       }
     });
-    console.log({ created, modified, deleted: deletedIds });
 
     if (!editOfficers.isPending) {
       editOfficers.mutate({

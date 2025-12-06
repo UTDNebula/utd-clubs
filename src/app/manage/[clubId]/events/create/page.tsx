@@ -21,9 +21,9 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
         ]}
         hrefBack={`/manage/${club.id}/events`}
       />
-      <main className="p-4">
+      <div className="p-4">
         <EventForm clubId={club.id} officerClubs={officerClubs} />
-      </main>
+      </div>
     </>
   );
 };
