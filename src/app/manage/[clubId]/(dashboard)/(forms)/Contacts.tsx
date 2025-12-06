@@ -1,163 +1,151 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import AddIcon from '@mui/icons-material/Add';
-import Button from '@mui/material/Button';
+import { Button, Typography } from '@mui/material';
+import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { z, type ZodError } from 'zod';
+import z from 'zod';
 import ContactListItem from '@src/components/club/manage/ContactListItem';
-import Form from '@src/components/club/manage/form/Form';
-import {
-  FormButtons,
-  FormFieldSet,
-} from '@src/components/club/manage/FormComponents';
+import { FormFieldSet } from '@src/components/club/manage/FormComponents';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
-import { startContacts } from '@src/server/db/schema/contacts';
+import { contactNames, startContacts } from '@src/server/db/schema/contacts';
 import { useTRPC } from '@src/trpc/react';
+import { useAppForm } from '@src/utils/form';
 import { editClubContactSchema } from '@src/utils/formSchemas';
+
+type FormData = z.infer<typeof editClubContactSchema>;
+
+function typedDefaultValues(contacts: SelectContact[]): FormData['contacts'] {
+  return contacts.map((contact) => ({
+    clubId: contact.clubId,
+    platform: contact.platform,
+    url: contact.url,
+  }));
+}
+
+type ContactWithId = FormData['contacts'][number] & { clubId: string };
+
+function hasId(
+  contact: FormData['contacts'][number],
+): contact is ContactWithId {
+  return typeof contact.clubId === 'string';
+}
 
 type ContactsProps = {
   club: SelectClub & { contacts: SelectContact[] };
 };
 
-type FormData = z.infer<typeof editClubContactSchema>;
-
-type Errors = {
-  errors: string[];
-  properties?: {
-    contacts?: { items?: { properties?: { url?: { errors?: string[] } } }[] };
-  };
-};
-
 const Contacts = ({ club }: ContactsProps) => {
-  const [deletedIds, setDeletedIds] = useState<
-    FormData['contacts'][number]['platform'][]
-  >([]);
-
-  const methods = useForm<FormData>({
-    resolver: zodResolver(editClubContactSchema),
-    defaultValues: {
-      contacts: club.contacts,
-    },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control: methods.control,
-    name: 'contacts',
-    keyName: 'fieldId',
-  });
-
   const api = useTRPC();
-  const editContacts = useMutation(
-    api.club.edit.contacts.mutationOptions({
-      onSuccess: (updated) => {
-        methods.reset({ contacts: updated });
-        setDeletedIds([]);
-        setErrors({ errors: [] });
-      },
-    }),
-  );
+  const editContacts = useMutation(api.club.edit.contacts.mutationOptions({}));
 
-  // Available platforms
-  const currentContacts = methods.watch('contacts') || [];
-  const available = startContacts.filter(
-    (p) => !currentContacts.map((c) => c.platform).includes(p),
-  );
+  const [defaultValues, setDefaultValues] = useState({
+    contacts: typedDefaultValues(club.contacts),
+  });
 
-  // Remove by index
-  const removeItem = (index: number) => {
-    const contact = currentContacts[index];
-    if (contact) {
-      setDeletedIds((prev) => [...prev, contact.platform]);
-    }
-    remove(index);
-  };
+  const form = useAppForm({
+    defaultValues,
+    onSubmit: async ({ value, formApi }) => {
+      // Separate created vs modified
+      const created: FormData['contacts'] = [];
+      const modified: ContactWithId[] = [];
 
-  const [errors, setErrors] = useState<Errors>({ errors: [] });
-
-  const submitForm = methods.handleSubmit((data) => {
-    // Separate created vs modified
-    const created: FormData['contacts'] = [];
-    const modified: SelectContact[] = [];
-
-    data.contacts.forEach((contact, index) => {
-      // If it has no ID, it's created
-      if (typeof contact.clubId === 'undefined') {
-        created.push(contact);
-      }
-      // If it has an ID, check if it was actually changed
-      else {
-        const isDirty = methods.formState.dirtyFields.contacts?.[index];
-        const isAnyDirty = isDirty && Object.values(isDirty).some((v) => v);
-        if (isAnyDirty) {
-          modified.push(contact as SelectContact);
+      value.contacts.forEach((contact, index) => {
+        // If it has no ID, it's created
+        if (!hasId(contact)) {
+          created.push(contact);
+          return;
         }
-      }
-    });
-
-    if (!editContacts.isPending) {
-      editContacts.mutate({
+        // If it has an ID, check if it was actually changed
+        const isDirty =
+          formApi.getFieldMeta(`contacts[${index}].platform`)?.isDirty ||
+          formApi.getFieldMeta(`contacts[${index}].url`)?.isDirty;
+        if (isDirty) {
+          modified.push(contact);
+        }
+      });
+      console.log(modified);
+      const updated = await editContacts.mutateAsync({
         clubId: club.id,
         deleted: deletedIds,
         modified: modified,
         created: created,
       });
-    }
+      setDeletedIds([]);
+      setDefaultValues({ contacts: typedDefaultValues(updated) });
+      formApi.reset({ contacts: typedDefaultValues(updated) });
+    },
+    validators: {
+      onChange: editClubContactSchema,
+    },
   });
 
+  const [deletedIds, setDeletedIds] = useState<
+    FormData['contacts'][number]['platform'][]
+  >([]);
+
+  const removeItem = (index: number) => {
+    const current = form.getFieldValue('contacts')[index];
+    if (current) {
+      setDeletedIds((prev) => [...prev, current.platform]);
+    }
+  };
+
+  const currentContacts =
+    useStore(form.store, (state) => state.values.contacts) || [];
+  const available = startContacts.filter(
+    (p) => !currentContacts.map((c) => c.platform).includes(p),
+  );
+
   return (
-    <Form
-      methods={methods}
+    <form
       onSubmit={(e) => {
         e.preventDefault();
-        submitForm().catch((err: ZodError) => {
-          setErrors(z.treeifyError(err));
-        });
+        e.stopPropagation();
+        form.handleSubmit();
       }}
     >
       <FormFieldSet legend="Contact Information">
-        <div className="flex flex-col gap-2">
-          {fields.map((field, index) => (
-            <ContactListItem
-              key={field.fieldId}
-              control={methods.control}
-              remove={removeItem}
-              platform={field.platform}
-              index={index}
-              errors={errors}
-              available={available}
-            />
-          ))}
+        <form.Field name="contacts">
+          {(field) => (
+            <div className="flex flex-col gap-2">
+              {field.state.value.map((_, index) => (
+                <ContactListItem
+                  key={index}
+                  index={index}
+                  form={form}
+                  removeItem={removeItem}
+                />
+              ))}
+              <div className="ml-2 p-2 flex flex-wrap items-center gap-2">
+                <Typography className="mr-2">Add Contact:</Typography>
+                {available.length > 0 &&
+                  available.map((platform) => (
+                    <Button
+                      key={platform}
+                      variant="contained"
+                      value={platform}
+                      className="normal-case"
+                      onClick={() => field.pushValue({ platform, url: '' })}
+                    >
+                      {contactNames[platform]}
+                    </Button>
+                  ))}
+              </div>
+            </div>
+          )}
+        </form.Field>
+
+        <div className="flex flex-wrap justify-end items-center gap-2">
+          <form.AppForm>
+            <form.FormResetButton />
+          </form.AppForm>
+          <form.AppForm>
+            <form.FormSubmitButton />
+          </form.AppForm>
         </div>
-
-        {available.length > 0 && (
-          <Button
-            className="normal-case mb-2"
-            startIcon={<AddIcon />}
-            size="large"
-            onClick={() => {
-              // Default to the first available platform
-              if (available[0]) {
-                append({ platform: available[0], url: '' });
-              }
-            }}
-          >
-            Add Contact
-          </Button>
-        )}
-
-        <FormButtons
-          isPending={editContacts.isPending}
-          onClickDiscard={() => {
-            setDeletedIds([]);
-            setErrors({ errors: [] });
-            methods.reset();
-          }}
-        />
       </FormFieldSet>
-    </Form>
+    </form>
   );
 };
 

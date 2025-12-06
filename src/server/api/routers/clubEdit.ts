@@ -105,7 +105,8 @@ export const clubEditRouter = createTRPCRouter({
           code: 'UNAUTHORIZED',
         });
 
-      if (input.deleted.length > 0) {
+      // Deleted
+      if (input.deleted.length) {
         await ctx.db
           .delete(contacts)
           .where(
@@ -115,6 +116,8 @@ export const clubEditRouter = createTRPCRouter({
             ),
           );
       }
+
+      // Modified
       const promises: Promise<unknown>[] = [];
       for (const modded of input.modified) {
         const prom = ctx.db
@@ -129,24 +132,26 @@ export const clubEditRouter = createTRPCRouter({
         promises.push(prom);
       }
       await Promise.allSettled(promises);
-      if (input.created.length === 0) return;
 
-      await ctx.db
-        .insert(contacts)
-        .values(
-          input.created.map((contact) => ({
-            clubId: input.clubId,
-            platform: contact.platform,
-            url: contact.url,
-          })),
-        )
-        .onConflictDoNothing();
-      await ctx.db
-        .update(club)
-        .set({
-          updatedAt: new Date(),
-        })
-        .where(eq(club.id, input.clubId));
+      // Created
+      if (input.created.length) {
+        await ctx.db
+          .insert(contacts)
+          .values(
+            input.created.map((contact) => ({
+              clubId: input.clubId,
+              platform: contact.platform,
+              url: contact.url,
+            })),
+          )
+          .onConflictDoNothing();
+        await ctx.db
+          .update(club)
+          .set({
+            updatedAt: new Date(),
+          })
+          .where(eq(club.id, input.clubId));
+      }
 
       // Return new contacts
       const newContacts = await ctx.db.query.contacts.findMany({

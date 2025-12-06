@@ -12,11 +12,11 @@ import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editListedOfficerSchema } from '@src/utils/formSchemas';
 
-type OfficersFormValues = z.infer<typeof editListedOfficerSchema>;
+type FormData = z.infer<typeof editListedOfficerSchema>;
 
 function typedDefaultValues(
   listedOfficers: SelectOfficer[],
-): OfficersFormValues['officers'] {
+): FormData['officers'] {
   return listedOfficers.map((officer) => ({
     id: officer.id,
     name: officer.name,
@@ -24,10 +24,10 @@ function typedDefaultValues(
   }));
 }
 
-type OfficerWithId = OfficersFormValues['officers'][number] & { id: string };
+type OfficerWithId = FormData['officers'][number] & { id: string };
 
 function hasId(
-  officer: OfficersFormValues['officers'][number],
+  officer: FormData['officers'][number],
 ): officer is OfficerWithId {
   return typeof officer.id === 'string';
 }
@@ -51,7 +51,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
       // Separate created vs modified
-      const created: OfficersFormValues['officers'] = [];
+      const created: FormData['officers'] = [];
       const modified: OfficerWithId[] = [];
 
       value.officers.forEach((officer, index) => {
