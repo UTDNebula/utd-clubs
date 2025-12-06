@@ -23,10 +23,8 @@ type FormData = z.infer<typeof editClubSchema>;
 type Errors = {
   errors: string[];
   properties?: {
-    officers?: {
-      items?: {
-        properties?: { [key in 'name' | 'position']?: { errors?: string[] } };
-      }[];
+    [key in keyof FormData]?: {
+      errors?: string[];
     };
   };
 };
@@ -68,13 +66,16 @@ const Details = ({ club }: DetailsProps) => {
     }
   });
 
+  const nameFieldErrors = errors.properties?.name?.errors;
+  const foundingDateFieldErrors = errors.properties?.foundingDate?.errors;
+  const descriptionFieldErrors = errors.properties?.description?.errors;
+
   return (
     <Form
       methods={methods}
       onSubmit={(e) => {
         e.preventDefault();
         submitForm().catch((err: ZodError) => {
-          console.log(z.treeifyError(err));
           setErrors(z.treeifyError(err));
         });
       }}
@@ -92,8 +93,9 @@ const Details = ({ club }: DetailsProps) => {
                   value={value}
                   label="Name"
                   className="grow [&>.MuiInputBase-root]:bg-white"
-                  /*error={urlFieldErrors && urlFieldErrors.length > 0}
-                helperText={urlFieldErrors?.join('. ')}*/
+                  size="small"
+                  error={nameFieldErrors && nameFieldErrors.length > 0}
+                  helperText={nameFieldErrors?.join('. ')}
                 />
               )}
             />
@@ -108,7 +110,14 @@ const Details = ({ club }: DetailsProps) => {
                   className="[&>.MuiInputBase-root]:bg-white"
                   slotProps={{
                     actionBar: {
-                      actions: ['clear', 'accept'],
+                      actions: ['accept'],
+                    },
+                    textField: {
+                      size: 'small',
+                      error:
+                        foundingDateFieldErrors &&
+                        foundingDateFieldErrors.length > 0,
+                      helperText: foundingDateFieldErrors?.join('. '),
                     },
                   }}
                 />
@@ -127,8 +136,10 @@ const Details = ({ club }: DetailsProps) => {
                 className="[&>.MuiInputBase-root]:bg-white"
                 multiline
                 minRows={4}
-                /*error={urlFieldErrors && urlFieldErrors.length > 0}
-                helperText={urlFieldErrors?.join('. ')}*/
+                error={
+                  descriptionFieldErrors && descriptionFieldErrors.length > 0
+                }
+                helperText={descriptionFieldErrors?.join('. ')}
               />
             )}
           />
