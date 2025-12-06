@@ -141,24 +141,25 @@ const Details = ({ club }: DetailsProps) => {
                   error={
                     descriptionFieldErrors && descriptionFieldErrors.length > 0
                   }
-                  helperText={descriptionFieldErrors?.join('. ')}
+                  helperText={
+                    descriptionFieldErrors?.join('. ') ?? (
+                      <span>
+                        We support{' '}
+                        <a
+                          href="https://www.markdownguide.org/basic-syntax/"
+                          rel="noreferrer"
+                          target="_blank"
+                          className="text-royal underline"
+                        >
+                          Markdown
+                        </a>
+                        !
+                      </span>
+                    )
+                  }
                 />
               )}
             />
-            <div className="text-slate-600 text-sm">
-              <p>
-                We support{' '}
-                <a
-                  href="https://www.markdownguide.org/basic-syntax/"
-                  rel="noreferrer"
-                  target="_blank"
-                  className="text-royal underline"
-                >
-                  Markdown
-                </a>
-                !
-              </p>
-            </div>
           </div>
           <Controller
             control={methods.control}
