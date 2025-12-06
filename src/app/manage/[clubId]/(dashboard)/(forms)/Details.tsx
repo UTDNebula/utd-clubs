@@ -43,10 +43,22 @@ function nullClubDataToUndefined(club: SelectClub) {
 
 const Details = ({ club }: DetailsProps) => {
   const methods = useForm<FormData>({
-    resolver: zodResolver(editClubSchema),
+    // resolver: zodResolver(editClubSchema),
+    resolver: async (data, context, options) => {
+      // you can debug your validation schema here
+      console.log('formData', data);
+      console.log(
+        'validation result',
+        await zodResolver(editClubSchema)(data, context, options),
+      );
+      console.log('return');
+      return zodResolver(editClubSchema)(data, context, options);
+    },
     defaultValues: nullClubDataToUndefined(club),
     mode: 'onTouched',
   });
+
+  const { formState } = methods;
 
   const api = useTRPC();
   const editData = useMutation(
@@ -59,7 +71,7 @@ const Details = ({ club }: DetailsProps) => {
     }),
   );
 
-  const [errors, setErrors] = useState<Errors>({ errors: [] });
+  // const [errors, setErrors] = useState<Errors>({ errors: [] });
 
   const submitForm = methods.handleSubmit((data) => {
     if (!editData.isPending) {
@@ -67,18 +79,20 @@ const Details = ({ club }: DetailsProps) => {
     }
   });
 
-  const nameFieldErrors = errors.properties?.name?.errors;
-  const foundingDateFieldErrors = errors.properties?.foundingDate?.errors;
-  const descriptionFieldErrors = errors.properties?.description?.errors;
+  // const nameFieldErrors = errors.properties?.name?.errors;
+  // const foundingDateFieldErrors = errors.properties?.foundingDate?.errors;
+  // const descriptionFieldErrors = errors.properties?.description?.errors;
 
   return (
     <Form
       methods={methods}
       onSubmit={(e) => {
+        console.log('formState', formState);
+        console.log('errors', formState.errors);
         e.preventDefault();
-        submitForm().catch((err: ZodError) => {
-          setErrors(z.treeifyError(err));
-        });
+        // submitForm().catch((err: ZodError) => {
+        // setErrors(z.treeifyError(err));
+        // });
       }}
     >
       <FormFieldSet legend="Edit Details">
@@ -95,8 +109,11 @@ const Details = ({ club }: DetailsProps) => {
                   label="Name"
                   className="grow [&>.MuiInputBase-root]:bg-white"
                   size="small"
-                  error={nameFieldErrors && nameFieldErrors.length > 0}
-                  helperText={nameFieldErrors?.join('. ')}
+                  // error={nameFieldErrors && nameFieldErrors.length > 0}
+                  // error={!!methods.getFieldState('name').error}
+                  error={!!methods.formState.errors['name']}
+                  // helperText={nameFieldErrors?.join('. ')}
+                  // helperText={methods.getFieldState('name').error ?? 'none'}
                 />
               )}
             />
@@ -115,10 +132,10 @@ const Details = ({ club }: DetailsProps) => {
                     },
                     textField: {
                       size: 'small',
-                      error:
-                        foundingDateFieldErrors &&
-                        foundingDateFieldErrors.length > 0,
-                      helperText: foundingDateFieldErrors?.join('. '),
+                      // error:
+                      //   foundingDateFieldErrors &&
+                      //   foundingDateFieldErrors.length > 0,
+                      // helperText: foundingDateFieldErrors?.join('. '),
                     },
                   }}
                 />
@@ -138,24 +155,22 @@ const Details = ({ club }: DetailsProps) => {
                   className="[&>.MuiInputBase-root]:bg-white"
                   multiline
                   minRows={4}
-                  error={
-                    descriptionFieldErrors && descriptionFieldErrors.length > 0
-                  }
+                  // error={
+                  // descriptionFieldErrors && descriptionFieldErrors.length > 0
+                  // }
                   helperText={
-                    descriptionFieldErrors?.join('. ') ?? (
-                      <span>
-                        We support{' '}
-                        <a
-                          href="https://www.markdownguide.org/basic-syntax/"
-                          rel="noreferrer"
-                          target="_blank"
-                          className="text-royal underline"
-                        >
-                          Markdown
-                        </a>
-                        !
-                      </span>
-                    )
+                    /* descriptionFieldErrors?.join('. ') ?? */ <span>
+                      We support{' '}
+                      <a
+                        href="https://www.markdownguide.org/basic-syntax/"
+                        rel="noreferrer"
+                        target="_blank"
+                        className="text-royal underline"
+                      >
+                        Markdown
+                      </a>
+                      !
+                    </span>
                   }
                 />
               )}
@@ -172,7 +187,7 @@ const Details = ({ club }: DetailsProps) => {
         <FormButtons
           isPending={editData.isPending}
           onClickDiscard={() => {
-            setErrors({ errors: [] });
+            // setErrors({ errors: [] });
             methods.reset();
           }}
         />
