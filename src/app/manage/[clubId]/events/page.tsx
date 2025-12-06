@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import EventCard from '@src/components/events/EventCard';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
@@ -26,15 +27,16 @@ export default async function Page({
         path={[{ text: 'Events', href: `/manage/${clubId}/events` }]}
         hrefBack={`/manage/${clubId}/`}
       >
-        <Button
-          href={`/manage/${clubId}/events/create`}
-          variant="contained"
-          className="normal-case"
-          startIcon={<AddIcon />}
-          size="large"
-        >
-          Create Event
-        </Button>
+        <Link href={`/manage/${clubId}/events/create`}>
+          <Button
+            variant="contained"
+            className="normal-case"
+            startIcon={<AddIcon />}
+            size="large"
+          >
+            Create Event
+          </Button>
+        </Link>
       </ClubManageHeader>
       <div
         className="group flex flex-wrap w-full justify-evenly items-center pt-4 gap-4"

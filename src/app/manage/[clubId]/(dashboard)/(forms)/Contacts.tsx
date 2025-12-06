@@ -90,7 +90,8 @@ const Contacts = ({ club }: ContactsProps) => {
       // If it has an ID, check if it was actually changed
       else {
         const isDirty = methods.formState.dirtyFields.contacts?.[index];
-        if (isDirty) {
+        const isAnyDirty = isDirty && Object.values(isDirty).some((v) => v);
+        if (isAnyDirty) {
           modified.push(contact as SelectContact);
         }
       }

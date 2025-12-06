@@ -1,3 +1,5 @@
+import { headers } from 'next/headers';
+import { auth } from '@src/server/auth';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { api } from '@src/trpc/server';
 import Collaborators from './(forms)/Collaborators';
@@ -12,22 +14,24 @@ const ClubManageForm = async ({
 }) => {
   const clubId = club.id;
 
-  const role = await api.club.memberType({ id: clubId });
-  const officers = await api.club.getOfficers({ id: clubId });
   const listedOfficers = await api.club.getListedOfficers({ id: clubId });
-  const officersMapped = officers.map((officer) => ({
-    userId: officer.userId,
-    name: officer.userMetadata.firstName + ' ' + officer.userMetadata.lastName,
-    locked: officer.memberType == 'President' || role == 'Officer',
-    position: officer.memberType as 'President' | 'Officer',
-  }));
+  const role = (await api.club.memberType({ id: clubId })) as
+    | 'President'
+    | 'Officer';
+  const officers = await api.club.getOfficers({ id: clubId });
+  const session = await auth.api.getSession({ headers: await headers() });
 
   return (
     <div className="flex flex-col gap-8">
       <Details club={club} />
-      <Officers club={club} officers={listedOfficers} />
+      <Officers club={club} listedOfficers={listedOfficers} />
       <Contacts club={club} />
-      <Collaborators club={club} officers={officersMapped} />
+      <Collaborators
+        club={club}
+        officers={officers}
+        role={role}
+        userId={session?.user.id as string}
+      />
     </div>
   );
 };

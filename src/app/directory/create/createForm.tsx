@@ -42,7 +42,7 @@ const CreateClubForm = ({ user }: { user: { id: string; name: string } }) => {
   });
   return (
     <form onSubmit={submitForm}>
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4">
         <div className="rounded-sm bg-slate-100 p-4 shadow-sm">
           <h1 className="font-display mb-2 text-2xl font-bold text-gray-800">
             Create New Organization

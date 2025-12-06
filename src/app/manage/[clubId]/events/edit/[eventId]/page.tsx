@@ -28,7 +28,7 @@ const EditEventPage = async (props: {
           { text: 'Edit', href: `/manage/${club.id}/events/edit/${eventId}` },
         ]}
         hrefBack={`/manage/${clubId}/events`}
-      ></ClubManageHeader>
+      />
       <main className="p-4">
         <EventForm
           mode="edit"

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
@@ -13,12 +14,10 @@ import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
 const Home = async () => {
   const tags = await api.club.topTags();
-  // const featured = await api.club.getCarousel();
-  // const onlyClubs = featured.map((item) => item.club);
+
   return (
     <SearchStoreProvider>
       <main className="relative">
-        {/* <Header /> */}
         <div className="absolute inset-0 z-0">
           <div className="relative h-[120vh] w-screen">
             <section className="absolute inset-0 z-0 h-[120vh] w-screen">
@@ -55,10 +54,17 @@ const Home = async () => {
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
-          <div className="pointer-events-none *:pointer-events-auto md:fixed md:top-0 md:z-20 flex w-full items-center justify-between p-2.5 md:p-5">
+          <div className="pointer-events-none *:pointer-events-auto lg:fixed lg:top-0 lg:z-20 flex w-full items-center justify-between py-1 md:py-2 px-4 gap-x-2 md:gap-x-4 lg:gap-x-8">
             <Sidebar hamburger="white" shadow />
+            <Link
+              href="/"
+              className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
+            >
+              <NebulaLogo className="h-6 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
+              UTD CLUBS
+            </Link>
             <div className="ml-auto flex items-center justify-center gap-2">
-              <ClubMatchButton />
+              <ClubMatchButton shadow />
               <ProfileDropDown shadow />
             </div>
           </div>

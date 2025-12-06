@@ -2,64 +2,79 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { IconButton, Tooltip } from '@mui/material';
-import FormTextField from './form/FormTextField';
+import { Controller, type Control } from 'react-hook-form';
+import type z from 'zod';
+import { editOfficerSchema } from '@src/utils/formSchemas';
 
 type CollaboratorListItemProps = {
-  remove: (index: number, userId: string) => void;
-  id: string;
+  control: Control<z.infer<typeof editOfficerSchema>>;
+  remove: (index: number) => void;
   index: number;
   name: string;
-  locked: boolean;
+  canRemove: boolean;
+  canTogglePresident: boolean;
 };
 
 const CollaboratorListItem = ({
-  index,
-  id,
-  name,
+  control,
   remove,
-  locked,
+  index,
+  name,
+  canRemove,
+  canTogglePresident,
 }: CollaboratorListItemProps) => {
   return (
-    <div className="flex flex-row hover:bg-slate-100 transition-colors rounded-lg">
-      <div className="flex flex-row w-full flex-wrap">
-        <span className="grow-1 self-center px-4">{name}</span>
-        <div className="h-10">
+    <div className="flex items-center gap-2 p-2 hover:bg-slate-100 transition-colors rounded-lg">
+      <span className="grow px-4">{name}</span>
+      <Controller
+        control={control}
+        name={`officers.${index}.position`}
+        render={({ field }) => (
           <Tooltip
-            title={locked ? 'You cannot remove this item' : 'Remove'}
-            placement="left"
+            title={
+              canTogglePresident
+                ? field.value === 'President'
+                  ? 'Make Collaborator'
+                  : 'Make Admin'
+                : 'Only an admin can change admin status'
+            }
           >
             {/* This span is required to ensure the locked tooltip shows when the IconButton is disabled */}
             <span>
               <IconButton
-                aria-label="remove"
-                className="self-center"
-                onClick={() => remove(index, id)}
-                disabled={locked}
+                aria-label="change admin status"
+                onClick={() =>
+                  field.onChange(
+                    field.value === 'President' ? 'Officer' : 'President',
+                  )
+                }
+                disabled={!canTogglePresident}
               >
-                <DeleteIcon />
+                {field.value === 'President' ? (
+                  <SupervisorAccountIcon
+                    color={canTogglePresident ? 'primary' : undefined}
+                  />
+                ) : (
+                  <PersonIcon />
+                )}
               </IconButton>
             </span>
           </Tooltip>
-        </div>
-      </div>
+        )}
+      />
+      <Tooltip title={canRemove ? 'Remove' : 'Only an admin can remove people'}>
+        {/* This span is required to ensure the locked tooltip shows when the IconButton is disabled */}
+        <span>
+          <IconButton
+            aria-label="remove"
+            onClick={() => remove(index)}
+            disabled={!canRemove}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </span>
+      </Tooltip>
     </div>
-    // <div className="flex flex-row items-center rounded-md bg-slate-300 p-2">
-    //   <div className="flex flex-col">
-    //     <div>
-    //       <h4 className="mb-1 bg-slate-300 text-xl font-bold text-black">
-    //         {name}
-    //       </h4>
-    //     </div>
-    //   </div>
-    //   <button
-    //     className="ml-auto disabled:hidden"
-    //     type="button"
-    //     onClick={() => remove(index, id)}
-    //     disabled={locked}
-    //   >
-    //     remove
-    //   </button>
-    // </div>
   );
 };
 
