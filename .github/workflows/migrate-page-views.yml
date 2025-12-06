@@ -9,6 +9,7 @@ jobs:
   main:
     name: Migrate Page Views
     runs-on: ubuntu-latest
+    environment: develop
 
     steps:
       - name: Check out Git repository
