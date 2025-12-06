@@ -26,7 +26,7 @@ const Home = async () => {
                 fill
                 sizes="120vw"
                 alt="Gradient Background for landing page"
-                className="bg-no-repeat object-cover"
+                className="bg-no-repeat object-cover select-none"
               />
               <Image
                 src={planetsDoodle}
@@ -50,7 +50,7 @@ const Home = async () => {
                 className="hidden md:block absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin bg-no-repeat object-cover [animation-duration:60s]"
               />
             </section>
-            <section className="absolute top-[100vh] z-10 h-[20vh] bg-linear-to-t from-[#edeff2] to-transparent"></section>
+            <section className="absolute top-[100vh] z-10 h-[20vh] w-full bg-linear-to-t from-[#edeff2] to-transparent"></section>
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
@@ -90,7 +90,7 @@ const Home = async () => {
                 Discover the Best Clubs and Organizations at UTD
               </h1>
               <HomePageSearchBar />
-              <div className="pointer-events-auto mt-2 flex max-w-2xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
+              <div className="pointer-events-auto mt-8 flex max-w-2xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
                 {tags.map((tag) => (
                   <TagPill
                     name={tag}
