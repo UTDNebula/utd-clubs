@@ -81,7 +81,7 @@ const Details = ({ club }: DetailsProps) => {
         });
       }}
     >
-      <FormFieldSet legend="Edit Details">
+      <FormFieldSet legend="Details">
         <div className="m-2 flex flex-col gap-4">
           <div className="flex flex-wrap gap-4">
             <Controller

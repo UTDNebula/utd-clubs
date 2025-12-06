@@ -117,7 +117,7 @@ const Contacts = ({ club }: ContactsProps) => {
         });
       }}
     >
-      <FormFieldSet legend="Edit Contact Information">
+      <FormFieldSet legend="Contact Information">
         <div className="flex flex-col gap-2">
           {fields.map((field, index) => (
             <ContactListItem

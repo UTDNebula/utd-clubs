@@ -114,7 +114,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
         });
       }}
     >
-      <FormFieldSet legend="Edit Listed Officers">
+      <FormFieldSet legend="Listed Officers">
         <div className="ml-2 mb-4 text-slate-600 text-sm">
           <p>
             People&apos;s names on this list will appear on your public

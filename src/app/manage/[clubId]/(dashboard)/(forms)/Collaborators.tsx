@@ -131,7 +131,7 @@ const Collaborators = ({
         submitForm();
       }}
     >
-      <FormFieldSet legend="Edit Collaborators">
+      <FormFieldSet legend="Collaborators">
         <div className="ml-2 mb-4 text-slate-600 text-sm">
           <p>
             Users in this list can edit your club&apos;s information and events.

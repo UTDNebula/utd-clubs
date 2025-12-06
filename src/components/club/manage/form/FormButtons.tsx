@@ -21,7 +21,7 @@ export const FormSubmitButton = ({
       loading={loading}
       loadingPosition="start"
     >
-      <span>Save Changes</span>
+      Save
     </Button>
   );
 };
@@ -42,7 +42,7 @@ export const FormResetButton = ({
       disabled={disabled}
       color="warning"
     >
-      Discard Changes
+      Discard
     </Button>
   );
 };
