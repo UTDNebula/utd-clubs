@@ -9,11 +9,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useTRPC } from '@src/trpc/react';
 
 export const ClubTagEdit = ({
-  tags,
-  setTagsAction,
+  value,
+  onChange,
 }: {
-  tags: string[];
-  setTagsAction: (value: string[]) => void;
+  value: string[];
+  onChange: (value: string[]) => void;
 }) => {
   const api = useTRPC();
 
@@ -31,8 +31,9 @@ export const ClubTagEdit = ({
       handleHomeEndKeys
       selectOnFocus
       clearOnBlur
+      noOptionsText="Loading..."
       aria-label="search"
-      value={tags}
+      value={value}
       options={allTags ?? []}
       renderInput={(params) => (
         <TextField
@@ -88,7 +89,7 @@ export const ClubTagEdit = ({
           // Trim the (Add ) and the ( tag) part of the
           value[value.length - 1] = last.substring(5, last.length - 5);
         }
-        setTagsAction(value);
+        onChange(value);
       }}
     />
   );

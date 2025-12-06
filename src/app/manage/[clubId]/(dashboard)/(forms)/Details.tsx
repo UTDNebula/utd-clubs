@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z, { ZodError } from 'zod';
+import { ClubTagEdit } from '@src/components/club/manage/form/ClubTagEdit';
 import Form from '@src/components/club/manage/form/Form';
 import FormButtons from '@src/components/club/manage/form/FormButtons';
 import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
@@ -124,39 +125,48 @@ const Details = ({ club }: DetailsProps) => {
               )}
             />
           </div>
+          <div className="flex flex-col gap-2">
+            <Controller
+              control={methods.control}
+              name="description"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextField
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  label="Description"
+                  className="[&>.MuiInputBase-root]:bg-white"
+                  multiline
+                  minRows={4}
+                  error={
+                    descriptionFieldErrors && descriptionFieldErrors.length > 0
+                  }
+                  helperText={descriptionFieldErrors?.join('. ')}
+                />
+              )}
+            />
+            <div className="text-slate-600 text-sm">
+              <p>
+                We support{' '}
+                <a
+                  href="https://www.markdownguide.org/basic-syntax/"
+                  rel="noreferrer"
+                  target="_blank"
+                  className="text-royal underline"
+                >
+                  Markdown
+                </a>
+                !
+              </p>
+            </div>
+          </div>
           <Controller
             control={methods.control}
-            name="description"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextField
-                onChange={onChange}
-                onBlur={onBlur}
-                value={value}
-                label="Description"
-                className="[&>.MuiInputBase-root]:bg-white"
-                multiline
-                minRows={4}
-                error={
-                  descriptionFieldErrors && descriptionFieldErrors.length > 0
-                }
-                helperText={descriptionFieldErrors?.join('. ')}
-              />
+            name="tags"
+            render={({ field: { onChange, value } }) => (
+              <ClubTagEdit value={value ?? []} onChange={onChange} />
             )}
           />
-          <div className="ml-2 text-slate-600 text-sm">
-            <p>
-              We support{' '}
-              <a
-                href="https://www.markdownguide.org/basic-syntax/"
-                rel="noreferrer"
-                target="_blank"
-                className="text-royal underline"
-              >
-                Markdown
-              </a>
-              !
-            </p>
-          </div>
         </div>
         <FormButtons
           isPending={editData.isPending}
