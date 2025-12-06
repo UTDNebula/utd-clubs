@@ -2,11 +2,9 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import Alert from '@mui/material/Alert';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import type z from 'zod';
 import Form from '@src/components/club/manage/form/Form';
 import FormButtons from '@src/components/club/manage/form/FormButtons';
@@ -25,15 +23,24 @@ const Details = ({
 }) => {
   const methods = useForm<z.infer<typeof editClubSchema>>({
     resolver: zodResolver(editClubSchema),
+    // defaultValues: club,
     defaultValues: {
-      id: club.id,
-      name: club.name,
-      description: club.description,
-      profileImage: club.profileImage ?? undefined,
-      bannerImage: club.bannerImage ?? undefined,
-      foundingDate: club.foundingDate ?? undefined,
-      tags: club.tags,
+      ...club,
+      ...{
+        profileImage: club.profileImage ?? undefined,
+        bannerImage: club.bannerImage ?? undefined,
+        foundingDate: club.foundingDate ?? undefined,
+      },
     },
+    // defaultValues: {
+    //   id: club.id,
+    //   name: club.name,
+    //   description: club.description,
+    //   profileImage: club.profileImage ?? undefined,
+    //   bannerImage: club.bannerImage ?? undefined,
+    //   foundingDate: club.foundingDate ?? undefined,
+    //   tags: club.tags,
+    // },
     mode: 'onTouched',
   });
 
@@ -50,14 +57,10 @@ const Details = ({
   );
 
   const submitForm = handleSubmit((data) => {
-    window.alert(JSON.stringify(data));
-    console.log(JSON.stringify(data));
     if (!editData.isPending) {
       editData.mutate(data);
     }
   });
-
-  const [dateFounded, setDateFounded] = useState('');
 
   return (
     <Form methods={methods} onSubmit={submitForm}>
@@ -69,8 +72,6 @@ const Details = ({
               'An error occurred while saving details.'}
           </Alert>
         )}
-        {/* <UploadImage clubId={club.id} /> */}
-        {/* <UploadImage clubId={club.id} /> */}
         <FormImageUpload
           name="profileImage"
           {...{ control }}
@@ -107,49 +108,8 @@ const Details = ({
           <FormDatePicker
             name="foundingDate"
             label="Date Founded"
-            // {...{ control }}
+            {...{ control }}
           />
-          {/* <DatePicker
-            onChange={(newValue, context) => {
-              if (context.validationError == null && newValue != null) {
-                // setDate(newValue);
-                setDateFounded(String(newValue.getTime()));
-                console.log(dateFounded);
-              }
-            }}
-            // className="[&>.MuiInputBase-root]:bg-white"
-            slotProps={{
-              actionBar: {
-                actions: ['today', 'accept'],
-              },
-              textField: {
-                id: 'outlined-basic',
-                variant: 'outlined',
-                size: 'small',
-                label: 'TEST INPUT',
-              },
-            }}
-          /> */}
-
-          {/* <Controller
-            name="foundingDate"
-            render={({ field }) => (
-              <DatePicker
-                slotProps={{
-                  actionBar: {
-                    actions: ['today', 'accept'],
-                  },
-                  textField: {
-                    id: 'outlined-basic',
-                    variant: 'outlined',
-                    size: 'small',
-                    label: 'TEST INPUT',
-                    ...field,
-                  },
-                }}
-              />
-            )}
-          /> */}
         </div>
         <FormTextField
           name="description"
@@ -158,7 +118,20 @@ const Details = ({
           multiline
           minRows={4}
         />
-        <FormButtons isPending={editData.isPending} />
+        <FormButtons
+          isPending={editData.isPending}
+          onClickDiscard={() => {
+            // console.log({ isDirty: methods.formState.isDirty });
+            console.log('Discard!');
+            methods.reset();
+            console.log({ club });
+            const values = methods.getValues();
+            console.log({ values });
+            console.log(club == values);
+            console.log(club === values);
+            console.log({ dirtyFields: methods.formState.dirtyFields });
+          }}
+        />
       </FormFieldSet>
     </Form>
   );
