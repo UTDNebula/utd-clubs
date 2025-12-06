@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
-import { RegisterModalProvider } from '@src/components/account/RegisterModalProvider';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
 import ClubMatchButton from '@src/components/header/ClubMatchButton';
 import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
@@ -18,7 +17,7 @@ const Home = async () => {
 
   return (
     <SearchStoreProvider>
-      <RegisterModalProvider>
+      
         <main className="relative">
           <div className="absolute inset-0 z-0">
             <div className="relative h-[120vh] w-screen">
@@ -108,7 +107,6 @@ const Home = async () => {
             </section>
           </div>
         </main>
-      </RegisterModalProvider>
     </SearchStoreProvider>
   );
 };
