@@ -8,13 +8,18 @@ const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
   const Icon = IconMap[cat];
   const route = routeMap[cat];
   const pathName = usePathname();
-  const active = pathName === route;
+  const active =
+    route && route !== '/'
+      ? pathName.startsWith(route)
+      : pathName === '/'
+        ? true
+        : false;
 
   if (!route) return null;
 
   return (
     <Link
-      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white shadow-md' : ''} hover:bg-cornflower-100 hover:shadow-md`}
+      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white shadow-md hover:shadow-gray-200' : ''} hover:bg-royal/10`}
       href={route}
       target={route.startsWith('http') ? '_blank' : ''}
     >
