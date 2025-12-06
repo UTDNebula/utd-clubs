@@ -30,7 +30,7 @@ export default function ClubMatchButton({
     <Link href="/club-match/results">
       <Button
         variant="contained"
-        className={`rounded-full normal-case ${shadow ? shadowStyle : ''}`}
+        className={`rounded-full normal-case whitespace-nowrap ${shadow ? shadowStyle : ''}`}
         startIcon={icon}
       >
         Club Match

@@ -13,7 +13,7 @@ import { ProfileDropDown } from './ProfileDropDown';
 export const BaseHeader = async ({ children }: { children: ReactNode }) => {
   const userCapabilities = await api.userMetadata.getUserSidebarCapabilities();
   return (
-    <div className="sticky top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-1 md:py-2 px-4 bg-lighten dark:bg-darken flex-wrap sm:flex-nowrap">
+    <div className="sticky top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-2 sm:px-4 bg-lighten dark:bg-darken flex-wrap sm:flex-nowrap">
       <Image
         src={gradientBG}
         alt="gradient background"
@@ -29,14 +29,19 @@ export const BaseHeader = async ({ children }: { children: ReactNode }) => {
           className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center"
         >
           <NebulaLogo className="h-6 w-auto fill-haiti" />
-          UTD CLUBS
+          <span className="whitespace-nowrap">UTD CLUBS</span>
         </Link>
       </div>
       <div className="grow order-last basis-full sm:order-none sm:basis-auto gap-x-2 md:gap-x-4 lg:gap-x-8">
         {children}
       </div>
       <div className="grow basis-0 flex justify-end items-center gap-x-2">
-        <ClubMatchButton />
+        <div className="sm:hidden">
+          <ClubMatchButton shadow iconOnly />
+        </div>
+        <div className="max-sm:hidden">
+          <ClubMatchButton shadow />
+        </div>
         <ProfileDropDown />
       </div>
     </div>

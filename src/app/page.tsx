@@ -61,7 +61,7 @@ const Home = async () => {
               className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
             >
               <NebulaLogo className="h-6 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
-              UTD CLUBS
+              <span className="whitespace-nowrap">UTD CLUBS</span>
             </Link>
             <div className="ml-auto flex items-center justify-center gap-2">
               <div className="sm:hidden">
