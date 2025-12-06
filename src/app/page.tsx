@@ -63,7 +63,10 @@ const Home = async () => {
               <NebulaLogo className="h-6 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
               UTD CLUBS
             </Link>
-            <div className="sm:ml-auto flex items-center justify-center gap-2">
+            <div className="ml-auto flex items-center justify-center gap-2">
+              <div className="sm:hidden">
+                <ClubMatchButton shadow iconOnly />
+              </div>
               <div className="max-sm:hidden">
                 <ClubMatchButton shadow />
               </div>
