@@ -29,9 +29,9 @@ export default async function Page(props: {
   }));
 
   return (
-    <main className="h-full">
+    <>
       <Header />
-      <div className="flex flex-col gap-y-2 px-5">
+      <main className="flex flex-col gap-y-2 p-4">
         <BackButton className="bg-royal [&>svg]:fill-white" />
         <p className="text-royal text-2xl font-extrabold">
           Edit club Collaborators
@@ -39,7 +39,7 @@ export default async function Page(props: {
         <EditOfficerForm clubId={clubId} officers={mapped} />
         <p className="text-royal text-2xl font-extrabold">Edit club officers</p>
         <EditListedOfficerForm clubId={clubId} officers={listedOfficers} />
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

@@ -22,12 +22,12 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
   }
 
   return (
-    <main className="h-screen">
+    <>
       <Header />
-      <div className="flex flex-row justify-between gap-20 px-5">
+      <main className="flex flex-row justify-between gap-20 p-4">
         <EventForm clubId={currentClub.id} officerClubs={officerClubs} />
-      </div>
-    </main>
+      </main>
+    </>
   );
 };
 export default Page;
