@@ -49,6 +49,7 @@ const editCollaboratorSchema = z.object({
   created: z
     .object({
       userId: z.string(),
+      position: z.enum(['President', 'Officer']),
     })
     .array(),
 });
@@ -145,13 +146,15 @@ export const clubEditRouter = createTRPCRouter({
             })),
           )
           .onConflictDoNothing();
-        await ctx.db
-          .update(club)
-          .set({
-            updatedAt: new Date(),
-          })
-          .where(eq(club.id, input.clubId));
       }
+
+      // Updated at
+      await ctx.db
+        .update(club)
+        .set({
+          updatedAt: new Date(),
+        })
+        .where(eq(club.id, input.clubId));
 
       // Return new contacts
       const newContacts = await ctx.db.query.contacts.findMany({
@@ -183,13 +186,22 @@ export const clubEditRouter = createTRPCRouter({
       // Deleted
       if (input.deleted.length) {
         await ctx.db
-          .delete(userMetadataToClubs)
-          .where(
-            and(
-              eq(userMetadataToClubs.clubId, input.clubId),
-              inArray(userMetadataToClubs.userId, input.deleted),
-            ),
-          );
+          .insert(userMetadataToClubs)
+          .values(
+            input.deleted.map((officer) => ({
+              userId: officer,
+              clubId: input.clubId,
+              memberType: 'Member' as const,
+            })),
+          )
+          .onConflictDoUpdate({
+            target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
+            set: { memberType: 'Member' as const },
+            where: inArray(userMetadataToClubs.memberType, [
+              'Officer',
+              'President',
+            ]),
+          });
       }
 
       // Modified
@@ -218,7 +230,7 @@ export const clubEditRouter = createTRPCRouter({
             input.created.map((officer) => ({
               userId: officer.userId,
               clubId: input.clubId,
-              officerType: 'Officer' as const,
+              memberType: officer.position,
             })),
           )
           .onConflictDoUpdate({
@@ -226,13 +238,15 @@ export const clubEditRouter = createTRPCRouter({
             set: { memberType: 'Officer' as const },
             where: eq(userMetadataToClubs.memberType, 'Member'),
           });
-        await ctx.db
-          .update(club)
-          .set({
-            updatedAt: new Date(),
-          })
-          .where(eq(club.id, input.clubId));
       }
+
+      // Updated at
+      await ctx.db
+        .update(club)
+        .set({
+          updatedAt: new Date(),
+        })
+        .where(eq(club.id, input.clubId));
 
       // Return new officers
       const newOfficers = await ctx.db.query.userMetadataToClubs.findMany({
@@ -292,13 +306,15 @@ export const clubEditRouter = createTRPCRouter({
             position: officer.position,
           })),
         );
-        await ctx.db
-          .update(club)
-          .set({
-            updatedAt: new Date(),
-          })
-          .where(eq(club.id, input.clubId));
       }
+
+      // Updated at
+      await ctx.db
+        .update(club)
+        .set({
+          updatedAt: new Date(),
+        })
+        .where(eq(club.id, input.clubId));
 
       // Return new officers
       const newListedOfficers = await ctx.db.query.officers.findMany({

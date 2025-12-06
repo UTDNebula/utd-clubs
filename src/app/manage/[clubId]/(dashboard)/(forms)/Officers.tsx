@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
-import { FormFieldSet } from '@src/components/club/manage/FormComponents';
+import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
 import OfficerListItem from '@src/components/club/manage/OfficerListItem';
 import type { SelectClub, SelectOfficer } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -75,8 +75,9 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
         created: created,
       });
       setDeletedIds([]);
-      setDefaultValues({ officers: typedDefaultValues(updated) });
-      formApi.reset({ officers: typedDefaultValues(updated) });
+      const newOfficers = typedDefaultValues(updated);
+      setDefaultValues({ officers: newOfficers });
+      formApi.reset({ officers: newOfficers });
     },
     validators: {
       onChange: editListedOfficerSchema,
@@ -111,7 +112,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
         <form.Field name="officers">
           {(field) => (
             <div className="flex flex-col gap-2">
-              {field.state.value.map((_, index) => (
+              {field.state.value.map((value, index) => (
                 <OfficerListItem
                   key={index}
                   index={index}

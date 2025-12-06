@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import ContactListItem from '@src/components/club/manage/ContactListItem';
-import { FormFieldSet } from '@src/components/club/manage/FormComponents';
+import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { contactNames, startContacts } from '@src/server/db/schema/contacts';
 import { useTRPC } from '@src/trpc/react';
@@ -64,7 +64,6 @@ const Contacts = ({ club }: ContactsProps) => {
           modified.push(contact);
         }
       });
-      console.log(modified);
       const updated = await editContacts.mutateAsync({
         clubId: club.id,
         deleted: deletedIds,
@@ -72,8 +71,9 @@ const Contacts = ({ club }: ContactsProps) => {
         created: created,
       });
       setDeletedIds([]);
-      setDefaultValues({ contacts: typedDefaultValues(updated) });
-      formApi.reset({ contacts: typedDefaultValues(updated) });
+      const newContacts = typedDefaultValues(updated);
+      setDefaultValues({ contacts: newContacts });
+      formApi.reset({ contacts: newContacts });
     },
     validators: {
       onChange: editClubContactSchema,
@@ -109,9 +109,9 @@ const Contacts = ({ club }: ContactsProps) => {
         <form.Field name="contacts">
           {(field) => (
             <div className="flex flex-col gap-2">
-              {field.state.value.map((_, index) => (
+              {field.state.value.map((value, index) => (
                 <ContactListItem
-                  key={index}
+                  key={value.platform}
                   index={index}
                   form={form}
                   removeItem={removeItem}
