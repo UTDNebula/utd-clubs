@@ -1,5 +1,5 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   Controller,
   useFormContext,
@@ -19,12 +19,14 @@ export const FormDatePicker = <TFormValues extends FieldValues>({
   name,
   label,
   className,
-  rules,
+  // rules,
   ...props
 }: FormDatePickerProps<TFormValues>) => {
   const methods = useFormContext();
 
   const error = methods.getFieldState(name).error;
+
+  const [popupDate, setPopupDate] = useState(null);
 
   return (
     <Controller
@@ -32,13 +34,16 @@ export const FormDatePicker = <TFormValues extends FieldValues>({
       {...props}
       render={({ field }) => (
         <DatePicker
-          // value={parseISO(date)}
-          // onChange={(newValue, context) => {
-          //   if (context.validationError == null && newValue != null) {
-          //     setDate(newValue);
-          //   }
-          // }}
-          // className="[&>.MuiInputBase-root]:bg-white "
+          value={popupDate}
+          onOpen={() => {
+            setPopupDate(field.value);
+          }}
+          onChange={(newValue, context) => {
+            if (context.validationError == null && newValue != null) {
+              field.onChange(newValue);
+            }
+          }}
+          className="[&>.MuiInputBase-root]:bg-white"
           slotProps={{
             actionBar: {
               actions: ['today', 'accept'],
