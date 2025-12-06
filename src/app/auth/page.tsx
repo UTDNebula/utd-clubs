@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import ProviderButton from '@src/app/auth/ProviderButtons';
 import BackButton from '@src/components/backButton';
+import RegisterModal from '@src/components/account/RegisterModal';
 import { auth } from '@src/server/auth';
 
 const providers = ['google', 'discord'] as const;
@@ -22,7 +23,8 @@ export default async function Auth(props: {
         <div className="absolute inset-0 h-full w-full overflow-hidden">
           <Image src={'/banner.png'} alt="background" fill objectFit="cover" />
         </div>
-        <div className="flex flex-col gap-16">
+        <RegisterModal open omitClose className='[&>.MuiModal-backdrop]:bg-transparent' />
+        {/* <div className="flex flex-col gap-16">
           <div className="absolute inset-5 z-10 flex w-fit sm:static">
             <BackButton className="bg-white" />
           </div>
@@ -40,7 +42,7 @@ export default async function Auth(props: {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </main>
   );

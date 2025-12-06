@@ -3,9 +3,13 @@
 import { Button, Skeleton } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import {
+  NoRegisterModalProviderError,
+  useRegisterModalContext,
+} from '../account/RegisterModalProvider';
 
 type JoinButtonProps = {
   isHeader?: boolean;
@@ -35,6 +39,20 @@ const JoinButton = ({ isHeader, clubID }: JoinButtonProps) => {
 
   const router = useRouter();
 
+  let useAuthPage = false;
+
+  let setShowRegisterModal: (value: boolean) => void;
+  try {
+    const context = useRegisterModalContext();
+    setShowRegisterModal = context.setShowRegisterModal;
+  } catch (e) {
+    if (e instanceof NoRegisterModalProviderError) {
+      useAuthPage = true;
+    } else {
+      throw e;
+    }
+  }
+
   return (
     <Button
       variant="contained"
@@ -46,9 +64,14 @@ const JoinButton = ({ isHeader, clubID }: JoinButtonProps) => {
         if (isPending || joinLeave.isPending) return;
 
         if (!session) {
-          router.push(
-            `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
-          );
+          // Will use auth page when this JoinButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
+          if (useAuthPage) {
+            router.push(
+              `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
+            );
+          } else {
+            setShowRegisterModal(true);
+          }
           return;
         }
 

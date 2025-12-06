@@ -15,6 +15,10 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import RegisterModal from '@src/components/account/RegisterModal';
 import { authClient } from '@src/utils/auth-client';
+import {
+  NoRegisterModalProviderError,
+  useRegisterModalContext,
+} from '../account/RegisterModalProvider';
 
 type Props = {
   shadow?: boolean;
@@ -24,7 +28,22 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
   const { data: session } = authClient.useSession();
   const avatarRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
+
+  const [openRegisterModal, setOpenRegisterModal] = useState(false);
+  let showRegisterModal: boolean;
+  let setShowRegisterModal: (value: boolean) => void;
+  try {
+    const context = useRegisterModalContext();
+    showRegisterModal = context.showRegisterModal;
+    setShowRegisterModal = context.setShowRegisterModal;
+  } catch (e) {
+    if (e instanceof NoRegisterModalProviderError) {
+      showRegisterModal = openRegisterModal;
+      setShowRegisterModal = setOpenRegisterModal;
+    } else {
+      throw e;
+    }
+  }
 
   // Close on scroll
   useEffect(() => {
@@ -49,7 +68,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
           if (session !== null) {
             setOpen(!open);
           } else {
-            setShowRegister(true);
+            setShowRegisterModal(true);
           }
         }}
         component="button"
@@ -87,8 +106,8 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
         </Card>
       </Popover>
       <RegisterModal
-        open={showRegister}
-        onClose={() => setShowRegister(false)}
+        open={showRegisterModal}
+        onClose={() => setShowRegisterModal(false)}
       />
     </>
   );
