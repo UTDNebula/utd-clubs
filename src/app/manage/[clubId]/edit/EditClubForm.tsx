@@ -3,8 +3,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
+import { ClubTagEdit } from '@src/components/searchBar/ClubTagEdit';
 import { type SelectClub, type SelectContact } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { editClubSchema } from '@src/utils/formSchemas';
@@ -41,6 +43,9 @@ const EditClubForm = ({
       editData.mutate(data);
     }
   });
+
+  const [tags, setTags] = useState<string[]>(club.tags);
+
   return (
     <form onSubmit={submitForm}>
       <div className="flex h-full w-full flex-col gap-y-5">
@@ -75,6 +80,7 @@ const EditClubForm = ({
               )}
             </div>
           </div>
+          <ClubTagEdit tags={tags} setTagsAction={setTags} />
           <div className="flex flex-row justify-end gap-x-4 py-2">
             <button
               className="rounded-lg bg-slate-200 p-1 font-bold"
