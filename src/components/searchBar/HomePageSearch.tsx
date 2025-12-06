@@ -5,6 +5,7 @@ import {
   Autocomplete,
   Chip,
   CircularProgress,
+  InputAdornment,
   TextField,
   Typography,
 } from '@mui/material';
@@ -126,13 +127,14 @@ export const HomePageSearchBar = () => {
                   ...params.InputProps,
                   endAdornment: (
                     <div className="flex gap-2 items-center">
-                      {/* <InputAdornment position="start"> */}
-                      {params.InputProps.endAdornment}
-                      {isFetching ? (
-                        <CircularProgress color="inherit" size={20} />
-                      ) : null}
-                      <SearchIcon />
-                      {/* </InputAdornment> */}
+                      <InputAdornment position="start">
+                        {params.InputProps.endAdornment}
+                        {isFetching ? (
+                          <CircularProgress color="inherit" size={24} />
+                        ) : (
+                          <SearchIcon />
+                        )}
+                      </InputAdornment>
                     </div>
                   ),
                   sx: {
