@@ -47,7 +47,11 @@ const OfficerListItem = withForm({
               error={!subField.state.meta.isValid}
               helperText={
                 !subField.state.meta.isValid
-                  ? subField.state.meta.errors
+                  ? (
+                      subField.state.meta.errors as unknown as {
+                        message: string;
+                      }[]
+                    )
                       .map((err) => err?.message)
                       .join('. ')
                   : undefined
@@ -67,7 +71,11 @@ const OfficerListItem = withForm({
               error={!subField.state.meta.isValid}
               helperText={
                 !subField.state.meta.isValid
-                  ? subField.state.meta.errors
+                  ? (
+                      subField.state.meta.errors as unknown as {
+                        message: string;
+                      }[]
+                    )
                       .map((err) => err?.message)
                       .join('. ')
                   : undefined
