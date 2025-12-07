@@ -1,5 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, IconButton, TextField, Tooltip, Typography } from '@mui/material';
 import type z from 'zod';
 import { contactNames } from '@src/server/db/schema/contacts';
 import { withForm } from '@src/utils/form';
@@ -35,40 +35,62 @@ const ContactListItem = withForm({
     };
 
     return (
-      <div className="flex items-center gap-2 p-2 pl-0 hover:bg-slate-100 transition-colors rounded-lg">
-        <Typography className="min-w-32 px-4">
-          {contactNames[form.getFieldValue(`contacts[${index}].platform`)]}
-        </Typography>
-        <form.Field name={`contacts[${index}].url`}>
-          {(subField) => (
-            <TextField
-              onChange={(e) => subField.handleChange(e.target.value)}
-              onBlur={subField.handleBlur}
-              value={subField.state.value}
-              label={subField.state.value === 'email' ? 'Email Address' : 'URL'}
-              className="grow [&>.MuiInputBase-root]:bg-white"
-              size="small"
-              error={!subField.state.meta.isValid}
-              helperText={
-                !subField.state.meta.isValid
-                  ? (
-                      subField.state.meta.errors as unknown as {
-                        message: string;
-                      }[]
-                    )
-                      .map((err) => err?.message)
-                      .join('. ')
-                  : undefined
-              }
-            />
-          )}
-        </form.Field>
-        <Tooltip title="Remove">
-          <IconButton aria-label="remove" onClick={handleRemove}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      </div>
+      <>
+        <Box
+          className="grid gap-2 p-2 sm:hover:bg-slate-100 max-sm:bg-slate-100 transition-colors rounded-lg"
+          sx={{
+            gridTemplateAreas: {
+              sm: `'name url buttons'`,
+              xs: `'name buttons' 'url url'`,
+            },
+            gridTemplateColumns: {
+              sm: `auto 1fr auto`,
+              xs: `1fr auto`,
+            },
+          }}
+        >
+          <div style={{ gridArea: 'name' }} className="h-full">
+            <Typography className="flex min-w-32 px-2 h-full items-center">
+              {contactNames[form.getFieldValue(`contacts[${index}].platform`)]}
+            </Typography>
+          </div>
+          <div style={{ gridArea: 'url' }} className="">
+            <form.Field name={`contacts[${index}].url`}>
+              {(subField) => (
+                <TextField
+                  onChange={(e) => subField.handleChange(e.target.value)}
+                  onBlur={subField.handleBlur}
+                  value={subField.state.value}
+                  label={
+                    subField.state.value === 'email' ? 'Email Address' : 'URL'
+                  }
+                  className="w-full [&>.MuiInputBase-root]:bg-white"
+                  size="small"
+                  error={!subField.state.meta.isValid}
+                  helperText={
+                    !subField.state.meta.isValid
+                      ? (
+                          subField.state.meta.errors as unknown as {
+                            message: string;
+                          }[]
+                        )
+                          .map((err) => err?.message)
+                          .join('. ')
+                      : undefined
+                  }
+                />
+              )}
+            </form.Field>
+          </div>
+          <div style={{ gridArea: 'buttons' }}>
+            <Tooltip title="Remove">
+              <IconButton aria-label="remove" onClick={handleRemove}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </Box>
+      </>
     );
   },
 });
