@@ -155,10 +155,10 @@ const Contacts = ({ club }: ContactsProps) => {
                 />
               ))}
               {available.length > 0 && (
-                <div className="flex sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors sm:rounded-full max-sm:rounded-lg overflow-clip">
+                <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors sm:rounded-full max-sm:rounded-lg overflow-clip">
                   <Typography
                     variant="button"
-                    className="flex items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 max-sm:pb-2 max-sm:pt-4 max-h-full px-4 text-base text-royal normal-case"
+                    className="flex items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 max-sm:pt-4 max-h-full px-4 text-base text-slate-600 normal-case"
                   >
                     Add Contact...
                   </Typography>

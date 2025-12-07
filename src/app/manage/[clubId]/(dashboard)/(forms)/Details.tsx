@@ -60,7 +60,7 @@ const Details = ({ club }: DetailsProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="grow [&>.MuiInputBase-root]:bg-white"
+                  className="grow-[100] [&>.MuiInputBase-root]:bg-white"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
@@ -80,7 +80,7 @@ const Details = ({ club }: DetailsProps) => {
                   onChange={(value) => field.handleChange(value)}
                   value={field.state.value}
                   label="Date Founded"
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="grow [&>.MuiInputBase-root]:bg-white"
                   slotProps={{
                     actionBar: {
                       actions: ['accept'],
