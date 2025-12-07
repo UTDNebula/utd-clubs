@@ -8,6 +8,7 @@ import { contacts } from '@src/server/db/schema/contacts';
 import { officers } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
 import { editClubSchema } from '@src/utils/formSchemas';
+import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 async function isUserOfficer(userId: string, clubId: string) {
@@ -330,6 +331,9 @@ export const clubEditRouter = createTRPCRouter({
         input.clubId,
       );
       if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+      await callStorageAPI('DELETE', `${input.clubId}-profile`);
+      await callStorageAPI('DELETE', `${input.clubId}-banner`);
 
       await ctx.db.delete(club).where(eq(club.id, input.clubId));
     }),

@@ -22,6 +22,7 @@ import {
 } from '@src/server/db/schema/users';
 import { dateSchema } from '@src/utils/eventFilter';
 import { createEventSchema, updateEventSchema } from '@src/utils/formSchemas';
+import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byClubIdSchema = z.object({
@@ -370,6 +371,8 @@ export const eventRouter = createTRPCRouter({
       if (!isOfficer) {
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
+
+      await callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`);
 
       await ctx.db.delete(events).where(eq(events.id, input.id));
 

@@ -7,10 +7,7 @@ type ClientEventTimeProps = {
   endTime: Date;
 };
 
-const ClientEventTime: React.FC<ClientEventTimeProps> = ({
-  startTime,
-  endTime,
-}) => {
+const ClientEventTime = ({ startTime, endTime }: ClientEventTimeProps) => {
   return (
     <>
       {isSameYear(startTime, new Date()) ? null : format(startTime, 'yyyy ')}
@@ -23,5 +20,5 @@ const ClientEventTime: React.FC<ClientEventTimeProps> = ({
     </>
   );
 };
-//export it
+
 export default ClientEventTime;
