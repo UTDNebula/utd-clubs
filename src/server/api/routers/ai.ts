@@ -79,7 +79,7 @@ ${JSON.stringify(
   clubs.map(({ id, name, description, tags }) => ({
     id,
     name,
-    description,
+    description: description.slice(0, 500),
     tags,
   })),
   null,

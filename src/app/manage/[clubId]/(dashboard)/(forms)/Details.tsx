@@ -4,8 +4,10 @@ import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import { ClubTagEdit } from '@src/components/club/manage/form/ClubTagEdit';
 import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
+import FormImage from '@src/components/club/manage/form/FormImage';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -18,6 +20,7 @@ type DetailsProps = {
 const Details = ({ club }: DetailsProps) => {
   const api = useTRPC();
   const editData = useMutation(api.club.edit.data.mutationOptions({}));
+  const uploadImage = useUploadToUploadURL();
 
   const [defaultValues, setDefaultValues] = useState({
     id: club.id,
@@ -32,6 +35,34 @@ const Details = ({ club }: DetailsProps) => {
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
+      // Profile image
+      const profileImageIsDirty = formApi.getFieldMeta('profileImage')?.isDirty;
+      if (profileImageIsDirty) {
+        if (profileFile === null) {
+          value.profileImage = null;
+        } else {
+          const url = await uploadImage.mutateAsync({
+            file: profileFile,
+            fileName: `${club.id}-profile`,
+          });
+          value.profileImage = url;
+        }
+      }
+
+      // Banner image
+      const bannerImageIsDirty = formApi.getFieldMeta('bannerImage')?.isDirty;
+      if (bannerImageIsDirty) {
+        if (bannerFile === null) {
+          value.bannerImage = null;
+        } else {
+          const url = await uploadImage.mutateAsync({
+            file: bannerFile,
+            fileName: `${club.id}-banner`,
+          });
+          value.bannerImage = url;
+        }
+      }
+
       const updated = await editData.mutateAsync(value);
       if (updated) {
         setDefaultValues(updated);
@@ -43,6 +74,9 @@ const Details = ({ club }: DetailsProps) => {
     },
   });
 
+  const [profileFile, setProfileFile] = useState<File | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+
   return (
     <form
       onSubmit={(e) => {
@@ -53,6 +87,44 @@ const Details = ({ club }: DetailsProps) => {
     >
       <FormFieldSet legend="Details">
         <div className="m-2 flex flex-col gap-4">
+          <div className="flex gap-4">
+            <form.Field name="profileImage">
+              {(field) => (
+                <FormImage
+                  label="Profile Image"
+                  initialValue={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    setProfileFile(file);
+                    let fakeUrl = file?.name ?? null;
+                    if (fakeUrl !== null) {
+                      fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+                    }
+                    field.handleChange(fakeUrl);
+                  }}
+                />
+              )}
+            </form.Field>
+            <form.Field name="bannerImage">
+              {(field) => (
+                <FormImage
+                  label="Banner Image"
+                  initialValue={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    setBannerFile(file);
+                    let fakeUrl = file?.name ?? null;
+                    if (fakeUrl !== null) {
+                      fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+                    }
+                    field.handleChange(fakeUrl);
+                  }}
+                />
+              )}
+            </form.Field>
+          </div>
           <div className="flex flex-wrap gap-4">
             <form.Field name="name">
               {(field) => (
@@ -80,7 +152,7 @@ const Details = ({ club }: DetailsProps) => {
                   onChange={(value) => field.handleChange(value)}
                   value={field.state.value}
                   label="Date Founded"
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiPickersInputBase-root]:bg-white"
                   slotProps={{
                     actionBar: {
                       actions: ['accept'],

@@ -1,67 +1,72 @@
-'use server';
+'use client';
 
-import { callStorageAPI, getUploadURL } from 'src/utils/storage';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTRPC } from '@src/trpc/react';
 
-export async function uploadImage(
-  formData: FormData,
-): Promise<{ success: boolean; url?: string; error?: string }> {
-  try {
-    const file = formData.get('file') as File;
-    const clubId = formData.get('clubId') as string;
-    const fileName = formData.get('fileName') as string;
+export function useUploadToUploadURL() {
+  const api = useTRPC();
+  const queryClient = useQueryClient();
 
-    if (!file) {
-      return { success: false, error: 'No file uploaded' };
-    }
+  return useMutation({
+    mutationFn: async ({
+      file,
+      fileName,
+    }: {
+      file: File | null;
+      fileName: string;
+    }) => {
+      if (!file) {
+        throw new Error('No file uploaded.');
+      }
 
-    if (!file.type.startsWith('image/')) {
-      return { success: false, error: 'File must be an image' };
-    }
+      if (!['image/jpeg', 'image/png', 'image/svg+xml'].includes(file.type)) {
+        throw new Error('File must be an image.');
+      }
 
-    if (file.size > 5 * 1024 * 1024) {
-      return { success: false, error: 'File size must be less than 5MB' };
-    }
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('File must be less than 5MB');
+      }
 
-    const objectID = `${clubId}/events/${fileName}`;
+      const uploadUrlResponse = await queryClient.fetchQuery(
+        api.storage.createUpload.queryOptions({
+          objectId: fileName,
+          mime: file.type,
+        }),
+      );
 
-    const uploadUrlResponse = await getUploadURL(objectID, file.type);
+      if (uploadUrlResponse.message !== 'success') {
+        throw new Error('Failed to get upload URL.');
+      }
 
-    if (uploadUrlResponse.message === 'error') {
-      return { success: false, error: 'Failed to get upload URL' };
-    }
+      const uploadUrl = uploadUrlResponse.data;
 
-    const uploadUrl = uploadUrlResponse.data;
+      const arrayBuffer = await file.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: file.type });
 
-    const arrayBuffer = await file.arrayBuffer();
-    const blob = new Blob([arrayBuffer], { type: file.type });
+      const uploadResponse = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'content-type': file.type,
+          'x-goog-content-length-range': `0,5000000`,
+        },
+        body: blob,
+      });
 
-    const uploadResponse = await fetch(uploadUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': file.type,
-      },
-      body: blob,
-    });
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload file.');
+      }
 
-    if (!uploadResponse.ok) {
-      return { success: false, error: 'Failed to upload file' };
-    }
+      const fileResponse = await queryClient.fetchQuery(
+        api.storage.get.queryOptions({
+          objectId: fileName,
+        }),
+      );
 
-    const fileResponse = await callStorageAPI('GET', objectID);
+      if (fileResponse.message !== 'success') {
+        throw new Error('Failed to get file URL.');
+      }
 
-    if (fileResponse.message === 'error') {
-      return { success: false, error: 'Failed to get file URL' };
-    }
-
-    return {
-      success: true,
-      url: fileResponse.data.media_link,
-    };
-  } catch (error) {
-    console.error('Upload error:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to upload file',
-    };
-  }
+      return fileResponse.data.media_link;
+    },
+  });
 }
