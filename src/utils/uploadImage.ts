@@ -1,78 +1,72 @@
-'use server';
+'use client';
 
-import { api } from '@src/trpc/server';
-import type { APIResponse } from './storage';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTRPC } from '@src/trpc/react';
 
-export async function uploadToUploadURL(
-  formData: FormData,
-): Promise<APIResponse<string>> {
-  try {
-    const file = formData.get('file') as File;
-    const fileName = formData.get('fileName') as string;
+export function useUploadToUploadURL() {
+  const api = useTRPC();
+  const queryClient = useQueryClient();
 
-    if (!file) {
-      return { message: 'error', status: 400, data: 'No file uploaded.' };
-    }
+  return useMutation({
+    mutationFn: async ({
+      file,
+      fileName,
+    }: {
+      file: File | null;
+      fileName: string;
+    }) => {
+      if (!file) {
+        throw new Error('No file uploaded.');
+      }
 
-    if (!file.type.startsWith('image/')) {
-      return { message: 'error', status: 400, data: 'File must be an image.' };
-    }
+      if (!['image/jpeg', 'image/png', 'image/svg+xml'].includes(file.type)) {
+        throw new Error('File must be an image.');
+      }
 
-    if (file.size > 5 * 1024 * 1024) {
-      return {
-        message: 'error',
-        status: 400,
-        data: 'File size must be less than 5MB.',
-      };
-    }
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('File must be less than 5MB');
+      }
 
-    const uploadUrlResponse = await api.storage.createUpload({
-      objectId: fileName,
-      mime: file.type,
-    });
+      const uploadUrlResponse = await queryClient.fetchQuery(
+        api.storage.createUpload.queryOptions({
+          objectId: fileName,
+          mime: file.type,
+        }),
+      );
 
-    if (uploadUrlResponse.message !== 'success') {
-      return {
-        message: 'error',
-        status: 500,
-        data: 'Failed to get upload URL.',
-      };
-    }
+      if (uploadUrlResponse.message !== 'success') {
+        throw new Error('Failed to get upload URL.');
+      }
 
-    const uploadUrl = uploadUrlResponse.data;
+      const uploadUrl = uploadUrlResponse.data;
 
-    const arrayBuffer = await file.arrayBuffer();
-    const blob = new Blob([arrayBuffer], { type: file.type });
+      const arrayBuffer = await file.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: file.type });
 
-    const uploadResponse = await fetch(uploadUrl, {
-      method: 'PUT',
-      headers: {
-        'content-type': file.type,
-        'x-goog-content-length-range': `0,${1000000}`,
-      },
-      body: blob,
-    });
+      const uploadResponse = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'content-type': file.type,
+          'x-goog-content-length-range': `0,5000000`,
+        },
+        body: blob,
+      });
 
-    if (!uploadResponse.ok) {
-      return { message: 'error', status: 500, data: 'Failed to upload file.' };
-    }
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload file.');
+      }
 
-    const fileResponse = await api.storage.get({ objectId: fileName });
+      const fileResponse = await queryClient.fetchQuery(
+        api.storage.get.queryOptions({
+          objectId: fileName,
+        }),
+      );
 
-    if (fileResponse.message !== 'success') {
-      return { message: 'error', status: 500, data: 'Failed to get file URL.' };
-    }
+      if (fileResponse.message !== 'success') {
+        throw new Error('Failed to get file URL.');
+      }
 
-    return {
-      message: 'success',
-      status: 200,
-      data: fileResponse.data.media_link,
-    };
-  } catch (error) {
-    return {
-      message: 'error',
-      status: 500,
-      data: error instanceof Error ? error.message : 'Failed to upload file.',
-    };
-  }
+      return fileResponse.data.media_link;
+    },
+  });
 }

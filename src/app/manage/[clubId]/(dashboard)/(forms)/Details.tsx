@@ -4,11 +4,10 @@ import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import { ClubTagEdit } from '@src/components/club/manage/form/ClubTagEdit';
 import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
-import FormImage, {
-  uploadFile,
-} from '@src/components/club/manage/form/FormImage';
+import FormImage from '@src/components/club/manage/form/FormImage';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -21,6 +20,7 @@ type DetailsProps = {
 const Details = ({ club }: DetailsProps) => {
   const api = useTRPC();
   const editData = useMutation(api.club.edit.data.mutationOptions({}));
+  const uploadImage = useUploadToUploadURL();
 
   const [defaultValues, setDefaultValues] = useState({
     id: club.id,
@@ -41,7 +41,10 @@ const Details = ({ club }: DetailsProps) => {
         if (profileFile === null) {
           value.profileImage = null;
         } else {
-          const url = await uploadFile(profileFile, club.id, 'profile');
+          const url = await uploadImage.mutateAsync({
+            file: profileFile,
+            fileName: `${club.id}-profile`,
+          });
           value.profileImage = url;
         }
       }
@@ -52,7 +55,10 @@ const Details = ({ club }: DetailsProps) => {
         if (bannerFile === null) {
           value.bannerImage = null;
         } else {
-          const url = await uploadFile(bannerFile, club.id, 'banner');
+          const url = await uploadImage.mutateAsync({
+            file: bannerFile,
+            fileName: `${club.id}-banner`,
+          });
           value.bannerImage = url;
         }
       }

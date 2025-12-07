@@ -2,7 +2,6 @@
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import React, { useEffect, useRef, useState } from 'react';
-import { uploadToUploadURL } from 'src/utils/uploadImage';
 
 function isImageType(type: string) {
   return ['image/jpeg', 'image/png', 'image/svg+xml'].includes(type);
@@ -23,13 +22,13 @@ const FormImage = ({
 }: FormImageProps) => {
   const storedInitalValueRef = useRef(initialValue);
   const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialValue);
 
   // Handle reset
   useEffect(() => {
     if (initialValue === storedInitalValueRef.current) {
       setFile(null);
-      setPreviewUrl(null);
+      setPreviewUrl(initialValue);
     }
   }, [initialValue]);
 
@@ -63,17 +62,21 @@ const FormImage = ({
 
   return (
     <div className="w-full h-96 flex flex-col justify-center items-center gap-2 p-6 rounded-md bg-royal/10 has-[:hover]:bg-royal/20 transition-colors relative">
-      {file?.name ? (
+      {label && <p className="text-xs font-bold text-slate-700">{label}</p>}
+      {file?.name || previewUrl ? (
         <>
           {previewUrl && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={previewUrl} alt="Preview image" className="rounded-lg" />
+            <img
+              src={previewUrl}
+              alt="Preview image"
+              className="max-h-full rounded-lg"
+            />
           )}
-          <p className="text-xs text-slate-700">{file.name}</p>
+          {file?.name && <p className="text-xs text-slate-700">{file.name}</p>}
         </>
       ) : (
         <>
-          {label && <p className="text-xs font-bold text-slate-700">{label}</p>}
           <CloudUploadIcon />
           <p className="text-xs font-bold text-slate-700">
             Drag or choose a file to upload
@@ -92,25 +95,5 @@ const FormImage = ({
     </div>
   );
 };
-
-export async function uploadFile(
-  file: File,
-  clubId: string,
-  type: 'profile' | 'banner',
-) {
-  const fileName = `${clubId}-${type}`;
-
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('fileName', fileName);
-
-  const result = await uploadToUploadURL(formData);
-
-  if (result.message !== 'success') {
-    throw new Error(result.data);
-  }
-
-  return result.data;
-}
 
 export default FormImage;

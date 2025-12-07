@@ -15,7 +15,7 @@ type GetPostResponse = {
 
 type DeleteResponse = 1;
 
-export type APIResponse<T> =
+type APIResponse<T> =
   | {
       message: 'success';
       status: number;
@@ -74,7 +74,7 @@ export async function getUploadURL(objectID: string, type: string) {
         expiration: addMinutes(Date.now(), 5),
         headers: [
           `content-type:${type}`,
-          `x-goog-content-length-range:0,${1000000}`,
+          `x-goog-content-length-range:0,5000000`,
         ],
         method: 'PUT',
       }),

@@ -36,7 +36,7 @@ export const storageRouter = createTRPCRouter({
   }),
   createUpload: protectedProcedure
     .input(createUploadSchema)
-    .mutation(async ({ input }) => {
+    .query(async ({ input }) => {
       const data = await getUploadURL(input.objectId, input.mime);
       if (data.message !== 'success') {
         throw new TRPCError({
