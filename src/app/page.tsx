@@ -70,7 +70,7 @@ const Home = async () => {
               <div className="max-sm:hidden">
                 <ClubMatchButton shadow />
               </div>
-              <ProfileDropDown shadow showClubMatchOnSmallScreens />
+              <ProfileDropDown shadow />
             </div>
           </div>
           <section className="h-screen">

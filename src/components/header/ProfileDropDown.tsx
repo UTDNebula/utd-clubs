@@ -1,6 +1,6 @@
 'use client';
 
-import DifferenceIcon from '@mui/icons-material/Difference';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {
@@ -19,13 +19,9 @@ import { authClient } from '@src/utils/auth-client';
 
 type Props = {
   shadow?: boolean;
-  showClubMatchOnSmallScreens?: boolean;
 };
 
-export const ProfileDropDown = ({
-  shadow = false,
-  showClubMatchOnSmallScreens = false,
-}: Props) => {
+export const ProfileDropDown = ({ shadow = false }: Props) => {
   const { data: session } = authClient.useSession();
   const avatarRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -70,18 +66,12 @@ export const ProfileDropDown = ({
       >
         <Card>
           <MenuList>
-            {showClubMatchOnSmallScreens && (
-              <MenuItem
-                component={Link}
-                href="/club-match/results"
-                className={showClubMatchOnSmallScreens ? 'sm:hidden' : ''}
-              >
-                <ListItemIcon>
-                  <DifferenceIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Club Match</ListItemText>
-              </MenuItem>
-            )}
+            <MenuItem component={Link} href="/club-match/results">
+              <ListItemIcon>
+                <Diversity3Icon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Club Match</ListItemText>
+            </MenuItem>
             <MenuItem component={Link} href="/settings">
               <ListItemIcon>
                 <SettingsIcon fontSize="small" />

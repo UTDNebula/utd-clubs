@@ -1,12 +1,12 @@
 'use client';
 
-import DifferenceIcon from '@mui/icons-material/Difference';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 import { Button, IconButton } from '@mui/material';
 import Link from 'next/link';
 
 const shadowStyle = 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]';
 
-const icon = <DifferenceIcon fontSize="small" />;
+const icon = <Diversity3Icon fontSize="small" />;
 
 export default function ClubMatchButton({
   shadow,
