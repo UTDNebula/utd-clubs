@@ -4,13 +4,16 @@ import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import { Button, IconButton } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useTRPC } from '@src/trpc/react';
+import { authClient } from '@src/utils/auth-client';
 
 type buttonProps = {
   isHeader?: boolean;
   eventId: string;
 };
 const EventLikeButton = ({ isHeader, eventId }: buttonProps) => {
+  const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
   const { data: joined, isPending } = useQuery(
@@ -41,11 +44,20 @@ const EventLikeButton = ({ isHeader, eventId }: buttonProps) => {
     },
   });
 
+  const router = useRouter();
+
   const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (isPending || join.isPending || leave.isPending) return;
+
+    if (!session) {
+      router.push(
+        `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
+      );
+      return;
+    }
 
     if (!joined) {
       void join.mutateAsync({ id: eventId });

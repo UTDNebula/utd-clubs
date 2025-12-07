@@ -3,14 +3,15 @@ import { IconButton } from '@mui/material';
 import { format, isSameDay } from 'date-fns';
 import Image from 'next/image';
 import EventTimeAlert from '@src/components/events/EventTimeAlert';
-import type { RouterOutputs } from '@src/trpc/shared';
+import type { SelectClub, SelectEvent } from '@src/server/db/models';
 
 interface Props {
-  event: RouterOutputs['event']['findByFilters']['events'][number];
+  club: SelectClub;
+  event: SelectEvent;
 }
 
-const EventCardPreview = ({ event }: Props) => {
-  const src = event.image ?? event.club.profileImage;
+const EventCardPreview = ({ club, event }: Props) => {
+  const src = event.image ?? club.profileImage;
   return (
     <div className="flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
       <div className="relative h-40 shrink-0 w-full">
@@ -31,7 +32,7 @@ const EventCardPreview = ({ event }: Props) => {
         <div className="space-y-2.5">
           <h3 className="font-bold">{event.name}</h3>
           <h4 className="text-xs font-bold">
-            {event.club.name}
+            {club.name}
             <div>
               <span className="text-royal">
                 {format(event.startTime, 'E, MMM d, p')}

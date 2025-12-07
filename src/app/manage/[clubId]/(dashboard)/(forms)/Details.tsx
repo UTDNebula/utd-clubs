@@ -95,8 +95,9 @@ const Details = ({ club }: DetailsProps) => {
                   initialValue={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => {
-                    setProfileFile(e.target.files?.[0] ?? null);
-                    let fakeUrl = e.target.files?.[0]?.name ?? null;
+                    const file = e.target.files?.[0] ?? null;
+                    setProfileFile(file);
+                    let fakeUrl = file?.name ?? null;
                     if (fakeUrl !== null) {
                       fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
                     }
@@ -112,8 +113,9 @@ const Details = ({ club }: DetailsProps) => {
                   initialValue={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => {
-                    setBannerFile(e.target.files?.[0] ?? null);
-                    let fakeUrl = e.target.files?.[0]?.name ?? null;
+                    const file = e.target.files?.[0] ?? null;
+                    setBannerFile(file);
+                    let fakeUrl = file?.name ?? null;
                     if (fakeUrl !== null) {
                       fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
                     }
@@ -150,7 +152,7 @@ const Details = ({ club }: DetailsProps) => {
                   onChange={(value) => field.handleChange(value)}
                   value={field.state.value}
                   label="Date Founded"
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiPickersInputBase-root]:bg-white"
                   slotProps={{
                     actionBar: {
                       actions: ['accept'],

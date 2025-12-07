@@ -240,9 +240,10 @@ export const eventRouter = createTRPCRouter({
       throw e;
     }
   }),
-  joinedEvent: protectedProcedure
+  joinedEvent: publicProcedure
     .input(joinLeaveSchema)
     .query(async ({ input, ctx }) => {
+      if (!ctx.session) return null;
       const eventId = input.id;
       const userId = ctx.session.user.id;
       return Boolean(
@@ -300,12 +301,13 @@ export const eventRouter = createTRPCRouter({
         .insert(events)
         .values({ ...input })
         .returning({ id: events.id });
-      if (res.length == 0)
+      const newEvent = res[0];
+      if (!newEvent)
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to add event',
         });
-      return res[0]?.id;
+      return newEvent.id;
     }),
   update: protectedProcedure
     .input(updateEventSchema)
@@ -333,6 +335,7 @@ export const eventRouter = createTRPCRouter({
           description: data.description,
           startTime: data.startTime,
           endTime: data.endTime,
+          image: data.image,
         })
         .where(eq(events.id, id))
         .returning({ id: events.id });

@@ -16,7 +16,6 @@ const EditEventPage = async (props: {
   if (!event) {
     return notFound();
   }
-  const officerClubs = await api.club.getOfficerClubs();
 
   return (
     <>
@@ -30,12 +29,7 @@ const EditEventPage = async (props: {
         hrefBack={`/manage/${clubId}/events`}
       />
       <div className="p-4">
-        <EventForm
-          mode="edit"
-          clubId={clubId}
-          officerClubs={officerClubs}
-          event={{ ...event, liked: false }}
-        />
+        <EventForm mode="edit" club={club} event={{ ...event, liked: false }} />
       </div>
     </>
   );

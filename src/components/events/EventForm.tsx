@@ -1,239 +1,326 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
+import { TextField } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { type z } from 'zod';
-import { UploadIcon } from '@src/icons/Icons';
+import { useMemo, useState } from 'react';
+import { useUploadToUploadURL } from 'src/utils/uploadImage';
+import FormImage from '@src/components/club/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
+import { useAppForm } from '@src/utils/form';
 import { createEventSchema } from '@src/utils/formSchemas';
 import EventCardPreview from './EventCardPreview';
-import TimeSelect from './TimeSelect';
 
-const EventForm = ({
-  mode = 'create',
-  clubId,
-  officerClubs,
-  event,
-}: {
-  mode?: 'create' | 'edit';
-  clubId: string;
-  officerClubs: SelectClub[];
-  event?: RouterOutputs['event']['findByFilters']['events'][number];
-}) => {
-  type FormType = z.infer<typeof createEventSchema>;
+type EventFormProps =
+  | {
+      mode?: 'create';
+      club: SelectClub;
+      event?: undefined;
+    }
+  | {
+      mode: 'edit';
+      club: SelectClub;
+      event: RouterOutputs['event']['findByFilters']['events'][number];
+    };
 
-  const { register, handleSubmit, watch, setValue, getValues, control } =
-    useForm<FormType>({
-      resolver: zodResolver(createEventSchema),
-      defaultValues:
-        mode === 'edit' && event
-          ? {
-              clubId: event.clubId,
-              name: event.name,
-              location: event.location,
-              description: event.description,
-              startTime: event.startTime,
-              endTime: event.endTime,
-            }
-          : {
-              clubId: clubId,
-            },
-      mode: 'onSubmit',
-    });
-  const router = useRouter();
-  const [watchDescription, watchStartTime] = watch([
-    'description',
-    'startTime',
-  ]);
-  const [loading, setLoading] = useState(false);
-  const [eventPreview, setEventPreview] = useState(
-    mode === 'edit' && event
-      ? event
-      : {
-          name: '',
-          clubId,
-          description: '',
-          location: '',
-          liked: false,
-          id: '',
-          startTime: new Date(Date.now()),
-          endTime: new Date(Date.now()),
-          image: null,
-          club: officerClubs.filter((v) => v.id == clubId)[0]!,
-        },
-  );
-  useEffect(() => {
-    const subscription = watch((data, info) => {
-      const { name, clubId, description, location, startTime, endTime } = data;
-      const club = officerClubs.find((val) => val.id == data.clubId);
-      if (club) {
-        setEventPreview({
-          name: name || '',
-          clubId: clubId || '',
-          description: description || '',
-          location: location || '',
-          liked: false,
-          id: '',
-          startTime:
-            startTime?.toString() === '' || startTime === undefined
-              ? new Date(Date.now())
-              : new Date(startTime),
-          endTime:
-            endTime?.toString() === '' ||
-            endTime?.toString() === 'Invalid Date' ||
-            !endTime
-              ? new Date(Date.now())
-              : new Date(endTime),
-          image: null,
-          club,
-        });
-      }
-      if (info.name === 'clubId' && mode === 'create') {
-        router.replace(`/manage/${data.clubId}/create`);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [router, watch, officerClubs, mode]);
-
+const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const api = useTRPC();
   const createMutation = useMutation(api.event.create.mutationOptions());
   const updateMutation = useMutation(api.event.update.mutationOptions());
+  const uploadImage = useUploadToUploadURL();
+  const router = useRouter();
 
-  const onSubmit = handleSubmit((data) => {
-    if (loading) return;
-    setLoading(true);
-
+  const defaultValues = useMemo(() => {
     if (mode === 'edit' && event) {
-      updateMutation.mutate(
+      return {
+        clubId: event.clubId,
+        name: event.name,
+        location: event.location,
+        description: event.description,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        image: event.image,
+      };
+    }
+
+    // New Date only once to prevent call stack exceeded
+    const defaultStartTime = new Date();
+    defaultStartTime.setHours(defaultStartTime.getHours() + 1);
+    defaultStartTime.setMinutes(0);
+    const defaultEndTime = new Date();
+    defaultEndTime.setHours(defaultEndTime.getHours() + 2);
+    defaultEndTime.setMinutes(0);
+
+    return {
+      clubId: club.id,
+      name: '',
+      location: '',
+      description: '',
+      startTime: defaultStartTime,
+      endTime: defaultEndTime,
+      image: null,
+    };
+  }, [mode, event, club.id]);
+
+  const form = useAppForm({
+    defaultValues,
+    onSubmit: async ({ value, formApi }) => {
+      if (mode === 'edit' && event) {
+        // Image
+        const iImageIsDirty = formApi.getFieldMeta('image')?.isDirty;
+        if (iImageIsDirty) {
+          if (file === null) {
+            value.image = null;
+          } else {
+            const url = await uploadImage.mutateAsync({
+              file: file,
+              fileName: `${club.id}-event-${event.id}`,
+            });
+            value.image = url ?? null;
+          }
+        }
+
+        return updateMutation.mutateAsync(
+          {
+            id: event.id,
+            ...value,
+            image: value.image ?? null,
+          },
+          {
+            onSuccess: () => router.push(`/event/${event.id}`),
+          },
+        );
+      }
+
+      // Create
+      return createMutation.mutateAsync(
         {
-          id: event.id,
-          ...data,
+          ...value,
+          image: value.image ?? null,
         },
         {
-          onSuccess: () => {
-            router.push(`/event/${event.id}`);
-          },
-          onError: () => {
-            setLoading(false);
+          onSuccess: async (newId) => {
+            // Uplaod image after we have an ID
+            const iImageIsDirty = formApi.getFieldMeta('image')?.isDirty;
+            if (!iImageIsDirty) {
+              router.push(`/event/${newId}`);
+              return;
+            }
+            if (file === null) {
+              value.image = null;
+            } else {
+              const url = await uploadImage.mutateAsync({
+                file: file,
+                fileName: `${club.id}-event-${newId}`,
+              });
+              value.image = url ?? null;
+              updateMutation.mutate(
+                {
+                  id: newId,
+                  ...value,
+                  image: value.image ?? null,
+                },
+                {
+                  onSuccess: () => {
+                    router.push(`/event/${newId}`);
+                  },
+                },
+              );
+            }
           },
         },
       );
-    } else {
-      createMutation.mutate(data, {
-        onSuccess: (newId) => {
-          router.push(`/event/${newId as string}`);
-        },
-        onError: () => {
-          setLoading(false);
-        },
-      });
-    }
+    },
+    validators: {
+      onChange: createEventSchema,
+    },
   });
 
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    event ? event.image : null,
+  );
+
+  const formValues = useStore(form.store, (state) => state.values);
+
   return (
-    <form
-      onSubmit={(e) => void onSubmit(e)}
-      className="flex w-full flex-row flex-wrap justify-start gap-10 overflow-x-clip pb-4 text-[#4D5E80]"
-    >
-      <div className="form-fields flex max-w-[830px] min-w-[320px] flex-1 flex-col gap-10">
-        <div className="create-dropdown flex max-w-full flex-row justify-start gap-1 py-2 text-2xl font-bold whitespace-nowrap">
-          <span>
-            {mode === 'edit' ? 'Edit Club Event' : 'Create Club Event'}{' '}
-            <span className="text-royal">for</span>
-          </span>
-          <div className="flex-1">
-            <select
-              {...register('clubId')}
-              defaultValue={clubId}
-              disabled={mode === 'edit'}
-              className="w-full overflow-hidden bg-inherit text-ellipsis whitespace-nowrap text-royal outline-hidden disabled:cursor-not-allowed"
-            >
-              {officerClubs.map((club) => {
-                return (
-                  <option key={club.id} value={club.id}>
-                    {club.name}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-        </div>
-        <div className="event-pic w-full">
-          <h2 className="mb-4 font-bold">Event Picture</h2>
-          <p className="upload-label mb-11 text-xs font-bold">
-            Drag or choose file to upload
-          </p>
-          <div className="upload-box flex h-48 w-full flex-col items-center justify-center gap-6 rounded-md bg-[#E9EAEF] opacity-50">
-            <UploadIcon />
-            <p className="text-xs font-bold">JPEG, PNG, or SVG</p>
-          </div>
-        </div>
-        <div className="event-details flex w-full flex-col gap-4">
-          <h2 className="font-bold">Event Details</h2>
-          <div className="event-name">
-            <label className="mb-2 block text-xs font-bold" htmlFor="name">
-              Event Name
-            </label>
-            <input
-              type="text"
-              className="w-full rounded-md p-2 text-xs shadow-xs outline-hidden placeholder:text-[#7D8FB3]"
-              placeholder="Event name"
-              {...register('name')}
+    <div className="flex w-full flex-wrap justify-start gap-10">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
+        className="grow flex flex-col gap-4"
+      >
+        <form.Field name="image">
+          {(field) => (
+            <FormImage
+              label="Profile Image"
+              initialValue={field.state.value}
+              onBlur={field.handleBlur}
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                setPreviewUrl(file ? URL.createObjectURL(file) : null);
+                setFile(file);
+                let fakeUrl = file?.name ?? null;
+                if (fakeUrl !== null) {
+                  fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+                }
+                field.handleChange(fakeUrl);
+              }}
             />
-          </div>
-          <div className="event-location">
-            <label className="mb-2 block text-xs font-bold" htmlFor="location">
-              Location
-            </label>
-            <input
-              type="text"
-              className="w-full rounded-md p-2 text-xs shadow-xs outline-hidden placeholder:text-[#7D8FB3]"
-              placeholder="123 Fun Street"
-              {...register('location')}
+          )}
+        </form.Field>
+        <form.Field name="name">
+          {(field) => (
+            <TextField
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+              className="[&>.MuiInputBase-root]:bg-white"
+              size="small"
+              error={!field.state.meta.isValid}
+              helperText={
+                !field.state.meta.isValid
+                  ? field.state.meta.errors
+                      .map((err) => err?.message)
+                      .join('. ')
+                  : undefined
+              }
+              label="Name"
             />
-          </div>
-          <div className="event-description">
-            <div className="desc-header flex w-full justify-between">
-              <label
-                className="mb-2 block text-xs font-bold"
-                htmlFor="description"
-              >
-                Description
-              </label>
-              <p className="text-xs">
-                {watchDescription && watchDescription.length} of 1000 Characters
-                used
-              </p>
-            </div>
-            <textarea
-              {...register('description')}
-              className="w-full rounded-md p-2 text-xs shadow-xs outline-hidden placeholder:text-[#7D8FB3]"
-              placeholder="Event description"
+          )}
+        </form.Field>
+        <form.Field name="location">
+          {(field) => (
+            <TextField
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+              className="[&>.MuiInputBase-root]:bg-white"
+              size="small"
+              error={!field.state.meta.isValid}
+              helperText={
+                !field.state.meta.isValid
+                  ? field.state.meta.errors
+                      .map((err) => err?.message)
+                      .join('. ')
+                  : undefined
+              }
+              label="Location"
             />
-          </div>
+          )}
+        </form.Field>
+        <form.Field name="description">
+          {(field) => (
+            <TextField
+              onChange={(e) => {
+                field.handleChange(e.target.value);
+              }}
+              onBlur={field.handleBlur}
+              value={field.state.value}
+              label="Description"
+              className="[&>.MuiInputBase-root]:bg-white"
+              multiline
+              minRows={4}
+              error={!field.state.meta.isValid}
+              helperText={
+                !field.state.meta.isValid ? (
+                  field.state.meta.errors.map((err) => err?.message).join('. ')
+                ) : (
+                  <span>
+                    We support{' '}
+                    <a
+                      href="https://www.markdownguide.org/basic-syntax/"
+                      rel="noreferrer"
+                      target="_blank"
+                      className="text-royal underline"
+                    >
+                      Markdown
+                    </a>
+                    !
+                  </span>
+                )
+              }
+            />
+          )}
+        </form.Field>
+        <div className="flex gap-4">
+          <form.Field name="startTime">
+            {(field) => (
+              <DateTimePicker
+                onChange={(value) => value && field.handleChange(value)}
+                value={field.state.value}
+                label="Date Founded"
+                className="[&>.MuiPickersInputBase-root]:bg-white"
+                slotProps={{
+                  actionBar: {
+                    actions: ['accept'],
+                  },
+                  textField: {
+                    size: 'small',
+                    error: !field.state.meta.isValid,
+                    helperText: field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ')
+                      : undefined,
+                  },
+                }}
+              />
+            )}
+          </form.Field>
+          <form.Field name="endTime">
+            {(field) => (
+              <DateTimePicker
+                onChange={(value) => value && field.handleChange(value)}
+                value={field.state.value}
+                label="Date Founded"
+                className="[&>.MuiPickersInputBase-root]:bg-white"
+                slotProps={{
+                  actionBar: {
+                    actions: ['accept'],
+                  },
+                  textField: {
+                    size: 'small',
+                    error: !field.state.meta.isValid,
+                    helperText: field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ')
+                      : undefined,
+                  },
+                }}
+              />
+            )}
+          </form.Field>
         </div>
-        <TimeSelect
-          setValue={setValue}
-          getValues={getValues}
-          watchStartTime={watchStartTime}
-          control={control}
-        />
-        <input
-          type="submit"
-          value={mode === 'edit' ? 'Save Changes' : 'Create'}
-          className={`bg-royal ${loading ? 'opacity-40' : ''} rounded-md py-6 text-xs font-black text-white hover:cursor-pointer`}
-        />
-      </div>
-      <div className="form-preview flex w-64 flex-col gap-14">
+        <div className="flex flex-wrap justify-end items-center gap-2">
+          <form.AppForm>
+            <form.FormResetButton />
+          </form.AppForm>
+          <form.AppForm>
+            <form.FormSubmitButton />
+          </form.AppForm>
+        </div>
+      </form>
+      <div className="flex flex-col gap-4">
         <h2 className="text-lg font-bold">Preview</h2>
-        {eventPreview && <EventCardPreview event={eventPreview} />}
+        <EventCardPreview
+          club={club}
+          event={{
+            id: '',
+            ...formValues,
+            image: previewUrl,
+          }}
+        />
       </div>
-    </form>
+    </div>
   );
 };
 export default EventForm;

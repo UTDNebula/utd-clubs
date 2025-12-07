@@ -22,9 +22,15 @@ export const editClubContactSchema = z.object({
 
 export const editClubSchema = z.object({
   id: z.string(),
-  name: z.string().min(3, { message: 'Name is required.' }),
-  description: z.string().min(1, { message: 'Description is required.' }),
-  tags: z.array(z.string()),
+  name: z
+    .string()
+    .min(3, { message: 'Name is required.' })
+    .max(100, { message: 'Character limit reached.' }),
+  description: z
+    .string()
+    .min(1, { message: 'Description is required.' })
+    .max(5000, { message: 'Character limit reached.' }),
+  tags: z.array(z.string().max(100, { message: 'Character limit reached.' })),
   profileImage: z.url().nullable(),
   bannerImage: z.url().nullable(),
   foundingDate: z.date().nullable(),
@@ -45,19 +51,26 @@ export const editListedOfficerSchema = z.object({
   officers: z
     .object({
       id: z.string().optional(),
-      name: z.string().min(1, { message: 'Name is required.' }),
-      position: z.string().min(1, { message: 'Position is required.' }),
+      name: z
+        .string()
+        .min(1, { message: 'Name is required.' })
+        .max(100, { message: 'Character limit reached.' }),
+      position: z
+        .string()
+        .min(1, { message: 'Position is required.' })
+        .max(100, { message: 'Character limit reached.' }),
     })
     .array(),
 });
 
 export const createEventSchema = z.object({
   clubId: z.string(),
-  name: z.string().min(1),
-  location: z.string().min(1),
-  description: z.string().max(1000),
-  startTime: z.coerce.date(),
-  endTime: z.coerce.date(),
+  name: z.string().min(1).max(100, { message: 'Character limit reached.' }),
+  location: z.string().min(1).max(100, { message: 'Character limit reached.' }),
+  description: z.string().max(1000, { message: 'Character limit reached.' }),
+  startTime: z.date(),
+  endTime: z.date(),
+  image: z.url().nullable(),
 });
 
 export const updateEventSchema = createEventSchema.extend({

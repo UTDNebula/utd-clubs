@@ -39,8 +39,7 @@ const FormImage = ({
         e.target.value = '';
         return;
       }
-      const objectUrl = URL.createObjectURL(file);
-      setPreviewUrl(objectUrl);
+      setPreviewUrl(URL.createObjectURL(file));
       setFile(file);
     } else {
       setPreviewUrl(null);
@@ -53,8 +52,7 @@ const FormImage = ({
     const file = e.dataTransfer.files?.[0];
     if (file) {
       if (isImageType(file.type)) {
-        const objectUrl = URL.createObjectURL(file);
-        setPreviewUrl(objectUrl);
+        setPreviewUrl(URL.createObjectURL(file));
         setFile(file);
       }
     }
