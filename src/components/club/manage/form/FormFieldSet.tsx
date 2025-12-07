@@ -19,7 +19,7 @@ export const FormFieldSet = ({
     <fieldset
       {...props}
       className={
-        'flex flex-col gap-2 rounded-lg bg-white px-14 py-10' +
+        'flex flex-col gap-2 rounded-lg bg-white px-14 py-10 min-w-0' +
         ' ' +
         props.className
       }

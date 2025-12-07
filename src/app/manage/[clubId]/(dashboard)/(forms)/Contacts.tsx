@@ -3,7 +3,7 @@
 import { Button, Typography } from '@mui/material';
 import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import z from 'zod';
 import ContactListItem from '@src/components/club/manage/ContactListItem';
 import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
@@ -89,6 +89,7 @@ const Contacts = ({ club }: ContactsProps) => {
     if (current) {
       setDeletedIds((prev) => [...prev, current.platform]);
     }
+    updateScrollGradient();
   };
 
   const currentContacts =
@@ -96,6 +97,42 @@ const Contacts = ({ club }: ContactsProps) => {
   const available = startContacts.filter(
     (p) => !currentContacts.map((c) => c.platform).includes(p),
   );
+
+  // Scroll gradients for adding contact item
+
+  const scrollDistanceForGradient = 32;
+
+  const [addContactBeforeOpacity, setAddContactBeforeOpacity] = useState(0);
+  const [addContactAfterOpacity, setAddContactAfterOpacity] = useState(0);
+
+  let addContactScrollDistance = 0;
+  let addContactScrollDistanceMax = 0;
+
+  const addContactRef = useRef<HTMLDivElement>(null);
+
+  const addContactStyle: { [key: string]: string | number } = {
+    '--addContactBeforeOpacity': addContactBeforeOpacity,
+    '--addContactAfterOpacity': addContactAfterOpacity,
+  };
+
+  const updateScrollGradient = () => {
+    addContactScrollDistance = addContactRef.current?.scrollLeft ?? 0;
+    addContactScrollDistanceMax =
+      (addContactRef.current?.scrollWidth ?? 0) -
+      (addContactRef.current?.clientWidth ?? 0);
+
+    setAddContactBeforeOpacity(
+      addContactScrollDistance - 1 < addContactScrollDistanceMax
+        ? addContactScrollDistance / scrollDistanceForGradient
+        : 0,
+    );
+    setAddContactAfterOpacity(
+      addContactScrollDistance < addContactScrollDistanceMax
+        ? (addContactScrollDistanceMax - addContactScrollDistance) /
+            scrollDistanceForGradient
+        : 0,
+    );
+  };
 
   return (
     <form
@@ -105,10 +142,10 @@ const Contacts = ({ club }: ContactsProps) => {
         form.handleSubmit();
       }}
     >
-      <FormFieldSet legend="Contact Information">
+      <FormFieldSet legend="Contact Information" className="min-w-0">
         <form.Field name="contacts">
           {(field) => (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 max-w-full">
               {field.state.value.map((value, index) => (
                 <ContactListItem
                   key={value.platform}
@@ -117,21 +154,49 @@ const Contacts = ({ club }: ContactsProps) => {
                   removeItem={removeItem}
                 />
               ))}
-              <div className="ml-2 p-2 flex flex-wrap items-center gap-2">
-                <Typography className="mr-2">Add Contact:</Typography>
-                {available.length > 0 &&
-                  available.map((platform) => (
-                    <Button
-                      key={platform}
-                      variant="contained"
-                      value={platform}
-                      className="normal-case"
-                      onClick={() => field.pushValue({ platform, url: '' })}
+              {available.length > 0 && (
+                <div className="flex sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors sm:rounded-full max-sm:rounded-lg overflow-clip">
+                  <Typography
+                    variant="button"
+                    className="flex items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 max-sm:pt-2 max-h-full px-4 text-base text-royal normal-case"
+                  >
+                    Add Contact...
+                  </Typography>
+                  <div
+                    style={addContactStyle}
+                    className={[
+                      'relative min-w-0 w-full sm:rounded-full overflow-clip',
+                      'before:opacity-[var(--addContactBeforeOpacity)] after:opacity-[var(--addContactAfterOpacity)]',
+                      'before:content before:z-10 before:absolute before:top-0 before:left-0 before:h-full before:w-8 before:pointer-events-none',
+                      'before:bg-linear-to-r before:from-white/75 before:to-transparent ',
+                      'after:content after:z-10 after:absolute after:top-0 after:right-0 after:h-full after:w-8 after:pointer-events-none',
+                      'after:bg-linear-to-l after:from-white/75 after:to-transparent after:backdrop-blur-xs after:mask-l-from-0',
+                    ].join(' ')}
+                  >
+                    <div
+                      className="relative p-2 flex gap-2 overflow-x-auto no-scrollbar sm:rounded-full"
+                      ref={addContactRef}
+                      onScroll={updateScrollGradient}
+                      onClick={updateScrollGradient}
                     >
-                      {contactNames[platform]}
-                    </Button>
-                  ))}
-              </div>
+                      {available.length > 0 &&
+                        available.map((platform) => (
+                          <Button
+                            key={platform}
+                            variant="contained"
+                            value={platform}
+                            className="normal-case min-w-fit"
+                            onClick={() =>
+                              field.pushValue({ platform, url: '' })
+                            }
+                          >
+                            {contactNames[platform]}
+                          </Button>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </form.Field>
