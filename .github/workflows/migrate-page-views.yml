@@ -9,6 +9,7 @@ jobs:
   main:
     name: Migrate Page Views
     runs-on: ubuntu-latest
+    environment: develop
 
     steps:
       - name: Check out Git repository
@@ -24,7 +25,7 @@ jobs:
         run: npm ci
 
       - name: Set up test environment file
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env && echo "GOOGLE_ANALYTICS_SERVICE_ACCOUNT=${{ secrets.GOOGLE_ANALYTICS_SERVICE_ACCOUNT }}" >> .env && echo "GOOGLE_ANALYTICS_PROPERTY_ID=${{ secrets.GOOGLE_ANALYTICS_PROPERTY_ID }}" >> .env
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env && echo 'GOOGLE_ANALYTICS_SERVICE_ACCOUNT=${{ secrets.GOOGLE_ANALYTICS_SERVICE_ACCOUNT }}' >> .env && echo "GOOGLE_ANALYTICS_PROPERTY_ID=${{ secrets.GOOGLE_ANALYTICS_PROPERTY_ID }}" >> .env
 
       - name: Run Migrate Page Views Script
         run: npm run migratePageViews
