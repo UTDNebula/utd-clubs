@@ -14,10 +14,7 @@ import {
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { authClient } from '@src/utils/auth-client';
-import {
-  NoRegisterModalProviderError,
-  useRegisterModalContext,
-} from '../account/RegisterModalProvider';
+import { useRegisterModal } from '../account/RegisterModalProvider';
 
 type Props = {
   shadow?: boolean;
@@ -28,16 +25,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
   const avatarRef = useRef(null);
   const [open, setOpen] = useState(false);
 
-  let setShowRegisterModal: (value: boolean) => void;
-  try {
-    const context = useRegisterModalContext();
-    setShowRegisterModal = context.setShowRegisterModal;
-  } catch (e) {
-    if (e instanceof NoRegisterModalProviderError) {
-    } else {
-      throw e;
-    }
-  }
+  const { setShowRegisterModal } = useRegisterModal();
 
   // Close on scroll
   useEffect(() => {

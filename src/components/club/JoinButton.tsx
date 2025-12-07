@@ -8,10 +8,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
-import {
-  NoRegisterModalProviderError,
-  useRegisterModalContext,
-} from '../account/RegisterModalProvider';
+import { useRegisterModal } from '../account/RegisterModalProvider';
 
 type JoinButtonProps = {
   isHeader?: boolean;
@@ -43,17 +40,9 @@ const JoinButton = ({ isHeader, clubID }: JoinButtonProps) => {
 
   let useAuthPage = false;
 
-  let setShowRegisterModal: (value: boolean) => void;
-  try {
-    const context = useRegisterModalContext();
-    setShowRegisterModal = context.setShowRegisterModal;
-  } catch (e) {
-    if (e instanceof NoRegisterModalProviderError) {
-      useAuthPage = true;
-    } else {
-      throw e;
-    }
-  }
+  const { setShowRegisterModal } = useRegisterModal(() => {
+    useAuthPage = true;
+  });
 
   return (
     <Tooltip title={memberType ? 'Click to leave club' : 'Click to join club'}>

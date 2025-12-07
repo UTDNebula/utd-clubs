@@ -13,6 +13,11 @@ export class NoRegisterModalProviderError extends Error {
   }
 }
 
+const defaultValues = {
+  showRegisterModal: false,
+  setShowRegisterModal: () => {},
+};
+
 interface RegisterModalContextInterface {
   inProvider: boolean;
   showRegisterModal: boolean;
@@ -25,8 +30,7 @@ interface RegisterModalContextInterface {
 export const RegisterModalContext =
   createContext<RegisterModalContextInterface>({
     inProvider: false,
-    showRegisterModal: false,
-    setShowRegisterModal: () => {},
+    ...defaultValues,
   });
 
 /**
@@ -40,6 +44,28 @@ export function useRegisterModalContext() {
     );
   }
   return context;
+}
+
+/**
+ * Utility function that calls {@linkcode useRegisterModalContext()} but catches the {@linkcode NoRegisterModalProviderError} if it is thrown.
+ * If this error is thrown, it will run the callback function in {@linkcode onError} and pass the error
+ */
+export function useRegisterModal(
+  onError?: (e?: NoRegisterModalProviderError) => void,
+) {
+  try {
+    const context = useRegisterModalContext();
+    return context;
+  } catch (e) {
+    if (e instanceof NoRegisterModalProviderError) {
+      if (onError) {
+        onError(e);
+      }
+    } else {
+      throw e;
+    }
+  }
+  return defaultValues;
 }
 
 type RegisterModalProviderProps = {

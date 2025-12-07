@@ -63,7 +63,13 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       onClose={onClose}
       className={`flex justify-center items-center h-screen p-4 ${className}`}
     >
-      <RegisterModalContents {...onClose} closeButton={closeButton ?? true} />
+      {/* This span is required to receive the tabIndex prop, which will let the user quickly navigate the modal using the keyboard */}
+      <span>
+        <RegisterModalContents
+          onClose={onClose}
+          closeButton={closeButton ?? true}
+        />
+      </span>
     </Modal>
   );
 };
