@@ -22,17 +22,22 @@ export const editClubContactSchema = z.object({
 
 export const editClubSchema = z.object({
   id: z.string(),
-  name: z.string().min(3),
-  description: z.string().min(1),
+  name: z.string().min(3, { message: 'Name is required.' }),
+  description: z.string().min(1, { message: 'Description is required.' }),
+  tags: z.array(z.string()),
+  profileImage: z.url().nullable(),
+  bannerImage: z.url().nullable(),
+  foundingDate: z.date().nullable(),
 });
 export const editOfficerSchema = z.object({
   officers: z
     .object({
       userId: z.string(),
       name: z.string(),
-      locked: z.boolean(),
-      title: z.string().min(1),
+      canRemove: z.boolean(),
+      canTogglePresident: z.boolean(),
       position: z.enum(['President', 'Officer']),
+      new: z.boolean().optional(),
     })
     .array(),
 });
@@ -40,9 +45,8 @@ export const editListedOfficerSchema = z.object({
   officers: z
     .object({
       id: z.string().optional(),
-      name: z.string(),
-      position: z.string().min(1),
-      isPresident: z.boolean(),
+      name: z.string().min(1, { message: 'Name is required.' }),
+      position: z.string().min(1, { message: 'Position is required.' }),
     })
     .array(),
 });
@@ -54,6 +58,10 @@ export const createEventSchema = z.object({
   description: z.string().max(1000),
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
+});
+
+export const updateEventSchema = createEventSchema.extend({
+  id: z.string(),
 });
 
 export const feedbackFormSchema = z.object({

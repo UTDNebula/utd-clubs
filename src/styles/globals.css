@@ -1,6 +1,7 @@
 @layer theme, base, mui, components, utilities;
 @import 'tailwindcss';
 @plugin 'tailwindcss-animate';
+@plugin "@tailwindcss/typography";
 
 @utility items-normal {
   align-items: normal;
@@ -38,9 +39,6 @@
   --color-periwinkle: #c2c8ff; /* brand secondary (light)*/
   --color-shade: #101828; /* drop shadow color from shipfaster ui*/
 
-  --color-blue-primary: #3361ff;
-  --color-events: #ff6633;
-
   --font-display: Bai Jamjuree, Roboto, sans-serif;
   --font-main: Inter, Roboto, sans-serif;
 }
@@ -75,5 +73,14 @@
   .tag-container {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+  }
+}
+
+@layer utilities {
+  .bg-lighten {
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+  .bg-darken {
+    background-color: rgba(0, 0, 0, 0.6);
   }
 }

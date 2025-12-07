@@ -1,8 +1,9 @@
 import { type Metadata } from 'next';
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import React from 'react';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import CommunityEvents from './communityEvents';
 
 export const metadata: Metadata = {
@@ -17,31 +18,37 @@ export const metadata: Metadata = {
 };
 
 const Community = async () => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
     return (
-      <main className="h-full">
+      <>
         <Header />
-        <div className="flex w-full place-content-center items-center pt-20">
-          <Image src="/nebula-logo.png" alt="" width={300} height={300} />
-        </div>
-        <div className="h-full">
-          <h1 className="text-black-500 pt-5 pb-1 text-center text-3xl font-bold">
-            Please Sign in to Use the Community Page.
-          </h1>
-        </div>
-      </main>
+        <main className="p-4">
+          <div className="flex w-full place-content-center items-center pt-20">
+            <Image src="/nebula-logo.png" alt="" width={300} height={300} />
+          </div>
+          <div className="h-full">
+            <h1 className="font-display text-black-500 pt-5 pb-1 text-center text-3xl font-bold">
+              Please Sign in to Use the Community Page.
+            </h1>
+          </div>
+        </main>
+      </>
     );
   }
   return (
-    <main className="h-full">
+    <>
       <Header />
-      <div className="mx-6 h-full p-2">
-        <h1 className="text-2xl font-bold text-slate-500">Community Events</h1>
-        <CommunityEvents />
-      </div>
-    </main>
+      <main className="p-4">
+        <div className="mx-6 h-full p-2">
+          <h1 className="font-display text-2xl font-bold text-haiti">
+            Community Events
+          </h1>
+          <CommunityEvents />
+        </div>
+      </main>
+    </>
   );
 };
 

@@ -2,11 +2,13 @@ import TagSwapper from './tagSwapper';
 
 export default function Page() {
   return (
-    <div className="m-5 md:pl-72">
-      <h1 className="text-center text-4xl font-bold text-black">Change tags</h1>
-      <div className="flex justify-center gap-x-5 pt-20">
+    <>
+      <h1 className="font-display text-center text-4xl font-bold text-haiti mt-5">
+        Change Tags
+      </h1>
+      <div className="flex justify-center gap-x-5 mt-5">
         <TagSwapper />
       </div>
-    </div>
+    </>
   );
 }

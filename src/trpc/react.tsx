@@ -1,6 +1,9 @@
 'use client';
 
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
 import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import { useState } from 'react';
@@ -44,6 +47,15 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
       <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
         {props.children}
       </TRPCProvider>
+      <TanStackDevtools
+        plugins={[
+          formDevtoolsPlugin(),
+          {
+            name: 'Tanstack Query',
+            render: <ReactQueryDevtoolsPanel />,
+          },
+        ]}
+      />
     </QueryClientProvider>
   );
 }

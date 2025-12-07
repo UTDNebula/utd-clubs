@@ -1,6 +1,6 @@
 'use client';
 
-import { format, isSameDay } from 'date-fns';
+import { format, isSameDay, isSameYear } from 'date-fns';
 
 type ClientEventTimeProps = {
   startTime: Date;
@@ -13,6 +13,7 @@ const ClientEventTime: React.FC<ClientEventTimeProps> = ({
 }) => {
   return (
     <>
+      {isSameYear(startTime, new Date()) ? null : format(startTime, 'yyyy ')}
       {format(startTime, 'E, MMM d, p')}
       {isSameDay(startTime, endTime) ? (
         <> - {format(endTime, 'p')}</>

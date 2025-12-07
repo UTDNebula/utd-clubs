@@ -1,23 +1,24 @@
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { signInRoute } from '@src/utils/redirect';
 import CreateClubForm from './createForm';
 
 export default async function Page() {
-  const session = await getServerAuthSession();
-  if (!session) redirect(signInRoute('directory/create'));
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect(await signInRoute('directory/create'));
   return (
-    <main>
-      <div className="">
-        <Header />
+    <>
+      <Header />
+      <main className="p-4">
         <CreateClubForm
           user={{
             id: session.user.id,
-            name: session.user.firstName + ' ' + session.user.lastName,
+            name: session.user.name,
           }}
         />
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

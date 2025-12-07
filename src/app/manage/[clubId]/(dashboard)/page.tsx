@@ -1,41 +1,48 @@
-import PillButton from '@src/components/PillButton';
-import {
-  EyeIcon,
-  GroupIcon,
-  PencilIcon,
-  PersonIcon,
-  PlusIcon,
-} from '@src/icons/Icons';
+import EventIcon from '@mui/icons-material/Event';
+import PeopleIcon from '@mui/icons-material/People';
+import Button from '@mui/material/Button';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import { api } from '@src/trpc/server';
+import ClubManageForm from './ClubManageForm';
 
 const Page = async (props: { params: Promise<{ clubId: string }> }) => {
-  const params = await props.params;
+  const { clubId } = await props.params;
+
+  const club = await api.club.byId({ id: clubId });
+  if (!club) {
+    notFound();
+  }
+
   return (
     <>
-      <div className="flex flex-row flex-wrap gap-x-10 gap-y-4 rounded-lg bg-white p-2 shadow-xs">
-        <PillButton
-          href={`/manage/${params.clubId}/edit`}
-          IconComponent={PencilIcon}
-        >
-          Edit Club Data
-        </PillButton>
-        <PillButton
-          href={`/manage/${params.clubId}/edit/officers`}
-          IconComponent={PersonIcon}
-        >
-          Manage Officers
-        </PillButton>
-        <PillButton IconComponent={GroupIcon} disabled>
-          View members
-        </PillButton>
-        <PillButton IconComponent={EyeIcon} disabled>
-          View Events
-        </PillButton>
-        <PillButton
-          href={`/manage/${params.clubId}/create`}
-          IconComponent={PlusIcon}
-        >
-          Create Event
-        </PillButton>
+      <ClubManageHeader club={club} hrefBack="/manage">
+        <Link href={`/manage/${clubId}/members`}>
+          <Button
+            variant="contained"
+            className="normal-case"
+            startIcon={<PeopleIcon />}
+            size="large"
+          >
+            View Members
+          </Button>
+        </Link>
+        <Link href={`/manage/${clubId}/events`}>
+          <Button
+            variant="contained"
+            className="normal-case"
+            startIcon={<EventIcon />}
+            size="large"
+          >
+            View Events
+          </Button>
+        </Link>
+      </ClubManageHeader>
+      <div className="flex w-full flex-col items-center">
+        <div className="w-full max-w-6xl">
+          <ClubManageForm club={club} />
+        </div>
       </div>
     </>
   );

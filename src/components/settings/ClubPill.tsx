@@ -11,7 +11,7 @@ export default function ClubPill({ club }: { club: SelectClub }) {
         height={40}
         className="-pl-1 rounded-full pr-1"
       />
-      <h1 className="truncate p-1 text-xs font-bold">{club.name}</h1>
+      <p className="truncate p-1 text-xs font-bold">{club.name}</p>
       <button className="ml-2 text-xs font-bold text-red-500">X</button>
     </div>
   );

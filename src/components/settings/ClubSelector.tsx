@@ -34,7 +34,7 @@ export default function ClubSelector({ control }: Props) {
                 className="-pl-1 rounded-full pr-1"
               />
             )}
-            <h1 className="truncate p-1 text-xs font-bold">{club.name}</h1>
+            <p className="truncate p-1 text-xs font-bold">{club.name}</p>
 
             <button
               type="button"
