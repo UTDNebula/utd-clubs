@@ -17,7 +17,7 @@ export default function EventEditButton({
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();
-        router.push(`/manage/${clubId}/edit/${eventId}`);
+        router.push(`/manage/${clubId}/events/edit/${eventId}`);
       }}
     >
       <EditIcon />

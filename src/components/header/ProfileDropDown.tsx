@@ -60,7 +60,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
         anchorEl={avatarRef.current}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         transformOrigin={{ horizontal: 'left', vertical: -8 }}
-        disableScrollLock={true}
+        disableScrollLock
         onClose={() => setOpen(false)}
       >
         <Card>

@@ -1,54 +1,48 @@
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
+import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
-import PersonIcon from '@mui/icons-material/Person';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import { api } from '@src/trpc/server';
+import ClubManageForm from './ClubManageForm';
 
 const Page = async (props: { params: Promise<{ clubId: string }> }) => {
-  const params = await props.params;
+  const { clubId } = await props.params;
+
+  const club = await api.club.byId({ id: clubId });
+  if (!club) {
+    notFound();
+  }
+
   return (
     <>
-      <div className="flex flex-row flex-wrap gap-x-10 gap-y-4 rounded-lg bg-white p-2 shadow-xs">
-        <Link href={`/manage/${params.clubId}/edit`}>
+      <ClubManageHeader club={club} hrefBack="/manage">
+        <Link href={`/manage/${clubId}/members`}>
           <Button
             variant="contained"
             className="normal-case"
-            startIcon={<EditIcon />}
+            startIcon={<PeopleIcon />}
             size="large"
           >
-            Edit Club Data
+            View Members
           </Button>
         </Link>
-        <Link href={`/manage/${params.clubId}/edit/officers`}>
+        <Link href={`/manage/${clubId}/events`}>
           <Button
             variant="contained"
             className="normal-case"
-            startIcon={<PersonIcon />}
+            startIcon={<EventIcon />}
             size="large"
           >
-            Manage Officers
+            View Events
           </Button>
         </Link>
-        <Button
-          variant="contained"
-          className="normal-case"
-          startIcon={<PeopleIcon />}
-          size="large"
-          disabled
-        >
-          View Members
-        </Button>
-        <Link href={`/manage/${params.clubId}/create`}>
-          <Button
-            variant="contained"
-            className="normal-case"
-            startIcon={<AddIcon />}
-            size="large"
-          >
-            Create Event
-          </Button>
-        </Link>
+      </ClubManageHeader>
+      <div className="flex w-full flex-col items-center">
+        <div className="w-full max-w-6xl">
+          <ClubManageForm club={club} />
+        </div>
       </div>
     </>
   );
