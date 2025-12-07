@@ -66,11 +66,8 @@ const FormImage = ({
       {file?.name ? (
         <>
           {previewUrl && (
-            <img
-              src={previewUrl}
-              alt="Preview image"
-              className="rounded-lg"
-            />
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={previewUrl} alt="Preview image" className="rounded-lg" />
           )}
           <p className="text-xs text-slate-700">{file.name}</p>
         </>
