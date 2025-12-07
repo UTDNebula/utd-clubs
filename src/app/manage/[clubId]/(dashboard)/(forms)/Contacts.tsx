@@ -103,7 +103,7 @@ const Contacts = ({ club }: ContactsProps) => {
   const scrollDistanceForGradient = 32;
 
   const [addContactBeforeOpacity, setAddContactBeforeOpacity] = useState(0);
-  const [addContactAfterOpacity, setAddContactAfterOpacity] = useState(0);
+  const [addContactAfterOpacity, setAddContactAfterOpacity] = useState(1);
 
   let addContactScrollDistance = 0;
   let addContactScrollDistanceMax = 0;
@@ -158,7 +158,7 @@ const Contacts = ({ club }: ContactsProps) => {
                 <div className="flex sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors sm:rounded-full max-sm:rounded-lg overflow-clip">
                   <Typography
                     variant="button"
-                    className="flex items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 max-sm:pt-2 max-h-full px-4 text-base text-royal normal-case"
+                    className="flex items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 max-sm:pb-2 max-sm:pt-4 max-h-full px-4 text-base text-royal normal-case"
                   >
                     Add Contact...
                   </Typography>
@@ -174,10 +174,16 @@ const Contacts = ({ club }: ContactsProps) => {
                     ].join(' ')}
                   >
                     <div
-                      className="relative p-2 flex gap-2 overflow-x-auto no-scrollbar sm:rounded-full"
+                      className="relative p-2 flex gap-2 overflow-x-auto no-scrollbar sm:rounded-full overscroll-contain"
                       ref={addContactRef}
                       onScroll={updateScrollGradient}
                       onClick={updateScrollGradient}
+                      onWheel={(event) => {
+                        if (!event.deltaY) return;
+                        event.currentTarget.scrollLeft +=
+                          event.deltaX + event.deltaY;
+                        event.preventDefault();
+                      }}
                     >
                       {available.length > 0 &&
                         available.map((platform) => (
