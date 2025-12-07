@@ -43,18 +43,27 @@ export const HomePageSearchBar = () => {
   const originalOffset = useRef<number>(0);
 
   useEffect(() => {
-    if (containerRef.current) {
-      originalOffset.current =
-        containerRef.current.getBoundingClientRect().top + window.scrollY;
-    }
+    const handleResize = () => {
+      if (containerRef.current) {
+        originalOffset.current =
+          containerRef.current.getBoundingClientRect().top + window.scrollY;
+      }
+    };
+    handleResize();
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
       setIsSticky(scrollY > originalOffset.current);
       setHeaderGradientOpacity((scrollY - originalOffset.current) / 128);
     };
     handleScroll();
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   function scroll() {
