@@ -1,51 +1,106 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
-import { uploadToUploadURL } from 'src/utils/uploadImage';
-import { UploadIcon } from '@src/icons/Icons';
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import React, { useEffect, useRef, useState } from 'react';
+import { uploadToUploadURL } from 'src/utils/uploadImage';
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
+function isImageType(type: string) {
+  return ['image/jpeg', 'image/png', 'image/svg+xml'].includes(type);
+}
 
 interface FormImageProps {
+  label?: string;
+  initialValue: string | null;
   onBlur: () => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const FormImage = ({ onBlur, onChange }: FormImageProps) => {
+const FormImage = ({
+  label,
+  initialValue,
+  onBlur,
+  onChange,
+}: FormImageProps) => {
+  const storedInitalValueRef = useRef(initialValue);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  // Handle reset
+  useEffect(() => {
+    if (initialValue === storedInitalValueRef.current) {
+      setFile(null);
+      setPreviewUrl(null);
+    }
+  }, [initialValue]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!isImageType(file.type)) {
+        e.target.value = '';
+        return;
+      }
+      const objectUrl = URL.createObjectURL(file);
+      setPreviewUrl(objectUrl);
+      setFile(file);
+    } else {
+      setPreviewUrl(null);
+      setFile(null);
+    }
+    onChange(e);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLInputElement>) => {
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      if (isImageType(file.type)) {
+        const objectUrl = URL.createObjectURL(file);
+        setPreviewUrl(objectUrl);
+        setFile(file);
+      }
+    }
+  };
+
   return (
-    <Button
-      component="label"
-      role={undefined}
-      variant="contained"
-      tabIndex={-1}
-      startIcon={<CloudUploadIcon />}
-      className="normal-case"
-    >
-      Upload Profile Image
-      <VisuallyHiddenInput
+    <div className="w-full h-96 flex flex-col justify-center items-center gap-2 p-6 rounded-md bg-royal/10 has-[:hover]:bg-royal/20 transition-colors relative">
+      {file?.name ? (
+        <>
+          {previewUrl && (
+            <img
+              src={previewUrl}
+              alt="Preview image"
+              className="flex-1 min-h-0 rounded-lg"
+            />
+          )}
+          <p className="text-xs text-slate-700">{file.name}</p>
+        </>
+      ) : (
+        <>
+          {label && <p className="text-xs font-bold text-slate-700">{label}</p>}
+          <CloudUploadIcon />
+          <p className="text-xs font-bold text-slate-700">
+            Drag or choose a file to upload
+          </p>
+          <p className="text-xs font-bold text-slate-700">JPEG, PNG, or SVG</p>
+        </>
+      )}
+      <input
         type="file"
         accept="image/jpeg,image/png,image/svg+xml"
         onBlur={onBlur}
-        onChange={onChange}
+        onChange={handleChange}
+        onDrop={handleDrop}
+        className="absolute inset-0 cursor-pointer text-transparent"
       />
-    </Button>
+    </div>
   );
 };
 
-export async function uploadFile(file: File, clubId: string, type: 'profile' | 'banner') {
+export async function uploadFile(
+  file: File,
+  clubId: string,
+  type: 'profile' | 'banner',
+) {
   const fileName = `${clubId}-${type}`;
 
   const formData = new FormData();
@@ -59,6 +114,6 @@ export async function uploadFile(file: File, clubId: string, type: 'profile' | '
   }
 
   return result.data;
-};
+}
 
 export default FormImage;

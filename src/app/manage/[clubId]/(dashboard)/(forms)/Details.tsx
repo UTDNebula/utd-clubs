@@ -6,11 +6,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ClubTagEdit } from '@src/components/club/manage/form/ClubTagEdit';
 import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
+import FormImage, {
+  uploadFile,
+} from '@src/components/club/manage/form/FormImage';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubSchema } from '@src/utils/formSchemas';
-import FormImage, { uploadFile } from '@src/components/club/manage/form/FormImage';
 
 type DetailsProps = {
   club: SelectClub;
@@ -36,11 +38,9 @@ const Details = ({ club }: DetailsProps) => {
       // Profile image
       const profileImageIsDirty = formApi.getFieldMeta('profileImage')?.isDirty;
       if (profileImageIsDirty) {
-        console.log('dirty');
         if (profileFile === null) {
           value.profileImage = null;
         } else {
-          console.log('uploading');
           const profileUrl = await uploadFile(profileFile, club.id, 'profile');
           console.log(profileUrl);
           value.profileImage = profileUrl;
@@ -74,6 +74,8 @@ const Details = ({ club }: DetailsProps) => {
             <form.Field name="profileImage">
               {(field) => (
                 <FormImage
+                  label="Profile Image"
+                  initialValue={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => {
                     setProfileFile(e.target.files?.[0] ?? null);

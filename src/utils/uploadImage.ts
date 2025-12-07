@@ -3,7 +3,9 @@
 import { api } from '@src/trpc/server';
 import type { APIResponse } from './storage';
 
-export async function uploadToUploadURL(formData: FormData): Promise<APIResponse<string>> {
+export async function uploadToUploadURL(
+  formData: FormData,
+): Promise<APIResponse<string>> {
   try {
     const file = formData.get('file') as File;
     const fileName = formData.get('fileName') as string;
@@ -17,13 +19,24 @@ export async function uploadToUploadURL(formData: FormData): Promise<APIResponse
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      return { message: 'error', status: 400, data: 'File size must be less than 5MB.' };
+      return {
+        message: 'error',
+        status: 400,
+        data: 'File size must be less than 5MB.',
+      };
     }
 
-    const uploadUrlResponse = await api.storage.createUpload({ objectId: fileName, mime: file.type });
+    const uploadUrlResponse = await api.storage.createUpload({
+      objectId: fileName,
+      mime: file.type,
+    });
 
     if (uploadUrlResponse.message !== 'success') {
-      return { message: 'error', status: 500, data: 'Failed to get upload URL.' };
+      return {
+        message: 'error',
+        status: 500,
+        data: 'Failed to get upload URL.',
+      };
     }
 
     const uploadUrl = uploadUrlResponse.data;
@@ -35,7 +48,7 @@ export async function uploadToUploadURL(formData: FormData): Promise<APIResponse
       method: 'PUT',
       headers: {
         'content-type': file.type,
-        'x-goog-content-length-range': `0,${1000000}`
+        'x-goog-content-length-range': `0,${1000000}`,
       },
       body: blob,
     });
@@ -56,6 +69,10 @@ export async function uploadToUploadURL(formData: FormData): Promise<APIResponse
       data: fileResponse.data.media_link,
     };
   } catch (error) {
-    return { message: 'error', status: 500, data: error instanceof Error ? error.message : 'Failed to upload file.' };
+    return {
+      message: 'error',
+      status: 500,
+      data: error instanceof Error ? error.message : 'Failed to upload file.',
+    };
   }
 }

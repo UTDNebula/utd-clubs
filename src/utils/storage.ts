@@ -1,5 +1,4 @@
 import 'server-only';
-
 import { addMinutes } from 'date-fns';
 
 type GetPostResponse = {
