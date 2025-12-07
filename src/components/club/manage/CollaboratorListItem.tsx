@@ -2,7 +2,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { IconButton, Tooltip, Typography } from '@mui/material';
+import { eq } from 'drizzle-orm';
+import { useEffect, useState } from 'react';
 import type z from 'zod';
+import { db } from '@src/server/db';
+import { user } from '@src/server/db/schema/auth';
 import { withForm } from '@src/utils/form';
 import { editOfficerSchema } from '@src/utils/formSchemas';
 
@@ -40,12 +44,31 @@ const CollaboratorListItem = withForm({
       form.setFieldValue('officers', next);
     };
 
+    const userId = form.getFieldValue(`officers[${index}].userId`);
+    const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        // const userData = await db.query.user.findFirst({
+        //   where: eq(user, userId),
+        // });
+        // setUserEmail(userData?.email);
+      };
+      fetchData();
+    }, [userId]);
+
     return (
       <div className="flex items-center gap-2 p-2 hover:bg-slate-100 transition-colors rounded-lg">
-        <Typography className="grow px-4">
-          <span>{form.getFieldValue(`officers[${index}].name`)}</span>
-          {self && <span>&nbsp;(You)</span>}
-        </Typography>
+        <div className="grow px-4">
+          <Typography variant="body1">
+            <span>{form.getFieldValue(`officers[${index}].name`)}</span>
+            {self && <span>&nbsp;(You)</span>}
+          </Typography>
+          <Typography variant="caption">
+            {/* <span>{form.getFieldValue(`officers[${index}].userId`)}</span> */}
+            <span>{userEmail}</span>
+          </Typography>
+        </div>
         {form.getFieldValue(`officers[${index}].position`) == 'President' && (
           <Typography variant="caption" className="self-center">
             Admin
