@@ -41,9 +41,19 @@ const Details = ({ club }: DetailsProps) => {
         if (profileFile === null) {
           value.profileImage = null;
         } else {
-          const profileUrl = await uploadFile(profileFile, club.id, 'profile');
-          console.log(profileUrl);
-          value.profileImage = profileUrl;
+          const url = await uploadFile(profileFile, club.id, 'profile');
+          value.profileImage = url;
+        }
+      }
+
+      // Banner image
+      const bannerImageIsDirty = formApi.getFieldMeta('bannerImage')?.isDirty;
+      if (bannerImageIsDirty) {
+        if (bannerFile === null) {
+          value.bannerImage = null;
+        } else {
+          const url = await uploadFile(bannerFile, club.id, 'banner');
+          value.bannerImage = url;
         }
       }
 
@@ -59,6 +69,7 @@ const Details = ({ club }: DetailsProps) => {
   });
 
   const [profileFile, setProfileFile] = useState<File | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
 
   return (
     <form
@@ -70,7 +81,7 @@ const Details = ({ club }: DetailsProps) => {
     >
       <FormFieldSet legend="Details">
         <div className="m-2 flex flex-col gap-4">
-          <div className="flex flex-wrap gap-4">
+          <div className="flex gap-4">
             <form.Field name="profileImage">
               {(field) => (
                 <FormImage
@@ -83,7 +94,23 @@ const Details = ({ club }: DetailsProps) => {
                     if (fakeUrl !== null) {
                       fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
                     }
-                    console.log(fakeUrl);
+                    field.handleChange(fakeUrl);
+                  }}
+                />
+              )}
+            </form.Field>
+            <form.Field name="bannerImage">
+              {(field) => (
+                <FormImage
+                  label="Banner Image"
+                  initialValue={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => {
+                    setBannerFile(e.target.files?.[0] ?? null);
+                    let fakeUrl = e.target.files?.[0]?.name ?? null;
+                    if (fakeUrl !== null) {
+                      fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+                    }
                     field.handleChange(fakeUrl);
                   }}
                 />

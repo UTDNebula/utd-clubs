@@ -69,7 +69,7 @@ const FormImage = ({
             <img
               src={previewUrl}
               alt="Preview image"
-              className="flex-1 min-h-0 rounded-lg"
+              className="rounded-lg"
             />
           )}
           <p className="text-xs text-slate-700">{file.name}</p>
