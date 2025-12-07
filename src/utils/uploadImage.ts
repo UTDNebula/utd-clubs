@@ -1,33 +1,29 @@
 'use server';
 
-import { callStorageAPI, getUploadURL } from 'src/utils/storage';
+import { api } from '@src/trpc/server';
+import type { APIResponse } from './storage';
 
-export async function uploadImage(
-  formData: FormData,
-): Promise<{ success: boolean; url?: string; error?: string }> {
+export async function uploadToUploadURL(formData: FormData): Promise<APIResponse<string>> {
   try {
     const file = formData.get('file') as File;
-    const clubId = formData.get('clubId') as string;
     const fileName = formData.get('fileName') as string;
 
     if (!file) {
-      return { success: false, error: 'No file uploaded' };
+      return { message: 'error', status: 400, data: 'No file uploaded.' };
     }
 
     if (!file.type.startsWith('image/')) {
-      return { success: false, error: 'File must be an image' };
+      return { message: 'error', status: 400, data: 'File must be an image.' };
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      return { success: false, error: 'File size must be less than 5MB' };
+      return { message: 'error', status: 400, data: 'File size must be less than 5MB.' };
     }
 
-    const objectID = `${clubId}/events/${fileName}`;
+    const uploadUrlResponse = await api.storage.createUpload({ objectId: fileName, mime: file.type });
 
-    const uploadUrlResponse = await getUploadURL(objectID, file.type);
-
-    if (uploadUrlResponse.message === 'error') {
-      return { success: false, error: 'Failed to get upload URL' };
+    if (uploadUrlResponse.message !== 'success') {
+      return { message: 'error', status: 500, data: 'Failed to get upload URL.' };
     }
 
     const uploadUrl = uploadUrlResponse.data;
@@ -38,30 +34,28 @@ export async function uploadImage(
     const uploadResponse = await fetch(uploadUrl, {
       method: 'PUT',
       headers: {
-        'Content-Type': file.type,
+        'content-type': file.type,
+        'x-goog-content-length-range': `0,${1000000}`
       },
       body: blob,
     });
 
     if (!uploadResponse.ok) {
-      return { success: false, error: 'Failed to upload file' };
+      return { message: 'error', status: 500, data: 'Failed to upload file.' };
     }
 
-    const fileResponse = await callStorageAPI('GET', objectID);
+    const fileResponse = await api.storage.get({ objectId: fileName });
 
-    if (fileResponse.message === 'error') {
-      return { success: false, error: 'Failed to get file URL' };
+    if (fileResponse.message !== 'success') {
+      return { message: 'error', status: 500, data: 'Failed to get file URL.' };
     }
 
     return {
-      success: true,
-      url: fileResponse.data.media_link,
+      message: 'success',
+      status: 200,
+      data: fileResponse.data.media_link,
     };
   } catch (error) {
-    console.error('Upload error:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to upload file',
-    };
+    return { message: 'error', status: 500, data: error instanceof Error ? error.message : 'Failed to upload file.' };
   }
 }

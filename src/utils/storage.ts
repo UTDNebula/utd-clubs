@@ -1,5 +1,6 @@
-import { addMinutes } from 'date-fns';
 import 'server-only';
+
+import { addMinutes } from 'date-fns';
 
 type GetPostResponse = {
   bucket: string;
@@ -15,7 +16,7 @@ type GetPostResponse = {
 
 type DeleteResponse = 1;
 
-type APIResponse<T> =
+export type APIResponse<T> =
   | {
       message: 'success';
       status: number;
@@ -63,7 +64,7 @@ export async function callStorageAPI<T>(
 
 export async function getUploadURL(objectID: string, type: string) {
   const res = await fetch(
-    `${process.env.NEBULA_API_URL}/storage/${process.env.NEBULA_API_STORAGE_BUCKET}/${objectID}`,
+    `${process.env.NEBULA_API_URL}/storage/${process.env.NEBULA_API_STORAGE_BUCKET}/${objectID}/url`,
     {
       method: 'PUT',
       headers: {
@@ -73,7 +74,7 @@ export async function getUploadURL(objectID: string, type: string) {
       body: JSON.stringify({
         expiration: addMinutes(Date.now(), 5),
         headers: [
-          `Content-type:${type}`,
+          `content-type:${type}`,
           `x-goog-content-length-range:0,${1000000}`,
         ],
         method: 'PUT',

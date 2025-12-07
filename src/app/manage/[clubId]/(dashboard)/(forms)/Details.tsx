@@ -10,6 +10,7 @@ import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubSchema } from '@src/utils/formSchemas';
+import FormImage, { uploadFile } from '@src/components/club/manage/form/FormImage';
 
 type DetailsProps = {
   club: SelectClub;
@@ -32,6 +33,20 @@ const Details = ({ club }: DetailsProps) => {
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
+      // Profile image
+      const profileImageIsDirty = formApi.getFieldMeta('profileImage')?.isDirty;
+      if (profileImageIsDirty) {
+        console.log('dirty');
+        if (profileFile === null) {
+          value.profileImage = null;
+        } else {
+          console.log('uploading');
+          const profileUrl = await uploadFile(profileFile, club.id, 'profile');
+          console.log(profileUrl);
+          value.profileImage = profileUrl;
+        }
+      }
+
       const updated = await editData.mutateAsync(value);
       if (updated) {
         setDefaultValues(updated);
@@ -43,6 +58,8 @@ const Details = ({ club }: DetailsProps) => {
     },
   });
 
+  const [profileFile, setProfileFile] = useState<File | null>(null);
+
   return (
     <form
       onSubmit={(e) => {
@@ -53,6 +70,24 @@ const Details = ({ club }: DetailsProps) => {
     >
       <FormFieldSet legend="Details">
         <div className="m-2 flex flex-col gap-4">
+          <div className="flex flex-wrap gap-4">
+            <form.Field name="profileImage">
+              {(field) => (
+                <FormImage
+                  onBlur={field.handleBlur}
+                  onChange={(e) => {
+                    setProfileFile(e.target.files?.[0] ?? null);
+                    let fakeUrl = e.target.files?.[0]?.name ?? null;
+                    if (fakeUrl !== null) {
+                      fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+                    }
+                    console.log(fakeUrl);
+                    field.handleChange(fakeUrl);
+                  }}
+                />
+              )}
+            </form.Field>
+          </div>
           <div className="flex flex-wrap gap-4">
             <form.Field name="name">
               {(field) => (
