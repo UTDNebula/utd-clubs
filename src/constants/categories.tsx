@@ -1,11 +1,9 @@
-import {
-  AboutIcon,
-  AdminIcon,
-  CommunityIcon,
-  EventsIcon,
-  HomeIcon,
-  type IconType,
-} from '../icons/Icons';
+import type { SvgIconComponent } from '@mui/icons-material';
+import EventIcon from '@mui/icons-material/Event';
+import GavelIcon from '@mui/icons-material/Gavel';
+import HelpIcon from '@mui/icons-material/Help';
+import HomeIcon from '@mui/icons-material/Home';
+import PeopleIcon from '@mui/icons-material/People';
 
 export const mainCats = ['Home', 'My Community', 'Events'] as const;
 export const moreCats = ['About'] as const;
@@ -16,14 +14,14 @@ export type allCats =
   | (typeof moreCats)[number]
   | (typeof personalCats)[number];
 export const IconMap: {
-  [key in allCats[number]]: IconType;
+  [key in allCats[number]]: SvgIconComponent;
 } = {
   Home: HomeIcon,
-  'My Community': CommunityIcon,
-  Events: EventsIcon,
-  About: AboutIcon,
+  'My Community': PeopleIcon,
+  Events: EventIcon,
+  About: HelpIcon,
   'Manage Clubs': HomeIcon,
-  Admin: AdminIcon,
+  Admin: GavelIcon,
 };
 
 export const routeMap: {
