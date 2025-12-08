@@ -26,11 +26,12 @@ type ClubManageHeaderBaseProps = {
 };
 
 type ClubManageHeaderProps =
-  | (ClubManageHeaderBaseProps & { club: Club; loading?: never })
+  | (ClubManageHeaderBaseProps & { club?: Club; loading?: never })
   | (ClubManageHeaderBaseProps & { club?: never; loading: true });
 
 /**
- * Requires either a `club` prop or a `loading` prop flag
+ * Requires either a `club` prop or a `loading` prop flag.
+ * `club` is only optional on the choose a club page.
  */
 const ClubManageHeader = ({
   club,
@@ -52,12 +53,19 @@ const ClubManageHeader = ({
       <div className="flex min-h-10.5 flex-row items-center gap-2">
         <BackButton href={hrefBack} />
         <Breadcrumbs aria-label="breadcrumb">
-          <Link href="/manage">Manage</Link>
-          {club && (
-            <Link className="font-bold" href={`/manage/${club.id}`}>
-              {club.name}
-            </Link>
+          {club || loading ? (
+            <Link href="/manage">Manage</Link>
+          ) : (
+            <Typography>Manage</Typography>
           )}
+          {club &&
+            (normalizedPath?.length ? (
+              <Link className="font-bold" href={`/manage/${club.id}`}>
+                {club.name}
+              </Link>
+            ) : (
+              <Typography className="font-bold">{club.name}</Typography>
+            ))}
           {loading && <Skeleton variant="text" className="w-16" />}
           {/* All but last path items can be links */}
           {normalizedPath?.slice(0, -1).map(({ text, href }, index) => {
