@@ -1,4 +1,19 @@
+import Skeleton from '@mui/material/Skeleton';
+import ClubManageHeader from '@src/components/header/ClubManageHeader';
+
 export default function Loading() {
-  // Put back button here that doesn't call API
-  return <p>Loading events...</p>;
+  return (
+    <>
+      <ClubManageHeader loading path={['Events']}>
+        <div className="flex gap-x-10">
+          <Skeleton
+            variant="rounded"
+            width={128}
+            height={40}
+            className="rounded-full"
+          />
+        </div>
+      </ClubManageHeader>
+    </>
+  );
 }
