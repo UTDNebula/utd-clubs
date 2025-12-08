@@ -1,6 +1,13 @@
 'use client';
 
-import { Autocomplete, TextField, Typography } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import {
+  Autocomplete,
+  CircularProgress,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -11,7 +18,7 @@ export const ClubSearchBar = () => {
   const [input, setInput] = useState('');
   const debouncedSearch = useDebounce(input, 300);
   const api = useTRPC();
-  const { data } = useQuery(
+  const { data, isFetching } = useQuery(
     api.club.byName.queryOptions(
       { name: debouncedSearch },
       { enabled: !!debouncedSearch },
@@ -38,6 +45,18 @@ export const ClubSearchBar = () => {
           slotProps={{
             input: {
               ...params.InputProps,
+              endAdornment: (
+                <div className="flex gap-2 items-center">
+                  <InputAdornment position="end">
+                    {params.InputProps.endAdornment}
+                    {isFetching ? (
+                      <CircularProgress color="inherit" size={24} />
+                    ) : (
+                      <SearchIcon />
+                    )}
+                  </InputAdornment>
+                </div>
+              ),
               type: 'search',
               sx: {
                 background: 'white',
