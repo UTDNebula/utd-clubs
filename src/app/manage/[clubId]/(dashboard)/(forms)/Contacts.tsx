@@ -3,7 +3,7 @@
 import { Button, Typography } from '@mui/material';
 import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import z from 'zod';
 import ContactListItem from '@src/components/club/manage/ContactListItem';
 import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
