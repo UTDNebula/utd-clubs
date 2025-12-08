@@ -4,6 +4,7 @@ import GavelIcon from '@mui/icons-material/Gavel';
 import HelpIcon from '@mui/icons-material/Help';
 import HomeIcon from '@mui/icons-material/Home';
 import PeopleIcon from '@mui/icons-material/People';
+import TuneIcon from '@mui/icons-material/Tune';
 
 export const mainCats = ['Home', 'My Community', 'Events'] as const;
 export const moreCats = ['About'] as const;
@@ -20,7 +21,7 @@ export const IconMap: {
   'My Community': PeopleIcon,
   Events: EventIcon,
   About: HelpIcon,
-  'Manage Clubs': HomeIcon,
+  'Manage Clubs': TuneIcon,
   Admin: GavelIcon,
 };
 

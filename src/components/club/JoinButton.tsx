@@ -2,6 +2,7 @@
 
 import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
+import TuneIcon from '@mui/icons-material/Tune';
 import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
@@ -52,6 +53,7 @@ const JoinButton = ({ isHeader, clubId }: JoinButtonProps) => {
           variant="contained"
           size={isHeader ? 'large' : 'small'}
           className="normal-case"
+          startIcon={<TuneIcon />}
         >
           Manage
         </Button>
