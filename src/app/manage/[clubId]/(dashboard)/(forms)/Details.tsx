@@ -88,7 +88,7 @@ const Details = ({ club }: DetailsProps) => {
       <FormFieldSet legend="Details">
         <div className="m-2 flex flex-col gap-4">
           <div className="flex flex-wrap gap-4">
-            <div className="grow lg:max-h-96 max-lg:max-h-48">
+            <div className="grow w-48 lg:max-h-96 max-lg:max-h-48">
               <form.Field name="profileImage">
                 {(field) => (
                   <FormImage
@@ -108,7 +108,7 @@ const Details = ({ club }: DetailsProps) => {
                 )}
               </form.Field>
             </div>
-            <div className="grow lg:max-h-96 max-lg:max-h-48">
+            <div className="grow w-48 lg:max-h-96 max-lg:max-h-48">
               <form.Field name="bannerImage">
                 {(field) => (
                   <FormImage
