@@ -28,24 +28,24 @@ type APIResponse<T> =
     };
 export async function callStorageAPI(
   method: 'GET',
-  objectID: string,
+  objectId: string,
 ): Promise<APIResponse<GetPostResponse>>;
 export async function callStorageAPI(
   method: 'POST',
-  objectID: string,
+  objectId: string,
   body: Blob,
 ): Promise<APIResponse<GetPostResponse>>;
 export async function callStorageAPI(
   method: 'DELETE',
-  objectID: string,
+  objectId: string,
 ): Promise<APIResponse<DeleteResponse>>;
 export async function callStorageAPI<T>(
   method: 'GET' | 'POST' | 'DELETE',
-  objectID: string,
+  objectId: string,
   body?: Blob,
 ): Promise<APIResponse<T>> {
   const res = await fetch(
-    `${process.env.NEBULA_API_URL}/storage/${process.env.NEBULA_API_STORAGE_BUCKET}/${objectID}`,
+    `${process.env.NEBULA_API_URL}/storage/${process.env.NEBULA_API_STORAGE_BUCKET}/${objectId}`,
     {
       method,
       headers: {
@@ -61,9 +61,9 @@ export async function callStorageAPI<T>(
   return data;
 }
 
-export async function getUploadURL(objectID: string, type: string) {
+export async function getUploadURL(objectId: string, type: string) {
   const res = await fetch(
-    `${process.env.NEBULA_API_URL}/storage/${process.env.NEBULA_API_STORAGE_BUCKET}/${objectID}/url`,
+    `${process.env.NEBULA_API_URL}/storage/${process.env.NEBULA_API_STORAGE_BUCKET}/${objectId}/url`,
     {
       method: 'PUT',
       headers: {
