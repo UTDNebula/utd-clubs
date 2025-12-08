@@ -2,7 +2,7 @@
 
 import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, Skeleton } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useTRPC } from '@src/trpc/react';
@@ -12,7 +12,7 @@ type buttonProps = {
   isHeader?: boolean;
   eventId: string;
 };
-const EventLikeButton = ({ isHeader, eventId }: buttonProps) => {
+const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
@@ -90,4 +90,31 @@ const EventLikeButton = ({ isHeader, eventId }: buttonProps) => {
     </IconButton>
   );
 };
-export default EventLikeButton;
+
+export default EventRegisterButton;
+
+type EventRegisterButtonSkeletonProps = {
+  isHeader?: boolean;
+};
+
+export const EventRegisterButtonSkeleton = ({
+  isHeader,
+}: EventRegisterButtonSkeletonProps) => {
+  if (isHeader) {
+    return (
+      <Skeleton variant="rounded" className="rounded-full">
+        <Button variant="contained" className="normal-case" size="large">
+          Register
+        </Button>
+      </Skeleton>
+    );
+  }
+
+  return (
+    <Skeleton variant="rounded" className="rounded-full">
+      <IconButton>
+        <AddIcon />
+      </IconButton>
+    </Skeleton>
+  );
+};

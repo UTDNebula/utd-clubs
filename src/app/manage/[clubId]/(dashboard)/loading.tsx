@@ -27,7 +27,7 @@ export default function Loading() {
         </div>
       </ClubManageHeader>
       <div className="flex w-full flex-col items-center">
-        <div className="flex flex-col gap-8 w-full max-w-6xl">
+        <div className="w-full max-w-6xl flex flex-col gap-8">
           <Skeleton variant="rounded" height={128} />
           <Skeleton variant="rounded" height={128} />
           <Skeleton variant="rounded" height={128} />
