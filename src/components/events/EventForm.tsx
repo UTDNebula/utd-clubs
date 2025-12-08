@@ -7,6 +7,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
+import FormFieldSet, {
+  FormFieldSetSkeleton,
+} from '@src/components/club/manage/form/FormFieldSet';
 import FormImage from '@src/components/club/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -14,6 +17,7 @@ import { type RouterOutputs } from '@src/trpc/shared';
 import { useAppForm } from '@src/utils/form';
 import { createEventSchema } from '@src/utils/formSchemas';
 import EventCardPreview from './EventCardPreview';
+import EventCardSkeleton from './EventCardSkeleton';
 
 type EventFormProps =
   | {
@@ -155,159 +159,163 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="grow flex flex-col gap-4"
+        className="grow flex flex-col gap-4 max-w-full"
       >
-        <form.Field name="image">
-          {(field) => (
-            <FormImage
-              label="Profile Image"
-              initialValue={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e) => {
-                const file = e.target.files?.[0] ?? null;
-                setPreviewUrl(file ? URL.createObjectURL(file) : null);
-                setFile(file);
-                let fakeUrl = file?.name ?? null;
-                if (fakeUrl !== null) {
-                  fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+        <FormFieldSet>
+          <form.Field name="image">
+            {(field) => (
+              <FormImage
+                label="Profile Image"
+                initialValue={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => {
+                  const file = e.target.files?.[0] ?? null;
+                  setPreviewUrl(file ? URL.createObjectURL(file) : null);
+                  setFile(file);
+                  let fakeUrl = file?.name ?? null;
+                  if (fakeUrl !== null) {
+                    fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+                  }
+                  field.handleChange(fakeUrl);
+                }}
+              />
+            )}
+          </form.Field>
+          <form.Field name="name">
+            {(field) => (
+              <TextField
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className="[&>.MuiInputBase-root]:bg-white"
+                size="small"
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ')
+                    : undefined
                 }
-                field.handleChange(fakeUrl);
-              }}
-            />
-          )}
-        </form.Field>
-        <form.Field name="name">
-          {(field) => (
-            <TextField
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.target.value)}
-              className="[&>.MuiInputBase-root]:bg-white"
-              size="small"
-              error={!field.state.meta.isValid}
-              helperText={
-                !field.state.meta.isValid
-                  ? field.state.meta.errors
-                      .map((err) => err?.message)
-                      .join('. ')
-                  : undefined
-              }
-              label="Name"
-            />
-          )}
-        </form.Field>
-        <form.Field name="location">
-          {(field) => (
-            <TextField
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.target.value)}
-              className="[&>.MuiInputBase-root]:bg-white"
-              size="small"
-              error={!field.state.meta.isValid}
-              helperText={
-                !field.state.meta.isValid
-                  ? field.state.meta.errors
-                      .map((err) => err?.message)
-                      .join('. ')
-                  : undefined
-              }
-              label="Location"
-            />
-          )}
-        </form.Field>
-        <form.Field name="description">
-          {(field) => (
-            <TextField
-              onChange={(e) => {
-                field.handleChange(e.target.value);
-              }}
-              onBlur={field.handleBlur}
-              value={field.state.value}
-              label="Description"
-              className="[&>.MuiInputBase-root]:bg-white"
-              multiline
-              minRows={4}
-              error={!field.state.meta.isValid}
-              helperText={
-                !field.state.meta.isValid ? (
-                  field.state.meta.errors.map((err) => err?.message).join('. ')
-                ) : (
-                  <span>
-                    We support{' '}
-                    <a
-                      href="https://www.markdownguide.org/basic-syntax/"
-                      rel="noreferrer"
-                      target="_blank"
-                      className="text-royal underline"
-                    >
-                      Markdown
-                    </a>
-                    !
-                  </span>
-                )
-              }
-            />
-          )}
-        </form.Field>
-        <div className="flex gap-4">
-          <form.Field name="startTime">
-            {(field) => (
-              <DateTimePicker
-                onChange={(value) => value && field.handleChange(value)}
-                value={field.state.value}
-                label="Date Founded"
-                className="[&>.MuiPickersInputBase-root]:bg-white"
-                slotProps={{
-                  actionBar: {
-                    actions: ['accept'],
-                  },
-                  textField: {
-                    size: 'small',
-                    error: !field.state.meta.isValid,
-                    helperText: field.state.meta.isValid
-                      ? field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ')
-                      : undefined,
-                  },
-                }}
+                label="Name"
               />
             )}
           </form.Field>
-          <form.Field name="endTime">
+          <form.Field name="location">
             {(field) => (
-              <DateTimePicker
-                onChange={(value) => value && field.handleChange(value)}
+              <TextField
                 value={field.state.value}
-                label="Date Founded"
-                className="[&>.MuiPickersInputBase-root]:bg-white"
-                slotProps={{
-                  actionBar: {
-                    actions: ['accept'],
-                  },
-                  textField: {
-                    size: 'small',
-                    error: !field.state.meta.isValid,
-                    helperText: field.state.meta.isValid
-                      ? field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ')
-                      : undefined,
-                  },
-                }}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className="[&>.MuiInputBase-root]:bg-white"
+                size="small"
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ')
+                    : undefined
+                }
+                label="Location"
               />
             )}
           </form.Field>
-        </div>
-        <div className="flex flex-wrap justify-end items-center gap-2">
-          <form.AppForm>
-            <form.FormResetButton />
-          </form.AppForm>
-          <form.AppForm>
-            <form.FormSubmitButton />
-          </form.AppForm>
-        </div>
+          <form.Field name="description">
+            {(field) => (
+              <TextField
+                onChange={(e) => {
+                  field.handleChange(e.target.value);
+                }}
+                onBlur={field.handleBlur}
+                value={field.state.value}
+                label="Description"
+                className="[&>.MuiInputBase-root]:bg-white"
+                multiline
+                minRows={4}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid ? (
+                    field.state.meta.errors
+                      .map((err) => err?.message)
+                      .join('. ')
+                  ) : (
+                    <span>
+                      We support{' '}
+                      <a
+                        href="https://www.markdownguide.org/basic-syntax/"
+                        rel="noreferrer"
+                        target="_blank"
+                        className="text-royal underline"
+                      >
+                        Markdown
+                      </a>
+                      !
+                    </span>
+                  )
+                }
+              />
+            )}
+          </form.Field>
+          <div className="flex gap-4">
+            <form.Field name="startTime">
+              {(field) => (
+                <DateTimePicker
+                  onChange={(value) => value && field.handleChange(value)}
+                  value={field.state.value}
+                  label="Date Founded"
+                  className="[&>.MuiPickersInputBase-root]:bg-white"
+                  slotProps={{
+                    actionBar: {
+                      actions: ['accept'],
+                    },
+                    textField: {
+                      size: 'small',
+                      error: !field.state.meta.isValid,
+                      helperText: field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ')
+                        : undefined,
+                    },
+                  }}
+                />
+              )}
+            </form.Field>
+            <form.Field name="endTime">
+              {(field) => (
+                <DateTimePicker
+                  onChange={(value) => value && field.handleChange(value)}
+                  value={field.state.value}
+                  label="Date Founded"
+                  className="[&>.MuiPickersInputBase-root]:bg-white"
+                  slotProps={{
+                    actionBar: {
+                      actions: ['accept'],
+                    },
+                    textField: {
+                      size: 'small',
+                      error: !field.state.meta.isValid,
+                      helperText: field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ')
+                        : undefined,
+                    },
+                  }}
+                />
+              )}
+            </form.Field>
+          </div>
+          <div className="flex flex-wrap justify-end items-center gap-2">
+            <form.AppForm>
+              <form.FormResetButton />
+            </form.AppForm>
+            <form.AppForm>
+              <form.FormSubmitButton />
+            </form.AppForm>
+          </div>
+        </FormFieldSet>
       </form>
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-bold">Preview</h2>
@@ -323,4 +331,19 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     </div>
   );
 };
+
 export default EventForm;
+
+export const EventFormSkeleton = () => {
+  return (
+    <div className="flex w-full flex-wrap justify-start gap-10">
+      <div className="grow flex flex-col gap-4 max-w-full">
+        <FormFieldSetSkeleton />
+      </div>
+      <div className="flex flex-col gap-4">
+        <h2 className="text-lg font-bold">Preview</h2>
+        <EventCardSkeleton />
+      </div>
+    </div>
+  );
+};

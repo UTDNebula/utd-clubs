@@ -27,16 +27,18 @@ export default async function Page({
         path={[{ text: 'Events', href: `/manage/${clubId}/events` }]}
         hrefBack={`/manage/${clubId}/`}
       >
-        <Link href={`/manage/${clubId}/events/create`}>
-          <Button
-            variant="contained"
-            className="normal-case"
-            startIcon={<AddIcon />}
-            size="large"
-          >
-            Create Event
-          </Button>
-        </Link>
+        <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
+          <Link href={`/manage/${clubId}/events/create`}>
+            <Button
+              variant="contained"
+              className="normal-case"
+              startIcon={<AddIcon />}
+              size="large"
+            >
+              Create Event
+            </Button>
+          </Link>
+        </div>
       </ClubManageHeader>
       <div
         className="group flex flex-wrap w-full justify-evenly items-center pt-4 gap-4"

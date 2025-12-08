@@ -87,43 +87,47 @@ const Details = ({ club }: DetailsProps) => {
     >
       <FormFieldSet legend="Details">
         <div className="m-2 flex flex-col gap-4">
-          <div className="flex gap-4">
-            <form.Field name="profileImage">
-              {(field) => (
-                <FormImage
-                  label="Profile Image"
-                  initialValue={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    setProfileFile(file);
-                    let fakeUrl = file?.name ?? null;
-                    if (fakeUrl !== null) {
-                      fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
-                    }
-                    field.handleChange(fakeUrl);
-                  }}
-                />
-              )}
-            </form.Field>
-            <form.Field name="bannerImage">
-              {(field) => (
-                <FormImage
-                  label="Banner Image"
-                  initialValue={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    setBannerFile(file);
-                    let fakeUrl = file?.name ?? null;
-                    if (fakeUrl !== null) {
-                      fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
-                    }
-                    field.handleChange(fakeUrl);
-                  }}
-                />
-              )}
-            </form.Field>
+          <div className="flex flex-wrap gap-4">
+            <div className="grow w-48 lg:max-h-96 max-lg:max-h-48">
+              <form.Field name="profileImage">
+                {(field) => (
+                  <FormImage
+                    label="Profile Image"
+                    initialValue={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      setProfileFile(file);
+                      let fakeUrl = file?.name ?? null;
+                      if (fakeUrl !== null) {
+                        fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+                      }
+                      field.handleChange(fakeUrl);
+                    }}
+                  />
+                )}
+              </form.Field>
+            </div>
+            <div className="grow w-48 lg:max-h-96 max-lg:max-h-48">
+              <form.Field name="bannerImage">
+                {(field) => (
+                  <FormImage
+                    label="Banner Image"
+                    initialValue={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      setBannerFile(file);
+                      let fakeUrl = file?.name ?? null;
+                      if (fakeUrl !== null) {
+                        fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+                      }
+                      field.handleChange(fakeUrl);
+                    }}
+                  />
+                )}
+              </form.Field>
+            </div>
           </div>
           <div className="flex flex-wrap gap-4">
             <form.Field name="name">
@@ -132,7 +136,7 @@ const Details = ({ club }: DetailsProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="grow [&>.MuiInputBase-root]:bg-white"
+                  className="grow-100 [&>.MuiInputBase-root]:bg-white"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
@@ -152,7 +156,7 @@ const Details = ({ club }: DetailsProps) => {
                   onChange={(value) => field.handleChange(value)}
                   value={field.state.value}
                   label="Date Founded"
-                  className="[&>.MuiPickersInputBase-root]:bg-white"
+                  className="grow [&>.MuiPickersInputBase-root]:bg-white"
                   slotProps={{
                     actionBar: {
                       actions: ['accept'],

@@ -108,7 +108,7 @@ const Contacts = ({ club }: ContactsProps) => {
       <FormFieldSet legend="Contact Information">
         <form.Field name="contacts">
           {(field) => (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 max-w-full">
               {field.state.value.map((value, index) => (
                 <ContactListItem
                   key={value.platform}
@@ -117,21 +117,29 @@ const Contacts = ({ club }: ContactsProps) => {
                   removeItem={removeItem}
                 />
               ))}
-              <div className="ml-2 p-2 flex flex-wrap items-center gap-2">
-                <Typography className="mr-2">Add Contact:</Typography>
-                {available.length > 0 &&
-                  available.map((platform) => (
-                    <Button
-                      key={platform}
-                      variant="contained"
-                      value={platform}
-                      className="normal-case"
-                      onClick={() => field.pushValue({ platform, url: '' })}
-                    >
-                      {contactNames[platform]}
-                    </Button>
-                  ))}
-              </div>
+              {available.length > 0 && (
+                <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors rounded-lg">
+                  <Typography
+                    variant="button"
+                    className="flex shrink-0 items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 sm:pl-4 max-sm:pt-4 max-h-full text-base text-slate-600 normal-case"
+                  >
+                    Add Contact...
+                  </Typography>
+                  <div className="flex flex-wrap relative p-2 gap-2 overflow-x-auto">
+                    {available.map((platform) => (
+                      <Button
+                        key={platform}
+                        variant="contained"
+                        value={platform}
+                        className="normal-case min-w-fit"
+                        onClick={() => field.pushValue({ platform, url: '' })}
+                      >
+                        {contactNames[platform]}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </form.Field>

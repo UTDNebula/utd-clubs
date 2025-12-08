@@ -43,60 +43,64 @@ const CreateClubForm = () => {
             page.
           </p>
         </div>
-        <form.Field name="name">
-          {(field) => (
-            <TextField
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.target.value)}
-              className="grow [&>.MuiInputBase-root]:bg-white"
-              size="small"
-              error={!field.state.meta.isValid}
-              helperText={
-                !field.state.meta.isValid
-                  ? field.state.meta.errors
+        <div className="m-2 mt-0 flex flex-col gap-4">
+          <form.Field name="name">
+            {(field) => (
+              <TextField
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className="grow [&>.MuiInputBase-root]:bg-white"
+                size="small"
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ')
+                    : undefined
+                }
+                label="Name"
+              />
+            )}
+          </form.Field>
+          <form.Field name="description">
+            {(field) => (
+              <TextField
+                onChange={(e) => {
+                  field.handleChange(e.target.value);
+                }}
+                onBlur={field.handleBlur}
+                value={field.state.value}
+                label="Description"
+                className="[&>.MuiInputBase-root]:bg-white"
+                multiline
+                minRows={4}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid ? (
+                    field.state.meta.errors
                       .map((err) => err?.message)
                       .join('. ')
-                  : undefined
-              }
-              label="Name"
-            />
-          )}
-        </form.Field>
-        <form.Field name="description">
-          {(field) => (
-            <TextField
-              onChange={(e) => {
-                field.handleChange(e.target.value);
-              }}
-              onBlur={field.handleBlur}
-              value={field.state.value}
-              label="Description"
-              className="[&>.MuiInputBase-root]:bg-white"
-              multiline
-              minRows={4}
-              error={!field.state.meta.isValid}
-              helperText={
-                !field.state.meta.isValid ? (
-                  field.state.meta.errors.map((err) => err?.message).join('. ')
-                ) : (
-                  <span>
-                    We support{' '}
-                    <a
-                      href="https://www.markdownguide.org/basic-syntax/"
-                      rel="noreferrer"
-                      target="_blank"
-                      className="text-royal underline"
-                    >
-                      Markdown
-                    </a>
-                    !
-                  </span>
-                )
-              }
-            />
-          )}
-        </form.Field>
+                  ) : (
+                    <span>
+                      We support{' '}
+                      <a
+                        href="https://www.markdownguide.org/basic-syntax/"
+                        rel="noreferrer"
+                        target="_blank"
+                        className="text-royal underline"
+                      >
+                        Markdown
+                      </a>
+                      !
+                    </span>
+                  )
+                }
+              />
+            )}
+          </form.Field>
+        </div>
         <div className="flex flex-wrap justify-end items-center gap-2">
           <form.AppForm>
             <form.FormResetButton />

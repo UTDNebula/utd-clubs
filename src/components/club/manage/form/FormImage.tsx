@@ -59,7 +59,7 @@ const FormImage = ({
   };
 
   return (
-    <div className="w-full h-96 flex flex-col justify-center items-center gap-2 p-6 rounded-md bg-royal/10 has-[:hover]:bg-royal/20 transition-colors relative">
+    <div className="w-full h-full max-h-96 flex flex-col justify-center items-center gap-2 p-8 rounded-md bg-royal/10 has-[:hover]:bg-royal/20 transition-colors relative">
       {label && <p className="text-xs font-bold text-slate-700">{label}</p>}
       {file?.name || previewUrl ? (
         <>
