@@ -35,15 +35,14 @@ export default async function EventsPage(props: Params) {
     <>
       <EventHeader />
       <main className="mb-5 flex flex-col space-y-4 p-4">
-        <section className="relative max-h-48 rounded-lg overflow-hidden">
+        <section className="relative min-h-48 rounded-lg overflow-hidden">
           <Image
             src={club.bannerImage ?? '/images/wideWave.jpg'}
             alt={club.name + ' banner'}
-            height={150}
-            width={450}
-            className="w-full object-cover object-center"
+            fill
+            className="object-cover object-center"
           />
-          <div className="absolute inset-0 flex h-full w-full items-center p-4 md:p-20">
+          <div className="relative z-10 flex flex-wrap h-full w-full items-center p-4 md:p-20 gap-4">
             <div className="flex flex-col gap-4">
               <h1
                 className={`font-display font-bold text-slate-100 text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] ${
@@ -55,19 +54,19 @@ export default async function EventsPage(props: Params) {
               <TimeComponent date={event.startTime.toISOString()} />
             </div>
             <div className="ml-auto flex items-center gap-x-6">
-              {memberType === 'Officer' || memberType === 'President' ? (
-                <Link href={`/manage/${club.id}/events/edit/${event.id}`}>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    className="normal-case"
-                  >
-                    Edit
-                  </Button>
-                </Link>
-              ) : (
-                <EventRegisterButton isHeader eventId={event.id} />
-              )}
+              {memberType === 'Officer' ||
+                (memberType === 'President' && (
+                  <Link href={`/manage/${club.id}/events/edit/${event.id}`}>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      className="normal-case"
+                    >
+                      Edit
+                    </Button>
+                  </Link>
+                ))}
+              <EventRegisterButton isHeader eventId={event.id} />
             </div>
           </div>
         </section>
