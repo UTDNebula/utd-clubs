@@ -8,18 +8,19 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { SelectEvent } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
-import { type RouterOutputs } from '@src/trpc/shared';
 
 export default function EventDeleteButton({
+  isHeader,
   event,
 }: {
-  event: RouterOutputs['event']['byClubId'][number];
+  isHeader?: boolean;
+  event: SelectEvent;
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -35,16 +36,20 @@ export default function EventDeleteButton({
 
   return (
     <>
-      <IconButton
+      <Button
+        variant="contained"
         color="error"
+        size={isHeader ? 'large' : 'small'}
+        className="normal-case"
+        startIcon={<DeleteIcon />}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
           setOpen(true);
         }}
       >
-        <DeleteIcon />
-      </IconButton>
+        Delete
+      </Button>
       <Dialog
         onClose={() => setOpen(false)}
         open={open}
@@ -53,7 +58,7 @@ export default function EventDeleteButton({
         <DialogTitle>Are you sure?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            This will permenantly delete {event.name}.
+            This will permenantly delete <b>{event.name}</b>.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

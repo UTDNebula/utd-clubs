@@ -259,7 +259,7 @@ export default function ClubTable({ clubs }: { clubs: Club[] }) {
         <DialogTitle>Are you sure?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            This will permenantly delete {deleteDialogClub?.name}.
+            This will permenantly delete <b>{deleteDialogClub?.name}</b>.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

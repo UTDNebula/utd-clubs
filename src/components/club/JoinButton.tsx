@@ -2,8 +2,10 @@
 
 import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
+import TuneIcon from '@mui/icons-material/Tune';
 import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useTRPC } from '@src/trpc/react';
@@ -12,15 +14,15 @@ import { useRegisterModal } from '../account/RegisterModalProvider';
 
 type JoinButtonProps = {
   isHeader?: boolean;
-  clubID: string;
+  clubId: string;
 };
 
-const JoinButton = ({ isHeader, clubID }: JoinButtonProps) => {
+const JoinButton = ({ isHeader, clubId }: JoinButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
   const { data: memberType, isPending } = useQuery(
-    api.club.memberType.queryOptions({ id: clubID }),
+    api.club.memberType.queryOptions({ id: clubId }),
   );
 
   const joinLeave = useMutation(
@@ -29,7 +31,7 @@ const JoinButton = ({ isHeader, clubID }: JoinButtonProps) => {
         queryClient.invalidateQueries({
           queryKey: [
             ['club', 'memberType'],
-            { input: { id: clubID }, type: 'query' },
+            { input: { id: clubId }, type: 'query' },
           ],
         });
       },
@@ -43,6 +45,21 @@ const JoinButton = ({ isHeader, clubID }: JoinButtonProps) => {
   const { setShowRegisterModal } = useRegisterModal(() => {
     useAuthPage = true;
   });
+
+  if (memberType === 'Officer' || memberType === 'President') {
+    return (
+      <Link href={`/manage/${clubId}`}>
+        <Button
+          variant="contained"
+          size={isHeader ? 'large' : 'small'}
+          className="normal-case"
+          startIcon={<TuneIcon />}
+        >
+          Manage
+        </Button>
+      </Link>
+    );
+  }
 
   return (
     <Tooltip title={memberType ? 'Click to leave club' : 'Click to join club'}>
@@ -68,7 +85,7 @@ const JoinButton = ({ isHeader, clubID }: JoinButtonProps) => {
             return;
           }
 
-          void joinLeave.mutateAsync({ clubId: clubID });
+          void joinLeave.mutateAsync({ clubId: clubId });
         }}
         className={`normal-case ${memberType ? 'bg-slate-400 hover:bg-slate-500' : ''}`}
         loading={isPending || joinLeave.isPending}

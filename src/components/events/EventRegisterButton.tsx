@@ -2,7 +2,7 @@
 
 import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
-import { Button, IconButton, Skeleton } from '@mui/material';
+import { Button, Skeleton } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useTRPC } from '@src/trpc/react';
@@ -66,28 +66,17 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
     }
   };
 
-  if (isHeader) {
-    return (
-      <Button
-        onClick={onClick}
-        loading={isPending || join.isPending || leave.isPending}
-        variant="contained"
-        className="normal-case"
-        size="large"
-      >
-        {joined ? 'Registered' : 'Register'}
-      </Button>
-    );
-  }
-
   return (
-    <IconButton
-      className="bg-royal [&:not(.MuiIconButton-loading)>svg]:fill-white"
+    <Button
       onClick={onClick}
       loading={isPending || join.isPending || leave.isPending}
+      variant="contained"
+      className="normal-case"
+      size={isHeader ? 'large' : 'small'}
+      startIcon={joined ? <CheckIcon /> : <AddIcon />}
     >
-      {joined ? <CheckIcon /> : <AddIcon />}
-    </IconButton>
+      {joined ? 'Registered' : 'Register'}
+    </Button>
   );
 };
 
@@ -100,21 +89,16 @@ type EventRegisterButtonSkeletonProps = {
 export const EventRegisterButtonSkeleton = ({
   isHeader,
 }: EventRegisterButtonSkeletonProps) => {
-  if (isHeader) {
-    return (
-      <Skeleton variant="rounded" className="rounded-full">
-        <Button variant="contained" className="normal-case" size="large">
-          Register
-        </Button>
-      </Skeleton>
-    );
-  }
-
   return (
     <Skeleton variant="rounded" className="rounded-full">
-      <IconButton>
-        <AddIcon />
-      </IconButton>
+      <Button
+        variant="contained"
+        className="normal-case"
+        size={isHeader ? 'large' : 'small'}
+        startIcon={<AddIcon />}
+      >
+        Register
+      </Button>
     </Skeleton>
   );
 };

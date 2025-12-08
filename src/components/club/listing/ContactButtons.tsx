@@ -21,7 +21,7 @@ const ContactButtons = ({ contacts }: contentButtonProps) => {
   return (
     <div className="flex flex-wrap gap-4">
       {contacts.map((item) => (
-        <div key={item.url}>
+        <div key={item.platform + item.url}>
           {item.platform === 'email' ? (
             <Tooltip title="Email">
               <EmailButton item={item} />

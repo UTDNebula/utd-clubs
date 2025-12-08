@@ -9,8 +9,8 @@ import { useMemo, useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import FormFieldSet, {
   FormFieldSetSkeleton,
-} from '@src/components/club/manage/form/FormFieldSet';
-import FormImage from '@src/components/club/manage/form/FormImage';
+} from '@src/components/form/FormFieldSet';
+import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
@@ -95,7 +95,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             image: value.image ?? null,
           },
           {
-            onSuccess: () => router.push(`/event/${event.id}`),
+            onSuccess: () => router.push(`/events/${event.id}`),
           },
         );
       }
@@ -111,7 +111,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             // Uplaod image after we have an ID
             const iImageIsDirty = formApi.getFieldMeta('image')?.isDirty;
             if (!iImageIsDirty) {
-              router.push(`/event/${newId}`);
+              router.push(`s${newId}`);
               return;
             }
             if (file === null) {
@@ -130,7 +130,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                 },
                 {
                   onSuccess: () => {
-                    router.push(`/event/${newId}`);
+                    router.push(`/events/${newId}`);
                   },
                 },
               );

@@ -1,5 +1,5 @@
 import { Skeleton } from '@mui/material';
-import { FormFieldSetSkeleton } from '@src/components/club/manage/form/FormFieldSet';
+import { FormFieldSetSkeleton } from '@src/components/form/FormFieldSet';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
 
 export default function Loading() {

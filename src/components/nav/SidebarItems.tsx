@@ -25,7 +25,7 @@ const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
     >
       {Icon && (
         <Icon
-          fill={`${
+          className={`${
             active ? 'fill-royal' : 'fill-slate-500'
           } group-hover:fill-royal`}
         />

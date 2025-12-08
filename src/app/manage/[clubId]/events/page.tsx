@@ -40,10 +40,7 @@ export default async function Page({
           </Link>
         </div>
       </ClubManageHeader>
-      <div
-        className="group flex flex-wrap w-full justify-evenly items-center pt-4 gap-4"
-        data-view="list"
-      >
+      <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
         {events?.map((event) => (
           <EventCard key={event.id} event={event} manageView />
         ))}
