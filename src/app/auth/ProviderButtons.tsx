@@ -1,13 +1,10 @@
 'use client';
 
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { type FC } from 'react';
 import AuthIcons from '@src/icons/AuthIcons';
 import { authClient } from '@src/utils/auth-client';
-
-const colors: Record<string, string> = {
-  Google: 'text-red-500',
-  Discord: 'text-blue-700',
-};
 
 const providerNames = {
   google: 'Google',
@@ -18,23 +15,24 @@ const ProviderButton: FC<{
   provider: 'google' | 'discord';
   callbackUrl?: string;
 }> = ({ provider, callbackUrl }) => (
-  <button
-    type="button"
+  <Button
+    variant="contained"
+    size="large"
     onClick={() => {
       void authClient.signIn.social({
         provider: provider,
         callbackURL: callbackUrl ?? window.location.href,
       });
     }}
-    className="box-content flex w-min flex-row items-center space-x-4 rounded-3xl bg-white py-2.5 pr-6 pl-5 shadow-xs shadow-slate-700 md:w-fit"
+    className="bg-white normal-case whitespace-nowrap min-w-max"
+    startIcon={AuthIcons[provider]}
   >
-    <div>{AuthIcons[provider]}</div>
-    <h2
-      className={`text-base font-extrabold md:text-xs ${colors[providerNames[provider]]}`}
+    <Typography
+      className={`text-base font-extrabold md:text-xs text-slate-700`}
     >
-      {providerNames[provider]}
-    </h2>
-  </button>
+      <span className="min-w-fit">Sign in with {providerNames[provider]}</span>
+    </Typography>
+  </Button>
 );
 
 export default ProviderButton;

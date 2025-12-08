@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
+import { RegisterModalProvider } from '@src/components/account/RegisterModalProvider';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
 import theme from '@src/utils/theme';
@@ -59,7 +60,7 @@ export default function RootLayout({
           <TRPCReactProvider>
             <ThemeProvider theme={theme}>
               <ClientLocalizationProvider>
-                {children}
+                <RegisterModalProvider>{children}</RegisterModalProvider>
               </ClientLocalizationProvider>
             </ThemeProvider>
           </TRPCReactProvider>

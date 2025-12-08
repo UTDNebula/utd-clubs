@@ -3,6 +3,8 @@
 import Diversity3Icon from '@mui/icons-material/Diversity3';
 import { Button, IconButton } from '@mui/material';
 import Link from 'next/link';
+import { authClient } from '@src/utils/auth-client';
+import { useRegisterModal } from '../account/RegisterModalProvider';
 
 const shadowStyle = 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]';
 
@@ -15,26 +17,36 @@ export default function ClubMatchButton({
   shadow?: boolean;
   iconOnly?: boolean;
 }) {
-  if (iconOnly)
-    return (
-      <Link href="/club-match/results">
+  const { data: session } = authClient.useSession();
+
+  const { setShowRegisterModal } = useRegisterModal();
+
+  const handleClick = !session
+    ? () => {
+        setShowRegisterModal(true);
+      }
+    : undefined;
+
+  return (
+    <Link href={session ? '/club-match/results' : ''} scroll={!!session}>
+      {iconOnly ? (
         <IconButton
           size="large"
           className={`rounded-full bg-royal text-white ${shadow ? shadowStyle : ''}`}
+          onClick={handleClick}
         >
           {icon}
         </IconButton>
-      </Link>
-    );
-  return (
-    <Link href="/club-match/results">
-      <Button
-        variant="contained"
-        className={`rounded-full normal-case whitespace-nowrap ${shadow ? shadowStyle : ''}`}
-        startIcon={icon}
-      >
-        Club Match
-      </Button>
+      ) : (
+        <Button
+          variant="contained"
+          className={`rounded-full normal-case whitespace-nowrap ${shadow ? shadowStyle : ''}`}
+          startIcon={icon}
+          onClick={handleClick}
+        >
+          Club Match
+        </Button>
+      )}
     </Link>
   );
 }

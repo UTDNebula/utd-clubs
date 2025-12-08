@@ -14,8 +14,8 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import RegisterModal from '@src/components/RegisterModal';
 import { authClient } from '@src/utils/auth-client';
+import { useRegisterModal } from '../account/RegisterModalProvider';
 
 type Props = {
   shadow?: boolean;
@@ -25,7 +25,8 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
   const { data: session } = authClient.useSession();
   const avatarRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
+
+  const { setShowRegisterModal } = useRegisterModal();
 
   // Close on scroll
   useEffect(() => {
@@ -50,7 +51,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
           if (session !== null) {
             setOpen(!open);
           } else {
-            setShowRegister(true);
+            setShowRegisterModal(true);
           }
         }}
         component="button"
@@ -93,10 +94,6 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
           </MenuList>
         </Card>
       </Popover>
-      <RegisterModal
-        open={showRegister}
-        onClose={() => setShowRegister(false)}
-      />
     </>
   );
 };

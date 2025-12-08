@@ -1,11 +1,14 @@
 'use client';
 
-import { Button, Skeleton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import CheckIcon from '@mui/icons-material/Check';
+import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import { useRegisterModal } from '../account/RegisterModalProvider';
 
 type JoinButtonProps = {
   isHeader?: boolean;
@@ -35,30 +38,44 @@ const JoinButton = ({ isHeader, clubID }: JoinButtonProps) => {
 
   const router = useRouter();
 
+  let useAuthPage = false;
+
+  const { setShowRegisterModal } = useRegisterModal(() => {
+    useAuthPage = true;
+  });
+
   return (
-    <Button
-      variant="contained"
-      size={isHeader ? 'large' : 'small'}
-      onClick={async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    <Tooltip title={memberType ? 'Click to leave club' : 'Click to join club'}>
+      <Button
+        variant="contained"
+        size={isHeader ? 'large' : 'small'}
+        startIcon={memberType ? <CheckIcon /> : <AddIcon />}
+        onClick={async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
 
-        if (isPending || joinLeave.isPending) return;
+          if (isPending || joinLeave.isPending) return;
 
-        if (!session) {
-          router.push(
-            `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
-          );
-          return;
-        }
+          if (!session) {
+            // This will use auth page when this JoinButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
+            if (useAuthPage) {
+              router.push(
+                `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
+              );
+            } else {
+              setShowRegisterModal(true);
+            }
+            return;
+          }
 
-        void joinLeave.mutateAsync({ clubId: clubID });
-      }}
-      className="normal-case"
-      loading={isPending || joinLeave.isPending}
-    >
-      {memberType ? 'Joined' : 'Join'}
-    </Button>
+          void joinLeave.mutateAsync({ clubId: clubID });
+        }}
+        className={`normal-case ${memberType ? 'bg-slate-400 hover:bg-slate-500' : ''}`}
+        loading={isPending || joinLeave.isPending}
+      >
+        {memberType ? 'Joined' : 'Join'}
+      </Button>
+    </Tooltip>
   );
 };
 
