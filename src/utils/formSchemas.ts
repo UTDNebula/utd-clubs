@@ -2,19 +2,8 @@ import { z } from 'zod';
 import { contactSchema } from './contact';
 
 export const createClubSchema = z.object({
-  name: z.string().min(3, 'Club name must be at least 3 characters long'),
+  name: z.string().min(3, 'Name is required'),
   description: z.string().min(1, 'Description is required'),
-  officers: z
-    .object({
-      id: z.string().min(1),
-      name: z.string(),
-      position: z.string().min(1),
-      president: z.boolean(),
-      locked: z.boolean(),
-    })
-    .array()
-    .min(1),
-  contacts: contactSchema.array(),
 });
 export const editClubContactSchema = z.object({
   contacts: contactSchema.array(),
@@ -22,20 +11,28 @@ export const editClubContactSchema = z.object({
 
 export const editClubSchema = z.object({
   id: z.string(),
-  name: z.string().min(3),
-  description: z.string().min(1),
-  tags: z.array(z.string()).optional(),
-  profileImage: z.string().url().optional(),
-  bannerImage: z.string().url().optional(),
-  foundingDate: z.string().optional(),
+  name: z
+    .string()
+    .min(3, 'Name is required')
+    .max(100, 'Character limit reached'),
+  description: z
+    .string()
+    .min(1, 'Description is required')
+    .max(5000, 'Character limit reached'),
+  tags: z.array(z.string().max(100, 'Character limit reached')),
+  profileImage: z.url().nullable(),
+  bannerImage: z.url().nullable(),
+  foundingDate: z.date().nullable(),
 });
 export const editOfficerSchema = z.object({
   officers: z
     .object({
       userId: z.string(),
       name: z.string(),
-      locked: z.boolean(),
+      canRemove: z.boolean(),
+      canTogglePresident: z.boolean(),
       position: z.enum(['President', 'Officer']),
+      new: z.boolean().optional(),
     })
     .array(),
 });
@@ -43,20 +40,26 @@ export const editListedOfficerSchema = z.object({
   officers: z
     .object({
       id: z.string().optional(),
-      name: z.string(),
-      position: z.string().min(1),
-      isPresident: z.boolean(),
+      name: z
+        .string()
+        .min(1, 'Name is required')
+        .max(100, 'Character limit reached'),
+      position: z
+        .string()
+        .min(1, 'Position is required')
+        .max(100, 'Character limit reached'),
     })
     .array(),
 });
 
 export const createEventSchema = z.object({
   clubId: z.string(),
-  name: z.string().min(1),
-  location: z.string().min(1),
-  description: z.string().max(1000),
-  startTime: z.coerce.date(),
-  endTime: z.coerce.date(),
+  name: z.string().min(1).max(100, 'Character limit reached'),
+  location: z.string().min(1).max(100, 'Character limit reached'),
+  description: z.string().max(1000, 'Character limit reached'),
+  startTime: z.date(),
+  endTime: z.date(),
+  image: z.url().nullable(),
 });
 
 export const updateEventSchema = createEventSchema.extend({
@@ -71,10 +74,10 @@ export const feedbackFormSchema = z.object({
   submit_on: z.date().default(new Date()),
 });
 
-const characterLimitError = 'Input cannot exceed 500 characters';
+const characterLimitError = 'Character limit reached';
 
 export const clubMatchFormSchema = z.object({
-  major: z.string().min(1).max(500, characterLimitError),
+  major: z.string().min(1).max(100, characterLimitError),
   year: z.string().min(1).max(100),
   proximity: z.string().min(1).max(100),
   categories: z.array(z.string().min(1).max(100)).max(50),

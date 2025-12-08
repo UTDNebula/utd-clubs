@@ -11,6 +11,7 @@ import {
   IconButton,
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
@@ -21,9 +22,16 @@ export default function EventDeleteButton({
   event: RouterOutputs['event']['byClubId'][number];
 }) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const api = useTRPC();
-  const { mutate } = useMutation(api.event.delete.mutationOptions());
+  const { mutate } = useMutation(
+    api.event.delete.mutationOptions({
+      onSuccess: () => {
+        router.refresh();
+      },
+    }),
+  );
 
   return (
     <>

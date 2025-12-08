@@ -8,9 +8,13 @@ import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 import InfiniteScrollGrid from './InfiniteScrollGrid';
 
 const ClubDirectoryGrid = () => {
-  const { search, tags, shouldFocus, setShouldFocus } = useSearchStore(
-    (state) => state,
-  );
+  const {
+    search,
+    tags,
+    shouldFocus,
+    setShouldFocus,
+    setIsFetching: setSearchBarLoading,
+  } = useSearchStore((state) => state);
   const api = useTRPC();
 
   const { data, isFetching } = useQuery(
@@ -20,6 +24,7 @@ const ClubDirectoryGrid = () => {
   const showNoResults = !isFetching && data && data.clubs.length === 0;
 
   useEffect(() => {
+    setSearchBarLoading(isFetching);
     // Focus on the first club card after the user hits Enter and the results load
     if (shouldFocus && !isFetching && !showNoResults) {
       setShouldFocus(false);
@@ -30,7 +35,13 @@ const ClubDirectoryGrid = () => {
         });
       }
     }
-  }, [shouldFocus, isFetching, showNoResults, setShouldFocus]);
+  }, [
+    shouldFocus,
+    isFetching,
+    showNoResults,
+    setShouldFocus,
+    setSearchBarLoading,
+  ]);
 
   return (
     <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">

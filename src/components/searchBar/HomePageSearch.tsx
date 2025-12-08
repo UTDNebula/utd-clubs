@@ -1,6 +1,14 @@
 'use client';
 
-import { Autocomplete, Chip, TextField, Typography } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import {
+  Autocomplete,
+  Chip,
+  CircularProgress,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
@@ -16,6 +24,7 @@ export const HomePageSearchBar = () => {
     tags,
     setTags,
     setShouldFocus,
+    isFetching,
   } = useSearchStore((state) => state);
   const api = useTRPC();
   const { data } = useQuery(
@@ -30,20 +39,31 @@ export const HomePageSearchBar = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
+  const [headerGradientOpacity, setHeaderGradientOpacity] = useState(1);
   const originalOffset = useRef<number>(0);
 
   useEffect(() => {
-    if (containerRef.current) {
-      originalOffset.current =
-        containerRef.current.getBoundingClientRect().top + window.scrollY;
-    }
+    const handleResize = () => {
+      if (containerRef.current) {
+        originalOffset.current =
+          containerRef.current.getBoundingClientRect().top + window.scrollY;
+      }
+    };
+    handleResize();
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
       setIsSticky(scrollY > originalOffset.current);
+      setHeaderGradientOpacity((scrollY - originalOffset.current) / 128);
     };
     handleScroll();
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   function scroll() {
@@ -72,6 +92,13 @@ export const HomePageSearchBar = () => {
 
   return (
     <>
+      {/* Header background gradient for improved clarity */}
+      {isSticky && (
+        <div
+          style={{ opacity: headerGradientOpacity }}
+          className="fixed inset-0 z-10 h-32 w-full bg-linear-to-b from-black/50 to-transparent"
+        ></div>
+      )}
       <div
         ref={containerRef}
         className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-2 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
@@ -107,6 +134,18 @@ export const HomePageSearchBar = () => {
               slotProps={{
                 input: {
                   ...params.InputProps,
+                  endAdornment: (
+                    <div className="flex gap-2 items-center">
+                      <InputAdornment position="start">
+                        {params.InputProps.endAdornment}
+                        {isFetching ? (
+                          <CircularProgress color="inherit" size={24} />
+                        ) : (
+                          <SearchIcon />
+                        )}
+                      </InputAdornment>
+                    </div>
+                  ),
                   sx: {
                     background: 'white',
                     borderRadius: theme.shape.borderRadius,

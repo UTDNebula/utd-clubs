@@ -4,6 +4,7 @@ export type SearchState = {
   search: string;
   tags: string[];
   shouldFocus: boolean;
+  isFetching: boolean;
 };
 
 export type SearchAction = {
@@ -12,11 +13,13 @@ export type SearchAction = {
   addTag: (tag: string) => void;
   removeTag: (tag: string) => void;
   setShouldFocus: (val: boolean) => void;
+  setIsFetching: (val: boolean) => void;
 };
 export const defaultInitState: SearchState = {
   search: '',
   tags: [],
   shouldFocus: false,
+  isFetching: false,
 };
 export type SearchStore = SearchState & SearchAction;
 export const createSearchStore = (
@@ -31,5 +34,6 @@ export const createSearchStore = (
       set(({ tags }) => ({ tags: [...tags.filter((t) => t != tag)] })),
     setTags: (tags: string[]) => set(() => ({ tags: tags })),
     setShouldFocus: (val: boolean) => set(() => ({ shouldFocus: val })),
+    setIsFetching: (val: boolean) => set(() => ({ isFetching: val })),
   }));
 };

@@ -17,8 +17,8 @@ export default async function Page(props: Props) {
   if (!org) notFound();
 
   return (
-    <div className="m-5">
-      <h1 className="font-display text-center text-4xl font-bold text-haiti mb-20">
+    <>
+      <h1 className="font-display text-center text-4xl font-bold text-haiti my-5">
         {org.name}
       </h1>
       {org.approved === 'approved' ? (
@@ -26,6 +26,6 @@ export default async function Page(props: Props) {
       ) : (
         <OtherClubStatus club={org} />
       )}
-    </div>
+    </>
   );
 }

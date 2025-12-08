@@ -3,11 +3,11 @@ import Link from 'next/link';
 
 export default function Page() {
   return (
-    <div className="m-5">
-      <h1 className="font-display text-center text-4xl font-bold text-haiti">
+    <>
+      <h1 className="font-display text-center text-4xl font-bold text-haiti mt-5">
         Admin
       </h1>
-      <div className="flex justify-center gap-x-5 pt-20">
+      <div className="flex justify-center gap-5 mt-5">
         <Link href="/admin/clubs">
           <Button variant="contained" className="normal-case" size="large">
             Manage Clubs
@@ -27,6 +27,6 @@ export default function Page() {
           </Button>
         </Link>
       </div>
-    </div>
+    </>
   );
 }

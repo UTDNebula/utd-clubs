@@ -10,10 +10,9 @@ import {
 } from 'drizzle-orm';
 import { z } from 'zod';
 import { club, usedTags } from '@src/server/db/schema/club';
-import { contacts } from '@src/server/db/schema/contacts';
 import { officers as officersTable } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { createClubSchema as baseClubSchema } from '@src/utils/formSchemas';
+import { createClubSchema } from '@src/utils/formSchemas';
 import {
   adminProcedure,
   createTRPCRouter,
@@ -57,16 +56,6 @@ const searchSchema = z.object({
   cursor: z.number().min(0).default(0),
   limit: z.number().min(1).max(50).default(10),
   initialCursor: z.number().min(0).default(0),
-});
-const createClubSchema = baseClubSchema.omit({ officers: true }).extend({
-  officers: z
-    .object({
-      id: z.string().min(1),
-      position: z.string(),
-      president: z.boolean(),
-    })
-    .array()
-    .min(1),
 });
 
 const searchTagSchema = z.object({
@@ -251,38 +240,17 @@ export const clubRouter = createTRPCRouter({
           updatedAt: new Date(),
           slug,
         })
-        .returning({ id: club.id });
+        .returning();
 
       const clubId = res[0]!.id;
 
-      if (input.contacts.length > 0) {
-        await ctx.db.insert(contacts).values(
-          input.contacts.map((contact) => {
-            return {
-              platform: contact.platform,
-              url: contact.url,
-              clubId: clubId,
-            };
-          }),
-        );
-      }
+      await ctx.db.insert(userMetadataToClubs).values({
+        userId: ctx.session.user.id,
+        clubId: clubId,
+        memberType: 'President' as const,
+      });
 
-      await ctx.db
-        .insert(userMetadataToClubs)
-        .values(
-          input.officers.map((officer) => {
-            return {
-              userId: officer.id,
-              clubId: clubId,
-              memberType: officer.president
-                ? ('President' as const)
-                : ('Officer' as const),
-              title: officer.position,
-            };
-          }),
-        )
-        .catch((e) => console.log(e));
-      return slug;
+      return clubId;
     }),
   getOfficers: protectedProcedure
     .input(byIdSchema)

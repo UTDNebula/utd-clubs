@@ -1,5 +1,6 @@
 'use client';
 
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {
@@ -61,11 +62,17 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
         anchorEl={avatarRef.current}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         transformOrigin={{ horizontal: 'left', vertical: -8 }}
-        disableScrollLock={true}
+        disableScrollLock
         onClose={() => setOpen(false)}
       >
         <Card>
           <MenuList>
+            <MenuItem component={Link} href="/club-match/results">
+              <ListItemIcon>
+                <Diversity3Icon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Club Match</ListItemText>
+            </MenuItem>
             <MenuItem component={Link} href="/settings">
               <ListItemIcon>
                 <SettingsIcon fontSize="small" />

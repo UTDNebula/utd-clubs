@@ -1,0 +1,152 @@
+'use client';
+
+import { Button, Typography } from '@mui/material';
+import { useStore } from '@tanstack/react-form';
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import z from 'zod';
+import ContactListItem from '@src/components/club/manage/ContactListItem';
+import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
+import type { SelectClub, SelectContact } from '@src/server/db/models';
+import { contactNames, startContacts } from '@src/server/db/schema/contacts';
+import { useTRPC } from '@src/trpc/react';
+import { useAppForm } from '@src/utils/form';
+import { editClubContactSchema } from '@src/utils/formSchemas';
+
+type FormData = z.infer<typeof editClubContactSchema>;
+
+function typedDefaultValues(contacts: SelectContact[]): FormData['contacts'] {
+  return contacts.map((contact) => ({
+    clubId: contact.clubId,
+    platform: contact.platform,
+    url: contact.url,
+  }));
+}
+
+type ContactWithId = FormData['contacts'][number] & { clubId: string };
+
+function hasId(
+  contact: FormData['contacts'][number],
+): contact is ContactWithId {
+  return typeof contact.clubId === 'string';
+}
+
+type ContactsProps = {
+  club: SelectClub & { contacts: SelectContact[] };
+};
+
+const Contacts = ({ club }: ContactsProps) => {
+  const api = useTRPC();
+  const editContacts = useMutation(api.club.edit.contacts.mutationOptions({}));
+
+  const [defaultValues, setDefaultValues] = useState({
+    contacts: typedDefaultValues(club.contacts),
+  });
+
+  const form = useAppForm({
+    defaultValues,
+    onSubmit: async ({ value, formApi }) => {
+      // Separate created vs modified
+      const created: FormData['contacts'] = [];
+      const modified: ContactWithId[] = [];
+
+      value.contacts.forEach((contact, index) => {
+        // If it has no ID, it's created
+        if (!hasId(contact)) {
+          created.push(contact);
+          return;
+        }
+        // If it has an ID, check if it was actually changed
+        const isDirty =
+          formApi.getFieldMeta(`contacts[${index}].platform`)?.isDirty ||
+          formApi.getFieldMeta(`contacts[${index}].url`)?.isDirty;
+        if (isDirty) {
+          modified.push(contact);
+        }
+      });
+      const updated = await editContacts.mutateAsync({
+        clubId: club.id,
+        deleted: deletedIds,
+        modified: modified,
+        created: created,
+      });
+      setDeletedIds([]);
+      const newContacts = typedDefaultValues(updated);
+      setDefaultValues({ contacts: newContacts });
+      formApi.reset({ contacts: newContacts });
+    },
+    validators: {
+      onChange: editClubContactSchema,
+    },
+  });
+
+  const [deletedIds, setDeletedIds] = useState<
+    FormData['contacts'][number]['platform'][]
+  >([]);
+
+  const removeItem = (index: number) => {
+    const current = form.getFieldValue('contacts')[index];
+    if (current) {
+      setDeletedIds((prev) => [...prev, current.platform]);
+    }
+  };
+
+  const currentContacts =
+    useStore(form.store, (state) => state.values.contacts) || [];
+  const available = startContacts.filter(
+    (p) => !currentContacts.map((c) => c.platform).includes(p),
+  );
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+    >
+      <FormFieldSet legend="Contact Information">
+        <form.Field name="contacts">
+          {(field) => (
+            <div className="flex flex-col gap-2">
+              {field.state.value.map((value, index) => (
+                <ContactListItem
+                  key={value.platform}
+                  index={index}
+                  form={form}
+                  removeItem={removeItem}
+                />
+              ))}
+              <div className="ml-2 p-2 flex flex-wrap items-center gap-2">
+                <Typography className="mr-2">Add Contact:</Typography>
+                {available.length > 0 &&
+                  available.map((platform) => (
+                    <Button
+                      key={platform}
+                      variant="contained"
+                      value={platform}
+                      className="normal-case"
+                      onClick={() => field.pushValue({ platform, url: '' })}
+                    >
+                      {contactNames[platform]}
+                    </Button>
+                  ))}
+              </div>
+            </div>
+          )}
+        </form.Field>
+
+        <div className="flex flex-wrap justify-end items-center gap-2">
+          <form.AppForm>
+            <form.FormResetButton />
+          </form.AppForm>
+          <form.AppForm>
+            <form.FormSubmitButton />
+          </form.AppForm>
+        </div>
+      </FormFieldSet>
+    </form>
+  );
+};
+
+export default Contacts;

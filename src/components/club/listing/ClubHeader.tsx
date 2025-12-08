@@ -15,24 +15,18 @@ type Club = SelectClub & {
 const ClubHeader = async ({ club }: { club: Club }) => {
   const memberType = await api.club.memberType({ id: club.id });
   return (
-    <div className="relative">
-      <div className="h-full w-full">
-        <Image
-          src={'/images/wideWave.jpg'}
-          alt="Picture of the club"
-          style={{
-            width: '100%',
-            height: 'auto',
-          }}
-          height={150}
-          width={450}
-          className="rounded-lg object-cover"
-          priority
-        />
-      </div>
-      <div className="absolute top-0 left-0 flex h-full w-full items-center p-4 md:p-20">
+    <div className="relative max-h-64 rounded-lg overflow-hidden">
+      <Image
+        src={club.bannerImage ?? '/images/wideWave.jpg'}
+        alt="Club banner"
+        height={150}
+        width={450}
+        className="w-full object-cover object-center"
+        priority
+      />
+      <div className="absolute inset-0 flex h-full w-full items-center p-4 md:p-20">
         <h1
-          className={`font-display font-bold text-slate-100 ${
+          className={`font-display font-bold text-slate-100 text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] ${
             club.name.length > 10 ? 'text-3xl' : 'text-5xl'
           }`}
         >
