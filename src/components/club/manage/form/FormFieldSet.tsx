@@ -26,10 +26,7 @@ export const FormFieldSet = ({
       }
     >
       <legend className="float-left">
-        <Typography
-          variant="h2"
-          className="ml-2 text-xl font-bold text-gray-800"
-        >
+        <Typography variant="h2" className="ml-2 text-xl font-bold text-haiti">
           {legend}
         </Typography>
       </legend>

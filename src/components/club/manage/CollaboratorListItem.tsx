@@ -2,7 +2,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { IconButton, Tooltip, Typography } from '@mui/material';
-import { useState } from 'react';
 import type z from 'zod';
 import { withForm } from '@src/utils/form';
 import { editOfficerSchema } from '@src/utils/formSchemas';
@@ -41,23 +40,14 @@ const CollaboratorListItem = withForm({
       form.setFieldValue('officers', next);
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const userId = form.getFieldValue(`officers[${index}].userId`);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
-
     // TODO: Insert code to fetch email by userID
 
     return (
       <div className="flex flex-wrap items-center gap-2 p-2 sm:hover:bg-slate-100 max-sm:bg-slate-100 transition-colors rounded-lg">
-        <div className="flex flex-col grow px-4 max-h-full min-h-10 justify-center">
+        <div className="flex flex-col grow pl-2 pr-4 max-h-full min-h-10 justify-center">
           <Typography variant="body1">
             <span>{form.getFieldValue(`officers[${index}].name`)}</span>
             {self && <span>&nbsp;(You)</span>}
-          </Typography>
-          <Typography variant="caption">
-            {/* <span>{form.getFieldValue(`officers[${index}].userId`)}</span> */}
-            <span>{userEmail}</span>
           </Typography>
         </div>
         <div className="flex gap-2 grow justify-end">
