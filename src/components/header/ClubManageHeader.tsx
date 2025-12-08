@@ -60,18 +60,20 @@ const ClubManageHeader = ({
           )}
           {loading && <Skeleton variant="text" className="w-16" />}
           {/* All but last path items can be links */}
-          {normalizedPath?.slice(0, -1).map((pathItem) => {
-            if (pathItem.text === 'loading') {
-              return <Skeleton variant="text" className="w-16" />;
-            }
-            if (pathItem.href) {
+          {normalizedPath?.slice(0, -1).map(({ text, href }, index) => {
+            if (text === 'loading') {
               return (
-                <Link key={pathItem.href} href={pathItem.href}>
-                  {pathItem.text}
+                <Skeleton key={text + index} variant="text" className="w-16" />
+              );
+            }
+            if (href) {
+              return (
+                <Link key={text + href} href={href}>
+                  {text}
                 </Link>
               );
             }
-            return <Typography key={pathItem.href}>{pathItem.text}</Typography>;
+            return <Typography key={text + href}>{text}</Typography>;
           })}
           {/* Last path item is just text */}
           {normalizedPath?.length &&
