@@ -1,4 +1,4 @@
-import Typography from '@mui/material/Typography';
+import { Skeleton, Typography } from '@mui/material';
 import React, { type ReactNode } from 'react';
 
 interface FormFieldSetPropsBase {
@@ -40,3 +40,20 @@ export const FormFieldSet = ({
 };
 
 export default FormFieldSet;
+
+interface FormFieldSetSkeletonProps {
+  className?: string;
+}
+
+export const FormFieldSetSkeleton = (props: FormFieldSetSkeletonProps) => {
+  return (
+    <Skeleton
+      className={
+        'flex flex-col gap-2 rounded-lg sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4 min-w-0 w-6xl ' +
+        props.className
+      }
+      variant="rounded"
+      height={512}
+    ></Skeleton>
+  );
+};

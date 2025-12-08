@@ -105,7 +105,7 @@ const Contacts = ({ club }: ContactsProps) => {
         form.handleSubmit();
       }}
     >
-      <FormFieldSet legend="Contact Information" className="min-w-0">
+      <FormFieldSet legend="Contact Information">
         <form.Field name="contacts">
           {(field) => (
             <div className="flex flex-col gap-2 max-w-full">

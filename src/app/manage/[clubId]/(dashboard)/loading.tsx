@@ -1,4 +1,5 @@
 import { Skeleton } from '@mui/material';
+import { FormFieldSetSkeleton } from '@src/components/club/manage/form/FormFieldSet';
 import ClubManageHeader from '@src/components/header/ClubManageHeader';
 
 export default function Loading() {
@@ -27,11 +28,11 @@ export default function Loading() {
         </div>
       </ClubManageHeader>
       <div className="flex w-full flex-col items-center">
-        <div className="w-full max-w-6xl flex flex-col gap-8">
-          <Skeleton variant="rounded" height={128} />
-          <Skeleton variant="rounded" height={128} />
-          <Skeleton variant="rounded" height={128} />
-          <Skeleton variant="rounded" height={128} />
+        <div className="flex flex-col gap-8">
+          <FormFieldSetSkeleton className="max-w-2xl" />
+          <FormFieldSetSkeleton className="max-w-2xl" />
+          <FormFieldSetSkeleton className="max-w-2xl" />
+          <FormFieldSetSkeleton className="max-w-2xl" />
         </div>
       </div>
     </>

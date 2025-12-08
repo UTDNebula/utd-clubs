@@ -7,7 +7,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
-import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
+import FormFieldSet, {
+  FormFieldSetSkeleton,
+} from '@src/components/club/manage/form/FormFieldSet';
 import FormImage from '@src/components/club/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -15,6 +17,7 @@ import { type RouterOutputs } from '@src/trpc/shared';
 import { useAppForm } from '@src/utils/form';
 import { createEventSchema } from '@src/utils/formSchemas';
 import EventCardPreview from './EventCardPreview';
+import EventCardSkeleton from './EventCardSkeleton';
 
 type EventFormProps =
   | {
@@ -328,4 +331,19 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     </div>
   );
 };
+
 export default EventForm;
+
+export const EventFormSkeleton = () => {
+  return (
+    <div className="flex w-full flex-wrap justify-start gap-10">
+      <div className="grow flex flex-col gap-4 max-w-full">
+        <FormFieldSetSkeleton />
+      </div>
+      <div className="flex flex-col gap-4">
+        <h2 className="text-lg font-bold">Preview</h2>
+        <EventCardSkeleton />
+      </div>
+    </div>
+  );
+};
