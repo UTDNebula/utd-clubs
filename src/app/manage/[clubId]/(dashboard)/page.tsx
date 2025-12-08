@@ -53,9 +53,7 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
         </div>
       </ClubManageHeader>
       <div className="flex w-full flex-col items-center">
-        <div className="w-full max-w-6xl">
-          <ClubManageForm club={club} />
-        </div>
+        <ClubManageForm club={club} />
       </div>
     </>
   );
