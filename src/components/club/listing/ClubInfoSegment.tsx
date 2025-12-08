@@ -49,7 +49,7 @@ const ClubInfoSegment: FC<{
           })}
         </div>
       </div>
-      <div className="w-full md:w-2/3 text-slate-700">
+      <div className="grow text-slate-700">
         <MarkdownText text={club.description} />
       </div>
       {club.officers.length != 0 && (

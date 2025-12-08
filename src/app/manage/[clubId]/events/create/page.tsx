@@ -9,7 +9,6 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
   if (!club) {
     notFound();
   }
-  const officerClubs = await api.club.getOfficerClubs();
 
   return (
     <>
@@ -22,7 +21,7 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
         hrefBack={`/manage/${club.id}/events`}
       />
       <div className="p-4">
-        <EventForm clubId={club.id} officerClubs={officerClubs} />
+        <EventForm club={club} />
       </div>
     </>
   );

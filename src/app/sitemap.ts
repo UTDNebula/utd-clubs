@@ -45,6 +45,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: 0.9,
     })),
+    {
+      url: 'https://clubs.utdnebula.com/directory/create',
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.8,
+    },
     ...events.map((event) => ({
       url: 'https://clubs.utdnebula.com/event/' + event.id,
       lastModified: new Date(),
@@ -54,13 +60,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: 'https://clubs.utdnebula.com/events',
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'daily',
       priority: 1,
     },
     {
       url: 'https://clubs.utdnebula.com/settings',
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'yearly',
       priority: 1,
     },
   ];

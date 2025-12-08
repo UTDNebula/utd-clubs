@@ -36,6 +36,7 @@ const ClubManageHeader = ({
       <div className="flex min-h-10.5 flex-row items-center gap-2">
         <BackButton href={hrefBack} />
         <Breadcrumbs aria-label="breadcrumb">
+          <Link href="Manage">Manage</Link>
           <Link className="font-bold" href={`/manage/${club.id}`}>
             {club.name}
           </Link>

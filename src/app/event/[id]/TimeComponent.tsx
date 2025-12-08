@@ -16,7 +16,7 @@ const TimeComponent = (props: Props) => {
   });
 
   return (
-    <p className="text-sm text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
+    <p className="text-sm text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
       {dateString}
     </p>
   );

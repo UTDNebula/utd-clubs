@@ -1,14 +1,13 @@
 import { Button, Chip } from '@mui/material';
 import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
-import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import EventRegisterButton from '@src/components/events/EventRegisterButton';
 import { EventHeader } from '@src/components/header/BaseHeader';
 import MarkdownText from '@src/components/MarkdownText';
-import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
+import { api } from '@src/trpc/server';
 import CountdownTimer from './CountdownTimer';
 import TimeComponent from './TimeComponent';
 
@@ -16,7 +15,6 @@ type Params = { params: Promise<{ id: string }> };
 
 export default async function EventsPage(props: Params) {
   const params = await props.params;
-  const session = await auth.api.getSession({ headers: await headers() });
   const res = await db.query.events.findFirst({
     where: (events) => eq(events.id, params.id),
     with: { club: true },
@@ -26,43 +24,63 @@ export default async function EventsPage(props: Params) {
 
   const { club, ...event } = res;
 
+  const memberType = await api.club.memberType({ id: club.id });
+
+  const src = event.image ?? club.profileImage;
+
   const clubDescription = ['Club', 'Location', 'Multi-Day'];
   const clubDetails = [club.name, event.location, 'No'];
 
   return (
-    <main className="w-full">
+    <>
       <EventHeader />
-      <div className="mb-5 flex flex-col space-y-4 px-3">
-        <section className="mb-5 relative rounded-xl shadow-lg overflow-hidden">
+      <main className="mb-5 flex flex-col space-y-4 p-4">
+        <section className="relative max-h-48 rounded-lg overflow-hidden">
           <Image
             src={club.bannerImage ?? '/images/wideWave.jpg'}
             alt={club.name + ' banner'}
-            fill
-            className="object-cover"
+            height={150}
+            width={450}
+            className="w-full object-cover object-center"
           />
-          <div className="relative z-10 flex h-full inset-0 flex-col justify-between gap-4 p-10 md:flex-row md:gap-0">
-            <div className="text-white">
-              <h1 className="font-display mb-4 text-4xl font-bold text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)]">
+          <div className="absolute inset-0 flex h-full w-full items-center p-4 md:p-20">
+            <div className="flex flex-col gap-4">
+              <h1
+                className={`font-display font-bold text-slate-100 text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] ${
+                  event.name.length > 10 ? 'text-3xl' : 'text-5xl'
+                }`}
+              >
                 {event.name}
               </h1>
               <TimeComponent date={event.startTime.toISOString()} />
             </div>
-            <div className="flex md:float-right md:my-auto">
-              {session && <EventRegisterButton isHeader eventId={event.id} />}
+            <div className="ml-auto flex items-center gap-x-6">
+              {memberType === 'Officer' || memberType === 'President' ? (
+                <Link href={`/manage/${club.id}/events/edit/${event.id}`}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    className="normal-case"
+                  >
+                    Edit
+                  </Button>
+                </Link>
+              ) : (
+                <EventRegisterButton isHeader eventId={event.id} />
+              )}
             </div>
           </div>
         </section>
         <section className="w-full rounded-lg bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
           <div>
-            {club.profileImage && (
-              <div className="relative mx-auto h-40 w-full overflow-hidden rounded-b-md">
-                <Image
-                  src={club.profileImage}
-                  alt={club.name + ' logo'}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+            {src && (
+              <Image
+                src={src}
+                alt={event.image ? `${event.name} promo` : `${club.name} logo`}
+                width={100}
+                height={100}
+                className="mb-5 rounded-lg"
+              />
             )}
             {clubDescription.map((details, index) => (
               <div key={details} className="mt-2 flex w-36 justify-between">
@@ -85,7 +103,7 @@ export default async function EventsPage(props: Params) {
               })}
             </div>
           </div>
-          <div className="grow text-sm md:mx-12 text-slate-700 pt-4">
+          <div className="grow text-slate-700">
             <MarkdownText text={event.description} />
           </div>
           <div className="flex flex-col gap-4">
@@ -99,8 +117,8 @@ export default async function EventsPage(props: Params) {
             </Link>
           </div>
         </section>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 

@@ -1,0 +1,37 @@
+const NotAccepted = ({ status }: { status: 'pending' | 'rejected' }) => {
+  return (
+    <div className="w-full flex flex-col gap-2 rounded-lg bg-cornflower-50 sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4 min-w-0">
+      <h2 className="text-lg font-semibold text-gray-800">
+        {status === 'pending' && 'Your organization is pending review.'}
+        {status === 'rejected' && 'Your organization has been rejected.'}
+      </h2>
+      <p>It is not publically visible at this time. </p>
+      {status === 'pending' && (
+        <p>
+          While we work on approving it please take the time to fill out more
+          information below.
+        </p>
+      )}
+      <p>
+        If you have any questions please reach out on our{' '}
+        <a
+          href="https://discord.utdnebula.com/"
+          className="text-royal underline decoration-transparent hover:decoration-inherit transition"
+        >
+          Discord
+        </a>{' '}
+        or{' '}
+        <a
+          href="https://www.instagram.com/utdnebula/"
+          className="text-royal underline decoration-transparent hover:decoration-inherit transition"
+        >
+          {' '}
+          Instagram
+        </a>
+        .
+      </p>
+    </div>
+  );
+};
+
+export default NotAccepted;

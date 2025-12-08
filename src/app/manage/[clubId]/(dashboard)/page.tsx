@@ -1,5 +1,6 @@
 import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
+import PreviewIcon from '@mui/icons-material/Preview';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -26,7 +27,7 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
               startIcon={<PeopleIcon />}
               size="large"
             >
-              View Members
+              Members
             </Button>
           </Link>
           <Link href={`/manage/${clubId}/events`}>
@@ -36,7 +37,17 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
               startIcon={<EventIcon />}
               size="large"
             >
-              View Events
+              Events
+            </Button>
+          </Link>
+          <Link href={`/directory/${club.slug}`}>
+            <Button
+              variant="contained"
+              className="normal-case whitespace-nowrap"
+              startIcon={<PreviewIcon />}
+              size="large"
+            >
+              Listing
             </Button>
           </Link>
         </div>
