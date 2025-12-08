@@ -15,12 +15,9 @@ export default function Loading() {
           />
         </div>
       </ClubManageHeader>
-      <div
-        className="group flex flex-wrap w-full justify-evenly items-center pt-4 gap-4"
-        data-view="list"
-      >
+      <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
         {Array.from({ length: 9 }, (_, index) => (
-          <EventCardSkeleton key={index} />
+          <EventCardSkeleton key={index} manageView />
         ))}
       </div>
     </>
