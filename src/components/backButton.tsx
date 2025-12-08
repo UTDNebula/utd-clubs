@@ -8,7 +8,7 @@ type BackButtonProps = IconButtonProps & {
   href?: string;
 };
 
-export const BackButton = ({ href, ...props }: BackButtonProps) => {
+const BackButton = ({ href, ...props }: BackButtonProps) => {
   const router = useRouter();
   return (
     <div className="flex h-min flex-row align-middle">

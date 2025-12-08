@@ -20,7 +20,7 @@ import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
-import { dateSchema } from '@src/utils/eventFilter';
+import { dateSchema, order } from '@src/utils/eventFilter';
 import { createEventSchema, updateEventSchema } from '@src/utils/formSchemas';
 import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
@@ -37,7 +37,7 @@ const byDateRangeSchema = z.object({
 });
 export const findByFilterSchema = z.object({
   date: z.date(),
-  order: z.enum(['soon', 'later', 'shortest duration', 'longest duration']),
+  order: order,
   club: z.string().array(),
 });
 export const findByDateSchema = z.object({

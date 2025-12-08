@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import type { SelectContact as Contacts } from '@src/server/db/models';
 
-export type logoProps = {
+type LogoProps = {
   [Property in Contacts['platform']]: ReactNode;
 };
 type IconProps = {
@@ -168,7 +168,7 @@ const linkedInStyling =
   'fill-blue-600 transition-colors group-hover:fill-blue-300';
 const linkStyling = 'fill-gray-500 transition-colors group-hover:fill-gray-300';
 
-export const logo: logoProps = {
+export const logo: LogoProps = {
   discord: <Discord className={discordStyling} />,
 
   youtube: <Youtube className={youtubeStyling} />,

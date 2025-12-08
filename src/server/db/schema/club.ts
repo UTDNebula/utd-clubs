@@ -16,12 +16,6 @@ import { events } from './events';
 import { officers } from './officers';
 import { userMetadataToClubs } from './users';
 
-export const tsvector = customType<{ data: string }>({
-  dataType() {
-    return `tsvector`;
-  },
-});
-
 export const approvedEnum = pgEnum('approved_enum', [
   'approved',
   'rejected',

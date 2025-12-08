@@ -11,11 +11,7 @@ type FormFieldSetProps = FormFieldSetPropsBase &
     keyof FormFieldSetPropsBase
   >;
 
-export const FormFieldSet = ({
-  children,
-  legend,
-  ...props
-}: FormFieldSetProps) => {
+const FormFieldSet = ({ children, legend, ...props }: FormFieldSetProps) => {
   return (
     <fieldset
       {...props}
