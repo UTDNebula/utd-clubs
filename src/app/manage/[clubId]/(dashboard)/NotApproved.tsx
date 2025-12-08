@@ -7,7 +7,7 @@ const NotAccepted = ({ status }: { status: 'pending' | 'rejected' }) => {
         {status === 'pending' && 'Your organization is pending review.'}
         {status === 'rejected' && 'Your organization has been rejected.'}
       </Typography>
-      <div className="px-2">
+      <div className="flex flex-col gap-2 px-2">
         <p>It is not publically visible at this time. </p>
         {status === 'pending' && (
           <p>
