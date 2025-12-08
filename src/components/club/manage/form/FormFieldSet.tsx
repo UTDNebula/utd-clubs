@@ -1,3 +1,4 @@
+import Typography from '@mui/material/Typography';
 import React, { type ReactNode } from 'react';
 
 interface FormFieldSetPropsBase {
@@ -24,8 +25,10 @@ export const FormFieldSet = ({
         props.className
       }
     >
-      <legend className="float-left ml-2 text-xl font-bold text-haiti">
-        {legend}
+      <legend className="float-left">
+        <Typography variant="h2" className="ml-2 text-xl font-bold text-gray-800">
+          {legend}
+        </Typography>
       </legend>
       {children}
     </fieldset>

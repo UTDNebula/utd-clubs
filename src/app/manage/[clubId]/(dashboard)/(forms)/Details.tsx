@@ -87,43 +87,47 @@ const Details = ({ club }: DetailsProps) => {
     >
       <FormFieldSet legend="Details">
         <div className="m-2 flex flex-col gap-4">
-          <div className="flex gap-4">
-            <form.Field name="profileImage">
-              {(field) => (
-                <FormImage
-                  label="Profile Image"
-                  initialValue={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    setProfileFile(file);
-                    let fakeUrl = file?.name ?? null;
-                    if (fakeUrl !== null) {
-                      fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
-                    }
-                    field.handleChange(fakeUrl);
-                  }}
-                />
-              )}
-            </form.Field>
-            <form.Field name="bannerImage">
-              {(field) => (
-                <FormImage
-                  label="Banner Image"
-                  initialValue={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    setBannerFile(file);
-                    let fakeUrl = file?.name ?? null;
-                    if (fakeUrl !== null) {
-                      fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
-                    }
-                    field.handleChange(fakeUrl);
-                  }}
-                />
-              )}
-            </form.Field>
+          <div className="flex flex-wrap gap-4">
+            <div className="grow lg:max-h-96 max-lg:max-h-48">
+              <form.Field name="profileImage">
+                {(field) => (
+                  <FormImage
+                    label="Profile Image"
+                    initialValue={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      setProfileFile(file);
+                      let fakeUrl = file?.name ?? null;
+                      if (fakeUrl !== null) {
+                        fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+                      }
+                      field.handleChange(fakeUrl);
+                    }}
+                  />
+                )}
+              </form.Field>
+            </div>
+            <div className="grow lg:max-h-96 max-lg:max-h-48">
+              <form.Field name="bannerImage">
+                {(field) => (
+                  <FormImage
+                    label="Banner Image"
+                    initialValue={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      setBannerFile(file);
+                      let fakeUrl = file?.name ?? null;
+                      if (fakeUrl !== null) {
+                        fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
+                      }
+                      field.handleChange(fakeUrl);
+                    }}
+                  />
+                )}
+              </form.Field>
+            </div>
           </div>
           <div className="flex flex-wrap gap-4">
             <form.Field name="name">
