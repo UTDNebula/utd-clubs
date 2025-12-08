@@ -185,20 +185,17 @@ const Contacts = ({ club }: ContactsProps) => {
                         event.preventDefault();
                       }}
                     >
-                      {available.length > 0 &&
-                        available.map((platform) => (
-                          <Button
-                            key={platform}
-                            variant="contained"
-                            value={platform}
-                            className="normal-case min-w-fit"
-                            onClick={() =>
-                              field.pushValue({ platform, url: '' })
-                            }
-                          >
-                            {contactNames[platform]}
-                          </Button>
-                        ))}
+                      {available.map((platform) => (
+                        <Button
+                          key={platform}
+                          variant="contained"
+                          value={platform}
+                          className="normal-case min-w-fit"
+                          onClick={() => field.pushValue({ platform, url: '' })}
+                        >
+                          {contactNames[platform]}
+                        </Button>
+                      ))}
                     </div>
                   </div>
                 </div>
