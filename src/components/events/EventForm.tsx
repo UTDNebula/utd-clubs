@@ -95,7 +95,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             image: value.image ?? null,
           },
           {
-            onSuccess: () => router.push(`/event/${event.id}`),
+            onSuccess: () => router.push(`/events/${event.id}`),
           },
         );
       }
@@ -111,7 +111,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             // Uplaod image after we have an ID
             const iImageIsDirty = formApi.getFieldMeta('image')?.isDirty;
             if (!iImageIsDirty) {
-              router.push(`/event/${newId}`);
+              router.push(`s${newId}`);
               return;
             }
             if (file === null) {
@@ -130,7 +130,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                 },
                 {
                   onSuccess: () => {
-                    router.push(`/event/${newId}`);
+                    router.push(`/events/${newId}`);
                   },
                 },
               );

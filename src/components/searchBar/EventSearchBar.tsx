@@ -51,7 +51,7 @@ export const EventSearchBar = () => {
       renderOption={(props, option) => {
         const { key, ...otherProps } = props;
         return (
-          <Link key={key} href={`/event/${option.id}`}>
+          <Link key={key} href={`/events/${option.id}`}>
             <li {...otherProps}>
               <div>
                 <Typography variant="body1">{option.name}</Typography>

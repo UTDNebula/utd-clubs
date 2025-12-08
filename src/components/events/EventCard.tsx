@@ -22,7 +22,7 @@ const EventCard = async ({ event, manageView }: EventCardProps) => {
   const src = event.image ?? event.club.profileImage;
   return (
     <div className="flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
-      <Link href={`/event/${event.id}`} className="grow flex flex-col">
+      <Link href={`/events/${event.id}`} className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full">
           <div className="absolute inset-0 h-full w-full bg-gray-200" />
           {src && (

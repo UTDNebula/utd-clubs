@@ -141,10 +141,10 @@ export async function generateMetadata(props: {
     title: `${found.name}`,
     description: `${found.name} from ${found.club.name} on UTD Clubs`,
     alternates: {
-      canonical: `https://clubs.utdnebula.com/event/${found.id}`,
+      canonical: `https://clubs.utdnebula.com/events/${found.id}`,
     },
     openGraph: {
-      url: `https://clubs.utdnebula.com/event/${found.id}`,
+      url: `https://clubs.utdnebula.com/events/${found.id}`,
       description: `${found.name} from ${found.club.name} on UTD Clubs`,
     },
   };

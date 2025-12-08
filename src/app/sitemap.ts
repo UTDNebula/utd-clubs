@@ -52,7 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     ...events.map((event) => ({
-      url: 'https://clubs.utdnebula.com/event/' + event.id,
+      url: 'https://clubs.utdnebula.com/events/' + event.id,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.9,
