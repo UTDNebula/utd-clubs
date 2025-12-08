@@ -1,7 +1,6 @@
-import { Breadcrumbs, Typography } from '@mui/material';
+import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-// import { notFound } from 'next/navigation';
 import type {
   SelectContact as Contacts,
   SelectClub,
@@ -59,21 +58,30 @@ const ClubManageHeader = ({
               {club.name}
             </Link>
           )}
-          {loading && <span className="italic">Loading...</span>}
+          {loading && <Skeleton variant="text" className="w-16" />}
+          {/* All but last path items can be links */}
           {normalizedPath?.slice(0, -1).map((pathItem) => {
-            return pathItem.href ? (
-              <Link key={pathItem.href} href={pathItem.href}>
-                {pathItem.text}
-              </Link>
-            ) : (
-              <Typography key={pathItem.href}>{pathItem.text}</Typography>
-            );
+            if (pathItem.text === 'loading') {
+              return <Skeleton variant="text" className="w-16" />;
+            }
+            if (pathItem.href) {
+              return (
+                <Link key={pathItem.href} href={pathItem.href}>
+                  {pathItem.text}
+                </Link>
+              );
+            }
+            return <Typography key={pathItem.href}>{pathItem.text}</Typography>;
           })}
-          {normalizedPath?.length && (
-            <Typography>
-              {normalizedPath[normalizedPath.length - 1]?.text}
-            </Typography>
-          )}
+          {/* Last path item is just text */}
+          {normalizedPath?.length &&
+            (normalizedPath[normalizedPath.length - 1]?.text === 'loading' ? (
+              <Skeleton variant="text" className="w-16" />
+            ) : (
+              <Typography>
+                {normalizedPath[normalizedPath.length - 1]?.text}
+              </Typography>
+            ))}
         </Breadcrumbs>
       </div>
       {children}
