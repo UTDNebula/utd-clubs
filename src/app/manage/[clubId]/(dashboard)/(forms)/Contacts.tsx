@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import ContactListItem from '@src/components/club/manage/ContactListItem';
-import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
+import FormFieldSet from '@src/components/form/FormFieldSet';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { contactNames, startContacts } from '@src/server/db/schema/contacts';
 import { useTRPC } from '@src/trpc/react';

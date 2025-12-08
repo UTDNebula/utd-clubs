@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
 import CollaboratorListItem from '@src/components/club/manage/CollaboratorListItem';
-import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
+import FormFieldSet from '@src/components/form/FormFieldSet';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 import type {
   SelectClub,

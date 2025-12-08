@@ -3,7 +3,7 @@
 import { TextField } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import FormFieldSet from '@src/components/club/manage/form/FormFieldSet';
+import FormFieldSet from '@src/components/form/FormFieldSet';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { createClubSchema } from '@src/utils/formSchemas';

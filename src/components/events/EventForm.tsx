@@ -7,10 +7,10 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
+import FormImage from '@src/components/club/manage/form/FormImage';
 import FormFieldSet, {
   FormFieldSetSkeleton,
-} from '@src/components/club/manage/form/FormFieldSet';
-import FormImage from '@src/components/club/manage/form/FormImage';
+} from '@src/components/form/FormFieldSet';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
