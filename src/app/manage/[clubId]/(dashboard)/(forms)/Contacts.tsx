@@ -89,7 +89,6 @@ const Contacts = ({ club }: ContactsProps) => {
     if (current) {
       setDeletedIds((prev) => [...prev, current.platform]);
     }
-    updateScrollGradient();
   };
 
   const currentContacts =
@@ -97,42 +96,6 @@ const Contacts = ({ club }: ContactsProps) => {
   const available = startContacts.filter(
     (p) => !currentContacts.map((c) => c.platform).includes(p),
   );
-
-  // Scroll gradients for adding contact item
-
-  const scrollDistanceForGradient = 32;
-
-  const [addContactBeforeOpacity, setAddContactBeforeOpacity] = useState(0);
-  const [addContactAfterOpacity, setAddContactAfterOpacity] = useState(1);
-
-  let addContactScrollDistance = 0;
-  let addContactScrollDistanceMax = 0;
-
-  const addContactRef = useRef<HTMLDivElement>(null);
-
-  const addContactStyle: { [key: string]: string | number } = {
-    '--addContactBeforeOpacity': addContactBeforeOpacity,
-    '--addContactAfterOpacity': addContactAfterOpacity,
-  };
-
-  const updateScrollGradient = () => {
-    addContactScrollDistance = addContactRef.current?.scrollLeft ?? 0;
-    addContactScrollDistanceMax =
-      (addContactRef.current?.scrollWidth ?? 0) -
-      (addContactRef.current?.clientWidth ?? 0);
-
-    setAddContactBeforeOpacity(
-      addContactScrollDistance - 1 < addContactScrollDistanceMax
-        ? addContactScrollDistance / scrollDistanceForGradient
-        : 0,
-    );
-    setAddContactAfterOpacity(
-      addContactScrollDistance < addContactScrollDistanceMax
-        ? (addContactScrollDistanceMax - addContactScrollDistance) /
-            scrollDistanceForGradient
-        : 0,
-    );
-  };
 
   return (
     <form
@@ -155,48 +118,25 @@ const Contacts = ({ club }: ContactsProps) => {
                 />
               ))}
               {available.length > 0 && (
-                <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors sm:rounded-full max-sm:rounded-lg overflow-clip">
+                <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors rounded-lg">
                   <Typography
                     variant="button"
-                    className="flex items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 max-sm:pt-4 max-h-full px-4 text-base text-slate-600 normal-case"
+                    className="flex shrink-0 items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 sm:pl-4 max-sm:pt-4 max-h-full text-base text-slate-600 normal-case"
                   >
                     Add Contact...
                   </Typography>
-                  <div
-                    style={addContactStyle}
-                    className={[
-                      'relative min-w-0 w-full sm:rounded-full overflow-clip',
-                      'before:opacity-[var(--addContactBeforeOpacity)] after:opacity-[var(--addContactAfterOpacity)]',
-                      'before:content before:z-10 before:absolute before:top-0 before:left-0 before:h-full before:w-8 before:pointer-events-none',
-                      'before:bg-linear-to-r before:from-white/75 before:to-transparent ',
-                      'after:content after:z-10 after:absolute after:top-0 after:right-0 after:h-full after:w-8 after:pointer-events-none',
-                      'after:bg-linear-to-l after:from-white/75 after:to-transparent after:backdrop-blur-xs after:mask-l-from-0',
-                    ].join(' ')}
-                  >
-                    <div
-                      className="relative p-2 flex gap-2 overflow-x-auto no-scrollbar sm:rounded-full overscroll-contain"
-                      ref={addContactRef}
-                      onScroll={updateScrollGradient}
-                      onClick={updateScrollGradient}
-                      onWheel={(event) => {
-                        if (!event.deltaY) return;
-                        event.currentTarget.scrollLeft +=
-                          event.deltaX + event.deltaY;
-                        event.preventDefault();
-                      }}
-                    >
-                      {available.map((platform) => (
-                        <Button
-                          key={platform}
-                          variant="contained"
-                          value={platform}
-                          className="normal-case min-w-fit"
-                          onClick={() => field.pushValue({ platform, url: '' })}
-                        >
-                          {contactNames[platform]}
-                        </Button>
-                      ))}
-                    </div>
+                  <div className="flex flex-wrap relative p-2 gap-2 overflow-x-auto">
+                    {available.map((platform) => (
+                      <Button
+                        key={platform}
+                        variant="contained"
+                        value={platform}
+                        className="normal-case min-w-fit"
+                        onClick={() => field.pushValue({ platform, url: '' })}
+                      >
+                        {contactNames[platform]}
+                      </Button>
+                    ))}
                   </div>
                 </div>
               )}
