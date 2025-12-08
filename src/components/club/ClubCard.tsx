@@ -1,21 +1,14 @@
 'use client';
 
-import { Button, Skeleton } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { SelectClub as Club } from '@src/server/db/models';
-import { useTRPC } from '@src/trpc/react';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
 
 type Props = { club: Club; priority?: boolean; manageView?: boolean };
 
 const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
-  const api = useTRPC();
-  const { data: memberType, isPending } = useQuery(
-    api.club.memberType.queryOptions({ id: club.id }),
-  );
-
   const desc = club.description;
   const name = club.name;
 

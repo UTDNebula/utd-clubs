@@ -22,8 +22,18 @@ const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
           {!manageView && <EventRegisterButtonSkeleton />}
           {manageView && (
             <>
-              <Skeleton variant="circular" width={40} height={40} />
-              <Skeleton variant="circular" width={40} height={40} />
+              <Skeleton
+                variant="rounded"
+                className="rounded-full"
+                width={70}
+                height={30.75}
+              />
+              <Skeleton
+                variant="rounded"
+                className="rounded-full"
+                width={70}
+                height={30.75}
+              />
             </>
           )}
         </div>

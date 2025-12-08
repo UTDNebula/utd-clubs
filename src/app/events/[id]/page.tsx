@@ -3,6 +3,8 @@ import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import EventDeleteButton from '@src/components/events/EventDeleteButton';
+import EventEditButton from '@src/components/events/EventEditButton';
 import EventRegisterButton from '@src/components/events/EventRegisterButton';
 import { EventHeader } from '@src/components/header/BaseHeader';
 import MarkdownText from '@src/components/MarkdownText';
@@ -56,15 +58,14 @@ export default async function EventsPage(props: Params) {
             <div className="ml-auto flex items-center gap-x-6">
               {memberType === 'Officer' ||
                 (memberType === 'President' && (
-                  <Link href={`/manage/${club.id}/events/edit/${event.id}`}>
-                    <Button
-                      variant="contained"
-                      size="large"
-                      className="normal-case"
-                    >
-                      Edit
-                    </Button>
-                  </Link>
+                  <>
+                    <EventDeleteButton isHeader event={event} />
+                    <EventEditButton
+                      isHeader
+                      clubId={club.id}
+                      eventId={event.id}
+                    />
+                  </>
                 ))}
               <EventRegisterButton isHeader eventId={event.id} />
             </div>

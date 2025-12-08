@@ -1,26 +1,28 @@
 'use client';
 
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { Button } from '@mui/material';
+import Link from 'next/link';
 
 export default function EventEditButton({
+  isHeader,
   clubId,
   eventId,
 }: {
+  isHeader?: boolean;
   clubId: string;
   eventId: string;
 }) {
-  const router = useRouter();
   return (
-    <IconButton
-      onClick={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        router.push(`/manage/${clubId}/events/edit/${eventId}`);
-      }}
-    >
-      <EditIcon />
-    </IconButton>
+    <Link href={`/manage/${clubId}/events/edit/${eventId}`}>
+      <Button
+        variant="contained"
+        size={isHeader ? 'large' : 'small'}
+        className="normal-case"
+        startIcon={<EditIcon />}
+      >
+        Edit
+      </Button>
+    </Link>
   );
 }

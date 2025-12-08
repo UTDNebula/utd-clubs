@@ -1,5 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
-import { IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import { format, isSameDay } from 'date-fns';
 import Image from 'next/image';
 import EventTimeAlert from '@src/components/events/EventTimeAlert';
@@ -51,9 +51,14 @@ const EventCardPreview = ({ club, event }: Props) => {
         </div>
       </div>
       <div className="m-4 mt-0 flex flex-row gap-2">
-        <IconButton className="bg-royal [&>svg]:fill-white">
-          <AddIcon />
-        </IconButton>
+        <Button
+          variant="contained"
+          className="normal-case"
+          size="small"
+          startIcon={<AddIcon />}
+        >
+          Register
+        </Button>
       </div>
     </div>
   );
