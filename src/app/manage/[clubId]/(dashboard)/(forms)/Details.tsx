@@ -164,7 +164,7 @@ const Details = ({ club }: DetailsProps) => {
                     textField: {
                       size: 'small',
                       error: !field.state.meta.isValid,
-                      helperText: field.state.meta.isValid
+                      helperText: !field.state.meta.isValid
                         ? field.state.meta.errors
                             .map((err) => err?.message)
                             .join('. ') + '.'

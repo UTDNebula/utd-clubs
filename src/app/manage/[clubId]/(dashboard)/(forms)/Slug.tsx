@@ -5,6 +5,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { TextField, Tooltip } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import FormFieldSet from '@src/components/form/FormFieldSet';
 import type { SelectClub } from '@src/server/db/models';
@@ -21,6 +22,7 @@ type DetailsProps = {
 const Slug = ({ club, role }: DetailsProps) => {
   const api = useTRPC();
   const editSlug = useMutation(api.club.edit.slug.mutationOptions({}));
+  const router = useRouter();
 
   const [defaultValues, setDefaultValues] = useState({
     id: club.id,
@@ -35,6 +37,7 @@ const Slug = ({ club, role }: DetailsProps) => {
         setDefaultValues({ id: club.id, slug: updated });
         formApi.reset({ id: club.id, slug: updated });
       }
+      router.refresh();
     },
     validators: {
       onChange: editSlugSchema,
@@ -43,11 +46,15 @@ const Slug = ({ club, role }: DetailsProps) => {
 
   // Check if taken
   const [input, setInput] = useState(club.slug);
+  const [simpleError, setSimpleError] = useState(false);
   const debouncedSearch = useDebounce(input, 300);
   const { data: slugExists, isFetching } = useQuery(
     api.club.slugExists.queryOptions(
       { slug: debouncedSearch },
-      { enabled: !!debouncedSearch },
+      {
+        enabled:
+          !!debouncedSearch && debouncedSearch !== club.slug && !simpleError,
+      },
     ),
   );
   const isFetchingOrWaiting = isFetching || debouncedSearch !== input;
@@ -64,7 +71,7 @@ const Slug = ({ club, role }: DetailsProps) => {
         return {
           ...prev,
           errorMap: {
-            onChange: [{ message: 'Checking availability…' }],
+            onChange: [{ message: 'Checking availability..' }],
           },
           isValidating: true,
         };
@@ -101,7 +108,7 @@ const Slug = ({ club, role }: DetailsProps) => {
             onChange:
               prev.errorMap.onChange?.filter(
                 (err: { message?: string } | undefined) =>
-                  err?.message !== 'Checking availability…' &&
+                  err?.message !== 'Checking availability..' &&
                   err?.message !== 'This slug is already taken',
               ) ?? [],
           },
@@ -125,6 +132,7 @@ const Slug = ({ club, role }: DetailsProps) => {
     const stringErrors = errors
       .map((error) => error?.message)
       .filter((error) => typeof error === 'string');
+    console.log(stringErrors);
     if (stringErrors.length) {
       return stringErrors[0] === 'This slug is already taken' ? (
         <span className="flex items-center gap-1">
@@ -181,13 +189,13 @@ const Slug = ({ club, role }: DetailsProps) => {
             validators={{
               onChange: ({ value }) => {
                 const result = editSlugSchema.shape.slug.safeParse(value);
-                return (
-                  (result.success
-                    ? undefined
-                    : result.error.issues.map((issue) => ({
-                        message: issue.message,
-                      }))) ?? []
-                );
+                const normalizeToArray = result.success
+                  ? []
+                  : result.error.issues.map((issue) => ({
+                      message: issue.message,
+                    }));
+                setSimpleError(normalizeToArray.length !== 0);
+                return normalizeToArray;
               },
             }}
           >
