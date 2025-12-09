@@ -75,7 +75,7 @@ const ContactListItem = withForm({
                           }[]
                         )
                           .map((err) => err?.message)
-                          .join('. ')
+                          .join('. ') + '.'
                       : undefined
                   }
                 />
