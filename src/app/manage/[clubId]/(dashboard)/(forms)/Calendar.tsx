@@ -8,6 +8,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Tooltip,
 } from '@mui/material';
 import FormFieldSet from '@src/components/form/FormFieldSet';
 import type { SelectClub } from '@src/server/db/models';
@@ -41,14 +42,18 @@ const Calendar = ({ club }: CalendarProps) => {
       </div>
       <div className="m-2 flex flex-col gap-4">
         {!isLinked ? (
-          <Button
-            variant="contained"
-            className="normal-case"
-            startIcon={<GoogleIcon />}
-            disabled
-          >
-            Link Google Calendar
-          </Button>
+          <Tooltip title="Coming Soon">
+            <span>
+              <Button
+                variant="contained"
+                className="normal-case w-full"
+                startIcon={<GoogleIcon />}
+                disabled
+              >
+                Link Google Calendar
+              </Button>
+            </span>
+          </Tooltip>
         ) : isSyncing ? (
           <>
             <Alert severity="success">
