@@ -28,11 +28,11 @@ export default function Loading() {
         </div>
       </ClubManageHeader>
       <div className="flex w-full flex-col items-center">
-        <div className="flex flex-col gap-8">
-          <FormFieldSetSkeleton className="max-w-2xl" />
-          <FormFieldSetSkeleton className="max-w-2xl" />
-          <FormFieldSetSkeleton className="max-w-2xl" />
-          <FormFieldSetSkeleton className="max-w-2xl" />
+        <div className="flex flex-col gap-8 w-full max-w-6xl">
+          <FormFieldSetSkeleton />
+          <FormFieldSetSkeleton />
+          <FormFieldSetSkeleton />
+          <FormFieldSetSkeleton />
         </div>
       </div>
     </>

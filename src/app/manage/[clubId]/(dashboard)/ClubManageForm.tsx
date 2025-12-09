@@ -23,7 +23,7 @@ const ClubManageForm = async ({
   const session = await auth.api.getSession({ headers: await headers() });
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 w-full max-w-6xl">
       {club.approved !== 'approved' && <NotApproved status={club.approved} />}
       <Details club={club} />
       <Officers club={club} listedOfficers={listedOfficers} />
