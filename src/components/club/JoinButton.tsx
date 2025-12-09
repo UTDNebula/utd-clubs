@@ -1,53 +1,117 @@
 'use client';
+
+import AddIcon from '@mui/icons-material/Add';
+import CheckIcon from '@mui/icons-material/Check';
+import TuneIcon from '@mui/icons-material/Tune';
+import { Button, Skeleton, Tooltip } from '@mui/material';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
-import { useState } from 'react';
-import { api } from '@src/trpc/react';
-import { type Session } from 'next-auth';
+import { useTRPC } from '@src/trpc/react';
+import { authClient } from '@src/utils/auth-client';
+import { useRegisterModal } from '../account/RegisterModalProvider';
 
 type JoinButtonProps = {
-  session: Session | null;
   isHeader?: boolean;
-  isJoined?: boolean;
-  clubID: string;
+  clubId: string;
 };
 
-const JoinButton = ({
-  isHeader,
-  session,
-  isJoined,
-  clubID,
-}: JoinButtonProps) => {
-  const mutation = api.club.joinLeave.useMutation();
-  const clubId = clubID;
-  const [isDisabled, setDisabled] = useState(isJoined ?? false);
-  const handleJoin = () => {
-    mutation.mutate({ clubId });
-    setDisabled(!isDisabled);
-  };
-  if (!session) {
+const JoinButton = ({ isHeader, clubId }: JoinButtonProps) => {
+  const { data: session } = authClient.useSession();
+  const api = useTRPC();
+  const queryClient = useQueryClient();
+  const { data: memberType, isPending } = useQuery(
+    api.club.memberType.queryOptions({ id: clubId }),
+  );
+
+  const joinLeave = useMutation(
+    api.club.joinLeave.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: [
+            ['club', 'memberType'],
+            { input: { id: clubId }, type: 'query' },
+          ],
+        });
+      },
+    }),
+  );
+
+  const router = useRouter();
+
+  let useAuthPage = false;
+
+  const { setShowRegisterModal } = useRegisterModal(() => {
+    useAuthPage = true;
+  });
+
+  if (memberType === 'Officer' || memberType === 'President') {
     return (
-      <button
-        className={`text-xs font-extrabold text-white disabled:bg-slate-700
-        ${
-          isHeader
-            ? 'rounded-full px-8 py-4'
-            : 'mr-2 rounded-2xl border-solid px-4 py-2'
-        }`}
-        disabled
-      >
-        Join
-      </button>
+      <Link href={`/manage/${clubId}`}>
+        <Button
+          variant="contained"
+          size={isHeader ? 'large' : 'small'}
+          className="normal-case"
+          startIcon={<TuneIcon />}
+        >
+          Manage
+        </Button>
+      </Link>
     );
   }
+
   return (
-    <button
-      onClick={handleJoin}
-      className={`bg-blue-primary text-xs font-extrabold text-white transition-colors hover:bg-blue-700 disabled:bg-blue-700
-      ${isHeader ? 'rounded-full  px-8 py-4 ' : 'mr-2 rounded-2xl px-4 py-2'}`}
-    >
-      {isDisabled ? 'Joined' : 'Join'}
-    </button>
+    <Tooltip title={memberType ? 'Click to leave club' : 'Click to join club'}>
+      <Button
+        variant="contained"
+        size={isHeader ? 'large' : 'small'}
+        startIcon={memberType ? <CheckIcon /> : <AddIcon />}
+        onClick={async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (isPending || joinLeave.isPending) return;
+
+          if (!session) {
+            // This will use auth page when this JoinButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
+            if (useAuthPage) {
+              router.push(
+                `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
+              );
+            } else {
+              setShowRegisterModal(true);
+            }
+            return;
+          }
+
+          void joinLeave.mutateAsync({ clubId: clubId });
+        }}
+        className={`normal-case ${memberType ? 'bg-slate-400 hover:bg-slate-500' : ''}`}
+        loading={isPending || joinLeave.isPending}
+      >
+        {memberType ? 'Joined' : 'Join'}
+      </Button>
+    </Tooltip>
   );
 };
 
 export default JoinButton;
+
+type JoinButtonSkeletonProps = {
+  isHeader?: boolean;
+};
+
+export const JoinButtonSkeleton = ({ isHeader }: JoinButtonSkeletonProps) => {
+  return (
+    <Skeleton variant="rounded" className="rounded-full">
+      <Button
+        variant="contained"
+        size={isHeader ? 'large' : 'small'}
+        className="normal-case"
+      >
+        Join
+      </Button>
+    </Skeleton>
+  );
+};

@@ -1,51 +1,69 @@
 'use client';
-import SidebarItems from './SidebarItems';
+
 import Image from 'next/image';
+import Link from 'next/link';
+import nebulaPic from 'public/nebula-logo.png';
 import {
   mainCats,
   moreCats,
   type personalCats,
 } from '@src/constants/categories';
+import SidebarItems from './SidebarItems';
+
 type NavMenuProps = {
   userCapabilites: Array<(typeof personalCats)[number]>;
 };
+
 const NavMenu = ({ userCapabilites }: NavMenuProps) => {
   return (
     <>
-      <div className="flex w-full place-content-center items-center pb-7 pt-10">
-        <Image
-          src="/nebula-logo.png"
-          alt=""
-          width={60}
-          height={60}
-          className="mr-1.5"
-        />
-        <h1 className=" text-2xl font-medium">Jupiter</h1>
+      {/* Logo Section */}
+      <div className="flex w-full justify-center pt-14 pb-14">
+        <Link className="flex items-center gap-2" href="/">
+          <Image
+            src={nebulaPic}
+            alt="Nebula Labs logo"
+            width={60}
+            height={60}
+          />
+          <h1 className="font-display text-2xl font-bold">UTD CLUBS</h1>
+        </Link>
       </div>
-      <div className="w-full px-5 py-5">
-        <h1 className="px-4 text-sm font-light capitalize text-slate-500 md:text-xs">
-          Main
-        </h1>
-        <div className="mb-5 mt-6">
+
+      {/* Navigation Section */}
+      <div className="w-full px-6 py-4">
+        <div className="flex flex-col space-y-4">
           {mainCats.map((cat) => (
             <SidebarItems key={cat} cat={cat} />
           ))}
-        </div>
-      </div>
-      <div className="w-full py-5 pl-5 md:p-5">
-        <h1 className="px-4 text-sm font-light capitalize text-slate-500 md:text-xs">
-          More
-        </h1>
-        <div className="mb-5 mt-6">
+
           {userCapabilites.map((cat) => (
             <SidebarItems key={cat} cat={cat} />
           ))}
+
           {moreCats.map((cat) => (
             <SidebarItems key={cat} cat={cat} />
           ))}
         </div>
       </div>
+
+      {/* Privacy Policy */}
+      <div className="w-full mt-auto px-6 py-2 flex flex-wrap gap-2 justify-evenly text-base font-medium capitalize md:text-sm text-slate-500">
+        <Link
+          className="underline decoration-transparent hover:decoration-inherit transition"
+          href="https://www.utdnebula.com/legal/privacy-policy.txt"
+        >
+          Privacy Policy
+        </Link>
+        <Link
+          className="underline decoration-transparent hover:decoration-inherit transition"
+          href="/sitemap.xml"
+        >
+          Sitemap
+        </Link>
+      </div>
     </>
   );
 };
+
 export default NavMenu;

@@ -1,32 +1,30 @@
 'use server';
 
+import Link from 'next/link';
 import EventCard from '@src/components/events/EventCard';
 import { api } from '@src/trpc/server';
-import Link from 'next/link';
 
 const CommunityEvents = async () => {
   const events = await api.userMetadata.getEvents();
   if (events.length == 0) {
     return (
       <div className="font-bold text-slate-500">
-        <div>You haven&apos;t added any community events yet 😭</div>
-        <div>
+        <p className="mt-2">You haven&apos;t added any community events yet.</p>
+        <p className="mt-2">
           You can check out new events{' '}
           <Link
-            href={'/events'}
-            className="text-lg text-blue-primary transition-colors hover:text-blue-700"
+            href="/events"
+            className="text-royal hover:text-royalDark underline decoration-transparent hover:decoration-inherit transition"
           >
             here
           </Link>
-        </div>
+          .
+        </p>
       </div>
     );
   }
   return (
-    <div
-      className="group flex w-full flex-col items-center space-y-7.5 pt-10 sm:items-start"
-      data-view={'list'}
-    >
+    <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
       {events.map((event) => (
         <EventCard key={event.id} event={event} />
       ))}

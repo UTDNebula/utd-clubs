@@ -1,5 +1,5 @@
-import { type SettingSchema } from './FormCard';
 import { type UseFormRegister } from 'react-hook-form';
+import { type SettingSchema } from './FormCard';
 
 type SettingsInputProps = {
   label: string;
@@ -22,7 +22,7 @@ const SettingsInput = ({
       <input
         type="text"
         defaultValue={defaultValue}
-        className="box-border w-full rounded-full border p-2"
+        className="box-border w-full rounded-full border bg-white p-2"
         {...register(name)}
       />
     </div>

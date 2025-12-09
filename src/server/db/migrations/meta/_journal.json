@@ -1,75 +1,75 @@
 {
-  "version": "5",
-  "dialect": "pg",
+  "version": "7",
+  "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1702076289386,
-      "tag": "0000_slimy_lifeguard",
+      "version": "7",
+      "when": 1764200141214,
+      "tag": "20251126233541_kind_eternals",
       "breakpoints": true
     },
     {
       "idx": 1,
-      "version": "5",
-      "when": 1703006445550,
-      "tag": "0001_melodic_pestilence",
+      "version": "7",
+      "when": 1764644843153,
+      "tag": "20251202030723_robust_menace",
       "breakpoints": true
     },
     {
       "idx": 2,
-      "version": "5",
-      "when": 1703471526365,
-      "tag": "0002_lean_obadiah_stane",
+      "version": "7",
+      "when": 1764649556522,
+      "tag": "20251202042556_fix-access-token-expiration",
       "breakpoints": true
     },
     {
       "idx": 3,
-      "version": "5",
-      "when": 1703484329154,
-      "tag": "0003_slim_sleeper",
+      "version": "7",
+      "when": 1764711512252,
+      "tag": "20251202213832_eminent_junta",
       "breakpoints": true
     },
     {
       "idx": 4,
-      "version": "5",
-      "when": 1703689775540,
-      "tag": "0004_smart_shadow_king",
+      "version": "7",
+      "when": 1764713000714,
+      "tag": "20251202220320_magical_lord_hawal",
       "breakpoints": true
     },
     {
       "idx": 5,
-      "version": "5",
-      "when": 1706922435227,
-      "tag": "0005_futuristic_taskmaster",
+      "version": "7",
+      "when": 1764716486332,
+      "tag": "20251202230126_cultured_loki",
       "breakpoints": true
     },
     {
       "idx": 6,
-      "version": "5",
-      "when": 1710890177407,
-      "tag": "0006_narrow_mad_thinker",
+      "version": "7",
+      "when": 1764720222292,
+      "tag": "20251203000342_fast_sharon_ventura",
       "breakpoints": true
     },
     {
       "idx": 7,
-      "version": "5",
-      "when": 1712936415961,
-      "tag": "0007_cool_stature",
+      "version": "7",
+      "when": 1764779544824,
+      "tag": "20251203163224_nervous_shadowcat",
       "breakpoints": true
     },
     {
       "idx": 8,
-      "version": "5",
-      "when": 1729719886854,
-      "tag": "0008_military_mole_man",
+      "version": "7",
+      "when": 1764888093150,
+      "tag": "20251204224133_mighty_bucky",
       "breakpoints": true
     },
     {
       "idx": 9,
-      "version": "5",
-      "when": 1730322465532,
-      "tag": "0009_colossal_omega_flight",
+      "version": "7",
+      "when": 1764892172195,
+      "tag": "20251204234932_steady_carlie_cooper",
       "breakpoints": true
     }
   ]

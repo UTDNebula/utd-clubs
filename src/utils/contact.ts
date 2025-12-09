@@ -2,54 +2,90 @@ import { z } from 'zod';
 
 const emailSchema = z.object({
   platform: z.literal('email'),
-  clubId: z.string().optional(),
-  url: z.string().email('Must be a valid email'),
+  clubId: z
+    .string()
+    .max(500, { message: 'Character limit reached.' })
+    .optional(),
+  url: z.email('Valid email required'),
 });
 const discordSchema = z.object({
   platform: z.literal('discord'),
-  clubId: z.string().optional(),
-  url: z.string().url('Valid url required'),
+  clubId: z
+    .string()
+    .max(500, { message: 'Character limit reached.' })
+    .optional(),
+  url: z.url('Valid url required'),
 });
 
 const youtubeSchema = z.object({
   platform: z.literal('youtube'),
-  clubId: z.string().optional(),
-  url: z.string().url('Valid url required'),
+  clubId: z
+    .string()
+    .max(500, { message: 'Character limit reached.' })
+    .optional(),
+  url: z.url('Valid url required'),
 });
 
 const twitchSchema = z.object({
   platform: z.literal('twitch'),
-  clubId: z.string().optional(),
-  url: z.string().url('Valid url required'),
+  clubId: z
+    .string()
+    .max(500, { message: 'Character limit reached.' })
+    .optional(),
+  url: z.url('Valid url required'),
 });
 
 const facebookSchema = z.object({
   platform: z.literal('facebook'),
-  clubId: z.string().optional(),
-  url: z.string().url('Valid url required'),
+  clubId: z
+    .string()
+    .max(500, { message: 'Character limit reached.' })
+    .optional(),
+  url: z.url('Valid url required'),
 });
 
 const twitterSchema = z.object({
   platform: z.literal('twitter'),
-  clubId: z.string().optional(),
-  url: z.string().url('Valid url required'),
+  clubId: z
+    .string()
+    .max(500, { message: 'Character limit reached.' })
+    .optional(),
+  url: z.url('Valid url required'),
 });
 const instagramSchema = z.object({
   platform: z.literal('instagram'),
-  clubId: z.string().optional(),
-  url: z.string().url('Valid url required'),
+  clubId: z
+    .string()
+    .max(500, { message: 'Character limit reached.' })
+    .optional(),
+  url: z.url('Valid url required'),
 });
 
 const websiteSchema = z.object({
   platform: z.literal('website'),
-  clubId: z.string().optional(),
-  url: z.string().url('Valid url required'),
+  clubId: z
+    .string()
+    .max(500, { message: 'Character limit reached.' })
+    .optional(),
+  url: z.url('Valid url required'),
+});
+
+const linkedInSchema = z.object({
+  platform: z.literal('linkedIn'),
+  clubId: z
+    .string()
+    .max(500, { message: 'Character limit reached.' })
+    .optional(),
+  url: z.url('Valid url required'),
 });
 
 const otherSchema = z.object({
   platform: z.literal('other'),
-  clubId: z.string().optional(),
-  url: z.string().url('must be a valid url'),
+  clubId: z
+    .string()
+    .max(500, { message: 'Character limit reached.' })
+    .optional(),
+  url: z.url('Valid url required'),
 });
 
 export const contactSchema = z.discriminatedUnion('platform', [
@@ -61,6 +97,7 @@ export const contactSchema = z.discriminatedUnion('platform', [
   twitterSchema,
   instagramSchema,
   websiteSchema,
+  linkedInSchema,
   otherSchema,
 ]);
 export type contact = z.infer<typeof contactSchema>;

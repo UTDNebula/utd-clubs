@@ -1,38 +1,42 @@
-import Header from '@src/components/header/BaseHeader';
-import { getServerAuthSession } from '@src/server/auth';
-import { api } from '@src/trpc/server';
-import ClubCard from './ClubCard';
+import { Button } from '@mui/material';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import ClubCard from '@src/components/club/ClubCard';
+import Header from '@src/components/header/BaseHeader';
+import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import { auth } from '@src/server/auth';
+import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 
 export default async function Page() {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
-    redirect(signInRoute('manage'));
+    redirect(await signInRoute('manage'));
   }
   const clubs = await api.club.getOfficerClubs();
   return (
-    <main className="md:pl-72">
+    <>
       <Header />
-      <div className="px-5">
-        <div className="flex flex-row">
-          <h1 className="bg-gradient-to-br from-blue-primary to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent">
-            Select a Club
-          </h1>
-          <Link
-            className="ml-auto rounded-lg bg-blue-primary px-2.5 py-2 font-bold text-white shadow-sm"
-            href={'/directory/create'}
-          >
-            create new club
-          </Link>
-        </div>
-        <div className="flex h-full w-full flex-wrap gap-4 p-4">
+      <main className="p-4">
+        <ClubManageHeader>
+          <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2 grow">
+            <Link className="ml-auto" href="/directory/create">
+              <Button
+                variant="contained"
+                className="normal-case whitespace-nowrap"
+              >
+                Create New Club
+              </Button>
+            </Link>
+          </div>
+        </ClubManageHeader>
+        <div className="flex justify-evenly h-full w-full flex-wrap gap-4 p-4">
           {clubs.map((club) => (
-            <ClubCard key={club.id} club={club} />
+            <ClubCard key={club.id} club={club} manageView />
           ))}
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

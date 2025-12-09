@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes, useEffect, useState } from 'react';
+import { useEffect, useState, type InputHTMLAttributes } from 'react';
 
 type Props = {
   value: string | number;
@@ -24,7 +24,7 @@ export default function DebouncedInput({
     }, debounce);
 
     return () => clearTimeout(timeout);
-  }, [value]);
+  }, [value, debounce, onChange]);
 
   return (
     <input

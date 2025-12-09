@@ -1,32 +1,36 @@
-import { getServerAuthSession } from '@src/server/auth';
-import SettingsForm from '@src/components/settings/SettingsForm';
 import { type Metadata } from 'next';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Header from '@src/components/header/BaseHeader';
+import SettingsForm from '@src/components/settings/SettingsForm';
+import { auth } from '@src/server/auth';
 import { signInRoute } from '@src/utils/redirect';
+
 export const metadata: Metadata = {
-  title: 'Settings - Jupiter',
-  description: 'Settings for your Jupiter account',
+  title: 'Settings',
+  description: 'Settings for your UTD Clubs account.',
   alternates: {
-    canonical: 'https://jupiter.utdnebula.com/settings',
+    canonical: 'https://clubs.utdnebula.com/settings',
   },
   openGraph: {
-    url: 'https://jupiter.utdnebula.com/settings',
-    description: 'Settings - Jupiter',
+    url: 'https://clubs.utdnebula.com/settings',
+    description: 'Settings for your UTD Clubs account.',
   },
 };
 const Settings = async () => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect(signInRoute('settings'));
+    redirect(await signInRoute('settings'));
   }
 
   return (
-    <div className="flex w-full flex-col items-center justify-center md:pl-72">
+    <>
       <Header />
-      <SettingsForm session={session} />
-    </div>
+      <main className="flex w-full flex-col items-center justify-center">
+        <SettingsForm session={session} />
+      </main>
+    </>
   );
 };
 

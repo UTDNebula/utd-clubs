@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, text, boolean, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { club } from './club';
 
 export const officers = pgTable('officers', {
@@ -9,8 +9,6 @@ export const officers = pgTable('officers', {
     .references(() => club.id),
   name: text('name').notNull(),
   position: text('position').notNull(),
-  image: text('image').default('/nebula-logo.png').notNull(),
-  isPresident: boolean('is_president').default(false).notNull(),
 });
 
 export const officersToClubs = relations(officers, ({ one }) => ({

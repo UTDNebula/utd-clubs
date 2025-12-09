@@ -1,30 +1,59 @@
+import EventIcon from '@mui/icons-material/Event';
+import PeopleIcon from '@mui/icons-material/People';
+import PreviewIcon from '@mui/icons-material/Preview';
+import Button from '@mui/material/Button';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import { api } from '@src/trpc/server';
+import ClubManageForm from './ClubManageForm';
 
-const Page = ({ params }: { params: { clubId: string } }) => {
+const Page = async (props: { params: Promise<{ clubId: string }> }) => {
+  const { clubId } = await props.params;
+
+  const club = await api.club.byId({ id: clubId });
+  if (!club) {
+    notFound();
+  }
+
   return (
     <>
-      <div className="flex flex-row gap-x-1 rounded-lg bg-white p-2 shadow-sm">
-        <Link
-          href={`/manage/${params.clubId}/edit`}
-          className="rounded-md bg-blue-primary p-1 font-semibold text-white"
-        >
-          Edit Club Data
-        </Link>
-        <Link
-          href={`/manage/${params.clubId}/edit/officers`}
-          className="rounded-md bg-blue-primary p-1 font-semibold text-white"
-        >
-          Manage Officers
-        </Link>
-        <button className="rounded-md bg-blue-primary p-1 font-semibold text-white">
-          View members
-        </button>
-        <Link
-          href={`/manage/${params.clubId}/create`}
-          className="rounded-md bg-blue-primary p-1 font-semibold text-white"
-        >
-          Create Event
-        </Link>
+      <ClubManageHeader club={club} hrefBack="/manage">
+        <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
+          <Link href={`/manage/${clubId}/members`}>
+            <Button
+              variant="contained"
+              className="normal-case whitespace-nowrap"
+              startIcon={<PeopleIcon />}
+              size="large"
+            >
+              Members
+            </Button>
+          </Link>
+          <Link href={`/manage/${clubId}/events`}>
+            <Button
+              variant="contained"
+              className="normal-case whitespace-nowrap"
+              startIcon={<EventIcon />}
+              size="large"
+            >
+              Events
+            </Button>
+          </Link>
+          <Link href={`/directory/${club.slug}`}>
+            <Button
+              variant="contained"
+              className="normal-case whitespace-nowrap"
+              startIcon={<PreviewIcon />}
+              size="large"
+            >
+              Listing
+            </Button>
+          </Link>
+        </div>
+      </ClubManageHeader>
+      <div className="flex w-full flex-col items-center">
+        <ClubManageForm club={club} />
       </div>
     </>
   );

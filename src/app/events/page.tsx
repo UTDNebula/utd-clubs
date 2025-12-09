@@ -1,34 +1,33 @@
+import { type Metadata } from 'next';
+import type z from 'zod';
+import EventCard from '@src/components/events/EventCard';
 import { EventHeader } from '@src/components/header/BaseHeader';
 import { api } from '@src/trpc/server';
-import EventView from './eventView';
-import { type Metadata } from 'next';
 import { eventParamsSchema } from '@src/utils/eventFilter';
-import EventCard from '@src/components/events/EventCard';
+import EventView from './eventView';
 
 export const metadata: Metadata = {
-  title: 'Events - Jupiter',
-  description: 'Get connected on campus.',
+  title: 'Events',
   alternates: {
-    canonical: 'https://jupiter.utdnebula.com/events',
+    canonical: 'https://clubs.utdnebula.com/events',
   },
   openGraph: {
-    url: 'https://jupiter.utdnebula.com/events',
-    description: 'Get connected on campus.',
+    url: 'https://clubs.utdnebula.com/events',
   },
 };
-const Events = async ({
-  searchParams,
-}: {
-  searchParams: (typeof eventParamsSchema)['_input'];
+const Events = async (props: {
+  searchParams: Promise<z.input<typeof eventParamsSchema>>;
 }) => {
+  const searchParams = await props.searchParams;
   const parsed = eventParamsSchema.parse(searchParams);
   const { events } = await api.event.findByDate({
     date: parsed.date,
   });
+
   return (
-    <main className="pb-10 md:pl-72">
+    <main className="pb-10">
       <EventHeader />
-      <EventView searchParams={parsed}>
+      <EventView date={parsed.date}>
         {events.map((event) => {
           return <EventCard key={event.id} event={event} />;
         })}

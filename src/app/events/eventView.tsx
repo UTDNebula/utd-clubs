@@ -1,34 +1,68 @@
 'use client';
-import DateBrowser from '@src/components/events/DateBrowser';
-import { type eventParamsSchema } from '@src/utils/eventFilter';
-import useSyncedSearchParams from '@src/utils/useSyncedSearchParams';
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { IconButton } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { add, format, parseISO, sub } from 'date-fns';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { type ReactNode } from 'react';
+
 type Props = {
   children: ReactNode;
-  searchParams: eventParamsSchema;
+  date: string;
 };
 
-const EventView = ({ children, searchParams }: Props) => {
-  const [params, setParams] = useSyncedSearchParams(searchParams, '/events');
+const EventView = ({ children, date }: Props) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  function setDate(newValue: Date) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('date', format(newValue, 'yyyy-MM-dd'));
+    router.replace(`${pathname}?${params.toString()}`);
+  }
+
   return (
     <div className="w-full px-6">
-      <div className="flex flex-col pt-4 md:flex-row md:items-end md:pb-12 md:pr-7.5">
-        <h1 className="h-min align-middle text-2xl font-bold text-[#4D5E80]">
-          Events
-        </h1>
-        <div className="relative z-0 mt-2.5 flex flex-row justify-center gap-x-16 md:ml-auto md:mt-0">
-          <DateBrowser filterState={params} setParams={setParams} />
+      <div className="flex flex-col pt-4 md:flex-row justify-between items-center md:pb-12">
+        <h1 className="font-display text-2xl font-bold text-haiti">Events</h1>
+        <div className="flex gap-2 items-center">
+          <IconButton
+            size="large"
+            onClick={() => {
+              setDate(sub(parseISO(date), { days: 1 }));
+            }}
+          >
+            <ArrowBackIcon fontSize="inherit" />
+          </IconButton>
+          <DatePicker
+            value={parseISO(date)}
+            onChange={(newValue, context) => {
+              if (context.validationError == null && newValue != null) {
+                setDate(newValue);
+              }
+            }}
+            className="[&>.MuiInputBase-root]:bg-white"
+            slotProps={{
+              actionBar: {
+                actions: ['today', 'accept'],
+              },
+            }}
+          />
+          <IconButton
+            size="large"
+            onClick={() => {
+              setDate(add(parseISO(date), { days: 1 }));
+            }}
+          >
+            <ArrowForwardIcon fontSize="inherit" />
+          </IconButton>
         </div>
       </div>
-      <div className="container flex w-full flex-col overflow-x-clip sm:flex-row sm:space-x-7.5 ">
-        <div
-          data-view={'list'}
-          className={
-            'md:items-normal group flex w-full flex-col items-center space-y-7.5 pt-10'
-          }
-        >
-          {children}
-        </div>
+      <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
+        {children}
       </div>
     </div>
   );

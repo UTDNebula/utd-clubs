@@ -1,19 +1,24 @@
 'use client';
 
-import { api } from '@src/trpc/react';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useTRPC } from '@src/trpc/react';
 
 type Props = { status: 'approved' | 'pending' | 'rejected'; clubId: string };
 
 export default function ChangeClubStatus({ status: initial, clubId }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState<Props['status']>(initial);
-  const { mutate } = api.admin.changeClubStatus.useMutation({
-    onSuccess: () => router.refresh(),
-  });
+  const api = useTRPC();
+  const { mutate } = useMutation(
+    api.admin.changeClubStatus.mutationOptions({
+      onSuccess: () => router.refresh(),
+    }),
+  );
 
-  function onChange(e: React.ChangeEvent<HTMLSelectElement>) {
+  function onChange(e: SelectChangeEvent) {
     switch (e.target.value) {
       case 'approved':
         mutate({ clubId: clubId, status: 'approved' });
@@ -45,15 +50,11 @@ export default function ChangeClubStatus({ status: initial, clubId }: Props) {
 
   return (
     <div className="flex">
-      <select
-        className={`rounded-lg border-2 border-gray-300 p-2 text-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 ${statusColor()}`}
-        value={status}
-        onChange={onChange}
-      >
-        <option value="approved">Approved</option>
-        <option value="pending">Pending</option>
-        <option value="rejected">Rejected</option>
-      </select>
+      <Select value={status} onChange={onChange} className={statusColor()}>
+        <MenuItem value="approved">Approved</MenuItem>
+        <MenuItem value="pending">Pending</MenuItem>
+        <MenuItem value="rejected">Rejected</MenuItem>
+      </Select>
     </div>
   );
 }

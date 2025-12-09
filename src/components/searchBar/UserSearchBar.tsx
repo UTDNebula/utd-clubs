@@ -1,40 +1,121 @@
 'use client';
-import { api } from '@src/trpc/react';
-import { useState } from 'react';
-import { DebouncedSearchBar } from './DebouncedSearchBar';
+
+import {
+  Autocomplete,
+  CircularProgress,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import React, { useEffect, useState } from 'react';
+import { useTRPC } from '@src/trpc/react';
+import useDebounce from '@src/utils/useDebounce';
+
+function getFullName(user: {
+  firstName: string | null;
+  lastName: string | null;
+}) {
+  return `${user.firstName ?? ''} ${user.lastName ?? ''}`;
+}
 
 type UserSearchBarProps = {
   passUser: (user: { id: string; name: string }) => void;
+  placeholder?: string;
+  className?: string;
 };
-export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
-  const [search, setSearch] = useState('');
-  const userQuery = api.userMetadata.searchByName.useQuery(
-    { name: search },
-    {
-      enabled: !!search,
-    },
+
+export const UserSearchBar = ({
+  passUser,
+  placeholder,
+  className,
+}: UserSearchBarProps) => {
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = React.useState(false);
+
+  const debouncedSearch = useDebounce(input, 300);
+  const api = useTRPC();
+  const { data } = useQuery(
+    api.userMetadata.searchByNameOrEmail.queryOptions(
+      { search: debouncedSearch },
+      { enabled: !!debouncedSearch },
+    ),
   );
-  const formattedData = userQuery.isSuccess
-    ? userQuery.data.map((val) => {
-        return { name: val.firstName + ' ' + val.lastName, ...val };
-      })
-    : [];
+
+  useEffect(() => {
+    setLoading(false);
+  }, [data]);
+
   return (
-    <DebouncedSearchBar
-      placeholder="Search for Someone"
-      setSearch={setSearch}
-      value={search}
-      searchResults={formattedData}
-      onClick={(user) => {
-        passUser({ id: user.id, name: user.name });
-        setSearch('');
+    <Autocomplete
+      freeSolo
+      disableClearable
+      // className="w-full max-w-xs md:max-w-sm lg:max-w-md"
+      className="w-full"
+      aria-label="search"
+      inputValue={input}
+      options={data ?? []}
+      filterOptions={(o) => o}
+      onInputChange={(e, value) => {
+        setInput(value);
       }}
-      submitLogic={() => {
-        if (formattedData && formattedData[0]) {
-          const user = formattedData[0];
-          passUser({ id: user.id, name: user.name });
-          setSearch('');
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          size="small"
+          className={'w-full' + ' ' + className}
+          onChange={() => {
+            setLoading(true);
+          }}
+          slotProps={{
+            input: {
+              ...params.InputProps,
+              type: 'search',
+              sx: {
+                background: 'white',
+                borderRadius: 'calc(infinity * 1px)',
+              },
+              endAdornment: (
+                <>
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            },
+          }}
+          placeholder={placeholder ?? 'Search for Someone'}
+        />
+      )}
+      renderOption={(props, option) => {
+        const { key, ...otherProps } = props;
+        return (
+          <li
+            key={key}
+            {...otherProps}
+            onClick={() => {
+              passUser({ id: option.id, name: getFullName(option) });
+              setInput('');
+            }}
+          >
+            <div>
+              <Typography variant="body1">{getFullName(option)}</Typography>
+              <Typography variant="caption">{option.email}</Typography>
+            </div>
+          </li>
+        );
+      }}
+      getOptionLabel={(option) => {
+        if (typeof option === 'string') {
+          return option;
         }
+        return getFullName(option);
+      }}
+      getOptionKey={(option) => {
+        if (typeof option === 'string') {
+          return option;
+        }
+        return option.id;
       }}
     />
   );

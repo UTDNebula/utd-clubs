@@ -1,12 +1,14 @@
 'use client';
-import { type api } from '@src/trpc/server';
+
 import {
-  getCoreRowModel,
-  type ColumnDef,
-  useReactTable,
   flexRender,
+  getCoreRowModel,
+  useReactTable,
+  type ColumnDef,
 } from '@tanstack/react-table';
+import { type api } from '@src/trpc/server';
 import RoleDropDown from './RoleDropDown';
+
 type Officers = Awaited<ReturnType<typeof api.club.getOfficers>>;
 
 const columns: ColumnDef<Officers[number]>[] = [
@@ -33,14 +35,14 @@ export default function OfficerTable({ officers }: { officers: Officers }) {
 
   return (
     <div className="p-4">
-      <table className="min-w-full divide-y divide-gray-200 overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
+      <table className="min-w-full divide-y divide-gray-200 overflow-hidden border-b border-gray-200 shadow-sm sm:rounded-lg">
         <thead className="bg-gray-50">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
                 >
                   {header.isPlaceholder
                     ? null
@@ -57,7 +59,7 @@ export default function OfficerTable({ officers }: { officers: Officers }) {
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="whitespace-nowrap px-6 py-4">
+                <td key={cell.id} className="px-6 py-4 whitespace-nowrap">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

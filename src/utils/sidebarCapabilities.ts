@@ -1,13 +1,14 @@
+import { and, eq, or } from 'drizzle-orm';
+import { headers } from 'next/headers';
+import { cache } from 'react';
 import { type personalCats } from '@src/constants/categories';
-import { getServerAuthSession } from '@src/server/auth';
+import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { admin } from '@src/server/db/schema/admin';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { and, eq, or } from 'drizzle-orm';
-import { cache } from 'react';
 
 export const getUserSidebarCapabilities = cache(async () => {
-  const session = await getServerAuthSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   const capabilites: (typeof personalCats)[number][] = [];
   if (!session) return capabilites;
   if (

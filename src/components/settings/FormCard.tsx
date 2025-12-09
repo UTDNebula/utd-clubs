@@ -1,20 +1,25 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client';
-import { selectClub, type SelectClub } from '@src/server/db/models';
-import { type Session } from 'next-auth';
-import SettingsDropdown from './SettingsDropdown';
-import SettingsInput from './SettingsInput';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 import ClubSelector from '@src/components/settings/ClubSelector';
-import { api } from '@src/trpc/react';
+import {
+  selectClub,
+  SelectUserMetadata,
+  type SelectClub,
+} from '@src/server/db/models';
+import { useTRPC } from '@src/trpc/react';
 import DeleteButton from './DeleteButton';
-import { useRouter } from 'next/navigation';
+import SettingsDropdown from './SettingsDropdown';
+import SettingsInput from './SettingsInput';
 
 type Props = {
   clubs: SelectClub[];
-  user: Session['user'];
+  user: SelectUserMetadata;
 };
 
 const settingsSchema = z.object({
@@ -24,7 +29,7 @@ const settingsSchema = z.object({
   minor: z.string().nullable(),
   year: z.enum(['Freshman', 'Sophomore', 'Junior', 'Senior', 'Grad Student']),
   role: z.enum(['Student', 'Student Organizer', 'Administrator']),
-  clubs: selectClub.pick({ name: true, id: true, image: true }).array(),
+  clubs: selectClub.pick({ name: true, id: true, profileImage: true }).array(),
 });
 
 export type SettingSchema = z.infer<typeof settingsSchema>;
@@ -42,12 +47,15 @@ export default function FormCard({ clubs, user }: Props) {
       role: user.role,
     },
   });
+  const api = useTRPC();
 
-  const { mutate } = api.userMetadata.updateById.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const { mutate } = useMutation(
+    api.userMetadata.updateById.mutationOptions({
+      onSuccess: () => {
+        router.refresh();
+      },
+    }),
+  );
 
   return (
     <form
@@ -60,7 +68,7 @@ export default function FormCard({ clubs, user }: Props) {
         });
       })}
     >
-      <div className="grid w-fit grid-cols-1 gap-3  lg:grid-cols-2">
+      <div className="grid w-fit grid-cols-1 gap-3 lg:grid-cols-2">
         <div className="flex flex-col space-y-2">
           <div className="grid grid-cols-2 space-x-2">
             <SettingsInput
@@ -115,7 +123,7 @@ export default function FormCard({ clubs, user }: Props) {
           </div>
         </div>
 
-        <div className="w-full ">
+        <div className="w-full">
           <h2 className="mb-2 font-medium text-slate-500">Clubs</h2>
           <div className="max-h-96 overflow-auto">
             <ClubSelector register={register} control={control} />
@@ -125,12 +133,9 @@ export default function FormCard({ clubs, user }: Props) {
 
       <div className="mt-6 flex justify-between gap-4">
         <DeleteButton />
-        <button
-          type="submit"
-          className="rounded-full bg-blue-500 px-4 py-2 text-white transition duration-300 hover:bg-blue-700"
-        >
+        <Button type="submit" variant="contained" className="normal-case">
           Apply Changes
-        </button>
+        </Button>
       </div>
     </form>
   );

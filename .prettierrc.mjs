@@ -10,7 +10,17 @@ const config = {
   trailingComma: 'all',
   useTabs: false,
   bracketSameLine: false,
-  plugins: ['prettier-plugin-tailwindcss'],
+  endOfLine: 'auto',
+  plugins: [
+    'prettier-plugin-tailwindcss',
+    '@ianvs/prettier-plugin-sort-imports',
+  ],
+  importOrder: [
+    '<BUILTIN_MODULES>', // Node.js built-in modules
+    '<THIRD_PARTY_MODULES>', // Imports not matched by other special words or groups.
+    '^(@src)(/.*)$',
+    '^[.]', // relative imports
+  ],
 };
 
 export default config;

@@ -1,0 +1,86 @@
+import { eq } from 'drizzle-orm';
+import type { Metadata } from 'next';
+import { headers } from 'next/headers';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import JoinButton from '@src/components/club/JoinButton';
+import Header from '@src/components/header/BaseHeader';
+import { auth } from '@src/server/auth';
+import { db } from '@src/server/db';
+import { signInRoute } from '@src/utils/redirect';
+import RedoClubMatchButton from './RedoClubMatchButton';
+
+export const metadata: Metadata = {
+  title: 'Club Match Results',
+  description:
+    'Find your club match! Generate club recommendations based on a simple form.',
+  alternates: {
+    canonical: 'https://clubs.utdnebula.com/club-match/results',
+  },
+  openGraph: {
+    url: 'https://clubs.utdnebula.com/club-match/results',
+    description:
+      'Find your club match! Generate club recommendations based on a simple form.',
+  },
+};
+
+const Page = async () => {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    redirect(await signInRoute('club-match/results'));
+  }
+
+  const data = await db.query.userAiCache.findFirst({
+    where: (userAiCache) => eq(userAiCache.id, session.user.id),
+  });
+
+  if (data?.clubMatch == null) {
+    redirect('/club-match');
+  }
+
+  return (
+    <>
+      <Header />
+      <main className="flex flex-col gap-8 p-4">
+        <h1 className="font-display text-center text-4xl font-bold">
+          Your Top Club Matches
+        </h1>
+        <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">
+          {data.clubMatch.map((club) => (
+            <Link
+              key={club.id}
+              href={'/directory/' + club.id}
+              className="flex flex-col gap-2 rounded-lg bg-white shadow-2xl p-6"
+            >
+              <p className="line-clamp-2 text-2xl font-medium text-slate-800 md:text-xl">
+                {club.name}
+              </p>
+              <p className="text-base text-slate-600 md:text-sm">
+                {club.reasoning}
+              </p>
+              <ul>
+                {club.benefit.split(', ').map((benefit) => (
+                  <li
+                    key={benefit}
+                    className="ml-6 list-disc text-base text-slate-600 md:text-sm"
+                  >
+                    {benefit.charAt(0).toUpperCase() + benefit.slice(1)}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-auto flex flex-row space-x-2">
+                <JoinButton clubId={club.id} />
+              </div>
+            </Link>
+          ))}
+        </div>
+        {(data.clubMatchLimit == null || data.clubMatchLimit > 0) && (
+          <RedoClubMatchButton />
+        )}
+      </main>
+    </>
+  );
+};
+
+export default Page;

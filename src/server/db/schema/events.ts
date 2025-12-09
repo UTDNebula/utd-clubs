@@ -14,6 +14,7 @@ export const events = pgTable('events', {
   startTime: timestamp('start_time', { withTimezone: true }).notNull(),
   endTime: timestamp('end_time', { withTimezone: true }).notNull(),
   location: text('location').default('').notNull(),
+  image: text('image'),
 });
 
 export const eventsRelation = relations(events, ({ one }) => ({

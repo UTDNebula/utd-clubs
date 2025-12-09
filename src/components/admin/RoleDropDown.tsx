@@ -1,8 +1,9 @@
-import { type api as API } from '@src/trpc/server';
-import { api } from '@src/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 import { type Row, type RowData, type Table } from '@tanstack/react-table';
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useTRPC } from '@src/trpc/react';
+import { type api as API } from '@src/trpc/server';
 
 type Officers = Awaited<ReturnType<typeof API.club.getOfficers>>;
 
@@ -21,9 +22,12 @@ declare module '@tanstack/react-table' {
 
 export default function RoleDropDown({ row, column: { id }, table }: Props) {
   const router = useRouter();
-  const { mutate } = api.admin.updateOfficer.useMutation({
-    onSuccess: () => router.refresh(),
-  });
+  const api = useTRPC();
+  const { mutate } = useMutation(
+    api.admin.updateOfficer.mutationOptions({
+      onSuccess: () => router.refresh(),
+    }),
+  );
   const originalVal = row.original.memberType;
 
   const [value, setValue] = useState(originalVal);

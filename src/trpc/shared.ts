@@ -1,6 +1,9 @@
+import {
+  defaultShouldDehydrateQuery,
+  QueryClient,
+} from '@tanstack/react-query';
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
 import superjson from 'superjson';
-
 import { type AppRouter } from '@src/server/api/root';
 
 export const transformer = superjson;
@@ -13,6 +16,24 @@ export function getUrl() {
   return getBaseUrl() + '/api/trpc';
 }
 
+export function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 30 * 1000,
+      },
+      dehydrate: {
+        serializeData: transformer.serialize,
+        shouldDehydrateQuery: (query) =>
+          defaultShouldDehydrateQuery(query) ||
+          query.state.status === 'pending',
+      },
+      hydrate: {
+        deserializeData: transformer.deserialize,
+      },
+    },
+  });
+}
 /**
  * Inference helper for inputs.
  *

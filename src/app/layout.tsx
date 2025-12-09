@@ -1,38 +1,50 @@
 import '@src/styles/globals.css';
-
-import { Inter } from 'next/font/google';
-import { headers } from 'next/headers';
-
-import { TRPCReactProvider } from '@src/trpc/react';
-import Sidebar from '@src/components/nav/Sidebar';
-import { type Metadata } from 'next';
-
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { type Metadata } from 'next';
+import { Bai_Jamjuree, Inter } from 'next/font/google';
+import { RegisterModalProvider } from '@src/components/account/RegisterModalProvider';
+import { TRPCReactProvider } from '@src/trpc/react';
+import ClientLocalizationProvider from '@src/utils/localization';
+import theme from '@src/utils/theme';
 
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-main',
+});
+
+const baiJamjuree = Bai_Jamjuree({
+  subsets: ['latin'],
+  weight: ['500', '700'],
+  variable: '--font-display',
 });
 
 export const metadata: Metadata = {
-  title: 'Jupiter',
-  icons: ['favicon-32x32.png', 'favicon-16x16.png', 'logoIcon.svg'],
-  manifest: 'site.webmanifest',
+  metadataBase: new URL('https://clubs.utdnebula.com'),
+  title: {
+    template: '%s - UTD CLUBS',
+    default: 'UTD CLUBS',
+  },
   description:
-    'A student organization portal to connect organizations on campus with interested students at UTD.',
+    'A student organization portal to connect interested students at UTD with organizations on campus.',
+  keywords: ['UT Dallas', 'clubs', 'organizations', 'events'],
   openGraph: {
-    title: 'Jupiter',
+    title: 'UTD Clubs',
     description:
-      'A student organization portal to connect organizations on campus with interested students at UTD.',
-    images: ['https://jupiter.utdnebula.com/logoIcon.png'],
+      'A student organization portal to connect interested students at UTD with organizations on campus.',
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    site: 'jupiter.utdnebula.com',
+  },
+  other: {
+    'geo.region': 'US-TX',
+    'geo.placename': 'Richardson',
   },
 };
 export const viewport = {
+  //copied from globals.css
   themeColor: '#573DFF',
 };
 
@@ -43,12 +55,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider headers={headers()}>
-          <Sidebar />
-          <div className="max-h-screen overflow-y-scroll">{children}</div>
-        </TRPCReactProvider>
-        <GoogleAnalytics gaId="G-FYTBHVKNG6" />
+      <body className={`${inter.variable} font-main ${baiJamjuree.variable}`}>
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <TRPCReactProvider>
+            <ThemeProvider theme={theme}>
+              <ClientLocalizationProvider>
+                <RegisterModalProvider>{children}</RegisterModalProvider>
+              </ClientLocalizationProvider>
+            </ThemeProvider>
+          </TRPCReactProvider>
+          {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
+            <GoogleAnalytics gaId="G-FYTBHVKNG6" />
+          )}
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

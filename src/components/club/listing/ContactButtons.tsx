@@ -1,13 +1,12 @@
-import type { SelectContact as Contacts } from '@src/server/db/models';
-import { logo } from '@src/icons/ContactIcons';
+import Tooltip from '@mui/material/Tooltip';
 import Link from 'next/link';
+import { logo } from '@src/icons/ContactIcons';
+import type { SelectContact as Contacts } from '@src/server/db/models';
+import { contactNames } from '@src/server/db/schema/contacts';
 
 const EmailButton = ({ item }: { item: Contacts }) => {
   return (
-    <button
-      key={item.url}
-      className="group relative h-min self-center rounded-full bg-slate-100 p-2.5 transition-colors hover:bg-blue-700"
-    >
+    <button className="group relative h-min self-center rounded-full bg-slate-100 p-2.5 transition-colors hover:color-red-100">
       <Link href={`mailto:${item.url}`}>
         <div className="relative h-8 w-8">{logo[item.platform]}</div>
       </Link>
@@ -20,22 +19,23 @@ type contentButtonProps = {
 };
 const ContactButtons = ({ contacts }: contentButtonProps) => {
   return (
-    <div className="flex flex-row content-center gap-x-4">
+    <div className="flex flex-wrap gap-4">
       {contacts.map((item) => (
-        <>
+        <div key={item.platform + item.url}>
           {item.platform === 'email' ? (
-            <EmailButton item={item} />
+            <Tooltip title="Email">
+              <EmailButton item={item} />
+            </Tooltip>
           ) : (
-            <button
-              key={item.url}
-              className="group relative h-min self-center rounded-full bg-slate-100 p-2.5 transition-colors hover:bg-blue-700"
-            >
-              <Link href={item.url} target="_blank">
-                <div className="relative h-8 w-8">{logo[item.platform]}</div>
-              </Link>
-            </button>
+            <Tooltip title={contactNames[item.platform]}>
+              <button className="group relative h-min self-center rounded-full bg-slate-100 p-2.5 transition-colors">
+                <Link href={item.url} target="_blank">
+                  <div className="relative h-8 w-8">{logo[item.platform]}</div>
+                </Link>
+              </button>
+            </Tooltip>
           )}
-        </>
+        </div>
       ))}
     </div>
   );

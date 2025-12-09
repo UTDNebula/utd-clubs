@@ -1,30 +1,38 @@
 'use client';
-import { signIn, type ClientSafeProvider } from 'next-auth/react';
+
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { type FC } from 'react';
 import AuthIcons from '@src/icons/AuthIcons';
+import { authClient } from '@src/utils/auth-client';
 
-type Provider = ClientSafeProvider;
+const providerNames = {
+  google: 'Google',
+  discord: 'Discord',
+} as const;
 
-const colors: Record<string, string> = {
-  Google: 'text-red-500',
-  Discord: 'text-blue-700',
-};
-
-const ProviderButton: FC<{ provider: Provider }> = ({ provider }) => (
-  <button
-    type="button"
+const ProviderButton: FC<{
+  provider: 'google' | 'discord';
+  callbackUrl?: string;
+}> = ({ provider, callbackUrl }) => (
+  <Button
+    variant="contained"
+    size="large"
     onClick={() => {
-      void signIn(provider.id);
+      void authClient.signIn.social({
+        provider: provider,
+        callbackURL: callbackUrl ?? window.location.href,
+      });
     }}
-    className="box-content flex w-min flex-row items-center space-x-4 rounded-3xl bg-white py-2.5 pl-5 pr-6 shadow-sm shadow-slate-700 md:w-fit"
+    className="bg-white normal-case whitespace-nowrap min-w-max"
+    startIcon={AuthIcons[provider]}
   >
-    <div>{AuthIcons[provider.id]}</div>
-    <h2
-      className={`text-base font-extrabold md:text-xs ${colors[provider.name]}`}
+    <Typography
+      className={`text-base font-extrabold md:text-xs text-slate-700`}
     >
-      {provider.name}
-    </h2>
-  </button>
+      <span className="min-w-fit">Sign in with {providerNames[provider]}</span>
+    </Typography>
+  </Button>
 );
 
 export default ProviderButton;

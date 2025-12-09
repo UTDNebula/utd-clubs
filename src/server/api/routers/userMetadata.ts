@@ -1,15 +1,12 @@
-import { z } from 'zod';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { and, eq, or, sql } from 'drizzle-orm';
-
-import { insertUserMetadata } from '@src/server/db/models';
-import {
-  userMetadata,
-  userMetadataToClubs,
-  users,
-} from '@src/server/db/schema/users';
+import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
+import { auth } from '@src/server/auth';
+import { insertUserMetadata } from '@src/server/db/models';
 import { admin } from '@src/server/db/schema/admin';
+import { user as users } from '@src/server/db/schema/auth';
+import { userMetadata, userMetadataToClubs } from '@src/server/db/schema/users';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byIdSchema = z.object({ id: z.string().uuid() });
 
@@ -17,8 +14,8 @@ const updateByIdSchema = z.object({
   updateUser: insertUserMetadata.omit({ id: true }),
   clubs: z.string().array(),
 });
-const nameSchema = z.object({
-  name: z.string().default(''),
+const nameOrEmailSchema = z.object({
+  search: z.string().default(''),
 });
 
 export const userMetadataRouter = createTRPCRouter({
@@ -56,6 +53,11 @@ export const userMetadataRouter = createTRPCRouter({
           sql`${userMetadataToClubs.clubId} NOT IN (${clubs})`,
         ),
       );
+      if (user.name != updateUser.firstName + ' ' + updateUser.lastName) {
+        await auth.api.updateUser({
+          body: { name: updateUser.firstName + ' ' + updateUser.lastName },
+        });
+      }
     }),
   deleteById: protectedProcedure.mutation(async ({ ctx }) => {
     const { user } = ctx.session;
@@ -78,15 +80,28 @@ export const userMetadataRouter = createTRPCRouter({
       return { ...item.event, liked: true };
     });
   }),
-  searchByName: publicProcedure
-    .input(nameSchema)
+  searchByNameOrEmail: publicProcedure
+    .input(nameOrEmailSchema)
     .query(async ({ input, ctx }) => {
-      const users = ctx.db.query.userMetadata.findMany({
-        where: sql`CONCAT(${userMetadata.firstName},' ',${
-          userMetadata.lastName
-        }) ilike ${'%' + input.name + '%'}`,
-      });
-      return await users;
+      const q = `%${input.search}%`;
+
+      const result = await ctx.db
+        .select({
+          id: users.id,
+          email: users.email,
+          firstName: userMetadata.firstName,
+          lastName: userMetadata.lastName,
+        })
+        .from(users)
+        .leftJoin(userMetadata, eq(userMetadata.id, users.id))
+        .where(
+          sql`
+            CONCAT(${userMetadata.firstName}, ' ', ${userMetadata.lastName}) ILIKE ${q}
+            OR ${users.email} ILIKE ${q}
+          `,
+        );
+
+      return result;
     }),
   getUserSidebarCapabilities: publicProcedure.query(async ({ ctx }) => {
     const session = ctx.session;

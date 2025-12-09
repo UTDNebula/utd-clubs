@@ -1,29 +1,48 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import gradientBG from 'public/images/landingGradient.png';
 import type { ReactNode } from 'react';
-import { ProfileDropDown } from './ProfileDropDown';
-import { getServerAuthSession } from '@src/server/auth';
+import ClubMatchButton from '@src/components/header/ClubMatchButton';
+import NebulaLogo from '@src/icons/NebulaLogo';
+import { api } from '@src/trpc/server';
+import NewSidebar from '../nav/Slide';
 import { ClubSearchBar } from '../searchBar/ClubSearchBar';
 import { EventSearchBar } from '../searchBar/EventSearchBar';
-import SignInButton from './signInButton';
-import MobileNav from '../nav/MobileNav';
-import { api } from '@src/trpc/server';
+import { ProfileDropDown } from './ProfileDropDown';
 
-export const BaseHeader = async ({ children }: { children: ReactNode }) => {
-  const session = await getServerAuthSession();
+export const BaseHeader = async ({ children }: { children?: ReactNode }) => {
   const userCapabilities = await api.userMetadata.getUserSidebarCapabilities();
   return (
-    <div className="flex h-20 w-full flex-shrink flex-row content-between items-center justify-start px-5 py-2.5">
-      <MobileNav userCapabilites={userCapabilities} />
-      {children}
-      <div className="ml-auto flex items-center justify-center">
-        {session !== null ? (
-          <div className="h-10 w-10 rounded-full">
-            <ProfileDropDown image={session.user.image || ''} />
-          </div>
-        ) : (
-          <div className="mr-2">
-            <SignInButton />
-          </div>
-        )}
+    <div className="sticky top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-2 sm:px-4 bg-lighten dark:bg-darken flex-wrap sm:flex-nowrap">
+      <Image
+        src={gradientBG}
+        alt="gradient background"
+        fill
+        className="object-cover -z-20"
+        sizes="120vw"
+      />
+      <div className="absolute inset-0 bg-lighten -z-10"></div>
+      <div className="grow basis-0 flex gap-x-2 md:gap-x-4 lg:gap-x-8">
+        <NewSidebar userCapabilities={userCapabilities} hamburger="black" />
+        <Link
+          href="/"
+          className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center"
+        >
+          <NebulaLogo className="h-6 w-auto fill-haiti" />
+          <span className="whitespace-nowrap">UTD CLUBS</span>
+        </Link>
+      </div>
+      <div className="grow order-last basis-full sm:order-none sm:basis-auto gap-x-2 md:gap-x-4 lg:gap-x-8">
+        {children}
+      </div>
+      <div className="grow basis-0 flex justify-end items-center gap-x-2">
+        <div className="sm:hidden">
+          <ClubMatchButton shadow iconOnly />
+        </div>
+        <div className="max-sm:hidden">
+          <ClubMatchButton shadow />
+        </div>
+        <ProfileDropDown />
       </div>
     </div>
   );
@@ -39,11 +58,9 @@ const Header = () => {
 
 export const EventHeader = () => {
   return (
-    <>
-      <BaseHeader>
-        <EventSearchBar />
-      </BaseHeader>
-    </>
+    <BaseHeader>
+      <EventSearchBar />
+    </BaseHeader>
   );
 };
 
