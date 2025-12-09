@@ -69,68 +69,73 @@ export const userMetadataRouter = createTRPCRouter({
     await ctx.db.delete(users).where(eq(users.id, user.id));
     await ctx.db.delete(userMetadata).where(eq(userMetadata.id, user.id));
   }),
-  getEvents: protectedProcedure.input(eventsSortSchema).query(async ({ input, ctx }) => {
-    const { currentTime, sortByDate } = input;
+  getEvents: protectedProcedure
+    .input(eventsSortSchema)
+    .query(async ({ input, ctx }) => {
+      const { currentTime, sortByDate } = input;
 
-    const rows = await ctx.db.query.userMetadataToEvents.findMany({
-      where: (userMetadataToEvents) =>
-        eq(userMetadataToEvents.userId, ctx.session.user.id),
-      with: {
-        event: {
-          with: {
-            club: true,
-          },
-        },
-      },
-    });
-    
-    let events = rows.map((item) => ({
-      ...item.event,
-      liked: true,
-    }));
-
-    if (currentTime) {
-      events = events.filter((ev) => ev.startTime >= currentTime);
-    }
-
-    if (sortByDate) {
-      events = events.sort(
-        (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
-      );
-    }
-
-    return events;
-  }),
-  getEventsFromJoinedClubs: protectedProcedure.input(eventsSortSchema).query(async ({ input, ctx }) => {
-    const { currentTime, sortByDate } = input;
-
-    const rows = await ctx.db.query.userMetadataToClubs.findMany({
-      where: (t) => eq(t.userId, ctx.session.user.id),
-      with: {
-        club: {
-          with: {
-            events: {
-              with: { club: true },
+      const rows = await ctx.db.query.userMetadataToEvents.findMany({
+        where: (userMetadataToEvents) =>
+          eq(userMetadataToEvents.userId, ctx.session.user.id),
+        with: {
+          event: {
+            with: {
+              club: true,
             },
           },
         },
-      },
-    });
+      });
 
-    let events = rows.flatMap((row) => row.club.events);
+      let events = rows.map((item) => ({
+        ...item.event,
+        liked: true,
+      }));
 
-    if (currentTime) {
-      events = events.filter((ev) => ev.startTime >= currentTime);
-    }
+      if (currentTime) {
+        events = events.filter((ev) => ev.startTime >= currentTime);
+      }
 
-    if (sortByDate) {
-      events = events.sort(
-        (a, b) => a.startTime.getTime() - b.startTime.getTime()
-      );
-    }
+      if (sortByDate) {
+        events = events.sort(
+          (a, b) =>
+            new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
+        );
+      }
 
-    return events;
-  }),
+      return events;
+    }),
+  getEventsFromJoinedClubs: protectedProcedure
+    .input(eventsSortSchema)
+    .query(async ({ input, ctx }) => {
+      const { currentTime, sortByDate } = input;
+
+      const rows = await ctx.db.query.userMetadataToClubs.findMany({
+        where: (t) => eq(t.userId, ctx.session.user.id),
+        with: {
+          club: {
+            with: {
+              events: {
+                with: { club: true },
+              },
+            },
+          },
+        },
+      });
+
+      let events = rows.flatMap((row) => row.club.events);
+
+      if (currentTime) {
+        events = events.filter((ev) => ev.startTime >= currentTime);
+      }
+
+      if (sortByDate) {
+        events = events.sort(
+          (a, b) => a.startTime.getTime() - b.startTime.getTime(),
+        );
+      }
+
+      return events;
+    }),
   searchByNameOrEmail: publicProcedure
     .input(nameOrEmailSchema)
     .query(async ({ input, ctx }) => {

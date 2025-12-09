@@ -146,7 +146,11 @@ export const clubRouter = createTRPCRouter({
     const results = await ctx.db.query.userMetadataToClubs.findMany({
       where: and(
         eq(userMetadataToClubs.userId, ctx.session.user.id),
-        inArray(userMetadataToClubs.memberType, ['Member', 'Officer', 'President']),
+        inArray(userMetadataToClubs.memberType, [
+          'Member',
+          'Officer',
+          'President',
+        ]),
       ),
       with: { club: true },
     });

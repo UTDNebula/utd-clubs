@@ -15,10 +15,14 @@ export const RegisteredEvents = async () => {
   if (events.length == 0) {
     return (
       <div className="flex flex-col items-center gap-4 mt-4">
-        <p className="font-bold text-slate-500">You haven&apos;t registered for any events.</p>
+        <p className="font-bold text-slate-500">
+          You haven&apos;t registered for any events.
+        </p>
         <Link href="/events">
           <Button
-            variant="contained" className="normal-case" size="large"
+            variant="contained"
+            className="normal-case"
+            size="large"
             endIcon={<ArrowForwardIcon />}
           >
             Check Out Events
@@ -46,10 +50,14 @@ export const ClubEvents = async () => {
   if (clubs.length === 0) {
     return (
       <div className="flex flex-col items-center gap-4 mt-4">
-        <p className="font-bold text-slate-500">You haven&apos;t joined any clubs.</p>
+        <p className="font-bold text-slate-500">
+          You haven&apos;t joined any clubs.
+        </p>
         <Link href="/">
           <Button
-            variant="contained" className="normal-case" size="large"
+            variant="contained"
+            className="normal-case"
+            size="large"
             endIcon={<ArrowForwardIcon />}
           >
             Check Out Clubs
@@ -62,10 +70,14 @@ export const ClubEvents = async () => {
   if (events.length === 0) {
     return (
       <div className="flex flex-col items-center gap-4 mt-4">
-        <p className="font-bold text-slate-500">Your joined clubs don&apos;t have any events.</p>
+        <p className="font-bold text-slate-500">
+          Your joined clubs don&apos;t have any events.
+        </p>
         <Link href="/events">
           <Button
-            variant="contained" className="normal-case" size="large"
+            variant="contained"
+            className="normal-case"
+            size="large"
             endIcon={<ArrowForwardIcon />}
           >
             Check Out Events

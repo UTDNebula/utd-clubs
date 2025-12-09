@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React from 'react';
 import Header from '@src/components/header/BaseHeader';
 import { auth } from '@src/server/auth';
-import { RegisteredEvents, ClubEvents } from './communityEvents';
+import { ClubEvents, RegisteredEvents } from './communityEvents';
 
 export const metadata: Metadata = {
   title: 'My Community',
