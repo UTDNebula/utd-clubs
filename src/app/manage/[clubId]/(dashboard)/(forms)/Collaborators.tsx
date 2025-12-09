@@ -73,12 +73,6 @@ const Collaborators = ({
           modified.push(officer);
         }
       });
-      console.log({
-        clubId: club.id,
-        deleted: deletedIds,
-        modified: modified,
-        created: created,
-      });
       const updated = await editOfficers.mutateAsync({
         clubId: club.id,
         deleted: deletedIds,

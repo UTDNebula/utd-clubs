@@ -46,6 +46,7 @@ const Slug = ({ club, role }: DetailsProps) => {
 
   // Check if taken
   const [input, setInput] = useState(club.slug);
+  // Set to true when there is a zod error to prevent fetching
   const [simpleError, setSimpleError] = useState(false);
   const debouncedSearch = useDebounce(input, 300);
   const { data: slugExists, isFetching } = useQuery(
@@ -59,6 +60,7 @@ const Slug = ({ club, role }: DetailsProps) => {
   );
   const isFetchingOrWaiting = isFetching || debouncedSearch !== input;
 
+  // Update async errors
   useEffect(() => {
     // Input has changed
     const isNewSlug = input !== club.slug;
@@ -125,14 +127,13 @@ const Slug = ({ club, role }: DetailsProps) => {
         isValidating: false,
       }));
     }
-  }, [input, isFetchingOrWaiting, slugExists]);
+  }, [club.slug, form, input, isFetchingOrWaiting, slugExists]);
 
   // Show first error
   const helperText = (errors: ({ message?: string } | undefined)[]) => {
     const stringErrors = errors
       .map((error) => error?.message)
       .filter((error) => typeof error === 'string');
-    console.log(stringErrors);
     if (stringErrors.length) {
       return stringErrors[0] === 'This slug is already taken' ? (
         <span className="flex items-center gap-1">
