@@ -37,7 +37,7 @@ export const auth = betterAuth({
             firstName,
             lastName,
             id: user.id,
-            major: 'Computer Science',
+            major: '',
           };
           await db.insert(userMetadata).values(insert).returning();
         },
