@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import { auth } from '@src/server/auth';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { api } from '@src/trpc/server';
+import Calendar from './(forms)/Calendar';
 import Collaborators from './(forms)/Collaborators';
 import Contacts from './(forms)/Contacts';
 import Details from './(forms)/Details';
@@ -26,6 +27,7 @@ const ClubManageForm = async ({
     <div className="flex flex-col gap-8 w-full max-w-6xl">
       {club.approved !== 'approved' && <NotApproved status={club.approved} />}
       <Details club={club} />
+      <Calendar club={club} />
       <Officers club={club} listedOfficers={listedOfficers} />
       <Contacts club={club} />
       <Collaborators
