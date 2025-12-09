@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React from 'react';
 import Header from '@src/components/header/BaseHeader';
 import { auth } from '@src/server/auth';
-import CommunityEvents from './communityEvents';
+import { RegisteredEvents, ClubEvents } from './communityEvents';
 
 export const metadata: Metadata = {
   title: 'My Community',
@@ -41,12 +41,17 @@ const Community = async () => {
     <>
       <Header />
       <main className="p-4">
-        <div className="mx-6 h-full p-2">
-          <h1 className="font-display text-2xl font-bold text-haiti">
-            Community Events
-          </h1>
-          <CommunityEvents />
-        </div>
+        <h1 className="font-display text-2xl font-bold text-haiti mt-2">
+          Community Events
+        </h1>
+        <h2 className="font-display text-xl font-bold text-haiti mt-4">
+          Registered
+        </h2>
+        <RegisteredEvents />
+        <h2 className="font-display text-xl font-bold text-haiti mt-4">
+          From Your Joined Clubs
+        </h2>
+        <ClubEvents />
       </main>
     </>
   );

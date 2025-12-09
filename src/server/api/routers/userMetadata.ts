@@ -18,6 +18,11 @@ const nameOrEmailSchema = z.object({
   search: z.string().default(''),
 });
 
+const eventsSortSchema = z.object({
+  currentTime: z.optional(z.date()),
+  sortByDate: z.boolean().default(false),
+});
+
 export const userMetadataRouter = createTRPCRouter({
   byId: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     const { id } = input;
@@ -64,8 +69,10 @@ export const userMetadataRouter = createTRPCRouter({
     await ctx.db.delete(users).where(eq(users.id, user.id));
     await ctx.db.delete(userMetadata).where(eq(userMetadata.id, user.id));
   }),
-  getEvents: protectedProcedure.query(async ({ ctx }) => {
-    const query = await ctx.db.query.userMetadataToEvents.findMany({
+  getEvents: protectedProcedure.input(eventsSortSchema).query(async ({ input, ctx }) => {
+    const { currentTime, sortByDate } = input;
+
+    const rows = await ctx.db.query.userMetadataToEvents.findMany({
       where: (userMetadataToEvents) =>
         eq(userMetadataToEvents.userId, ctx.session.user.id),
       with: {
@@ -76,9 +83,53 @@ export const userMetadataRouter = createTRPCRouter({
         },
       },
     });
-    return query.map((item) => {
-      return { ...item.event, liked: true };
+    
+    let events = rows.map((item) => ({
+      ...item.event,
+      liked: true,
+    }));
+
+    if (currentTime) {
+      events = events.filter((ev) => ev.startTime >= currentTime);
+    }
+
+    if (sortByDate) {
+      events = events.sort(
+        (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+      );
+    }
+
+    return events;
+  }),
+  getEventsFromJoinedClubs: protectedProcedure.input(eventsSortSchema).query(async ({ input, ctx }) => {
+    const { currentTime, sortByDate } = input;
+
+    const rows = await ctx.db.query.userMetadataToClubs.findMany({
+      where: (t) => eq(t.userId, ctx.session.user.id),
+      with: {
+        club: {
+          with: {
+            events: {
+              with: { club: true },
+            },
+          },
+        },
+      },
     });
+
+    let events = rows.flatMap((row) => row.club.events);
+
+    if (currentTime) {
+      events = events.filter((ev) => ev.startTime >= currentTime);
+    }
+
+    if (sortByDate) {
+      events = events.sort(
+        (a, b) => a.startTime.getTime() - b.startTime.getTime()
+      );
+    }
+
+    return events;
   }),
   searchByNameOrEmail: publicProcedure
     .input(nameOrEmailSchema)

@@ -25,8 +25,8 @@ const EventView = ({ children, date }: Props) => {
   }
 
   return (
-    <div className="w-full px-6">
-      <div className="flex flex-col pt-4 md:flex-row justify-between items-center md:pb-12">
+    <main className="w-full p-4">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <h1 className="font-display text-2xl font-bold text-haiti">Events</h1>
         <div className="flex gap-2 items-center">
           <IconButton
@@ -64,7 +64,7 @@ const EventView = ({ children, date }: Props) => {
       <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
         {children}
       </div>
-    </div>
+    </main>
   );
 };
 export default EventView;

@@ -25,14 +25,14 @@ const Events = async (props: {
   });
 
   return (
-    <main className="pb-10">
+    <>
       <EventHeader />
       <EventView date={parsed.date}>
         {events.map((event) => {
           return <EventCard key={event.id} event={event} />;
         })}
       </EventView>
-    </main>
+    </>
   );
 };
 
