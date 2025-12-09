@@ -298,6 +298,22 @@ export const clubRouter = createTRPCRouter({
         throw e;
       }
     }),
+  slugExists: publicProcedure
+    .input(bySlugSchema)
+    .query(async ({ input: { slug }, ctx }) => {
+      try {
+        if (slug === 'create') {
+          return true;
+        }
+        const bySlug = await ctx.db.query.club.findFirst({
+          where: (club) => eq(club.slug, slug),
+        });
+        return typeof bySlug !== 'undefined';
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    }),
   getSlug: publicProcedure
     .input(byIdSchema)
     .query(async ({ input: { id }, ctx }) => {

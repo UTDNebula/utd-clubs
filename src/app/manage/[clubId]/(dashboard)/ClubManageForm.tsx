@@ -6,6 +6,7 @@ import Collaborators from './(forms)/Collaborators';
 import Contacts from './(forms)/Contacts';
 import Details from './(forms)/Details';
 import Officers from './(forms)/Officers';
+import Slug from './(forms)/Slug';
 import NotApproved from './NotApproved';
 
 const ClubManageForm = async ({
@@ -26,6 +27,7 @@ const ClubManageForm = async ({
     <div className="flex flex-col gap-8 w-full max-w-6xl">
       {club.approved !== 'approved' && <NotApproved status={club.approved} />}
       <Details club={club} />
+      <Slug club={club} role={role} />
       <Officers club={club} listedOfficers={listedOfficers} />
       <Contacts club={club} />
       <Collaborators
