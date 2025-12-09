@@ -333,6 +333,7 @@ export const clubRouter = createTRPCRouter({
         );
       }
       await Promise.all(clubPromise);
+      await ctx.db.refreshMaterializedView(usedTags);
       return { affected: clubsToChange.length };
     }),
   tagSearch: publicProcedure
