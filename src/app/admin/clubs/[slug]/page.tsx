@@ -64,7 +64,7 @@ export default async function Page(props: Props) {
       </AdminHeader>
       <div className="flex w-full flex-col items-center">
         <div className="flex flex-col gap-8 w-full max-w-6xl">
-          <ChangeClubStatus status={club.approved} clubId={club.id} />
+          <ChangeClubStatus status={club.approved} club={club} />
           <Collaborators club={club} officers={officers} role="Admin" />
           <DeleteClub club={club} />
           {club.approved !== 'approved' && (

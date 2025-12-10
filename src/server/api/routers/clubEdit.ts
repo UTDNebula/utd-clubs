@@ -38,7 +38,7 @@ const editContactSchema = z.object({
   modified: selectContact.array(),
   created: selectContact.omit({ clubId: true }).array(),
 });
-const editCollaboratorSchema = z.object({
+export const editCollaboratorSchema = z.object({
   clubId: z.string(),
   deleted: z.string().array(),
   modified: z

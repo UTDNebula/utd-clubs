@@ -1,3 +1,4 @@
+import { FormControl, MenuItem, Select } from '@mui/material';
 import { type Column, type Table } from '@tanstack/react-table';
 import { useState } from 'react';
 
@@ -13,7 +14,7 @@ export default function StatusFilter<T>({ column }: Props<T>) {
     | 'pending'
     | null;
 
-  const [value, setValue] = useState(columnFilterValue ?? '');
+  const [value, setValue] = useState(columnFilterValue ?? 'All');
 
   function updateFilterValue(value: string) {
     switch (value) {
@@ -36,15 +37,17 @@ export default function StatusFilter<T>({ column }: Props<T>) {
   }
 
   return (
-    <select
-      value={value}
-      onChange={(e) => updateFilterValue(e.target.value)}
-      className="rounded-sm border shadow-sm"
-    >
-      <option value="All">All</option>
-      <option value="approved">Approved</option>
-      <option value="pending">Pending</option>
-      <option value="rejected">Rejected</option>
-    </select>
+    <FormControl size="small" className="[&>.MuiInputBase-root]:bg-white">
+      <Select
+        value={value}
+        onChange={(e) => updateFilterValue(e.target.value)}
+        className="min-w-24 normal-case max-h-8 text-xs"
+      >
+        <MenuItem value="All">All</MenuItem>
+        <MenuItem value="approved">Approved</MenuItem>
+        <MenuItem value="pending">Pending</MenuItem>
+        <MenuItem value="rejected">Rejected</MenuItem>
+      </Select>
+    </FormControl>
   );
 }

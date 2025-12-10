@@ -47,7 +47,12 @@ const Collaborators = ({
   userId,
 }: CollaboratorsProps) => {
   const api = useTRPC();
-  const editOfficers = useMutation(api.club.edit.officers.mutationOptions({}));
+  const editOfficers = useMutation(
+    (role === 'Admin'
+      ? api.admin.updateOfficers
+      : api.club.edit.officers
+    ).mutationOptions({}),
+  );
 
   const [defaultValues, setDefaultValues] = useState({
     officers: typedDefaultValues(officers, role, userId),
@@ -73,12 +78,6 @@ const Collaborators = ({
         if (isDirty) {
           modified.push(officer);
         }
-      });
-      console.log({
-        clubId: club.id,
-        deleted: deletedIds,
-        modified: modified,
-        created: created,
       });
       const updated = await editOfficers.mutateAsync({
         clubId: club.id,
@@ -123,7 +122,7 @@ const Collaborators = ({
         <div className="ml-2 mb-4 text-slate-600 text-sm">
           <p>
             Users in this list can edit {role === 'Admin' ? 'a' : 'your'}{' '}
-            club&apos;s information and events.
+            organization&apos;s information and events.
           </p>
           <p>Admins in this list can manage other collaborators.</p>
           <p>

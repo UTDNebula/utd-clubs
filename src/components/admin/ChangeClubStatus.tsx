@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Alert,
   FormControl,
   InputLabel,
   MenuItem,
@@ -11,11 +12,12 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import FormFieldSet from '@src/components/form/FormFieldSet';
+import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 
-type Props = { status: 'approved' | 'pending' | 'rejected'; clubId: string };
+type Props = { status: 'approved' | 'pending' | 'rejected'; club: SelectClub };
 
-export default function ChangeClubStatus({ status: initial, clubId }: Props) {
+export default function ChangeClubStatus({ status: initial, club }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState<Props['status']>(initial);
   const api = useTRPC();
@@ -28,15 +30,15 @@ export default function ChangeClubStatus({ status: initial, clubId }: Props) {
   function onChange(e: SelectChangeEvent) {
     switch (e.target.value) {
       case 'approved':
-        changeClubStatus.mutate({ clubId: clubId, status: 'approved' });
+        changeClubStatus.mutate({ clubId: club.id, status: 'approved' });
         setStatus('approved');
         break;
       case 'pending':
-        changeClubStatus.mutate({ clubId: clubId, status: 'pending' });
+        changeClubStatus.mutate({ clubId: club.id, status: 'pending' });
         setStatus('pending');
         break;
       case 'rejected':
-        changeClubStatus.mutate({ clubId: clubId, status: 'rejected' });
+        changeClubStatus.mutate({ clubId: club.id, status: 'rejected' });
         setStatus('rejected');
         break;
     }
@@ -78,6 +80,11 @@ export default function ChangeClubStatus({ status: initial, clubId }: Props) {
             <MenuItem value="rejected">Rejected</MenuItem>
           </Select>
         </FormControl>
+        <Alert severity="info">
+          {club.soc
+            ? 'This organization is originally from SOC.'
+            : 'This organization was created on UTD Clubs.'}
+        </Alert>
       </div>
     </FormFieldSet>
   );

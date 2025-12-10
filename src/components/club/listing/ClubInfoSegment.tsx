@@ -42,7 +42,7 @@ const ClubInfoSegment: FC<{
               <Chip
                 label={tag}
                 key={tag}
-                className=" rounded-full font-bold transition-colors text-white"
+                className="font-bold"
                 color="primary"
               />
             );
