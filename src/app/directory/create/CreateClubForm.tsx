@@ -57,7 +57,7 @@ const CreateClubForm = () => {
                   !field.state.meta.isValid
                     ? field.state.meta.errors
                         .map((err) => err?.message)
-                        .join('. ')
+                        .join('. ') + '.'
                     : undefined
                 }
                 label="Name"
@@ -81,7 +81,7 @@ const CreateClubForm = () => {
                   !field.state.meta.isValid ? (
                     field.state.meta.errors
                       .map((err) => err?.message)
-                      .join('. ')
+                      .join('. ') + '.'
                   ) : (
                     <span>
                       We support{' '}

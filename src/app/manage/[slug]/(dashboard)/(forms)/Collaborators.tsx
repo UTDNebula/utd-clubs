@@ -163,7 +163,12 @@ const Collaborators = ({
         </form.Field>
         <div className="flex flex-wrap justify-end items-center gap-2">
           <form.AppForm>
-            <form.FormResetButton />
+            <form.FormResetButton
+              onClick={() => {
+                setDeletedIds([]);
+                form.reset();
+              }}
+            />
           </form.AppForm>
           <form.AppForm>
             <form.FormSubmitButton />

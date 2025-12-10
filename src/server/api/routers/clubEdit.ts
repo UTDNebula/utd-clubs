@@ -7,7 +7,7 @@ import { club } from '@src/server/db/schema/club';
 import { contacts } from '@src/server/db/schema/contacts';
 import { officers } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { editClubSchema } from '@src/utils/formSchemas';
+import { editClubSchema, editSlugSchema } from '@src/utils/formSchemas';
 import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
@@ -22,6 +22,7 @@ async function isUserOfficer(userId: string, clubId: string) {
   if (!officer || !officer.memberType) return false;
   return officer.memberType !== 'Member';
 }
+
 async function isUserPresident(userId: string, clubId: string) {
   const officer = await db.query.userMetadataToClubs.findFirst({
     where: (userMetadataToClubs) =>
@@ -32,12 +33,14 @@ async function isUserPresident(userId: string, clubId: string) {
   });
   return officer?.memberType == 'President';
 }
+
 const editContactSchema = z.object({
   clubId: z.string(),
   deleted: selectContact.shape.platform.array(),
   modified: selectContact.array(),
   created: selectContact.omit({ clubId: true }).array(),
 });
+
 export const editCollaboratorSchema = z.object({
   clubId: z.string(),
   deleted: z.string().array(),
@@ -72,6 +75,7 @@ const editOfficerSchema = z.object({
     })
     .array(),
 });
+
 const deleteSchema = z.object({ clubId: z.string() });
 
 export const clubEditRouter = createTRPCRouter({
@@ -322,6 +326,33 @@ export const clubEditRouter = createTRPCRouter({
         where: eq(officers.clubId, input.clubId),
       });
       return newListedOfficers;
+    }),
+  slug: protectedProcedure
+    .input(editSlugSchema)
+    .mutation(async ({ input, ctx }) => {
+      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
+      if (!isPresident) {
+        throw new TRPCError({
+          message: 'only a president can remove or modify people',
+          code: 'UNAUTHORIZED',
+        });
+      }
+
+      const bySlug = await ctx.db.query.club.findFirst({
+        where: (club) => eq(club.slug, input.slug),
+      });
+      if (input.slug === 'create' || typeof bySlug !== 'undefined') {
+        return null;
+      }
+
+      await ctx.db
+        .update(club)
+        .set({
+          slug: input.slug,
+        })
+        .where(and(eq(club.id, input.id)));
+
+      return input.slug;
     }),
   delete: protectedProcedure
     .input(deleteSchema)
