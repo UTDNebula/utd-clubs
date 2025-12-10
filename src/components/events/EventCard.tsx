@@ -1,12 +1,9 @@
-'use server';
+'use client';
 
-import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import { auth } from '@src/server/auth';
 import { type RouterOutputs } from '@src/trpc/shared';
-import ClientEventTime from './ClientEventTime'; //importing new component
-
+import ClientEventTime from './ClientEventTime';
 import EventDeleteButton from './EventDeleteButton';
 import EventEditButton from './EventEditButton';
 import EventRegisterButton from './EventRegisterButton';
@@ -17,8 +14,7 @@ interface EventCardProps {
   manageView?: boolean;
 }
 
-const EventCard = async ({ event, manageView }: EventCardProps) => {
-  const session = await auth.api.getSession({ headers: await headers() });
+const EventCard = ({ event, manageView }: EventCardProps) => {
   const src = event.image ?? event.club.profileImage;
   return (
     <div className="flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
@@ -53,7 +49,7 @@ const EventCard = async ({ event, manageView }: EventCardProps) => {
         </div>
       </Link>
       <div className="m-4 mt-0 flex flex-row gap-2">
-        {!manageView && session && <EventRegisterButton eventId={event.id} />}
+        {!manageView && <EventRegisterButton eventId={event.id} />}
         {manageView && (
           <>
             <EventEditButton clubId={event.clubId} eventId={event.id} />

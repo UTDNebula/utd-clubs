@@ -2,7 +2,6 @@
 
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { type FC } from 'react';
 import AuthIcons from '@src/icons/AuthIcons';
 import { authClient } from '@src/utils/auth-client';
 
@@ -11,10 +10,13 @@ const providerNames = {
   discord: 'Discord',
 } as const;
 
-const ProviderButton: FC<{
+const ProviderButton = ({
+  provider,
+  callbackUrl,
+}: {
   provider: 'google' | 'discord';
   callbackUrl?: string;
-}> = ({ provider, callbackUrl }) => (
+}) => (
   <Button
     variant="contained"
     size="large"

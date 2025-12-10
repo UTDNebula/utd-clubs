@@ -1,13 +1,13 @@
-import { type FC } from 'react';
+import { TZDateMini } from '@date-fns/tz';
 import EventCard from '@src/components/events/EventCard';
 import { api } from '@src/trpc/server';
 
-const ClubUpcomingEvents: FC<{ clubId: string }> = async ({ clubId }) => {
-  const cur_time = new Date();
+const ClubUpcomingEvents = async ({ clubId }: { clubId: string }) => {
+  const now = TZDateMini.tz('America/Chicago');
 
   const data = await api.event.byClubId({
     clubId: clubId,
-    currentTime: cur_time,
+    currentTime: now,
     sortByDate: true,
   });
 
@@ -19,7 +19,7 @@ const ClubUpcomingEvents: FC<{ clubId: string }> = async ({ clubId }) => {
           data.map((event) => <EventCard key={event.id} event={event} />)
         ) : (
           <div className="text-md font-medium text-gray-700">
-            There are no upcoming events
+            There are no upcoming events.
           </div>
         )}
       </div>

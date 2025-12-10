@@ -142,6 +142,20 @@ export const clubRouter = createTRPCRouter({
       return [];
     }
   }),
+  getMemberClubs: protectedProcedure.query(async ({ ctx }) => {
+    const results = await ctx.db.query.userMetadataToClubs.findMany({
+      where: and(
+        eq(userMetadataToClubs.userId, ctx.session.user.id),
+        inArray(userMetadataToClubs.memberType, [
+          'Member',
+          'Officer',
+          'President',
+        ]),
+      ),
+      with: { club: true },
+    });
+    return results.map((ele) => ele.club);
+  }),
   getOfficerClubs: protectedProcedure.query(async ({ ctx }) => {
     const results = await ctx.db.query.userMetadataToClubs.findMany({
       where: and(
@@ -150,7 +164,6 @@ export const clubRouter = createTRPCRouter({
       ),
       with: { club: true },
     });
-    // type wah = NonNullable<(typeof results)[number]['club']>;
     return results.map((ele) => ele.club);
   }),
   isOfficer: protectedProcedure
