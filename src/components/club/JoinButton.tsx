@@ -8,9 +8,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
-import { useRegisterModal } from '../account/RegisterModalProvider';
 
 type JoinButtonProps = {
   isHeader?: boolean;

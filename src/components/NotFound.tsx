@@ -1,7 +1,7 @@
-import React, { type FC } from 'react';
+import React from 'react';
 import Header from '@src/components/header/BaseHeader';
 
-const NotFound: FC<{ elementType: string }> = ({ elementType }) => {
+const NotFound = ({ elementType }: { elementType: string }) => {
   return (
     <div className="absolute h-full w-full">
       <Header />
