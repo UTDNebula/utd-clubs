@@ -125,7 +125,7 @@ export const userMetadataRouter = createTRPCRouter({
       let events = rows.flatMap((row) => row.club.events);
 
       if (currentTime) {
-        events = events.filter((ev) => ev.startTime >= currentTime);
+        events = events.filter((ev) => ev.endTime >= currentTime);
       }
 
       if (sortByDate) {

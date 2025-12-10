@@ -1,5 +1,6 @@
 'use server';
 
+import { TZDateMini } from '@date-fns/tz';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button } from '@mui/material';
 import Link from 'next/link';
@@ -8,7 +9,7 @@ import { api } from '@src/trpc/server';
 
 export const RegisteredEvents = async () => {
   const events = await api.userMetadata.getEvents({
-    currentTime: new Date(),
+    currentTime: TZDateMini.tz('America/Chicago'),
     sortByDate: true,
   });
 
@@ -43,7 +44,7 @@ export const RegisteredEvents = async () => {
 export const ClubEvents = async () => {
   const clubs = await api.club.getMemberClubs();
   const events = await api.userMetadata.getEventsFromJoinedClubs({
-    currentTime: new Date(),
+    currentTime: TZDateMini.tz('America/Chicago'),
     sortByDate: true,
   });
 

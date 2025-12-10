@@ -1,4 +1,5 @@
-import { format, startOfToday } from 'date-fns';
+import { TZDateMini } from '@date-fns/tz';
+import { format, startOfDay } from 'date-fns';
 import { z } from 'zod';
 
 export const order = [
@@ -10,8 +11,8 @@ export const order = [
 export const dateSchema = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
-  .default(format(startOfToday(), 'yyyy-MM-dd'))
-  .catch(format(startOfToday(), 'yyyy-MM-dd'));
+  .default(format(startOfDay(TZDateMini.tz('America/Chicago')), 'yyyy-MM-dd'))
+  .catch(format(startOfDay(TZDateMini.tz('America/Chicago')), 'yyyy-MM-dd'));
 export const eventParamsSchema = z.object({
   date: dateSchema,
 });

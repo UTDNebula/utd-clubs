@@ -1,4 +1,4 @@
-import { TZDate } from '@date-fns/tz';
+import { TZDateMini } from '@date-fns/tz';
 import { TRPCError } from '@trpc/server';
 import { add, startOfDay } from 'date-fns';
 import {
@@ -109,16 +109,12 @@ export const eventRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       const zone = 'America/Chicago';
       const [year, month, day] = input.date.split('-').map(Number);
-      const backup = new Date();
+      const backup = new TZDateMini(zone);
       const startCT = startOfDay(
-        new TZDate(
+        new TZDateMini(
           year ?? backup.getFullYear(),
           (month ?? backup.getMonth()) - 1,
           day ?? backup.getDate(),
-          0,
-          0,
-          0,
-          0,
           zone,
         ),
       );

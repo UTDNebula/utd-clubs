@@ -4,7 +4,7 @@ import EventCard from '@src/components/events/EventCard';
 import { EventHeader } from '@src/components/header/BaseHeader';
 import { api } from '@src/trpc/server';
 import { eventParamsSchema } from '@src/utils/eventFilter';
-import EventView from './eventView';
+import EventsTitle from './EventsTitle';
 
 export const metadata: Metadata = {
   title: 'Events',
@@ -27,11 +27,14 @@ const Events = async (props: {
   return (
     <>
       <EventHeader />
-      <EventView date={parsed.date}>
-        {events.map((event) => {
-          return <EventCard key={event.id} event={event} />;
-        })}
-      </EventView>
+      <main className="w-full p-4">
+        <EventsTitle date={parsed.date} />
+        <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
+          {events.map((event) => {
+            return <EventCard key={event.id} event={event} />;
+          })}
+        </div>
+      </main>
     </>
   );
 };
