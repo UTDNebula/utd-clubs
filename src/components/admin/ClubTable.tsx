@@ -45,7 +45,7 @@ export default function ClubTable({ clubs }: { clubs: Club[] }) {
       {
         id: 'view',
         cell: ({ row }) => (
-          <Link href={`clubs/${row.original.id}`}>
+          <Link href={`/admin/clubs/${row.original.slug}`}>
             <Button variant="contained" className="normal-case" size="small">
               View
             </Button>
