@@ -1,12 +1,11 @@
-import TagSwapper from './tagSwapper';
+import AdminHeader from '@src/components/admin/AdminHeader';
+import TagSwapper from './TagSwapper';
 
 export default function Page() {
   return (
     <>
-      <h1 className="font-display text-center text-4xl font-bold text-haiti mt-5">
-        Change Tags
-      </h1>
-      <div className="flex justify-center gap-x-5 mt-5">
+      <AdminHeader path={[{ text: 'Admin', href: '/admin' }, 'Tags']} />
+      <div className="flex w-full flex-col items-center">
         <TagSwapper />
       </div>
     </>
