@@ -58,7 +58,10 @@ export default function ChangeClubStatus({ status: initial, clubId }: Props) {
   return (
     <FormFieldSet legend="Status">
       <div className="ml-2 mb-4 text-slate-600 text-sm">
-        <p>Pending and rejected clubs are not shown anywhere on UTD Clubs.</p>
+        <p>
+          Pending and rejected organizations are not shown anywhere on UTD
+          Clubs.
+        </p>
       </div>
       <div className="m-2 mt-0 flex flex-col gap-4">
         <FormControl fullWidth>

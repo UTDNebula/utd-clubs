@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import Collaborators from '@src/app/manage/[clubId]/(dashboard)/(forms)/Collaborators';
 import AdminHeader from '@src/components/admin/AdminHeader';
 import ChangeClubStatus from '@src/components/admin/ChangeClubStatus';
+import DeleteClub from '@src/components/admin/DeleteClub';
 import ClubHeader from '@src/components/club/listing/ClubHeader';
 import ClubInfoSegment from '@src/components/club/listing/ClubInfoSegment';
 import ClubUpcomingEvents from '@src/components/club/listing/ClubUpcomingEvents';
@@ -65,6 +66,7 @@ export default async function Page(props: Props) {
         <div className="flex flex-col gap-8 w-full max-w-6xl">
           <ChangeClubStatus status={club.approved} clubId={club.id} />
           <Collaborators club={club} officers={officers} role="Admin" />
+          <DeleteClub club={club} />
           {club.approved !== 'approved' && (
             <div className="mb-5 flex flex-col space-y-4 p-4">
               <ClubHeader club={club} />
