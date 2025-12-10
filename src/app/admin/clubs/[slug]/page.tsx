@@ -3,7 +3,7 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import { Button, Tooltip } from '@mui/material';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import Collaborators from '@src/app/manage/[clubId]/(dashboard)/(forms)/Collaborators';
+import Collaborators from '@src/app/manage/[slug]/(dashboard)/(forms)/Collaborators';
 import AdminHeader from '@src/components/admin/AdminHeader';
 import ChangeClubStatus from '@src/components/admin/ChangeClubStatus';
 import DeleteClub from '@src/components/admin/DeleteClub';

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) redirect(await signInRoute('directory/create'));
+  if (!session) redirect(await signInRoute('/directory/create'));
 
   return (
     <>

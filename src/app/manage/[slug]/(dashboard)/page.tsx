@@ -8,10 +8,10 @@ import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 import ClubManageForm from './ClubManageForm';
 
-const Page = async (props: { params: Promise<{ clubId: string }> }) => {
-  const { clubId } = await props.params;
+const Page = async (props: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await props.params;
 
-  const club = await api.club.byId({ id: clubId });
+  const club = await api.club.bySlug({ slug });
   if (!club) {
     notFound();
   }
@@ -20,7 +20,7 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
     <>
       <ManageHeader club={club} hrefBack="/manage">
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Link href={`/manage/${clubId}/members`}>
+          <Link href={`/manage/${slug}/members`}>
             <Button
               variant="contained"
               className="normal-case whitespace-nowrap"
@@ -30,7 +30,7 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
               Members
             </Button>
           </Link>
-          <Link href={`/manage/${clubId}/events`}>
+          <Link href={`/manage/${slug}/events`}>
             <Button
               variant="contained"
               className="normal-case whitespace-nowrap"
@@ -40,7 +40,7 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
               Events
             </Button>
           </Link>
-          <Link href={`/directory/${club.slug}`}>
+          <Link href={`/directory/${slug}`}>
             <Button
               variant="contained"
               className="normal-case whitespace-nowrap"

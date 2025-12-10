@@ -56,7 +56,7 @@ const EventCard = async ({ event, manageView }: EventCardProps) => {
         {!manageView && session && <EventRegisterButton eventId={event.id} />}
         {manageView && (
           <>
-            <EventEditButton clubId={event.clubId} eventId={event.id} />
+            <EventEditButton clubSlug={event.club.slug} eventId={event.id} />
             <EventDeleteButton event={event} />
           </>
         )}

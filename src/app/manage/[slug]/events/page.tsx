@@ -9,26 +9,26 @@ import { api } from '@src/trpc/server';
 export default async function Page({
   params,
 }: {
-  params: Promise<{ clubId: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { clubId } = await params;
+  const { slug } = await params;
 
-  const club = await api.club.byId({ id: clubId });
+  const club = await api.club.bySlug({ slug });
   if (!club) {
     notFound();
   }
 
-  const events = await api.event.byClubId({ clubId });
+  const events = await api.event.byClubId({ clubId: club.id });
 
   return (
     <main>
       <ManageHeader
         club={club}
-        path={[{ text: 'Events', href: `/manage/${clubId}/events` }]}
-        hrefBack={`/manage/${clubId}/`}
+        path={[{ text: 'Events', href: `/manage/${slug}/events` }]}
+        hrefBack={`/manage/${slug}/`}
       >
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Link href={`/manage/${clubId}/events/create`}>
+          <Link href={`/manage/${slug}/events/create`}>
             <Button
               variant="contained"
               className="normal-case"

@@ -5,11 +5,11 @@ import { api } from '@src/trpc/server';
 export default async function Page({
   params,
 }: {
-  params: Promise<{ clubId: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { clubId } = await params;
+  const { slug } = await params;
 
-  const club = await api.club.byId({ id: clubId });
+  const club = await api.club.bySlug({ slug });
   if (!club) {
     notFound();
   }
@@ -18,8 +18,8 @@ export default async function Page({
     <main>
       <ManageHeader
         club={club}
-        path={[{ text: 'Members', href: `/manage/${clubId}/members` }]}
-        hrefBack={`/manage/${clubId}/`}
+        path={[{ text: 'Members', href: `/manage/${slug}/members` }]}
+        hrefBack={`/manage/${slug}/`}
       />
       <h1>Not implemented yet, sorry!</h1>
     </main>

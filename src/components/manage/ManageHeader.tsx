@@ -52,7 +52,7 @@ const ManageHeader = ({
           )}
           {club &&
             (normalizedPath?.length ? (
-              <Link className="font-bold" href={`/manage/${club.id}`}>
+              <Link className="font-bold" href={`/manage/${club.slug}`}>
                 {club.name}
               </Link>
             ) : (

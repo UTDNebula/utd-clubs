@@ -3,9 +3,9 @@ import EventForm from '@src/components/events/EventForm';
 import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 
-const Page = async (props: { params: Promise<{ clubId: string }> }) => {
-  const { clubId } = await props.params;
-  const club = await api.club.byId({ id: clubId });
+const Page = async (props: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await props.params;
+  const club = await api.club.bySlug({ slug });
   if (!club) {
     notFound();
   }
@@ -15,10 +15,10 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
       <ManageHeader
         club={club}
         path={[
-          { text: 'Events', href: `/manage/${club.id}/events` },
-          { text: 'Create', href: `/manage/${club.id}/events/create` },
+          { text: 'Events', href: `/manage/${slug}/events` },
+          { text: 'Create', href: `/manage/${slug}/events/create` },
         ]}
-        hrefBack={`/manage/${club.id}/events`}
+        hrefBack={`/manage/${slug}/events`}
       />
       <EventForm club={club} />
     </>

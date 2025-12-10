@@ -4,10 +4,10 @@ import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 
 const EditEventPage = async (props: {
-  params: Promise<{ clubId: string; eventId: string }>;
+  params: Promise<{ slug: string; eventId: string }>;
 }) => {
-  const { clubId, eventId } = await props.params;
-  const club = await api.club.byId({ id: clubId });
+  const { slug, eventId } = await props.params;
+  const club = await api.club.bySlug({ slug });
   if (!club) {
     notFound();
   }
@@ -22,11 +22,11 @@ const EditEventPage = async (props: {
       <ManageHeader
         club={club}
         path={[
-          { text: 'Events', href: `/manage/${club.id}/events` },
+          { text: 'Events', href: `/manage/${slug}/events` },
           { text: event.name, href: `/events/${eventId}` },
-          { text: 'Edit', href: `/manage/${club.id}/events/edit/${eventId}` },
+          { text: 'Edit', href: `/manage/${slug}/events/edit/${eventId}` },
         ]}
-        hrefBack={`/manage/${clubId}/events`}
+        hrefBack={`/manage/${slug}/events`}
       />
       <EventForm mode="edit" club={club} event={{ ...event, liked: false }} />
     </>
