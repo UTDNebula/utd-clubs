@@ -312,7 +312,8 @@ export const clubRouter = createTRPCRouter({
     .query(async ({ input: { slug }, ctx }) => {
       try {
         const bySlug = await ctx.db.query.club.findFirst({
-          where: (club) => eq(club.slug, slug),
+          where: (club) =>
+            and(eq(club.slug, slug), eq(club.approved, 'approved')),
           with: {
             contacts: true,
             officers: true,

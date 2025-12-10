@@ -18,7 +18,7 @@ type Props = { params: Promise<{ slug: string }> };
 export default async function Page(props: Props) {
   const params = await props.params;
 
-  const club = await api.club.getDirectoryInfo({ slug: params.slug });
+  const club = await api.admin.getDirectoryInfo({ slug: params.slug });
   if (!club) {
     notFound();
   }

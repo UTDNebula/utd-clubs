@@ -80,7 +80,6 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
               <ListItemText>Settings</ListItemText>
             </MenuItem>
             <MenuItem
-              component="button"
               onClick={async () => {
                 await authClient.signOut();
                 setOpen(false);

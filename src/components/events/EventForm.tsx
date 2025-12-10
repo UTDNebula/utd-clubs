@@ -12,9 +12,8 @@ import FormFieldSet, {
   FormFieldSetSkeleton,
 } from '@src/components/form/FormFieldSet';
 import FormImage from '@src/components/manage/form/FormImage';
-import { type SelectClub } from '@src/server/db/models';
+import { SelectEvent, type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
-import { type RouterOutputs } from '@src/trpc/shared';
 import { useAppForm } from '@src/utils/form';
 import { createEventSchema } from '@src/utils/formSchemas';
 import EventCardPreview from './EventCardPreview';
@@ -29,7 +28,7 @@ type EventFormProps =
   | {
       mode: 'edit';
       club: SelectClub;
-      event: RouterOutputs['event']['findByFilters']['events'][number];
+      event: SelectEvent;
     };
 
 const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {

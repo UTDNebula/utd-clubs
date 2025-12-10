@@ -5,6 +5,10 @@ import { userMetadataToClubs } from '@src/server/db/schema/users';
 import { adminProcedure, createTRPCRouter } from '../trpc';
 import { editCollaboratorSchema } from './clubEdit';
 
+const bySlugSchema = z.object({
+  slug: z.string().default(''),
+});
+
 const deleteSchema = z.object({
   id: z.string(),
 });
@@ -120,5 +124,22 @@ export const adminRouter = createTRPCRouter({
         .update(club)
         .set({ approved: input.status })
         .where(eq(club.id, input.clubId));
+    }),
+  getDirectoryInfo: adminProcedure
+    .input(bySlugSchema)
+    .query(async ({ input: { slug }, ctx }) => {
+      try {
+        const bySlug = await ctx.db.query.club.findFirst({
+          where: (club) => eq(club.slug, slug),
+          with: {
+            contacts: true,
+            officers: true,
+          },
+        });
+        return bySlug;
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
     }),
 });

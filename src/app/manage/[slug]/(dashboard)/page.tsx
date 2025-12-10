@@ -40,16 +40,18 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
               Events
             </Button>
           </Link>
-          <Link href={`/directory/${slug}`}>
-            <Button
-              variant="contained"
-              className="normal-case whitespace-nowrap"
-              startIcon={<PreviewIcon />}
-              size="large"
-            >
-              Listing
-            </Button>
-          </Link>
+          {club.approved === 'approved' && (
+            <Link href={`/directory/${slug}`}>
+              <Button
+                variant="contained"
+                className="normal-case whitespace-nowrap"
+                startIcon={<PreviewIcon />}
+                size="large"
+              >
+                Listing
+              </Button>
+            </Link>
+          )}
         </div>
       </ManageHeader>
       <div className="flex w-full flex-col items-center">
