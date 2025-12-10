@@ -92,7 +92,7 @@ export const userMetadataRouter = createTRPCRouter({
       }));
 
       if (currentTime) {
-        events = events.filter((ev) => ev.startTime >= currentTime);
+        events = events.filter((ev) => ev.endTime >= currentTime);
       }
 
       if (sortByDate) {

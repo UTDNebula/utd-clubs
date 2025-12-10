@@ -66,7 +66,7 @@ export const eventRouter = createTRPCRouter({
         const events = await ctx.db.query.events.findMany({
           where: (event) =>
             currentTime
-              ? and(eq(event.clubId, clubId), gte(event.startTime, currentTime))
+              ? and(eq(event.clubId, clubId), gte(event.endTime, currentTime))
               : eq(event.clubId, clubId),
           orderBy: sortByDate ? (event) => [event.startTime] : undefined,
           with: {
