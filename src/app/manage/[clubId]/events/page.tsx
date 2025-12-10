@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import EventCard from '@src/components/events/EventCard';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 
 export default async function Page({
@@ -22,7 +22,7 @@ export default async function Page({
 
   return (
     <main>
-      <ClubManageHeader
+      <ManageHeader
         club={club}
         path={[{ text: 'Events', href: `/manage/${clubId}/events` }]}
         hrefBack={`/manage/${clubId}/`}
@@ -39,7 +39,7 @@ export default async function Page({
             </Button>
           </Link>
         </div>
-      </ClubManageHeader>
+      </ManageHeader>
       <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
         {events?.map((event) => (
           <EventCard key={event.id} event={event} manageView />

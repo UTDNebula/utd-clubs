@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 
 export default async function Page({
@@ -16,7 +16,7 @@ export default async function Page({
 
   return (
     <main>
-      <ClubManageHeader
+      <ManageHeader
         club={club}
         path={[{ text: 'Members', href: `/manage/${clubId}/members` }]}
         hrefBack={`/manage/${clubId}/`}

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import EventForm from '@src/components/events/EventForm';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 
 const EditEventPage = async (props: {
@@ -19,7 +19,7 @@ const EditEventPage = async (props: {
 
   return (
     <>
-      <ClubManageHeader
+      <ManageHeader
         club={club}
         path={[
           { text: 'Events', href: `/manage/${club.id}/events` },

@@ -4,7 +4,7 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 import ClubManageForm from './ClubManageForm';
 
@@ -18,7 +18,7 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
 
   return (
     <>
-      <ClubManageHeader club={club} hrefBack="/manage">
+      <ManageHeader club={club} hrefBack="/manage">
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
           <Link href={`/manage/${clubId}/members`}>
             <Button
@@ -51,7 +51,7 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
             </Button>
           </Link>
         </div>
-      </ClubManageHeader>
+      </ManageHeader>
       <div className="flex w-full flex-col items-center">
         <ClubManageForm club={club} />
       </div>
