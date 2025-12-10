@@ -1,9 +1,16 @@
 'use client';
 
-import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import FormFieldSet from '@src/components/form/FormFieldSet';
 import { useTRPC } from '@src/trpc/react';
 
 type Props = { status: 'approved' | 'pending' | 'rejected'; clubId: string };
@@ -12,7 +19,7 @@ export default function ChangeClubStatus({ status: initial, clubId }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState<Props['status']>(initial);
   const api = useTRPC();
-  const { mutate } = useMutation(
+  const changeClubStatus = useMutation(
     api.admin.changeClubStatus.mutationOptions({
       onSuccess: () => router.refresh(),
     }),
@@ -21,15 +28,15 @@ export default function ChangeClubStatus({ status: initial, clubId }: Props) {
   function onChange(e: SelectChangeEvent) {
     switch (e.target.value) {
       case 'approved':
-        mutate({ clubId: clubId, status: 'approved' });
+        changeClubStatus.mutate({ clubId: clubId, status: 'approved' });
         setStatus('approved');
         break;
       case 'pending':
-        mutate({ clubId: clubId, status: 'pending' });
+        changeClubStatus.mutate({ clubId: clubId, status: 'pending' });
         setStatus('pending');
         break;
       case 'rejected':
-        mutate({ clubId: clubId, status: 'rejected' });
+        changeClubStatus.mutate({ clubId: clubId, status: 'rejected' });
         setStatus('rejected');
         break;
     }
@@ -49,12 +56,26 @@ export default function ChangeClubStatus({ status: initial, clubId }: Props) {
   };
 
   return (
-    <div className="flex">
-      <Select value={status} onChange={onChange} className={statusColor()}>
-        <MenuItem value="approved">Approved</MenuItem>
-        <MenuItem value="pending">Pending</MenuItem>
-        <MenuItem value="rejected">Rejected</MenuItem>
-      </Select>
-    </div>
+    <FormFieldSet legend="Status">
+      <div className="ml-2 mb-4 text-slate-600 text-sm">
+        <p>Pending and rejected clubs are not shown anywhere on UTD Clubs.</p>
+      </div>
+      <div className="m-2 mt-0 flex flex-col gap-4">
+        <FormControl fullWidth>
+          <InputLabel id="change-club-status-label">Status</InputLabel>
+          <Select
+            labelId="change-club-status-label"
+            value={status}
+            label="Status"
+            onChange={onChange}
+            className={statusColor()}
+          >
+            <MenuItem value="approved">Approved</MenuItem>
+            <MenuItem value="pending">Pending</MenuItem>
+            <MenuItem value="rejected">Rejected</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+    </FormFieldSet>
   );
 }

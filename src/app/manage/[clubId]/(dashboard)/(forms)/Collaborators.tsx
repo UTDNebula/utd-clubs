@@ -18,16 +18,17 @@ type FormData = z.infer<typeof editOfficerSchema>;
 
 function typedDefaultValues(
   officers: SelectUserMetadataToClubsWithUserMetadata[],
-  role: 'Officer' | 'President',
-  userId: string,
+  role: 'Officer' | 'President' | 'Admin',
+  userId: string | undefined,
 ): FormData['officers'] {
   return officers.map((officer) => ({
     userId: officer.userId,
     name:
       officer.userMetadata?.firstName + ' ' + officer.userMetadata?.lastName,
     // Can remove if self or President
-    canRemove: role === 'President' || officer.userId === userId,
-    canTogglePresident: role === 'President',
+    canRemove:
+      role === 'President' || role === 'Admin' || officer.userId === userId,
+    canTogglePresident: role === 'President' || role === 'Admin',
     position: officer.memberType as 'President' | 'Officer',
   }));
 }
@@ -35,8 +36,8 @@ function typedDefaultValues(
 type CollaboratorsProps = {
   club: SelectClub;
   officers: SelectUserMetadataToClubsWithUserMetadata[];
-  role: 'Officer' | 'President';
-  userId: string;
+  role: 'Officer' | 'President' | 'Admin';
+  userId?: string;
 };
 
 const Collaborators = ({
@@ -91,7 +92,7 @@ const Collaborators = ({
       formApi.reset({ officers: newOfficers });
       // Reload if own role changed
       const self = newOfficers.find((o) => o.userId === userId);
-      if (!self || role !== self.position) {
+      if (role !== 'Admin' && (!self || role !== self.position)) {
         window.location.reload();
       }
     },
@@ -121,7 +122,8 @@ const Collaborators = ({
       <FormFieldSet legend="Collaborators">
         <div className="ml-2 mb-4 text-slate-600 text-sm">
           <p>
-            Users in this list can edit your club&apos;s information and events.
+            Users in this list can edit {role === 'Admin' ? 'a' : 'your'}{' '}
+            club&apos;s information and events.
           </p>
           <p>Admins in this list can manage other collaborators.</p>
           <p>
@@ -150,8 +152,9 @@ const Collaborators = ({
                     userId: user.id,
                     name: user.name,
                     position: 'Officer',
-                    canRemove: role === 'President',
-                    canTogglePresident: role === 'President',
+                    canRemove: role === 'President' || role === 'Admin',
+                    canTogglePresident:
+                      role === 'President' || role === 'Admin',
                     new: true,
                   });
                 }}
