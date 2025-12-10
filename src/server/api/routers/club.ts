@@ -74,12 +74,25 @@ export const clubRouter = createTRPCRouter({
 
     return clubs;
   }),
-
   byId: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     const { id } = input;
     try {
       const byId = await ctx.db.query.club.findFirst({
         where: (club) => eq(club.id, id),
+        with: { contacts: true },
+      });
+
+      return byId;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }),
+  bySlug: publicProcedure.input(bySlugSchema).query(async ({ input, ctx }) => {
+    const { slug } = input;
+    try {
+      const byId = await ctx.db.query.club.findFirst({
+        where: (club) => eq(club.slug, slug),
         with: { contacts: true },
       });
 
@@ -263,7 +276,7 @@ export const clubRouter = createTRPCRouter({
         memberType: 'President' as const,
       });
 
-      return clubId;
+      return slug;
     }),
   getOfficers: protectedProcedure
     .input(byIdSchema)
@@ -299,7 +312,8 @@ export const clubRouter = createTRPCRouter({
     .query(async ({ input: { slug }, ctx }) => {
       try {
         const bySlug = await ctx.db.query.club.findFirst({
-          where: (club) => eq(club.slug, slug),
+          where: (club) =>
+            and(eq(club.slug, slug), eq(club.approved, 'approved')),
           with: {
             contacts: true,
             officers: true,

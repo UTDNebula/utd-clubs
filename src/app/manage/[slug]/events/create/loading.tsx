@@ -1,10 +1,10 @@
 import { EventFormSkeleton } from '@src/components/events/EventForm';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import ManageHeader from '@src/components/manage/ManageHeader';
 
 export default function Loading() {
   return (
     <>
-      <ClubManageHeader loading path={['Events', 'loading', 'Edit']} />
+      <ManageHeader loading path={['Events', 'Create']} />
       <EventFormSkeleton />
     </>
   );

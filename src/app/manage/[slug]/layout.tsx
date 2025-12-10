@@ -10,19 +10,24 @@ const Layout = async ({
   params,
   children,
 }: {
-  params: Promise<{ clubId: string }>;
+  params: Promise<{ slug: string }>;
   children: ReactNode;
 }) => {
-  const { clubId } = await params;
+  const { slug } = await params;
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) redirect(await signInRoute(`manage/${clubId}`));
-  const canAccess = await api.club.isOfficer({ id: clubId });
+  if (!session) redirect(await signInRoute(`manage/${slug}`));
+  const club = await api.club.bySlug({ slug });
+  if (!club) {
+    // Backup: If using ID, redirect
+    const clubSlugById = await api.club.getSlug({ id: slug });
+    if (clubSlugById) {
+      redirect(`/manage/${clubSlugById}`);
+    }
+    notFound();
+  }
+  const canAccess = await api.club.isOfficer({ id: club.id });
   if (!canAccess) {
     return <div className="">You can&apos;t access this 😢</div>;
-  }
-  const club = await api.club.byId({ id: clubId });
-  if (!club) {
-    notFound();
   }
 
   return (

@@ -1,10 +1,11 @@
-import { useEffect, useState, type InputHTMLAttributes } from 'react';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { useEffect, useState } from 'react';
 
 type Props = {
   value: string | number;
   onChange: (value: string | number) => void;
   debounce?: number;
-} & Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'>;
+} & Omit<TextFieldProps, 'onChange'>;
 
 export default function DebouncedInput({
   value: initialValue,
@@ -27,10 +28,12 @@ export default function DebouncedInput({
   }, [value, debounce, onChange]);
 
   return (
-    <input
+    <TextField
       {...props}
       value={value}
       onChange={(e) => setValue(e.target.value)}
+      size="small"
+      className={`[&>.MuiInputBase-root]:bg-white min-w-16 [&>.MuiInputBase-root]:max-h-8 text-xs ${props.className ?? ''}`}
     />
   );
 }

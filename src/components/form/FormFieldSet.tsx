@@ -21,7 +21,7 @@ export const FormFieldSet = ({
       {...props}
       className={
         'flex flex-col gap-2 rounded-lg bg-white sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4 min-w-0 max-w-6xl ' +
-        props.className
+        (props.className ?? '')
       }
     >
       {legend && (

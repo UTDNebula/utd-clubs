@@ -3,32 +3,32 @@ import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import EventCard from '@src/components/events/EventCard';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ clubId: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { clubId } = await params;
+  const { slug } = await params;
 
-  const club = await api.club.byId({ id: clubId });
+  const club = await api.club.bySlug({ slug });
   if (!club) {
     notFound();
   }
 
-  const events = await api.event.byClubId({ clubId });
+  const events = await api.event.byClubId({ clubId: club.id });
 
   return (
     <main>
-      <ClubManageHeader
+      <ManageHeader
         club={club}
-        path={[{ text: 'Events', href: `/manage/${clubId}/events` }]}
-        hrefBack={`/manage/${clubId}/`}
+        path={[{ text: 'Events', href: `/manage/${slug}/events` }]}
+        hrefBack={`/manage/${slug}/`}
       >
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Link href={`/manage/${clubId}/events/create`}>
+          <Link href={`/manage/${slug}/events/create`}>
             <Button
               variant="contained"
               className="normal-case"
@@ -39,7 +39,7 @@ export default async function Page({
             </Button>
           </Link>
         </div>
-      </ClubManageHeader>
+      </ManageHeader>
       <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
         {events?.map((event) => (
           <EventCard key={event.id} event={event} manageView />

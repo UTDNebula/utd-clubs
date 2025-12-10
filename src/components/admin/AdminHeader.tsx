@@ -1,16 +1,7 @@
 import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import type {
-  SelectContact as Contacts,
-  SelectClub,
-} from '@src/server/db/models';
-import BackButton from '../backButton';
-
-type Club = SelectClub & {
-  contacts?: Contacts[];
-  tags: string[];
-};
+import BackButton from '@src/components/BackButton';
 
 type PathItem =
   | {
@@ -19,27 +10,12 @@ type PathItem =
     }
   | string;
 
-type ClubManageHeaderBaseProps = {
+type AdminHeaderProps = {
   children?: ReactNode;
   path?: PathItem[];
-  hrefBack?: string;
 };
 
-type ClubManageHeaderProps =
-  | (ClubManageHeaderBaseProps & { club?: Club; loading?: never })
-  | (ClubManageHeaderBaseProps & { club?: never; loading: true });
-
-/**
- * Requires either a `club` prop or a `loading` prop flag.
- * `club` is only optional on the choose a club page.
- */
-const ClubManageHeader = ({
-  club,
-  loading,
-  children,
-  path,
-  hrefBack,
-}: ClubManageHeaderProps) => {
+const AdminHeader = ({ children, path }: AdminHeaderProps) => {
   const normalizedPath = path?.map((pathItem) => {
     if (typeof pathItem === 'string') {
       return { text: pathItem };
@@ -51,22 +27,8 @@ const ClubManageHeader = ({
   return (
     <div className="mb-8 flex w-full flex-row flex-wrap items-center gap-x-10 gap-y-2">
       <div className="flex min-h-10.5 flex-row items-center gap-2">
-        <BackButton href={hrefBack} />
+        <BackButton href={normalizedPath?.[normalizedPath.length - 2]?.href} />
         <Breadcrumbs aria-label="breadcrumb">
-          {club || loading ? (
-            <Link href="/manage">Manage</Link>
-          ) : (
-            <Typography>Manage</Typography>
-          )}
-          {club &&
-            (normalizedPath?.length ? (
-              <Link className="font-bold" href={`/manage/${club.id}`}>
-                {club.name}
-              </Link>
-            ) : (
-              <Typography className="font-bold">{club.name}</Typography>
-            ))}
-          {loading && <Skeleton variant="text" className="w-16" />}
           {/* All but last path items can be links */}
           {normalizedPath?.slice(0, -1).map(({ text, href }, index) => {
             if (text === 'loading') {
@@ -99,4 +61,4 @@ const ClubManageHeader = ({
   );
 };
 
-export default ClubManageHeader;
+export default AdminHeader;

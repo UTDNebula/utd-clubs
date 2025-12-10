@@ -19,8 +19,8 @@ const CreateClubForm = () => {
       description: '',
     },
     onSubmit: async ({ value }) => {
-      const clubId = await createClub.mutateAsync(value);
-      router.push(`/manage/${clubId}`);
+      const slug = await createClub.mutateAsync(value);
+      router.push(`/manage/${slug}`);
     },
     validators: {
       onChange: createClubSchema,
