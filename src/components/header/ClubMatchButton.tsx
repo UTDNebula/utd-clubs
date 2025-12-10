@@ -27,8 +27,15 @@ export default function ClubMatchButton({
       }
     : undefined;
 
+  const LinkIfSession = ({ children }: { children: React.ReactNode }) => {
+    if (session) {
+      return <Link href={'/club-match/results'}>{children}</Link>;
+    }
+    return children;
+  };
+
   return (
-    <Link href={session ? '/club-match/results' : ''} scroll={!!session}>
+    <LinkIfSession>
       {iconOnly ? (
         <IconButton
           size="large"
@@ -47,6 +54,6 @@ export default function ClubMatchButton({
           Club Match
         </Button>
       )}
-    </Link>
+    </LinkIfSession>
   );
 }

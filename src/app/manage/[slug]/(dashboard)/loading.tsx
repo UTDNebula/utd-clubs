@@ -1,11 +1,11 @@
 import { Skeleton } from '@mui/material';
 import { FormFieldSetSkeleton } from '@src/components/form/FormFieldSet';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import ManageHeader from '@src/components/manage/ManageHeader';
 
 export default function Loading() {
   return (
     <>
-      <ClubManageHeader loading hrefBack="/manage">
+      <ManageHeader loading hrefBack="/manage">
         <div className="flex gap-x-10">
           <Skeleton
             variant="rounded"
@@ -26,7 +26,7 @@ export default function Loading() {
             className="rounded-full"
           />
         </div>
-      </ClubManageHeader>
+      </ManageHeader>
       <div className="flex w-full flex-col items-center">
         <div className="flex flex-col gap-8 w-full max-w-6xl">
           <FormFieldSetSkeleton />

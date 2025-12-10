@@ -4,23 +4,23 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 import ClubManageForm from './ClubManageForm';
 
-const Page = async (props: { params: Promise<{ clubId: string }> }) => {
-  const { clubId } = await props.params;
+const Page = async (props: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await props.params;
 
-  const club = await api.club.byId({ id: clubId });
+  const club = await api.club.bySlug({ slug });
   if (!club) {
     notFound();
   }
 
   return (
     <>
-      <ClubManageHeader club={club} hrefBack="/manage">
+      <ManageHeader club={club} hrefBack="/manage">
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Link href={`/manage/${clubId}/members`}>
+          <Link href={`/manage/${slug}/members`}>
             <Button
               variant="contained"
               className="normal-case whitespace-nowrap"
@@ -30,7 +30,7 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
               Members
             </Button>
           </Link>
-          <Link href={`/manage/${clubId}/events`}>
+          <Link href={`/manage/${slug}/events`}>
             <Button
               variant="contained"
               className="normal-case whitespace-nowrap"
@@ -40,18 +40,20 @@ const Page = async (props: { params: Promise<{ clubId: string }> }) => {
               Events
             </Button>
           </Link>
-          <Link href={`/directory/${club.slug}`}>
-            <Button
-              variant="contained"
-              className="normal-case whitespace-nowrap"
-              startIcon={<PreviewIcon />}
-              size="large"
-            >
-              Listing
-            </Button>
-          </Link>
+          {club.approved === 'approved' && (
+            <Link href={`/directory/${slug}`}>
+              <Button
+                variant="contained"
+                className="normal-case whitespace-nowrap"
+                startIcon={<PreviewIcon />}
+                size="large"
+              >
+                Listing
+              </Button>
+            </Link>
+          )}
         </div>
-      </ClubManageHeader>
+      </ManageHeader>
       <div className="flex w-full flex-col items-center">
         <ClubManageForm club={club} />
       </div>

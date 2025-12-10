@@ -1,6 +1,7 @@
+import { TZDateMini } from '@date-fns/tz';
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from '@mui/material';
-import { format, isSameDay } from 'date-fns';
+import { format, isSameDay, isSameYear } from 'date-fns';
 import Image from 'next/image';
 import EventTimeAlert from '@src/components/events/EventTimeAlert';
 import type { SelectClub, SelectEvent } from '@src/server/db/models';
@@ -12,6 +13,9 @@ interface Props {
 
 const EventCardPreview = ({ club, event }: Props) => {
   const src = event.image ?? club.profileImage;
+  const tzStartTime = new TZDateMini(event.startTime, 'America/Chicago');
+  const tzEndTime = new TZDateMini(event.endTime, 'America/Chicago');
+
   return (
     <div className="flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
       <div className="grow flex flex-col">
@@ -35,14 +39,17 @@ const EventCardPreview = ({ club, event }: Props) => {
             {club.name}
             <div>
               <span className="text-royal">
-                {format(event.startTime, 'E, MMM d, p')}
-                {isSameDay(event.startTime, event.endTime) ? (
-                  <> - {format(event.endTime, 'p')}</>
+                {isSameYear(tzStartTime, TZDateMini.tz('America/Chicago'))
+                  ? null
+                  : format(tzStartTime, 'yyyy ')}
+                {format(tzStartTime, 'E, MMM d, p')}
+                {isSameDay(tzStartTime, tzEndTime) ? (
+                  <> - {format(tzEndTime, 'p')}</>
                 ) : (
                   <>
                     {' '}
                     - <br />
-                    {format(event.endTime, 'E, MMM d, p')}
+                    {format(tzEndTime, 'E, MMM d, p')}
                   </>
                 )}
               </span>
