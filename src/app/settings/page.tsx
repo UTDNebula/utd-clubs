@@ -21,7 +21,7 @@ const Settings = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect(await signInRoute('/settings'));
+    redirect(await signInRoute('settings'));
   }
 
   return (

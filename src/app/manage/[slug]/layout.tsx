@@ -15,7 +15,7 @@ const Layout = async ({
 }) => {
   const { slug } = await params;
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) redirect(await signInRoute(`/manage/${slug}`));
+  if (!session) redirect(await signInRoute(`manage/${slug}`));
   const club = await api.club.bySlug({ slug });
   if (!club) {
     // Backup: If using ID, redirect

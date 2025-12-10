@@ -28,7 +28,7 @@ const Page = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect(await signInRoute('/club-match/results'));
+    redirect(await signInRoute('club-match/results'));
   }
 
   const data = await db.query.userAiCache.findFirst({

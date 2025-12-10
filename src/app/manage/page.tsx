@@ -12,7 +12,7 @@ import { signInRoute } from '@src/utils/redirect';
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
-    redirect(await signInRoute('/manage'));
+    redirect(await signInRoute('manage'));
   }
   const clubs = await api.club.getOfficerClubs();
   return (
