@@ -42,7 +42,7 @@ export default async function Page({
       </ManageHeader>
       <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
         {events?.map((event) => (
-          <EventCard key={event.id} event={event} manageView />
+          <EventCard key={event.id} event={event} view="manage" />
         ))}
       </div>
     </main>

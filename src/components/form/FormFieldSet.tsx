@@ -46,7 +46,7 @@ export const FormFieldSetSkeleton = (props: FormFieldSetSkeletonProps) => {
     <Skeleton
       className={
         'flex flex-col gap-2 rounded-lg sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4 min-w-0 w-6xl ' +
-        props.className
+        (props.className ?? '')
       }
       variant="rounded"
       height={512}

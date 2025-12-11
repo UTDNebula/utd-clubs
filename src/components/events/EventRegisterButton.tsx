@@ -94,6 +94,19 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
 
 export default EventRegisterButton;
 
+export const EventRegisterButtonPreview = () => {
+  return (
+    <Button
+      variant="contained"
+      className="normal-case"
+      size="small"
+      startIcon={<AddIcon />}
+    >
+      Register
+    </Button>
+  );
+};
+
 type EventRegisterButtonSkeletonProps = {
   isHeader?: boolean;
 };
