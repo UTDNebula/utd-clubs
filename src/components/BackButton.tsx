@@ -9,7 +9,7 @@ type BackButtonProps = IconButtonProps & {
   href?: string;
 };
 
-export const BackButton = ({ href, ...props }: BackButtonProps) => {
+const BackButton = ({ href, ...props }: BackButtonProps) => {
   const router = useRouter();
 
   const LinkIfHref = ({ children }: { children: React.ReactNode }) => {
