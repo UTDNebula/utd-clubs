@@ -10,7 +10,7 @@ import {
   Select,
   Tooltip,
 } from '@mui/material';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Panel from '@src/components/form/Panel';
 import type { SelectClub } from '@src/server/db/models';
 
 type CalendarProps = {
@@ -29,7 +29,7 @@ const Calendar = ({ club }: CalendarProps) => {
   ];
 
   return (
-    <FormFieldSet legend="Google Calendar Sync">
+    <Panel heading="Google Calendar Sync">
       <div className="ml-2 mb-2 text-slate-600 text-sm">
         <p>
           If your organization uses a shared Google Calendar we can pull its
@@ -115,7 +115,7 @@ const Calendar = ({ club }: CalendarProps) => {
           </>
         )}
       </div>
-    </FormFieldSet>
+    </Panel>
   );
 };
 

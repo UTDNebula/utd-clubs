@@ -1,12 +1,18 @@
-import Typography from '@mui/material/Typography';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import Panel from '@src/components/form/Panel';
 
 const NotAccepted = ({ status }: { status: 'pending' | 'rejected' }) => {
   return (
-    <div className="w-full flex flex-col gap-2 rounded-lg bg-cornflower-50 sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4 min-w-0">
-      <Typography variant="h2" className="ml-2 text-xl font-bold text-gray-800">
-        {status === 'pending' && 'Your organization is pending review.'}
-        {status === 'rejected' && 'Your organization has been rejected.'}
-      </Typography>
+    <Panel
+      className="bg-cornflower-50"
+      startAdornment={<AccessTimeIcon />}
+      heading={
+        <>
+          {status === 'pending' && 'Your organization is pending review.'}
+          {status === 'rejected' && 'Your organization has been rejected.'}
+        </>
+      }
+    >
       <div className="flex flex-col gap-2 px-2">
         <p>It is not publically visible at this time. </p>
         {status === 'pending' && (
@@ -34,7 +40,7 @@ const NotAccepted = ({ status }: { status: 'pending' | 'rejected' }) => {
           .
         </p>
       </div>
-    </div>
+    </Panel>
   );
 };
 

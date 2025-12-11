@@ -11,7 +11,7 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Panel from '@src/components/form/Panel';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 
@@ -29,10 +29,7 @@ export default function ChangeClubStatus({ club }: Props) {
 
   return (
     <>
-      <FormFieldSet
-        legend="Delete"
-        className="!bg-red-100 border border-red-500"
-      >
+      <Panel heading="Delete" className="!bg-red-100 border border-red-500">
         <div className="ml-2 mb-4 text-slate-800 text-sm">
           <p>This will permenantly delete this organization from UTD Clubs.</p>
         </div>
@@ -47,7 +44,7 @@ export default function ChangeClubStatus({ club }: Props) {
             Delete
           </Button>
         </div>
-      </FormFieldSet>
+      </Panel>
       <Dialog onClose={() => setOpen(false)} open={open}>
         <DialogTitle>Are you sure?</DialogTitle>
         <DialogContent>

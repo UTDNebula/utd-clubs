@@ -3,7 +3,7 @@
 import { TextField } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Panel from '@src/components/form/Panel';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { createClubSchema } from '@src/utils/formSchemas';
@@ -35,7 +35,7 @@ const CreateClubForm = () => {
         form.handleSubmit();
       }}
     >
-      <FormFieldSet legend="Create New Organization">
+      <Panel heading="Create New Organization">
         <div className="ml-2 mb-4 text-slate-600 text-sm">
           <p>
             We&apos;ll start with the basics then get your organization&apos;s
@@ -109,7 +109,7 @@ const CreateClubForm = () => {
             <form.FormSubmitButton />
           </form.AppForm>
         </div>
-      </FormFieldSet>
+      </Panel>
     </form>
   );
 };
