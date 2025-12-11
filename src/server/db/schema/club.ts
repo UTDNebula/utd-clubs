@@ -74,6 +74,7 @@ export const clubRelations = relations(club, ({ many }) => ({
   userMetadataToClubs: many(userMetadataToClubs),
 }));
 
+// TODO add schema for search index
 export const usedTags = pgMaterializedView('used_tags', {
   tag: text('tag').notNull(),
   count: integer('count').notNull(),
