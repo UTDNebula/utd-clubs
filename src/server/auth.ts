@@ -37,7 +37,7 @@ export const auth = betterAuth({
             firstName,
             lastName,
             id: user.id,
-            major: 'Computer Science',
+            major: '',
           };
           await db.insert(userMetadata).values(insert).returning();
         },
@@ -61,5 +61,6 @@ export const auth = betterAuth({
     'http://localhost:3000',
     'https://clubs.utdnebula.com',
     'https://clubs-*-utdnebula.vercel.app',
+    'http://192.168.137.1:3000',
   ],
 });

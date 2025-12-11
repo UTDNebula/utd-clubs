@@ -19,8 +19,8 @@ const CreateClubForm = () => {
       description: '',
     },
     onSubmit: async ({ value }) => {
-      const clubId = await createClub.mutateAsync(value);
-      router.push(`/manage/${clubId}`);
+      const slug = await createClub.mutateAsync(value);
+      router.push(`/manage/${slug}`);
     },
     validators: {
       onChange: createClubSchema,
@@ -57,7 +57,7 @@ const CreateClubForm = () => {
                   !field.state.meta.isValid
                     ? field.state.meta.errors
                         .map((err) => err?.message)
-                        .join('. ')
+                        .join('. ') + '.'
                     : undefined
                 }
                 label="Name"
@@ -81,7 +81,7 @@ const CreateClubForm = () => {
                   !field.state.meta.isValid ? (
                     field.state.meta.errors
                       .map((err) => err?.message)
-                      .join('. ')
+                      .join('. ') + '.'
                   ) : (
                     <span>
                       We support{' '}

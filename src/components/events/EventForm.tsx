@@ -1,5 +1,6 @@
 'use client';
 
+import { TZDateMini } from '@date-fns/tz';
 import { TextField } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useStore } from '@tanstack/react-form';
@@ -52,10 +53,10 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     }
 
     // New Date only once to prevent call stack exceeded
-    const defaultStartTime = new Date();
+    const defaultStartTime = TZDateMini.tz('America/Chicago');
     defaultStartTime.setHours(defaultStartTime.getHours() + 1);
     defaultStartTime.setMinutes(0);
-    const defaultEndTime = new Date();
+    const defaultEndTime = TZDateMini.tz('America/Chicago');
     defaultEndTime.setHours(defaultEndTime.getHours() + 2);
     defaultEndTime.setMinutes(0);
 
@@ -111,7 +112,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             // Uplaod image after we have an ID
             const iImageIsDirty = formApi.getFieldMeta('image')?.isDirty;
             if (!iImageIsDirty) {
-              router.push(`s${newId}`);
+              router.push(`/events/${newId}`);
               return;
             }
             if (file === null) {
@@ -194,7 +195,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   !field.state.meta.isValid
                     ? field.state.meta.errors
                         .map((err) => err?.message)
-                        .join('. ')
+                        .join('. ') + '.'
                     : undefined
                 }
                 label="Name"
@@ -214,7 +215,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   !field.state.meta.isValid
                     ? field.state.meta.errors
                         .map((err) => err?.message)
-                        .join('. ')
+                        .join('. ') + '.'
                     : undefined
                 }
                 label="Location"
@@ -238,7 +239,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   !field.state.meta.isValid ? (
                     field.state.meta.errors
                       .map((err) => err?.message)
-                      .join('. ')
+                      .join('. ') + '.'
                   ) : (
                     <span>
                       We support{' '}
@@ -257,14 +258,14 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
               />
             )}
           </form.Field>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             <form.Field name="startTime">
               {(field) => (
                 <DateTimePicker
                   onChange={(value) => value && field.handleChange(value)}
                   value={field.state.value}
-                  label="Date Founded"
-                  className="[&>.MuiPickersInputBase-root]:bg-white"
+                  label="Start"
+                  className="grow [&>.MuiPickersInputBase-root]:bg-white"
                   slotProps={{
                     actionBar: {
                       actions: ['accept'],
@@ -275,7 +276,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                       helperText: field.state.meta.isValid
                         ? field.state.meta.errors
                             .map((err) => err?.message)
-                            .join('. ')
+                            .join('. ') + '.'
                         : undefined,
                     },
                   }}
@@ -287,8 +288,8 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                 <DateTimePicker
                   onChange={(value) => value && field.handleChange(value)}
                   value={field.state.value}
-                  label="Date Founded"
-                  className="[&>.MuiPickersInputBase-root]:bg-white"
+                  label="End"
+                  className="grow [&>.MuiPickersInputBase-root]:bg-white"
                   slotProps={{
                     actionBar: {
                       actions: ['accept'],
@@ -299,7 +300,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                       helperText: field.state.meta.isValid
                         ? field.state.meta.errors
                             .map((err) => err?.message)
-                            .join('. ')
+                            .join('. ') + '.'
                         : undefined,
                     },
                   }}

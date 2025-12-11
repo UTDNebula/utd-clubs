@@ -8,16 +8,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
-import { useRegisterModal } from '../account/RegisterModalProvider';
 
 type JoinButtonProps = {
   isHeader?: boolean;
   clubId: string;
+  clubSlug?: string;
 };
 
-const JoinButton = ({ isHeader, clubId }: JoinButtonProps) => {
+const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
@@ -48,7 +49,7 @@ const JoinButton = ({ isHeader, clubId }: JoinButtonProps) => {
 
   if (memberType === 'Officer' || memberType === 'President') {
     return (
-      <Link href={`/manage/${clubId}`}>
+      <Link href={`/manage/${clubSlug ?? clubId}`}>
         <Button
           variant="contained"
           size={isHeader ? 'large' : 'small'}

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import ClubCard from '@src/components/club/ClubCard';
 import Header from '@src/components/header/BaseHeader';
-import ClubManageHeader from '@src/components/header/ClubManageHeader';
+import ManageHeader from '@src/components/manage/ManageHeader';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
@@ -19,7 +19,7 @@ export default async function Page() {
     <>
       <Header />
       <main className="p-4">
-        <ClubManageHeader>
+        <ManageHeader>
           <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2 grow">
             <Link className="ml-auto" href="/directory/create">
               <Button
@@ -30,7 +30,7 @@ export default async function Page() {
               </Button>
             </Link>
           </div>
-        </ClubManageHeader>
+        </ManageHeader>
         <div className="flex justify-evenly h-full w-full flex-wrap gap-4 p-4">
           {clubs.map((club) => (
             <ClubCard key={club.id} club={club} manageView />

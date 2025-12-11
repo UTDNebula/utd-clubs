@@ -1,32 +1,48 @@
-import { Button } from '@mui/material';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PersonIcon from '@mui/icons-material/Person';
+import TagIcon from '@mui/icons-material/Tag';
+import { Button, Tooltip } from '@mui/material';
 import Link from 'next/link';
+import AdminHeader from '@src/components/admin/AdminHeader';
 
 export default function Page() {
   return (
-    <>
-      <h1 className="font-display text-center text-4xl font-bold text-haiti mt-5">
-        Admin
-      </h1>
-      <div className="flex justify-center gap-5 mt-5">
+    <AdminHeader path={['Admin']}>
+      <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
         <Link href="/admin/clubs">
-          <Button variant="contained" className="normal-case" size="large">
-            Manage Clubs
+          <Button
+            variant="contained"
+            className="normal-case whitespace-nowrap"
+            startIcon={<GroupsIcon />}
+            size="large"
+          >
+            Clubs
           </Button>
         </Link>
-        <Button
-          variant="contained"
-          className="normal-case"
-          size="large"
-          disabled
-        >
-          Manage Users
-        </Button>
+        <Tooltip title="Coming soon">
+          <span>
+            <Button
+              variant="contained"
+              className="normal-case"
+              startIcon={<PersonIcon />}
+              size="large"
+              disabled
+            >
+              Users
+            </Button>
+          </span>
+        </Tooltip>
         <Link href="/admin/tags">
-          <Button variant="contained" className="normal-case" size="large">
-            Change Tags
+          <Button
+            variant="contained"
+            className="normal-case"
+            startIcon={<TagIcon />}
+            size="large"
+          >
+            Tags
           </Button>
         </Link>
       </div>
-    </>
+    </AdminHeader>
   );
 }

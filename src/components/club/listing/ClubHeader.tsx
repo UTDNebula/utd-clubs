@@ -28,7 +28,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
           {club.name}
         </h1>
         <div className="ml-auto flex items-center gap-x-6">
-          <JoinButton isHeader clubId={club.id} />
+          <JoinButton isHeader clubId={club.id} clubSlug={club.slug} />
         </div>
       </div>
     </div>

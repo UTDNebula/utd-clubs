@@ -13,7 +13,7 @@ If you see anything that you think could be improved, please create an issue and
 
 ### Getting Started
 
-Please make sure you have at least [NodeJS v21.1.0](https://nodejs.org/en) or greater installed before continuing.
+Please make sure you have at least [NodeJS v22](https://nodejs.org/en) or greater installed before continuing.
 
 Start by cloning the repository to your local machine.
 

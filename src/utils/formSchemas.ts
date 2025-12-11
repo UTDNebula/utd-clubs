@@ -2,9 +2,10 @@ import { z } from 'zod';
 import { contactSchema } from './contact';
 
 export const createClubSchema = z.object({
-  name: z.string().min(3, 'Name is required'),
+  name: z.string().min(3, 'Name must be at least 3 characters'),
   description: z.string().min(1, 'Description is required'),
 });
+
 export const editClubContactSchema = z.object({
   contacts: contactSchema.array(),
 });
@@ -13,7 +14,7 @@ export const editClubSchema = z.object({
   id: z.string(),
   name: z
     .string()
-    .min(3, 'Name is required')
+    .min(3, 'Name must be at least 3 characters')
     .max(100, 'Character limit reached'),
   description: z
     .string()
@@ -24,6 +25,7 @@ export const editClubSchema = z.object({
   bannerImage: z.url().nullable(),
   foundingDate: z.date().nullable(),
 });
+
 export const editOfficerSchema = z.object({
   officers: z
     .object({
@@ -36,6 +38,7 @@ export const editOfficerSchema = z.object({
     })
     .array(),
 });
+
 export const editListedOfficerSchema = z.object({
   officers: z
     .object({
@@ -50,6 +53,22 @@ export const editListedOfficerSchema = z.object({
         .max(100, 'Character limit reached'),
     })
     .array(),
+});
+
+export const editSlugSchema = z.object({
+  id: z.string(),
+  slug: z
+    .string()
+    .min(3, 'URL must be at least 3 characters')
+    .max(100, 'URL may be at most 100 characters')
+    .regex(
+      /^[a-z0-9].*[a-z0-9]$/,
+      'URL must begin and end with a lowercase letter or number',
+    )
+    .regex(
+      /^[a-z0-9][a-z0-9-]+[a-z0-9]$/,
+      'URL may only use lowercase letters, numbers, and dashes',
+    ),
 });
 
 export const createEventSchema = z.object({
@@ -75,7 +94,6 @@ export const clubMatchFormSchema = z.object({
   categories: z.array(z.string().min(1).max(100)).max(50),
   specificCultures: z.string().max(500, characterLimitError).optional(),
   hobbies: z.array(z.string().min(1).max(100)).max(50),
-  hobbiesOther: z.string().max(500, characterLimitError).optional(),
   hobbyDetails: z.string().max(500, characterLimitError).optional(),
   otherAcademicInterests: z.string().max(500, characterLimitError).optional(),
   gender: z.string().min(1).max(100),
