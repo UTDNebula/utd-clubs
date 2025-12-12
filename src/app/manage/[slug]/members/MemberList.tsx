@@ -4,11 +4,15 @@ import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined
 import CancelIcon from '@mui/icons-material/Cancel';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import GavelIcon from '@mui/icons-material/Gavel';
+import HandymanIcon from '@mui/icons-material/Handyman';
+import PersonIcon from '@mui/icons-material/Person';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
 import Badge from '@mui/material/Badge';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import InputAdornment from '@mui/material/InputAdornment';
 import Menu from '@mui/material/Menu';
@@ -21,10 +25,9 @@ import {
   ColumnsPanelTrigger,
   DataGrid,
   ExportCsv,
-  ExportPrint,
+  // ExportPrint,
   FilterPanelTrigger,
   GridColDef,
-  GridColumnHeaderParams,
   QuickFilter,
   QuickFilterClear,
   QuickFilterControl,
@@ -76,11 +79,11 @@ type MemberListProps = {
 };
 
 const MemberList = ({ members, club }: MemberListProps) => {
-  const columns: GridColDef[] = [
+  const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] = [
     {
       field: 'firstName',
       valueGetter: (_value, row) => {
-        return row.userMetadata.firstName;
+        return row.userMetadata?.firstName;
       },
       headerName: 'First Name',
       width: 130,
@@ -88,7 +91,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
     {
       field: 'lastName',
       valueGetter: (value, row) => {
-        return row.userMetadata.lastName;
+        return row.userMetadata?.lastName;
       },
       headerName: 'Last Name',
       width: 130,
@@ -96,36 +99,48 @@ const MemberList = ({ members, club }: MemberListProps) => {
     {
       field: 'year',
       valueGetter: (_value, row) => {
-        return row.userMetadata.year;
+        return row.userMetadata?.year;
       },
       headerName: 'Year',
-      renderHeader: (params: GridColumnHeaderParams) => (
+      renderHeader: (params) => (
         <ColumnHeaderWithIcon icon={<CalendarMonthOutlinedIcon />}>
           {params.colDef.headerName}
         </ColumnHeaderWithIcon>
       ),
-      width: 100,
+      width: 140,
+      renderCell: (params) => {
+        if (!params.value) return;
+        return <Chip label={params.value} />;
+      },
     },
     {
       field: 'major',
       valueGetter: (_value, row) => {
-        return row.userMetadata.major;
+        return row.userMetadata?.major;
       },
       headerName: 'Major',
-      renderHeader: (params: GridColumnHeaderParams) => (
+      renderHeader: (params) => (
         <ColumnHeaderWithIcon icon={<SchoolOutlinedIcon />}>
           {params.colDef.headerName}
         </ColumnHeaderWithIcon>
       ),
       width: 240,
+      renderCell: (params) => {
+        if (!params.value) return;
+        return <Chip label={params.value} />;
+      },
     },
     {
       field: 'minor',
       valueGetter: (_value, row) => {
-        return row.userMetadata.minor;
+        return row.userMetadata?.minor;
       },
       headerName: 'Minor',
       width: 240,
+      renderCell: (params) => {
+        if (!params.value) return;
+        return <Chip label={params.value} />;
+      },
     },
     {
       field: 'memberType',
@@ -140,13 +155,44 @@ const MemberList = ({ members, club }: MemberListProps) => {
         }
       },
       headerName: 'Role',
-      renderHeader: (params: GridColumnHeaderParams) => (
+      renderHeader: (params) => (
         <ColumnHeaderWithIcon icon={<PersonOutlinedIcon />}>
           {params.colDef.headerName}
         </ColumnHeaderWithIcon>
       ),
+      width: 140,
+      renderCell: (params) => {
+        if (!params.value) return;
 
-      width: 120,
+        let color = '';
+        let icon: ReactNode = <></>;
+
+        switch (params.value) {
+          case 'Admin':
+            color = 'bg-rose-200';
+            icon = <GavelIcon fontSize="small" />;
+            break;
+          case 'Collaborator':
+            color = 'bg-royal/30';
+            icon = <HandymanIcon fontSize="small" />;
+            break;
+          case 'Member':
+            icon = <PersonIcon fontSize="small" />;
+            break;
+        }
+
+        return (
+          <Chip
+            icon={
+              <div className="ml-2 flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
+                {icon}
+              </div>
+            }
+            label={params.value}
+            className={`${color}`}
+          />
+        );
+      },
     },
     { field: 'userId', headerName: 'ID', width: 360 },
   ];
@@ -168,7 +214,10 @@ const MemberList = ({ members, club }: MemberListProps) => {
           variant="h2"
           className="grow-1 ml-2 text-base font-semibold text-haiti"
         >
-          {'Club Members' + (club ? ' for ' + club.name : '')}
+          <span className="hidden sm:inline">
+            {'Club Members' + (club ? ' for ' + club.name : '')}
+          </span>
+          <span className="inline sm:hidden">Club Members</span>
         </Typography>
         <Tooltip title="Columns">
           <ColumnsPanelTrigger render={<ToolbarButton />}>
@@ -225,23 +274,26 @@ const MemberList = ({ members, club }: MemberListProps) => {
             },
           }}
         >
-          <ExportPrint
+          {/* <ExportPrint
             render={<MenuItem />}
             onClick={() => setExportMenuOpen(false)}
           >
             Print
-          </ExportPrint>
+          </ExportPrint> */}
           <ExportCsv
             render={<MenuItem />}
             onClick={() => setExportMenuOpen(false)}
           >
             Download as CSV
           </ExportCsv>
-          {/* Available to MUI X Premium users */}
-          {/* <ExportExcel render={<MenuItem />}>
-          Download as Excel
-          </ExportExcel> */}
         </Menu>
+
+        <Divider
+          orientation="vertical"
+          variant="middle"
+          flexItem
+          sx={{ mx: 0.5 }}
+        />
 
         <StyledQuickFilter>
           <QuickFilterTrigger
@@ -311,27 +363,13 @@ const MemberList = ({ members, club }: MemberListProps) => {
         pageSizeOptions={[25]}
         checkboxSelection
         disableRowSelectionOnClick
-        className="rounded-lg [&_.MuiDataGrid-columnHeader:nth-of-type(2)]:rounded-tl-lg"
+        className="rounded-lg"
       />
     </div>
   );
 };
 
 export default MemberList;
-
-// type CustomToolbarProps = {
-//   club?: SelectClub;
-// };
-
-// const CustomToolbar = ({ club }: CustomToolbarProps) => {
-//   return (
-//     <Toolbar>
-//       <Typography>
-//         {'Club Members' + (club ? ' for ' + club.name : '')}
-//       </Typography>
-//     </Toolbar>
-//   );
-// };
 
 type ColumnHeaderWithIconProps = {
   icon: ReactNode;
