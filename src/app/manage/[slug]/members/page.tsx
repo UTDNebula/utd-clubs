@@ -25,7 +25,7 @@ export default async function Page({
         hrefBack={`/manage/${slug}/`}
       />
       <div className="flex w-full flex-col items-center">
-        <MemberList members={members} />
+        <MemberList members={members} club={club} />
       </div>
     </main>
   );
