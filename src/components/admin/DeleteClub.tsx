@@ -29,7 +29,7 @@ export default function ChangeClubStatus({ club }: Props) {
 
   return (
     <>
-      <Panel heading="Delete" className="!bg-red-100 border border-red-500">
+      <Panel heading="Delete" className="bg-red-100 border border-red-500">
         <div className="ml-2 mb-4 text-slate-800 text-sm">
           <p>This will permenantly delete this organization from UTD Clubs.</p>
         </div>

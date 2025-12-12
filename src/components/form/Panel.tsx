@@ -20,7 +20,7 @@ const Panel = ({
     <Box
       {...props}
       className={`flex flex-col gap-2 rounded-lg sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4 min-w-0 max-w-6xl
-        ${props.className?.includes('bg-') ? '' : 'bg-white'} ${props.className}`}
+        ${props.className?.includes('bg-') ? '' : 'bg-white'} ${props.className ?? ''}`}
     >
       <div className="flex items-center gap-2 ml-2">
         {startAdornment}
