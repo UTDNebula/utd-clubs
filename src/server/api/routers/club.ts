@@ -298,6 +298,15 @@ export const clubRouter = createTRPCRouter({
       });
       return officers;
     }),
+  getMembers: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input, ctx }) => {
+      const members = await ctx.db.query.userMetadataToClubs.findMany({
+        where: eq(userMetadataToClubs.clubId, input.id),
+        with: { userMetadata: true },
+      });
+      return members;
+    }),
   isActive: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     const hasPresident = await ctx.db.query.userMetadataToClubs.findFirst({
       where: and(
