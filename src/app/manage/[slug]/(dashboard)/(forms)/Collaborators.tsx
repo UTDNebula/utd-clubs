@@ -3,7 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Panel from '@src/components/form/Panel';
 import CollaboratorListItem from '@src/components/manage/CollaboratorListItem';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 import type {
@@ -118,7 +118,7 @@ const Collaborators = ({
         form.handleSubmit();
       }}
     >
-      <FormFieldSet legend="Collaborators">
+      <Panel heading="Collaborators">
         <div className="ml-2 mb-4 text-slate-600 text-sm">
           <p>
             Users in this list can edit {role === 'Admin' ? 'a' : 'your'}{' '}
@@ -174,7 +174,7 @@ const Collaborators = ({
             <form.FormSubmitButton />
           </form.AppForm>
         </div>
-      </FormFieldSet>
+      </Panel>
     </form>
   );
 };

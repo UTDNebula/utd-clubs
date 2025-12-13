@@ -11,7 +11,7 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Panel from '@src/components/form/Panel';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 
@@ -58,7 +58,7 @@ export default function ChangeClubStatus({ status: initial, club }: Props) {
   };
 
   return (
-    <FormFieldSet legend="Status">
+    <Panel heading="Status">
       <div className="ml-2 mb-4 text-slate-600 text-sm">
         <p>
           Pending and rejected organizations are not shown anywhere on UTD
@@ -86,6 +86,6 @@ export default function ChangeClubStatus({ status: initial, club }: Props) {
             : 'This organization was created on UTD Clubs.'}
         </Alert>
       </div>
-    </FormFieldSet>
+    </Panel>
   );
 }

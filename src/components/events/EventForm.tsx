@@ -8,9 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
-import FormFieldSet, {
-  FormFieldSetSkeleton,
-} from '@src/components/form/FormFieldSet';
+import Panel, { PanelSkeleton } from '@src/components/form/Panel';
 import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -161,7 +159,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
         }}
         className="grow flex flex-col gap-4 max-w-full"
       >
-        <FormFieldSet>
+        <Panel>
           <div className="flex flex-col gap-4">
             <form.Field name="image">
               {(field) => (
@@ -317,7 +315,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
               <form.FormSubmitButton />
             </form.AppForm>
           </div>
-        </FormFieldSet>
+        </Panel>
       </form>
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-bold">Preview</h2>
@@ -341,7 +339,7 @@ export const EventFormSkeleton = () => {
   return (
     <div className="flex w-full flex-wrap justify-start gap-10">
       <div className="grow flex flex-col gap-4 max-w-full">
-        <FormFieldSetSkeleton />
+        <PanelSkeleton />
       </div>
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-bold">Preview</h2>

@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Panel from '@src/components/form/Panel';
 import OfficerListItem from '@src/components/manage/OfficerListItem';
 import type { SelectClub, SelectOfficer } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -102,7 +102,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
         form.handleSubmit();
       }}
     >
-      <FormFieldSet legend="Listed Officers">
+      <Panel heading="Listed Officers">
         <div className="ml-2 mb-4 text-slate-600 text-sm">
           <p>
             People&apos;s names on this list will appear on your public
@@ -146,7 +146,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
             <form.FormSubmitButton />
           </form.AppForm>
         </div>
-      </FormFieldSet>
+      </Panel>
     </form>
   );
 };
