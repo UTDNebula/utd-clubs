@@ -7,7 +7,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Panel from '@src/components/form/Panel';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -168,7 +168,7 @@ const Slug = ({ club, role }: DetailsProps) => {
         form.handleSubmit();
       }}
     >
-      <FormFieldSet legend="Listing URL">
+      <Panel heading="Listing URL">
         <div className="ml-2 mb-4 text-slate-600 text-sm">
           <p>
             This is the URL of your organization&apos;s listing in the
@@ -241,7 +241,7 @@ const Slug = ({ club, role }: DetailsProps) => {
             <form.FormSubmitButton />
           </form.AppForm>
         </div>
-      </FormFieldSet>
+      </Panel>
     </form>
   );
 };

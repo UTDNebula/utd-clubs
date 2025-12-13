@@ -5,7 +5,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Panel from '@src/components/form/Panel';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
 import type { SelectClub } from '@src/server/db/models';
@@ -85,7 +85,7 @@ const Details = ({ club }: DetailsProps) => {
         form.handleSubmit();
       }}
     >
-      <FormFieldSet legend="Details">
+      <Panel heading="Details">
         <div className="m-2 flex flex-col gap-4">
           <div className="flex flex-wrap gap-4">
             <div className="grow w-48 lg:max-h-96 max-lg:max-h-48">
@@ -232,7 +232,7 @@ const Details = ({ club }: DetailsProps) => {
             <form.FormSubmitButton />
           </form.AppForm>
         </div>
-      </FormFieldSet>
+      </Panel>
     </form>
   );
 };

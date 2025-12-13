@@ -4,7 +4,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Alert, Button, TextField } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Panel from '@src/components/form/Panel';
 import { useTRPC } from '@src/trpc/react';
 
 export default function TagSwapper() {
@@ -14,7 +14,7 @@ export default function TagSwapper() {
   const changeTags = useMutation(api.club.changeTags.mutationOptions());
 
   return (
-    <FormFieldSet legend="Rename Tag" className="w-2xl">
+    <Panel heading="Rename Tag" className="w-2xl">
       <div className="m-2 flex flex-col gap-4">
         <TextField
           value={oldTag}
@@ -51,6 +51,6 @@ export default function TagSwapper() {
           Modified the tags for {changeTags.data.affected} clubs.
         </Alert>
       )}
-    </FormFieldSet>
+    </Panel>
   );
 }
