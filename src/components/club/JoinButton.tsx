@@ -88,7 +88,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
           void joinLeave.mutateAsync({ clubId: clubId });
         }}
-        className={`normal-case ${memberType ? 'bg-slate-400 hover:bg-slate-500' : ''}`}
+        className="normal-case"
         loading={isPending || joinLeave.isPending}
       >
         {memberType ? 'Joined' : 'Join'}
