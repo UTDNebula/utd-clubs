@@ -1,13 +1,15 @@
+import { TZDateMini } from '@date-fns/tz';
 import Chip from '@mui/material/Chip';
 import { format } from 'date-fns';
 import Image from 'next/image';
-import { type FC } from 'react';
 import MarkdownText from '@src/components/MarkdownText';
 import { type RouterOutputs } from '@src/trpc/shared';
 
-const ClubInfoSegment: FC<{
+const ClubInfoSegment = async ({
+  club,
+}: {
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
-}> = async ({ club }) => {
+}) => {
   return (
     <section className="w-full rounded-lg bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
       <div>
@@ -32,7 +34,10 @@ const ClubInfoSegment: FC<{
           <div className="mt-2 flex w-36 justify-between">
             <p className="text-sm text-slate-400">Updated</p>
             <p className="text-right text-sm text-slate-600">
-              {format(club.updatedAt, 'LLL yyyy')}
+              {format(
+                new TZDateMini(club.updatedAt, 'America/Chicago'),
+                'LLL yyyy',
+              )}
             </p>
           </div>
         )}
@@ -42,7 +47,7 @@ const ClubInfoSegment: FC<{
               <Chip
                 label={tag}
                 key={tag}
-                className=" rounded-full font-bold transition-colors text-white"
+                className="font-bold"
                 color="primary"
               />
             );

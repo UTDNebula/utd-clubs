@@ -18,7 +18,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
       data-club-result
     >
       <Link
-        href={manageView ? `/manage/${club.id}` : `/directory/${club.slug}`}
+        href={manageView ? `/manage/${club.slug}` : `/directory/${club.slug}`}
         className="grow flex flex-col"
       >
         <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
@@ -46,7 +46,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
       </Link>
 
       <div className="m-5 mt-0 flex flex-row space-x-2">
-        <JoinButton clubId={club.id} />
+        <JoinButton clubId={club.id} clubSlug={club.slug} />
       </div>
     </div>
   );

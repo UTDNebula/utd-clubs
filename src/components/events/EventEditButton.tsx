@@ -6,15 +6,15 @@ import Link from 'next/link';
 
 export default function EventEditButton({
   isHeader,
-  clubId,
+  clubSlug,
   eventId,
 }: {
   isHeader?: boolean;
-  clubId: string;
+  clubSlug: string;
   eventId: string;
 }) {
   return (
-    <Link href={`/manage/${clubId}/events/edit/${eventId}`}>
+    <Link href={`/manage/${clubSlug}/events/edit/${eventId}`}>
       <Button
         variant="contained"
         size={isHeader ? 'large' : 'small'}

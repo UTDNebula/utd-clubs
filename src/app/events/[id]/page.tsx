@@ -62,7 +62,7 @@ export default async function EventsPage(props: Params) {
                     <EventDeleteButton isHeader event={event} />
                     <EventEditButton
                       isHeader
-                      clubId={club.id}
+                      clubSlug={club.slug}
                       eventId={event.id}
                     />
                   </>

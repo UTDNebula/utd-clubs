@@ -1,13 +1,12 @@
 import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import ClubHeader from '@src/components/club/listing/ClubHeader';
 import ClubInfoSegment from '@src/components/club/listing/ClubInfoSegment';
 import { ClubNotClaimed } from '@src/components/club/listing/ClubNotClaimed';
 import ClubUpcomingEvents from '@src/components/club/listing/ClubUpcomingEvents';
 import ContactInformation from '@src/components/club/listing/ContactInformation';
 import Header from '@src/components/header/BaseHeader';
-import NotFound from '@src/components/NotFound';
 import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
 
@@ -20,7 +19,7 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
     if (clubSlugById) {
       redirect(`/directory/${clubSlugById}`);
     }
-    return <NotFound elementType="Club" />;
+    notFound();
   }
 
   const now = new Date();

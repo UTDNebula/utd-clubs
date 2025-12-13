@@ -24,16 +24,23 @@ export const FormSubmitButton = () => {
   );
 };
 
-export const FormResetButton = () => {
+interface FormResetButtonProps {
+  onClick?: () => void;
+}
+
+export const FormResetButton = ({ onClick }: FormResetButtonProps) => {
   const form = useFormContext();
   const isDefaultValue = useStore(form.store, (state) => state.isDefaultValue);
   const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
   return (
     <form.Subscribe>
       <Button
-        onClick={() => {
-          form.reset();
-        }}
+        onClick={
+          onClick ??
+          (() => {
+            form.reset();
+          })
+        }
         variant="text"
         className="normal-case"
         startIcon={<DeleteIcon />}

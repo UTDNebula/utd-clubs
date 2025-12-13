@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, useState } from 'react';
 
 const calculateTimeRemaining = (eventStartTime: number) => {
   const timeUntilStart = eventStartTime - Date.now();
@@ -46,7 +46,7 @@ const calculateTimeRemaining = (eventStartTime: number) => {
   };
 };
 
-const CountdownTimer: FC<{ startTime: Date }> = ({ startTime }) => {
+const CountdownTimer = ({ startTime }: { startTime: Date }) => {
   const eventStartTime = startTime.getTime();
 
   const [isLoading, setIsLoading] = useState(true);

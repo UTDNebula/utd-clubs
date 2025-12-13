@@ -5,6 +5,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Button, Skeleton } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 
@@ -46,6 +47,12 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
 
   const router = useRouter();
 
+  let useAuthPage = false;
+
+  const { setShowRegisterModal } = useRegisterModal(() => {
+    useAuthPage = true;
+  });
+
   const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -53,9 +60,14 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
     if (isPending || join.isPending || leave.isPending) return;
 
     if (!session) {
-      router.push(
-        `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
-      );
+      // This will use auth page when this EventRegisterButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
+      if (useAuthPage) {
+        router.push(
+          `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
+        );
+      } else {
+        setShowRegisterModal(true);
+      }
       return;
     }
 
@@ -81,6 +93,19 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
 };
 
 export default EventRegisterButton;
+
+export const EventRegisterButtonPreview = () => {
+  return (
+    <Button
+      variant="contained"
+      className="normal-case"
+      size="small"
+      startIcon={<AddIcon />}
+    >
+      Register
+    </Button>
+  );
+};
 
 type EventRegisterButtonSkeletonProps = {
   isHeader?: boolean;
