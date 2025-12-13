@@ -36,8 +36,8 @@ const Slug = ({ club, role }: DetailsProps) => {
       if (updated) {
         setDefaultValues({ id: club.id, slug: updated });
         formApi.reset({ id: club.id, slug: updated });
+        router.push(`/manage/${updated}`);
       }
-      router.refresh();
     },
     validators: {
       onChange: editSlugSchema,
