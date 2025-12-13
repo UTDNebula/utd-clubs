@@ -1,14 +1,8 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material';
+import { Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Confirmation from '@src/components/Confirmation';
 import { authClient } from '@src/utils/auth-client';
 
 export default function DeleteButton() {
@@ -26,29 +20,15 @@ export default function DeleteButton() {
       >
         Delete Account
       </Button>
-      <Dialog onClose={() => setOpen(false)} open={open}>
-        <DialogTitle>Are you sure?</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            This will clear all your account data and remove it from the
-            platform.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={async () => {
-              await authClient.deleteUser();
-              router.push('/');
-            }}
-            autoFocus
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Confirmation
+        open={open}
+        onClose={() => setOpen(false)}
+        contentText="This will clear all your account data and remove it from the platform."
+        onConfirm={async () => {
+          await authClient.deleteUser();
+          router.push('/');
+        }}
+      />
     </>
   );
 }
