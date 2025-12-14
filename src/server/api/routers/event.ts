@@ -13,8 +13,10 @@ import {
   sql,
   type SQL,
 } from 'drizzle-orm';
+import { OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
 import { selectEvent } from '@src/server/db/models';
+import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
 import {
   userMetadataToClubs,
@@ -22,6 +24,7 @@ import {
 } from '@src/server/db/schema/users';
 import { dateSchema } from '@src/utils/eventFilter';
 import { createEventSchema, updateEventSchema } from '@src/utils/formSchemas';
+import { getGoogleAccessToken } from '@src/utils/googleAuth';
 import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
@@ -370,6 +373,9 @@ export const eventRouter = createTRPCRouter({
 
       await callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`);
 
+      await ctx.db
+        .delete(userMetadataToEvents)
+        .where(eq(userMetadataToEvents.eventId, input.id));
       await ctx.db.delete(events).where(eq(events.id, input.id));
 
       return { success: true };
@@ -393,4 +399,53 @@ export const eventRouter = createTRPCRouter({
       throw e;
     }
   }),
+  getUserCalendars: protectedProcedure.query(async ({ ctx }) => {
+    const accessToken = await getGoogleAccessToken(ctx.session.user.id);
+    const googleOauthClient = new OAuth2Client();
+    googleOauthClient.setCredentials({ access_token: accessToken });
+    try {
+      const res = await googleOauthClient.fetch(
+        'https://www.googleapis.com/calendar/v3/users/me/calendarList',
+      );
+      if (res.ok) {
+        return (
+          res.data as {
+            items: { id: string; summary: string; description: string }[];
+          }
+        ).items;
+      } else {
+        throw new TRPCError({
+          message: JSON.stringify(res.data),
+          code: 'INTERNAL_SERVER_ERROR',
+        });
+      }
+    } catch (e) {
+      console.log(e);
+      return [];
+    }
+  }),
+  disableSync: protectedProcedure
+    .input(z.object({ clubId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+
+      const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
+        where: and(
+          eq(userMetadataToClubs.userId, userId),
+          eq(userMetadataToClubs.clubId, input.clubId),
+          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+        ),
+      });
+      if (!isOfficer) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+      }
+      await ctx.db.update(club).set({
+        calendarSyncToken: null,
+        calendarId: null,
+        calendarName: null,
+        calendarGoogleAccountId: null,
+      });
+
+      return { success: true };
+    }),
 });

@@ -22,12 +22,26 @@ const ClubManageForm = async ({
     | 'Officer';
   const officers = await api.club.getOfficers({ id: clubId });
   const session = await auth.api.getSession({ headers: await headers() });
-
+  const googleAccount = (
+    await auth.api.listUserAccounts({
+      headers: await headers(),
+      query: { user: { id: session!.user.id } },
+    })
+  ).find((acc) => acc.providerId === 'google');
+  console.log(JSON.stringify(googleAccount));
+  const hasScopesForCalendarSync =
+    !!googleAccount &&
+    googleAccount.scopes.includes(
+      'https://www.googleapis.com/auth/calendar.events.public.readonly',
+    ) &&
+    googleAccount.scopes.includes(
+      'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
+    );
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl">
       {club.approved !== 'approved' && <NotApproved status={club.approved} />}
       <Details club={club} />
-      <Calendar club={club} />
+      <Calendar club={club} hasScopes={hasScopesForCalendarSync} />
       <Officers club={club} listedOfficers={listedOfficers} />
       <Contacts club={club} />
       <Collaborators

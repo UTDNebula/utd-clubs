@@ -1,5 +1,6 @@
 'use client';
 
+import { Alert } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type RouterOutputs } from '@src/trpc/shared';
@@ -50,12 +51,15 @@ const EventCard = ({ event, manageView }: EventCardProps) => {
       </Link>
       <div className="m-4 mt-0 flex flex-row gap-2">
         {!manageView && <EventRegisterButton eventId={event.id} />}
-        {manageView && (
-          <>
-            <EventEditButton clubId={event.clubId} eventId={event.id} />
-            <EventDeleteButton event={event} />
-          </>
-        )}
+        {manageView &&
+          (event.google ? (
+            <Alert severity="info">Synced from Google Calendar.</Alert>
+          ) : (
+            <>
+              <EventEditButton clubId={event.clubId} eventId={event.id} />
+              <EventDeleteButton event={event} />
+            </>
+          ))}
       </div>
     </div>
   );

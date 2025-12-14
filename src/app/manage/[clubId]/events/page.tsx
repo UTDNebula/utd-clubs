@@ -18,7 +18,7 @@ export default async function Page({
     notFound();
   }
 
-  const events = await api.event.byClubId({ clubId });
+  const events = await api.event.byClubId({ clubId, sortByDate: true });
 
   return (
     <main>

@@ -10,23 +10,36 @@ import {
   Select,
   Tooltip,
 } from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import FormFieldSet from '@src/components/form/FormFieldSet';
 import type { SelectClub } from '@src/server/db/models';
+import { useTRPC } from '@src/trpc/react';
+import { authClient } from '@src/utils/auth-client';
 
 type CalendarProps = {
   club: SelectClub;
+  hasScopes: boolean;
 };
 
-const Calendar = ({ club }: CalendarProps) => {
-  const isLinked = false;
-  const isSyncing = false;
-  const syncingFrom = 'Org Calendar';
-  const allCalendars = [
-    syncingFrom,
-    'My Calendar',
-    "Your Mom's Calendar",
-    'Some other BS',
-  ];
+const Calendar = ({ club, hasScopes }: CalendarProps) => {
+  const isSyncing = !!club.calendarId && !!club.calendarName;
+  const trpc = useTRPC();
+  const { data, isSuccess } = useQuery(
+    trpc.event.getUserCalendars.queryOptions(),
+  );
+  const [selectedCalendar, setSelectedCalendar] = useState<{
+    id: string;
+    summary: string;
+  }>(
+    isSyncing
+      ? { id: club.calendarId!, summary: club.calendarName! }
+      : { id: '', summary: '' },
+  );
+  const pathname = usePathname();
+  const router = useRouter();
+  const syncEvents = useMutation(trpc.club.eventSync.mutationOptions());
 
   return (
     <FormFieldSet legend="Google Calendar Sync">
@@ -41,23 +54,32 @@ const Calendar = ({ club }: CalendarProps) => {
         </p>
       </div>
       <div className="m-2 flex flex-col gap-4">
-        {!isLinked ? (
-          <Tooltip title="Coming Soon">
+        {!hasScopes ? (
+          <Tooltip title="Authorize Google Calendar Access">
             <span>
               <Button
                 variant="contained"
                 className="normal-case w-full"
                 startIcon={<GoogleIcon />}
-                disabled
+                onClick={() => {
+                  void authClient.linkSocial({
+                    provider: 'google',
+                    scopes: [
+                      'https://www.googleapis.com/auth/calendar.events.public.readonly',
+                      'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
+                    ],
+                    callbackURL: pathname,
+                  });
+                }}
               >
-                Link Google Calendar
+                Authorize Google Calendar Access
               </Button>
             </span>
           </Tooltip>
         ) : isSyncing ? (
           <>
             <Alert severity="success">
-              Google Calendar sync is active from <b>{syncingFrom}</b>.
+              Google Calendar sync is active from <b>{club.calendarName}</b>.
             </Alert>
             <div className="flex flex-wrap gap-4">
               <FormControl className="grow" size="small">
@@ -66,20 +88,33 @@ const Calendar = ({ club }: CalendarProps) => {
                 </InputLabel>
                 <Select
                   labelId="calendar-select-label"
-                  value={syncingFrom}
+                  value={selectedCalendar.id}
                   label="Linked Calendar"
                 >
-                  {allCalendars.map((calendar) => (
-                    <MenuItem key={calendar} value={calendar}>
-                      {calendar}
-                    </MenuItem>
-                  ))}
+                  {isSuccess &&
+                    data.map((calendar) => (
+                      <MenuItem key={calendar.id} value={calendar.id}>
+                        {calendar.summary}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
               <Button variant="contained" className="normal-case">
                 Disable Sync
               </Button>
-              <Button variant="contained" className="normal-case">
+              <Button
+                variant="contained"
+                className="normal-case"
+                disabled={selectedCalendar.id == ''}
+                onClick={async () => {
+                  await syncEvents.mutateAsync({
+                    calendarId: selectedCalendar.id,
+                    calendarName: selectedCalendar.summary,
+                    clubId: club.id,
+                  });
+                  router.refresh();
+                }}
+              >
                 Resync
               </Button>
             </div>
@@ -94,20 +129,38 @@ const Calendar = ({ club }: CalendarProps) => {
                 </InputLabel>
                 <Select
                   labelId="calendar-select-label"
-                  value={syncingFrom}
                   label="Link Calendar"
+                  value={selectedCalendar.id}
+                  onChange={(e) => {
+                    if (isSuccess) {
+                      const calendar = data.find((c) => c.id == e.target.value);
+                      if (calendar) {
+                        setSelectedCalendar(calendar);
+                      }
+                    }
+                  }}
                 >
-                  {allCalendars.map((calendar) => (
-                    <MenuItem key={calendar} value={calendar}>
-                      {calendar}
-                    </MenuItem>
-                  ))}
+                  {isSuccess &&
+                    data.map((calendar) => (
+                      <MenuItem key={calendar.id} value={calendar.id}>
+                        {calendar.summary}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
               <Button
                 variant="contained"
                 className="normal-case"
                 startIcon={<GoogleIcon />}
+                disabled={selectedCalendar.id == ''}
+                onClick={async () => {
+                  await syncEvents.mutateAsync({
+                    calendarId: selectedCalendar.id,
+                    calendarName: selectedCalendar.summary,
+                    clubId: club.id,
+                  });
+                  router.refresh();
+                }}
               >
                 Enable Google Calendar Sync
               </Button>
