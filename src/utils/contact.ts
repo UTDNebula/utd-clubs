@@ -100,4 +100,4 @@ export const contactSchema = z.discriminatedUnion('platform', [
   linkedInSchema,
   otherSchema,
 ]);
-export type contact = z.infer<typeof contactSchema>;
+export type Contact = z.infer<typeof contactSchema>;

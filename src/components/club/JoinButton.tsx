@@ -15,9 +15,10 @@ import { authClient } from '@src/utils/auth-client';
 type JoinButtonProps = {
   isHeader?: boolean;
   clubId: string;
+  clubSlug?: string;
 };
 
-const JoinButton = ({ isHeader, clubId }: JoinButtonProps) => {
+const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
@@ -48,7 +49,7 @@ const JoinButton = ({ isHeader, clubId }: JoinButtonProps) => {
 
   if (memberType === 'Officer' || memberType === 'President') {
     return (
-      <Link href={`/manage/${clubId}`}>
+      <Link href={`/manage/${clubSlug ?? clubId}`}>
         <Button
           variant="contained"
           size={isHeader ? 'large' : 'small'}
@@ -87,7 +88,7 @@ const JoinButton = ({ isHeader, clubId }: JoinButtonProps) => {
 
           void joinLeave.mutateAsync({ clubId: clubId });
         }}
-        className={`normal-case ${memberType ? 'bg-slate-400 hover:bg-slate-500' : ''}`}
+        className="normal-case"
         loading={isPending || joinLeave.isPending}
       >
         {memberType ? 'Joined' : 'Join'}
