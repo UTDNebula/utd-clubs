@@ -81,7 +81,7 @@ export const userMetadataToEvents = pgTable(
       .references(() => user.id, { onDelete: 'cascade' }),
     eventId: text('event_id')
       .notNull()
-      .references(() => events.id, { onDelete: 'cascade' }),
+      .references(() => events.id, { onDelete: 'no action' }),
   },
   (table) => ({
     pk: primaryKey(table.userId, table.eventId),
