@@ -10,7 +10,7 @@ import {
   timestamp,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
-import { account, user } from './auth';
+import { user } from './auth';
 import { contacts } from './contacts';
 import { events } from './events';
 import { officers } from './officers';

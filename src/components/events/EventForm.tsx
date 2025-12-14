@@ -325,6 +325,12 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             ...formValues,
             image: previewUrl,
             club,
+            updatedAt: new Date(),
+            createdAt: new Date(),
+            recurrence: '',
+            recurenceId: '',
+            google: false,
+            etag: '',
           }}
           view="preview"
         />

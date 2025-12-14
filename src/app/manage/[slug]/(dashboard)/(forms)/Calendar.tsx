@@ -13,7 +13,6 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import FormFieldSet from '@src/components/form/FormFieldSet';
 import Panel from '@src/components/form/Panel';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -41,6 +40,7 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const syncEvents = useMutation(trpc.club.eventSync.mutationOptions());
+  const disableSync = useMutation(trpc.event.disableSync.mutationOptions());
 
   return (
     <Panel heading="Google Calendar Sync">
@@ -100,7 +100,16 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
                     ))}
                 </Select>
               </FormControl>
-              <Button variant="contained" className="normal-case">
+              <Button
+                variant="contained"
+                className="normal-case"
+                onClick={async () => {
+                  await disableSync.mutateAsync({
+                    clubId: club.id,
+                  });
+                  router.refresh();
+                }}
+              >
                 Disable Sync
               </Button>
               <Button
