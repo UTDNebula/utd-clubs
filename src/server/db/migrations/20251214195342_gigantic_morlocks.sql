@@ -1,0 +1,1 @@
+ALTER TABLE "events" RENAME COLUMN "reccurence_id" TO "recurence_id";
