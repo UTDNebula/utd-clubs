@@ -11,6 +11,7 @@ import {
   MenuItem,
   MenuList,
   Popover,
+  Typography,
 } from '@mui/material';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -57,42 +58,63 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
         component="button"
         className={`cursor-pointer ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
       />
-      <Popover
-        open={open}
-        anchorEl={avatarRef.current}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        transformOrigin={{ horizontal: 'left', vertical: -8 }}
-        disableScrollLock
-        onClose={() => setOpen(false)}
-      >
-        <Card>
-          <MenuList>
-            <MenuItem component={Link} href="/club-match/results">
-              <ListItemIcon>
-                <Diversity3Icon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Club Match</ListItemText>
-            </MenuItem>
-            <MenuItem component={Link} href="/settings">
-              <ListItemIcon>
-                <SettingsIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Settings</ListItemText>
-            </MenuItem>
-            <MenuItem
-              onClick={async () => {
-                await authClient.signOut();
-                setOpen(false);
-              }}
-            >
-              <ListItemIcon>
-                <LogoutIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Sign out</ListItemText>
-            </MenuItem>
-          </MenuList>
-        </Card>
-      </Popover>
+      {session && (
+        <Popover
+          open={open}
+          anchorEl={avatarRef.current}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          transformOrigin={{ horizontal: 'left', vertical: -8 }}
+          disableScrollLock
+          onClose={() => setOpen(false)}
+        >
+          <Card>
+            <MenuList>
+              <MenuItem divider component={Link} href="/settings">
+                <ListItemIcon>
+                  <Avatar
+                    alt={session.user.name}
+                    src={session.user.image ?? undefined}
+                    className="w-6 h-6"
+                  />
+                </ListItemIcon>
+                <div>
+                  {session.user.name}
+                  <Typography
+                    variant="caption"
+                    gutterBottom
+                    sx={{ display: 'block' }}
+                  >
+                    {session.user.email}
+                  </Typography>
+                </div>
+              </MenuItem>
+              <MenuItem component={Link} href="/club-match/results">
+                <ListItemIcon>
+                  <Diversity3Icon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Club Match</ListItemText>
+              </MenuItem>
+              <MenuItem component={Link} href="/settings">
+                <ListItemIcon>
+                  <SettingsIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Settings</ListItemText>
+              </MenuItem>
+              <MenuItem
+                onClick={async () => {
+                  await authClient.signOut();
+                  setOpen(false);
+                }}
+              >
+                <ListItemIcon>
+                  <LogoutIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Sign out</ListItemText>
+              </MenuItem>
+            </MenuList>
+          </Card>
+        </Popover>
+      )}
     </>
   );
 };
