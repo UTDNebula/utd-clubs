@@ -1,7 +1,6 @@
 'use client';
 
-import { Alert } from '@mui/material';
-import { Skeleton } from '@mui/material';
+import { Alert, Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type RouterOutputs } from '@src/trpc/shared';
@@ -55,7 +54,8 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
       </Link>
       <div className="m-4 mt-0 flex flex-row gap-2">
         {view === 'normal' && <EventRegisterButton eventId={event.id} />}
-        {view === 'manage' && (event.google ? (
+        {view === 'manage' &&
+          (event.google ? (
             <Alert severity="info">Synced from Google Calendar.</Alert>
           ) : (
             <>
