@@ -1,4 +1,4 @@
-import { TZDate } from '@date-fns/tz';
+import { TZDate, TZDateMini } from '@date-fns/tz';
 import { DatabaseError } from '@neondatabase/serverless';
 import { addDays, subMinutes } from 'date-fns';
 import {
@@ -98,14 +98,11 @@ export async function syncCalendar(
           await tx
             .delete(userMetadataToEvents)
             .where(inArray(userMetadataToEvents.eventId, deletedIds));
-          const deleted = await tx
-            .delete(clubTable)
-            .where(inArray(clubTable.id, deletedIds));
-          console.log(`deleted ${deleted.rowCount} events`);
+          await tx.delete(clubTable).where(inArray(clubTable.id, deletedIds));
         }
         try {
           if (newOrUpdated.length > 0) {
-            const syncQuery = await tx
+            await tx
               .insert(eventTable)
               .values(newOrUpdated.map((e) => generateEvent(clubId, e)))
               .onConflictDoUpdate({
@@ -123,7 +120,6 @@ export async function syncCalendar(
                   'updatedAt',
                 ]),
               });
-            console.log(`inserted ${syncQuery.rowCount} events`);
           }
         } catch (error) {
           console.log(JSON.stringify(error));
@@ -184,12 +180,15 @@ function generateEvent(clubId: string, event: z.infer<typeof eventSchema>) {
     recurrence: JSON.stringify(event.recurrence),
     recurenceId: event.recurenceEventId,
     startTime: event.start.date
-      ? new TZDate(event.start.date, 'America/Chicago')
+      ? new TZDateMini(event.start.date, 'America/Chicago')
       : event.start.dateTime
         ? new Date(event.start.dateTime)
         : new Date(),
     endTime: event.end.date
-      ? subMinutes(addDays(new TZDate(event.end.date, 'America/Chicago'), 1), 1)
+      ? subMinutes(
+          addDays(new TZDateMini(event.end.date, 'America/Chicago'), 1),
+          1,
+        )
       : event.end.dateTime
         ? new Date(event.end.dateTime)
         : new Date(),

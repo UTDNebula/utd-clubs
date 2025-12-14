@@ -56,27 +56,25 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
       </div>
       <div className="m-2 flex flex-col gap-4">
         {!hasScopes ? (
-          <Tooltip title="Authorize Google Calendar Access">
-            <span>
-              <Button
-                variant="contained"
-                className="normal-case w-full"
-                startIcon={<GoogleIcon />}
-                onClick={() => {
-                  void authClient.linkSocial({
-                    provider: 'google',
-                    scopes: [
-                      'https://www.googleapis.com/auth/calendar.events.public.readonly',
-                      'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
-                    ],
-                    callbackURL: pathname,
-                  });
-                }}
-              >
-                Authorize Google Calendar Access
-              </Button>
-            </span>
-          </Tooltip>
+          <span>
+            <Button
+              variant="contained"
+              className="normal-case w-full"
+              startIcon={<GoogleIcon />}
+              onClick={() => {
+                void authClient.linkSocial({
+                  provider: 'google',
+                  scopes: [
+                    'https://www.googleapis.com/auth/calendar.events.public.readonly',
+                    'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
+                  ],
+                  callbackURL: pathname,
+                });
+              }}
+            >
+              Authorize Google Calendar Access
+            </Button>
+          </span>
         ) : isSyncing ? (
           <>
             <Alert severity="success">

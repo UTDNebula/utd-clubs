@@ -29,7 +29,6 @@ const ClubManageForm = async ({
       query: { user: { id: session!.user.id } },
     })
   ).find((acc) => acc.providerId === 'google');
-  console.log(JSON.stringify(googleAccount));
   const hasScopesForCalendarSync =
     !!googleAccount &&
     googleAccount.scopes.includes(
