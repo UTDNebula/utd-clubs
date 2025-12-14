@@ -1,4 +1,4 @@
-import { TZDate, TZDateMini } from '@date-fns/tz';
+import { TZDateMini } from '@date-fns/tz';
 import { DatabaseError } from '@neondatabase/serverless';
 import { addDays, subMinutes } from 'date-fns';
 import {
@@ -122,7 +122,6 @@ export async function syncCalendar(
               });
           }
         } catch (error) {
-          console.log(JSON.stringify(error));
           if (
             !(error instanceof DrizzleError) ||
             !(error.cause instanceof DatabaseError)
@@ -134,14 +133,9 @@ export async function syncCalendar(
           // Check the driver-specific error code
           if (actualError) {
             // PostgreSQL unique violation code
-            console.log('DB error:', actualError.message);
             // You could throw a more specific, user-friendly error from here
             throw new Error(actualError.message);
           } else {
-            console.log(
-              'An unexpected database error occurred:',
-              error.message,
-            );
             // Re-throw or handle other unexpected errors
             throw error;
           }

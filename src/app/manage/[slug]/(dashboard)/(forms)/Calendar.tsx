@@ -8,7 +8,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Tooltip,
 } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
@@ -56,25 +55,23 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
       </div>
       <div className="m-2 flex flex-col gap-4">
         {!hasScopes ? (
-          <span>
-            <Button
-              variant="contained"
-              className="normal-case w-full"
-              startIcon={<GoogleIcon />}
-              onClick={() => {
-                void authClient.linkSocial({
-                  provider: 'google',
-                  scopes: [
-                    'https://www.googleapis.com/auth/calendar.events.public.readonly',
-                    'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
-                  ],
-                  callbackURL: pathname,
-                });
-              }}
-            >
-              Authorize Google Calendar Access
-            </Button>
-          </span>
+          <Button
+            variant="contained"
+            className="normal-case w-full"
+            startIcon={<GoogleIcon />}
+            onClick={() => {
+              void authClient.linkSocial({
+                provider: 'google',
+                scopes: [
+                  'https://www.googleapis.com/auth/calendar.events.public.readonly',
+                  'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
+                ],
+                callbackURL: pathname,
+              });
+            }}
+          >
+            Authorize Google Calendar Access
+          </Button>
         ) : isSyncing ? (
           <>
             <Alert severity="success">
