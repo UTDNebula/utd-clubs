@@ -18,8 +18,7 @@ import type { AnyFieldApi } from '@tanstack/react-form';
 import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 import { ClubMatchResponses } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
@@ -253,9 +252,26 @@ const SelectMultipleInput = ({
 
 type ClubMatchProps = {
   response: ClubMatchResponses | null;
+  userMetadata: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    major: string;
+    minor: string | null;
+    year: 'Freshman' | 'Sophomore' | 'Junior' | 'Senior' | 'Grad Student';
+    role: 'Student' | 'Student Organizer' | 'Administrator';
+    career:
+      | 'Healthcare'
+      | 'Art and Music'
+      | 'Engineering'
+      | 'Business'
+      | 'Sciences'
+      | 'Public Service'
+      | null;
+  } | null;
 };
 
-const ClubMatch = ({ response }: ClubMatchProps) => {
+const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
   const api = useTRPC();
   const router = useRouter();
 
@@ -269,7 +285,10 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
 
   const form = useForm({
     defaultValues: {
-      major: response?.major ?? '',
+      major:
+        userMetadata && userMetadata.major
+          ? userMetadata.major
+          : (response?.major ?? ''),
       year: response?.year ?? '',
       proximity: response?.proximity ?? '',
       categories: response?.categories ?? [],

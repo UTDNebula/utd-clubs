@@ -33,6 +33,12 @@ const Page = async () => {
     where: (userAiCache) => eq(userAiCache.id, session.user.id),
   });
 
+  const userMetadata = await db.query.userMetadata.findFirst({
+    where: (userMetadata) => eq(userMetadata.id, session.user.id),
+  });
+
+  console.log('user', userMetadata);
+
   if (data?.clubMatchLimit != null && data.clubMatchLimit <= 0) {
     redirect('/club-match/results');
   }
@@ -40,7 +46,10 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <ClubMatch response={data?.responses ?? null} />
+      <ClubMatch
+        response={data?.responses ?? null}
+        userMetadata={userMetadata ?? null}
+      />
     </>
   );
 };
