@@ -549,12 +549,14 @@ const ClubMatch = () => {
               <form.FormResetButton />
             </form.AppForm>
             <form.AppForm>
-              <div
-                onClick={async () => {
-                  form.handleSubmit(); // force submit so onSubmit validation shows errors
-                }}
-              >
-                <form.FormSubmitButton text="Find Clubs" icon={Binoculars} />
+              <div>
+                <form.FormSubmitButton
+                  text="Find Clubs"
+                  icon={Binoculars}
+                  onClick={async () => {
+                    form.handleSubmit(); // force submit so onSubmit validation shows errors
+                  }}
+                />
               </div>
             </form.AppForm>
           </div>

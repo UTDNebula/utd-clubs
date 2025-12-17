@@ -7,9 +7,14 @@ import { useFormContext } from '@src/utils/form';
 interface FormSubmitButtonProps {
   text?: string;
   icon?: React.ElementType;
+  onClick?: () => void;
 }
 
-export const FormSubmitButton = ({ text, icon }: FormSubmitButtonProps) => {
+export const FormSubmitButton = ({
+  text,
+  icon,
+  onClick,
+}: FormSubmitButtonProps) => {
   const form = useFormContext();
   const isDefaultValue = useStore(form.store, (state) => state.isDefaultValue);
   const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
@@ -26,6 +31,7 @@ export const FormSubmitButton = ({ text, icon }: FormSubmitButtonProps) => {
       loading={isSubmitting}
       loadingPosition="start"
       color={!isDefaultValue && isValid ? 'primary' : 'inherit'}
+      onClick={onClick}
     >
       {text ?? 'Save'}
     </Button>
