@@ -304,7 +304,7 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
   });
 
   return (
-    <main className="p-4">
+    <main className="p-4 mb-10">
       <h1 className="font-display mb-2 text-center text-4xl font-bold text-haiti">
         Club Match
       </h1>
@@ -586,12 +586,12 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
           variant="contained"
           type="submit"
           disabled={editData.isPending}
-          className="normal-case w-fit self-center px-6"
+          className="normal-case w-fit self-center mt-3 px-6"
           startIcon={
             editData.isPending ? <CircularProgress size={18} color="inherit" /> : null
           }
         >
-          {editData.isPending ? 'Finding Clubs...' : 'Find Clubs'}
+          {editData.isPending ? 'Matching...' : 'Find Clubs'}
         </Button>
       </form>
     </main>
