@@ -37,6 +37,8 @@ interface SharedInputProps {
 
 const TextInput = ({ id, label, disabled, field }: SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError =
+    field.state.meta.isTouched && !field.state.meta.isValid;
   return (
     <div className="flex flex-col gap-1">
       {label && (
@@ -53,9 +55,9 @@ const TextInput = ({ id, label, disabled, field }: SharedInputProps) => {
         required={required}
         value={field.state.value ?? ''}
         onChange={(e) => field.handleChange(e.target.value)}
-        error={!field.state.meta.isValid}
+        error={shouldShowError}
         helperText={
-          !field.state.meta.isValid
+          shouldShowError
             ? field.state.meta.errors.map((err) => err?.message).join('. ') +
               '.'
             : undefined
@@ -74,6 +76,8 @@ const SelectInput = ({
   options: string[];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError =
+    field.state.meta.isTouched && !field.state.meta.isValid;
   return (
     <FormControl className="flex flex-col gap-1">
       <label htmlFor={id}>
@@ -86,7 +90,7 @@ const SelectInput = ({
         size="small"
         value={field.state.value ?? ''}
         onChange={(event) => field.handleChange(event.target.value)}
-        error={!field.state.meta.isValid}
+        error={shouldShowError}
       >
         <MenuItem disabled value="">
           <em>--Select--</em>
@@ -97,7 +101,7 @@ const SelectInput = ({
           </MenuItem>
         ))}
       </Select>
-      {!field.state.meta.isValid && (
+      {shouldShowError && (
         <FormHelperText error>
           {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
         </FormHelperText>
@@ -123,6 +127,10 @@ const RadioInput = ({
   otherField?: SharedInputProps['field'];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError =
+    field.state.meta.isTouched && !field.state.meta.isValid;
+  const otherFieldShouldShowError =
+    otherField?.state.meta.isTouched && !otherField?.state.meta.isValid;
   return (
     <FormControl className="flex flex-col gap-1">
       <label htmlFor={id}>
@@ -152,9 +160,9 @@ const RadioInput = ({
                 disabled={other.disabled}
                 value={otherField.state.value ?? ''}
                 onChange={(e) => otherField.handleChange(e.target.value)}
-                error={!otherField.state.meta.isValid}
+                error={otherFieldShouldShowError}
                 helperText={
-                  !otherField.state.meta.isValid
+                  otherFieldShouldShowError
                     ? otherField.state.meta.errors
                         .map((err) => err?.message)
                         .join('. ') + '.'
@@ -166,7 +174,7 @@ const RadioInput = ({
           </div>
         ))}
       </RadioGroup>
-      {!field.state.meta.isValid && (
+      {shouldShowError && (
         <FormHelperText error>
           {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
         </FormHelperText>
@@ -184,6 +192,8 @@ const SelectMultipleInput = ({
   options: string[];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError =
+    field.state.meta.isTouched && !field.state.meta.isValid;
   const value: string[] = field.state.value ?? [];
   return (
     <FormControl className="flex flex-col gap-1">
@@ -214,7 +224,7 @@ const SelectMultipleInput = ({
           </div>
         )}
         MenuProps={{ PaperProps: { className: 'max-h-60' } }}
-        error={!field.state.meta.isValid}
+        error={shouldShowError}
       >
         <MenuItem disabled value="">
           <em>--Select one or multiple--</em>
@@ -225,7 +235,7 @@ const SelectMultipleInput = ({
           </MenuItem>
         ))}
       </Select>
-      {!field.state.meta.isValid && (
+      {shouldShowError && (
         <FormHelperText error>
           {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
         </FormHelperText>
