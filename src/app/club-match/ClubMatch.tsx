@@ -53,6 +53,8 @@ const TextInput = ({
   field,
 }: SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError = field.state.meta.isTouched && error;
+  
   return (
     <div className="flex flex-col gap-1">
       {label && (
@@ -61,27 +63,23 @@ const TextInput = ({
           {required && <span className="text-red-600"> *</span>}
         </label>
       )}
-      {/* {errors.properties?.[id]?.errors &&
-        errors.properties?.[id].errors.map((error) => (
-          <span key={error} role="alert" className="text-red-600">
-            {error}
-          </span>
-        ))} */}
       <TextField
         id={id}
         variant="outlined"
         size="small"
         disabled={disabled}
         required={required}
-        error={error}
-        helperText={helperText}
+        error={shouldShowError}
+        helperText={shouldShowError ? helperText : undefined}
         value={field.state.value ?? ''}
+        onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
-        aria-invalid={error}
+        aria-invalid={shouldShowError}
       />
     </div>
   );
 };
+
 
 const SelectInput = ({
   id,
@@ -94,17 +92,20 @@ const SelectInput = ({
   options: string[];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError = field.state.meta.isTouched && error;
+  
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="min-h-[3rem] flex items-end">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      <FormControl error={error} size="small" fullWidth>
+      <FormControl error={shouldShowError} size="small" fullWidth>
         <Select
           id={id}
           required={required}
           value={field.state.value ?? ''}
+          onBlur={field.handleBlur}
           onChange={(event) => field.handleChange(event.target.value)}
         >
           <MenuItem disabled value="">
@@ -116,11 +117,12 @@ const SelectInput = ({
             </MenuItem>
           ))}
         </Select>
-        {/* {helperText && <FormHelperText>{helperText}</FormHelperText>} */}
+        {shouldShowError && helperText && <FormHelperText>{helperText}</FormHelperText>}
       </FormControl>
     </div>
   );
 };
+
 
 
 const RadioInput = ({
@@ -142,15 +144,16 @@ const RadioInput = ({
   otherField?: SharedInputProps['field'];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError = field.state.meta.isTouched && error;
   return (
     <fieldset className="flex flex-col gap-1">
       <label htmlFor={id} className="min-h-[3rem] flex items-end">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      <FormControl error={error}>
+      <FormControl error={shouldShowError}>
         <RadioGroup
-          aria-invalid={error}
+          aria-invalid={shouldShowError}
           value={field.state.value ?? ''}
           onChange={(e) => field.handleChange(e.target.value)}
         >
@@ -159,6 +162,7 @@ const RadioInput = ({
               <Radio
                 id={`${id}-${option}`}
                 value={option}
+                onBlur={field.handleBlur}
                 size="small"
                 checked={field.state.value === option}
               />
@@ -171,6 +175,7 @@ const RadioInput = ({
                   id={other.id}
                   disabled={other.disabled}
                   value={otherField.state.value ?? ''}
+                  onBlur={otherField.handleBlur}
                   onChange={(e) => otherField.handleChange(e.target.value)}
                   className="ml-2 rounded-md border border-gray-200 bg-white px-2 disabled:bg-gray-200"
                 />
@@ -178,7 +183,7 @@ const RadioInput = ({
             </div>
           ))}
         </RadioGroup>
-        {helperText && <FormHelperText>{helperText}</FormHelperText>}
+        {shouldShowError && helperText && <FormHelperText>{helperText}</FormHelperText>}
       </FormControl>
     </fieldset>
   );
@@ -212,6 +217,7 @@ const SelectMultipleInput = ({
           multiple
           required={required}
           value={value}
+          onBlur={field.handleBlur}
           onChange={(event) => {
             const value = event.target.value;
             field.handleChange(
