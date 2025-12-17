@@ -137,11 +137,9 @@ Maintain strict formatting:
             responses: input,
           },
         });
-        //Save to profile
-        await ctx.db
-          .update(userMetadata)
-          .set({
-            major: input.major
-          });
+      //Save to profile
+      await ctx.db.update(userMetadata).set({
+        major: input.major,
+      });
     }),
 });
