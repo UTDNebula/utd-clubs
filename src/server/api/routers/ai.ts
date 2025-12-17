@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm';
 import { club } from '@src/server/db/schema/club';
 import {
   userAiCache,
+  userMetadata,
   type ClubMatchResults,
 } from '@src/server/db/schema/users';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
@@ -136,5 +137,11 @@ Maintain strict formatting:
             responses: input,
           },
         });
+        //Save to profile
+        await ctx.db
+          .update(userMetadata)
+          .set({
+            major: input.major
+          });
     }),
 });
