@@ -22,9 +22,10 @@ export const FormSubmitButton = ({ text, icon }: FormSubmitButtonProps) => {
       variant="contained"
       className="normal-case"
       startIcon={<IconComponent />}
-      disabled={isDefaultValue || !isValid}
+      disabled={isSubmitting}
       loading={isSubmitting}
       loadingPosition="start"
+      color={!isDefaultValue && isValid ? 'primary' : 'inherit'}
     >
       {text ?? 'Save'}
     </Button>

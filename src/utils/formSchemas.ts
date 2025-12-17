@@ -93,7 +93,7 @@ export const clubMatchFormSchema = z.object({
   proximity: z.string().min(1, 'Proximity is required').max(100),
   categories: z
     .array(z.string().min(1).max(100))
-    .min(1, 'Types of organizations is required')
+    .min(1, 'Types of organizations are required')
     .max(50),
   specificCultures: z.string().max(500, characterLimitError).optional(),
   hobbies: z

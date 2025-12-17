@@ -59,8 +59,7 @@ const TextInput = ({ id, label, disabled, field }: SharedInputProps) => {
         error={shouldShowError}
         helperText={
           shouldShowError
-            ? field.state.meta.errors.map((err) => err?.message).join('. ') +
-              '.'
+            ? field.state.meta.errors.map((err) => err?.message).join('. ')
             : undefined
         }
       />
@@ -104,7 +103,7 @@ const SelectInput = ({
       </Select>
       {shouldShowError && (
         <FormHelperText error>
-          {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
+          {field.state.meta.errors.map((err) => err?.message).join('. ')}
         </FormHelperText>
       )}
     </FormControl>
@@ -177,7 +176,7 @@ const RadioInput = ({
       </RadioGroup>
       {shouldShowError && (
         <FormHelperText error>
-          {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
+          {field.state.meta.errors.map((err) => err?.message).join('. ')}
         </FormHelperText>
       )}
     </FormControl>
@@ -238,7 +237,7 @@ const SelectMultipleInput = ({
       </Select>
       {shouldShowError && (
         <FormHelperText error>
-          {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
+          {field.state.meta.errors.map((err) => err?.message).join('. ')}
         </FormHelperText>
       )}
     </FormControl>
@@ -287,14 +286,7 @@ const ClubMatch = () => {
       <p className="mb-8 text-center">
         Generate club recommendations based on a simple form.
       </p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          form.handleSubmit();
-        }}
-        className="mx-auto w-full max-w-3xl"
-      >
+      <form className="mx-auto w-full max-w-3xl">
         <Panel>
           <div className="m-2 flex flex-col gap-8">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3 items-end">
@@ -551,7 +543,13 @@ const ClubMatch = () => {
               <form.FormResetButton />
             </form.AppForm>
             <form.AppForm>
-              <form.FormSubmitButton text="Find Clubs" icon={Binoculars} />
+              <div
+                onClick={async () => {
+                  form.handleSubmit(); // force submit so onSubmit validation shows errors
+                }}
+              >
+                <form.FormSubmitButton text="Find Clubs" icon={Binoculars} />
+              </div>
             </form.AppForm>
           </div>
         </Panel>
