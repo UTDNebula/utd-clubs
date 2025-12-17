@@ -6,7 +6,7 @@ import { useFormContext } from '@src/utils/form';
 
 interface FormSubmitButtonProps {
   text?: string;
-  icon?: React.ElementType;
+  icon?: React.ReactElement;
   onClick?: () => void;
   allowDisable?: boolean;
 }
@@ -21,14 +21,14 @@ export const FormSubmitButton = ({
   const isDefaultValue = useStore(form.store, (state) => state.isDefaultValue);
   const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
   const isValid = useStore(form.store, (state) => state.isValid);
-  const IconComponent = icon ?? SaveIcon;
+  const iconComponent = icon ?? <SaveIcon />;
 
   return (
     <Button
       type="submit"
       variant="contained"
       className="normal-case"
-      startIcon={<IconComponent />}
+      startIcon={iconComponent}
       disabled={allowDisable && (isDefaultValue || !isValid)}
       loading={isSubmitting}
       loadingPosition="start"
