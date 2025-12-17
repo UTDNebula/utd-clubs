@@ -59,7 +59,8 @@ const TextInput = ({ id, label, disabled, field }: SharedInputProps) => {
         error={shouldShowError}
         helperText={
           shouldShowError
-            ? field.state.meta.errors.map((err) => err?.message).join('. ')
+            ? field.state.meta.errors.map((err) => err?.message).join('. ') +
+              '.'
             : undefined
         }
       />
@@ -103,7 +104,7 @@ const SelectInput = ({
       </Select>
       {shouldShowError && (
         <FormHelperText error>
-          {field.state.meta.errors.map((err) => err?.message).join('. ')}
+          {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
         </FormHelperText>
       )}
     </FormControl>
@@ -181,7 +182,7 @@ const RadioInput = ({
       </RadioGroup>
       {shouldShowError && (
         <FormHelperText error>
-          {field.state.meta.errors.map((err) => err?.message).join('. ')}
+          {field.state.meta.errors.map((err) => err?.message) + '.'}
         </FormHelperText>
       )}
     </FormControl>
@@ -242,7 +243,7 @@ const SelectMultipleInput = ({
       </Select>
       {shouldShowError && (
         <FormHelperText error>
-          {field.state.meta.errors.map((err) => err?.message).join('. ')}
+          {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
         </FormHelperText>
       )}
     </FormControl>
