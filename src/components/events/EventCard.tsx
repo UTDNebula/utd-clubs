@@ -3,6 +3,7 @@
 import { Alert, Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime';
 import EventDeleteButton from './EventDeleteButton';
@@ -21,7 +22,10 @@ interface EventCardProps {
 const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
   const src = event.image ?? event.club.profileImage;
   return (
-    <div className="flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
+    <BaseCard
+      variant="interactive"
+      className="flex h-96 w-64 flex-col overflow-hidden"
+    >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full">
           <div className="absolute inset-0 h-full w-full bg-gray-200" />
@@ -65,7 +69,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
           ))}
         {view === 'preview' && <EventRegisterButtonPreview />}
       </div>
-    </div>
+    </BaseCard>
   );
 };
 
@@ -77,7 +81,10 @@ interface EventCardSkeletonProps {
 
 export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
   return (
-    <div className="flex h-96 w-64 flex-col overflow-hidden rounded-lg bg-white shadow-xs transition-shadow hover:shadow-lg">
+    <BaseCard
+      variant="interactive"
+      className="flex h-96 w-64 flex-col overflow-hidden"
+    >
       <div className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full">
           <div className="absolute inset-0 h-full w-full bg-gray-200" />
@@ -106,6 +113,6 @@ export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
           )}
         </div>
       </div>
-    </div>
+    </BaseCard>
   );
 };
