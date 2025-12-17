@@ -37,8 +37,6 @@ const Page = async () => {
     where: (userMetadata) => eq(userMetadata.id, session.user.id),
   });
 
-  console.log('user', userMetadata);
-
   if (data?.clubMatchLimit != null && data.clubMatchLimit <= 0) {
     redirect('/club-match/results');
   }
