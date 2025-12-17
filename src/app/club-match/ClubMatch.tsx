@@ -17,17 +17,11 @@ import type { AnyFieldApi } from '@tanstack/react-form';
 import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 import { useTRPC } from '@src/trpc/react';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
-
-type Errors = {
-  errors: string[];
-  properties?: Record<keyof ClubMatchFormSchema, { errors: string[] }>;
-};
 
 function isFieldRequired(fieldName: keyof ClubMatchFormSchema) {
   const shape = clubMatchFormSchema.shape;
@@ -54,7 +48,7 @@ const TextInput = ({
 }: SharedInputProps) => {
   const required = isFieldRequired(id);
   const shouldShowError = field.state.meta.isTouched && error;
-  
+
   return (
     <div className="flex flex-col gap-1">
       {label && (
@@ -80,7 +74,6 @@ const TextInput = ({
   );
 };
 
-
 const SelectInput = ({
   id,
   label,
@@ -93,7 +86,7 @@ const SelectInput = ({
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
   const shouldShowError = field.state.meta.isTouched && error;
-  
+
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="min-h-[3rem] flex items-end">
@@ -117,13 +110,13 @@ const SelectInput = ({
             </MenuItem>
           ))}
         </Select>
-        {shouldShowError && helperText && <FormHelperText>{helperText}</FormHelperText>}
+        {shouldShowError && helperText && (
+          <FormHelperText>{helperText}</FormHelperText>
+        )}
       </FormControl>
     </div>
   );
 };
-
-
 
 const RadioInput = ({
   id,
@@ -183,12 +176,13 @@ const RadioInput = ({
             </div>
           ))}
         </RadioGroup>
-        {shouldShowError && helperText && <FormHelperText>{helperText}</FormHelperText>}
+        {shouldShowError && helperText && (
+          <FormHelperText>{helperText}</FormHelperText>
+        )}
       </FormControl>
     </fieldset>
   );
 };
-
 
 const SelectMultipleInput = ({
   id,
@@ -222,7 +216,9 @@ const SelectMultipleInput = ({
           onChange={(event) => {
             const value = event.target.value;
             field.handleChange(
-              typeof value === 'string' ? value.split(',') : (value as string[]),
+              typeof value === 'string'
+                ? value.split(',')
+                : (value as string[]),
             );
           }}
           input={<OutlinedInput />}
@@ -244,16 +240,15 @@ const SelectMultipleInput = ({
             </MenuItem>
           ))}
         </Select>
-        {shouldShowError && helperText && <FormHelperText>{helperText}</FormHelperText>}
+        {shouldShowError && helperText && (
+          <FormHelperText>{helperText}</FormHelperText>
+        )}
       </FormControl>
     </fieldset>
   );
 };
 
-
 const ClubMatch = () => {
-  const [errors, setErrors] = useState<Errors>({ errors: [] });
-
   const api = useTRPC();
   const router = useRouter();
 
@@ -317,7 +312,7 @@ const ClubMatch = () => {
                     id="major"
                     label="What is your current or intended major?"
                     error={!field.state.meta.isValid}
-                    helperText={"Major is Required"}
+                    helperText={'Major is Required'}
                     disabled={false}
                     field={field}
                   />
@@ -338,7 +333,7 @@ const ClubMatch = () => {
                       'A current student (2nd year+, transfer)',
                     ]}
                     error={!field.state.meta.isValid}
-                    helperText={"Select your Year"}
+                    helperText={'Select your Year'}
                     field={field}
                   />
                 </div>
@@ -356,7 +351,7 @@ const ClubMatch = () => {
                       'Live at home and commute',
                     ]}
                     error={!field.state.meta.isValid}
-                    helperText={"Choose a Proximity"}
+                    helperText={'Choose a Proximity'}
                     field={field}
                   />
                 </div>
@@ -387,7 +382,7 @@ const ClubMatch = () => {
                   'Student Media',
                 ]}
                 error={!field.state.meta.isValid}
-                helperText={"Select an Organizaiton Type"}
+                helperText={'Select an Organizaiton Type'}
                 field={field}
               />
             )}
@@ -407,7 +402,7 @@ const ClubMatch = () => {
                       id="specificCultures"
                       label="Please list the specific cultures or religions you are interested in."
                       error={!field.state.meta.isValid}
-                      helperText={"Enter Cultures or Religions"}
+                      helperText={'Enter Cultures or Religions'}
                       disabled={false}
                       field={field}
                     />
@@ -437,7 +432,7 @@ const ClubMatch = () => {
                   'Other',
                 ]}
                 error={!field.state.meta.isValid}
-                helperText={"Select Hobbies/Interests"}
+                helperText={'Select Hobbies/Interests'}
                 field={field}
               />
             )}
@@ -449,7 +444,7 @@ const ClubMatch = () => {
                 id="hobbyDetails"
                 label="Please be specific about your selected hobbies."
                 error={!field.state.meta.isValid}
-                helperText={"Write about your Hobbies"}
+                helperText={'Write about your Hobbies'}
                 disabled={false}
                 field={field}
               />
@@ -462,7 +457,7 @@ const ClubMatch = () => {
                 id="otherAcademicInterests"
                 label="Beyond your major, are there other academic topics or tracks you're interested in?"
                 error={!field.state.meta.isValid}
-                helperText={"Write about your other Academic Interests"}
+                helperText={'Write about your other Academic Interests'}
                 disabled={false}
                 field={field}
               />
@@ -475,7 +470,7 @@ const ClubMatch = () => {
                 id="newExperiences"
                 label="What new experiences, hobbies, or activities would you be interested in?"
                 error={!field.state.meta.isValid}
-                helperText={"Enter new Experiences"}
+                helperText={'Enter new Experiences'}
                 disabled={false}
                 field={field}
               />
@@ -499,7 +494,7 @@ const ClubMatch = () => {
                   'Simply Have Fun/De-stress',
                 ]}
                 error={!field.state.meta.isValid}
-                helperText={"Write Goals"}
+                helperText={'Write Goals'}
                 field={field}
               />
             )}
@@ -524,7 +519,7 @@ const ClubMatch = () => {
                   'Writing/Editing',
                 ]}
                 error={!field.state.meta.isValid}
-                helperText={"Select Activities"}
+                helperText={'Select Activities'}
                 field={field}
               />
             )}
@@ -549,7 +544,7 @@ const ClubMatch = () => {
                             'Other',
                           ]}
                           error={!genderField.state.meta.isValid}
-                          helperText={"Select an option"}
+                          helperText={'Select an option'}
                           field={genderField}
                           other={{
                             id: 'genderOther',
@@ -576,7 +571,7 @@ const ClubMatch = () => {
                     "Don't care",
                   ]}
                   error={!field.state.meta.isValid}
-                  helperText={"Select preferred Time Commitment"}
+                  helperText={'Select preferred Time Commitment'}
                   field={field}
                 />
               )}
