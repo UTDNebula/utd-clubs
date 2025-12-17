@@ -291,13 +291,7 @@ const ClubMatch = () => {
     },
     onSubmit: async ({ value }) => {
       if (!editData.isPending) {
-        try {
-          await editData.mutateAsync(value);
-        } catch (err) {
-          if (err instanceof ZodError) {
-            setErrors(z.treeifyError(err));
-          }
-        }
+        await editData.mutateAsync(value);
       }
     },
   });
