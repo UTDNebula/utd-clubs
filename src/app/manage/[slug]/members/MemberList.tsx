@@ -16,7 +16,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import { IconButton, Skeleton } from '@mui/material';
+import { CircularProgress, IconButton, Skeleton } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -43,8 +43,12 @@ import {
   GridActionsCellItem,
   GridColDef,
   GridEventListener,
+  GridFooter,
+  GridFooterContainer,
   GridRenderCellParams,
   GridRowId,
+  gridRowSelectionCountSelector,
+  GridRowSelectionModel,
   GridSlotProps,
   GridSlots,
   PropsFromSlot,
@@ -54,13 +58,25 @@ import {
   QuickFilterTrigger,
   Toolbar,
   ToolbarButton,
+  useGridApiContext,
+  useGridSelector,
 } from '@mui/x-data-grid';
+import {
+  UseMutateFunction,
+  useMutation,
+  UseMutationResult,
+} from '@tanstack/react-query';
+import { TRPCClientErrorLike } from '@trpc/client';
 import { ReactNode } from 'react';
 import * as React from 'react';
+import z from 'zod';
+import { AppRouter } from '@src/server/api/root';
+import { removeMemberSchema } from '@src/server/api/routers/clubEdit';
 import {
   SelectClub,
   SelectUserMetadataToClubsWithUserMetadata,
 } from '@src/server/db/models';
+import { useTRPC } from '@src/trpc/react';
 
 type OwnerState = {
   expanded: boolean;
@@ -98,13 +114,33 @@ interface MemberListHandlers {
   deleteUser: (id: GridRowId) => void;
   contactEmailsVisible: boolean;
   showContactEmails: (visibility: boolean) => void;
+  removeMember:
+    | UseMutationResult<
+        void,
+        TRPCClientErrorLike<AppRouter>,
+        z.infer<typeof removeMemberSchema>
+      >
+    | undefined;
+  rowSelectionModel: GridRowSelectionModel;
 }
+
+const removeMemberFunction: UseMutateFunction<
+  void,
+  TRPCClientErrorLike<AppRouter>,
+  z.infer<typeof removeMemberSchema>
+> = () => {};
 
 const MemberListHandlersContext = React.createContext<MemberListHandlers>({
   toggleAdmin: () => {},
   deleteUser: () => {},
   contactEmailsVisible: false,
   showContactEmails: () => {},
+  rowSelectionModel: {
+    type: 'include',
+    ids: new Set<GridRowId>(),
+  },
+  removeMember: undefined,
+  // removeMember: removeMemberFunction,
 });
 
 function ContactEmailCell(params: GridRenderCellParams) {
@@ -175,16 +211,27 @@ function MemberTypeCell(params: GridRenderCellParams) {
 }
 
 function ActionsCell(props: GridRenderCellParams) {
-  const { deleteUser, toggleAdmin } = React.useContext(
+  const { deleteUser, toggleAdmin, removeMember } = React.useContext(
     MemberListHandlersContext,
   );
+
+  // const targetMember = rows.find((row) => row.id == deleteUserId);
+
+  // removeMember.variables?.id
 
   return (
     <GridActionsCell {...props}>
       <GridActionsCellItem
-        icon={<DeleteIcon />}
+        icon={
+          removeMember?.isPending ? (
+            <CircularProgress color="inherit" size={20} />
+          ) : (
+            <DeleteIcon />
+          )
+        }
         label="Delete"
         onClick={() => deleteUser(props.id)}
+        disabled={removeMember?.isPending}
       />
       <GridActionsCellItem
         icon={<SecurityIcon />}
@@ -346,6 +393,38 @@ function CustomToolbar({ club }: CustomToolbarProps) {
   );
 }
 
+function CustomFooter() {
+  const { removeMember, rowSelectionModel } = React.useContext(
+    MemberListHandlersContext,
+  );
+
+  const apiRef = useGridApiContext();
+  const selectedRowCount = useGridSelector(
+    apiRef,
+    gridRowSelectionCountSelector,
+  );
+
+  return (
+    <GridFooterContainer>
+      <div className="mx-4">
+        {removeMember?.isPending ? (
+          <div className="flex items-center gap-2">
+            <CircularProgress color="inherit" size={20} />
+            <span>Deleting user</span>
+          </div>
+        ) : selectedRowCount > 0 ? (
+          `${selectedRowCount} ${selectedRowCount == 1 ? 'person' : 'people'} selected`
+        ) : null}
+      </div>
+      <GridFooter
+        sx={{
+          border: 'none',
+        }}
+      />
+    </GridFooterContainer>
+  );
+}
+
 const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] = [
   {
     field: 'firstName',
@@ -457,16 +536,40 @@ const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] = [
 
 type MemberListProps = {
   members: SelectUserMetadataToClubsWithUserMetadata[];
-  club?: SelectClub;
+  club: SelectClub;
 };
 
 const MemberList = ({ members, club }: MemberListProps) => {
+  const api = useTRPC();
+  // const editData = useMutation(api.club.edit.data.mutationOptions({}));
+  const removeMember = useMutation<
+    void,
+    TRPCClientErrorLike<AppRouter>,
+    z.infer<typeof removeMemberSchema>
+  >(
+    api.club.edit.removeMember.mutationOptions({
+      // onError: (e) => {
+      //   if (e.data?.code === 'UNAUTHORIZED') {
+      //     console.log(`You are unauthorized! ${e.message}`);
+      //   } else {
+      //     console.log(`Error happened! ${e.message}`);
+      //   }
+      // },
+    }),
+  );
+
   const membersIndexed = members.map((member, index) => {
     return {
       ...member,
       id: index,
     };
   });
+
+  const [rowSelectionModel, setRowSelectionModel] =
+    React.useState<GridRowSelectionModel>({
+      type: 'include',
+      ids: new Set<GridRowId>(),
+    });
 
   const [contactEmailsVisible, showContactEmails] =
     React.useState<boolean>(false);
@@ -493,9 +596,34 @@ const MemberList = ({ members, club }: MemberListProps) => {
   }, []);
 
   const handleConfirmDelete = React.useCallback(() => {
-    deleteActiveRow(deleteUserId!);
     handleCloseDialog();
-  }, [deleteUserId, deleteActiveRow, handleCloseDialog]);
+
+    const targetMember = rows.find((row) => row.id == deleteUserId);
+    // console.log(`Delete: ${targetMember?.userId}`);
+
+    void removeMember.mutateAsync(
+      {
+        clubId: club.id,
+        id: targetMember?.userId ?? '',
+      },
+      {
+        onSuccess: (data) => {
+          deleteActiveRow(deleteUserId!);
+          console.log(`Success! ${data}`);
+        },
+        onError: (error) => {
+          console.log(`Error: ${error}`);
+        },
+      },
+    );
+  }, [
+    club.id,
+    deleteActiveRow,
+    deleteUserId,
+    handleCloseDialog,
+    removeMember,
+    rows,
+  ]);
 
   const toggleAdmin = React.useCallback((id: GridRowId) => {
     setRows((prevRows) =>
@@ -511,8 +639,17 @@ const MemberList = ({ members, club }: MemberListProps) => {
       toggleAdmin,
       contactEmailsVisible,
       showContactEmails,
+      removeMember,
+      rowSelectionModel,
     }),
-    [deleteUser, toggleAdmin, contactEmailsVisible, showContactEmails],
+    [
+      deleteUser,
+      toggleAdmin,
+      contactEmailsVisible,
+      showContactEmails,
+      removeMember,
+      rowSelectionModel,
+    ],
   );
 
   return (
@@ -523,7 +660,10 @@ const MemberList = ({ members, club }: MemberListProps) => {
           columns={columns}
           // MUI recommends type assertion for passing custom props to slots
           // Documentation: https://mui.com/x/common-concepts/custom-components/#type-custom-slots
-          slots={{ toolbar: CustomToolbar as GridSlots['toolbar'] }}
+          slots={{
+            toolbar: CustomToolbar as GridSlots['toolbar'],
+            footer: CustomFooter,
+          }}
           slotProps={{ toolbar: { club: club } as GridSlotProps['toolbar'] }}
           showToolbar
           initialState={{
@@ -535,6 +675,11 @@ const MemberList = ({ members, club }: MemberListProps) => {
           disableRowSelectionOnClick
           className="rounded-lg"
           onCellDoubleClick={handleOnCellDoubleClick}
+          rowSelectionModel={rowSelectionModel}
+          onRowSelectionModelChange={(newRowSelectionModel) => {
+            setRowSelectionModel(newRowSelectionModel);
+          }}
+          hideFooterSelectedRowCount
         />
       </MemberListHandlersContext.Provider>
       <Dialog

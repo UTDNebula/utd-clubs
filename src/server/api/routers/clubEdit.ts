@@ -78,6 +78,11 @@ const editOfficerSchema = z.object({
 
 const deleteSchema = z.object({ clubId: z.string() });
 
+export const removeMemberSchema = z.object({
+  clubId: z.string(),
+  id: z.string().default(''),
+});
+
 export const clubEditRouter = createTRPCRouter({
   data: protectedProcedure
     .input(editClubSchema)
@@ -367,5 +372,34 @@ export const clubEditRouter = createTRPCRouter({
       await callStorageAPI('DELETE', `${input.clubId}-banner`);
 
       await ctx.db.delete(club).where(eq(club.id, input.clubId));
+    }),
+  removeMember: protectedProcedure
+    .input(removeMemberSchema)
+    .mutation(async ({ input, ctx }) => {
+      const isPresident = await isUserPresident(
+        ctx.session.user.id,
+        input.clubId,
+      );
+      if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+      console.log(
+        `Authorized removal of user ${input.id} from club ${input.clubId}`,
+      );
+
+      const result = await ctx.db
+        .delete(userMetadataToClubs)
+        .where(
+          and(
+            eq(userMetadataToClubs.clubId, input.clubId),
+            eq(userMetadataToClubs.userId, input.id),
+          ),
+        );
+
+      if (result.rowCount === 0) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `User with ID ${input.id} not found in club with ID ${input.clubId}`,
+        });
+      }
     }),
 });
