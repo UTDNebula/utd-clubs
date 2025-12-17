@@ -43,7 +43,7 @@ const TextInput = ({ id, label, disabled, field }: SharedInputProps) => {
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label htmlFor={id}>
+        <label htmlFor={id} className="whitespace-pre-line">
           {label}
           {required && <span className="text-red-600"> *</span>}
         </label>
@@ -80,7 +80,7 @@ const SelectInput = ({
     field.state.meta.isTouched && !field.state.meta.isValid;
   return (
     <FormControl className="flex flex-col gap-1">
-      <label htmlFor={id}>
+      <label htmlFor={id} className="whitespace-pre-line">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
@@ -133,7 +133,7 @@ const RadioInput = ({
     otherField?.state.meta.isTouched && !otherField?.state.meta.isValid;
   return (
     <FormControl className="flex flex-col gap-1">
-      <label htmlFor={id}>
+      <label htmlFor={id} className="whitespace-pre-line">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
@@ -202,7 +202,7 @@ const SelectMultipleInput = ({
   const value: string[] = field.state.value ?? [];
   return (
     <FormControl className="flex flex-col gap-1">
-      <label htmlFor={id}>
+      <label htmlFor={id} className="whitespace-pre-line">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
@@ -294,7 +294,7 @@ const ClubMatch = () => {
       <form className="mx-auto w-full max-w-3xl">
         <Panel>
           <div className="m-2 flex flex-col gap-8">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 items-end">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 items-start">
               <form.Field name="major">
                 {(field) => (
                   <div className="flex-1">
@@ -312,7 +312,7 @@ const ClubMatch = () => {
                   <div className="flex-1">
                     <SelectInput
                       id="year"
-                      label="What year are you?"
+                      label={'\nWhat year are you?'}
                       options={[
                         'A prospective student (not yet attending UTD)',
                         'A first-year student (non-transfer)',
