@@ -102,7 +102,7 @@ export const clubMatchFormSchema = z.object({
     .max(50),
   hobbyDetails: z.string().max(500, characterLimitError).optional(),
   otherAcademicInterests: z.string().max(500, characterLimitError).optional(),
-  gender: z.string().min(1, 'Gender is required').max(100),
+  gender: z.string().min(1, 'Gender is required').max(100).optional(),
   genderOther: z.string().max(500, characterLimitError).optional(),
   newExperiences: z.string().max(500, characterLimitError).optional(),
   involvementGoals: z.array(z.string().min(1).max(100)).max(50).optional(),
