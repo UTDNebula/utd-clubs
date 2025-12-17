@@ -8,12 +8,14 @@ interface FormSubmitButtonProps {
   text?: string;
   icon?: React.ElementType;
   onClick?: () => void;
+  allowDisable?: boolean;
 }
 
 export const FormSubmitButton = ({
   text,
   icon,
   onClick,
+  allowDisable = true,
 }: FormSubmitButtonProps) => {
   const form = useFormContext();
   const isDefaultValue = useStore(form.store, (state) => state.isDefaultValue);
@@ -27,7 +29,7 @@ export const FormSubmitButton = ({
       variant="contained"
       className="normal-case"
       startIcon={<IconComponent />}
-      disabled={isSubmitting}
+      disabled={allowDisable && (isDefaultValue || !isValid)}
       loading={isSubmitting}
       loadingPosition="start"
       color={!isDefaultValue && isValid ? 'primary' : 'inherit'}

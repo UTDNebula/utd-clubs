@@ -556,6 +556,7 @@ const ClubMatch = () => {
                   onClick={async () => {
                     form.handleSubmit(); // force submit so onSubmit validation shows errors
                   }}
+                  allowDisable={false}
                 />
               </div>
             </form.AppForm>
