@@ -380,7 +380,18 @@ export const clubEditRouter = createTRPCRouter({
         ctx.session.user.id,
         input.clubId,
       );
-      if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
+      if (!isPresident)
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Must be a club admin to remove members',
+        });
+
+      if (ctx.session.user.id == input.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Cannot remove yourself',
+        });
+      }
 
       console.log(
         `Authorized removal of user ${input.id} from club ${input.clubId}`,
@@ -398,7 +409,7 @@ export const clubEditRouter = createTRPCRouter({
       if (result.rowCount === 0) {
         throw new TRPCError({
           code: 'NOT_FOUND',
-          message: `User with ID ${input.id} not found in club with ID ${input.clubId}`,
+          message: `User was not found in club`,
         });
       }
     }),

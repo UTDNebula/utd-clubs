@@ -16,7 +16,14 @@ import SecurityIcon from '@mui/icons-material/Security';
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import { CircularProgress, IconButton, Skeleton } from '@mui/material';
+import {
+  Alert,
+  CircularProgress,
+  IconButton,
+  Skeleton,
+  Snackbar,
+  SnackbarCloseReason,
+} from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -37,7 +44,6 @@ import {
   ColumnsPanelTrigger,
   DataGrid,
   ExportCsv,
-  // ExportPrint,
   FilterPanelTrigger,
   GridActionsCell,
   GridActionsCellItem,
@@ -109,6 +115,13 @@ const StyledTextField = styled(TextField)<{
   transition: theme.transitions.create(['width', 'opacity']),
 }));
 
+type ToastState = {
+  open: boolean;
+  type?: 'success' | 'error';
+  user?: SelectUserMetadataToClubsWithUserMetadata;
+  error?: TRPCClientErrorLike<AppRouter>;
+};
+
 interface MemberListHandlers {
   toggleAdmin: (id: GridRowId) => void;
   deleteUser: (id: GridRowId) => void;
@@ -122,13 +135,8 @@ interface MemberListHandlers {
       >
     | undefined;
   rowSelectionModel: GridRowSelectionModel;
+  setToastState: (toastState: ToastState) => void;
 }
-
-const removeMemberFunction: UseMutateFunction<
-  void,
-  TRPCClientErrorLike<AppRouter>,
-  z.infer<typeof removeMemberSchema>
-> = () => {};
 
 const MemberListHandlersContext = React.createContext<MemberListHandlers>({
   toggleAdmin: () => {},
@@ -140,7 +148,7 @@ const MemberListHandlersContext = React.createContext<MemberListHandlers>({
     ids: new Set<GridRowId>(),
   },
   removeMember: undefined,
-  // removeMember: removeMemberFunction,
+  setToastState: () => {},
 });
 
 function ContactEmailCell(params: GridRenderCellParams) {
@@ -216,8 +224,6 @@ function ActionsCell(props: GridRenderCellParams) {
   );
 
   // const targetMember = rows.find((row) => row.id == deleteUserId);
-
-  // removeMember.variables?.id
 
   return (
     <GridActionsCell {...props}>
@@ -541,22 +547,12 @@ type MemberListProps = {
 
 const MemberList = ({ members, club }: MemberListProps) => {
   const api = useTRPC();
-  // const editData = useMutation(api.club.edit.data.mutationOptions({}));
+
   const removeMember = useMutation<
     void,
     TRPCClientErrorLike<AppRouter>,
     z.infer<typeof removeMemberSchema>
-  >(
-    api.club.edit.removeMember.mutationOptions({
-      // onError: (e) => {
-      //   if (e.data?.code === 'UNAUTHORIZED') {
-      //     console.log(`You are unauthorized! ${e.message}`);
-      //   } else {
-      //     console.log(`Error happened! ${e.message}`);
-      //   }
-      // },
-    }),
-  );
+  >(api.club.edit.removeMember.mutationOptions({}));
 
   const membersIndexed = members.map((member, index) => {
     return {
@@ -582,6 +578,21 @@ const MemberList = ({ members, club }: MemberListProps) => {
     }
   };
 
+  const [toastState, setToastState] = React.useState<ToastState>({
+    open: false,
+  });
+
+  const handleCloseToast = React.useCallback(
+    (event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+
+      setToastState({ ...toastState, open: false });
+    },
+    [toastState],
+  );
+
   const [rows, setRows] = React.useState<typeof membersIndexed>(membersIndexed);
   const [deleteUserId, deleteUser] = React.useState<GridRowId | null>(null);
 
@@ -599,7 +610,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
     handleCloseDialog();
 
     const targetMember = rows.find((row) => row.id == deleteUserId);
-    // console.log(`Delete: ${targetMember?.userId}`);
 
     void removeMember.mutateAsync(
       {
@@ -610,9 +620,16 @@ const MemberList = ({ members, club }: MemberListProps) => {
         onSuccess: (data) => {
           deleteActiveRow(deleteUserId!);
           console.log(`Success! ${data}`);
+          setToastState({ open: true, type: 'success', user: targetMember });
         },
         onError: (error) => {
           console.log(`Error: ${error}`);
+          setToastState({
+            open: true,
+            type: 'error',
+            user: targetMember,
+            error: error,
+          });
         },
       },
     );
@@ -641,6 +658,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
       showContactEmails,
       removeMember,
       rowSelectionModel,
+      setToastState,
     }),
     [
       deleteUser,
@@ -649,12 +667,37 @@ const MemberList = ({ members, club }: MemberListProps) => {
       showContactEmails,
       removeMember,
       rowSelectionModel,
+      setToastState,
     ],
   );
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl">
       <MemberListHandlersContext.Provider value={MemberListHandlers}>
+        <Snackbar
+          open={toastState.open}
+          autoHideDuration={6000}
+          anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+          onClose={handleCloseToast}
+        >
+          <Alert
+            onClose={handleCloseToast}
+            severity={toastState.type}
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            {toastState.type === 'success' ? (
+              `Successfully removed ${toastState.user?.userMetadata?.firstName}!`
+            ) : (
+              <>
+                <p>
+                  {`Couldn't remove ${toastState.user?.userMetadata?.firstName}!`}
+                </p>
+                <p>{`Reason: ${toastState.error?.message}`}</p>
+              </>
+            )}
+          </Alert>
+        </Snackbar>
         <DataGrid
           rows={rows}
           columns={columns}
