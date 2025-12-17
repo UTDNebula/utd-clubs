@@ -10,6 +10,7 @@ import GavelIcon from '@mui/icons-material/Gavel';
 import HandymanIcon from '@mui/icons-material/Handyman';
 import PersonIcon from '@mui/icons-material/Person';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -68,9 +69,10 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import {
-  UseMutateFunction,
   useMutation,
   UseMutationResult,
+  useQuery,
+  UseQueryResult,
 } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { ReactNode } from 'react';
@@ -122,6 +124,7 @@ type ToastState = {
   error?: TRPCClientErrorLike<AppRouter>;
 };
 
+// TODO: remove unused contexts, including: rowSelectionModel, setToastState
 interface MemberListHandlers {
   toggleAdmin: (id: GridRowId) => void;
   deleteUser: (id: GridRowId) => void;
@@ -134,8 +137,15 @@ interface MemberListHandlers {
         z.infer<typeof removeMemberSchema>
       >
     | undefined;
+  getMembers:
+    | UseQueryResult<
+        z.infer<SelectUserMetadataToClubsWithUserMetadata>,
+        TRPCClientErrorLike<AppRouter>
+      >
+    | undefined;
   rowSelectionModel: GridRowSelectionModel;
   setToastState: (toastState: ToastState) => void;
+  refreshList: () => void;
 }
 
 const MemberListHandlersContext = React.createContext<MemberListHandlers>({
@@ -148,7 +158,9 @@ const MemberListHandlersContext = React.createContext<MemberListHandlers>({
     ids: new Set<GridRowId>(),
   },
   removeMember: undefined,
+  getMembers: undefined,
   setToastState: () => {},
+  refreshList: () => {},
 });
 
 function ContactEmailCell(params: GridRenderCellParams) {
@@ -254,6 +266,8 @@ interface CustomToolbarProps extends PropsFromSlot<GridSlots['toolbar']> {
 }
 
 function CustomToolbar({ club }: CustomToolbarProps) {
+  const { refreshList } = React.useContext(MemberListHandlersContext);
+
   const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
 
@@ -268,6 +282,33 @@ function CustomToolbar({ club }: CustomToolbarProps) {
         </span>
         <span className="inline sm:hidden">Club Members</span>
       </Typography>
+
+      <Tooltip title="Refresh">
+        <ToolbarButton onClick={refreshList}>
+          <RefreshIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
+
+      <Tooltip title="Export">
+        <ToolbarButton
+          ref={exportMenuTriggerRef}
+          id="export-menu-trigger"
+          aria-controls="export-menu"
+          aria-haspopup="true"
+          aria-expanded={exportMenuOpen ? 'true' : undefined}
+          onClick={() => setExportMenuOpen(true)}
+        >
+          <FileDownloadOutlinedIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
+
+      <Divider
+        orientation="vertical"
+        variant="middle"
+        flexItem
+        sx={{ mx: 0.5 }}
+      />
+
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>
           <ViewColumnOutlinedIcon fontSize="small" />
@@ -290,26 +331,6 @@ function CustomToolbar({ club }: CustomToolbarProps) {
         />
       </Tooltip>
 
-      <Divider
-        orientation="vertical"
-        variant="middle"
-        flexItem
-        sx={{ mx: 0.5 }}
-      />
-
-      <Tooltip title="Export">
-        <ToolbarButton
-          ref={exportMenuTriggerRef}
-          id="export-menu-trigger"
-          aria-controls="export-menu"
-          aria-haspopup="true"
-          aria-expanded={exportMenuOpen ? 'true' : undefined}
-          onClick={() => setExportMenuOpen(true)}
-        >
-          <FileDownloadOutlinedIcon fontSize="small" />
-        </ToolbarButton>
-      </Tooltip>
-
       <Menu
         id="export-menu"
         anchorEl={exportMenuTriggerRef.current}
@@ -323,12 +344,6 @@ function CustomToolbar({ club }: CustomToolbarProps) {
           },
         }}
       >
-        {/* <ExportPrint
-            render={<MenuItem />}
-            onClick={() => setExportMenuOpen(false)}
-          >
-            Print
-          </ExportPrint> */}
         <ExportCsv
           render={<MenuItem />}
           onClick={() => setExportMenuOpen(false)}
@@ -400,7 +415,7 @@ function CustomToolbar({ club }: CustomToolbarProps) {
 }
 
 function CustomFooter() {
-  const { removeMember, rowSelectionModel } = React.useContext(
+  const { removeMember, getMembers } = React.useContext(
     MemberListHandlersContext,
   );
 
@@ -410,13 +425,16 @@ function CustomFooter() {
     gridRowSelectionCountSelector,
   );
 
+  const loading = removeMember?.isPending || getMembers?.isFetching;
+
   return (
     <GridFooterContainer>
       <div className="mx-4">
-        {removeMember?.isPending ? (
+        {loading ? (
           <div className="flex items-center gap-2">
             <CircularProgress color="inherit" size={20} />
-            <span>Deleting user</span>
+            {removeMember?.isPending && <span>Deleting user</span>}
+            {getMembers?.isFetching && <span>Refreshing</span>}
           </div>
         ) : selectedRowCount > 0 ? (
           `${selectedRowCount} ${selectedRowCount == 1 ? 'person' : 'people'} selected`
@@ -554,6 +572,11 @@ const MemberList = ({ members, club }: MemberListProps) => {
     z.infer<typeof removeMemberSchema>
   >(api.club.edit.removeMember.mutationOptions({}));
 
+  // Only used for the refresh button
+  const getMembers = useQuery(
+    api.club.getMembers.queryOptions({ id: club.id }, { enabled: false }),
+  );
+
   const membersIndexed = members.map((member, index) => {
     return {
       ...member,
@@ -650,6 +673,22 @@ const MemberList = ({ members, club }: MemberListProps) => {
     );
   }, []);
 
+  const refreshList = React.useCallback(async () => {
+    if (getMembers.isFetching) return;
+    await getMembers.refetch();
+
+    if (getMembers.data) {
+      setRows(
+        getMembers.data.map((member, index) => {
+          return {
+            ...member,
+            id: index,
+          };
+        }),
+      );
+    }
+  }, [getMembers]);
+
   const MemberListHandlers = React.useMemo<MemberListHandlers>(
     () => ({
       deleteUser,
@@ -657,8 +696,10 @@ const MemberList = ({ members, club }: MemberListProps) => {
       contactEmailsVisible,
       showContactEmails,
       removeMember,
+      getMembers,
       rowSelectionModel,
       setToastState,
+      refreshList,
     }),
     [
       deleteUser,
@@ -666,8 +707,10 @@ const MemberList = ({ members, club }: MemberListProps) => {
       contactEmailsVisible,
       showContactEmails,
       removeMember,
+      getMembers,
       rowSelectionModel,
       setToastState,
+      refreshList,
     ],
   );
 
