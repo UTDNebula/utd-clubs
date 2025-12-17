@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   MenuItem,
   OutlinedInput,
   Radio,
@@ -586,6 +587,9 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
           type="submit"
           disabled={editData.isPending}
           className="normal-case"
+          startIcon={
+            editData.isPending ? <CircularProgress size={18} color="inherit" /> : null
+          }
         >
           {editData.isPending ? 'Finding Clubs...' : 'Find Clubs'}
         </Button>
