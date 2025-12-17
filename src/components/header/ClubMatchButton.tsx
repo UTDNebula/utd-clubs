@@ -22,25 +22,18 @@ export default function ClubMatchButton({
   const { setShowRegisterModal } = useRegisterModal();
 
   const handleClick = !session
-    ? () => {
+    ? (e: React.MouseEvent) => {
+        e.preventDefault();
         setShowRegisterModal(true);
       }
     : undefined;
 
-  const LinkIfSession = ({ children }: { children: React.ReactNode }) => {
-    if (session) {
-      return <Link href={'/club-match/results'}>{children}</Link>;
-    }
-    return children;
-  };
-
   return (
-    <LinkIfSession>
+    <Link href={session ? '/club-match/results' : '#'} onClick={handleClick}>
       {iconOnly ? (
         <IconButton
           size="large"
           className={`rounded-full bg-royal text-white ${shadow ? shadowStyle : ''}`}
-          onClick={handleClick}
         >
           {icon}
         </IconButton>
@@ -49,11 +42,10 @@ export default function ClubMatchButton({
           variant="contained"
           className={`rounded-full normal-case whitespace-nowrap ${shadow ? shadowStyle : ''}`}
           startIcon={icon}
-          onClick={handleClick}
         >
           Club Match
         </Button>
       )}
-    </LinkIfSession>
+    </Link>
   );
 }
