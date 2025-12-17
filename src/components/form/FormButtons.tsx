@@ -4,7 +4,11 @@ import Button from '@mui/material/Button';
 import { useStore } from '@tanstack/react-form';
 import { useFormContext } from '@src/utils/form';
 
-export const FormSubmitButton = () => {
+interface FormSubmitButtonProps {
+  text?: string;
+}
+
+export const FormSubmitButton = ({ text }: FormSubmitButtonProps) => {
   const form = useFormContext();
   const isDefaultValue = useStore(form.store, (state) => state.isDefaultValue);
   const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
@@ -19,7 +23,7 @@ export const FormSubmitButton = () => {
       loading={isSubmitting}
       loadingPosition="start"
     >
-      Save
+      {text ?? 'Save'}
     </Button>
   );
 };

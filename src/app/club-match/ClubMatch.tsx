@@ -12,12 +12,12 @@ import {
   TextField,
 } from '@mui/material';
 import type { AnyFieldApi } from '@tanstack/react-form';
-import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { z, ZodError } from 'zod';
 import { useTRPC } from '@src/trpc/react';
+import { useAppForm } from '@src/utils/form';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
@@ -264,7 +264,7 @@ const ClubMatch = () => {
     }),
   );
 
-  const form = useForm({
+  const form = useAppForm({
     defaultValues: {
       major: '',
       year: '',
@@ -576,14 +576,15 @@ const ClubMatch = () => {
           </div>
         </div>
 
-        <Button
-          variant="contained"
-          type="submit"
-          disabled={editData.isPending}
-          className="normal-case"
-        >
-          {editData.isPending ? 'Finding Clubs...' : 'Find Clubs'}
-        </Button>
+        <div className="flex flex-wrap justify-end items-center gap-2">
+          <form.AppForm>
+            <form.FormResetButton />
+          </form.AppForm>
+          <form.AppForm>
+            <form.FormSubmitButton text="Find Clubs" />
+          </form.AppForm>
+        </div>
+        </Panel>
       </form>
     </main>
   );
