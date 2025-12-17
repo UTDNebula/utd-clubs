@@ -148,6 +148,11 @@ const RadioInput = ({
               value={option}
               size="small"
               checked={field.state.value === option}
+              onClick={() => {
+                if (field.state.value === option) {
+                  field.handleChange('');
+                }
+              }}
             />
             <label htmlFor={`${id}-${option}`} className="ml-1">
               {option}
