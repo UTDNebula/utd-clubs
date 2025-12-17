@@ -203,6 +203,7 @@ const SelectMultipleInput = ({
   options: string[];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError = field.state.meta.isTouched && error;
   const value: string[] = field.state.value ?? [];
   return (
     <fieldset className="flex flex-col gap-1">
@@ -210,7 +211,7 @@ const SelectMultipleInput = ({
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      <FormControl error={error} variant="outlined" size="small">
+      <FormControl error={shouldShowError} variant="outlined" size="small">
         <Select
           labelId={`${id}-label`}
           id={id}
@@ -243,7 +244,7 @@ const SelectMultipleInput = ({
             </MenuItem>
           ))}
         </Select>
-        {helperText && <FormHelperText>{helperText}</FormHelperText>}
+        {shouldShowError && helperText && <FormHelperText>{helperText}</FormHelperText>}
       </FormControl>
     </fieldset>
   );
@@ -326,13 +327,7 @@ const ClubMatch = () => {
                     id="major"
                     label="What is your current or intended major?"
                     error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
+                    helperText={"Major is Required"}
                     disabled={false}
                     field={field}
                   />
@@ -353,13 +348,7 @@ const ClubMatch = () => {
                       'A current student (2nd year+, transfer)',
                     ]}
                     error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
+                    helperText={"Select your Year"}
                     field={field}
                   />
                 </div>
@@ -377,13 +366,7 @@ const ClubMatch = () => {
                       'Live at home and commute',
                     ]}
                     error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
+                    helperText={"Choose a Proximity"}
                     field={field}
                   />
                 </div>
@@ -414,13 +397,7 @@ const ClubMatch = () => {
                   'Student Media',
                 ]}
                 error={!field.state.meta.isValid}
-                helperText={
-                  !field.state.meta.isValid
-                    ? field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                helperText={"Select an Organizaiton Type"}
                 field={field}
               />
             )}
@@ -440,13 +417,7 @@ const ClubMatch = () => {
                       id="specificCultures"
                       label="Please list the specific cultures or religions you are interested in."
                       error={!field.state.meta.isValid}
-                      helperText={
-                        !field.state.meta.isValid
-                          ? field.state.meta.errors
-                              .map((err) => err?.message)
-                              .join('. ') + '.'
-                          : undefined
-                      }
+                      helperText={"Enter Cultures or Religions"}
                       disabled={false}
                       field={field}
                     />
@@ -476,13 +447,7 @@ const ClubMatch = () => {
                   'Other',
                 ]}
                 error={!field.state.meta.isValid}
-                helperText={
-                  !field.state.meta.isValid
-                    ? field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                helperText={"Select Hobbies/Interests"}
                 field={field}
               />
             )}
@@ -494,13 +459,7 @@ const ClubMatch = () => {
                 id="hobbyDetails"
                 label="Please be specific about your selected hobbies."
                 error={!field.state.meta.isValid}
-                helperText={
-                  !field.state.meta.isValid
-                    ? field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                helperText={"Write about your Hobbies"}
                 disabled={false}
                 field={field}
               />
@@ -513,13 +472,7 @@ const ClubMatch = () => {
                 id="otherAcademicInterests"
                 label="Beyond your major, are there other academic topics or tracks you're interested in?"
                 error={!field.state.meta.isValid}
-                helperText={
-                  !field.state.meta.isValid
-                    ? field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                helperText={"Write about your other Academic Interests"}
                 disabled={false}
                 field={field}
               />
@@ -532,13 +485,7 @@ const ClubMatch = () => {
                 id="newExperiences"
                 label="What new experiences, hobbies, or activities would you be interested in?"
                 error={!field.state.meta.isValid}
-                helperText={
-                  !field.state.meta.isValid
-                    ? field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                helperText={"Enter new Experiences"}
                 disabled={false}
                 field={field}
               />
@@ -562,13 +509,7 @@ const ClubMatch = () => {
                   'Simply Have Fun/De-stress',
                 ]}
                 error={!field.state.meta.isValid}
-                helperText={
-                  !field.state.meta.isValid
-                    ? field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                helperText={"Write Goals"}
                 field={field}
               />
             )}
@@ -593,13 +534,7 @@ const ClubMatch = () => {
                   'Writing/Editing',
                 ]}
                 error={!field.state.meta.isValid}
-                helperText={
-                  !field.state.meta.isValid
-                    ? field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                helperText={"Select Activities"}
                 field={field}
               />
             )}
@@ -624,13 +559,7 @@ const ClubMatch = () => {
                             'Other',
                           ]}
                           error={!genderField.state.meta.isValid}
-                          helperText={
-                            !genderField.state.meta.isValid
-                              ? genderField.state.meta.errors
-                                  .map((err) => err?.message)
-                                  .join('. ') + '.'
-                              : undefined
-                          }
+                          helperText={"Select an option"}
                           field={genderField}
                           other={{
                             id: 'genderOther',
@@ -657,13 +586,7 @@ const ClubMatch = () => {
                     "Don't care",
                   ]}
                   error={!field.state.meta.isValid}
-                  helperText={
-                    !field.state.meta.isValid
-                      ? field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      : undefined
-                  }
+                  helperText={"Select preferred Time Commitment"}
                   field={field}
                 />
               )}
