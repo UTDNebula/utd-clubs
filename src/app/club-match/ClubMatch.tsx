@@ -16,6 +16,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import Panel from '@src/components/form/Panel';
+import { Binoculars } from '@src/icons/OtherIcons';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
@@ -550,7 +551,7 @@ const ClubMatch = () => {
               <form.FormResetButton />
             </form.AppForm>
             <form.AppForm>
-              <form.FormSubmitButton text="Find Clubs" />
+              <form.FormSubmitButton text="Find Clubs" icon={Binoculars} />
             </form.AppForm>
           </div>
         </Panel>
