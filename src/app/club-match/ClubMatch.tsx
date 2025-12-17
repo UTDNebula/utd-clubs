@@ -12,8 +12,8 @@ import {
   TextField,
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
-import type { AnyFieldApi, DeepKeys } from '@tanstack/react-form'
-import { FieldApi, useForm } from '@tanstack/react-form';
+import type { AnyFieldApi } from '@tanstack/react-form'
+import { useForm } from '@tanstack/react-form';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { z, ZodError } from 'zod';
@@ -314,8 +314,8 @@ const ClubMatch = () => {
         <div className="bg-white p-8 shadow-xl rounded-4xl flex flex-col gap-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <form.Field
-              name="major"
-              children={(field) => (
+              name="major">
+                {(field) => (
                 <div className="flex-1">
                   <TextInput
                     id="major"
@@ -326,10 +326,10 @@ const ClubMatch = () => {
                   />
                 </div>
               )}
-            />
+              </form.Field>
             <form.Field
-              name="year"
-              children={(field) => (
+              name="year">
+                {(field) => (
                 <div className="flex-1">
                   <SelectInput
                     id="year"
@@ -346,10 +346,10 @@ const ClubMatch = () => {
                   />
                 </div>
               )}
-            />
+            </form.Field>
             <form.Field
-              name="proximity"
-              children={(field) => (
+              name="proximity">
+                {(field) => (
                 <div className="flex-1">
                   <SelectInput
                     id="proximity"
@@ -364,12 +364,12 @@ const ClubMatch = () => {
                   />
                 </div>
               )}
-            />
+            </form.Field>
           </div>
 
           <form.Field
-            name="categories"
-            children={(field) => (
+            name="categories">
+              {(field) => (
               <SelectMultipleInput
                 id="categories"
                 label="What types of organizations are you interested in?"
@@ -394,19 +394,19 @@ const ClubMatch = () => {
                 field={field}
               />
             )}
-          />
+          </form.Field>
 
           {/* subscribe to the categories field so it only re-renders if categories changes */}
           <form.Subscribe
-            selector={(state) => state.values.categories}
-            children={(categories) => {
+            selector={(state) => state.values.categories}>
+              {(categories) => {
               const showSpecificCultures =
                 categories?.includes('Cultural') || categories?.includes('Religious');
               
               return showSpecificCultures ? (
                 <form.Field
-                  name="specificCultures"
-                  children={(field) => (
+                  name="specificCultures">
+                    {(field) => (
                     <TextInput
                       id="specificCultures"
                       label="Please list the specific cultures or religions you are interested in."
@@ -415,14 +415,14 @@ const ClubMatch = () => {
                       field={field}
                     />
                   )}
-                />
+                </form.Field>
               ) : null;
             }}
-          />
+            </form.Subscribe>
 
           <form.Field
-            name="hobbies"
-            children={(field) => (
+            name="hobbies">
+              {(field) => (
               <SelectMultipleInput
                 id="hobbies"
                 label="What are your hobbies or areas of interest?"
@@ -444,11 +444,11 @@ const ClubMatch = () => {
                 field={field}
               />
             )}
-          />
+          </form.Field>
 
           <form.Field
-            name="hobbyDetails"
-            children={(field) => (
+            name="hobbyDetails">
+              {(field) => (
               <TextInput
                 id="hobbyDetails"
                 label="Please be specific about your selected hobbies."
@@ -457,11 +457,11 @@ const ClubMatch = () => {
                 field={field}
               />
             )}
-          />
+          </form.Field>
 
           <form.Field
-            name="otherAcademicInterests"
-            children={(field) => (
+            name="otherAcademicInterests">
+              {(field) => (
               <TextInput
                 id="otherAcademicInterests"
                 label="Beyond your major, are there other academic topics or tracks you're interested in?"
@@ -470,11 +470,11 @@ const ClubMatch = () => {
                 field={field}
               />
             )}
-          />
+          </form.Field>
 
           <form.Field
-            name="newExperiences"
-            children={(field) => (
+            name="newExperiences">
+              {(field) => (
               <TextInput
                 id="newExperiences"
                 label="What new experiences, hobbies, or activities would you be interested in?"
@@ -483,11 +483,11 @@ const ClubMatch = () => {
                 field={field}
               />
             )}
-          />
+          </form.Field>
 
           <form.Field
-            name="involvementGoals"
-            children={(field) => (
+            name="involvementGoals">
+              {(field) => (
               <SelectMultipleInput
                 id="involvementGoals"
                 label="Goals for Getting Involved"
@@ -506,11 +506,11 @@ const ClubMatch = () => {
                 field={field}
               />
             )}
-          />
+          </form.Field>
 
           <form.Field
-            name="skills"
-            children={(field) => (
+            name="skills">
+              {(field) => (
               <SelectMultipleInput
                 id="skills"
                 label="Skills & Activities Interest"
@@ -531,19 +531,19 @@ const ClubMatch = () => {
                 field={field}
               />
             )}
-          />
+          </form.Field>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Conditionally render on gender value */}
             <form.Subscribe
-              selector={(state) => state.values.gender}
-              children={(gender) => (
+              selector={(state) => state.values.gender}>
+                {(gender) => (
                 <form.Field
-                  name="gender"
-                  children={(genderField) => (
+                  name="gender">
+                    {(genderField) => (
                     <form.Field
-                      name="genderOther"
-                      children={(genderOtherField) => (
+                      name="genderOther">
+                        {(genderOtherField) => (
                         <RadioInput
                           id="gender"
                           label="Gender Identity"
@@ -563,15 +563,15 @@ const ClubMatch = () => {
                           otherField={genderOtherField}
                         />
                       )}
-                    />
+                    </form.Field>
                   )}
-                />
+                </form.Field>
               )}
-            />
+            </form.Subscribe>
 
             <form.Field
-              name="timeCommitment"
-              children={(field) => (
+              name="timeCommitment">
+                {(field) => (
                 <RadioInput
                   id="timeCommitment"
                   label="Preferred Time Commitment"
@@ -585,7 +585,7 @@ const ClubMatch = () => {
                   field={field}
                 />
               )}
-            />
+            </form.Field>
           </div>
         </div>
 
