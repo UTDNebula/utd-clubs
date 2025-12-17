@@ -262,10 +262,6 @@ const ClubMatch = () => {
       onSuccess: () => {
         router.push('/club-match/results');
       },
-      onError: (err) => {
-        // err is typically TRPCClientError, not ZodError
-        console.error(err);
-      },
     }),
   );
 
