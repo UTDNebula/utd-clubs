@@ -12,7 +12,7 @@ const baseClasses = 'rounded-lg bg-white';
 
 const variantClasses: Record<CardVariant, string> = {
   flat: 'shadow-none',
-  interactive: 'shadow-lg transition-shadow hover:shadow-2xl',
+  interactive: 'shadow-lg transition-shadow hover:shadow-xl',
 };
 
 export const BaseCard = ({
