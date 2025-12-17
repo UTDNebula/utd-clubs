@@ -58,6 +58,7 @@
     "react-markdown": "^10.1.0",
     "rehype-external-links": "^3.0.0",
     "remark-gfm": "^4.0.1",
+    "remark-strip-html": "^1.0.2",
     "sharp": "^0.33.5",
     "superjson": "^1.13.1",
     "ws": "^8.18.3",
