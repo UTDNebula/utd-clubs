@@ -2,6 +2,7 @@ import { and, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 import { club } from '@src/server/db/schema/club';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
+import { callStorageAPI } from '@src/utils/storage';
 import { adminProcedure, createTRPCRouter } from '../trpc';
 import { editCollaboratorSchema } from './clubEdit';
 
@@ -15,7 +16,7 @@ const deleteSchema = z.object({
 
 const changeClubStatusSchema = z.object({
   clubId: z.string(),
-  status: z.enum(['approved', 'pending', 'rejected']),
+  status: z.enum(club.approved.enumValues),
 });
 
 export const adminRouter = createTRPCRouter({
@@ -37,6 +38,8 @@ export const adminRouter = createTRPCRouter({
   deleteClub: adminProcedure
     .input(deleteSchema)
     .mutation(async ({ ctx, input }) => {
+      await callStorageAPI('DELETE', `${input.id}-profile`);
+      await callStorageAPI('DELETE', `${input.id}-banner`);
       await ctx.db.delete(club).where(eq(club.id, input.id));
     }),
   updateOfficers: adminProcedure
