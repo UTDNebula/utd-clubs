@@ -17,9 +17,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { z, ZodError } from 'zod';
+import { ClubMatchResponses } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
-import { ClubMatchResponses } from '@src/server/db/schema/users';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
 
@@ -251,7 +251,7 @@ type ClubMatchProps = {
   response: ClubMatchResponses | null;
 };
 
-const ClubMatch = ( { response } : ClubMatchProps ) => {
+const ClubMatch = ({ response }: ClubMatchProps) => {
   const [errors, setErrors] = useState<Errors>({ errors: [] });
 
   const api = useTRPC();

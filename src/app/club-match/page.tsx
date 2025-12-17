@@ -40,7 +40,7 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <ClubMatch response={data?.responses ?? null}/>
+      <ClubMatch response={data?.responses ?? null} />
     </>
   );
 };
