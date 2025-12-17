@@ -2,20 +2,21 @@ import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import PreviewIcon from '@mui/icons-material/Preview';
 import Button from '@mui/material/Button';
+import { HydrationBoundary } from '@tanstack/react-query';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ManageHeader from '@src/components/manage/ManageHeader';
-import { api } from '@src/trpc/server';
+import { api, getQueryClient } from '@src/trpc/server';
 import ClubManageForm from './ClubManageForm';
 
 const Page = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params;
 
   const club = await api.club.bySlug({ slug });
+
   if (!club) {
     notFound();
   }
-
   return (
     <>
       <ManageHeader club={club} hrefBack="/manage">

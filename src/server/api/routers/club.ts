@@ -468,4 +468,27 @@ export const clubRouter = createTRPCRouter({
       });
       return await syncCalendar(input.clubId, false, oauth2Client);
     }),
+
+  details: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
+    const { id } = input;
+    try {
+      const byId = await ctx.db.query.club.findFirst({
+        where: (club) => eq(club.id, id),
+        columns: {
+          id: true,
+          name: true,
+          description: true,
+          foundingDate: true,
+          tags: true,
+          profileImage: true,
+          bannerImage: true,
+        },
+      });
+
+      return byId;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }),
 });
