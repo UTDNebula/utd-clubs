@@ -15,7 +15,8 @@ import type { AnyFieldApi } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
+import Panel from '@src/components/form/Panel';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
@@ -52,7 +53,7 @@ const TextInput = ({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label htmlFor={id} className="min-h-[3rem] flex items-end">
+        <label htmlFor={id}>
           {label}
           {required && <span className="text-red-600"> *</span>}
         </label>
@@ -89,7 +90,7 @@ const SelectInput = ({
   const required = isFieldRequired(id);
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="min-h-[3rem] flex items-end">
+      <label htmlFor={id}>
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
@@ -139,7 +140,7 @@ const RadioInput = ({
   const required = isFieldRequired(id);
   return (
     <fieldset className="flex flex-col gap-1">
-      <label htmlFor={id} className="min-h-[3rem] flex items-end">
+      <label htmlFor={id}>
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
@@ -199,7 +200,7 @@ const SelectMultipleInput = ({
   const value: string[] = field.state.value ?? [];
   return (
     <fieldset className="flex flex-col gap-1">
-      <label htmlFor={id} className="min-h-[3rem] flex items-end">
+      <label htmlFor={id}>
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
@@ -286,13 +287,7 @@ const ClubMatch = () => {
     },
     onSubmit: async ({ value }) => {
       if (!editData.isPending) {
-        try {
-          await editData.mutateAsync(value);
-        } catch (err) {
-          if (err instanceof ZodError) {
-            setErrors(z.treeifyError(err));
-          }
-        }
+        await editData.mutateAsync(value);
       }
     },
   });
@@ -311,279 +306,280 @@ const ClubMatch = () => {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="mx-auto flex w-full max-w-3xl flex-col gap-4"
+        className="mx-auto w-full max-w-3xl"
       >
-        <div className="bg-white p-8 shadow-xl rounded-4xl flex flex-col gap-6">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <form.Field name="major">
-              {(field) => (
-                <div className="flex-1">
-                  <TextInput
-                    id="major"
-                    label="What is your current or intended major?"
-                    errors={errors}
-                    disabled={false}
-                    field={field}
-                  />
-                </div>
-              )}
-            </form.Field>
-            <form.Field name="year">
-              {(field) => (
-                <div className="flex-1">
-                  <SelectInput
-                    id="year"
-                    label="What year are you?"
-                    options={[
-                      'A prospective student (not yet attending UTD)',
-                      'A first-year student (non-transfer)',
-                      'A first-year student (transfer)',
-                      'A current student (2nd year+, non-transfer)',
-                      'A current student (2nd year+, transfer)',
-                    ]}
-                    errors={errors}
-                    field={field}
-                  />
-                </div>
-              )}
-            </form.Field>
-            <form.Field name="proximity">
-              {(field) => (
-                <div className="flex-1">
-                  <SelectInput
-                    id="proximity"
-                    label="How close do you live to campus?"
-                    options={[
-                      'Live on campus in the residence halls',
-                      'Live near campus in an apartment or houses',
-                      'Live at home and commute',
-                    ]}
-                    errors={errors}
-                    field={field}
-                  />
-                </div>
-              )}
-            </form.Field>
-          </div>
-
-          <form.Field name="categories">
-            {(field) => (
-              <SelectMultipleInput
-                id="categories"
-                label="What types of organizations are you interested in?"
-                options={[
-                  'Academic',
-                  'Art and Music',
-                  'Club Sports',
-                  'Cultural',
-                  'Educational/Departmental',
-                  'Fraternity & Sorority Life',
-                  'Honor Society',
-                  'Political',
-                  'Recreation',
-                  'Religious',
-                  'Service',
-                  'Social',
-                  'Special Interest',
-                  'Student Government',
-                  'Student Media',
-                ]}
-                errors={errors}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          {/* subscribe to the categories field so it only re-renders if categories changes */}
-          <form.Subscribe selector={(state) => state.values.categories}>
-            {(categories) => {
-              const showSpecificCultures =
-                categories?.includes('Cultural') ||
-                categories?.includes('Religious');
-
-              return showSpecificCultures ? (
-                <form.Field name="specificCultures">
-                  {(field) => (
+        <Panel>
+          <div className="m-2 flex flex-col gap-8">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 items-end">
+              <form.Field name="major">
+                {(field) => (
+                  <div className="flex-1">
                     <TextInput
-                      id="specificCultures"
-                      label="Please list the specific cultures or religions you are interested in."
+                      id="major"
+                      label="What is your current or intended major?"
                       errors={errors}
                       disabled={false}
                       field={field}
                     />
-                  )}
-                </form.Field>
-              ) : null;
-            }}
-          </form.Subscribe>
+                  </div>
+                )}
+              </form.Field>
+              <form.Field name="year">
+                {(field) => (
+                  <div className="flex-1">
+                    <SelectInput
+                      id="year"
+                      label="What year are you?"
+                      options={[
+                        'A prospective student (not yet attending UTD)',
+                        'A first-year student (non-transfer)',
+                        'A first-year student (transfer)',
+                        'A current student (2nd year+, non-transfer)',
+                        'A current student (2nd year+, transfer)',
+                      ]}
+                      errors={errors}
+                      field={field}
+                    />
+                  </div>
+                )}
+              </form.Field>
+              <form.Field name="proximity">
+                {(field) => (
+                  <div className="flex-1">
+                    <SelectInput
+                      id="proximity"
+                      label="How close do you live to campus?"
+                      options={[
+                        'Live on campus in the residence halls',
+                        'Live near campus in an apartment or houses',
+                        'Live at home and commute',
+                      ]}
+                      errors={errors}
+                      field={field}
+                    />
+                  </div>
+                )}
+              </form.Field>
+            </div>
 
-          <form.Field name="hobbies">
-            {(field) => (
-              <SelectMultipleInput
-                id="hobbies"
-                label="What are your hobbies or areas of interest?"
-                options={[
-                  'Gaming/Esports',
-                  'Outdoor Activities/Sports',
-                  'Reading/Writing',
-                  'Cooking/Food',
-                  'Technology/Maker',
-                  'Film/TV/Pop Culture',
-                  'Board Games/Tabletop RPGs',
-                  'Volunteering',
-                  'Fitness/Wellness',
-                  'Performing Arts',
-                  'Visual Arts',
-                  'Other',
-                ]}
-                errors={errors}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="hobbyDetails">
-            {(field) => (
-              <TextInput
-                id="hobbyDetails"
-                label="Please be specific about your selected hobbies."
-                errors={errors}
-                disabled={false}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="otherAcademicInterests">
-            {(field) => (
-              <TextInput
-                id="otherAcademicInterests"
-                label="Beyond your major, are there other academic topics or tracks you're interested in?"
-                errors={errors}
-                disabled={false}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="newExperiences">
-            {(field) => (
-              <TextInput
-                id="newExperiences"
-                label="What new experiences, hobbies, or activities would you be interested in?"
-                errors={errors}
-                disabled={false}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="involvementGoals">
-            {(field) => (
-              <SelectMultipleInput
-                id="involvementGoals"
-                label="Goals for Getting Involved"
-                options={[
-                  'Make Friends/Build Community',
-                  'Develop Leadership Skills',
-                  'Gain Experience for Resume/Career',
-                  'Explore a Specific Interest/Hobby',
-                  'Networking (Peers/Professionals)',
-                  'Make an Impact/Serve Others',
-                  'Learn New Skills',
-                  'Find Mentorship',
-                  'Simply Have Fun/De-stress',
-                ]}
-                errors={errors}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="skills">
-            {(field) => (
-              <SelectMultipleInput
-                id="skills"
-                label="Skills & Activities Interest"
-                options={[
-                  'Advocacy/Campaigning',
-                  'Building/Making Things',
-                  'Event Planning',
-                  'Graphic Design/Visual Arts',
-                  'Fundraising',
-                  'Performing (Music, Acting, Dance)',
-                  'Public Speaking/Presenting',
-                  'Social Media Management',
-                  'Tutoring/Mentoring',
-                  'Website/App Development',
-                  'Writing/Editing',
-                ]}
-                errors={errors}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* Conditionally render on gender value */}
-            <form.Subscribe selector={(state) => state.values.gender}>
-              {(gender) => (
-                <form.Field name="gender">
-                  {(genderField) => (
-                    <form.Field name="genderOther">
-                      {(genderOtherField) => (
-                        <RadioInput
-                          id="gender"
-                          label="Gender Identity"
-                          options={[
-                            'Female',
-                            'Male',
-                            'Non-binary',
-                            'Prefer not to say',
-                            'Other',
-                          ]}
-                          errors={errors}
-                          field={genderField}
-                          other={{
-                            id: 'genderOther',
-                            disabled: gender !== 'Other',
-                          }}
-                          otherField={genderOtherField}
-                        />
-                      )}
-                    </form.Field>
-                  )}
-                </form.Field>
-              )}
-            </form.Subscribe>
-
-            <form.Field name="timeCommitment">
+            <form.Field name="categories">
               {(field) => (
-                <RadioInput
-                  id="timeCommitment"
-                  label="Preferred Time Commitment"
+                <SelectMultipleInput
+                  id="categories"
+                  label="What types of organizations are you interested in?"
                   options={[
-                    'Low (e.g., < 2-3 hours/week, meetings optional)',
-                    'Medium (e.g., 3-5 hours/week, regular meetings/events)',
-                    'High (e.g., 5+ hours/week, significant responsibilities/practices)',
-                    "Don't care",
+                    'Academic',
+                    'Art and Music',
+                    'Club Sports',
+                    'Cultural',
+                    'Educational/Departmental',
+                    'Fraternity & Sorority Life',
+                    'Honor Society',
+                    'Political',
+                    'Recreation',
+                    'Religious',
+                    'Service',
+                    'Social',
+                    'Special Interest',
+                    'Student Government',
+                    'Student Media',
                   ]}
                   errors={errors}
                   field={field}
                 />
               )}
             </form.Field>
-          </div>
-        </div>
 
-        <div className="flex flex-wrap justify-end items-center gap-2">
-          <form.AppForm>
-            <form.FormResetButton />
-          </form.AppForm>
-          <form.AppForm>
-            <form.FormSubmitButton text="Find Clubs" />
-          </form.AppForm>
-        </div>
+            {/* subscribe to the categories field so it only re-renders if categories changes */}
+            <form.Subscribe selector={(state) => state.values.categories}>
+              {(categories) => {
+                const showSpecificCultures =
+                  categories?.includes('Cultural') ||
+                  categories?.includes('Religious');
+
+                return showSpecificCultures ? (
+                  <form.Field name="specificCultures">
+                    {(field) => (
+                      <TextInput
+                        id="specificCultures"
+                        label="Please list the specific cultures or religions you are interested in."
+                        errors={errors}
+                        disabled={false}
+                        field={field}
+                      />
+                    )}
+                  </form.Field>
+                ) : null;
+              }}
+            </form.Subscribe>
+
+            <form.Field name="hobbies">
+              {(field) => (
+                <SelectMultipleInput
+                  id="hobbies"
+                  label="What are your hobbies or areas of interest?"
+                  options={[
+                    'Gaming/Esports',
+                    'Outdoor Activities/Sports',
+                    'Reading/Writing',
+                    'Cooking/Food',
+                    'Technology/Maker',
+                    'Film/TV/Pop Culture',
+                    'Board Games/Tabletop RPGs',
+                    'Volunteering',
+                    'Fitness/Wellness',
+                    'Performing Arts',
+                    'Visual Arts',
+                    'Other',
+                  ]}
+                  errors={errors}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="hobbyDetails">
+              {(field) => (
+                <TextInput
+                  id="hobbyDetails"
+                  label="Please be specific about your selected hobbies."
+                  errors={errors}
+                  disabled={false}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="otherAcademicInterests">
+              {(field) => (
+                <TextInput
+                  id="otherAcademicInterests"
+                  label="Beyond your major, are there other academic topics or tracks you're interested in?"
+                  errors={errors}
+                  disabled={false}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="newExperiences">
+              {(field) => (
+                <TextInput
+                  id="newExperiences"
+                  label="What new experiences, hobbies, or activities would you be interested in?"
+                  errors={errors}
+                  disabled={false}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="involvementGoals">
+              {(field) => (
+                <SelectMultipleInput
+                  id="involvementGoals"
+                  label="Goals for Getting Involved"
+                  options={[
+                    'Make Friends/Build Community',
+                    'Develop Leadership Skills',
+                    'Gain Experience for Resume/Career',
+                    'Explore a Specific Interest/Hobby',
+                    'Networking (Peers/Professionals)',
+                    'Make an Impact/Serve Others',
+                    'Learn New Skills',
+                    'Find Mentorship',
+                    'Simply Have Fun/De-stress',
+                  ]}
+                  errors={errors}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="skills">
+              {(field) => (
+                <SelectMultipleInput
+                  id="skills"
+                  label="Skills & Activities Interest"
+                  options={[
+                    'Advocacy/Campaigning',
+                    'Building/Making Things',
+                    'Event Planning',
+                    'Graphic Design/Visual Arts',
+                    'Fundraising',
+                    'Performing (Music, Acting, Dance)',
+                    'Public Speaking/Presenting',
+                    'Social Media Management',
+                    'Tutoring/Mentoring',
+                    'Website/App Development',
+                    'Writing/Editing',
+                  ]}
+                  errors={errors}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {/* Conditionally render on gender value */}
+              <form.Subscribe selector={(state) => state.values.gender}>
+                {(gender) => (
+                  <form.Field name="gender">
+                    {(genderField) => (
+                      <form.Field name="genderOther">
+                        {(genderOtherField) => (
+                          <RadioInput
+                            id="gender"
+                            label="Gender Identity"
+                            options={[
+                              'Female',
+                              'Male',
+                              'Non-binary',
+                              'Prefer not to say',
+                              'Other',
+                            ]}
+                            errors={errors}
+                            field={genderField}
+                            other={{
+                              id: 'genderOther',
+                              disabled: gender !== 'Other',
+                            }}
+                            otherField={genderOtherField}
+                          />
+                        )}
+                      </form.Field>
+                    )}
+                  </form.Field>
+                )}
+              </form.Subscribe>
+
+              <form.Field name="timeCommitment">
+                {(field) => (
+                  <RadioInput
+                    id="timeCommitment"
+                    label="Preferred Time Commitment"
+                    options={[
+                      'Low (e.g., < 2-3 hours/week, meetings optional)',
+                      'Medium (e.g., 3-5 hours/week, regular meetings/events)',
+                      'High (e.g., 5+ hours/week, significant responsibilities/practices)',
+                      "Don't care",
+                    ]}
+                    errors={errors}
+                    field={field}
+                  />
+                )}
+              </form.Field>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap justify-end items-center gap-2">
+            <form.AppForm>
+              <form.FormResetButton />
+            </form.AppForm>
+            <form.AppForm>
+              <form.FormSubmitButton text="Find Clubs" />
+            </form.AppForm>
+          </div>
         </Panel>
       </form>
     </main>
