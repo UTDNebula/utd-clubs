@@ -588,7 +588,9 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
           disabled={editData.isPending}
           className="normal-case w-fit self-center mt-3 px-6"
           startIcon={
-            editData.isPending ? <CircularProgress size={18} color="inherit" /> : null
+            editData.isPending ? (
+              <CircularProgress size={18} color="inherit" />
+            ) : null
           }
         >
           {editData.isPending ? 'Matching...' : 'Find Clubs'}
