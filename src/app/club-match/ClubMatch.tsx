@@ -4,6 +4,8 @@ import {
   Box,
   Button,
   Chip,
+  FormControl,
+  FormHelperText,
   MenuItem,
   OutlinedInput,
   Radio,
@@ -37,7 +39,8 @@ interface SharedInputProps {
   id: keyof ClubMatchFormSchema;
   label?: string;
   disabled?: boolean;
-  errors: Errors;
+  error: boolean;
+  helperText?: string;
   field: AnyFieldApi;
 }
 
@@ -45,7 +48,8 @@ const TextInput = ({
   id,
   label,
   disabled,
-  errors,
+  error,
+  helperText,
   field,
 }: SharedInputProps) => {
   const required = isFieldRequired(id);
@@ -57,21 +61,23 @@ const TextInput = ({
           {required && <span className="text-red-600"> *</span>}
         </label>
       )}
-      {errors.properties?.[id]?.errors &&
+      {/* {errors.properties?.[id]?.errors &&
         errors.properties?.[id].errors.map((error) => (
           <span key={error} role="alert" className="text-red-600">
             {error}
           </span>
-        ))}
+        ))} */}
       <TextField
         id={id}
         variant="outlined"
         size="small"
         disabled={disabled}
         required={required}
+        error={error}
+        helperText={helperText}
         value={field.state.value ?? ''}
         onChange={(e) => field.handleChange(e.target.value)}
-        aria-invalid={!!errors.properties?.[id]}
+        aria-invalid={error}
       />
     </div>
   );
@@ -81,7 +87,8 @@ const SelectInput = ({
   id,
   label,
   options,
-  errors,
+  error,
+  helperText,
   field,
 }: {
   options: string[];
@@ -93,37 +100,35 @@ const SelectInput = ({
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      {errors.properties?.[id]?.errors &&
-        errors.properties?.[id].errors.map((error) => (
-          <span key={error} role="alert" className="text-red-600">
-            {error}
-          </span>
-        ))}
-      <Select
-        id={id}
-        required={required}
-        size="small"
-        value={field.state.value ?? ''}
-        onChange={(event) => field.handleChange(event.target.value)}
-      >
-        <MenuItem disabled value="">
-          <em>--Select--</em>
-        </MenuItem>
-        {options.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
+      <FormControl error={error} size="small" fullWidth>
+        <Select
+          id={id}
+          required={required}
+          value={field.state.value ?? ''}
+          onChange={(event) => field.handleChange(event.target.value)}
+        >
+          <MenuItem disabled value="">
+            <em>--Select--</em>
           </MenuItem>
-        ))}
-      </Select>
+          {options.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+        {/* {helperText && <FormHelperText>{helperText}</FormHelperText>} */}
+      </FormControl>
     </div>
   );
 };
+
 
 const RadioInput = ({
   id,
   label,
   options,
-  errors,
+  error,
+  helperText,
   other,
   field,
   otherField,
@@ -143,57 +148,54 @@ const RadioInput = ({
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      {errors.properties?.[id]?.errors &&
-        errors.properties?.[id].errors.map((error) => (
-          <span key={error} role="alert" className="text-red-600">
-            {error}
-          </span>
-        ))}
-      <RadioGroup
-        aria-invalid={!!errors.properties?.[id]}
-        value={field.state.value ?? ''}
-        onChange={(e) => field.handleChange(e.target.value)}
-      >
-        {options.map((option) => (
-          <div key={option} className="flex items-center">
-            <Radio
-              id={`${id}-${option}`}
-              value={option}
-              size="small"
-              checked={field.state.value === option}
-            />
-            <label htmlFor={`${id}-${option}`} className="ml-1">
-              {option}
-            </label>
-            {other && option === 'Other' && otherField && (
-              <input
-                type="text"
-                id={other.id}
-                disabled={other.disabled}
-                value={otherField.state.value ?? ''}
-                onChange={(e) => otherField.handleChange(e.target.value)}
-                aria-invalid={!!errors.properties?.[other.id]}
-                className="ml-2 rounded-md border border-gray-200 bg-white px-2 disabled:bg-gray-200"
+      <FormControl error={error}>
+        <RadioGroup
+          aria-invalid={error}
+          value={field.state.value ?? ''}
+          onChange={(e) => field.handleChange(e.target.value)}
+        >
+          {options.map((option) => (
+            <div key={option} className="flex items-center">
+              <Radio
+                id={`${id}-${option}`}
+                value={option}
+                size="small"
+                checked={field.state.value === option}
               />
-            )}
-          </div>
-        ))}
-      </RadioGroup>
+              <label htmlFor={`${id}-${option}`} className="ml-1">
+                {option}
+              </label>
+              {other && option === 'Other' && otherField && (
+                <input
+                  type="text"
+                  id={other.id}
+                  disabled={other.disabled}
+                  value={otherField.state.value ?? ''}
+                  onChange={(e) => otherField.handleChange(e.target.value)}
+                  className="ml-2 rounded-md border border-gray-200 bg-white px-2 disabled:bg-gray-200"
+                />
+              )}
+            </div>
+          ))}
+        </RadioGroup>
+        {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      </FormControl>
     </fieldset>
   );
 };
+
 
 const SelectMultipleInput = ({
   id,
   label,
   options,
-  errors,
+  error,
+  helperText,
   field,
 }: {
   id: keyof ClubMatchFormSchema;
   label: string;
   options: string[];
-  errors: Errors;
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
   const value: string[] = field.state.value ?? [];
@@ -203,48 +205,44 @@ const SelectMultipleInput = ({
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      {errors.properties?.[id]?.errors &&
-        errors.properties?.[id].errors.map((error) => (
-          <span key={error} role="alert" className="text-red-600">
-            {error}
-          </span>
-        ))}
-      <Select
-        labelId={`${id}-label`}
-        id={id}
-        multiple
-        variant="outlined"
-        size="small"
-        required={required}
-        value={value}
-        onChange={(event) => {
-          const value = event.target.value;
-          field.handleChange(
-            typeof value === 'string' ? value.split(',') : (value as string[]),
-          );
-        }}
-        input={<OutlinedInput />}
-        renderValue={(selected) => (
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-            {(selected as string[]).map((value) => (
-              <Chip key={value} label={value} color="primary" />
-            ))}
-          </Box>
-        )}
-        MenuProps={{ PaperProps: { className: 'max-h-60' } }}
-      >
-        <MenuItem disabled value="">
-          <em>--Select one or multiple--</em>
-        </MenuItem>
-        {options.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
+      <FormControl error={error} variant="outlined" size="small">
+        <Select
+          labelId={`${id}-label`}
+          id={id}
+          multiple
+          required={required}
+          value={value}
+          onChange={(event) => {
+            const value = event.target.value;
+            field.handleChange(
+              typeof value === 'string' ? value.split(',') : (value as string[]),
+            );
+          }}
+          input={<OutlinedInput />}
+          renderValue={(selected) => (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {(selected as string[]).map((value) => (
+                <Chip key={value} label={value} color="primary" />
+              ))}
+            </Box>
+          )}
+          MenuProps={{ PaperProps: { className: 'max-h-60' } }}
+        >
+          <MenuItem disabled value="">
+            <em>--Select one or multiple--</em>
           </MenuItem>
-        ))}
-      </Select>
+          {options.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+        {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      </FormControl>
     </fieldset>
   );
 };
+
 
 const ClubMatch = () => {
   const [errors, setErrors] = useState<Errors>({ errors: [] });
@@ -321,7 +319,14 @@ const ClubMatch = () => {
                   <TextInput
                     id="major"
                     label="What is your current or intended major?"
-                    errors={errors}
+                    error={!field.state.meta.isValid}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
                     disabled={false}
                     field={field}
                   />
@@ -341,7 +346,14 @@ const ClubMatch = () => {
                       'A current student (2nd year+, non-transfer)',
                       'A current student (2nd year+, transfer)',
                     ]}
-                    errors={errors}
+                    error={!field.state.meta.isValid}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
                     field={field}
                   />
                 </div>
@@ -358,7 +370,14 @@ const ClubMatch = () => {
                       'Live near campus in an apartment or houses',
                       'Live at home and commute',
                     ]}
-                    errors={errors}
+                    error={!field.state.meta.isValid}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
                     field={field}
                   />
                 </div>
@@ -388,7 +407,14 @@ const ClubMatch = () => {
                   'Student Government',
                   'Student Media',
                 ]}
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
                 field={field}
               />
             )}
@@ -407,7 +433,14 @@ const ClubMatch = () => {
                     <TextInput
                       id="specificCultures"
                       label="Please list the specific cultures or religions you are interested in."
-                      errors={errors}
+                      error={!field.state.meta.isValid}
+                      helperText={
+                        !field.state.meta.isValid
+                          ? field.state.meta.errors
+                              .map((err) => err?.message)
+                              .join('. ') + '.'
+                          : undefined
+                      }
                       disabled={false}
                       field={field}
                     />
@@ -436,7 +469,14 @@ const ClubMatch = () => {
                   'Visual Arts',
                   'Other',
                 ]}
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
                 field={field}
               />
             )}
@@ -447,7 +487,14 @@ const ClubMatch = () => {
               <TextInput
                 id="hobbyDetails"
                 label="Please be specific about your selected hobbies."
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
                 disabled={false}
                 field={field}
               />
@@ -459,7 +506,14 @@ const ClubMatch = () => {
               <TextInput
                 id="otherAcademicInterests"
                 label="Beyond your major, are there other academic topics or tracks you're interested in?"
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
                 disabled={false}
                 field={field}
               />
@@ -471,7 +525,14 @@ const ClubMatch = () => {
               <TextInput
                 id="newExperiences"
                 label="What new experiences, hobbies, or activities would you be interested in?"
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
                 disabled={false}
                 field={field}
               />
@@ -494,7 +555,14 @@ const ClubMatch = () => {
                   'Find Mentorship',
                   'Simply Have Fun/De-stress',
                 ]}
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
                 field={field}
               />
             )}
@@ -518,7 +586,14 @@ const ClubMatch = () => {
                   'Website/App Development',
                   'Writing/Editing',
                 ]}
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
                 field={field}
               />
             )}
@@ -542,7 +617,14 @@ const ClubMatch = () => {
                             'Prefer not to say',
                             'Other',
                           ]}
-                          errors={errors}
+                          error={!genderField.state.meta.isValid}
+                          helperText={
+                            !genderField.state.meta.isValid
+                              ? genderField.state.meta.errors
+                                  .map((err) => err?.message)
+                                  .join('. ') + '.'
+                              : undefined
+                          }
                           field={genderField}
                           other={{
                             id: 'genderOther',
@@ -568,7 +650,14 @@ const ClubMatch = () => {
                     'High (e.g., 5+ hours/week, significant responsibilities/practices)',
                     "Don't care",
                   ]}
-                  errors={errors}
+                  error={!field.state.meta.isValid}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
                   field={field}
                 />
               )}
