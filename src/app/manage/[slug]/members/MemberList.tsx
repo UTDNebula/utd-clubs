@@ -13,7 +13,6 @@ import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import SearchIcon from '@mui/icons-material/Search';
-import SecurityIcon from '@mui/icons-material/Security';
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -85,6 +84,7 @@ import {
   SelectUserMetadataToClubsWithUserMetadata,
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
+import { authClient } from '@src/utils/auth-client';
 
 type OwnerState = {
   expanded: boolean;
@@ -124,9 +124,8 @@ type ToastState = {
   error?: TRPCClientErrorLike<AppRouter>;
 };
 
-// TODO: remove unused contexts, including: rowSelectionModel, setToastState
+// TODO: remove unused contexts, including: rowSelectionModel, setToastState, toggleAdmin, deleteUserId
 interface MemberListHandlers {
-  toggleAdmin: (id: GridRowId) => void;
   deleteUser: (id: GridRowId) => void;
   contactEmailsVisible: boolean;
   showContactEmails: (visibility: boolean) => void;
@@ -143,23 +142,15 @@ interface MemberListHandlers {
         TRPCClientErrorLike<AppRouter>
       >
     | undefined;
-  rowSelectionModel: GridRowSelectionModel;
-  setToastState: (toastState: ToastState) => void;
   refreshList: () => void;
 }
 
 const MemberListHandlersContext = React.createContext<MemberListHandlers>({
-  toggleAdmin: () => {},
   deleteUser: () => {},
   contactEmailsVisible: false,
   showContactEmails: () => {},
-  rowSelectionModel: {
-    type: 'include',
-    ids: new Set<GridRowId>(),
-  },
   removeMember: undefined,
   getMembers: undefined,
-  setToastState: () => {},
   refreshList: () => {},
 });
 
@@ -174,21 +165,23 @@ function ContactEmailCell(params: GridRenderCellParams) {
 
   return (
     <div className="flex gap-1 items-center h-full">
-      <IconButton size="small" onClick={handleOnClick}>
-        <div className="flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
-          {contactEmailsVisible ? (
-            <VisibilityOutlinedIcon />
-          ) : (
-            <VisibilityOffOutlinedIcon />
-          )}
-        </div>
-      </IconButton>
+      <Tooltip title={contactEmailsVisible ? 'Hide' : 'Show'} placement="left">
+        <IconButton size="small" onClick={handleOnClick}>
+          <div className="flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
+            {contactEmailsVisible ? (
+              <VisibilityOutlinedIcon />
+            ) : (
+              <VisibilityOffOutlinedIcon />
+            )}
+          </div>
+        </IconButton>
+      </Tooltip>
       {contactEmailsVisible ? (
         params.value
       ) : (
         <Skeleton
           className="text-sm"
-          // Add variation in width to Skeleton. This is deterministic based off the ID (i.e. row number)
+          // Adds variation in width to Skeleton. This is deterministic based off the ID (i.e. row number)
           width={120 + Math.sin(Number(params.id.valueOf())) * 20}
           animation={false}
         />
@@ -230,33 +223,41 @@ function MemberTypeCell(params: GridRenderCellParams) {
   );
 }
 
-function ActionsCell(props: GridRenderCellParams) {
-  const { deleteUser, toggleAdmin, removeMember } = React.useContext(
+function ActionsCell(
+  props: GridRenderCellParams<SelectUserMetadataToClubsWithUserMetadata>,
+) {
+  const { deleteUser, removeMember } = React.useContext(
     MemberListHandlersContext,
   );
+  const deleting = props.row.userId === removeMember?.variables?.id;
 
-  // const targetMember = rows.find((row) => row.id == deleteUserId);
+  const session = authClient.useSession();
+  const self = props.row.userId === session.data?.user.id;
 
   return (
     <GridActionsCell {...props}>
       <GridActionsCellItem
         icon={
-          removeMember?.isPending ? (
+          removeMember?.isPending && deleting ? (
             <CircularProgress color="inherit" size={20} />
           ) : (
-            <DeleteIcon />
+            // It isn't possible to add a tooltip for when the button is disabled.
+            // See https://github.com/mui/mui-x/issues/14045
+            <Tooltip title="Remove" placement="left">
+              <DeleteIcon />
+            </Tooltip>
           )
         }
         label="Delete"
         onClick={() => deleteUser(props.id)}
-        disabled={removeMember?.isPending}
+        disabled={removeMember?.isPending || self}
       />
-      <GridActionsCellItem
+      {/* <GridActionsCellItem
         icon={<SecurityIcon />}
         label="Toggle Admin"
         onClick={() => toggleAdmin(props.id)}
         showInMenu
-      />
+      /> */}
     </GridActionsCell>
   );
 }
@@ -494,7 +495,7 @@ const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] = [
         {params.colDef.headerName}
       </ColumnHeaderWithIcon>
     ),
-    width: 200,
+    width: 230,
     renderCell: (params) => {
       if (!params.value) return;
       return <Chip label={params.value} />;
@@ -506,7 +507,7 @@ const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] = [
       return row.userMetadata?.minor;
     },
     headerName: 'Minor',
-    width: 200,
+    width: 230,
     renderCell: (params) => {
       if (!params.value) return;
       return <Chip label={params.value} />;
@@ -514,6 +515,7 @@ const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] = [
   },
   {
     field: 'contactEmail',
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     valueGetter: (_value, row) => {
       return 'placeholder@utdallas.edu';
     },
@@ -549,14 +551,15 @@ const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] = [
     renderCell: (params) => <MemberTypeCell {...params} />,
   },
   { field: 'userId', headerName: 'ID', width: 360 },
-  {
-    field: 'actions',
-    type: 'actions',
-    width: 80,
-    renderCell: (params) => <ActionsCell {...params} />,
-    resizable: false,
-  },
 ];
+
+const actionColumn: GridColDef<SelectUserMetadataToClubsWithUserMetadata> = {
+  field: 'actions',
+  type: 'actions',
+  width: 40,
+  renderCell: (params) => <ActionsCell {...params} />,
+  resizable: false,
+};
 
 type MemberListProps = {
   members: SelectUserMetadataToClubsWithUserMetadata[];
@@ -564,6 +567,8 @@ type MemberListProps = {
 };
 
 const MemberList = ({ members, club }: MemberListProps) => {
+  const session = authClient.useSession();
+
   const api = useTRPC();
 
   const removeMember = useMutation<
@@ -665,14 +670,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
     rows,
   ]);
 
-  const toggleAdmin = React.useCallback((id: GridRowId) => {
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id ? { ...row, isAdmin: !row.memberType } : row,
-      ),
-    );
-  }, []);
-
   const refreshList = React.useCallback(async () => {
     if (getMembers.isFetching) return;
     await getMembers.refetch();
@@ -692,27 +689,28 @@ const MemberList = ({ members, club }: MemberListProps) => {
   const MemberListHandlers = React.useMemo<MemberListHandlers>(
     () => ({
       deleteUser,
-      toggleAdmin,
       contactEmailsVisible,
       showContactEmails,
       removeMember,
       getMembers,
-      rowSelectionModel,
-      setToastState,
       refreshList,
     }),
     [
       deleteUser,
-      toggleAdmin,
       contactEmailsVisible,
       showContactEmails,
       removeMember,
       getMembers,
-      rowSelectionModel,
-      setToastState,
       refreshList,
     ],
   );
+
+  // Shows action column only if user is an admin
+  const actionedColumns =
+    rows.find((row) => row.userId === session.data?.user.id)?.memberType ===
+    'President'
+      ? [...columns, actionColumn]
+      : columns;
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl">
@@ -743,7 +741,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
         </Snackbar>
         <DataGrid
           rows={rows}
-          columns={columns}
+          columns={actionedColumns}
           // MUI recommends type assertion for passing custom props to slots
           // Documentation: https://mui.com/x/common-concepts/custom-components/#type-custom-slots
           slots={{
@@ -774,7 +772,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Delete this user?</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Remove this user?</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             This action cannot be undone.
@@ -783,7 +781,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
           <Button onClick={handleConfirmDelete} color="warning" autoFocus>
-            Delete
+            Remove
           </Button>
         </DialogActions>
       </Dialog>
