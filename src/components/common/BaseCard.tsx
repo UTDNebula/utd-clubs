@@ -21,9 +21,7 @@ export const BaseCard = ({
   className = '',
 }: BaseCardProps) => {
   return (
-    <div
-      className={`${baseClasses} ${variantClasses[variant]} ${className}`}
-    >
+    <div className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
       {children}
     </div>
   );
