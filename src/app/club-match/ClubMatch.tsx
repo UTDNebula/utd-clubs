@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { z, ZodError } from 'zod';
 import { useTRPC } from '@src/trpc/react';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
+import { ClubMatchResponses } from '@src/server/db/schema/users';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
 
@@ -246,7 +247,11 @@ const SelectMultipleInput = ({
   );
 };
 
-const ClubMatch = () => {
+type ClubMatchProps = {
+  response: ClubMatchResponses | null;
+};
+
+const ClubMatch = ( { response } : ClubMatchProps ) => {
   const [errors, setErrors] = useState<Errors>({ errors: [] });
 
   const api = useTRPC();
@@ -266,20 +271,20 @@ const ClubMatch = () => {
 
   const form = useForm({
     defaultValues: {
-      major: '',
-      year: '',
-      proximity: '',
-      categories: [],
-      hobbies: [],
-      involvementGoals: [],
-      skills: [],
-      specificCultures: '',
-      hobbyDetails: '',
-      otherAcademicInterests: '',
-      gender: '',
-      genderOther: '',
-      newExperiences: '',
-      timeCommitment: '',
+      major: response?.major ?? '',
+      year: response?.year ?? '',
+      proximity: response?.proximity ?? '',
+      categories: response?.categories ?? [],
+      hobbies: response?.hobbies ?? [],
+      involvementGoals: response?.involvementGoals ?? [],
+      skills: response?.skills ?? [],
+      specificCultures: response?.specificCultures ?? '',
+      hobbyDetails: response?.hobbyDetails ?? '',
+      otherAcademicInterests: response?.otherAcademicInterests ?? '',
+      gender: response?.gender ?? '',
+      genderOther: response?.genderOther ?? '',
+      newExperiences: response?.newExperiences ?? '',
+      timeCommitment: response?.timeCommitment ?? '',
     } as ClubMatchFormSchema,
     validators: {
       onChange: clubMatchFormSchema,
