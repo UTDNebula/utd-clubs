@@ -5,6 +5,8 @@ import {
   Button,
   Chip,
   CircularProgress,
+  FormControl,
+  FormHelperText,
   MenuItem,
   OutlinedInput,
   Radio,
@@ -24,11 +26,6 @@ import { clubMatchFormSchema } from '@src/utils/formSchemas';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
 
-type Errors = {
-  errors: string[];
-  properties?: Record<keyof ClubMatchFormSchema, { errors: string[] }>;
-};
-
 function isFieldRequired(fieldName: keyof ClubMatchFormSchema) {
   const shape = clubMatchFormSchema.shape;
   const field = shape[fieldName];
@@ -39,7 +36,8 @@ interface SharedInputProps {
   id: keyof ClubMatchFormSchema;
   label?: string;
   disabled?: boolean;
-  errors: Errors;
+  error: boolean;
+  helperText?: string;
   field: AnyFieldApi;
 }
 
@@ -47,10 +45,13 @@ const TextInput = ({
   id,
   label,
   disabled,
-  errors,
+  error,
+  helperText,
   field,
 }: SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError = field.state.meta.isTouched && error;
+
   return (
     <div className="flex flex-col gap-1">
       {label && (
@@ -59,21 +60,18 @@ const TextInput = ({
           {required && <span className="text-red-600"> *</span>}
         </label>
       )}
-      {errors.properties?.[id]?.errors &&
-        errors.properties?.[id].errors.map((error) => (
-          <span key={error} role="alert" className="text-red-600">
-            {error}
-          </span>
-        ))}
       <TextField
         id={id}
         variant="outlined"
         size="small"
         disabled={disabled}
         required={required}
+        error={shouldShowError}
+        helperText={shouldShowError ? helperText : undefined}
         value={field.state.value ?? ''}
+        onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
-        aria-invalid={!!errors.properties?.[id]}
+        aria-invalid={shouldShowError}
       />
     </div>
   );
@@ -83,40 +81,42 @@ const SelectInput = ({
   id,
   label,
   options,
-  errors,
+  error,
+  helperText,
   field,
 }: {
   options: string[];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError = field.state.meta.isTouched && error;
+
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="min-h-[3rem] flex items-end">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      {errors.properties?.[id]?.errors &&
-        errors.properties?.[id].errors.map((error) => (
-          <span key={error} role="alert" className="text-red-600">
-            {error}
-          </span>
-        ))}
-      <Select
-        id={id}
-        required={required}
-        size="small"
-        value={field.state.value ?? ''}
-        onChange={(event) => field.handleChange(event.target.value)}
-      >
-        <MenuItem disabled value="">
-          <em>--Select--</em>
-        </MenuItem>
-        {options.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
+      <FormControl error={shouldShowError} size="small" fullWidth>
+        <Select
+          id={id}
+          required={required}
+          value={field.state.value ?? ''}
+          onBlur={field.handleBlur}
+          onChange={(event) => field.handleChange(event.target.value)}
+        >
+          <MenuItem disabled value="">
+            <em>--Select--</em>
           </MenuItem>
-        ))}
-      </Select>
+          {options.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+        {shouldShowError && helperText && (
+          <FormHelperText>{helperText}</FormHelperText>
+        )}
+      </FormControl>
     </div>
   );
 };
@@ -125,7 +125,8 @@ const RadioInput = ({
   id,
   label,
   options,
-  errors,
+  error,
+  helperText,
   other,
   field,
   otherField,
@@ -139,48 +140,49 @@ const RadioInput = ({
   otherField?: SharedInputProps['field'];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError = field.state.meta.isTouched && error;
   return (
     <fieldset className="flex flex-col gap-1">
       <label htmlFor={id} className="min-h-[3rem] flex items-end">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      {errors.properties?.[id]?.errors &&
-        errors.properties?.[id].errors.map((error) => (
-          <span key={error} role="alert" className="text-red-600">
-            {error}
-          </span>
-        ))}
-      <RadioGroup
-        aria-invalid={!!errors.properties?.[id]}
-        value={field.state.value ?? ''}
-        onChange={(e) => field.handleChange(e.target.value)}
-      >
-        {options.map((option) => (
-          <div key={option} className="flex items-center">
-            <Radio
-              id={`${id}-${option}`}
-              value={option}
-              size="small"
-              checked={field.state.value === option}
-            />
-            <label htmlFor={`${id}-${option}`} className="ml-1">
-              {option}
-            </label>
-            {other && option === 'Other' && otherField && (
-              <input
-                type="text"
-                id={other.id}
-                disabled={other.disabled}
-                value={otherField.state.value ?? ''}
-                onChange={(e) => otherField.handleChange(e.target.value)}
-                aria-invalid={!!errors.properties?.[other.id]}
-                className="ml-2 rounded-md border border-gray-200 bg-white px-2 disabled:bg-gray-200"
+      <FormControl error={shouldShowError}>
+        <RadioGroup
+          aria-invalid={shouldShowError}
+          value={field.state.value ?? ''}
+          onChange={(e) => field.handleChange(e.target.value)}
+        >
+          {options.map((option) => (
+            <div key={option} className="flex items-center">
+              <Radio
+                id={`${id}-${option}`}
+                value={option}
+                onBlur={field.handleBlur}
+                size="small"
+                checked={field.state.value === option}
               />
-            )}
-          </div>
-        ))}
-      </RadioGroup>
+              <label htmlFor={`${id}-${option}`} className="ml-1">
+                {option}
+              </label>
+              {other && option === 'Other' && otherField && (
+                <input
+                  type="text"
+                  id={other.id}
+                  disabled={other.disabled}
+                  value={otherField.state.value ?? ''}
+                  onBlur={otherField.handleBlur}
+                  onChange={(e) => otherField.handleChange(e.target.value)}
+                  className="ml-2 rounded-md border border-gray-200 bg-white px-2 disabled:bg-gray-200"
+                />
+              )}
+            </div>
+          ))}
+        </RadioGroup>
+        {shouldShowError && helperText && (
+          <FormHelperText>{helperText}</FormHelperText>
+        )}
+      </FormControl>
     </fieldset>
   );
 };
@@ -189,15 +191,16 @@ const SelectMultipleInput = ({
   id,
   label,
   options,
-  errors,
+  error,
+  helperText,
   field,
 }: {
   id: keyof ClubMatchFormSchema;
   label: string;
   options: string[];
-  errors: Errors;
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
+  const shouldShowError = field.state.meta.isTouched && error;
   const value: string[] = field.state.value ?? [];
   return (
     <fieldset className="flex flex-col gap-1">
@@ -205,45 +208,45 @@ const SelectMultipleInput = ({
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      {errors.properties?.[id]?.errors &&
-        errors.properties?.[id].errors.map((error) => (
-          <span key={error} role="alert" className="text-red-600">
-            {error}
-          </span>
-        ))}
-      <Select
-        labelId={`${id}-label`}
-        id={id}
-        multiple
-        variant="outlined"
-        size="small"
-        required={required}
-        value={value}
-        onChange={(event) => {
-          const value = event.target.value;
-          field.handleChange(
-            typeof value === 'string' ? value.split(',') : (value as string[]),
-          );
-        }}
-        input={<OutlinedInput />}
-        renderValue={(selected) => (
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-            {(selected as string[]).map((value) => (
-              <Chip key={value} label={value} color="primary" />
-            ))}
-          </Box>
-        )}
-        MenuProps={{ PaperProps: { className: 'max-h-60' } }}
-      >
-        <MenuItem disabled value="">
-          <em>--Select one or multiple--</em>
-        </MenuItem>
-        {options.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
+      <FormControl error={shouldShowError} variant="outlined" size="small">
+        <Select
+          labelId={`${id}-label`}
+          id={id}
+          multiple
+          required={required}
+          value={value}
+          onBlur={field.handleBlur}
+          onChange={(event) => {
+            const value = event.target.value;
+            field.handleChange(
+              typeof value === 'string'
+                ? value.split(',')
+                : (value as string[]),
+            );
+          }}
+          input={<OutlinedInput />}
+          renderValue={(selected) => (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {(selected as string[]).map((value) => (
+                <Chip key={value} label={value} color="primary" />
+              ))}
+            </Box>
+          )}
+          MenuProps={{ PaperProps: { className: 'max-h-60' } }}
+        >
+          <MenuItem disabled value="">
+            <em>--Select one or multiple--</em>
           </MenuItem>
-        ))}
-      </Select>
+          {options.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+        {shouldShowError && helperText && (
+          <FormHelperText>{helperText}</FormHelperText>
+        )}
+      </FormControl>
     </fieldset>
   );
 };
@@ -253,8 +256,6 @@ type ClubMatchProps = {
 };
 
 const ClubMatch = ({ response }: ClubMatchProps) => {
-  const [errors, setErrors] = useState<Errors>({ errors: [] });
-
   const api = useTRPC();
   const router = useRouter();
 
@@ -262,10 +263,6 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
     api.ai.clubMatch.mutationOptions({
       onSuccess: () => {
         router.push('/club-match/results');
-      },
-      onError: (err) => {
-        // err is typically TRPCClientError, not ZodError
-        console.error(err);
       },
     }),
   );
@@ -292,13 +289,7 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
     },
     onSubmit: async ({ value }) => {
       if (!editData.isPending) {
-        try {
-          await editData.mutateAsync(value);
-        } catch (err) {
-          if (err instanceof ZodError) {
-            setErrors(z.treeifyError(err));
-          }
-        }
+        await editData.mutateAsync(value);
       }
     },
   });
@@ -327,7 +318,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
                   <TextInput
                     id="major"
                     label="What is your current or intended major?"
-                    errors={errors}
+                    error={!field.state.meta.isValid}
+                    helperText={'Major is Required'}
                     disabled={false}
                     field={field}
                   />
@@ -347,7 +339,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
                       'A current student (2nd year+, non-transfer)',
                       'A current student (2nd year+, transfer)',
                     ]}
-                    errors={errors}
+                    error={!field.state.meta.isValid}
+                    helperText={'Select your Year'}
                     field={field}
                   />
                 </div>
@@ -364,7 +357,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
                       'Live near campus in an apartment or houses',
                       'Live at home and commute',
                     ]}
-                    errors={errors}
+                    error={!field.state.meta.isValid}
+                    helperText={'Choose a Proximity'}
                     field={field}
                   />
                 </div>
@@ -394,7 +388,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
                   'Student Government',
                   'Student Media',
                 ]}
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={'Select an Organizaiton Type'}
                 field={field}
               />
             )}
@@ -413,7 +408,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
                     <TextInput
                       id="specificCultures"
                       label="Please list the specific cultures or religions you are interested in."
-                      errors={errors}
+                      error={!field.state.meta.isValid}
+                      helperText={'Enter Cultures or Religions'}
                       disabled={false}
                       field={field}
                     />
@@ -442,7 +438,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
                   'Visual Arts',
                   'Other',
                 ]}
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={'Select Hobbies/Interests'}
                 field={field}
               />
             )}
@@ -453,7 +450,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
               <TextInput
                 id="hobbyDetails"
                 label="Please be specific about your selected hobbies."
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={'Write about your Hobbies'}
                 disabled={false}
                 field={field}
               />
@@ -465,7 +463,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
               <TextInput
                 id="otherAcademicInterests"
                 label="Beyond your major, are there other academic topics or tracks you're interested in?"
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={'Write about your other Academic Interests'}
                 disabled={false}
                 field={field}
               />
@@ -477,7 +476,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
               <TextInput
                 id="newExperiences"
                 label="What new experiences, hobbies, or activities would you be interested in?"
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={'Enter new Experiences'}
                 disabled={false}
                 field={field}
               />
@@ -500,7 +500,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
                   'Find Mentorship',
                   'Simply Have Fun/De-stress',
                 ]}
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={'Write Goals'}
                 field={field}
               />
             )}
@@ -524,7 +525,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
                   'Website/App Development',
                   'Writing/Editing',
                 ]}
-                errors={errors}
+                error={!field.state.meta.isValid}
+                helperText={'Select Activities'}
                 field={field}
               />
             )}
@@ -548,7 +550,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
                             'Prefer not to say',
                             'Other',
                           ]}
-                          errors={errors}
+                          error={!genderField.state.meta.isValid}
+                          helperText={'Select an option'}
                           field={genderField}
                           other={{
                             id: 'genderOther',
@@ -574,7 +577,8 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
                     'High (e.g., 5+ hours/week, significant responsibilities/practices)',
                     "Don't care",
                   ]}
-                  errors={errors}
+                  error={!field.state.meta.isValid}
+                  helperText={'Select preferred Time Commitment'}
                   field={field}
                 />
               )}
