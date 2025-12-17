@@ -11,9 +11,9 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
-import type { AnyFieldApi } from '@tanstack/react-form'
+import type { AnyFieldApi } from '@tanstack/react-form';
 import { useForm } from '@tanstack/react-form';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { z, ZodError } from 'zod';
@@ -38,7 +38,7 @@ interface SharedInputProps {
   label?: string;
   disabled?: boolean;
   errors: Errors;
-  field: AnyFieldApi
+  field: AnyFieldApi;
 }
 
 const TextInput = ({
@@ -219,7 +219,9 @@ const SelectMultipleInput = ({
         value={value}
         onChange={(event) => {
           const value = event.target.value;
-          field.handleChange(typeof value === 'string' ? value.split(',') : (value as string[]));
+          field.handleChange(
+            typeof value === 'string' ? value.split(',') : (value as string[]),
+          );
         }}
         input={<OutlinedInput />}
         renderValue={(selected) => (
@@ -249,7 +251,7 @@ const ClubMatch = () => {
 
   const api = useTRPC();
   const router = useRouter();
-  
+
   const editData = useMutation(
     api.ai.clubMatch.mutationOptions({
       onSuccess: () => {
@@ -263,37 +265,37 @@ const ClubMatch = () => {
   );
 
   const form = useForm({
-  defaultValues: {
-    major: '',
-    year: '',
-    proximity: '',
-    categories: [],
-    hobbies: [],
-    involvementGoals: [],
-    skills: [],
-    specificCultures: '',
-    hobbyDetails: '',
-    otherAcademicInterests: '',
-    gender: '',
-    genderOther: '',
-    newExperiences: '',
-    timeCommitment: '',
-  } as ClubMatchFormSchema,
-  validators: {
-    onChange: clubMatchFormSchema,
-  },
-  onSubmit: async ({ value }) => {
-    if (!editData.isPending) {
-      try {
-        await editData.mutateAsync(value);
-      } catch (err) {
-        if (err instanceof ZodError) {
-          setErrors(z.treeifyError(err));
+    defaultValues: {
+      major: '',
+      year: '',
+      proximity: '',
+      categories: [],
+      hobbies: [],
+      involvementGoals: [],
+      skills: [],
+      specificCultures: '',
+      hobbyDetails: '',
+      otherAcademicInterests: '',
+      gender: '',
+      genderOther: '',
+      newExperiences: '',
+      timeCommitment: '',
+    } as ClubMatchFormSchema,
+    validators: {
+      onChange: clubMatchFormSchema,
+    },
+    onSubmit: async ({ value }) => {
+      if (!editData.isPending) {
+        try {
+          await editData.mutateAsync(value);
+        } catch (err) {
+          if (err instanceof ZodError) {
+            setErrors(z.treeifyError(err));
+          }
         }
       }
-    }
-  },
-});
+    },
+  });
 
   return (
     <main className="p-4">
@@ -305,17 +307,16 @@ const ClubMatch = () => {
       </p>
       <form
         onSubmit={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          form.handleSubmit()
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
         }}
         className="mx-auto flex w-full max-w-3xl flex-col gap-4"
       >
         <div className="bg-white p-8 shadow-xl rounded-4xl flex flex-col gap-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <form.Field
-              name="major">
-                {(field) => (
+            <form.Field name="major">
+              {(field) => (
                 <div className="flex-1">
                   <TextInput
                     id="major"
@@ -326,10 +327,9 @@ const ClubMatch = () => {
                   />
                 </div>
               )}
-              </form.Field>
-            <form.Field
-              name="year">
-                {(field) => (
+            </form.Field>
+            <form.Field name="year">
+              {(field) => (
                 <div className="flex-1">
                   <SelectInput
                     id="year"
@@ -347,9 +347,8 @@ const ClubMatch = () => {
                 </div>
               )}
             </form.Field>
-            <form.Field
-              name="proximity">
-                {(field) => (
+            <form.Field name="proximity">
+              {(field) => (
                 <div className="flex-1">
                   <SelectInput
                     id="proximity"
@@ -367,9 +366,8 @@ const ClubMatch = () => {
             </form.Field>
           </div>
 
-          <form.Field
-            name="categories">
-              {(field) => (
+          <form.Field name="categories">
+            {(field) => (
               <SelectMultipleInput
                 id="categories"
                 label="What types of organizations are you interested in?"
@@ -397,16 +395,15 @@ const ClubMatch = () => {
           </form.Field>
 
           {/* subscribe to the categories field so it only re-renders if categories changes */}
-          <form.Subscribe
-            selector={(state) => state.values.categories}>
-              {(categories) => {
+          <form.Subscribe selector={(state) => state.values.categories}>
+            {(categories) => {
               const showSpecificCultures =
-                categories?.includes('Cultural') || categories?.includes('Religious');
-              
+                categories?.includes('Cultural') ||
+                categories?.includes('Religious');
+
               return showSpecificCultures ? (
-                <form.Field
-                  name="specificCultures">
-                    {(field) => (
+                <form.Field name="specificCultures">
+                  {(field) => (
                     <TextInput
                       id="specificCultures"
                       label="Please list the specific cultures or religions you are interested in."
@@ -418,11 +415,10 @@ const ClubMatch = () => {
                 </form.Field>
               ) : null;
             }}
-            </form.Subscribe>
+          </form.Subscribe>
 
-          <form.Field
-            name="hobbies">
-              {(field) => (
+          <form.Field name="hobbies">
+            {(field) => (
               <SelectMultipleInput
                 id="hobbies"
                 label="What are your hobbies or areas of interest?"
@@ -446,9 +442,8 @@ const ClubMatch = () => {
             )}
           </form.Field>
 
-          <form.Field
-            name="hobbyDetails">
-              {(field) => (
+          <form.Field name="hobbyDetails">
+            {(field) => (
               <TextInput
                 id="hobbyDetails"
                 label="Please be specific about your selected hobbies."
@@ -459,9 +454,8 @@ const ClubMatch = () => {
             )}
           </form.Field>
 
-          <form.Field
-            name="otherAcademicInterests">
-              {(field) => (
+          <form.Field name="otherAcademicInterests">
+            {(field) => (
               <TextInput
                 id="otherAcademicInterests"
                 label="Beyond your major, are there other academic topics or tracks you're interested in?"
@@ -472,9 +466,8 @@ const ClubMatch = () => {
             )}
           </form.Field>
 
-          <form.Field
-            name="newExperiences">
-              {(field) => (
+          <form.Field name="newExperiences">
+            {(field) => (
               <TextInput
                 id="newExperiences"
                 label="What new experiences, hobbies, or activities would you be interested in?"
@@ -485,9 +478,8 @@ const ClubMatch = () => {
             )}
           </form.Field>
 
-          <form.Field
-            name="involvementGoals">
-              {(field) => (
+          <form.Field name="involvementGoals">
+            {(field) => (
               <SelectMultipleInput
                 id="involvementGoals"
                 label="Goals for Getting Involved"
@@ -508,9 +500,8 @@ const ClubMatch = () => {
             )}
           </form.Field>
 
-          <form.Field
-            name="skills">
-              {(field) => (
+          <form.Field name="skills">
+            {(field) => (
               <SelectMultipleInput
                 id="skills"
                 label="Skills & Activities Interest"
@@ -535,15 +526,12 @@ const ClubMatch = () => {
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Conditionally render on gender value */}
-            <form.Subscribe
-              selector={(state) => state.values.gender}>
-                {(gender) => (
-                <form.Field
-                  name="gender">
-                    {(genderField) => (
-                    <form.Field
-                      name="genderOther">
-                        {(genderOtherField) => (
+            <form.Subscribe selector={(state) => state.values.gender}>
+              {(gender) => (
+                <form.Field name="gender">
+                  {(genderField) => (
+                    <form.Field name="genderOther">
+                      {(genderOtherField) => (
                         <RadioInput
                           id="gender"
                           label="Gender Identity"
@@ -569,9 +557,8 @@ const ClubMatch = () => {
               )}
             </form.Subscribe>
 
-            <form.Field
-              name="timeCommitment">
-                {(field) => (
+            <form.Field name="timeCommitment">
+              {(field) => (
                 <RadioInput
                   id="timeCommitment"
                   label="Preferred Time Commitment"
