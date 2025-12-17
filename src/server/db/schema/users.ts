@@ -127,8 +127,26 @@ export type ClubMatchResults = {
   benefit: string;
 }[];
 
+export type ClubMatchResponses = {
+  major: string;
+  year: string;
+  proximity: string;
+  categories: string[];
+  hobbies: string[];
+  gender: string;
+  timeCommitment: string;
+  specificCultures?: string | undefined;
+  hobbyDetails?: string | undefined;
+  otherAcademicInterests?: string | undefined;
+  genderOther?: string | undefined;
+  newExperiences?: string | undefined;
+  involvementGoals?: string[] | undefined;
+  skills?: string[] | undefined;
+};
+
 export const userAiCache = pgTable('user_ai_cache', {
   id: text('id').notNull().primaryKey(),
   clubMatch: jsonb('clubMatch').$type<ClubMatchResults>(),
   clubMatchLimit: integer('clubMatchLimit').$default(() => 100),
+  responses: jsonb('responses').$type<ClubMatchResponses>(),
 });
