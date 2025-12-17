@@ -586,7 +586,7 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
           variant="contained"
           type="submit"
           disabled={editData.isPending}
-          className="normal-case"
+          className="normal-case w-fit self-center px-6"
           startIcon={
             editData.isPending ? <CircularProgress size={18} color="inherit" /> : null
           }
