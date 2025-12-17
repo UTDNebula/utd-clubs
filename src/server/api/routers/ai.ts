@@ -138,8 +138,11 @@ Maintain strict formatting:
           },
         });
       //Save to profile
-      await ctx.db.update(userMetadata).set({
-        major: input.major,
-      });
+      await ctx.db
+        .update(userMetadata)
+        .set({
+          major: input.major,
+        })
+        .where(eq(userMetadata.id, ctx.session.user.id));
     }),
 });
