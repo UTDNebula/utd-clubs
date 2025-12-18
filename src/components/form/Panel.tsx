@@ -1,5 +1,6 @@
 import { Box, BoxProps, Skeleton, Typography } from '@mui/material';
 import React, { type ReactNode } from 'react';
+import { BaseCard } from '@src/components/common/BaseCard';
 
 interface PanelPropsBase {
   heading?: ReactNode;
@@ -17,10 +18,10 @@ const Panel = ({
   ...props
 }: PanelProps) => {
   return (
-    <Box
+    <BaseCard
       {...props}
-      className={`flex flex-col gap-2 rounded-lg sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4 min-w-0 max-w-6xl
-        ${props.className?.includes('bg-') ? '' : 'bg-white'} ${props.className ?? ''}`}
+      className={`flex flex-col gap-2 sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4 min-w-0 max-w-6xl
+        ${props.className ?? ''}`}
     >
       <div className="flex items-center gap-2 ml-2">
         {startAdornment}
@@ -32,7 +33,7 @@ const Panel = ({
         {endAdornment}
       </div>
       {children}
-    </Box>
+    </BaseCard>
   );
 };
 
