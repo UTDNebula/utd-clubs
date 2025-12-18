@@ -13,7 +13,7 @@ const ClubBody = async ({
 }) => {
   return (
     <section className="w-full rounded-lg p-10 flex flex-col items-start justify-between md:flex-row gap-4">
-      <div className="md:w-1/5">
+      <div className="flex flex-col md:w-1/5">
         <div className='flex flex-col'>
             <h2 className='text-2xl font-semibold'>Details</h2>
             {/*club.numMembers*/true && (
@@ -40,6 +40,10 @@ const ClubBody = async ({
                     <span>Nov 2025</span>
                 </div>
             )}
+        </div>
+        <div className='flex flex-col'>
+            <h2 className='text-2xl font-semibold'>Contact</h2>
+            {club.contacts && club.contacts.map((contact) => <ContactButton contact={contact} />)}
         </div>
       </div>
       <div className="grow text-slate-700">

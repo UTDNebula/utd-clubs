@@ -9,7 +9,6 @@ type ContactButtonProps = {
 };
 const ContactButton = ({ contact }: ContactButtonProps) => {
   return (
-    <div className="flex flex-wrap gap-4">
       <Tooltip
         key={contact.platform + contact.url}
         title={contactNames[contact.platform]}
@@ -17,14 +16,14 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
         <Link
           href={contact.platform === 'email' ? `mailto:${contact.url}` : contact.url}
           target="_blank"
-          className="inline-block"
+          className="inline-block w-full"
         >
           <IconButton className="group bg-slate-100" size="large">
             {logo[contact.platform]}
           </IconButton>
+          <span>{contact.platform}</span>
         </Link>
       </Tooltip>
-    </div>
   );
 };
 
