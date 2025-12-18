@@ -10,6 +10,7 @@ import ContactInformation from '@src/components/club/listing/ContactInformation'
 import Header from '@src/components/header/BaseHeader';
 import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
+import ClubBody from '@src/components/club/listing/ClubBody';
 
 const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
   const params = await props.params;
@@ -33,7 +34,7 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
       <main className="mb-5 flex flex-col space-y-4 p-4">
         <ClubHeader club={club} />
         <ClubTitle club={club} />
-        {/* <ClubBody club={club} /> */}
+        <ClubBody club={club} />
         <ClubInfoSegment club={club} />
         {club.contacts.length > 0 && <ContactInformation club={club} />}
         {club.updatedAt && <ClubUpcomingEvents clubId={club.id} />}

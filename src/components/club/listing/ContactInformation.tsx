@@ -2,7 +2,7 @@ import type {
   SelectContact as Contacts,
   SelectClub,
 } from '@src/server/db/models';
-import ContactButtons from './ContactButtons';
+import ContactButton from './ContactButton';
 
 type Club = SelectClub & {
   contacts?: Contacts[];
@@ -18,7 +18,7 @@ const ContactInformation = ({ club }: { club: Club }) => {
         </h2>
 
         <div className="flex flex-wrap gap-4 mt-4 md:mt-0">
-          <ContactButtons contacts={club.contacts || []} />
+          {/* <ContactButtons contacts={club.contacts || []} /> */}
         </div>
       </div>
     </div>
