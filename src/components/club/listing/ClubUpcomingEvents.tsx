@@ -1,7 +1,7 @@
 import { TZDateMini } from '@date-fns/tz';
+import { BaseCard } from '@src/components/common/BaseCard';
 import EventCard from '@src/components/events/EventCard';
 import { api } from '@src/trpc/server';
-import { BaseCard } from '@src/components/common/BaseCard';
 
 const ClubUpcomingEvents = async ({ clubId }: { clubId: string }) => {
   const now = TZDateMini.tz('America/Chicago');
