@@ -2,7 +2,6 @@
 
 import {
   Chip,
-  CircularProgress,
   FormControl,
   FormHelperText,
   MenuItem,
@@ -18,10 +17,10 @@ import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import Panel from '@src/components/form/Panel';
 import { Binoculars } from '@src/icons/OtherIcons';
+import { ClubMatchResponses } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
-import { ClubMatchResponses } from '@src/server/db/schema/users';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
 
