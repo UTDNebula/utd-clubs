@@ -1,4 +1,4 @@
-import { Box, BoxProps, Skeleton, Typography } from '@mui/material';
+import { BoxProps, Skeleton, Typography } from '@mui/material';
 import React, { type ReactNode } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
 
