@@ -7,7 +7,7 @@ import { club } from '@src/server/db/schema/club';
 import { contacts } from '@src/server/db/schema/contacts';
 import { officers } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { editClubSchema, editSlugSchema } from '@src/utils/formSchemas';
+import { editClubDetailsSchema, editSlugSchema } from '@src/utils/formSchemas';
 import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
@@ -80,7 +80,7 @@ const deleteSchema = z.object({ clubId: z.string() });
 
 export const clubEditRouter = createTRPCRouter({
   data: protectedProcedure
-    .input(editClubSchema)
+    .input(editClubDetailsSchema)
     .mutation(async ({ input, ctx }) => {
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.id);
       if (!isOfficer) throw new TRPCError({ code: 'UNAUTHORIZED' });
