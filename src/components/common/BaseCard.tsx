@@ -6,7 +6,7 @@ type BaseCardProps = {
   className?: string;
 };
 
-const baseClasses = 'rounded-lg bg-white';
+const baseClasses = 'rounded-lg';
 
 const variantClasses: Record<CardVariant, string> = {
   flat: 'shadow-none',
@@ -18,8 +18,11 @@ export const BaseCard = ({
   variant = 'flat',
   className = '',
 }: BaseCardProps) => {
+  const hasBgClass = className.includes('bg-');
   return (
-    <div className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
+    <div
+      className={`${baseClasses} ${hasBgClass ? '' : 'bg-white'} ${variantClasses[variant]} ${className}`}
+    >
       {children}
     </div>
   );
