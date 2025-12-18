@@ -5,6 +5,7 @@ import Image from 'next/image';
 import MarkdownText from '@src/components/MarkdownText';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ContactButton from './ContactButton';
+import ClubOfficer from './ClubOfficer';
 
 const ClubBody = async ({
   club,
@@ -45,31 +46,24 @@ const ClubBody = async ({
             <h2 className='text-2xl font-semibold'>Contact</h2>
             {club.contacts && club.contacts.map((contact) => <ContactButton contact={contact} />)}
         </div>
+        <div className='flex flex-col'>
+            <h2 className='text-2xl font-semibold'>Officers</h2>
+            {club.officers.length != 0 && (
+            <div className="w-auto max-w-[320px] min-w-0">
+            <>
+                <div className="flex flex-col justify-center align-middle">
+                {club.officers.map((officer) => (
+                    <ClubOfficer officer={officer}/>
+                ))}
+                </div>
+            </>
+            </div>
+        )}
+        </div>
       </div>
       <div className="grow text-slate-700">
         <MarkdownText text={club.description} />
       </div>
-      {club.officers.length != 0 && (
-        <div className="w-auto max-w-[320px] min-w-0">
-          <>
-            <h3 className="text-center text-2xl font-medium">Leadership</h3>
-            <div className="flex flex-col justify-center align-middle">
-              {club.officers.map((officer) => (
-                <div className="mt-5 flex flex-row" key={officer.id}>
-                  <div className="mx-5 flex flex-col justify-center align-middle">
-                    <p className="text-left text-sm break-words whitespace-normal text-slate-600">
-                      {officer.name}
-                    </p>
-                    <p className="mt-2 text-sm break-words whitespace-normal text-slate-400">
-                      {officer.position}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        </div>
-      )}
     </section>
   );
 };
