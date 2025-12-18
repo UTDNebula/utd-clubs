@@ -1,5 +1,3 @@
-'use client';
-
 type CardVariant = 'flat' | 'interactive';
 
 type BaseCardProps = {
