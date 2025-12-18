@@ -1,3 +1,4 @@
+"use client"
 import { TZDateMini } from '@date-fns/tz';
 import Chip from '@mui/material/Chip';
 import { format } from 'date-fns';
@@ -6,12 +7,14 @@ import MarkdownText from '@src/components/MarkdownText';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ContactButton from './ContactButton';
 import ClubOfficer from './ClubOfficer';
+import { useState } from 'react';
 
-const ClubBody = async ({
+const ClubBody = ({
   club,
 }: {
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }) => {
+    const [expanded, setExpanded] = useState(false);
   return (
     <section className="w-full rounded-lg p-10 flex flex-col items-start justify-between md:flex-row gap-4">
       <div className="flex flex-col md:w-1/5">
@@ -44,7 +47,7 @@ const ClubBody = async ({
         </div>
         <div className='flex flex-col'>
             <h2 className='text-2xl font-semibold'>Contact</h2>
-            {club.contacts && club.contacts.map((contact) => <ContactButton contact={contact} />)}
+            {club.contacts && club.contacts.map((contact) => <ContactButton key={contact.platform} contact={contact} />)}
         </div>
         <div className='flex flex-col'>
             <h2 className='text-2xl font-semibold'>Officers</h2>
@@ -53,7 +56,7 @@ const ClubBody = async ({
             <>
                 <div className="flex flex-col justify-center align-middle">
                 {club.officers.map((officer) => (
-                    <ClubOfficer officer={officer}/>
+                    <ClubOfficer key={officer.name} officer={officer}/>
                 ))}
                 </div>
             </>
@@ -62,7 +65,15 @@ const ClubBody = async ({
         </div>
       </div>
       <div className="grow text-slate-700">
-        <MarkdownText text={club.description} />
+            <MarkdownText text={club.description} expanded={expanded} />
+            {/* Read more / Read less */}
+            <button
+                type="button"
+                className="mt-2 text-sm font-medium text-royal hover:underline"
+                onClick={() => setExpanded((v) => !v)}
+            >
+                {expanded ? 'Read less' : 'Read more'}
+            </button>
       </div>
     </section>
   );
