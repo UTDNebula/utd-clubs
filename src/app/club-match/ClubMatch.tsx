@@ -1,10 +1,7 @@
 'use client';
 
 import {
-  Box,
-  Button,
   Chip,
-  CircularProgress,
   FormControl,
   FormHelperText,
   MenuItem,
@@ -15,12 +12,14 @@ import {
   TextField,
 } from '@mui/material';
 import type { AnyFieldApi } from '@tanstack/react-form';
-import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+import Panel from '@src/components/form/Panel';
+import { Binoculars } from '@src/icons/OtherIcons';
 import { ClubMatchResponses } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
+import { useAppForm } from '@src/utils/form';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
@@ -35,26 +34,17 @@ interface SharedInputProps {
   id: keyof ClubMatchFormSchema;
   label?: string;
   disabled?: boolean;
-  error: boolean;
-  helperText?: string;
   field: AnyFieldApi;
 }
 
-const TextInput = ({
-  id,
-  label,
-  disabled,
-  error,
-  helperText,
-  field,
-}: SharedInputProps) => {
+const TextInput = ({ id, label, disabled, field }: SharedInputProps) => {
   const required = isFieldRequired(id);
-  const shouldShowError = field.state.meta.isTouched && error;
-
+  const shouldShowError =
+    field.state.meta.isTouched && !field.state.meta.isValid;
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label htmlFor={id} className="min-h-[3rem] flex items-end">
+        <label htmlFor={id} className="whitespace-pre-line">
           {label}
           {required && <span className="text-red-600"> *</span>}
         </label>
@@ -65,12 +55,15 @@ const TextInput = ({
         size="small"
         disabled={disabled}
         required={required}
-        error={shouldShowError}
-        helperText={shouldShowError ? helperText : undefined}
         value={field.state.value ?? ''}
-        onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
-        aria-invalid={shouldShowError}
+        error={shouldShowError}
+        helperText={
+          shouldShowError
+            ? field.state.meta.errors.map((err) => err?.message).join('. ') +
+              '.'
+            : undefined
+        }
       />
     </div>
   );
@@ -80,43 +73,42 @@ const SelectInput = ({
   id,
   label,
   options,
-  error,
-  helperText,
   field,
 }: {
   options: string[];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
-  const shouldShowError = field.state.meta.isTouched && error;
-
+  const shouldShowError =
+    field.state.meta.isTouched && !field.state.meta.isValid;
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="min-h-[3rem] flex items-end">
+    <FormControl className="flex flex-col gap-1">
+      <label htmlFor={id} className="whitespace-pre-line">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      <FormControl error={shouldShowError} size="small" fullWidth>
-        <Select
-          id={id}
-          required={required}
-          value={field.state.value ?? ''}
-          onBlur={field.handleBlur}
-          onChange={(event) => field.handleChange(event.target.value)}
-        >
-          <MenuItem disabled value="">
-            <em>--Select--</em>
+      <Select
+        id={id}
+        required={required}
+        size="small"
+        value={field.state.value ?? ''}
+        onChange={(event) => field.handleChange(event.target.value)}
+        error={shouldShowError}
+      >
+        <MenuItem disabled value="">
+          <em>--Select--</em>
+        </MenuItem>
+        {options.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
           </MenuItem>
-          {options.map((option) => (
-            <MenuItem key={option} value={option}>
-              {option}
-            </MenuItem>
-          ))}
-        </Select>
-        {shouldShowError && helperText && (
-          <FormHelperText>{helperText}</FormHelperText>
-        )}
-      </FormControl>
-    </div>
+        ))}
+      </Select>
+      {shouldShowError && (
+        <FormHelperText error>
+          {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
+        </FormHelperText>
+      )}
+    </FormControl>
   );
 };
 
@@ -124,8 +116,6 @@ const RadioInput = ({
   id,
   label,
   options,
-  error,
-  helperText,
   other,
   field,
   otherField,
@@ -139,50 +129,64 @@ const RadioInput = ({
   otherField?: SharedInputProps['field'];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
-  const shouldShowError = field.state.meta.isTouched && error;
+  const shouldShowError =
+    field.state.meta.isTouched && !field.state.meta.isValid;
+  const otherFieldShouldShowError =
+    otherField?.state.meta.isTouched && !otherField?.state.meta.isValid;
   return (
-    <fieldset className="flex flex-col gap-1">
-      <label htmlFor={id} className="min-h-[3rem] flex items-end">
+    <FormControl className="flex flex-col gap-1">
+      <label htmlFor={id} className="whitespace-pre-line">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      <FormControl error={shouldShowError}>
-        <RadioGroup
-          aria-invalid={shouldShowError}
-          value={field.state.value ?? ''}
-          onChange={(e) => field.handleChange(e.target.value)}
-        >
-          {options.map((option) => (
-            <div key={option} className="flex items-center">
-              <Radio
-                id={`${id}-${option}`}
-                value={option}
-                onBlur={field.handleBlur}
+      <RadioGroup
+        value={field.state.value ?? ''}
+        onChange={(e) => field.handleChange(e.target.value)}
+      >
+        {options.map((option) => (
+          <div key={option} className="flex items-center">
+            <Radio
+              id={`${id}-${option}`}
+              value={option}
+              size="small"
+              checked={field.state.value === option}
+              onClick={() => {
+                if (field.state.value === option) {
+                  field.handleChange('');
+                }
+              }}
+            />
+            <label htmlFor={`${id}-${option}`} className="ml-1">
+              {option}
+            </label>
+            {other && option === 'Other' && otherField && (
+              <TextField
+                id={other.id}
+                variant="outlined"
                 size="small"
-                checked={field.state.value === option}
+                disabled={other.disabled}
+                value={otherField.state.value ?? ''}
+                onChange={(e) => otherField.handleChange(e.target.value)}
+                error={otherFieldShouldShowError}
+                helperText={
+                  otherFieldShouldShowError
+                    ? otherField.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
+                className="ml-2 [&>.Mui-disabled.MuiInputBase-root]:bg-gray-200"
               />
-              <label htmlFor={`${id}-${option}`} className="ml-1">
-                {option}
-              </label>
-              {other && option === 'Other' && otherField && (
-                <input
-                  type="text"
-                  id={other.id}
-                  disabled={other.disabled}
-                  value={otherField.state.value ?? ''}
-                  onBlur={otherField.handleBlur}
-                  onChange={(e) => otherField.handleChange(e.target.value)}
-                  className="ml-2 rounded-md border border-gray-200 bg-white px-2 disabled:bg-gray-200"
-                />
-              )}
-            </div>
-          ))}
-        </RadioGroup>
-        {shouldShowError && helperText && (
-          <FormHelperText>{helperText}</FormHelperText>
-        )}
-      </FormControl>
-    </fieldset>
+            )}
+          </div>
+        ))}
+      </RadioGroup>
+      {shouldShowError && (
+        <FormHelperText error>
+          {field.state.meta.errors.map((err) => err?.message) + '.'}
+        </FormHelperText>
+      )}
+    </FormControl>
   );
 };
 
@@ -190,63 +194,60 @@ const SelectMultipleInput = ({
   id,
   label,
   options,
-  error,
-  helperText,
   field,
 }: {
-  id: keyof ClubMatchFormSchema;
-  label: string;
   options: string[];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
-  const shouldShowError = field.state.meta.isTouched && error;
+  const shouldShowError =
+    field.state.meta.isTouched && !field.state.meta.isValid;
   const value: string[] = field.state.value ?? [];
   return (
-    <fieldset className="flex flex-col gap-1">
-      <label htmlFor={id} className="min-h-[3rem] flex items-end">
+    <FormControl className="flex flex-col gap-1">
+      <label htmlFor={id} className="whitespace-pre-line">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </label>
-      <FormControl error={shouldShowError} variant="outlined" size="small">
-        <Select
-          labelId={`${id}-label`}
-          id={id}
-          multiple
-          required={required}
-          value={value}
-          onBlur={field.handleBlur}
-          onChange={(event) => {
-            const value = event.target.value;
-            field.handleChange(
-              typeof value === 'string'
-                ? value.split(',')
-                : (value as string[]),
-            );
-          }}
-          input={<OutlinedInput />}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {(selected as string[]).map((value) => (
-                <Chip key={value} label={value} color="primary" />
-              ))}
-            </Box>
-          )}
-          MenuProps={{ PaperProps: { className: 'max-h-60' } }}
-        >
-          <MenuItem disabled value="">
-            <em>--Select one or multiple--</em>
-          </MenuItem>
-          {options.map((option) => (
-            <MenuItem key={option} value={option}>
-              {option}
-            </MenuItem>
-          ))}
-        </Select>
-        {shouldShowError && helperText && (
-          <FormHelperText>{helperText}</FormHelperText>
+      <Select
+        labelId={`${id}-label`}
+        id={id}
+        multiple
+        variant="outlined"
+        size="small"
+        required={required}
+        value={value}
+        onChange={(event) => {
+          const value = event.target.value;
+          field.handleChange(
+            typeof value === 'string' ? value.split(',') : (value as string[]),
+          );
+        }}
+        input={<OutlinedInput />}
+        renderValue={(selected) => (
+          <div className="flex flex-wrap gap-0.5">
+            {(selected as string[]).map((value) => (
+              <Chip key={value} label={value} color="primary" />
+            ))}
+          </div>
         )}
-      </FormControl>
-    </fieldset>
+        MenuProps={{ PaperProps: { className: 'max-h-60' } }}
+        error={shouldShowError}
+      >
+        <MenuItem disabled value="">
+          <em>--Select one or multiple--</em>
+        </MenuItem>
+        {options.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </Select>
+      {shouldShowError && (
+        <FormHelperText error>
+          {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
+        </FormHelperText>
+      )}
+    </FormControl>
   );
 };
 
@@ -275,15 +276,9 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
   const api = useTRPC();
   const router = useRouter();
 
-  const editData = useMutation(
-    api.ai.clubMatch.mutationOptions({
-      onSuccess: () => {
-        router.push('/club-match/results');
-      },
-    }),
-  );
+  const editData = useMutation(api.ai.clubMatch.mutationOptions({}));
 
-  const form = useForm({
+  const form = useAppForm({
     defaultValues: {
       major:
         userMetadata && userMetadata.major
@@ -303,13 +298,14 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
       newExperiences: response?.newExperiences ?? '',
       timeCommitment: response?.timeCommitment ?? '',
     } as ClubMatchFormSchema,
-    validators: {
-      onChange: clubMatchFormSchema,
-    },
     onSubmit: async ({ value }) => {
       if (!editData.isPending) {
         await editData.mutateAsync(value);
+        router.push('/club-match/results');
       }
+    },
+    validators: {
+      onChange: clubMatchFormSchema,
     },
   });
 
@@ -321,303 +317,274 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
       <p className="mb-8 text-center">
         Generate club recommendations based on a simple form.
       </p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          form.handleSubmit();
-        }}
-        className="mx-auto flex w-full max-w-3xl flex-col gap-4"
-      >
-        <div className="bg-white p-8 shadow-xl rounded-4xl flex flex-col gap-6">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <form.Field name="major">
-              {(field) => (
-                <div className="flex-1">
-                  <TextInput
-                    id="major"
-                    label="What is your current or intended major?"
-                    error={!field.state.meta.isValid}
-                    helperText={'Major is Required'}
-                    disabled={false}
-                    field={field}
-                  />
-                </div>
-              )}
-            </form.Field>
-            <form.Field name="year">
-              {(field) => (
-                <div className="flex-1">
-                  <SelectInput
-                    id="year"
-                    label="What year are you?"
-                    options={[
-                      'A prospective student (not yet attending UTD)',
-                      'A first-year student (non-transfer)',
-                      'A first-year student (transfer)',
-                      'A current student (2nd year+, non-transfer)',
-                      'A current student (2nd year+, transfer)',
-                    ]}
-                    error={!field.state.meta.isValid}
-                    helperText={'Select your Year'}
-                    field={field}
-                  />
-                </div>
-              )}
-            </form.Field>
-            <form.Field name="proximity">
-              {(field) => (
-                <div className="flex-1">
-                  <SelectInput
-                    id="proximity"
-                    label="How close do you live to campus?"
-                    options={[
-                      'Live on campus in the residence halls',
-                      'Live near campus in an apartment or houses',
-                      'Live at home and commute',
-                    ]}
-                    error={!field.state.meta.isValid}
-                    helperText={'Choose a Proximity'}
-                    field={field}
-                  />
-                </div>
-              )}
-            </form.Field>
-          </div>
-
-          <form.Field name="categories">
-            {(field) => (
-              <SelectMultipleInput
-                id="categories"
-                label="What types of organizations are you interested in?"
-                options={[
-                  'Academic',
-                  'Art and Music',
-                  'Club Sports',
-                  'Cultural',
-                  'Educational/Departmental',
-                  'Fraternity & Sorority Life',
-                  'Honor Society',
-                  'Political',
-                  'Recreation',
-                  'Religious',
-                  'Service',
-                  'Social',
-                  'Special Interest',
-                  'Student Government',
-                  'Student Media',
-                ]}
-                error={!field.state.meta.isValid}
-                helperText={'Select an Organizaiton Type'}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          {/* subscribe to the categories field so it only re-renders if categories changes */}
-          <form.Subscribe selector={(state) => state.values.categories}>
-            {(categories) => {
-              const showSpecificCultures =
-                categories?.includes('Cultural') ||
-                categories?.includes('Religious');
-
-              return showSpecificCultures ? (
-                <form.Field name="specificCultures">
-                  {(field) => (
+      <form className="mx-auto w-full max-w-3xl">
+        <Panel>
+          <div className="m-2 flex flex-col gap-8">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 items-start">
+              <form.Field name="major">
+                {(field) => (
+                  <div className="flex-1">
                     <TextInput
-                      id="specificCultures"
-                      label="Please list the specific cultures or religions you are interested in."
-                      error={!field.state.meta.isValid}
-                      helperText={'Enter Cultures or Religions'}
+                      id="major"
+                      label="What is your current or intended major?"
                       disabled={false}
                       field={field}
                     />
-                  )}
-                </form.Field>
-              ) : null;
-            }}
-          </form.Subscribe>
+                  </div>
+                )}
+              </form.Field>
+              <form.Field name="year">
+                {(field) => (
+                  <div className="flex-1">
+                    <SelectInput
+                      id="year"
+                      label={'\nWhat year are you?'}
+                      options={[
+                        'A prospective student (not yet attending UTD)',
+                        'A first-year student (non-transfer)',
+                        'A first-year student (transfer)',
+                        'A current student (2nd year+, non-transfer)',
+                        'A current student (2nd year+, transfer)',
+                      ]}
+                      field={field}
+                    />
+                  </div>
+                )}
+              </form.Field>
+              <form.Field name="proximity">
+                {(field) => (
+                  <div className="flex-1">
+                    <SelectInput
+                      id="proximity"
+                      label="How close do you live to campus?"
+                      options={[
+                        'Live on campus in the residence halls',
+                        'Live near campus in an apartment or houses',
+                        'Live at home and commute',
+                      ]}
+                      field={field}
+                    />
+                  </div>
+                )}
+              </form.Field>
+            </div>
 
-          <form.Field name="hobbies">
-            {(field) => (
-              <SelectMultipleInput
-                id="hobbies"
-                label="What are your hobbies or areas of interest?"
-                options={[
-                  'Gaming/Esports',
-                  'Outdoor Activities/Sports',
-                  'Reading/Writing',
-                  'Cooking/Food',
-                  'Technology/Maker',
-                  'Film/TV/Pop Culture',
-                  'Board Games/Tabletop RPGs',
-                  'Volunteering',
-                  'Fitness/Wellness',
-                  'Performing Arts',
-                  'Visual Arts',
-                  'Other',
-                ]}
-                error={!field.state.meta.isValid}
-                helperText={'Select Hobbies/Interests'}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="hobbyDetails">
-            {(field) => (
-              <TextInput
-                id="hobbyDetails"
-                label="Please be specific about your selected hobbies."
-                error={!field.state.meta.isValid}
-                helperText={'Write about your Hobbies'}
-                disabled={false}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="otherAcademicInterests">
-            {(field) => (
-              <TextInput
-                id="otherAcademicInterests"
-                label="Beyond your major, are there other academic topics or tracks you're interested in?"
-                error={!field.state.meta.isValid}
-                helperText={'Write about your other Academic Interests'}
-                disabled={false}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="newExperiences">
-            {(field) => (
-              <TextInput
-                id="newExperiences"
-                label="What new experiences, hobbies, or activities would you be interested in?"
-                error={!field.state.meta.isValid}
-                helperText={'Enter new Experiences'}
-                disabled={false}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="involvementGoals">
-            {(field) => (
-              <SelectMultipleInput
-                id="involvementGoals"
-                label="Goals for Getting Involved"
-                options={[
-                  'Make Friends/Build Community',
-                  'Develop Leadership Skills',
-                  'Gain Experience for Resume/Career',
-                  'Explore a Specific Interest/Hobby',
-                  'Networking (Peers/Professionals)',
-                  'Make an Impact/Serve Others',
-                  'Learn New Skills',
-                  'Find Mentorship',
-                  'Simply Have Fun/De-stress',
-                ]}
-                error={!field.state.meta.isValid}
-                helperText={'Write Goals'}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="skills">
-            {(field) => (
-              <SelectMultipleInput
-                id="skills"
-                label="Skills & Activities Interest"
-                options={[
-                  'Advocacy/Campaigning',
-                  'Building/Making Things',
-                  'Event Planning',
-                  'Graphic Design/Visual Arts',
-                  'Fundraising',
-                  'Performing (Music, Acting, Dance)',
-                  'Public Speaking/Presenting',
-                  'Social Media Management',
-                  'Tutoring/Mentoring',
-                  'Website/App Development',
-                  'Writing/Editing',
-                ]}
-                error={!field.state.meta.isValid}
-                helperText={'Select Activities'}
-                field={field}
-              />
-            )}
-          </form.Field>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* Conditionally render on gender value */}
-            <form.Subscribe selector={(state) => state.values.gender}>
-              {(gender) => (
-                <form.Field name="gender">
-                  {(genderField) => (
-                    <form.Field name="genderOther">
-                      {(genderOtherField) => (
-                        <RadioInput
-                          id="gender"
-                          label="Gender Identity"
-                          options={[
-                            'Female',
-                            'Male',
-                            'Non-binary',
-                            'Prefer not to say',
-                            'Other',
-                          ]}
-                          error={!genderField.state.meta.isValid}
-                          helperText={'Select an option'}
-                          field={genderField}
-                          other={{
-                            id: 'genderOther',
-                            disabled: gender !== 'Other',
-                          }}
-                          otherField={genderOtherField}
-                        />
-                      )}
-                    </form.Field>
-                  )}
-                </form.Field>
-              )}
-            </form.Subscribe>
-
-            <form.Field name="timeCommitment">
+            <form.Field name="categories">
               {(field) => (
-                <RadioInput
-                  id="timeCommitment"
-                  label="Preferred Time Commitment"
+                <SelectMultipleInput
+                  id="categories"
+                  label="What types of organizations are you interested in?"
                   options={[
-                    'Low (e.g., < 2-3 hours/week, meetings optional)',
-                    'Medium (e.g., 3-5 hours/week, regular meetings/events)',
-                    'High (e.g., 5+ hours/week, significant responsibilities/practices)',
-                    "Don't care",
+                    'Academic',
+                    'Art and Music',
+                    'Club Sports',
+                    'Cultural',
+                    'Educational/Departmental',
+                    'Fraternity & Sorority Life',
+                    'Honor Society',
+                    'Political',
+                    'Recreation',
+                    'Religious',
+                    'Service',
+                    'Social',
+                    'Special Interest',
+                    'Student Government',
+                    'Student Media',
                   ]}
-                  error={!field.state.meta.isValid}
-                  helperText={'Select preferred Time Commitment'}
                   field={field}
                 />
               )}
             </form.Field>
-          </div>
-        </div>
 
-        <Button
-          variant="contained"
-          type="submit"
-          disabled={editData.isPending}
-          className="normal-case w-fit self-center mt-3 px-6"
-          startIcon={
-            editData.isPending ? (
-              <CircularProgress size={18} color="inherit" />
-            ) : null
-          }
-        >
-          {editData.isPending ? 'Matching...' : 'Find Clubs'}
-        </Button>
+            {/* subscribe to the categories field so it only re-renders if categories changes */}
+            <form.Subscribe selector={(state) => state.values.categories}>
+              {(categories) => {
+                const showSpecificCultures =
+                  categories?.includes('Cultural') ||
+                  categories?.includes('Religious');
+
+                return showSpecificCultures ? (
+                  <form.Field name="specificCultures">
+                    {(field) => (
+                      <TextInput
+                        id="specificCultures"
+                        label="Please list the specific cultures or religions you are interested in."
+                        disabled={false}
+                        field={field}
+                      />
+                    )}
+                  </form.Field>
+                ) : null;
+              }}
+            </form.Subscribe>
+
+            <form.Field name="hobbies">
+              {(field) => (
+                <SelectMultipleInput
+                  id="hobbies"
+                  label="What are your hobbies or areas of interest?"
+                  options={[
+                    'Gaming/Esports',
+                    'Outdoor Activities/Sports',
+                    'Reading/Writing',
+                    'Cooking/Food',
+                    'Technology/Maker',
+                    'Film/TV/Pop Culture',
+                    'Board Games/Tabletop RPGs',
+                    'Volunteering',
+                    'Fitness/Wellness',
+                    'Performing Arts',
+                    'Visual Arts',
+                    'Other',
+                  ]}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="hobbyDetails">
+              {(field) => (
+                <TextInput
+                  id="hobbyDetails"
+                  label="Please be specific about your selected hobbies."
+                  disabled={false}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="otherAcademicInterests">
+              {(field) => (
+                <TextInput
+                  id="otherAcademicInterests"
+                  label="Beyond your major, are there other academic topics or tracks you're interested in?"
+                  disabled={false}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="newExperiences">
+              {(field) => (
+                <TextInput
+                  id="newExperiences"
+                  label="What new experiences, hobbies, or activities would you be interested in?"
+                  disabled={false}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="involvementGoals">
+              {(field) => (
+                <SelectMultipleInput
+                  id="involvementGoals"
+                  label="Goals for Getting Involved"
+                  options={[
+                    'Make Friends/Build Community',
+                    'Develop Leadership Skills',
+                    'Gain Experience for Resume/Career',
+                    'Explore a Specific Interest/Hobby',
+                    'Networking (Peers/Professionals)',
+                    'Make an Impact/Serve Others',
+                    'Learn New Skills',
+                    'Find Mentorship',
+                    'Simply Have Fun/De-stress',
+                  ]}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="skills">
+              {(field) => (
+                <SelectMultipleInput
+                  id="skills"
+                  label="Skills & Activities Interest"
+                  options={[
+                    'Advocacy/Campaigning',
+                    'Building/Making Things',
+                    'Event Planning',
+                    'Graphic Design/Visual Arts',
+                    'Fundraising',
+                    'Performing (Music, Acting, Dance)',
+                    'Public Speaking/Presenting',
+                    'Social Media Management',
+                    'Tutoring/Mentoring',
+                    'Website/App Development',
+                    'Writing/Editing',
+                  ]}
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {/* Conditionally render on gender value */}
+              <form.Subscribe selector={(state) => state.values.gender}>
+                {(gender) => (
+                  <form.Field name="gender">
+                    {(genderField) => (
+                      <form.Field name="genderOther">
+                        {(genderOtherField) => (
+                          <RadioInput
+                            id="gender"
+                            label="Gender Identity"
+                            options={[
+                              'Female',
+                              'Male',
+                              'Non-binary',
+                              'Prefer not to say',
+                              'Other',
+                            ]}
+                            field={genderField}
+                            other={{
+                              id: 'genderOther',
+                              disabled: gender !== 'Other',
+                            }}
+                            otherField={genderOtherField}
+                          />
+                        )}
+                      </form.Field>
+                    )}
+                  </form.Field>
+                )}
+              </form.Subscribe>
+
+              <form.Field name="timeCommitment">
+                {(field) => (
+                  <RadioInput
+                    id="timeCommitment"
+                    label="Preferred Time Commitment"
+                    options={[
+                      'Low (e.g., < 2-3 hours/week, meetings optional)',
+                      'Medium (e.g., 3-5 hours/week, regular meetings/events)',
+                      'High (e.g., 5+ hours/week, significant responsibilities/practices)',
+                      "Don't care",
+                    ]}
+                    field={field}
+                  />
+                )}
+              </form.Field>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap justify-end items-center gap-2">
+            <form.AppForm>
+              <form.FormResetButton />
+            </form.AppForm>
+            <form.AppForm>
+              <form.FormSubmitButton
+                text="Find Clubs"
+                icon={<Binoculars />}
+                onClick={async () => {
+                  form.handleSubmit(); // force submit so onSubmit validation shows errors
+                }}
+                allowDisable={false}
+              />
+            </form.AppForm>
+          </div>
+        </Panel>
       </form>
     </main>
   );
