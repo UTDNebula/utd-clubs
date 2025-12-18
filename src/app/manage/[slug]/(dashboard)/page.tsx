@@ -12,10 +12,10 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params;
 
   const club = await api.club.bySlug({ slug });
+
   if (!club) {
     notFound();
   }
-
   return (
     <>
       <ManageHeader club={club} hrefBack="/manage">

@@ -6,7 +6,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/form/Panel';
 import FormImage from '@src/components/manage/form/FormImage';
@@ -14,7 +14,7 @@ import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
 import { useAppForm } from '@src/utils/form';
-import { createEventSchema } from '@src/utils/formSchemas';
+import { eventFormSchema } from '@src/utils/formSchemas';
 import EventCard, { EventCardSkeleton } from './EventCard';
 
 type EventFormProps =
@@ -29,6 +29,16 @@ type EventFormProps =
       event: RouterOutputs['event']['findByFilters']['events'][number];
     };
 
+interface EventDetails {
+  clubId: string;
+  name: string;
+  location: string;
+  description: string;
+  startTime: Date;
+  endTime: Date;
+  image: File | null;
+}
+
 const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const api = useTRPC();
   const createMutation = useMutation(api.event.create.mutationOptions());
@@ -38,15 +48,17 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
 
   const defaultValues = useMemo(() => {
     if (mode === 'edit' && event) {
-      return {
+      const defValues: EventDetails = {
         clubId: event.clubId,
         name: event.name,
         location: event.location,
         description: event.description,
         startTime: event.startTime,
         endTime: event.endTime,
-        image: event.image,
+        image: null,
       };
+
+      return defValues;
     }
 
     // New Date only once to prevent call stack exceeded
@@ -57,7 +69,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     defaultEndTime.setHours(defaultEndTime.getHours() + 2);
     defaultEndTime.setMinutes(0);
 
-    return {
+    const defValues: EventDetails = {
       clubId: club.id,
       name: '',
       location: '',
@@ -66,6 +78,8 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
       endTime: defaultEndTime,
       image: null,
     };
+
+    return defValues;
   }, [mode, event, club.id]);
 
   const form = useAppForm({
@@ -73,16 +87,17 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     onSubmit: async ({ value, formApi }) => {
       if (mode === 'edit' && event) {
         // Image
-        const iImageIsDirty = formApi.getFieldMeta('image')?.isDirty;
+        let imageUrl = null;
+        const iImageIsDirty = !formApi.getFieldMeta('image')?.isDefaultValue;
         if (iImageIsDirty) {
-          if (file === null) {
-            value.image = null;
+          if (value.image === null) {
+            imageUrl = null;
           } else {
             const url = await uploadImage.mutateAsync({
-              file: file,
+              file: value.image,
               fileName: `${club.id}-event-${event.id}`,
             });
-            value.image = url ?? null;
+            imageUrl = url ?? null;
           }
         }
 
@@ -90,7 +105,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
           {
             id: event.id,
             ...value,
-            image: value.image ?? null,
+            image: imageUrl,
           },
           {
             onSuccess: () => router.push(`/events/${event.id}`),
@@ -102,52 +117,47 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
       return createMutation.mutateAsync(
         {
           ...value,
-          image: value.image ?? null,
         },
         {
           onSuccess: async (newId) => {
             // Uplaod image after we have an ID
-            const iImageIsDirty = formApi.getFieldMeta('image')?.isDirty;
+            const iImageIsDirty =
+              !formApi.getFieldMeta('image')?.isDefaultValue;
             if (!iImageIsDirty) {
               router.push(`/events/${newId}`);
               return;
             }
-            if (file === null) {
-              value.image = null;
-            } else {
-              const url = await uploadImage.mutateAsync({
-                file: file,
-                fileName: `${club.id}-event-${newId}`,
-              });
-              value.image = url ?? null;
-              updateMutation.mutate(
-                {
-                  id: newId,
-                  ...value,
-                  image: value.image ?? null,
+
+            const url = await uploadImage.mutateAsync({
+              file: value.image,
+              fileName: `${club.id}-event-${newId}`,
+            });
+            const imageUrl = url ?? null;
+            updateMutation.mutate(
+              {
+                id: newId,
+                ...value,
+                image: imageUrl,
+              },
+              {
+                onSuccess: () => {
+                  router.push(`/events/${newId}`);
                 },
-                {
-                  onSuccess: () => {
-                    router.push(`/events/${newId}`);
-                  },
-                },
-              );
-            }
+              },
+            );
           },
         },
       );
     },
     validators: {
-      onChange: createEventSchema,
+      onChange: eventFormSchema,
     },
   });
 
-  const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(
-    event ? event.image : null,
-  );
-
   const formValues = useStore(form.store, (state) => state.values);
+  const previewUrl = formValues.image
+    ? URL.createObjectURL(formValues.image)
+    : (event?.image ?? null);
 
   return (
     <div className="flex w-full flex-wrap justify-start gap-10">
@@ -165,17 +175,12 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
               {(field) => (
                 <FormImage
                   label="Event Image"
-                  initialValue={field.state.value}
+                  value={field.state.value}
+                  fallbackUrl={event?.image ?? undefined}
                   onBlur={field.handleBlur}
                   onChange={(e) => {
                     const file = e.target.files?.[0] ?? null;
-                    setPreviewUrl(file ? URL.createObjectURL(file) : null);
-                    setFile(file);
-                    let fakeUrl = file?.name ?? null;
-                    if (fakeUrl !== null) {
-                      fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
-                    }
-                    field.handleChange(fakeUrl);
+                    field.handleChange(file);
                   }}
                 />
               )}
