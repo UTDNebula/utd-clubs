@@ -1,4 +1,3 @@
-"use client"
 import { TZDateMini } from '@date-fns/tz';
 import Chip from '@mui/material/Chip';
 import { format } from 'date-fns';
@@ -7,17 +6,23 @@ import MarkdownText from '@src/components/MarkdownText';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ContactButton from './ContactButton';
 import ClubOfficer from './ClubOfficer';
-import { useState } from 'react';
+import { api } from '@src/trpc/server';
+import EventCard from '@src/components/events/EventCard';
+import ExpandableMarkdownText from '@src/components/ExpandableMarkdownText';
 
-const ClubBody = ({
+const ClubBody = async ({
   club,
 }: {
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }) => {
-    const [expanded, setExpanded] = useState(false);
+    const events = await api.event.byClubId({
+        clubId: club.id,
+        sortByDate: true,
+        // currentTime: new Date(),
+    });
   return (
-    <section className="w-full rounded-lg p-10 flex flex-col items-start justify-between md:flex-row gap-4">
-      <div className="flex flex-col md:w-1/5">
+    <section className="w-full rounded-lg p-10 flex flex-col items-start md:flex-row gap-4">
+      <div className="flex flex-col md:w-1/5 flex-shrink-0">
         <div className='flex flex-col'>
             <h2 className='text-2xl font-semibold'>Details</h2>
             {/*club.numMembers*/true && (
@@ -64,17 +69,20 @@ const ClubBody = ({
         )}
         </div>
       </div>
-      <div className="grow text-slate-700">
-            <MarkdownText text={club.description} expanded={expanded} />
-            {/* Read more / Read less */}
-            <button
-                type="button"
-                className="mt-2 text-sm font-medium text-royal hover:underline"
-                onClick={() => setExpanded((v) => !v)}
-            >
-                {expanded ? 'Read less' : 'Read more'}
-            </button>
-      </div>
+      <div className='flex flex-col md:w-4/5'>
+        <div className="grow text-slate-700">
+            <ExpandableMarkdownText text={club.description} />
+        </div>
+        {events.length > 0 && (
+            <div className='flex flex-row overflow-x-auto gap-4'>
+                {events.map((event) => (
+                    <div className='flex-shrink-0'>
+                        <EventCard event={event} />
+                    </div>
+                ))}
+            </div>
+        )}
+    </div>
     </section>
   );
 };
