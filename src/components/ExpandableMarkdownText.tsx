@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import MarkdownText from './MarkdownText';
 
-const ExpandableMarkdownText = ({ text }: { text: string }) => {
+const ExpandableMarkdownText = ({ text, maxLines }: { text: string, maxLines: number }) => {
   const [expanded, setExpanded] = useState(false);
   return (
-    <>
-      <MarkdownText text={text} expanded={expanded} />
+    <div className='[&_.prose]:max-w-none'>
+      <MarkdownText text={text} expanded={expanded} maxLines={maxLines} />
       {/* Read more / Read less */}
       <button
         type="button"
@@ -16,7 +16,7 @@ const ExpandableMarkdownText = ({ text }: { text: string }) => {
       >
         {expanded ? 'Read less' : 'Read more'}
       </button>
-    </>
+    </div>
   );
 };
 
