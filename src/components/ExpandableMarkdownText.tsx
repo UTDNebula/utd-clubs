@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import MarkdownText from './MarkdownText';
 
 const ExpandableMarkdownText = ({
@@ -11,10 +11,24 @@ const ExpandableMarkdownText = ({
   maxLines: number;
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const content = container.firstElementChild as HTMLElement;
+    if (content) {
+      setIsOverflowing(content.scrollHeight > content.offsetHeight); // scrollHeight is the total height, offsetHeight is the visible height
+    }
+  }, [text, maxLines]);
+
   return (
     <div className="[&_.prose]:max-w-none">
       <MarkdownText text={text} expanded={expanded} maxLines={maxLines} />
       {/* Read more / Read less */}
+      {isOverflowing && (
       <button
         type="button"
         className="mt-2 text-sm font-medium text-royal hover:underline"
@@ -22,6 +36,7 @@ const ExpandableMarkdownText = ({
       >
         {expanded ? 'Read less' : 'Read more'}
       </button>
+      )}
     </div>
   );
 };
