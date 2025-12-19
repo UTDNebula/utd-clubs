@@ -78,9 +78,9 @@ const editOfficerSchema = z.object({
 
 const deleteSchema = z.object({ clubId: z.string() });
 
-export const removeMemberSchema = z.object({
+export const removeMembersSchema = z.object({
   clubId: z.string(),
-  id: z.string().default(''),
+  ids: z.union([z.string().default(''), z.string().default('').array()]),
 });
 
 export const clubEditRouter = createTRPCRouter({
@@ -373,8 +373,8 @@ export const clubEditRouter = createTRPCRouter({
 
       await ctx.db.delete(club).where(eq(club.id, input.clubId));
     }),
-  removeMember: protectedProcedure
-    .input(removeMemberSchema)
+  removeMembers: protectedProcedure
+    .input(removeMembersSchema)
     .mutation(async ({ input, ctx }) => {
       const isPresident = await isUserPresident(
         ctx.session.user.id,
@@ -386,23 +386,25 @@ export const clubEditRouter = createTRPCRouter({
           message: 'Must be a club admin to remove members',
         });
 
-      if (ctx.session.user.id == input.id) {
+      if (
+        Array.isArray(input.ids)
+          ? input.ids.includes(ctx.session.user.id)
+          : ctx.session.user.id == input.ids
+      ) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'Cannot remove yourself',
         });
       }
 
-      console.log(
-        `Authorized removal of user ${input.id} from club ${input.clubId}`,
-      );
-
       const result = await ctx.db
         .delete(userMetadataToClubs)
         .where(
           and(
             eq(userMetadataToClubs.clubId, input.clubId),
-            eq(userMetadataToClubs.userId, input.id),
+            Array.isArray(input.ids)
+              ? inArray(userMetadataToClubs.userId, input.ids)
+              : eq(userMetadataToClubs.userId, input.ids),
           ),
         );
 

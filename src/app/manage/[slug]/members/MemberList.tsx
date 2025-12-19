@@ -78,13 +78,31 @@ import { ReactNode } from 'react';
 import * as React from 'react';
 import z from 'zod';
 import { AppRouter } from '@src/server/api/root';
-import { removeMemberSchema } from '@src/server/api/routers/clubEdit';
+import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
 import {
   SelectClub,
   SelectUserMetadataToClubsWithUserMetadata,
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import useMemberListDeletionState from './useMemberListDeletionState';
+
+// TODO: move to `/utils` and abstract
+function getUserListString(
+  users?:
+    | SelectUserMetadataToClubsWithUserMetadata
+    | SelectUserMetadataToClubsWithUserMetadata[],
+): string {
+  if (users === undefined) return 'unknown user(s)';
+
+  const firstUser = Array.isArray(users)
+    ? users[0]?.userMetadata?.firstName
+    : users?.userMetadata?.firstName;
+
+  const otherCount = Array.isArray(users) ? users.length - 1 : 0;
+
+  return `${firstUser}${otherCount ? ` and ${otherCount} other ${otherCount === 1 ? 'person' : 'people'}` : ''}`;
+}
 
 type OwnerState = {
   expanded: boolean;
@@ -120,20 +138,22 @@ const StyledTextField = styled(TextField)<{
 type ToastState = {
   open: boolean;
   type?: 'success' | 'error';
-  user?: SelectUserMetadataToClubsWithUserMetadata;
+  string?: string;
   error?: TRPCClientErrorLike<AppRouter>;
 };
 
-// TODO: remove unused contexts, including: rowSelectionModel, setToastState, toggleAdmin, deleteUserId
+// TODO: Possible remove usused: rowSelectionModel
 interface MemberListHandlers {
-  deleteUser: (id: GridRowId) => void;
+  memberListDeletionState:
+    | ReturnType<typeof useMemberListDeletionState>
+    | undefined;
   contactEmailsVisible: boolean;
   showContactEmails: (visibility: boolean) => void;
-  removeMember:
+  removeMembers:
     | UseMutationResult<
         void,
         TRPCClientErrorLike<AppRouter>,
-        z.infer<typeof removeMemberSchema>
+        z.infer<typeof removeMembersSchema>
       >
     | undefined;
   getMembers:
@@ -143,15 +163,20 @@ interface MemberListHandlers {
       >
     | undefined;
   refreshList: () => void;
+  rowSelectionModel: GridRowSelectionModel;
 }
 
 const MemberListHandlersContext = React.createContext<MemberListHandlers>({
-  deleteUser: () => {},
+  memberListDeletionState: undefined,
   contactEmailsVisible: false,
   showContactEmails: () => {},
-  removeMember: undefined,
+  removeMembers: undefined,
   getMembers: undefined,
   refreshList: () => {},
+  rowSelectionModel: {
+    type: 'include',
+    ids: new Set<GridRowId>(),
+  },
 });
 
 function ContactEmailCell(params: GridRenderCellParams) {
@@ -226,10 +251,13 @@ function MemberTypeCell(params: GridRenderCellParams) {
 function ActionsCell(
   props: GridRenderCellParams<SelectUserMetadataToClubsWithUserMetadata>,
 ) {
-  const { deleteUser, removeMember } = React.useContext(
+  const { memberListDeletionState, removeMembers } = React.useContext(
     MemberListHandlersContext,
   );
-  const deleting = props.row.userId === removeMember?.variables?.id;
+
+  const deleting = Array.isArray(removeMembers?.variables?.ids)
+    ? removeMembers?.variables?.ids.includes(props.row.userId)
+    : props.row.userId === removeMembers?.variables?.ids;
 
   const session = authClient.useSession();
   const self = props.row.userId === session.data?.user.id;
@@ -238,7 +266,7 @@ function ActionsCell(
     <GridActionsCell {...props}>
       <GridActionsCellItem
         icon={
-          removeMember?.isPending && deleting ? (
+          removeMembers?.isPending && deleting ? (
             <CircularProgress color="inherit" size={20} />
           ) : (
             // It isn't possible to add a tooltip for when the button is disabled.
@@ -249,15 +277,12 @@ function ActionsCell(
           )
         }
         label="Delete"
-        onClick={() => deleteUser(props.id)}
-        disabled={removeMember?.isPending || self}
+        onClick={() => {
+          memberListDeletionState?.deleteSourceModel.setFromRowId(props.id);
+          memberListDeletionState?.setOpenConfirmDialog(true);
+        }}
+        disabled={removeMembers?.isPending || self}
       />
-      {/* <GridActionsCellItem
-        icon={<SecurityIcon />}
-        label="Toggle Admin"
-        onClick={() => toggleAdmin(props.id)}
-        showInMenu
-      /> */}
     </GridActionsCell>
   );
 }
@@ -267,22 +292,52 @@ interface CustomToolbarProps extends PropsFromSlot<GridSlots['toolbar']> {
 }
 
 function CustomToolbar({ club }: CustomToolbarProps) {
-  const { refreshList } = React.useContext(MemberListHandlersContext);
+  const { memberListDeletionState, refreshList } = React.useContext(
+    MemberListHandlersContext,
+  );
+
+  const apiRef = useGridApiContext();
+  const selectedRowCount = useGridSelector(
+    apiRef,
+    gridRowSelectionCountSelector,
+  );
 
   const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <Toolbar>
-      <Typography
-        variant="h2"
-        className="grow-1 ml-2 text-base font-semibold text-haiti"
-      >
-        <span className="hidden sm:inline">
-          {'Club Members' + (club ? ' for ' + club.name : '')}
-        </span>
-        <span className="inline sm:hidden">Club Members</span>
-      </Typography>
+    <Toolbar
+      className={`${selectedRowCount ? 'bg-[var(--DataGrid-t-color-interactive-selected)]/8' : ''}`}
+    >
+      <div className="grow-1 ml-2">
+        {selectedRowCount ? (
+          <div className="flex items-center gap-2">
+            <span>{`Selection (${selectedRowCount} ${selectedRowCount == 1 ? 'person' : 'people'})`}</span>
+            <div>
+              <Tooltip title="Remove Selected">
+                <ToolbarButton
+                  onClick={() => {
+                    memberListDeletionState?.deleteSourceModel.setFromSelection();
+                    memberListDeletionState?.setOpenConfirmDialog(true);
+                  }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </ToolbarButton>
+              </Tooltip>
+            </div>
+          </div>
+        ) : (
+          <Typography
+            variant="h2"
+            className="text-base font-semibold text-haiti"
+          >
+            <span className="hidden sm:inline">
+              {'Club Members' + (club ? ' for ' + club.name : '')}
+            </span>
+            <span className="inline sm:hidden">Club Members</span>
+          </Typography>
+        )}
+      </div>
 
       <Tooltip title="Refresh">
         <ToolbarButton onClick={refreshList}>
@@ -416,17 +471,10 @@ function CustomToolbar({ club }: CustomToolbarProps) {
 }
 
 function CustomFooter() {
-  const { removeMember, getMembers } = React.useContext(
-    MemberListHandlersContext,
-  );
+  const { memberListDeletionState, removeMembers, getMembers } =
+    React.useContext(MemberListHandlersContext);
 
-  const apiRef = useGridApiContext();
-  const selectedRowCount = useGridSelector(
-    apiRef,
-    gridRowSelectionCountSelector,
-  );
-
-  const loading = removeMember?.isPending || getMembers?.isFetching;
+  const loading = removeMembers?.isPending || getMembers?.isFetching;
 
   return (
     <GridFooterContainer>
@@ -434,11 +482,11 @@ function CustomFooter() {
         {loading ? (
           <div className="flex items-center gap-2">
             <CircularProgress color="inherit" size={20} />
-            {removeMember?.isPending && <span>Deleting user</span>}
+            {removeMembers?.isPending && (
+              <span>{`Removing ${getUserListString(memberListDeletionState?.deleteUsers)}`}</span>
+            )}
             {getMembers?.isFetching && <span>Refreshing</span>}
           </div>
-        ) : selectedRowCount > 0 ? (
-          `${selectedRowCount} ${selectedRowCount == 1 ? 'person' : 'people'} selected`
         ) : null}
       </div>
       <GridFooter
@@ -571,11 +619,11 @@ const MemberList = ({ members, club }: MemberListProps) => {
 
   const api = useTRPC();
 
-  const removeMember = useMutation<
+  const removeMembers = useMutation<
     void,
     TRPCClientErrorLike<AppRouter>,
-    z.infer<typeof removeMemberSchema>
-  >(api.club.edit.removeMember.mutationOptions({}));
+    z.infer<typeof removeMembersSchema>
+  >(api.club.edit.removeMembers.mutationOptions({}));
 
   // Only used for the refresh button
   const getMembers = useQuery(
@@ -622,52 +670,80 @@ const MemberList = ({ members, club }: MemberListProps) => {
   );
 
   const [rows, setRows] = React.useState<typeof membersIndexed>(membersIndexed);
-  const [deleteUserId, deleteUser] = React.useState<GridRowId | null>(null);
 
-  const deleteActiveRow = React.useCallback(
-    (rowId: GridRowId) =>
-      setRows((prevRows) => prevRows.filter((row) => row.id !== rowId)),
-    [],
+  const memberListDeletionState = useMemberListDeletionState(
+    rows,
+    rowSelectionModel,
   );
 
-  const handleCloseDialog = React.useCallback(() => {
-    deleteUser(null);
+  const {
+    deleteUsers,
+    deleteSourceModel,
+    openConfirmDialog,
+    setOpenConfirmDialog,
+  } = memberListDeletionState;
+
+  const deleteRows = React.useCallback((rowId: GridRowId | GridRowId[]) => {
+    const normalizedGridRowIds = Array.isArray(rowId) ? rowId : [rowId];
+    setRows((prevRows) =>
+      prevRows.filter((row) => !normalizedGridRowIds.includes(row.id)),
+    );
   }, []);
+
+  const handleCloseDialog = React.useCallback(() => {
+    setOpenConfirmDialog(false);
+  }, [setOpenConfirmDialog]);
 
   const handleConfirmDelete = React.useCallback(() => {
     handleCloseDialog();
 
-    const targetMember = rows.find((row) => row.id == deleteUserId);
+    const userListString = getUserListString(deleteUsers);
 
-    void removeMember.mutateAsync(
+    console.log('users to delete: ', deleteUsers);
+
+    const targetUserIds = Array.isArray(deleteUsers)
+      ? deleteUsers?.map((row) => row.userId)
+      : deleteUsers?.userId;
+
+    void removeMembers.mutateAsync(
       {
         clubId: club.id,
-        id: targetMember?.userId ?? '',
+        ids: targetUserIds ?? '',
       },
       {
         onSuccess: (data) => {
-          deleteActiveRow(deleteUserId!);
+          if (deleteSourceModel.source === 'selection') {
+            deleteRows([...rowSelectionModel.ids]);
+          } else {
+            deleteRows(deleteSourceModel.rowId!);
+          }
           console.log(`Success! ${data}`);
-          setToastState({ open: true, type: 'success', user: targetMember });
+          setToastState({
+            open: true,
+            type: 'success',
+            string: `Successfully removed ${userListString}!`,
+          });
         },
         onError: (error) => {
           console.log(`Error: ${error}`);
           setToastState({
             open: true,
             type: 'error',
-            user: targetMember,
+            string: `Couldn't remove ${userListString}!`,
             error: error,
           });
         },
       },
     );
   }, [
-    club.id,
-    deleteActiveRow,
-    deleteUserId,
     handleCloseDialog,
-    removeMember,
-    rows,
+    deleteSourceModel.rowId,
+    deleteSourceModel.source,
+    deleteUsers,
+    removeMembers,
+    club.id,
+    deleteRows,
+    rowSelectionModel.ids,
   ]);
 
   const refreshList = React.useCallback(async () => {
@@ -688,20 +764,22 @@ const MemberList = ({ members, club }: MemberListProps) => {
 
   const MemberListHandlers = React.useMemo<MemberListHandlers>(
     () => ({
-      deleteUser,
+      memberListDeletionState,
       contactEmailsVisible,
       showContactEmails,
-      removeMember,
+      removeMembers,
       getMembers,
       refreshList,
+      rowSelectionModel,
     }),
     [
-      deleteUser,
+      memberListDeletionState,
       contactEmailsVisible,
       showContactEmails,
-      removeMember,
+      removeMembers,
       getMembers,
       refreshList,
+      rowSelectionModel,
     ],
   );
 
@@ -727,16 +805,10 @@ const MemberList = ({ members, club }: MemberListProps) => {
             variant="filled"
             sx={{ width: '100%' }}
           >
-            {toastState.type === 'success' ? (
-              `Successfully removed ${toastState.user?.userMetadata?.firstName}!`
-            ) : (
-              <>
-                <p>
-                  {`Couldn't remove ${toastState.user?.userMetadata?.firstName}!`}
-                </p>
-                <p>{`Reason: ${toastState.error?.message}`}</p>
-              </>
-            )}
+            {toastState.string}
+            {toastState.type === 'error' && toastState.error
+              ? `Reason: ${toastState.error.message}`
+              : ''}
           </Alert>
         </Snackbar>
         <DataGrid
@@ -757,6 +829,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
           pageSizeOptions={[25]}
           checkboxSelection
           disableRowSelectionOnClick
+          disableRowSelectionExcludeModel
           className="rounded-lg"
           onCellDoubleClick={handleOnCellDoubleClick}
           rowSelectionModel={rowSelectionModel}
@@ -767,12 +840,16 @@ const MemberList = ({ members, club }: MemberListProps) => {
         />
       </MemberListHandlersContext.Provider>
       <Dialog
-        open={deleteUserId !== null}
+        open={openConfirmDialog}
         onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Remove this user?</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <span>Remove </span>
+          {getUserListString(deleteUsers)}
+          <span>?</span>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             This action cannot be undone.
