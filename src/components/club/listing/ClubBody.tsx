@@ -20,47 +20,56 @@ const ClubBody = async ({
       <div className="md:col-span-1 flex flex-col gap-4 h-full">
         <div className="flex flex-col bg-slate-100 p-4 rounded-xl gap-2 text-sm">
           <h2 className="text-2xl font-semibold mb-2">Details</h2>
-          {
-            /*club.numMembers*/ true && (
-              <div className="flex flex-row w-full justify-between">
-                <span>Members</span>
-                <span>67</span>
-              </div>
-            )
-          }
-          {
-            /*club.foundingDate*/ true && (
-              <div className="flex flex-row w-full justify-between">
-                <span>Founded</span>
-                <span>May 2020</span>
-              </div>
-            )
-          }
-          {
-            /*club.*/ true && (
-              <div className="flex flex-row w-full justify-between">
-                <span>Last Active</span>
-                <span>2020 present</span>
-              </div>
-            )
-          }
-          {
-            /*club.updatedAt*/ true && (
-              <div className="flex flex-row w-full justify-between">
-                <span>Updated</span>
-                <span>Nov 2025</span>
-              </div>
-            )
-          }
+          {/*club.numMembers ||*/ club.foundingDate || /*club.lastActive ||*/ club.updatedAt || true ? (
+            <>
+              {
+                /*club.numMembers*/ true && (
+                  <div className="flex flex-row w-full justify-between">
+                    <span>Members</span>
+                    <span>67</span>
+                  </div>
+                )
+              }
+              {
+                /*club.foundingDate*/ true && (
+                  <div className="flex flex-row w-full justify-between">
+                    <span>Founded</span>
+                    <span>May 2020</span>
+                  </div>
+                )
+              }
+              {
+                /*club.*/ true && (
+                  <div className="flex flex-row w-full justify-between">
+                    <span>Last Active</span>
+                    <span>2020 present</span>
+                  </div>
+                )
+              }
+              {
+                /*club.updatedAt*/ true && (
+                  <div className="flex flex-row w-full justify-between">
+                    <span>Updated</span>
+                    <span>Nov 2025</span>
+                  </div>
+                )
+              }
+            </>
+          ) : (
+            <span className="text-slate-500">Awaiting details...</span>
+          )}
         </div>
         <div className="flex flex-col bg-slate-100 p-4 rounded-xl gap-2">
           <h2 className="text-2xl font-semibold mb-2">Contact</h2>
-          {club.contacts &&
+          {club.contacts && club.contacts.length > 0 ? (
             club.contacts.map((contact) => (
               <div key={contact.platform} className="bg-white rounded-4xl">
                 <ContactButton contact={contact} />
               </div>
-            ))}
+            ))
+          ) : (
+            <span className="text-slate-500 text-sm">Check back soon...</span>
+          )}
         </div>
         <OfficerList officers={club.officers} />
       </div>
@@ -69,7 +78,14 @@ const ClubBody = async ({
         className="md:col-span-4 flex flex-col gap-4"
       >
         <div className="bg-slate-100 p-10 rounded-xl grow text-slate-700">
-          <ExpandableMarkdownText text={club.description} maxLines={10} />
+          <ExpandableMarkdownText
+            text={
+              club.description.length > 0
+                ? club.description
+                : '**Check us out!**'
+            }
+            maxLines={10}
+          />
         </div>
         <div className="flex flex-col bg-slate-100 p-4 rounded-xl">
           <h2 className="text-2xl font-semibold mb-2">Upcoming Events</h2>
