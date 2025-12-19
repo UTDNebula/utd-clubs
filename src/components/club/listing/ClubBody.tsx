@@ -10,10 +10,13 @@ const ClubBody = async ({
 }: {
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }) => {
+  const now = new Date();
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(now.getFullYear() - 1);
   const events = await api.event.byClubId({
     clubId: club.id,
     sortByDate: true,
-    // currentTime: new Date(),
+    // currentTime: now,
   });
   return (
     <section className="w-full rounded-lg grid grid-cols-1 md:grid-cols-5 gap-5 items-start mt-8">
@@ -98,7 +101,9 @@ const ClubBody = async ({
               events.map((event) => <EventCard key={event.id} event={event} />)
             ) : (
               <div className="text-md font-medium text-gray-700">
-                There are no upcoming events.
+                {club.updatedAt == null || club.updatedAt < oneYearAgo
+                  ? 'No info about upcoming events'
+                  : 'There are no upcoming events'}
               </div>
             )}
           </div>
