@@ -22,8 +22,8 @@ const ClubTitle = async ({
       <div className="flex flex-col flex-grow">
         {club.name && (
           <h1
-            className={`font-display font-bold text-slate-800 text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] ${
-              club.name.length > 10 ? 'text-3xl' : 'text-5xl'
+            className={`font-display font-bold text-slate-800 ${
+              club.name.length > 40 ? 'text-3xl' : 'text-5xl'
             }`}
           >
             {club.name}
