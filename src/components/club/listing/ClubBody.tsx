@@ -16,7 +16,7 @@ const ClubBody = async ({
     // currentTime: new Date(),
   });
   return (
-    <section className="w-full rounded-lg p-10 grid grid-cols-1 md:grid-cols-5 gap-5 items-start">
+    <section className="w-full rounded-lg grid grid-cols-1 md:grid-cols-5 gap-5 items-start mt-8">
       <div className="md:col-span-1 flex flex-col gap-4 h-full">
         <div className="flex flex-col bg-slate-100 p-4 rounded-xl gap-2 text-sm">
           <h2 className="text-2xl font-semibold mb-2">Details</h2>
