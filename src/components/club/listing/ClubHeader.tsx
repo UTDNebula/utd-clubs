@@ -11,7 +11,7 @@ type Club = SelectClub & {
 };
 const ClubHeader = async ({ club }: { club: Club }) => {
   return (
-    <div className="relative min-h-64 rounded-lg overflow-hidden">
+    <div className="relative w-full aspect-[4.5/1] rounded-lg overflow-hidden">
       <Image
         src={club.bannerImage ?? '/images/wideWave.jpg'}
         alt="Club banner"
@@ -19,7 +19,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
         className="object-cover object-center"
         priority
       />
-      <div className="relative z-10 flex flex-wrap min-h-64 h-full w-full items-center p-4 md:p-20 gap-4">
+      <div className="absolute inset-0 z-10 flex flex-wrap items-center p-4 md:px-20 gap-4">
         <h1
           className={`font-display font-bold text-slate-100 text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] ${
             club.name.length > 10 ? 'text-3xl' : 'text-5xl'
