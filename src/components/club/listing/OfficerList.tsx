@@ -70,7 +70,7 @@ export default function OfficerList({
               <ClubOfficer key={officer.name} officer={officer} />
             ))
           ) : (
-            <span className="text-slate-500 text-sm">Stay tuned...</span>
+            <span className="text-slate-500 text-sm">No officers listed</span>
           )}
         </div>
 
