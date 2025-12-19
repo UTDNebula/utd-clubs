@@ -73,15 +73,15 @@ const ClubBody = async ({
         <div className="grow text-slate-700">
             <ExpandableMarkdownText text={club.description} />
         </div>
-        {events.length > 0 && (
-            <div className='flex flex-row overflow-x-auto gap-4'>
-                {events.map((event) => (
-                    <div className='flex-shrink-0'>
-                        <EventCard event={event} />
-                    </div>
-                ))}
+        <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
+            {events.length > 0 ? (
+            events.map((event) => <EventCard key={event.id} event={event} />)
+            ) : (
+            <div className="text-md font-medium text-gray-700">
+                There are no upcoming events.
             </div>
-        )}
+            )}
+        </div>
     </div>
     </section>
   );
