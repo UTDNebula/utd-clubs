@@ -99,14 +99,6 @@ export const adminRouter = createTRPCRouter({
           });
       }
 
-      // Updated at
-      await ctx.db
-        .update(club)
-        .set({
-          updatedAt: new Date(),
-        })
-        .where(eq(club.id, input.clubId));
-
       // Return new officers
       const newOfficers = await ctx.db.query.userMetadataToClubs.findMany({
         where: and(
