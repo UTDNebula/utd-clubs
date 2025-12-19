@@ -35,9 +35,9 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
         <ClubHeader club={club} />
         <ClubTitle club={club} />
         <ClubBody club={club} />
-        <ClubInfoSegment club={club} />
+        {/* <ClubInfoSegment club={club} />
         {club.contacts.length > 0 && <ContactInformation club={club} />}
-        {club.updatedAt && <ClubUpcomingEvents clubId={club.id} />}
+        {club.updatedAt && <ClubUpcomingEvents clubId={club.id} />} */}
         {(club.updatedAt == null || club.updatedAt < oneYearAgo) && (
           <ClubNotClaimed />
         )}

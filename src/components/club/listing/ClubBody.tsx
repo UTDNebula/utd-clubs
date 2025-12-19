@@ -60,7 +60,7 @@ const ClubBody = async ({
               <div className='bg-white rounded-4xl'><ContactButton key={contact.platform} contact={contact} /></div>
             ))}
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col bg-slate-100 p-4 rounded-xl">
           <h2 className="text-2xl font-semibold">Officers</h2>
           {club.officers.length != 0 && (
             <div className="w-auto max-w-[320px] min-w-0">
