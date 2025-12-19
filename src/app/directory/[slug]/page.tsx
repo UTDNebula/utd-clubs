@@ -31,7 +31,7 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
   return (
     <>
       <Header />
-      <main className="mb-5 flex flex-col space-y-4 p-4 px-[5vw]">
+      <main className="mb-5 flex flex-col space-y-4 p-4 px-[10vw]">
         <ClubHeader club={club} />
         <ClubTitle club={club} />
         <ClubBody club={club} />

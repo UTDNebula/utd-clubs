@@ -34,6 +34,7 @@ const ClubTitle = async ({
             {club.tags.map((tag) => (
               <Chip
                 label={tag}
+                key={tag}
                 className="font-semibold"
                 sx={{
                   backgroundColor: 'var(--color-cornflower-100)',
