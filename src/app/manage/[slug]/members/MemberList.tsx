@@ -87,6 +87,13 @@ import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 import useMemberListDeletionState from './useMemberListDeletionState';
 
+type MemberListAbilities = {
+  removeUsers?: boolean;
+  refresh?: boolean;
+  downloadCSV?: boolean;
+  viewAccountEmail?: boolean;
+};
+
 // TODO: move to `/utils` and abstract
 function getUserListString(
   users?:
@@ -147,6 +154,7 @@ interface MemberListHandlers {
   memberListDeletionState:
     | ReturnType<typeof useMemberListDeletionState>
     | undefined;
+  memberListAbilities: MemberListAbilities;
   contactEmailsVisible: boolean;
   showContactEmails: (visibility: boolean) => void;
   removeMembers:
@@ -168,6 +176,11 @@ interface MemberListHandlers {
 
 const MemberListHandlersContext = React.createContext<MemberListHandlers>({
   memberListDeletionState: undefined,
+  memberListAbilities: {
+    removeUsers: false,
+    downloadCSV: true,
+    viewAccountEmail: true,
+  },
   contactEmailsVisible: false,
   showContactEmails: () => {},
   removeMembers: undefined,
@@ -251,9 +264,8 @@ function MemberTypeCell(params: GridRenderCellParams) {
 function ActionsCell(
   props: GridRenderCellParams<SelectUserMetadataToClubsWithUserMetadata>,
 ) {
-  const { memberListDeletionState, removeMembers } = React.useContext(
-    MemberListHandlersContext,
-  );
+  const { memberListDeletionState, memberListAbilities, removeMembers } =
+    React.useContext(MemberListHandlersContext);
 
   const deleting = Array.isArray(removeMembers?.variables?.ids)
     ? removeMembers?.variables?.ids.includes(props.row.userId)
@@ -264,25 +276,27 @@ function ActionsCell(
 
   return (
     <GridActionsCell {...props}>
-      <GridActionsCellItem
-        icon={
-          removeMembers?.isPending && deleting ? (
-            <CircularProgress color="inherit" size={20} />
-          ) : (
-            // It isn't possible to add a tooltip for when the button is disabled.
-            // See https://github.com/mui/mui-x/issues/14045
-            <Tooltip title="Remove" placement="left">
-              <DeleteIcon />
-            </Tooltip>
-          )
-        }
-        label="Delete"
-        onClick={() => {
-          memberListDeletionState?.deleteSourceModel.setFromRowId(props.id);
-          memberListDeletionState?.setOpenConfirmDialog(true);
-        }}
-        disabled={removeMembers?.isPending || self}
-      />
+      {memberListAbilities.removeUsers && (
+        <GridActionsCellItem
+          icon={
+            removeMembers?.isPending && deleting ? (
+              <CircularProgress color="inherit" size={20} />
+            ) : (
+              // It isn't possible to add a tooltip for when the button is disabled.
+              // See https://github.com/mui/mui-x/issues/14045
+              <Tooltip title="Remove" placement="left">
+                <DeleteIcon />
+              </Tooltip>
+            )
+          }
+          label="Delete"
+          onClick={() => {
+            memberListDeletionState?.deleteSourceModel.setFromRowId(props.id);
+            memberListDeletionState?.setOpenConfirmDialog(true);
+          }}
+          disabled={removeMembers?.isPending || self}
+        />
+      )}
     </GridActionsCell>
   );
 }
@@ -292,9 +306,8 @@ interface CustomToolbarProps extends PropsFromSlot<GridSlots['toolbar']> {
 }
 
 function CustomToolbar({ club }: CustomToolbarProps) {
-  const { memberListDeletionState, refreshList } = React.useContext(
-    MemberListHandlersContext,
-  );
+  const { memberListDeletionState, memberListAbilities, refreshList } =
+    React.useContext(MemberListHandlersContext);
 
   const apiRef = useGridApiContext();
   const selectedRowCount = useGridSelector(
@@ -314,16 +327,18 @@ function CustomToolbar({ club }: CustomToolbarProps) {
           <div className="flex items-center gap-2">
             <span>{`Selection (${selectedRowCount} ${selectedRowCount == 1 ? 'person' : 'people'})`}</span>
             <div>
-              <Tooltip title="Remove Selected">
-                <ToolbarButton
-                  onClick={() => {
-                    memberListDeletionState?.deleteSourceModel.setFromSelection();
-                    memberListDeletionState?.setOpenConfirmDialog(true);
-                  }}
-                >
-                  <DeleteIcon fontSize="small" />
-                </ToolbarButton>
-              </Tooltip>
+              {memberListAbilities.removeUsers && (
+                <Tooltip title="Remove Selected">
+                  <ToolbarButton
+                    onClick={() => {
+                      memberListDeletionState?.deleteSourceModel.setFromSelection();
+                      memberListDeletionState?.setOpenConfirmDialog(true);
+                    }}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </ToolbarButton>
+                </Tooltip>
+              )}
             </div>
           </div>
         ) : (
@@ -339,31 +354,37 @@ function CustomToolbar({ club }: CustomToolbarProps) {
         )}
       </div>
 
-      <Tooltip title="Refresh">
-        <ToolbarButton onClick={refreshList}>
-          <RefreshIcon fontSize="small" />
-        </ToolbarButton>
-      </Tooltip>
+      {memberListAbilities.refresh && (
+        <Tooltip title="Refresh">
+          <ToolbarButton onClick={refreshList}>
+            <RefreshIcon fontSize="small" />
+          </ToolbarButton>
+        </Tooltip>
+      )}
 
-      <Tooltip title="Export">
-        <ToolbarButton
-          ref={exportMenuTriggerRef}
-          id="export-menu-trigger"
-          aria-controls="export-menu"
-          aria-haspopup="true"
-          aria-expanded={exportMenuOpen ? 'true' : undefined}
-          onClick={() => setExportMenuOpen(true)}
-        >
-          <FileDownloadOutlinedIcon fontSize="small" />
-        </ToolbarButton>
-      </Tooltip>
+      {memberListAbilities.downloadCSV && (
+        <Tooltip title="Export">
+          <ToolbarButton
+            ref={exportMenuTriggerRef}
+            id="export-menu-trigger"
+            aria-controls="export-menu"
+            aria-haspopup="true"
+            aria-expanded={exportMenuOpen ? 'true' : undefined}
+            onClick={() => setExportMenuOpen(true)}
+          >
+            <FileDownloadOutlinedIcon fontSize="small" />
+          </ToolbarButton>
+        </Tooltip>
+      )}
 
-      <Divider
-        orientation="vertical"
-        variant="middle"
-        flexItem
-        sx={{ mx: 0.5 }}
-      />
+      {memberListAbilities.refresh && memberListAbilities.downloadCSV && (
+        <Divider
+          orientation="vertical"
+          variant="middle"
+          flexItem
+          sx={{ mx: 0.5 }}
+        />
+      )}
 
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>
@@ -400,12 +421,14 @@ function CustomToolbar({ club }: CustomToolbarProps) {
           },
         }}
       >
-        <ExportCsv
-          render={<MenuItem />}
-          onClick={() => setExportMenuOpen(false)}
-        >
-          Download as CSV
-        </ExportCsv>
+        {memberListAbilities.downloadCSV && (
+          <ExportCsv
+            render={<MenuItem />}
+            onClick={() => setExportMenuOpen(false)}
+          >
+            Download as CSV
+          </ExportCsv>
+        )}
       </Menu>
 
       <Divider
@@ -699,8 +722,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
 
     const userListString = getUserListString(deleteUsers);
 
-    console.log('users to delete: ', deleteUsers);
-
     const targetUserIds = Array.isArray(deleteUsers)
       ? deleteUsers?.map((row) => row.userId)
       : deleteUsers?.userId;
@@ -711,13 +732,12 @@ const MemberList = ({ members, club }: MemberListProps) => {
         ids: targetUserIds ?? '',
       },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           if (deleteSourceModel.source === 'selection') {
             deleteRows([...rowSelectionModel.ids]);
           } else {
             deleteRows(deleteSourceModel.rowId!);
           }
-          console.log(`Success! ${data}`);
           setToastState({
             open: true,
             type: 'success',
@@ -725,7 +745,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
           });
         },
         onError: (error) => {
-          console.log(`Error: ${error}`);
           setToastState({
             open: true,
             type: 'error',
@@ -762,9 +781,26 @@ const MemberList = ({ members, club }: MemberListProps) => {
     }
   }, [getMembers]);
 
+  const isAdmin =
+    rows.find((row) => row.userId === session.data?.user.id)?.memberType ===
+    'President';
+
+  const memberListAbilities: MemberListAbilities = React.useMemo(() => {
+    return {
+      removeUsers: isAdmin,
+      refresh: true,
+      downloadCSV: true,
+      viewAccountEmail: true,
+    };
+  }, [isAdmin]);
+
+  // Shows action column only if user is an admin
+  const actionedColumns = isAdmin ? [...columns, actionColumn] : columns;
+
   const MemberListHandlers = React.useMemo<MemberListHandlers>(
     () => ({
       memberListDeletionState,
+      memberListAbilities,
       contactEmailsVisible,
       showContactEmails,
       removeMembers,
@@ -774,6 +810,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
     }),
     [
       memberListDeletionState,
+      memberListAbilities,
       contactEmailsVisible,
       showContactEmails,
       removeMembers,
@@ -782,13 +819,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
       rowSelectionModel,
     ],
   );
-
-  // Shows action column only if user is an admin
-  const actionedColumns =
-    rows.find((row) => row.userId === session.data?.user.id)?.memberType ===
-    'President'
-      ? [...columns, actionColumn]
-      : columns;
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl">
@@ -805,10 +835,12 @@ const MemberList = ({ members, club }: MemberListProps) => {
             variant="filled"
             sx={{ width: '100%' }}
           >
-            {toastState.string}
-            {toastState.type === 'error' && toastState.error
-              ? `Reason: ${toastState.error.message}`
-              : ''}
+            <p>{toastState.string}</p>
+            <p>
+              {toastState.type === 'error' && toastState.error
+                ? `Reason: ${toastState.error.message}`
+                : ''}
+            </p>
           </Alert>
         </Snackbar>
         <DataGrid
