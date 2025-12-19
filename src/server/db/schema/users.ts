@@ -133,7 +133,7 @@ export type ClubMatchResponses = {
   proximity: string;
   categories: string[];
   hobbies: string[];
-  gender: string;
+  gender?: string | undefined;
   timeCommitment: string;
   specificCultures?: string | undefined;
   hobbyDetails?: string | undefined;
