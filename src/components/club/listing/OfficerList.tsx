@@ -35,7 +35,7 @@ export default function OfficerList({
       const targetHeight = rightBottom - officerTop;
       const contentHeight = contentRef.current.scrollHeight + 80; // + padding/header space
       setMaxHeight(targetHeight > 0 ? targetHeight : 300);
-      setNeedsTruncation(contentHeight > targetHeight);
+      setNeedsTruncation(contentHeight > targetHeight && officers.length > 0);
     };
 
     // Initial measure
@@ -59,18 +59,22 @@ export default function OfficerList({
 
   return (
     <div
-      className="flex flex-col bg-slate-100 p-4 rounded-xl transition-all duration-500 overflow-hidden"
+      className="flex flex-col gap-2 bg-slate-100 p-4 rounded-xl transition-all duration-500 overflow-hidden"
       style={containerStyle}
     >
-      <h2 className="text-2xl font-semibold">Officers</h2>
+      <h2 className="text-2xl font-semibold mb-2">Officers</h2>
       <div className="relative flex-1 min-h-0 overflow-hidden">
         <div ref={contentRef} className="flex flex-col gap-4">
-          {officers.map((officer) => (
-            <ClubOfficer key={officer.name} officer={officer} />
-          ))}
+          {officers.length > 0 ? (
+            officers.map((officer) => (
+              <ClubOfficer key={officer.name} officer={officer} />
+            ))
+          ) : (
+            <span className="text-slate-500 text-sm">Stay tuned...</span>
+          )}
         </div>
 
-        {/* Fade overlay: only shows if content is taller than right side AND not expanded */}
+        {/* fade overlay only shows if content is taller than right side AND not expanded */}
         {needsTruncation && !isExpanded && (
           <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-slate-100 to-transparent pointer-events-none" />
         )}
