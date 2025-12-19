@@ -14,8 +14,8 @@ const ClubTitle = async ({
         <Image
           src={club.profileImage}
           alt={club.name + ' logo'}
-          width={100}
-          height={100}
+          width={110}
+          height={110}
           className="rounded-lg"
         />
       )}
@@ -31,16 +31,19 @@ const ClubTitle = async ({
         )}
         {club.tags && (
           <div className="flex flex-wrap gap-1 mt-2">
-            {club.tags.map((tag) => {
-              return (
-                <Chip
-                  label={tag}
-                  key={tag}
-                  className="font-bold"
-                  color="primary"
-                />
-              );
-            })}
+            {club.tags.map((tag) => (
+              <Chip
+                label={tag}
+                className="font-semibold"
+                sx={{
+                  backgroundColor: 'var(--color-cornflower-100)',
+                  color: 'var(--color-cornflower-600)',
+                  '&:hover': {
+                    backgroundColor: 'var(--color-cornflower-200)',
+                  },
+                }}
+              />
+            ))}
           </div>
         )}
       </div>
