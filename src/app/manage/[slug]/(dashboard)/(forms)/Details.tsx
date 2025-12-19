@@ -236,6 +236,15 @@ const Details = ({ club }: DetailsProps) => {
                 onChange={(value) => {
                   field.handleChange(value);
                 }}
+                onBlur={field.handleBlur}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
               />
             )}
           </form.Field>

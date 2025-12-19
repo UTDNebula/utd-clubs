@@ -4,6 +4,9 @@ import { contactSchema } from './contact';
 export const createClubSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   description: z.string().min(1, 'Description is required'),
+  tags: z
+    .array(z.string().max(100, 'Character limit reached'))
+    .min(2, 'Select at least 2 tags'),
 });
 
 export const editClubContactSchema = z.object({
@@ -36,7 +39,9 @@ export const editClubDetailsSchema = z.object({
     .string()
     .min(1, 'Description is required')
     .max(5000, 'Character limit reached'),
-  tags: z.array(z.string().max(100, 'Character limit reached')),
+  tags: z
+    .array(z.string().max(100, 'Character limit reached'))
+    .min(2, 'Select at least 2 tags'),
   profileImage: z.url().optional(),
   bannerImage: z.url().optional(),
   foundingDate: z.date().nullable(),
