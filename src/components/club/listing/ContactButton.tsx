@@ -9,21 +9,23 @@ type ContactButtonProps = {
 };
 const ContactButton = ({ contact }: ContactButtonProps) => {
   return (
-      <Tooltip
-        key={contact.platform + contact.url}
-        title={contactNames[contact.platform]}
+    <Tooltip
+      key={contact.platform + contact.url}
+      title={contactNames[contact.platform]}
+    >
+      <Link
+        href={
+          contact.platform === 'email' ? `mailto:${contact.url}` : contact.url
+        }
+        target="_blank"
+        className="inline-block w-full"
       >
-        <Link
-          href={contact.platform === 'email' ? `mailto:${contact.url}` : contact.url}
-          target="_blank"
-          className="inline-block w-full"
-        >
-          <IconButton className="group bg-slate-100" size="large">
-            {logo[contact.platform]}
-          </IconButton>
-          <span>{contact.platform}</span>
-        </Link>
-      </Tooltip>
+        <IconButton className="group bg-slate-100" size="large">
+          {logo[contact.platform]}
+        </IconButton>
+        <span>{contact.platform}</span>
+      </Link>
+    </Tooltip>
   );
 };
 
