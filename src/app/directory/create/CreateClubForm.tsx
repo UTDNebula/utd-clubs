@@ -3,10 +3,14 @@
 import { TextField } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { z } from 'zod';
 import Panel from '@src/components/form/Panel';
+import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { createClubSchema } from '@src/utils/formSchemas';
+
+type CreateClubSchema = z.infer<typeof createClubSchema>;
 
 const CreateClubForm = () => {
   const api = useTRPC();
@@ -17,7 +21,8 @@ const CreateClubForm = () => {
     defaultValues: {
       name: '',
       description: '',
-    },
+      tags: [],
+    } as CreateClubSchema,
     onSubmit: async ({ value }) => {
       const slug = await createClub.mutateAsync(value);
       router.push(`/manage/${slug}`);
@@ -52,9 +57,9 @@ const CreateClubForm = () => {
                 onChange={(e) => field.handleChange(e.target.value)}
                 className="grow [&>.MuiInputBase-root]:bg-white"
                 size="small"
-                error={!field.state.meta.isValid}
+                error={field.state.meta.isTouched && !field.state.meta.isValid}
                 helperText={
-                  !field.state.meta.isValid
+                  field.state.meta.isTouched && !field.state.meta.isValid
                     ? field.state.meta.errors
                         .map((err) => err?.message)
                         .join('. ') + '.'
@@ -76,9 +81,9 @@ const CreateClubForm = () => {
                 className="[&>.MuiInputBase-root]:bg-white"
                 multiline
                 minRows={4}
-                error={!field.state.meta.isValid}
+                error={field.state.meta.isTouched && !field.state.meta.isValid}
                 helperText={
-                  !field.state.meta.isValid ? (
+                  field.state.meta.isTouched && !field.state.meta.isValid ? (
                     field.state.meta.errors
                       .map((err) => err?.message)
                       .join('. ') + '.'
@@ -96,6 +101,25 @@ const CreateClubForm = () => {
                       !
                     </span>
                   )
+                }
+              />
+            )}
+          </form.Field>
+          <form.Field name="tags">
+            {(field) => (
+              <ClubTagEdit
+                value={field.state.value}
+                onChange={(value) => {
+                  field.handleChange(value);
+                }}
+                onBlur={field.handleBlur}
+                error={field.state.meta.isTouched && !field.state.meta.isValid}
+                helperText={
+                  field.state.meta.isTouched && !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
                 }
               />
             )}
