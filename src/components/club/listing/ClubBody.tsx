@@ -63,18 +63,21 @@ const ClubBody = async ({
                 </div>
                 <OfficerList officers={club.officers} /> 
             </div>
-            <div id="club-content-right" className="md:col-span-4 flex flex-col">
-                <div className="grow text-slate-700">
-                    <ExpandableMarkdownText text={club.description} />
+            <div id="club-content-right" className="md:col-span-4 flex flex-col gap-4">
+                <div className="bg-slate-100 p-10 rounded-xl grow text-slate-700">
+                    <ExpandableMarkdownText text={club.description} maxLines={10}/>
                 </div>
-                <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
-                    {events.length > 0 ? (
-                        events.map((event) => <EventCard key={event.id} event={event} />)
-                    ) : (
-                        <div className="text-md font-medium text-gray-700">
-                            There are no upcoming events.
-                        </div>
-                    )}
+                <div className='flex flex-col bg-slate-100 p-4 rounded-xl'>
+                    <h2 className="text-2xl font-semibold mb-2">Upcoming Events</h2>
+                    <div className="flex flex-wrap w-full justify-evenly items-center gap-4">
+                        {events.length > 0 ? (
+                            events.map((event) => <EventCard key={event.id} event={event} />)
+                        ) : (
+                            <div className="text-md font-medium text-gray-700">
+                                There are no upcoming events.
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </section>
