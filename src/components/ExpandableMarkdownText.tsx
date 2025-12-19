@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useLayoutEffect } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import MarkdownText from './MarkdownText';
 
 const ExpandableMarkdownText = ({
@@ -29,13 +29,13 @@ const ExpandableMarkdownText = ({
       <MarkdownText text={text} expanded={expanded} maxLines={maxLines} />
       {/* Read more / Read less */}
       {isOverflowing && (
-      <button
-        type="button"
-        className="mt-2 text-sm font-medium text-royal hover:underline"
-        onClick={() => setExpanded((v) => !v)}
-      >
-        {expanded ? 'Read less' : 'Read more'}
-      </button>
+        <button
+          type="button"
+          className="mt-2 text-sm font-medium text-royal hover:underline"
+          onClick={() => setExpanded((v) => !v)}
+        >
+          {expanded ? 'Read less' : 'Read more'}
+        </button>
       )}
     </div>
   );
