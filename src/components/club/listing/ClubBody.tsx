@@ -16,10 +16,10 @@ const ClubBody = async ({
     // currentTime: new Date(),
   });
   return (
-    <section className="w-full rounded-lg p-10 flex flex-col items-start md:flex-row gap-4">
-      <div className="flex flex-col md:w-1/5 flex-shrink-0">
-        <div className="flex flex-col">
-          <h2 className="text-2xl font-semibold">Details</h2>
+    <section className="w-full rounded-lg p-10 flex flex-col items-start md:flex-row gap-5">
+      <div className="flex flex-col md:w-1/5 flex-shrink-0 gap-4">
+        <div className="flex flex-col bg-slate-100 p-4 rounded-xl gap-2 text-sm">
+          <h2 className="text-2xl font-semibold mb-2">Details</h2>
           {
             /*club.numMembers*/ true && (
               <div className="flex flex-row w-full justify-between">
@@ -53,11 +53,11 @@ const ClubBody = async ({
             )
           }
         </div>
-        <div className="flex flex-col">
-          <h2 className="text-2xl font-semibold">Contact</h2>
+        <div className="flex flex-col bg-slate-100 p-4 rounded-xl gap-2">
+          <h2 className="text-2xl font-semibold mb-2">Contact</h2>
           {club.contacts &&
             club.contacts.map((contact) => (
-              <ContactButton key={contact.platform} contact={contact} />
+              <div className='bg-white rounded-4xl'><ContactButton key={contact.platform} contact={contact} /></div>
             ))}
         </div>
         <div className="flex flex-col">
