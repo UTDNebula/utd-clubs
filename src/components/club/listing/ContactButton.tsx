@@ -20,7 +20,7 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
         target="_blank"
         className="inline-block w-full"
       >
-        <IconButton className="group bg-slate-100" size="large">
+        <IconButton className="group" size="medium">
           {logo[contact.platform]}
         </IconButton>
         <span>{contact.platform}</span>
