@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import ManageHeader from '@src/components/manage/ManageHeader';
+import MemberList from '@src/components/manage/MemberList';
 import { api } from '@src/trpc/server';
-import MemberList from './MemberList';
 
 export default async function Page({
   params,
