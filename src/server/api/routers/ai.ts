@@ -69,11 +69,7 @@ export const aiRouter = createTRPCRouter({
       const joined = await ctx.db.query.userMetadata.findFirst({
         where: eq(userMetadata.id, ctx.session.user.id),
         with: {
-          clubs: {
-            with: {
-              club: true, // Gets full club details
-            },
-          },
+          clubs: true,
         },
       });
       // Get all clubs
