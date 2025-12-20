@@ -265,10 +265,7 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
 
   const form = useAppForm({
     defaultValues: {
-      major:
-        userMetadata && userMetadata.major
-          ? userMetadata.major
-          : (response?.major ?? ''),
+      major: userMetadata?.major ?? response?.major ?? '',
       year: response?.year ?? '',
       proximity: response?.proximity ?? '',
       categories: response?.categories ?? [],
