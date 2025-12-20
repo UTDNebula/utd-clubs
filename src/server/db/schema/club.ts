@@ -20,6 +20,7 @@ export const approvedEnum = pgEnum('approved_enum', [
   'approved',
   'rejected',
   'pending',
+  'deleted',
 ]);
 
 export const club = pgTable(

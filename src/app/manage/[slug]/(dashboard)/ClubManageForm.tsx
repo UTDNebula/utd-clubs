@@ -5,6 +5,7 @@ import { api } from '@src/trpc/server';
 import Calendar from './(forms)/Calendar';
 import Collaborators from './(forms)/Collaborators';
 import Contacts from './(forms)/Contacts';
+import DeleteClub from './(forms)/DeleteClub';
 import Details from './(forms)/Details';
 import Officers from './(forms)/Officers';
 import Slug from './(forms)/Slug';
@@ -51,6 +52,7 @@ const ClubManageForm = async ({
         role={role}
         userId={session?.user.id as string}
       />
+      {role === 'President' && <DeleteClub view="manage" club={club} />}
     </div>
   );
 };

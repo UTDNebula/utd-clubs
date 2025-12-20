@@ -1,0 +1,1 @@
+ALTER TYPE "public"."approved_enum" ADD VALUE 'deleted';

@@ -12,6 +12,7 @@ export default function StatusFilter<T>({ column }: Props<T>) {
     | 'approved'
     | 'rejected'
     | 'pending'
+    | 'deleted'
     | null;
 
   const [value, setValue] = useState(columnFilterValue ?? 'All');
@@ -30,6 +31,10 @@ export default function StatusFilter<T>({ column }: Props<T>) {
         setValue('pending');
         column.setFilterValue('pending');
         break;
+      case 'deleted':
+        setValue('deleted');
+        column.setFilterValue('deleted');
+        break;
       default:
         setValue('All');
         column.setFilterValue(null);
@@ -47,6 +52,7 @@ export default function StatusFilter<T>({ column }: Props<T>) {
         <MenuItem value="approved">Approved</MenuItem>
         <MenuItem value="pending">Pending</MenuItem>
         <MenuItem value="rejected">Rejected</MenuItem>
+        <MenuItem value="deleted">Pending Deletion</MenuItem>
       </Select>
     </FormControl>
   );
