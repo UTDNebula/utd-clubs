@@ -16,26 +16,23 @@ import SearchIcon from '@mui/icons-material/Search';
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import {
-  Alert,
-  CircularProgress,
-  IconButton,
-  Skeleton,
-  Snackbar,
-  SnackbarCloseReason,
-} from '@mui/material';
+import Alert from '@mui/material/Alert';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Skeleton from '@mui/material/Skeleton';
+import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
@@ -85,7 +82,77 @@ import {
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
-import useMemberListDeletionState from './useMemberListDeletionState';
+
+type deleteSourceModelSources = 'rowId' | 'selection' | undefined;
+
+type deleteSourceModelValues = {
+  rowId: GridRowId | null;
+  source: deleteSourceModelSources;
+  setFromRowId: (rowId: GridRowId) => void;
+  setFromSelection: () => void;
+  unset: () => void;
+};
+
+function useMemberListDeletionState(
+  rows: (SelectUserMetadataToClubsWithUserMetadata & {
+    id: number;
+  })[],
+  rowSelectionModel: GridRowSelectionModel,
+) {
+  const [deleteUsers, setDeleteUsers] = React.useState<
+    | SelectUserMetadataToClubsWithUserMetadata
+    | SelectUserMetadataToClubsWithUserMetadata[]
+  >();
+
+  const [rowId, setRowId] = React.useState<GridRowId | null>(null);
+
+  const [source, setSource] = React.useState<deleteSourceModelSources>();
+
+  const updateDeleteUsers = React.useCallback(() => {
+    setDeleteUsers(
+      source === 'selection'
+        ? rows.filter((row) => rowSelectionModel.ids.has(row.id))
+        : rows.find((row) => row.id == rowId),
+    );
+  }, [rowId, rowSelectionModel.ids, rows, source]);
+
+  const setFromRowId = React.useCallback(
+    (rowId: GridRowId) => {
+      setRowId(rowId);
+      setSource('rowId');
+      setDeleteUsers(rows.find((row) => row.id == rowId));
+    },
+    [rows],
+  );
+
+  const setFromSelection = React.useCallback(() => {
+    setSource('selection');
+    setDeleteUsers(rows.filter((row) => rowSelectionModel.ids.has(row.id)));
+  }, [rowSelectionModel.ids, rows]);
+
+  const unset = React.useCallback(() => {
+    setRowId(null);
+    setSource(undefined);
+  }, []);
+
+  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
+
+  const deleteSourceModelValue: deleteSourceModelValues = {
+    rowId,
+    source,
+    setFromRowId,
+    setFromSelection,
+    unset,
+  };
+
+  return {
+    deleteUsers,
+    updateDeleteUsers,
+    deleteSourceModel: deleteSourceModelValue,
+    openConfirmDialog,
+    setOpenConfirmDialog,
+  };
+}
 
 type MemberListAbilities = {
   removeUsers?: boolean;
@@ -94,21 +161,87 @@ type MemberListAbilities = {
   viewAccountEmail?: boolean;
 };
 
-// TODO: move to `/utils` and abstract
-function getUserListString(
+type getFormattedListStringOptions = {
+  maxSpecified: number;
+  termString: {
+    singular: string;
+    plural: string;
+  };
+  oxfordComma: boolean;
+};
+
+const getFormattedListStringOptionsDefaults: getFormattedListStringOptions = {
+  maxSpecified: 1,
+  termString: { singular: 'item', plural: 'items' },
+  oxfordComma: true,
+};
+
+function getFormattedListString(
+  list: string | string[],
+  options?: Partial<getFormattedListStringOptions>,
+): string {
+  const normalizedList = Array.isArray(list) ? list : [list];
+  const defaultedOptions = {
+    ...getFormattedListStringOptionsDefaults,
+    ...options,
+  };
+
+  const outputListItems: string[] = [];
+
+  if (normalizedList.length === 0)
+    return `0 ${defaultedOptions.termString.plural}`;
+
+  for (
+    let i = 0;
+    (defaultedOptions.maxSpecified >= 0
+      ? i < defaultedOptions.maxSpecified
+      : true) && i < normalizedList.length;
+    i++
+  ) {
+    outputListItems.push(normalizedList[i] ?? '');
+  }
+
+  if (defaultedOptions.maxSpecified >= 0) {
+    const otherCount = normalizedList.length - defaultedOptions.maxSpecified;
+    if (otherCount > 0) {
+      outputListItems.push(
+        `${otherCount} ${defaultedOptions.maxSpecified !== 0 ? 'other ' : ''}${
+          otherCount === 1
+            ? defaultedOptions.termString.singular
+            : defaultedOptions.termString.plural
+        }`,
+      );
+    }
+  }
+
+  const lastOutputItem: string =
+    outputListItems.length > 1 ? (outputListItems.pop() ?? '') : '';
+
+  let output = outputListItems.join(', ');
+  output += lastOutputItem
+    ? `${outputListItems.length >= 2 && defaultedOptions.oxfordComma ? ',' : ''} and ${lastOutputItem}`
+    : '';
+
+  return output;
+}
+
+function getFormattedUserListString(
   users?:
     | SelectUserMetadataToClubsWithUserMetadata
     | SelectUserMetadataToClubsWithUserMetadata[],
 ): string {
   if (users === undefined) return 'unknown user(s)';
 
-  const firstUser = Array.isArray(users)
-    ? users[0]?.userMetadata?.firstName
-    : users?.userMetadata?.firstName;
+  const normalizedUsers = Array.isArray(users) ? users : [users];
 
-  const otherCount = Array.isArray(users) ? users.length - 1 : 0;
-
-  return `${firstUser}${otherCount ? ` and ${otherCount} other ${otherCount === 1 ? 'person' : 'people'}` : ''}`;
+  return getFormattedListString(
+    normalizedUsers.map((ele) => ele.userMetadata?.firstName ?? ''),
+    {
+      maxSpecified: 1,
+      oxfordComma: true,
+      termString: { singular: 'person', plural: 'people' },
+    },
+  );
 }
 
 type OwnerState = {
@@ -508,7 +641,7 @@ function CustomFooter() {
           <div className="flex items-center gap-2">
             <CircularProgress color="inherit" size={20} />
             {removeMembers?.isPending && (
-              <span>{`Removing ${getUserListString(memberListDeletionState?.deleteUsers)}`}</span>
+              <span>{`Removing ${getFormattedUserListString(memberListDeletionState?.deleteUsers)}`}</span>
             )}
             {getMembers?.isFetching && <span>Refreshing</span>}
           </div>
@@ -722,7 +855,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
   const handleConfirmDelete = React.useCallback(() => {
     handleCloseDialog();
 
-    const userListString = getUserListString(deleteUsers);
+    const userListString = getFormattedUserListString(deleteUsers);
 
     const targetUserIds = Array.isArray(deleteUsers)
       ? deleteUsers?.map((row) => row.userId)
@@ -881,7 +1014,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
       >
         <DialogTitle id="alert-dialog-title">
           <span>Remove </span>
-          {getUserListString(deleteUsers)}
+          {getFormattedUserListString(deleteUsers)}
           <span>?</span>
         </DialogTitle>
         <DialogContent>
