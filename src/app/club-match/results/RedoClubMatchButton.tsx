@@ -17,7 +17,8 @@ const RedoClubMatchButton = () => {
     <Button
       variant="contained"
       onClick={handleClick}
-      disabled={loading}
+      loading={loading}
+      loadingPosition="start"
       className="rounded-full w-fit normal-case self-center"
       startIcon={
         loading ? <CircularProgress size={18} color="inherit" /> : null
