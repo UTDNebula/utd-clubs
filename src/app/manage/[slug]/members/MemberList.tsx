@@ -322,9 +322,9 @@ function CustomToolbar({ club }: CustomToolbarProps) {
     <Toolbar
       className={`${selectedRowCount ? 'bg-[var(--DataGrid-t-color-interactive-selected)]/8' : ''}`}
     >
-      <div className="grow-1 ml-2">
+      <div className="grow-1 ml-2 shrink-1 max-w-full overflow-hidden whitespace-nowrap">
         {selectedRowCount ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-1">
             <span>{`Selection (${selectedRowCount} ${selectedRowCount == 1 ? 'person' : 'people'})`}</span>
             <div>
               {memberListAbilities.removeUsers && (
@@ -355,7 +355,7 @@ function CustomToolbar({ club }: CustomToolbarProps) {
       </div>
 
       {memberListAbilities.refresh && (
-        <Tooltip title="Refresh">
+        <Tooltip title="Refresh" className="max-sm:hidden">
           <ToolbarButton onClick={refreshList}>
             <RefreshIcon fontSize="small" />
           </ToolbarButton>
@@ -363,7 +363,7 @@ function CustomToolbar({ club }: CustomToolbarProps) {
       )}
 
       {memberListAbilities.downloadCSV && (
-        <Tooltip title="Export">
+        <Tooltip title="Export" className="max-sm:hidden">
           <ToolbarButton
             ref={exportMenuTriggerRef}
             id="export-menu-trigger"
@@ -383,16 +383,17 @@ function CustomToolbar({ club }: CustomToolbarProps) {
           variant="middle"
           flexItem
           sx={{ mx: 0.5 }}
+          className="max-sm:hidden"
         />
       )}
 
-      <Tooltip title="Columns">
+      <Tooltip title="Columns" className="max-sm:hidden">
         <ColumnsPanelTrigger render={<ToolbarButton />}>
           <ViewColumnOutlinedIcon fontSize="small" />
         </ColumnsPanelTrigger>
       </Tooltip>
 
-      <Tooltip title="Filters">
+      <Tooltip title="Filters" className="max-sm:hidden">
         <FilterPanelTrigger
           render={(props, state) => (
             <ToolbarButton {...props} color="default">
@@ -436,6 +437,7 @@ function CustomToolbar({ club }: CustomToolbarProps) {
         variant="middle"
         flexItem
         sx={{ mx: 0.5 }}
+        className="max-sm:hidden"
       />
 
       <StyledQuickFilter>
