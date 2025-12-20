@@ -1,23 +1,17 @@
 'use client';
 
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material';
+import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Confirmation from '@src/components/Confirmation';
+import Panel from '@src/components/form/Panel';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 
 type Props = { club: SelectClub };
 
-export default function ChangeClubStatus({ club }: Props) {
+export default function DeleteClub({ club }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const api = useTRPC();
@@ -29,10 +23,7 @@ export default function ChangeClubStatus({ club }: Props) {
 
   return (
     <>
-      <FormFieldSet
-        legend="Delete"
-        className="!bg-red-100 border border-red-500"
-      >
+      <Panel heading="Delete" className="bg-red-100 border border-red-500">
         <div className="ml-2 mb-4 text-slate-800 text-sm">
           <p>This will permenantly delete this organization from UTD Clubs.</p>
         </div>
@@ -47,29 +38,20 @@ export default function ChangeClubStatus({ club }: Props) {
             Delete
           </Button>
         </div>
-      </FormFieldSet>
-      <Dialog onClose={() => setOpen(false)} open={open}>
-        <DialogTitle>Are you sure?</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+      </Panel>
+      <Confirmation
+        open={open}
+        onClose={() => setOpen(false)}
+        contentText={
+          <>
             This will permenantly delete <b>{club.name}</b>.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              deleteClub.mutate({ id: club.id });
-            }}
-            autoFocus
-            loading={deleteClub.isPending}
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </>
+        }
+        onConfirm={() => {
+          deleteClub.mutate({ id: club.id });
+        }}
+        loading={deleteClub.isPending}
+      />
     </>
   );
 }

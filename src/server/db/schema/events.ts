@@ -1,5 +1,5 @@
 import { relations, sql } from 'drizzle-orm';
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { club } from './club';
 
 export const events = pgTable('events', {
@@ -10,11 +10,17 @@ export const events = pgTable('events', {
     .notNull()
     .references(() => club.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
-  description: text('description').notNull(),
-  startTime: timestamp('start_time', { withTimezone: true }).notNull(),
-  endTime: timestamp('end_time', { withTimezone: true }).notNull(),
+  description: text('description').default('').notNull(),
+  startTime: timestamp('start_time').notNull(),
+  endTime: timestamp('end_time').notNull(),
+  recurrence: text('recurrence'),
+  recurenceId: text('recurence_id'),
+  google: boolean().default(false).notNull(),
+  etag: text(),
   location: text('location').default('').notNull(),
   image: text('image'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
 export const eventsRelation = relations(events, ({ one }) => ({

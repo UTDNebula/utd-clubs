@@ -1,17 +1,11 @@
 'use client';
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material';
+import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Confirmation from '@src/components/Confirmation';
 import { SelectEvent } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 
@@ -26,9 +20,10 @@ export default function EventDeleteButton({
   const router = useRouter();
 
   const api = useTRPC();
-  const { mutate } = useMutation(
+  const deleteEvent = useMutation(
     api.event.delete.mutationOptions({
       onSuccess: () => {
+        setOpen(false);
         router.refresh();
       },
     }),
@@ -50,32 +45,19 @@ export default function EventDeleteButton({
       >
         Delete
       </Button>
-      <Dialog
-        onClose={() => setOpen(false)}
+      <Confirmation
         open={open}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <DialogTitle>Are you sure?</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+        onClose={() => setOpen(false)}
+        contentText={
+          <>
             This will permenantly delete <b>{event.name}</b>.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              mutate({ id: event.id });
-              setOpen(false);
-            }}
-            autoFocus
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </>
+        }
+        onConfirm={() => {
+          deleteEvent.mutate({ id: event.id });
+        }}
+        loading={deleteEvent.isPending}
+      />
     </>
   );
 }

@@ -3,11 +3,13 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { TextField, Tooltip } from '@mui/material';
+import { useStore } from '@tanstack/react-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import FormFieldSet from '@src/components/form/FormFieldSet';
+import Confirmation from '@src/components/Confirmation';
+import Panel from '@src/components/form/Panel';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -29,6 +31,7 @@ const Slug = ({ club, role }: DetailsProps) => {
     slug: club.slug,
   });
 
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
@@ -36,13 +39,14 @@ const Slug = ({ club, role }: DetailsProps) => {
       if (updated) {
         setDefaultValues({ id: club.id, slug: updated });
         formApi.reset({ id: club.id, slug: updated });
+        router.replace(`/manage/${updated}`);
       }
-      router.refresh();
     },
     validators: {
       onChange: editSlugSchema,
     },
   });
+  const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
   // Check if taken
   const [input, setInput] = useState(club.slug);
@@ -158,91 +162,103 @@ const Slug = ({ club, role }: DetailsProps) => {
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (isFetchingOrWaiting || slugExists) {
-          return;
-        }
-        form.handleSubmit();
-      }}
-    >
-      <FormFieldSet legend="Listing URL">
-        <div className="ml-2 mb-4 text-slate-600 text-sm">
-          <p>
-            This is the URL of your organization&apos;s listing in the
-            directory.
-          </p>
-          <p>
-            Currently it is{' '}
-            <Link
-              href={`https://clubs.utdnebula.com/directory/${club.slug}`}
-              className="text-royal underline"
-            >{`https://clubs.utdnebula.com/directory/${club.slug}`}</Link>
-            .
-          </p>
-          <p>Your URL may only use lowercase letters, numbers, and dashes.</p>
-        </div>
-        <div className="m-2 mt-0 flex flex-col gap-4">
-          <form.Field
-            name="slug"
-            validators={{
-              onChange: ({ value }) => {
-                const result = editSlugSchema.shape.slug.safeParse(value);
-                const normalizeToArray = result.success
-                  ? []
-                  : result.error.issues.map((issue) => ({
-                      message: issue.message,
-                    }));
-                setSimpleError(normalizeToArray.length !== 0);
-                return normalizeToArray;
-              },
-            }}
-          >
-            {(field) => (
-              <Tooltip
-                title={
-                  role !== 'President'
-                    ? 'Only an admin can change the club URL'
-                    : undefined
-                }
-              >
-                <TextField
-                  onChange={(e) => {
-                    field.handleChange(e.target.value);
-                    setInput(e.target.value);
-                  }}
-                  onBlur={field.handleBlur}
-                  value={field.state.value}
-                  label="URL"
-                  className="[&>.MuiInputBase-root]:bg-white"
-                  size="small"
-                  disabled={role !== 'President'}
-                  error={
-                    !field.state.meta.isValid && !field.state.meta.isValidating
-                  }
-                  helperText={helperText(field.state.meta.errors)}
-                />
-              </Tooltip>
-            )}
-          </form.Field>
-        </div>
-        <div className="flex flex-wrap justify-end items-center gap-2">
-          <form.AppForm>
-            <form.FormResetButton
-              onClick={() => {
-                form.reset();
-                setInput(form.getFieldValue('slug'));
+    <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (isFetchingOrWaiting || slugExists) {
+            return;
+          }
+          setConfirmationOpen(true);
+        }}
+      >
+        <Panel heading="Listing URL">
+          <div className="ml-2 mb-4 text-slate-600 text-sm">
+            <p>
+              This is the URL of your organization&apos;s listing in the
+              directory.
+            </p>
+            <p>
+              Currently it is{' '}
+              <Link
+                href={`https://clubs.utdnebula.com/directory/${club.slug}`}
+                className="text-royal underline"
+              >{`https://clubs.utdnebula.com/directory/${club.slug}`}</Link>
+              .
+            </p>
+            <p>Your URL may only use lowercase letters, numbers, and dashes.</p>
+          </div>
+          <div className="m-2 mt-0 flex flex-col gap-4">
+            <form.Field
+              name="slug"
+              validators={{
+                onChange: ({ value }) => {
+                  const result = editSlugSchema.shape.slug.safeParse(value);
+                  const normalizeToArray = result.success
+                    ? []
+                    : result.error.issues.map((issue) => ({
+                        message: issue.message,
+                      }));
+                  setSimpleError(normalizeToArray.length !== 0);
+                  return normalizeToArray;
+                },
               }}
-            />
-          </form.AppForm>
-          <form.AppForm>
-            <form.FormSubmitButton />
-          </form.AppForm>
-        </div>
-      </FormFieldSet>
-    </form>
+            >
+              {(field) => (
+                <Tooltip
+                  title={
+                    role !== 'President'
+                      ? 'Only an admin can change the club URL'
+                      : undefined
+                  }
+                >
+                  <TextField
+                    onChange={(e) => {
+                      field.handleChange(e.target.value);
+                      setInput(e.target.value);
+                    }}
+                    onBlur={field.handleBlur}
+                    value={field.state.value}
+                    label="URL"
+                    className="[&>.MuiInputBase-root]:bg-white"
+                    size="small"
+                    disabled={role !== 'President'}
+                    error={
+                      !field.state.meta.isValid &&
+                      !field.state.meta.isValidating
+                    }
+                    helperText={helperText(field.state.meta.errors)}
+                  />
+                </Tooltip>
+              )}
+            </form.Field>
+          </div>
+          <div className="flex flex-wrap justify-end items-center gap-2">
+            <form.AppForm>
+              <form.FormResetButton
+                onClick={() => {
+                  form.reset();
+                  setInput(form.getFieldValue('slug'));
+                }}
+              />
+            </form.AppForm>
+            <form.AppForm>
+              <form.FormSubmitButton />
+            </form.AppForm>
+          </div>
+        </Panel>
+      </form>
+      <Confirmation
+        open={confirmationOpen}
+        onClose={() => setConfirmationOpen(false)}
+        contentText="Changing your URL will reload the page and discard changes to other forms."
+        confirmText="Change"
+        confirmColor="primary"
+        onConfirm={form.handleSubmit}
+        loading={isSubmitting}
+      />
+    </>
   );
 };
 

@@ -10,6 +10,7 @@ import {
   timestamp,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
+import { user } from './auth';
 import { contacts } from './contacts';
 import { events } from './events';
 import { officers } from './officers';
@@ -43,6 +44,15 @@ export const club = pgTable(
     bannerImage: text('banner_image'),
     soc: boolean('soc').notNull().default(false),
     pageViews: integer('page_views').notNull().default(0),
+    calendarId: text('calendar_id'),
+    calendarName: text('calendar_name'),
+    calendarSyncToken: text('calendar_sync_token'),
+    calendarWebhookId: text('calendar_webhook_id'),
+    calendarWebHookExpiration: timestamp('calendar_webhook_expiration'),
+    calendarGoogleAccountId: text('calendarGoogleAccountId').references(
+      () => user.id,
+      { onDelete: 'set null' },
+    ),
   },
   (t) => [
     index('club_search_idx')

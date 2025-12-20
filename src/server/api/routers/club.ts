@@ -8,11 +8,14 @@ import {
   inArray,
   sql,
 } from 'drizzle-orm';
+import { google } from 'googleapis';
 import { z } from 'zod';
 import { club, usedTags } from '@src/server/db/schema/club';
 import { officers as officersTable } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
+import { syncCalendar } from '@src/utils/calendar';
 import { createClubSchema } from '@src/utils/formSchemas';
+import { getGoogleAccessToken } from '@src/utils/googleAuth';
 import {
   adminProcedure,
   createTRPCRouter,
@@ -60,6 +63,12 @@ const searchSchema = z.object({
 
 const searchTagSchema = z.object({
   search: z.string(),
+});
+
+const eventSyncSchema = z.object({
+  clubId: z.string(),
+  calendarName: z.string().optional(),
+  calendarId: z.string().optional(),
 });
 
 export const clubRouter = createTRPCRouter({
@@ -449,6 +458,46 @@ export const clubRouter = createTRPCRouter({
         clubs: [],
         cursor: 0,
       };
+    }
+  }),
+  eventSync: protectedProcedure
+    .input(eventSyncSchema)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(club)
+        .set({
+          calendarId: input.calendarId,
+          calendarGoogleAccountId: ctx.session.user.id,
+          calendarName: input.calendarName,
+        })
+        .where(eq(club.id, input.clubId));
+      const oauth2Client = new google.auth.OAuth2();
+      oauth2Client.setCredentials({
+        access_token: await getGoogleAccessToken(ctx.session.user.id),
+      });
+      return await syncCalendar(input.clubId, false, oauth2Client);
+    }),
+
+  details: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
+    const { id } = input;
+    try {
+      const byId = await ctx.db.query.club.findFirst({
+        where: (club) => eq(club.id, id),
+        columns: {
+          id: true,
+          name: true,
+          description: true,
+          foundingDate: true,
+          tags: true,
+          profileImage: true,
+          bannerImage: true,
+        },
+      });
+
+      return byId;
+    } catch (e) {
+      console.error(e);
+      throw e;
     }
   }),
 });

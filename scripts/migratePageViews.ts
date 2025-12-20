@@ -25,11 +25,14 @@ const analyticsDataClient = new BetaAnalyticsDataClient({
 
 async function getPageViews() {
   console.log('Fetching page views from Google Analytics...');
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const oneWeekAgoString = oneWeekAgo.toISOString().split('T')[0];
   const [response] = await analyticsDataClient.runReport({
     property: `properties/${process.env.GOOGLE_ANALYTICS_PROPERTY_ID}`,
     dimensions: [{ name: 'pagePath' }],
     metrics: [{ name: 'screenPageViews' }],
-    dateRanges: [{ startDate: '2015-08-14', endDate: 'yesterday' }],
+    dateRanges: [{ startDate: oneWeekAgoString, endDate: 'yesterday' }],
     dimensionFilter: {
       filter: {
         fieldName: 'pagePath',
