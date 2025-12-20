@@ -767,18 +767,18 @@ const MemberList = ({ members, club }: MemberListProps) => {
 
   const refreshList = React.useCallback(async () => {
     if (getMembers.isFetching) return;
-    await getMembers.refetch();
-
-    if (getMembers.data) {
-      setRows(
-        getMembers.data.map((member, index) => {
-          return {
-            ...member,
-            id: index,
-          };
-        }),
-      );
-    }
+    await getMembers.refetch().then((data) => {
+      if (data.data) {
+        setRows(
+          data.data.map((member, index) => {
+            return {
+              ...member,
+              id: index,
+            };
+          }),
+        );
+      }
+    });
   }, [getMembers]);
 
   const isAdmin =
@@ -891,6 +891,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
           <Button onClick={handleCloseDialog}>Cancel</Button>
           <Button onClick={handleConfirmDelete} color="warning" autoFocus>
             Remove
+            {Array.isArray(deleteUsers) && deleteUsers.length > 1 ? ' All' : ''}
           </Button>
         </DialogActions>
       </Dialog>
