@@ -72,7 +72,7 @@ export default async function EventsPage(props: Params) {
           </div>
         </section>
         <section className="w-full rounded-lg bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
-          <div>
+          <div className="md:max-w-1/4">
             {src && (
               <Image
                 src={src}
