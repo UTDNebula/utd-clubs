@@ -43,7 +43,7 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <main className="flex flex-col gap-8 p-4">
+      <main className="flex flex-col gap-8 p-4 mb-5">
         <h1 className="font-display text-center text-4xl font-bold">
           Your Top Club Matches
         </h1>

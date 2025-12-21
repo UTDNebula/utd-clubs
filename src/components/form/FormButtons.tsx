@@ -4,22 +4,38 @@ import Button from '@mui/material/Button';
 import { useStore } from '@tanstack/react-form';
 import { useFormContext } from '@src/utils/form';
 
-export const FormSubmitButton = () => {
+interface FormSubmitButtonProps {
+  text?: string;
+  icon?: React.ReactElement;
+  onClick?: () => void;
+  allowDisable?: boolean;
+}
+
+export const FormSubmitButton = ({
+  text,
+  icon,
+  onClick,
+  allowDisable = true,
+}: FormSubmitButtonProps) => {
   const form = useFormContext();
   const isDefaultValue = useStore(form.store, (state) => state.isDefaultValue);
   const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
   const isValid = useStore(form.store, (state) => state.isValid);
+  const iconComponent = icon ?? <SaveIcon />;
+
   return (
     <Button
       type="submit"
       variant="contained"
       className="normal-case"
-      startIcon={<SaveIcon />}
-      disabled={isDefaultValue || !isValid}
+      startIcon={iconComponent}
+      disabled={allowDisable && (isDefaultValue || !isValid)}
       loading={isSubmitting}
       loadingPosition="start"
+      color={!isDefaultValue && isValid ? 'primary' : 'inherit'}
+      onClick={onClick}
     >
-      Save
+      {text ?? 'Save'}
     </Button>
   );
 };

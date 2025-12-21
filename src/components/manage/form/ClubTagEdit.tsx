@@ -11,9 +11,15 @@ import { useTRPC } from '@src/trpc/react';
 export const ClubTagEdit = ({
   value,
   onChange,
+  onBlur,
+  error,
+  helperText,
 }: {
   value: string[];
   onChange: (value: string[]) => void;
+  onBlur: () => void;
+  error?: boolean;
+  helperText?: string;
 }) => {
   const api = useTRPC();
 
@@ -54,6 +60,8 @@ export const ClubTagEdit = ({
               ),
             },
           }}
+          error={error}
+          helperText={helperText}
         />
       )}
       renderValue={(value, getItemProps) => {
@@ -91,6 +99,7 @@ export const ClubTagEdit = ({
         }
         onChange(value);
       }}
+      onBlur={onBlur}
     />
   );
 };
