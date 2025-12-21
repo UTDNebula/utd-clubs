@@ -326,9 +326,20 @@ export const clubRouter = createTRPCRouter({
           with: {
             contacts: true,
             officers: true,
+            userMetadataToClubs: {
+              columns: {
+                userId: true, // Only fetch the ID to keep the payload small
+              },
+            },
           },
         });
-        return bySlug;
+
+        if (!bySlug) return null;
+        return {
+          ...bySlug,
+          numMembers: bySlug.userMetadataToClubs.length,
+          userMetadataToClubs: null,
+        };
       } catch (e) {
         console.error(e);
         throw e;
