@@ -24,7 +24,7 @@ const ClubBody = async ({
   return (
     <section className="w-full rounded-lg grid grid-cols-1 md:grid-cols-5 gap-5 items-start mt-8">
       <div className="md:col-span-1 flex flex-col gap-4 h-full">
-        <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl gap-2 text-sm text-slate-600">
+        <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm  p-5 rounded-xl gap-2 text-sm text-slate-600">
           <h2 className="text-xl font-bold text-slate-900 mb-2">Details</h2>
           {
             /*club.numMembers ||*/ club.foundingDate ||
@@ -81,7 +81,7 @@ const ClubBody = async ({
             )
           }
         </div>
-        <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl gap-2">
+        <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm  p-5 rounded-xl gap-2">
           <h2 className="text-xl font-bold text-slate-900 mb-2">Contact</h2>
           {club.contacts && club.contacts.length > 0 ? (
             club.contacts.map((contact) => (
@@ -109,7 +109,7 @@ const ClubBody = async ({
             maxLines={10}
           />
         </div>
-        <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl">
+        <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm  p-5 rounded-xl">
           <h2 className="text-xl font-bold text-slate-900 mb-2">
             Upcoming Events
           </h2>
