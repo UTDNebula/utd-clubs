@@ -34,7 +34,7 @@ const ClubBody = async ({
               <>
                 {
                   /*club.numMembers*/ true && (
-                    <div className="flex flex-row w-full justify-between">
+                    <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
                       <span>Members</span>
                       <span>67</span>
                     </div>
@@ -42,14 +42,14 @@ const ClubBody = async ({
                 }
                 {
                   /*club.foundingDate*/ true && (
-                    <div className="flex flex-row w-full justify-between">
+                    <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
                       <span>Founded</span>
                       <span>May 2020</span>
                     </div>
                   )
                 }
                 {lastEventDate && true && (
-                  <div className="flex flex-row w-full justify-between">
+                  <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
                     <span>Last Active</span>
                     <span>
                       {lastEventDate.toLocaleDateString('en-US', {
@@ -61,7 +61,7 @@ const ClubBody = async ({
                 )}
                 {
                   /*club.updatedAt*/ true && (
-                    <div className="flex flex-row w-full justify-between">
+                    <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
                       <span>Updated</span>
                       <span>Nov 2025</span>
                     </div>
