@@ -26,60 +26,53 @@ const ClubBody = async ({
       <div className="md:col-span-1 flex flex-col gap-4 h-full">
         <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm  p-5 rounded-xl gap-2 text-sm text-slate-600">
           <h2 className="text-xl font-bold text-slate-900 mb-2">Details</h2>
-          {
-            /*club.numMembers ||*/ club.foundingDate ||
-            lastEventDate ||
-            club.updatedAt ||
-            true ? ( //TODO: must remove the true's
-              <>
-                {
-                  /*club.numMembers*/ true && (
-                    <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
-                      <span className="font-medium text-slate-500">
-                        Members
-                      </span>
-                      <span className="text-slate-500">67</span>
-                    </div>
-                  )
-                }
-                {
-                  /*club.foundingDate*/ true && (
-                    <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
-                      <span className="font-medium text-slate-500">
-                        Founded
-                      </span>
-                      <span className="text-slate-500">May 2020</span>
-                    </div>
-                  )
-                }
-                {lastEventDate && true && (
+          {club.numMembers ||
+          club.foundingDate ||
+          lastEventDate ||
+          club.updatedAt ? ( //TODO: must remove the true's
+            <>
+              {club.numMembers && (
+                <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
+                  <span className="font-medium text-slate-500">Members</span>
+                  <span className="text-slate-500">{club.numMembers}</span>
+                </div>
+              )}
+              {club.foundingDate && (
+                <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
+                  <span className="font-medium text-slate-500">Founded</span>
+                  <span className="text-slate-50club0">
+                    {club.foundingDate.toLocaleDateString('en-US', {
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </span>
+                </div>
+              )}
+              {lastEventDate && true && (
+                <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
+                  <span className="font-medium text-slate-500">
+                    Last Active
+                  </span>
+                  <span className="text-slate-500">
+                    {lastEventDate.toLocaleDateString('en-US', {
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </span>
+                </div>
+              )}
+              {
+                /*club.updatedAt*/ true && (
                   <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
-                    <span className="font-medium text-slate-500">
-                      Last Active
-                    </span>
-                    <span className="text-slate-500">
-                      {lastEventDate.toLocaleDateString('en-US', {
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    </span>
+                    <span className="font-medium text-slate-500">Updated</span>
+                    <span className="text-slate-500">Nov 2025</span>
                   </div>
-                )}
-                {
-                  /*club.updatedAt*/ true && (
-                    <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
-                      <span className="font-medium text-slate-500">
-                        Updated
-                      </span>
-                      <span className="text-slate-500">Nov 2025</span>
-                    </div>
-                  )
-                }
-              </>
-            ) : (
-              <span className="text-slate-500">No details</span>
-            )
-          }
+                )
+              }
+            </>
+          ) : (
+            <span className="text-slate-500">No details</span>
+          )}
         </div>
         <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm  p-5 rounded-xl gap-2">
           <h2 className="text-xl font-bold text-slate-900 mb-2">Contact</h2>
