@@ -12,7 +12,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
   return (
     <div className="relative w-full aspect-[4.5/1] rounded-lg overflow-hidden">
       <Image
-        src={club.bannerImage ?? '/images/wideWave.jpg'}
+        src={club.bannerImage ?? club.profileImage ?? '/images/wideWave.jpg'}
         alt="Club banner"
         fill
         className="object-cover object-center"
