@@ -87,7 +87,7 @@ const ClubBody = async ({
             club.contacts.map((contact) => (
               <div
                 key={contact.platform}
-                className="bg-white shadow-sm rounded-4xl"
+                className="bg-white shadow-sm rounded-4xl hover:bg-gray-100 transition-colors duration-200"
               >
                 <ContactButton contact={contact} />
               </div>

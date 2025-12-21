@@ -20,7 +20,15 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
         target="_blank"
         className="inline-block w-full"
       >
-        <IconButton className="group" size="medium">
+        <IconButton
+          className="group"
+          size="medium"
+          sx={{
+            '&:hover': {
+              backgroundColor: 'inherit',
+            },
+          }}
+        >
           {logo[contact.platform]}
         </IconButton>
         <span>{contact.platform}</span>
