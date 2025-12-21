@@ -127,11 +127,13 @@ Maintain strict formatting:
         .values({
           id: ctx.session.user.id,
           clubMatch: result,
+          responses: input,
         })
         .onConflictDoUpdate({
           target: userAiCache.id,
           set: {
             clubMatch: result,
+            responses: input,
           },
         });
     }),
