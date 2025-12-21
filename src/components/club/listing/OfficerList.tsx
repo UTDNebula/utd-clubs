@@ -21,7 +21,7 @@ export default function OfficerList({
 
     const updateHeight = () => {
       const rightSide = document.getElementById('club-content-right');
-      const officerContainer = contentRef.current?.closest('.bg-slate-100'); // Finds the card wrapper
+      const officerContainer = document.getElementById('officer-card-wrapper'); // Finds the card wrapper
 
       if (!rightSide || !officerContainer || !contentRef.current) return;
 
@@ -59,7 +59,8 @@ export default function OfficerList({
 
   return (
     <div
-      className="flex flex-col gap-2 bg-slate-100 p-4 rounded-xl transition-all duration-500 overflow-hidden"
+      id="officer-card-wrapper"
+      className="flex flex-col gap-2 bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl transition-all duration-500 overflow-hidden"
       style={containerStyle}
     >
       <h2 className="text-2xl font-semibold mb-2">Officers</h2>
