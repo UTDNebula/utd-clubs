@@ -15,7 +15,7 @@ import EventTimeAlert from './EventTimeAlert';
 
 interface EventCardProps {
   event: RouterOutputs['event']['byClubId'][number];
-  view?: 'normal' | 'manage' | 'preview';
+  view?: 'normal' | 'manage' | 'preview' | 'admin';
 }
 
 const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
@@ -40,7 +40,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
         <div className="flex h-full flex-col p-5 space-y-2.5">
           <h3 className="font-bold">{event.name}</h3>
           <h4 className="text-xs font-bold">
-            {view !== 'manage' && event.club.name}
+            {view !== 'manage' && view !== 'admin' && event.club.name}
             <div>
               <span className="text-royal">
                 <ClientEventTime
@@ -64,6 +64,12 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
             </>
           ))}
         {view === 'preview' && <EventRegisterButtonPreview />}
+        {view === 'admin' &&
+          (event.google ? (
+            <Alert severity="info">Synced from Google Calendar.</Alert>
+          ) : (
+            <EventDeleteButton event={event} view="admin" />
+          ))}
       </div>
     </div>
   );
