@@ -24,7 +24,7 @@ const ClubBody = async ({
   return (
     <section className="w-full rounded-lg grid grid-cols-1 md:grid-cols-5 gap-5 items-start mt-8">
       <div className="md:col-span-1 flex flex-col gap-4 h-full">
-        <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl gap-2 text-sm">
+        <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl gap-2 text-sm text-slate-600">
           <h2 className="text-xl font-bold text-slate-900 mb-2">Details</h2>
           {
             /*club.numMembers ||*/ club.foundingDate ||
@@ -35,23 +35,29 @@ const ClubBody = async ({
                 {
                   /*club.numMembers*/ true && (
                     <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
-                      <span>Members</span>
-                      <span>67</span>
+                      <span className="font-medium text-slate-500">
+                        Members
+                      </span>
+                      <span className="text-slate-500">67</span>
                     </div>
                   )
                 }
                 {
                   /*club.foundingDate*/ true && (
                     <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
-                      <span>Founded</span>
-                      <span>May 2020</span>
+                      <span className="font-medium text-slate-500">
+                        Founded
+                      </span>
+                      <span className="text-slate-500">May 2020</span>
                     </div>
                   )
                 }
                 {lastEventDate && true && (
                   <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
-                    <span>Last Active</span>
-                    <span>
+                    <span className="font-medium text-slate-500">
+                      Last Active
+                    </span>
+                    <span className="text-slate-500">
                       {lastEventDate.toLocaleDateString('en-US', {
                         month: 'short',
                         year: 'numeric',
@@ -62,8 +68,10 @@ const ClubBody = async ({
                 {
                   /*club.updatedAt*/ true && (
                     <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
-                      <span>Updated</span>
-                      <span>Nov 2025</span>
+                      <span className="font-medium text-slate-500">
+                        Updated
+                      </span>
+                      <span className="text-slate-500">Nov 2025</span>
                     </div>
                   )
                 }
