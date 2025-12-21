@@ -2,80 +2,104 @@
 
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
-import Panel from '@src/components/form/Panel';
+import Panel, { PanelSkeleton } from '@src/components/form/Panel';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
-import type { SelectClub } from '@src/server/db/models';
+import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
-import { editClubSchema } from '@src/utils/formSchemas';
+import { editClubFormSchema } from '@src/utils/formSchemas';
 
 type DetailsProps = {
   club: SelectClub;
 };
 
+interface ClubDetails {
+  id: string;
+  name: string;
+  description: string;
+  foundingDate: Date | null;
+  tags: string[];
+  profileImage: File | null;
+  bannerImage: File | null;
+}
+
 const Details = ({ club }: DetailsProps) => {
   const api = useTRPC();
+  const clubQuery = useQuery(
+    api.club.details.queryOptions({ id: club.id }, { initialData: club }),
+  );
   const editData = useMutation(api.club.edit.data.mutationOptions({}));
   const uploadImage = useUploadToUploadURL();
+  const queryClient = useQueryClient();
 
-  const [defaultValues, setDefaultValues] = useState({
-    id: club.id,
-    name: club.name,
-    description: club.description,
-    foundingDate: club.foundingDate,
-    tags: club.tags,
-    profileImage: club.profileImage,
-    bannerImage: club.bannerImage,
-  });
+  const clubDetails = clubQuery.data;
+  const defaultValues: ClubDetails = {
+    id: clubDetails?.id ?? '',
+    name: clubDetails?.name ?? '',
+    description: clubDetails?.description ?? '',
+    foundingDate: clubDetails?.foundingDate ?? null,
+    tags: clubDetails?.tags ?? [],
+    profileImage: null,
+    bannerImage: null,
+  };
 
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
       // Profile image
-      const profileImageIsDirty = formApi.getFieldMeta('profileImage')?.isDirty;
+
+      const { profileImage, bannerImage, ...formValues } = value;
+      let profileImageUrl, bannerImageUrl;
+      const profileImageIsDirty =
+        !formApi.getFieldMeta('profileImage')?.isDefaultValue;
       if (profileImageIsDirty) {
-        if (profileFile === null) {
+        if (profileImage === null) {
           value.profileImage = null;
         } else {
           const url = await uploadImage.mutateAsync({
-            file: profileFile,
+            file: profileImage,
             fileName: `${club.id}-profile`,
           });
-          value.profileImage = url;
+          profileImageUrl = url;
         }
       }
 
       // Banner image
-      const bannerImageIsDirty = formApi.getFieldMeta('bannerImage')?.isDirty;
+      const bannerImageIsDirty =
+        !formApi.getFieldMeta('bannerImage')?.isDefaultValue;
       if (bannerImageIsDirty) {
-        if (bannerFile === null) {
+        if (bannerImage === null) {
           value.bannerImage = null;
         } else {
           const url = await uploadImage.mutateAsync({
-            file: bannerFile,
+            file: bannerImage,
             fileName: `${club.id}-banner`,
           });
-          value.bannerImage = url;
+          bannerImageUrl = url;
         }
       }
 
-      const updated = await editData.mutateAsync(value);
+      const updated = await editData.mutateAsync({
+        ...formValues,
+        bannerImage: bannerImageUrl,
+        profileImage: profileImageUrl,
+      });
       if (updated) {
-        setDefaultValues(updated);
-        formApi.reset(updated);
+        queryClient.invalidateQueries(
+          api.club.details.queryOptions({ id: club.id }),
+        );
+        formApi.reset();
       }
     },
     validators: {
-      onChange: editClubSchema,
+      onChange: editClubFormSchema,
     },
   });
 
-  const [profileFile, setProfileFile] = useState<File | null>(null);
-  const [bannerFile, setBannerFile] = useState<File | null>(null);
+  if (!clubQuery.isSuccess) return <PanelSkeleton />;
 
   return (
     <form
@@ -93,16 +117,12 @@ const Details = ({ club }: DetailsProps) => {
                 {(field) => (
                   <FormImage
                     label="Profile Image"
-                    initialValue={field.state.value}
+                    value={field.state.value}
                     onBlur={field.handleBlur}
+                    fallbackUrl={clubDetails!.profileImage ?? undefined}
                     onChange={(e) => {
                       const file = e.target.files?.[0] ?? null;
-                      setProfileFile(file);
-                      let fakeUrl = file?.name ?? null;
-                      if (fakeUrl !== null) {
-                        fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
-                      }
-                      field.handleChange(fakeUrl);
+                      field.handleChange(file);
                     }}
                   />
                 )}
@@ -113,16 +133,12 @@ const Details = ({ club }: DetailsProps) => {
                 {(field) => (
                   <FormImage
                     label="Banner Image"
-                    initialValue={field.state.value}
                     onBlur={field.handleBlur}
+                    value={field.state.value}
+                    fallbackUrl={clubDetails!.bannerImage ?? undefined}
                     onChange={(e) => {
                       const file = e.target.files?.[0] ?? null;
-                      setBannerFile(file);
-                      let fakeUrl = file?.name ?? null;
-                      if (fakeUrl !== null) {
-                        fakeUrl = 'https://' + btoa(fakeUrl) + '.com';
-                      }
-                      field.handleChange(fakeUrl);
+                      field.handleChange(file);
                     }}
                   />
                 )}
@@ -220,6 +236,15 @@ const Details = ({ club }: DetailsProps) => {
                 onChange={(value) => {
                   field.handleChange(value);
                 }}
+                onBlur={field.handleBlur}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
               />
             )}
           </form.Field>
