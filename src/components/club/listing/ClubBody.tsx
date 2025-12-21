@@ -29,7 +29,7 @@ const ClubBody = async ({
           {club.numMembers ||
           club.foundingDate ||
           lastEventDate ||
-          club.updatedAt ? ( //TODO: must remove the true's
+          club.updatedAt ? (
             <>
               {club.numMembers && (
                 <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
@@ -48,7 +48,7 @@ const ClubBody = async ({
                   </span>
                 </div>
               )}
-              {lastEventDate && true && (
+              {lastEventDate && (
                 <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
                   <span className="font-medium text-slate-500">
                     Last Active
@@ -61,14 +61,17 @@ const ClubBody = async ({
                   </span>
                 </div>
               )}
-              {
-                /*club.updatedAt*/ true && (
-                  <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
-                    <span className="font-medium text-slate-500">Updated</span>
-                    <span className="text-slate-500">Nov 2025</span>
-                  </div>
-                )
-              }
+              {club.updatedAt && (
+                <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
+                  <span className="font-medium text-slate-500">Updated</span>
+                  <span className="text-slate-500">
+                    {club.updatedAt.toLocaleDateString('en-US', {
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </span>
+                </div>
+              )}
             </>
           ) : (
             <span className="text-slate-500">No details</span>
