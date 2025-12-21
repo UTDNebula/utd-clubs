@@ -2,6 +2,7 @@
 
 import { RestartAlt } from '@mui/icons-material';
 import { Button } from '@mui/material';
+import Link from 'next/link';
 import { useState } from 'react';
 
 const RedoClubMatchButton = () => {
@@ -11,6 +12,7 @@ const RedoClubMatchButton = () => {
     <Button
       variant="contained"
       onClick={() => setLoading(true)}
+      component={Link}
       href="/club-match"
       loading={loading}
       loadingPosition="start"
