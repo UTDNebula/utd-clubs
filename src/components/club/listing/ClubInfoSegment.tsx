@@ -2,6 +2,7 @@ import { TZDateMini } from '@date-fns/tz';
 import Chip from '@mui/material/Chip';
 import { format } from 'date-fns';
 import Image from 'next/image';
+import { BaseCard } from '@src/components/common/BaseCard';
 import MarkdownText from '@src/components/MarkdownText';
 import { type RouterOutputs } from '@src/trpc/shared';
 
@@ -11,7 +12,7 @@ const ClubInfoSegment = async ({
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }) => {
   return (
-    <section className="w-full rounded-lg bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
+    <BaseCard className="w-full bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
       <div className="md:max-w-1/4">
         {club.profileImage && (
           <Image
@@ -78,7 +79,7 @@ const ClubInfoSegment = async ({
           </>
         </div>
       )}
-    </section>
+    </BaseCard>
   );
 };
 
