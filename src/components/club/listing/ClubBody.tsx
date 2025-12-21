@@ -85,7 +85,10 @@ const ClubBody = async ({
           <h2 className="text-xl font-bold text-slate-900 mb-2">Contact</h2>
           {club.contacts && club.contacts.length > 0 ? (
             club.contacts.map((contact) => (
-              <div key={contact.platform} className="bg-white shadow-sm rounded-4xl">
+              <div
+                key={contact.platform}
+                className="bg-white shadow-sm rounded-4xl"
+              >
                 <ContactButton contact={contact} />
               </div>
             ))
@@ -113,13 +116,13 @@ const ClubBody = async ({
           <h2 className="text-xl font-bold text-slate-900 mb-2">
             Upcoming Events
           </h2>
-          <div className="flex flex-wrap w-full justify-evenly items-center gap-4">
+          <div className="flex flex-wrap w-full justify-evenly items-center gap-4 mt-5">
             {upcomingEvents.length > 0 ? (
               upcomingEvents.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))
             ) : (
-              <div className="text-md font-medium text-gray-700">
+              <div className="w-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl text-md font-medium text-gray-700">
                 {club.updatedAt == null || club.updatedAt < oneYearAgo
                   ? 'No info about upcoming events'
                   : 'There are no upcoming events'}
