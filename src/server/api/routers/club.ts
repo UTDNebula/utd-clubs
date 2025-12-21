@@ -335,10 +335,10 @@ export const clubRouter = createTRPCRouter({
         });
 
         if (!bySlug) return null;
+        const { userMetadataToClubs, ...clubData } = bySlug; // clubData doesn't have userMetadataToClubs field
         return {
-          ...bySlug,
-          numMembers: bySlug.userMetadataToClubs.length,
-          userMetadataToClubs: null,
+          ...clubData,
+          numMembers: userMetadataToClubs.length,
         };
       } catch (e) {
         console.error(e);
