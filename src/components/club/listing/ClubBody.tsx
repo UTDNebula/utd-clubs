@@ -85,7 +85,7 @@ const ClubBody = async ({
           <h2 className="text-xl font-bold text-slate-900 mb-2">Contact</h2>
           {club.contacts && club.contacts.length > 0 ? (
             club.contacts.map((contact) => (
-              <div key={contact.platform} className="bg-white rounded-4xl">
+              <div key={contact.platform} className="bg-white shadow-sm rounded-4xl">
                 <ContactButton contact={contact} />
               </div>
             ))
