@@ -1,4 +1,4 @@
-import { BoxProps, Skeleton, Typography } from '@mui/material';
+import { Skeleton, Typography } from '@mui/material';
 import React, { type ReactNode } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
 
@@ -8,20 +8,22 @@ interface PanelPropsBase {
   endAdornment?: React.JSX.Element;
 }
 
-type PanelProps = PanelPropsBase & Omit<BoxProps, keyof PanelPropsBase>;
+interface PanelProps extends PanelPropsBase {
+  className?: string;
+  children?: ReactNode;
+}
 
 const Panel = ({
   children,
   heading,
   startAdornment,
   endAdornment,
-  ...props
+  className,
 }: PanelProps) => {
   return (
     <BaseCard
-      {...props}
       className={`flex flex-col gap-2 sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4 min-w-0 max-w-6xl
-        ${props.className ?? ''}`}
+        ${className ?? ''}`}
     >
       <div className="flex items-center gap-2 ml-2">
         {startAdornment}
