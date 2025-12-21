@@ -34,7 +34,7 @@ export default function OfficerList({
       // 3. The height of the card should be the distance between its top and the right side's bottom
       const targetHeight = rightBottom - officerTop;
       const contentHeight = contentRef.current.scrollHeight + 80; // + padding/header space
-      setMaxHeight(targetHeight > 0 ? targetHeight : 300);
+      setMaxHeight(targetHeight > 300 ? targetHeight : 300);
       setNeedsTruncation(contentHeight > targetHeight && officers.length > 0);
     };
 
