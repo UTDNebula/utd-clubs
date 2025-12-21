@@ -14,8 +14,8 @@ const ClubTitle = async ({
         <Image
           src={club.profileImage}
           alt={club.name + ' logo'}
-          width={110}
-          height={110}
+          width={128}
+          height={128}
           className="rounded-lg"
         />
       )}
