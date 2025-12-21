@@ -65,12 +65,21 @@ export const aiRouter = createTRPCRouter({
         }
       }
 
+      // Get clubs the user has joined
+      const joined = await ctx.db.query.userMetadata.findFirst({
+        where: eq(userMetadata.id, ctx.session.user.id),
+        with: {
+          clubs: true,
+        },
+      });
       // Get all clubs
-      const clubs = await ctx.db
-        .select()
-        .from(club)
-        .orderBy(club.name)
-        .where(eq(club.approved, 'approved'));
+      const clubs = (
+        await ctx.db
+          .select()
+          .from(club)
+          .orderBy(club.name)
+          .where(eq(club.approved, 'approved'))
+      ).filter((club) => !joined?.clubs.find((c) => c.clubId == club.id)); // filter out clubs the user is in
 
       const prompt = `Analyze this student's preferences and recommend 9 organizations,
 ensuring balanced coverage across all selected categories:
