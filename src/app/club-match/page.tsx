@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import Header from '@src/components/header/BaseHeader';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
+import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
 import ClubMatch from './ClubMatch';
 
@@ -33,6 +34,8 @@ const Page = async () => {
     where: (userAiCache) => eq(userAiCache.id, session.user.id),
   });
 
+  const userMetadata = await api.userMetadata.byId({ id: session.user.id });
+
   if (data?.clubMatchLimit != null && data.clubMatchLimit <= 0) {
     redirect('/club-match/results');
   }
@@ -40,7 +43,10 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <ClubMatch response={data?.responses ?? null} />
+      <ClubMatch
+        response={data?.responses ?? null}
+        userMetadata={userMetadata ?? null}
+      />
     </>
   );
 };

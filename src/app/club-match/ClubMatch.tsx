@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import Panel from '@src/components/form/Panel';
 import { Binoculars } from '@src/icons/OtherIcons';
+import { SelectUserMetadata } from '@src/server/db/models';
 import { ClubMatchResponses } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -253,9 +254,10 @@ const SelectMultipleInput = ({
 
 type ClubMatchProps = {
   response: ClubMatchResponses | null;
+  userMetadata: SelectUserMetadata | null;
 };
 
-const ClubMatch = ({ response }: ClubMatchProps) => {
+const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
   const api = useTRPC();
   const router = useRouter();
 
@@ -263,7 +265,7 @@ const ClubMatch = ({ response }: ClubMatchProps) => {
 
   const form = useAppForm({
     defaultValues: {
-      major: response?.major ?? '',
+      major: userMetadata?.major ?? response?.major ?? '',
       year: response?.year ?? '',
       proximity: response?.proximity ?? '',
       categories: response?.categories ?? [],
