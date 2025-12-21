@@ -148,26 +148,9 @@ export const eventRouter = createTRPCRouter({
       const approvedEvents = events.filter(
         (e) => e.club.approved === 'approved',
       );
-      if (ctx.session) {
-        const user = ctx.session.user;
-        const eventsWithLike = await Promise.all(
-          approvedEvents.map(async (ev) => {
-            const liked = !!(await ctx.db.query.userMetadataToEvents.findFirst({
-              where: (userMetadataToEvents) =>
-                and(
-                  eq(userMetadataToEvents.userId, user.id),
-                  eq(userMetadataToEvents.eventId, ev.id),
-                ),
-            }));
-            return { ...ev, liked: liked };
-          }),
-        );
-        return { events: eventsWithLike };
-      }
+
       return {
-        events: approvedEvents.map((event) => {
-          return { ...event, liked: false };
-        }),
+        events: approvedEvents,
       };
     }),
   findByFilters: publicProcedure
@@ -212,26 +195,9 @@ export const eventRouter = createTRPCRouter({
         },
         limit: 20,
       });
-      if (ctx.session) {
-        const user = ctx.session.user;
-        const eventsWithLike = await Promise.all(
-          events.map(async (ev) => {
-            const liked = !!(await ctx.db.query.userMetadataToEvents.findFirst({
-              where: (userMetadataToEvents) =>
-                and(
-                  eq(userMetadataToEvents.userId, user.id),
-                  eq(userMetadataToEvents.eventId, ev.id),
-                ),
-            }));
-            return { ...ev, liked: liked };
-          }),
-        );
-        return { events: eventsWithLike };
-      }
+
       return {
-        events: events.map((event) => {
-          return { ...event, liked: false };
-        }),
+        events: events,
       };
     }),
   byId: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {

@@ -28,7 +28,7 @@ const EditEventPage = async (props: {
         ]}
         hrefBack={`/manage/${slug}/events`}
       />
-      <EventForm mode="edit" club={club} event={{ ...event, liked: false }} />
+      <EventForm mode="edit" club={club} event={event} />
     </>
   );
 };
