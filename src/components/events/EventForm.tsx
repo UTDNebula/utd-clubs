@@ -26,7 +26,7 @@ type EventFormProps =
   | {
       mode: 'edit';
       club: SelectClub;
-      event: RouterOutputs['event']['findByFilters']['events'][number];
+      event: RouterOutputs['event']['byId'];
     };
 
 interface EventDetails {
