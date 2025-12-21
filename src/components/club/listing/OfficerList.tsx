@@ -63,7 +63,7 @@ export default function OfficerList({
       className="flex flex-col gap-2 bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl transition-all duration-500 overflow-hidden"
       style={containerStyle}
     >
-      <h2 className="text-2xl font-semibold mb-2">Officers</h2>
+      <h2 className="text-xl font-bold text-slate-900 mb-2">Officers</h2>
       <div className="relative flex-1 min-h-0 overflow-hidden">
         <div ref={contentRef} className="flex flex-col gap-4">
           {officers.length > 0 ? (

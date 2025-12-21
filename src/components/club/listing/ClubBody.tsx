@@ -25,7 +25,7 @@ const ClubBody = async ({
     <section className="w-full rounded-lg grid grid-cols-1 md:grid-cols-5 gap-5 items-start mt-8">
       <div className="md:col-span-1 flex flex-col gap-4 h-full">
         <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl gap-2 text-sm">
-          <h2 className="text-2xl font-semibold mb-2">Details</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Details</h2>
           {
             /*club.numMembers ||*/ club.foundingDate ||
             lastEventDate ||
@@ -74,7 +74,7 @@ const ClubBody = async ({
           }
         </div>
         <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl gap-2">
-          <h2 className="text-2xl font-semibold mb-2">Contact</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Contact</h2>
           {club.contacts && club.contacts.length > 0 ? (
             club.contacts.map((contact) => (
               <div key={contact.platform} className="bg-white rounded-4xl">
@@ -102,7 +102,7 @@ const ClubBody = async ({
           />
         </div>
         <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl">
-          <h2 className="text-2xl font-semibold mb-2">Upcoming Events</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Upcoming Events</h2>
           <div className="flex flex-wrap w-full justify-evenly items-center gap-4">
             {upcomingEvents.length > 0 ? (
               upcomingEvents.map((event) => (
