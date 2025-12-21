@@ -18,6 +18,9 @@ const ClubBody = async ({
     sortByDate: true,
     // currentTime: now,
   });
+  const upcomingEvents = events.filter((e) => e.endTime >= now);
+  const lastEventDate =
+    events.filter((e) => e.startTime <= now).reverse()[0]?.endTime ?? null;
   return (
     <section className="w-full rounded-lg grid grid-cols-1 md:grid-cols-5 gap-5 items-start mt-8">
       <div className="md:col-span-1 flex flex-col gap-4 h-full">
@@ -25,8 +28,9 @@ const ClubBody = async ({
           <h2 className="text-2xl font-semibold mb-2">Details</h2>
           {
             /*club.numMembers ||*/ club.foundingDate ||
-            /*club.lastActive ||*/ club.updatedAt ||
-            true ? (
+            lastEventDate ||
+            club.updatedAt ||
+            true ? ( //TODO: must remove the true's
               <>
                 {
                   /*club.numMembers*/ true && (
@@ -44,14 +48,17 @@ const ClubBody = async ({
                     </div>
                   )
                 }
-                {
-                  /*club.*/ true && (
-                    <div className="flex flex-row w-full justify-between">
-                      <span>Last Active</span>
-                      <span>2020 present</span>
-                    </div>
-                  )
-                }
+                {lastEventDate && true && (
+                  <div className="flex flex-row w-full justify-between">
+                    <span>Last Active</span>
+                    <span>
+                      {lastEventDate.toLocaleDateString('en-US', {
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </span>
+                  </div>
+                )}
                 {
                   /*club.updatedAt*/ true && (
                     <div className="flex flex-row w-full justify-between">
@@ -97,8 +104,10 @@ const ClubBody = async ({
         <div className="flex flex-col bg-slate-100 p-4 rounded-xl">
           <h2 className="text-2xl font-semibold mb-2">Upcoming Events</h2>
           <div className="flex flex-wrap w-full justify-evenly items-center gap-4">
-            {events.length > 0 ? (
-              events.map((event) => <EventCard key={event.id} event={event} />)
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))
             ) : (
               <div className="text-md font-medium text-gray-700">
                 {club.updatedAt == null || club.updatedAt < oneYearAgo
