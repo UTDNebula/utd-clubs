@@ -77,7 +77,7 @@ export default function OfficerList({
 
         {/* fade overlay only shows if content is taller than right side AND not expanded */}
         {needsTruncation && !isExpanded && (
-          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-slate-100 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-neutral-50 to-transparent pointer-events-none" />
         )}
       </div>
 
