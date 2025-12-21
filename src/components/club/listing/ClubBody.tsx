@@ -102,7 +102,9 @@ const ClubBody = async ({
           />
         </div>
         <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-4 rounded-xl">
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Upcoming Events</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
+            Upcoming Events
+          </h2>
           <div className="flex flex-wrap w-full justify-evenly items-center gap-4">
             {upcomingEvents.length > 0 ? (
               upcomingEvents.map((event) => (
