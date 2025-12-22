@@ -24,7 +24,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
         className="grow flex flex-col"
       >
         <div className="relative aspect-square overflow-hidden rounded-t-lg">
-          <div className="absolute inset-0 h-full w-full bg-gray-200" />
+          <div className="absolute inset-0 h-full w-full bg-white" />
           {club.profileImage && (
             <Image
               src={club.profileImage}
@@ -32,7 +32,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
               alt={club.name + ' logo'}
               priority={priority}
               sizes="20rem"
-              className="object-cover select-none"
+              className="object-contain select-none"
             />
           )}
         </div>
