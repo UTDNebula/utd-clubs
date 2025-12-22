@@ -3,11 +3,8 @@ import { type Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import ClubBody from '@src/components/club/listing/ClubBody';
 import ClubHeader from '@src/components/club/listing/ClubHeader';
-// import ClubInfoSegment from '@src/components/club/listing/ClubInfoSegment';
 import { ClubNotClaimed } from '@src/components/club/listing/ClubNotClaimed';
 import ClubTitle from '@src/components/club/listing/ClubTitle';
-// import ClubUpcomingEvents from '@src/components/club/listing/ClubUpcomingEvents';
-// import ContactInformation from '@src/components/club/listing/ContactInformation';
 import Header from '@src/components/header/BaseHeader';
 import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
@@ -35,9 +32,6 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
         <ClubHeader club={club} />
         <ClubTitle club={club} />
         <ClubBody club={club} />
-        {/* <ClubInfoSegment club={club} />
-        {club.contacts.length > 0 && <ContactInformation club={club} />}
-        {club.updatedAt && <ClubUpcomingEvents clubId={club.id} />} */}
         {(club.updatedAt == null || club.updatedAt < oneYearAgo) && (
           <ClubNotClaimed />
         )}
