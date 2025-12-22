@@ -1,0 +1,40 @@
+import { IconButton, Tooltip } from '@mui/material';
+import Link from 'next/link';
+import { logo } from '@src/icons/ContactIcons';
+import type { SelectContact } from '@src/server/db/models';
+import { contactNames } from '@src/server/db/schema/contacts';
+
+type ContactButtonProps = {
+  contact: SelectContact;
+};
+const ContactButton = ({ contact }: ContactButtonProps) => {
+  return (
+    <Tooltip
+      key={contact.platform + contact.url}
+      title={contactNames[contact.platform]}
+    >
+      <Link
+        href={
+          contact.platform === 'email' ? `mailto:${contact.url}` : contact.url
+        }
+        target="_blank"
+        className="inline-block w-full"
+      >
+        <IconButton
+          className="group"
+          size="medium"
+          sx={{
+            '&:hover': {
+              backgroundColor: 'inherit',
+            },
+          }}
+        >
+          {logo[contact.platform]}
+        </IconButton>
+        <span>{contact.platform}</span>
+      </Link>
+    </Tooltip>
+  );
+};
+
+export default ContactButton;
