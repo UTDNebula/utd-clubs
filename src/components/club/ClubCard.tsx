@@ -41,9 +41,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
           <p className="line-clamp-2 text-xl font-medium text-slate-800">
             {name}
           </p>
-          <p className="line-clamp-9 text-base text-slate-600">
-            {desc}
-          </p>
+          <p className="line-clamp-9 text-base text-slate-600">{desc}</p>
         </div>
       </Link>
 
@@ -68,14 +66,8 @@ export const ClubCardSkeleton = () => {
           />
         </div>
         <div className="flex flex-col space-y-2 p-6">
-          <Skeleton
-            variant="text"
-            className="text-xl font-medium"
-          />
-          <Skeleton
-            variant="text"
-            className="text-xl font-medium w-1/2"
-          />
+          <Skeleton variant="text" className="text-xl font-medium" />
+          <Skeleton variant="text" className="text-xl font-medium w-1/2" />
           <Skeleton variant="text" className="text-base" />
           <Skeleton variant="text" className="text-base" />
           <Skeleton variant="text" className="text-base" />
