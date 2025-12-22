@@ -7,7 +7,7 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, {useState, useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
@@ -26,11 +26,13 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
     api.club.memberType.queryOptions({ id: clubId }),
   );
 
-  const [optimisticMemberType, setOptimisticMemberType] = useState<string | null>(null);
+  const [optimisticMemberType, setOptimisticMemberType] = useState<
+    string | null
+  >(null);
 
   useEffect(() => {
     setOptimisticMemberType(memberType ?? null);
-  }, [memberType]); 
+  }, [memberType]);
 
   const joinLeave = useMutation(
     api.club.joinLeave.mutationOptions({
@@ -44,7 +46,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       },
       onError: () => {
         setOptimisticMemberType(memberType ?? null);
-      }, 
+      },
     }),
   );
 
@@ -56,7 +58,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
     useAuthPage = true;
   });
 
-  const displayMemberType = optimisticMemberType; 
+  const displayMemberType = optimisticMemberType;
 
   if (displayMemberType === 'Officer' || displayMemberType === 'President') {
     return (
@@ -74,7 +76,9 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   }
 
   return (
-    <Tooltip title={displayMemberType ? 'Click to leave club' : 'Click to join club'}>
+    <Tooltip
+      title={displayMemberType ? 'Click to leave club' : 'Click to join club'}
+    >
       <Button
         variant="contained"
         size={isHeader ? 'large' : 'small'}
