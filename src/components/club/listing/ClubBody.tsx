@@ -51,7 +51,7 @@ const ClubBody = async ({
               {lastEventDate && (
                 <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
                   <span className="font-medium text-slate-500">
-                    Last Active
+                    Last Event
                   </span>
                   <span className="text-slate-500">
                     {lastEventDate.toLocaleDateString('en-US', {
