@@ -25,23 +25,19 @@ export default function OfficerList({
 
       if (!rightSide || !officerContainer || !contentRef.current) return;
 
-      // 1. Get the page position of the bottom of the right column
       const rightBottom = rightSide.getBoundingClientRect().bottom;
-
-      // 2. Get the page position of the top of the Officer Card
       const officerTop = officerContainer.getBoundingClientRect().top;
 
-      // 3. The height of the card should be the distance between its top and the right side's bottom
+      // The height of the officer card at start should be the distance between officer's top and the right side's bottom
       const targetHeight = rightBottom - officerTop;
-      const contentHeight = contentRef.current.scrollHeight + 80; // + padding/header space
-      setMaxHeight(targetHeight > 300 ? targetHeight : 300);
-      setNeedsTruncation(contentHeight > targetHeight && officers.length > 0);
+      const contentHeight = contentRef.current.scrollHeight + 80; // height of the full officer card + padding/header space
+      setMaxHeight(targetHeight > 300 ? targetHeight : 300); // at least 300px to show 2 officers
+      setNeedsTruncation(contentHeight > targetHeight && officers.length > 0); // if no officers, no truncation -- just show error text
     };
 
-    // Initial measure
-    updateHeight();
+    updateHeight(); // initial measure
 
-    // Re-measure if the window is resized or description expands
+    // re-measure if the window is resized or description expands
     const observer = new ResizeObserver(updateHeight);
     observer.observe(rightSide);
     if (contentRef.current) observer.observe(contentRef.current);
@@ -49,7 +45,7 @@ export default function OfficerList({
     return () => observer.disconnect();
   }, [officers]);
 
-  // Determine the CSS height
+  // dynamically determine css height in expanded or normal states
   const containerStyle =
     isExpanded || !needsTruncation
       ? { height: 'auto' }
@@ -60,7 +56,7 @@ export default function OfficerList({
   return (
     <div
       id="officer-card-wrapper"
-      className="flex flex-col gap-2 bg-neutral-50 border-slate-200 shadow-sm p-6 rounded-xl transition-all duration-500 overflow-hidden"
+      className="flex flex-col gap-2 bg-neutral-50 border-slate-200 shadow-sm p-6 rounded-lg transition-all duration-500 overflow-hidden"
       style={containerStyle}
     >
       <h2 className="text-xl font-bold text-slate-900 mb-2">Officers</h2>

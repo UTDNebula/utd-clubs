@@ -25,7 +25,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
   return (
     <BaseCard
       variant="interactive"
-      className="flex h-96 w-64 flex-col overflow-hidden border border-slate-100 shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl hover:border-slate-200"
+      className="group flex h-96 w-64 flex-col overflow-hidden border border-slate-100 shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:border-slate-200"
     >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
         <div className="relative h-44 shrink-0 w-full overflow-hidden">

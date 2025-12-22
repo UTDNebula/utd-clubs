@@ -1,3 +1,4 @@
+import { BaseCard } from '@src/components/common/BaseCard';
 import { RouterOutputs } from '@src/trpc/shared';
 import ContactButton from './ContactButton';
 
@@ -7,7 +8,7 @@ type ClubContactCardProps = {
 
 export default function ClubContactCard({ club }: ClubContactCardProps) {
   return (
-    <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm  p-5 rounded-xl gap-2">
+    <BaseCard className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-5 gap-2">
       <h2 className="text-xl font-bold text-slate-900 mb-2">Contact</h2>
       {club.contacts && club.contacts.length > 0 ? (
         club.contacts.map((contact) => (
@@ -21,6 +22,6 @@ export default function ClubContactCard({ club }: ClubContactCardProps) {
       ) : (
         <span className="text-slate-500 text-sm">No contact info</span>
       )}
-    </div>
+    </BaseCard>
   );
 }

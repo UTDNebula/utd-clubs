@@ -23,7 +23,10 @@ const ClubBody = async ({
   const lastEventDate =
     events.filter((e) => e.startTime <= now).reverse()[0]?.endTime ?? null;
   return (
-    <section className="w-full rounded-lg grid grid-cols-1 md:grid-cols-5 gap-5 items-start mt-8">
+    <section
+      id="club-body"
+      className="w-full rounded-lg grid grid-cols-1 md:grid-cols-5 gap-5 items-start mt-8"
+    >
       <div
         id="club-content-left"
         className="md:col-span-1 flex flex-col gap-4 h-full"

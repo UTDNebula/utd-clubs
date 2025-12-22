@@ -1,3 +1,4 @@
+import { BaseCard } from '@src/components/common/BaseCard';
 import EventCard from '@src/components/events/EventCard';
 import { RouterOutputs } from '@src/trpc/shared';
 
@@ -13,7 +14,7 @@ export default function ClubUpcomingEventsCard({
   oneYearAgo,
 }: ClubUpcomingEventsCardProps) {
   return (
-    <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm  p-5 rounded-xl">
+    <BaseCard className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-5">
       <h2 className="text-xl font-bold text-slate-900 mb-2">Upcoming Events</h2>
       <div className="flex flex-wrap w-full justify-evenly items-center gap-4 mt-5">
         {upcomingEvents.length > 0 ? (
@@ -28,6 +29,6 @@ export default function ClubUpcomingEventsCard({
           </div>
         )}
       </div>
-    </div>
+    </BaseCard>
   );
 }

@@ -1,3 +1,4 @@
+import { BaseCard } from '@src/components/common/BaseCard';
 import { RouterOutputs } from '@src/trpc/shared';
 
 type ClubDetailsCardProps = {
@@ -9,7 +10,7 @@ export default function ClubDetailsCard({
   lastEventDate,
 }: ClubDetailsCardProps) {
   return (
-    <div className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm  p-5 rounded-xl gap-2 text-sm text-slate-600">
+    <BaseCard className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-5 gap-2 text-sm text-slate-600">
       <h2 className="text-xl font-bold text-slate-900 mb-2">Details</h2>
       {club.numMembers ||
       club.foundingDate ||
@@ -59,6 +60,6 @@ export default function ClubDetailsCard({
       ) : (
         <span className="text-slate-500">No details</span>
       )}
-    </div>
+    </BaseCard>
   );
 }

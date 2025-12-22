@@ -9,7 +9,10 @@ const ClubTitle = async ({
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }) => {
   return (
-    <section className="w-full rounded-lg flex flex-col items-start md:flex-row justify-between gap-4 mb-0 mt-2">
+    <section
+      id="club-tile"
+      className="w-full rounded-lg flex flex-col items-start md:flex-row justify-between gap-4 mb-0 mt-2"
+    >
       {club.profileImage && (
         <Image
           src={club.profileImage}
