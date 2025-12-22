@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm';
 import { club } from '@src/server/db/schema/club';
 import {
   userAiCache,
+  userMetadata,
   type ClubMatchResults,
 } from '@src/server/db/schema/users';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
@@ -64,12 +65,21 @@ export const aiRouter = createTRPCRouter({
         }
       }
 
+      // Get clubs the user has joined
+      const joined = await ctx.db.query.userMetadata.findFirst({
+        where: eq(userMetadata.id, ctx.session.user.id),
+        with: {
+          clubs: true,
+        },
+      });
       // Get all clubs
-      const clubs = await ctx.db
-        .select()
-        .from(club)
-        .orderBy(club.name)
-        .where(eq(club.approved, 'approved'));
+      const clubs = (
+        await ctx.db
+          .select()
+          .from(club)
+          .orderBy(club.name)
+          .where(eq(club.approved, 'approved'))
+      ).filter((club) => !joined?.clubs.find((c) => c.clubId == club.id)); // filter out clubs the user is in
 
       const prompt = `Analyze this student's preferences and recommend 9 organizations,
 ensuring balanced coverage across all selected categories:
@@ -109,7 +119,7 @@ Maintain strict formatting:
 `;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash-lite',
+        model: 'gemini-2.5-flash-lite',
         contents: prompt,
       });
 
@@ -127,12 +137,21 @@ Maintain strict formatting:
         .values({
           id: ctx.session.user.id,
           clubMatch: result,
+          responses: input,
         })
         .onConflictDoUpdate({
           target: userAiCache.id,
           set: {
             clubMatch: result,
+            responses: input,
           },
         });
+      //Save to profile
+      await ctx.db
+        .update(userMetadata)
+        .set({
+          major: input.major,
+        })
+        .where(eq(userMetadata.id, ctx.session.user.id));
     }),
 });

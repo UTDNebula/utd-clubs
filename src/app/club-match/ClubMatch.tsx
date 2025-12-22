@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import Panel from '@src/components/form/Panel';
 import { Binoculars } from '@src/icons/OtherIcons';
+import { SelectUserMetadata } from '@src/server/db/models';
+import { ClubMatchResponses } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
@@ -250,7 +252,12 @@ const SelectMultipleInput = ({
   );
 };
 
-const ClubMatch = () => {
+type ClubMatchProps = {
+  response: ClubMatchResponses | null;
+  userMetadata: SelectUserMetadata | null;
+};
+
+const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
   const api = useTRPC();
   const router = useRouter();
 
@@ -258,20 +265,20 @@ const ClubMatch = () => {
 
   const form = useAppForm({
     defaultValues: {
-      major: '',
-      year: '',
-      proximity: '',
-      categories: [],
-      hobbies: [],
-      involvementGoals: [],
-      skills: [],
-      specificCultures: '',
-      hobbyDetails: '',
-      otherAcademicInterests: '',
-      gender: '',
-      genderOther: '',
-      newExperiences: '',
-      timeCommitment: '',
+      major: userMetadata?.major ?? response?.major ?? '',
+      year: response?.year ?? '',
+      proximity: response?.proximity ?? '',
+      categories: response?.categories ?? [],
+      hobbies: response?.hobbies ?? [],
+      involvementGoals: response?.involvementGoals ?? [],
+      skills: response?.skills ?? [],
+      specificCultures: response?.specificCultures ?? '',
+      hobbyDetails: response?.hobbyDetails ?? '',
+      otherAcademicInterests: response?.otherAcademicInterests ?? '',
+      gender: response?.gender ?? '',
+      genderOther: response?.genderOther ?? '',
+      newExperiences: response?.newExperiences ?? '',
+      timeCommitment: response?.timeCommitment ?? '',
     } as ClubMatchFormSchema,
     onSubmit: async ({ value }) => {
       if (!editData.isPending) {
@@ -285,7 +292,7 @@ const ClubMatch = () => {
   });
 
   return (
-    <main className="p-4">
+    <main className="p-4 mb-10">
       <h1 className="font-display mb-2 text-center text-4xl font-bold text-haiti">
         Club Match
       </h1>

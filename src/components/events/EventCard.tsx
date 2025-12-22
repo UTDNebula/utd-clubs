@@ -3,6 +3,7 @@
 import { Alert, Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime';
 import EventDeleteButton from './EventDeleteButton';
@@ -15,14 +16,17 @@ import EventTimeAlert from './EventTimeAlert';
 
 interface EventCardProps {
   event: RouterOutputs['event']['byClubId'][number];
-  view?: 'normal' | 'manage' | 'preview';
+  view?: 'normal' | 'manage' | 'preview' | 'admin';
 }
 
 const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
   const src = event.image ?? event.club.profileImage;
 
   return (
-    <div className="group flex h-96 w-64 flex-col overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl hover:border-slate-200">
+    <BaseCard
+      variant="interactive"
+      className="flex h-96 w-64 flex-col overflow-hidden border border-slate-100 shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl hover:border-slate-200"
+    >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
         <div className="relative h-44 shrink-0 w-full overflow-hidden">
           <div className="absolute inset-0 h-full w-full bg-slate-200" />
@@ -81,8 +85,14 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
             </div>
           ))}
         {view === 'preview' && <EventRegisterButtonPreview />}
+        {view === 'admin' &&
+          (event.google ? (
+            <Alert severity="info">Synced from Google Calendar.</Alert>
+          ) : (
+            <EventDeleteButton event={event} view="admin" />
+          ))}
       </div>
-    </div>
+    </BaseCard>
   );
 };
 
@@ -94,7 +104,10 @@ interface EventCardSkeletonProps {
 
 export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
   return (
-    <div className="flex h-96 w-64 flex-col overflow-hidden rounded-2xl bg-white border border-slate-100">
+    <BaseCard
+      variant="interactive"
+      className="flex h-96 w-64 flex-col overflow-hidden border border-slate-100"
+    >
       <div className="grow flex flex-col">
         <div className="relative h-44 shrink-0 w-full bg-slate-100" />
         <div className="flex h-full flex-col p-5 space-y-3">
@@ -121,6 +134,6 @@ export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
           )}
         </div>
       </div>
-    </div>
+    </BaseCard>
   );
 };

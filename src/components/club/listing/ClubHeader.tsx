@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { BaseCard } from '@src/components/common/BaseCard';
 import type {
   SelectContact as Contacts,
   SelectClub,
@@ -10,7 +11,7 @@ type Club = SelectClub & {
 };
 const ClubHeader = async ({ club }: { club: Club }) => {
   return (
-    <div className="relative w-full aspect-[4.5/1] rounded-lg overflow-hidden">
+    <BaseCard className="relative w-full aspect-[4.5/1] overflow-hidden">
       <Image
         src={club.bannerImage ?? club.profileImage ?? '/images/wideWave.jpg'}
         alt="Club banner"
@@ -18,7 +19,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
         className="object-cover object-center"
         priority
       />
-    </div>
+    </BaseCard>
   );
 };
 

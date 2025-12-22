@@ -1,7 +1,10 @@
 // component with info for clubs not on the platform
+
+import { BaseCard } from '@src/components/common/BaseCard';
+
 export const ClubNotClaimed = () => {
   return (
-    <div className="w-full rounded-lg bg-cornflower-50 p-6 md:p-10">
+    <BaseCard className="w-full bg-cornflower-50 p-6 md:p-10">
       <h2 className="text-2xl font-semibold text-gray-800">
         Is this your Club or Organization?
       </h2>
@@ -26,6 +29,6 @@ export const ClubNotClaimed = () => {
           .
         </p>
       </div>
-    </div>
+    </BaseCard>
   );
 };
