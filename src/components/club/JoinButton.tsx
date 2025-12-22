@@ -7,7 +7,7 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
@@ -26,6 +26,12 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
     api.club.memberType.queryOptions({ id: clubId }),
   );
 
+  const [optimisticMemberType, setOptimisticMemberType] = useState<string | null>(null);
+
+  useEffect(() => {
+    setOptimisticMemberType(memberType ?? null);
+  }, [memberType]); 
+
   const joinLeave = useMutation(
     api.club.joinLeave.mutationOptions({
       onSuccess: () => {
@@ -36,6 +42,9 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
           ],
         });
       },
+      onError: () => {
+        setOptimisticMemberType(memberType ?? null);
+      }, 
     }),
   );
 
@@ -47,7 +56,9 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
     useAuthPage = true;
   });
 
-  if (memberType === 'Officer' || memberType === 'President') {
+  const displayMemberType = optimisticMemberType; 
+
+  if (displayMemberType === 'Officer' || displayMemberType === 'President') {
     return (
       <Link href={`/manage/${clubSlug ?? clubId}`}>
         <Button
@@ -63,11 +74,11 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   }
 
   return (
-    <Tooltip title={memberType ? 'Click to leave club' : 'Click to join club'}>
+    <Tooltip title={displayMemberType ? 'Click to leave club' : 'Click to join club'}>
       <Button
         variant="contained"
         size={isHeader ? 'large' : 'small'}
-        startIcon={memberType ? <CheckIcon /> : <AddIcon />}
+        startIcon={displayMemberType ? <CheckIcon /> : <AddIcon />}
         onClick={async (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -86,12 +97,14 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
             return;
           }
 
+          const newMemberType = displayMemberType ? null : 'Member';
+          setOptimisticMemberType(newMemberType);
           void joinLeave.mutateAsync({ clubId: clubId });
         }}
         className="normal-case"
         loading={isPending || joinLeave.isPending}
       >
-        {memberType ? 'Joined' : 'Join'}
+        {displayMemberType ? 'Joined' : 'Join'}
       </Button>
     </Tooltip>
   );
