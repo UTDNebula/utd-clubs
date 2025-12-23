@@ -178,7 +178,7 @@ export const clubEditRouter = createTRPCRouter({
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
       if (!isOfficer) {
         throw new TRPCError({
-          message: 'must be an officer to modify this club',
+          message: 'You must be an officer to modify this club',
           code: 'UNAUTHORIZED',
         });
       }
@@ -188,8 +188,20 @@ export const clubEditRouter = createTRPCRouter({
       );
       if (!isPresident && (input.deleted.length || input.modified.length)) {
         throw new TRPCError({
-          message: 'only a president can remove or modify people',
+          message: 'Only an admin can remove or modify people',
           code: 'UNAUTHORIZED',
+        });
+      }
+      if (input.deleted.includes(ctx.session.user.id)) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Cannot remove yourself',
+        });
+      }
+      if (input.modified.some((ele) => ele.userId === ctx.session.user.id)) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Cannot promote or demote yourself',
         });
       }
 
