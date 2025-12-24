@@ -140,8 +140,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
   }, [setOpenConfirmDialog]);
 
   const handleConfirmDelete = useCallback(() => {
-    handleCloseDialog();
-
     const userListString = formatUserListString(deleteUsers);
 
     const targetUserIds = Array.isArray(deleteUsers)
@@ -154,6 +152,9 @@ const MemberList = ({ members, club }: MemberListProps) => {
         ids: targetUserIds ?? '',
       },
       {
+        onSettled: () => {
+          handleCloseDialog();
+        },
         onSuccess: () => {
           if (deleteSourceModel.source === 'selection') {
             deleteRows([...rowSelectionModel.ids]);
@@ -313,6 +314,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
         title={`Remove ${formatUserListString(deleteUsers)}?`}
         contentText="This action cannot be undone."
         confirmText={`Remove${Array.isArray(deleteUsers) && deleteUsers.length > 1 ? ' All' : ''}`}
+        loading={removeMembers.isPending}
       />
     </div>
   );

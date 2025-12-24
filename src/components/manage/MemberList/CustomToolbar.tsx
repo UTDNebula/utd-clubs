@@ -6,6 +6,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from '@mui/icons-material/Search';
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
 import Badge from '@mui/material/Badge';
+import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import InputAdornment from '@mui/material/InputAdornment';
 import Menu from '@mui/material/Menu';
@@ -79,6 +80,7 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
     refreshList,
     rowSelectionModel,
     selfRowId,
+    getMembers,
   } = useContext(MemberListContext);
 
   const apiRef = useGridApiContext();
@@ -147,8 +149,15 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
 
       {memberListAbilities.refresh && (
         <Tooltip title="Refresh" className="max-sm:hidden">
-          <ToolbarButton onClick={refreshList}>
-            <RefreshIcon fontSize="small" />
+          <ToolbarButton
+            onClick={refreshList}
+            disabled={getMembers?.isFetching}
+          >
+            {getMembers?.isFetching ? (
+              <CircularProgress color="inherit" size={20} />
+            ) : (
+              <RefreshIcon fontSize="small" />
+            )}
           </ToolbarButton>
         </Tooltip>
       )}
