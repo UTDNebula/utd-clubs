@@ -1,15 +1,11 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import GavelIcon from '@mui/icons-material/Gavel';
-import HandymanIcon from '@mui/icons-material/Handyman';
-import PersonIcon from '@mui/icons-material/Person';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { GridRenderCellParams } from '@mui/x-data-grid';
-import { ReactNode, useContext } from 'react';
+import { useContext } from 'react';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
 import { authClient } from '@src/utils/auth-client';
 import MemberRoleChip, { MemberTypes } from '../MemberRoleChip';
