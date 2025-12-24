@@ -9,7 +9,6 @@ import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models
 import useMemberListDeletionState from './useMemberListDeletionState';
 import { MemberListAbilities } from './utils';
 
-// TODO: Possible remove usused: rowSelectionModel
 export interface MemberListContextType {
   memberListDeletionState:
     | ReturnType<typeof useMemberListDeletionState>

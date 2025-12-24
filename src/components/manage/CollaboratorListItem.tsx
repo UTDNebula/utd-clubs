@@ -88,7 +88,7 @@ const CollaboratorListItem = withForm({
                           : 'President',
                       )
                     }
-                    // disabled={self || !canTogglePresident}
+                    disabled={self || !canTogglePresident}
                   >
                     {subField.state.value === 'President' ? (
                       <SupervisorAccountIcon

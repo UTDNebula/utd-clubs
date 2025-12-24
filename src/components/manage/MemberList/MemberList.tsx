@@ -313,7 +313,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
         title={`Remove ${formatUserListString(deleteUsers)}?`}
         contentText="This action cannot be undone."
         confirmText={`Remove${Array.isArray(deleteUsers) && deleteUsers.length > 1 ? ' All' : ''}`}
-        // loading
       />
     </div>
   );
