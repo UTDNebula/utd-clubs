@@ -140,7 +140,7 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
             className="text-base font-semibold text-haiti"
           >
             <span className="hidden sm:inline">
-              {'Club Members' + (club ? ' for ' + club.name : '')}
+              {'Club Members for ' + club.name}
             </span>
             <span className="inline sm:hidden">Club Members</span>
           </Typography>
