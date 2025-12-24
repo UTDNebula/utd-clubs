@@ -7,7 +7,6 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
-import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 import {
   GridActionsCell,
@@ -29,7 +28,7 @@ export function ContactEmailCell(params: GridRenderCellParams) {
 
   return (
     <div className="flex gap-1 items-center h-full">
-      <Tooltip title={contactEmailsVisible ? 'Hide' : 'Show'} placement="left">
+      <Tooltip title={contactEmailsVisible ? 'Hide' : 'Show'}>
         <IconButton size="small" onClick={handleOnClick}>
           <div className="flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
             {contactEmailsVisible ? (
@@ -43,12 +42,14 @@ export function ContactEmailCell(params: GridRenderCellParams) {
       {contactEmailsVisible ? (
         params.value
       ) : (
-        <Skeleton
-          className="text-sm"
-          // Adds variation in width to Skeleton. This is deterministic based off the ID (i.e. row number)
-          width={120 + Math.sin(Number(params.id.valueOf())) * 20}
-          animation={false}
-        />
+        // Used this method instead of a dotted border in order to decrease
+        // space between dots, which is not possible with the other method.
+        //
+        // Sine function adds variation to number of dots. This is
+        // deterministic based off the row ID (i.e. row number)
+        <span className="text-gray-600 select-none tracking-tighter">
+          {'•'.repeat(12 + Math.sin(Number(params.id.valueOf()) * 2) * 3)}
+        </span>
       )}
     </div>
   );

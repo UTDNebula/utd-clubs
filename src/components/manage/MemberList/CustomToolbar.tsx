@@ -65,6 +65,9 @@ const StyledTextField = styled(TextField)<{
   transition: theme.transitions.create(['width', 'opacity']),
 }));
 
+// In order to add custom props to the custom MUI toolbar component,
+// we need to extend the `PropsFromSlot<GridSlots['toolbar']>` interface.
+// Documentation: https://mui.com/x/common-concepts/custom-components/#using-additional-props
 interface CustomToolbarProps extends PropsFromSlot<GridSlots['toolbar']> {
   club: SelectClub;
 }

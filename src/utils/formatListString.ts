@@ -1,4 +1,4 @@
-type getFormattedListStringOptions = {
+type formatListStringOptions = {
   /**
    * Max number of items to explicitly name
    * @default 1
@@ -24,7 +24,7 @@ type getFormattedListStringOptions = {
   conjunction: string;
 };
 
-const getFormattedListStringOptionsDefaults: getFormattedListStringOptions = {
+const formatListStringOptionsDefaults: formatListStringOptions = {
   maxSpecified: 1,
   termString: { singular: 'item', plural: 'items' },
   oxfordComma: true,
@@ -33,34 +33,34 @@ const getFormattedListStringOptionsDefaults: getFormattedListStringOptions = {
 
 /**
  * Formats a list of items into a single string separated by commas.
- * Will only explicitly name a maximum number of items (customizable via {@linkcode getFormattedListStringOptions.maxSpecified | options.maxSpecified}).
+ * Will only explicitly name a maximum number of items (customizable via {@linkcode formatListStringOptions.maxSpecified | options.maxSpecified}).
  * The remaining items will be counted as N and expressed as `N other items`.
  * @param {string | string[]} list - Array of string items to be formatted (required)
- * @param {getFormattedListStringOptionsDefaults} [options] - Object of options (optional). Valid options listed in {@linkcode getFormattedListStringOptions}
+ * @param {formatListStringOptionsDefaults} [options] - Object of options (optional). Valid options listed in {@linkcode formatListStringOptions}
  * @returns {string} Formatted string
  *
  * @example <caption>Basic usage</caption>
  * // returns "Apple, Banana, and 1 other fruit"
  * const list = ["Apple", "Banana", "Canteloupe"];
  * const options = {maxSpecified: 2, termString: {singular: "fruit", plural: "fruits"}};
- * getFormattedListString(list, options);
+ * formatListString(list, options);
  *
  * @example <caption>Single item and 0 maxSpecified</caption>
  * // returns "1 item"
- * getFormattedListString("Durian", {maxSpecified: 0});
+ * formatListString("Durian", {maxSpecified: 0});
  *
  * @example <caption>Uncapped maxSpecified and alternate conjunction</caption>
  * // returns "Apple, Banana, or Canteloupe"
  * const list = ["Apple", "Banana", "Canteloupe"];
- * getFormattedListString(list, {maxSpecified: -1, conjunction: "or"});
+ * formatListString(list, {maxSpecified: -1, conjunction: "or"});
  */
-export default function getFormattedListString(
+export default function formatListString(
   list: string | string[],
-  options?: Partial<getFormattedListStringOptions>,
+  options?: Partial<formatListStringOptions>,
 ): string {
   const normalizedList = Array.isArray(list) ? list : [list];
   const defaultedOptions = {
-    ...getFormattedListStringOptionsDefaults,
+    ...formatListStringOptionsDefaults,
     ...options,
   };
 

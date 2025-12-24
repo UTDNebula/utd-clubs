@@ -2,7 +2,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { GridFooter, GridFooterContainer } from '@mui/x-data-grid';
 import { useContext } from 'react';
 import { MemberListContext } from './MemberListContext';
-import { getFormattedUserListString } from './utils';
+import { formatUserListString } from './utils';
 
 export default function CustomFooter() {
   const { memberListDeletionState, removeMembers, getMembers } =
@@ -17,7 +17,7 @@ export default function CustomFooter() {
           <div className="flex items-center gap-2">
             <CircularProgress color="inherit" size={20} />
             {removeMembers?.isPending && (
-              <span>{`Removing ${getFormattedUserListString(memberListDeletionState?.deleteUsers)}`}</span>
+              <span>{`Removing ${formatUserListString(memberListDeletionState?.deleteUsers)}`}</span>
             )}
             {getMembers?.isFetching && <span>Refreshing</span>}
           </div>

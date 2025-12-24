@@ -8,7 +8,7 @@ import { TRPCClientErrorLike } from '@trpc/client';
 import { ReactNode } from 'react';
 import { AppRouter } from '@src/server/api/root';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
-import getFormattedListString from '@src/utils/getFormattedListString';
+import formatListString from '@src/utils/formatListString';
 import {
   ActionsCell,
   ContactEmailCell,
@@ -16,11 +16,11 @@ import {
 } from './CustomRenderCell';
 
 /**
- * Wrapper function for {@linkcode getFormattedListString()} that takes in a list of users and returns the users' first names formatted as a list.
+ * Wrapper function for {@linkcode formatListString()} that takes in a list of users and returns the users' first names formatted as a list.
  * @param {SelectUserMetadataToClubsWithUserMetadata | SelectUserMetadataToClubsWithUserMetadata[]} users - Array of users to be formatted (required)
  * @returns {string} Formatted string
  */
-export function getFormattedUserListString(
+export function formatUserListString(
   users?:
     | SelectUserMetadataToClubsWithUserMetadata
     | SelectUserMetadataToClubsWithUserMetadata[],
@@ -29,7 +29,7 @@ export function getFormattedUserListString(
 
   const normalizedUsers = Array.isArray(users) ? users : [users];
 
-  return getFormattedListString(
+  return formatListString(
     normalizedUsers.map((ele) => ele.userMetadata?.firstName ?? ''),
     {
       maxSpecified: 1,

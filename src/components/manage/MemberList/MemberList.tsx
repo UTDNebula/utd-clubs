@@ -1,12 +1,6 @@
 'use client';
 
 import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import {
   DataGrid,
@@ -20,6 +14,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { SyntheticEvent, useCallback, useMemo, useState } from 'react';
 import z from 'zod';
+import Confirmation from '@src/components/Confirmation';
 import { AppRouter } from '@src/server/api/root';
 import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
 import {
@@ -35,7 +30,7 @@ import useMemberListDeletionState from './useMemberListDeletionState';
 import {
   actionColumn,
   columns,
-  getFormattedUserListString,
+  formatUserListString,
   MemberListAbilities,
   ToastState,
 } from './utils';
@@ -147,7 +142,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
   const handleConfirmDelete = useCallback(() => {
     handleCloseDialog();
 
-    const userListString = getFormattedUserListString(deleteUsers);
+    const userListString = formatUserListString(deleteUsers);
 
     const targetUserIds = Array.isArray(deleteUsers)
       ? deleteUsers?.map((row) => row.userId)
@@ -265,7 +260,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
         <Snackbar
           open={toastState.open}
           autoHideDuration={6000}
-          anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           onClose={handleCloseToast}
         >
           <Alert
@@ -275,18 +270,16 @@ const MemberList = ({ members, club }: MemberListProps) => {
             sx={{ width: '100%' }}
           >
             <p>{toastState.string}</p>
-            <p>
-              {toastState.type === 'error' && toastState.error
-                ? `Reason: ${toastState.error.message}`
-                : ''}
-            </p>
+            {toastState.type === 'error' && toastState.error && (
+              <p>Reason: {toastState.error.message}</p>
+            )}
           </Alert>
         </Snackbar>
         <DataGrid
           rows={rows}
           columns={actionedColumns}
           // MUI recommends type assertion for passing custom props to slots
-          // Documentation: https://mui.com/x/common-concepts/custom-components/#type-custom-slots
+          // Documentation: https://mui.com/x/common-concepts/custom-components/#using-additional-prop
           slots={{
             toolbar: CustomToolbar as GridSlots['toolbar'],
             footer: CustomFooter,
@@ -310,30 +303,15 @@ const MemberList = ({ members, club }: MemberListProps) => {
           hideFooterSelectedRowCount
         />
       </MemberListContext.Provider>
-      <Dialog
+      <Confirmation
         open={openConfirmDialog}
         onClose={handleCloseDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          <span>Remove </span>
-          {getFormattedUserListString(deleteUsers)}
-          <span>?</span>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleConfirmDelete} color="warning" autoFocus>
-            Remove
-            {Array.isArray(deleteUsers) && deleteUsers.length > 1 ? ' All' : ''}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={handleConfirmDelete}
+        title={`Remove ${formatUserListString(deleteUsers)}?`}
+        contentText="This action cannot be undone."
+        confirmText={`Remove${Array.isArray(deleteUsers) && deleteUsers.length > 1 ? ' All' : ''}`}
+        // loading
+      />
     </div>
   );
 };
