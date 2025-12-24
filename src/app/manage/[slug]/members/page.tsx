@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import ManageHeader from '@src/components/manage/ManageHeader';
+import MemberList from '@src/components/manage/MemberList';
 import { api } from '@src/trpc/server';
 
 export default async function Page({
@@ -14,6 +15,8 @@ export default async function Page({
     notFound();
   }
 
+  const members = await api.club.getMembers({ id: club.id });
+
   return (
     <main>
       <ManageHeader
@@ -21,7 +24,9 @@ export default async function Page({
         path={[{ text: 'Members', href: `/manage/${slug}/members` }]}
         hrefBack={`/manage/${slug}/`}
       />
-      <h1>Not implemented yet, sorry!</h1>
+      <div className="flex w-full flex-col items-center">
+        <MemberList members={members} club={club} />
+      </div>
     </main>
   );
 }

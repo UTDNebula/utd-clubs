@@ -33,10 +33,17 @@ export default function Confirmation({
   loading,
 }: ConfirmationProps) {
   return (
-    <Dialog onClose={onClose} open={open}>
+    <Dialog
+      onClose={onClose}
+      open={open}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText>{contentText}</DialogContentText>
+        <DialogContentText id="alert-dialog-description">
+          {contentText}
+        </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>

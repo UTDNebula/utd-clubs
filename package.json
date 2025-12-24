@@ -26,6 +26,7 @@
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.4",
     "@mui/material-nextjs": "^7.3.3",
+    "@mui/x-data-grid": "^8.22.0",
     "@mui/x-date-pickers": "^8.15.0",
     "@neondatabase/serverless": "^0.10.2",
     "@next/third-parties": "^15.5.6",
