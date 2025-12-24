@@ -15,6 +15,11 @@ const lightPalette = {
     error: {
       main: '#ff5743',
     },
+    info: {
+      light: '#857efc',
+      main: '#6266fa',
+      dark: '#45449f',
+    }
   },
 };
 /*const darkPalette = {
