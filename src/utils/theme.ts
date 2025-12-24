@@ -19,7 +19,7 @@ const lightPalette = {
       light: '#857efc',
       main: '#6266fa',
       dark: '#45449f',
-    }
+    },
   },
 };
 /*const darkPalette = {
