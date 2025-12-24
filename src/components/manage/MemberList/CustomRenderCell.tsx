@@ -12,6 +12,7 @@ import { GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactNode, useContext } from 'react';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
 import { authClient } from '@src/utils/auth-client';
+import MemberRoleChip, { MemberTypes } from '../MemberRoleChip';
 import { MemberListContext } from './MemberListContext';
 
 export function ContactEmailCell(params: GridRenderCellParams) {
@@ -51,36 +52,16 @@ export function ContactEmailCell(params: GridRenderCellParams) {
   );
 }
 
+const RoleToMemberType: Record<string, MemberTypes> = {
+  Admin: 'President',
+  Collaborator: 'Officer',
+  Member: 'Member',
+};
+
 export function MemberTypeCell(params: GridRenderCellParams) {
   if (!params.value) return;
-
-  let color = '';
-  let icon: ReactNode = <></>;
-
-  switch (params.value) {
-    case 'Admin':
-      color = 'bg-rose-200';
-      icon = <GavelIcon fontSize="small" />;
-      break;
-    case 'Collaborator':
-      color = 'bg-royal/30';
-      icon = <HandymanIcon fontSize="small" />;
-      break;
-    case 'Member':
-      icon = <PersonIcon fontSize="small" />;
-      break;
-  }
-
   return (
-    <Chip
-      icon={
-        <div className="ml-2 flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
-          {icon}
-        </div>
-      }
-      label={params.value}
-      className={`${color}`}
-    />
+    <MemberRoleChip memberType={RoleToMemberType[params.value] ?? 'Member'} />
   );
 }
 
