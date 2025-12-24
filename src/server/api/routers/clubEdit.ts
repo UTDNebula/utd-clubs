@@ -426,5 +426,12 @@ export const clubEditRouter = createTRPCRouter({
           message: `User was not found in club`,
         });
       }
+
+      // Return new members
+      const newMembers = await ctx.db.query.userMetadataToClubs.findMany({
+        where: eq(userMetadataToClubs.clubId, input.clubId),
+        with: { userMetadata: true },
+      });
+      return newMembers;
     }),
 });

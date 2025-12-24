@@ -25,7 +25,11 @@ import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';
-import { MemberListContext, MemberListContextType } from './MemberListContext';
+import {
+  MemberListContext,
+  MemberListContextType,
+  SelectUserMetadataToClubsWithNonNullableUserMetadata,
+} from './MemberListContext';
 import useMemberListDeletionState from './useMemberListDeletionState';
 import {
   actionColumn,
@@ -55,9 +59,8 @@ const MemberList = ({ members, club }: MemberListProps) => {
 
   const api = useTRPC();
 
-  // For row/member deletion
   const removeMembers = useMutation<
-    void,
+    SelectUserMetadataToClubsWithNonNullableUserMetadata[],
     TRPCClientErrorLike<AppRouter>,
     z.infer<typeof removeMembersSchema>
   >(api.club.edit.removeMembers.mutationOptions({}));
@@ -155,12 +158,25 @@ const MemberList = ({ members, club }: MemberListProps) => {
         onSettled: () => {
           handleCloseDialog();
         },
-        onSuccess: () => {
-          if (deleteSourceModel.source === 'selection') {
-            deleteRows([...rowSelectionModel.ids]);
-          } else {
-            deleteRows(deleteSourceModel.rowId!);
-          }
+        onSuccess: (newMembers) => {
+          setRows(
+            newMembers.map((member, index) => {
+              const indexOG = membersIndexed.find(
+                (oldMember) => oldMember.userId === member.userId,
+              )?.id;
+
+              return {
+                ...member,
+                id: indexOG ?? index,
+              };
+            }),
+          );
+          // if (deleteSourceModel.source === 'selection') {
+          //   deleteRows([...rowSelectionModel.ids]);
+          // } else {
+          //   deleteRows(deleteSourceModel.rowId!);
+          // }
+
           setToastState({
             open: true,
             type: 'success',
@@ -177,16 +193,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
         },
       },
     );
-  }, [
-    handleCloseDialog,
-    deleteSourceModel.rowId,
-    deleteSourceModel.source,
-    deleteUsers,
-    removeMembers,
-    club.id,
-    deleteRows,
-    rowSelectionModel.ids,
-  ]);
+  }, [deleteUsers, removeMembers, club.id, handleCloseDialog, membersIndexed]);
 
   /*
    * Refresh button
