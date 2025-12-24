@@ -8,11 +8,7 @@ import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import {
-  GridActionsCell,
-  GridActionsCellItem,
-  GridRenderCellParams,
-} from '@mui/x-data-grid';
+import { GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactNode, useContext } from 'react';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
 import { authClient } from '@src/utils/auth-client';
@@ -102,28 +98,42 @@ export function ActionsCell(
   const self = props.row.userId === session.data?.user.id;
 
   return (
-    <GridActionsCell {...props}>
+    <div>
       {memberListAbilities.removeUsers && (
-        <GridActionsCellItem
-          icon={
-            removeMembers?.isPending && deleting ? (
-              <CircularProgress color="inherit" size={20} />
+        <Tooltip
+          title={
+            self ? (
+              <div className="text-center">
+                You cannot remove yourself
+                <br />
+                Another admin must remove you
+              </div>
             ) : (
-              // It isn't possible to add a tooltip for when the button is disabled.
-              // See https://github.com/mui/mui-x/issues/14045
-              <Tooltip title="Remove" placement="left">
-                <DeleteIcon />
-              </Tooltip>
+              'Remove'
             )
           }
-          label="Delete"
-          onClick={() => {
-            memberListDeletionState?.deleteSourceModel.setFromRowId(props.id);
-            memberListDeletionState?.setOpenConfirmDialog(true);
-          }}
-          disabled={removeMembers?.isPending || self}
-        />
+          placement="right"
+        >
+          {/* This span is required to ensure the error tooltip shows when the IconButton is disabled */}
+          <span>
+            <IconButton
+              onClick={() => {
+                memberListDeletionState?.deleteSourceModel.setFromRowId(
+                  props.id,
+                );
+                memberListDeletionState?.setOpenConfirmDialog(true);
+              }}
+              disabled={removeMembers?.isPending || self}
+            >
+              {removeMembers?.isPending && deleting ? (
+                <CircularProgress color="inherit" size={20} />
+              ) : (
+                <DeleteIcon fontSize="small" />
+              )}
+            </IconButton>
+          </span>
+        </Tooltip>
       )}
-    </GridActionsCell>
+    </div>
   );
 }

@@ -211,6 +211,8 @@ const MemberList = ({ members, club }: MemberListProps) => {
    * Abilities
    */
 
+  const self = rows.find((row) => row.userId === session.data?.user.id);
+
   const isAdmin =
     rows.find((row) => row.userId === session.data?.user.id)?.memberType ===
     'President';
@@ -241,16 +243,17 @@ const MemberList = ({ members, club }: MemberListProps) => {
       getMembers,
       refreshList,
       rowSelectionModel,
+      selfRowId: self?.id,
     }),
     [
       memberListDeletionState,
       memberListAbilities,
       contactEmailsVisible,
-      showContactEmails,
       removeMembers,
       getMembers,
       refreshList,
       rowSelectionModel,
+      self?.id,
     ],
   );
 

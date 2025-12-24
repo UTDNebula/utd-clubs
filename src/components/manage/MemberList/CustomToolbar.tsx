@@ -73,14 +73,22 @@ interface CustomToolbarProps extends PropsFromSlot<GridSlots['toolbar']> {
 }
 
 export default function CustomToolbar({ club }: CustomToolbarProps) {
-  const { memberListDeletionState, memberListAbilities, refreshList } =
-    useContext(MemberListContext);
+  const {
+    memberListDeletionState,
+    memberListAbilities,
+    refreshList,
+    rowSelectionModel,
+    selfRowId,
+  } = useContext(MemberListContext);
 
   const apiRef = useGridApiContext();
   const selectedRowCount = useGridSelector(
     apiRef,
     gridRowSelectionCountSelector,
   );
+
+  const selfSelected =
+    selfRowId !== undefined ? rowSelectionModel.ids.has(selfRowId) : false;
 
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const exportMenuTriggerRef = useRef<HTMLButtonElement>(null);
@@ -95,15 +103,31 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
             <span>{`Selection (${selectedRowCount} ${selectedRowCount == 1 ? 'person' : 'people'})`}</span>
             <div>
               {memberListAbilities.removeUsers && (
-                <Tooltip title="Remove Selected">
-                  <ToolbarButton
-                    onClick={() => {
-                      memberListDeletionState?.deleteSourceModel.setFromSelection();
-                      memberListDeletionState?.setOpenConfirmDialog(true);
-                    }}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </ToolbarButton>
+                <Tooltip
+                  title={
+                    selfSelected ? (
+                      <div className="text-center">
+                        You cannot remove yourself
+                        <br />
+                        Another admin must remove you
+                      </div>
+                    ) : (
+                      'Remove Selected'
+                    )
+                  }
+                >
+                  {/* This span is required to ensure the error tooltip shows when the IconButton is disabled */}
+                  <span>
+                    <ToolbarButton
+                      onClick={() => {
+                        memberListDeletionState?.deleteSourceModel.setFromSelection();
+                        memberListDeletionState?.setOpenConfirmDialog(true);
+                      }}
+                      disabled={selfSelected}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </ToolbarButton>
+                  </span>
                 </Tooltip>
               )}
             </div>

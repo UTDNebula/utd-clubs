@@ -32,6 +32,7 @@ export interface MemberListContextType {
     | undefined;
   refreshList: () => void;
   rowSelectionModel: GridRowSelectionModel;
+  selfRowId: GridRowId | undefined;
 }
 
 export const MemberListContext = createContext<MemberListContextType>({
@@ -50,4 +51,5 @@ export const MemberListContext = createContext<MemberListContextType>({
     type: 'include',
     ids: new Set<GridRowId>(),
   },
+  selfRowId: undefined,
 });
