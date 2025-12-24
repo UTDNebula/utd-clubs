@@ -15,6 +15,11 @@ import {
   MemberTypeCell,
 } from './CustomRenderCell';
 
+/**
+ * Wrapper function for {@linkcode getFormattedListString()} that takes in a list of users and returns the users' first names formatted as a list.
+ * @param {SelectUserMetadataToClubsWithUserMetadata | SelectUserMetadataToClubsWithUserMetadata[]} users - Array of users to be formatted (required)
+ * @returns {string} Formatted string
+ */
 export function getFormattedUserListString(
   users?:
     | SelectUserMetadataToClubsWithUserMetadata
@@ -30,6 +35,7 @@ export function getFormattedUserListString(
       maxSpecified: 1,
       oxfordComma: true,
       termString: { singular: 'person', plural: 'people' },
+      conjunction: 'and',
     },
   );
 }
@@ -47,6 +53,7 @@ export const ColumnHeaderWithIcon = ({
     <div className="flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
       {icon}
     </div>
+    {/* Matches font weight of header text to default font weight of MUI Data Grid headers */}
     <div className="font-[var(--unstable_DataGrid-headWeight)]">{children}</div>
   </span>
 );
