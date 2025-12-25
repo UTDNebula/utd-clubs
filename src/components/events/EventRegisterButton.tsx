@@ -5,6 +5,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Button, Skeleton } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
@@ -21,6 +22,12 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
     api.event.joinedEvent.queryOptions({ id: eventId }),
   );
 
+  const [optimisticJoined, setOptimisticJoined] = useState<boolean>(false);
+
+  useEffect(() => {
+    setOptimisticJoined(joined ?? false);
+  }, [joined]);
+
   const join = useMutation({
     ...api.event.joinEvent.mutationOptions(),
     onSuccess: () => {
@@ -30,6 +37,9 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
           { input: { id: eventId }, type: 'query' },
         ],
       });
+    },
+    onError: () => {
+      setOptimisticJoined(joined ?? false);
     },
   });
 
@@ -43,6 +53,9 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
         ],
       });
     },
+    onError: () => {
+      setOptimisticJoined(joined ?? false);
+    },
   });
 
   const router = useRouter();
@@ -52,6 +65,8 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
   const { setShowRegisterModal } = useRegisterModal(() => {
     useAuthPage = true;
   });
+
+  const displayJoined = optimisticJoined;
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -71,9 +86,11 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
       return;
     }
 
-    if (!joined) {
+    if (!displayJoined) {
+      setOptimisticJoined(true);
       void join.mutateAsync({ id: eventId });
     } else {
+      setOptimisticJoined(false);
       void leave.mutateAsync({ id: eventId });
     }
   };
@@ -85,9 +102,9 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
       variant="contained"
       className="normal-case"
       size={isHeader ? 'large' : 'small'}
-      startIcon={joined ? <CheckIcon /> : <AddIcon />}
+      startIcon={displayJoined ? <CheckIcon /> : <AddIcon />}
     >
-      {joined ? 'Registered' : 'Register'}
+      {displayJoined ? 'Registered' : 'Register'}
     </Button>
   );
 };
