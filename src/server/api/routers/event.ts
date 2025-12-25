@@ -66,15 +66,21 @@ export const eventRouter = createTRPCRouter({
       const { clubId, currentTime, sortByDate } = input;
 
       try {
+        const now = currentTime ?? new Date();
+        const threeMonthsLater = add(now, { months: 3 });
+
         const events = await ctx.db.query.events.findMany({
           where: (event) =>
-            currentTime
-              ? and(eq(event.clubId, clubId), gte(event.endTime, currentTime))
-              : eq(event.clubId, clubId),
+            and(
+              eq(event.clubId, clubId),
+              gte(event.startTime, now),
+              lte(event.startTime, threeMonthsLater),
+            ),
           orderBy: sortByDate ? (event) => [event.startTime] : undefined,
           with: {
             club: true,
           },
+          limit: 20,
         });
 
         return events;
