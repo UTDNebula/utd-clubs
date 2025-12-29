@@ -42,7 +42,12 @@ export function JoinedAtCell(params: GridRenderCellParams) {
       arrow
       slotProps={{
         popper: {
-          modifiers: [{ name: 'offset', options: { offset: [0, -8] } }],
+          modifiers: [
+            {
+              name: 'offset',
+              options: { offset: [0, expandTimestamps ? -12 : -24] },
+            },
+          ],
         },
       }}
     >
