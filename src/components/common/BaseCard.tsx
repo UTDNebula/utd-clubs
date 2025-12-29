@@ -10,7 +10,8 @@ const baseClasses = 'rounded-lg';
 
 const variantClasses: Record<CardVariant, string> = {
   flat: 'shadow-none',
-  interactive: 'shadow-lg transition-shadow hover:shadow-xl',
+  interactive:
+    'shadow-lg transition-shadow hover:shadow-xl dark:shadow-white/40',
 };
 
 export const BaseCard = ({

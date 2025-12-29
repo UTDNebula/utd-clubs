@@ -96,7 +96,7 @@ export const HomePageSearchBar = () => {
       {isSticky && (
         <div
           style={{ opacity: headerGradientOpacity }}
-          className="fixed inset-0 z-10 h-32 w-full bg-linear-to-b from-black/50 to-transparent"
+          className="fixed inset-0 z-10 h-32 w-full bg-linear-to-b from-black/50 dark:from-white/50 to-transparent"
         ></div>
       )}
       <div
