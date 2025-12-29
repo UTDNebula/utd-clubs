@@ -48,12 +48,14 @@ type MemberListProps = {
 };
 
 const MemberList = ({ members, club }: MemberListProps) => {
-  const membersIndexed = members.map((member, index) => {
-    return {
-      ...member,
-      id: index,
-    };
-  });
+  const membersIndexed = members
+    .sort((a, b) => b.joinedAt.getTime() - a.joinedAt.getTime())
+    .map((member, index) => {
+      return {
+        ...member,
+        id: index,
+      };
+    });
 
   /**
    * Hooks and API
