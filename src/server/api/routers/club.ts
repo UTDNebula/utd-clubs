@@ -295,7 +295,7 @@ export const clubRouter = createTRPCRouter({
           eq(userMetadataToClubs.clubId, input.id),
           inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
         ),
-        with: { userMetadata: true },
+        with: { userMetadata: { with: { user: true } } },
       });
       return officers;
     }),
@@ -306,6 +306,15 @@ export const clubRouter = createTRPCRouter({
         where: eq(officersTable.clubId, input.id),
       });
       return officers;
+    }),
+  getMembers: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input, ctx }) => {
+      const members = await ctx.db.query.userMetadataToClubs.findMany({
+        where: eq(userMetadataToClubs.clubId, input.id),
+        with: { userMetadata: { with: { user: true } } },
+      });
+      return members;
     }),
   isActive: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     const hasPresident = await ctx.db.query.userMetadataToClubs.findFirst({
