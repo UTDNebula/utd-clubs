@@ -1,3 +1,5 @@
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, IconButton, TextField, Tooltip, Typography } from '@mui/material';
 import type z from 'zod';
@@ -33,6 +35,8 @@ const ContactListItem = withForm({
       const next = (current ?? []).filter((_, i) => i !== index);
       form.setFieldValue('contacts', next);
     };
+
+    // form.moveFieldValues("contacts",)
 
     return (
       <>
@@ -82,7 +86,33 @@ const ContactListItem = withForm({
               )}
             </form.Field>
           </div>
-          <div style={{ gridArea: 'buttons' }}>
+          <div style={{ gridArea: 'buttons' }} className="flex h-fit">
+            <div className="flex flex-col gap-1">
+              <Tooltip title="Move up" placement="left">
+                <IconButton
+                  onClick={() =>
+                    form.moveFieldValues('contacts', index, index - 1)
+                  }
+                  disabled={index === 0}
+                  size="small"
+                  className="p-0"
+                >
+                  <ArrowDropUpIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Move down" placement="left">
+                <IconButton
+                  onClick={() =>
+                    form.moveFieldValues('contacts', index, index + 1)
+                  }
+                  disabled={index === form.getFieldValue('contacts').length - 1}
+                  size="small"
+                  className="p-0"
+                >
+                  <ArrowDropDownIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+            </div>
             <Tooltip title="Remove">
               <IconButton aria-label="remove" onClick={handleRemove}>
                 <DeleteIcon />

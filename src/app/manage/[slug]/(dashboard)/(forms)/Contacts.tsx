@@ -106,16 +106,32 @@ const Contacts = ({ club }: ContactsProps) => {
       }}
     >
       <Panel heading="Contact Information">
-        <form.Field name="contacts">
+        <form.Field name="contacts" mode="array">
           {(field) => (
             <div className="flex flex-col gap-2 max-w-full">
               {field.state.value.map((value, index) => (
-                <ContactListItem
-                  key={value.platform}
-                  index={index}
-                  form={form}
-                  removeItem={removeItem}
-                />
+                <>
+                  <ContactListItem
+                    key={value.platform}
+                    index={index}
+                    form={form}
+                    removeItem={removeItem}
+                  />
+                  {/* <div>
+                    <Button
+                      onClick={() => field.moveValue(index, index - 1)}
+                      disabled={index === 0}
+                    >
+                      Move up
+                    </Button>
+                    <Button
+                      onClick={() => field.moveValue(index, index + 1)}
+                      disabled={index === field.state.value.length - 1}
+                    >
+                      Move down
+                    </Button>
+                  </div> */}
+                </>
               ))}
               {available.length > 0 && (
                 <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors rounded-lg">
