@@ -23,7 +23,7 @@ export const RegisterModalContents = ({
 }: Pick<RegisterModalProps, 'className' | 'onClose' | 'closeButton'>) => {
   return (
     <div
-      className={`flex flex-col items-center z-20 w-fit rounded-lg bg-gray-100 p-4 shadow-lg ${className}`}
+      className={`flex flex-col items-center z-20 w-fit rounded-lg bg-slate-100 p-4 shadow-lg ${className}`}
     >
       <div className="flex flex-col h-fit w-full">
         {closeButton && (

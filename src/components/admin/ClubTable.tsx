@@ -150,7 +150,7 @@ export default function ClubTable({
     <div ref={parentRef} className="w-full max-w-6xl">
       <TableContainer component={Paper}>
         <Table
-          className="w-full text-left text-sm text-gray-500"
+          className="w-full text-left text-sm text-slate-500"
           sx={{ tableLayout: 'fixed' }}
         >
           <TableHead className="bg-slate-100 text-xs text-slate-700 uppercase">

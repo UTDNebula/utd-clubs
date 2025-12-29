@@ -28,7 +28,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
     >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full">
-          <div className="absolute inset-0 h-full w-full bg-gray-200" />
+          <div className="absolute inset-0 h-full w-full bg-slate-200" />
           {src && (
             <Image
               fill
@@ -93,7 +93,7 @@ export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
     >
       <div className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full">
-          <div className="absolute inset-0 h-full w-full bg-gray-200" />
+          <div className="absolute inset-0 h-full w-full bg-slate-200" />
         </div>
         <div className="flex h-full flex-col p-5 space-y-2.5">
           <Skeleton variant="text" className="font-bold" />

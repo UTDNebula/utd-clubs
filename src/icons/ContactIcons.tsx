@@ -56,7 +56,7 @@ const linkedInStyling =
   'text-[#0a66c2] transition-colors group-hover:text-[#0a66c2]/80';
 
 const genericStyling =
-  'text-gray-500 transition-colors group-hover:text-gray-500/80';
+  'text-slate-500 transition-colors group-hover:text-slate-500/80';
 
 export const logo = {
   discord: <Discord className={discordStyling} />,

@@ -53,7 +53,7 @@ export default function ChangeClubStatus({ status: initial, club }: Props) {
       case 'rejected':
         return 'bg-red-200 text-red-800';
       default:
-        return 'bg-gray-200 text-gray-800';
+        return 'bg-slate-200 text-slate-800';
     }
   };
 

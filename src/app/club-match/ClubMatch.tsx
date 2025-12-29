@@ -176,7 +176,7 @@ const RadioInput = ({
                         .join('. ') + '.'
                     : undefined
                 }
-                className="ml-2 [&>.Mui-disabled.MuiInputBase-root]:bg-gray-200"
+                className="ml-2 [&>.Mui-disabled.MuiInputBase-root]:bg-slate-200"
               />
             )}
           </div>

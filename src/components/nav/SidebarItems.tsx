@@ -19,7 +19,7 @@ const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
 
   return (
     <Link
-      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white dark:bg-haiti shadow-md hover:shadow-gray-200' : ''} hover:bg-royal/10`}
+      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white dark:bg-haiti shadow-md hover:shadow-slate-200' : ''} hover:bg-royal/10`}
       href={route}
       target={route.startsWith('http') ? '_blank' : ''}
     >
