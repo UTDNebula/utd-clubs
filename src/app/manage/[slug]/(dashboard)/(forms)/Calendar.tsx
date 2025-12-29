@@ -43,7 +43,7 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
 
   return (
     <Panel heading="Google Calendar Sync">
-      <div className="ml-2 mb-2 text-slate-600 text-sm">
+      <div className="ml-2 mb-2 text-slate-600 dark:text-slate-400 text-sm">
         <p>
           If your organization uses a shared Google Calendar we can pull its
           events into UTD Clubs.

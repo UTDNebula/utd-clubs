@@ -150,10 +150,10 @@ export default function ClubTable({
     <div ref={parentRef} className="w-full max-w-6xl">
       <TableContainer component={Paper}>
         <Table
-          className="w-full text-left text-sm text-slate-500"
+          className="w-full text-left text-sm text-slate-600 dark:text-slate-400"
           sx={{ tableLayout: 'fixed' }}
         >
-          <TableHead className="bg-slate-100 text-xs text-slate-700 uppercase">
+          <TableHead className="bg-slate-100 dark:bg-slate-900 text-xs text-slate-800 dark:text-slate-200 uppercase">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

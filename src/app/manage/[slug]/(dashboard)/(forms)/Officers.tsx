@@ -103,7 +103,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
       }}
     >
       <Panel heading="Listed Officers">
-        <div className="ml-2 mb-4 text-slate-600 text-sm">
+        <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
           <p>
             People&apos;s names on this list will appear on your public
             organization listing.

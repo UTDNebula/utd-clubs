@@ -37,7 +37,7 @@ const ContactListItem = withForm({
     return (
       <>
         <Box
-          className="grid sm:gap-2 max-sm:gap-4 p-2 sm:hover:bg-slate-100 max-sm:bg-slate-100 transition-colors rounded-lg"
+          className="grid sm:gap-2 max-sm:gap-4 p-2 sm:hover:bg-slate-100 dark:sm:hover:bg-slate-900 max-sm:bg-slate-100 dark:max-sm:bg-slate-900 transition-colors rounded-lg"
           sx={{
             gridTemplateAreas: {
               sm: `'name url buttons'`,

@@ -4,8 +4,8 @@ import { BaseCard } from '@src/components/common/BaseCard';
 
 export const ClubNotClaimed = () => {
   return (
-    <BaseCard className="w-full bg-cornflower-50 p-6 md:p-10">
-      <h2 className="text-2xl font-semibold text-slate-800">
+    <BaseCard className="w-full bg-cornflower-50 dark:bg-cornflower-900 p-6 md:p-10">
+      <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-200">
         Is this your Club or Organization?
       </h2>
       <div className="mt-4 flex flex-col space-y-4 md:mt-6 md:flex-row md:space-y-0 md:space-x-4">

@@ -12,7 +12,7 @@ const ClubInfoSegment = async ({
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }) => {
   return (
-    <BaseCard className="w-full bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
+    <BaseCard className="w-full p-10 flex flex-col items-start justify-between md:flex-row gap-4">
       <div className="md:max-w-1/4">
         {club.profileImage && (
           <Image
@@ -25,16 +25,20 @@ const ClubInfoSegment = async ({
         )}
         {club.foundingDate && (
           <div className="mt-2 flex w-36 justify-between">
-            <p className="text-sm text-slate-400">Founded</p>
-            <p className="text-right text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              Founded
+            </p>
+            <p className="text-right text-sm text-slate-800 dark:text-slate-200">
               {club.foundingDate.toLocaleDateString()}
             </p>
           </div>
         )}
         {club.updatedAt && (
           <div className="mt-2 flex w-36 justify-between">
-            <p className="text-sm text-slate-400">Updated</p>
-            <p className="text-right text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              Updated
+            </p>
+            <p className="text-right text-sm text-slate-800 dark:text-slate-200">
               {format(
                 new TZDateMini(club.updatedAt, 'America/Chicago'),
                 'LLL yyyy',
@@ -55,7 +59,7 @@ const ClubInfoSegment = async ({
           })}
         </div>
       </div>
-      <div className="grow text-slate-700">
+      <div className="grow text-slate-800 dark:text-slate-200">
         <MarkdownText text={club.description} />
       </div>
       {club.officers.length != 0 && (
@@ -66,10 +70,10 @@ const ClubInfoSegment = async ({
               {club.officers.map((officer) => (
                 <div className="mt-5 flex flex-row" key={officer.id}>
                   <div className="mx-5 flex flex-col justify-center align-middle">
-                    <p className="text-left text-sm break-words whitespace-normal text-slate-600">
+                    <p className="text-left text-sm break-words whitespace-normal text-slate-800 dark:text-slate-200">
                       {officer.name}
                     </p>
-                    <p className="mt-2 text-sm break-words whitespace-normal text-slate-400">
+                    <p className="mt-2 text-sm break-words whitespace-normal text-slate-600 dark:text-slate-400">
                       {officer.position}
                     </p>
                   </div>

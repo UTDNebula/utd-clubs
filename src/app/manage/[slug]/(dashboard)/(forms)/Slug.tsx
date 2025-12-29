@@ -174,7 +174,7 @@ const Slug = ({ club, role }: DetailsProps) => {
         }}
       >
         <Panel heading="Listing URL">
-          <div className="ml-2 mb-4 text-slate-600 text-sm">
+          <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
             <p>
               This is the URL of your organization&apos;s listing in the
               directory.

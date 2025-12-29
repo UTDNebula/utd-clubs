@@ -43,7 +43,7 @@ const CollaboratorListItem = withForm({
     // TODO: Insert code to fetch email by userID
 
     return (
-      <div className="flex flex-wrap items-center gap-2 p-2 sm:hover:bg-slate-100 max-sm:bg-slate-100 transition-colors rounded-lg">
+      <div className="flex flex-wrap items-center gap-2 p-2 sm:hover:bg-slate-100 dark:sm:hover:bg-slate-900 max-sm:bg-slate-100 dark:max-sm:bg-slate-900 transition-colors rounded-lg">
         <div className="flex flex-col grow pl-2 pr-4 max-h-full min-h-10 justify-center">
           <Typography variant="body1">
             <span>{form.getFieldValue(`officers[${index}].name`)}</span>

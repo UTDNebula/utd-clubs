@@ -24,7 +24,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
         className="grow flex flex-col"
       >
         <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
-          <div className="absolute inset-0 h-full w-full bg-slate-200" />
+          <div className="absolute inset-0 h-full w-full bg-slate-200 dark:bg-slate-800" />
           {club.profileImage && (
             <Image
               src={club.profileImage}
@@ -38,10 +38,10 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
         </div>
 
         <div className="flex flex-col space-y-2 p-6">
-          <p className="line-clamp-2 text-2xl font-medium text-slate-800 md:text-xl">
+          <p className="line-clamp-2 text-2xl font-medium text-slate-800 dark:text-slate-200 md:text-xl">
             {name}
           </p>
-          <p className="line-clamp-9 text-base text-slate-600 md:text-sm">
+          <p className="line-clamp-9 text-base text-slate-600 dark:text-slate-400 md:text-sm">
             {desc}
           </p>
         </div>
@@ -64,7 +64,7 @@ export const ClubCardSkeleton = () => {
         <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
           <Skeleton
             variant="rectangular"
-            className="absolute inset-0 h-full w-full bg-slate-200"
+            className="absolute inset-0 h-full w-full bg-slate-200 dark:bg-slate-800"
           />
         </div>
         <div className="flex flex-col space-y-2 p-6">

@@ -124,7 +124,9 @@ export default function FormCard({ clubs, user }: Props) {
         </div>
 
         <div className="w-full">
-          <h2 className="mb-2 font-medium text-slate-500">Clubs</h2>
+          <h2 className="mb-2 font-medium text-slate-600 dark:text-slate-400">
+            Clubs
+          </h2>
           <div className="max-h-96 overflow-auto">
             <ClubSelector register={register} control={control} />
           </div>

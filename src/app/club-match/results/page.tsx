@@ -55,17 +55,17 @@ const Page = async () => {
               className="flex flex-col gap-2 p-6"
             >
               <Link href={'/directory/' + club.id}>
-                <p className="line-clamp-2 text-2xl font-medium text-slate-800 md:text-xl">
+                <p className="line-clamp-2 text-2xl font-medium text-slate-800 dark:text-slate-200 md:text-xl">
                   {club.name}
                 </p>
-                <p className="text-base text-slate-600 md:text-sm">
+                <p className="text-base text-slate-600 dark:text-slate-400 md:text-sm">
                   {club.reasoning}
                 </p>
                 <ul>
                   {club.benefit.split(', ').map((benefit) => (
                     <li
                       key={benefit}
-                      className="ml-6 list-disc text-base text-slate-600 md:text-sm"
+                      className="ml-6 list-disc text-base text-slate-600 dark:text-slate-400 md:text-sm"
                     >
                       {benefit.charAt(0).toUpperCase() + benefit.slice(1)}
                     </li>

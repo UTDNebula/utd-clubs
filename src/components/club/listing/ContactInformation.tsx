@@ -12,9 +12,9 @@ type Club = SelectClub & {
 
 const ContactInformation = ({ club }: { club: Club }) => {
   return (
-    <BaseCard className="w-full bg-cornflower-50 p-6 md:p-10">
+    <BaseCard className="w-full bg-cornflower-50 dark:bg-cornflower-900 p-6 md:p-10">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full">
-        <h2 className="text-2xl font-semibold text-cornflower-700">
+        <h2 className="text-2xl font-semibold text-cornflower-700 dark:text-cornflower-300">
           Contact Information
         </h2>
 

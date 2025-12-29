@@ -30,7 +30,7 @@ const ProviderButton = ({
     startIcon={AuthIcons[provider]}
   >
     <Typography
-      className={`text-base font-extrabold md:text-xs text-slate-700`}
+      className={`text-base font-extrabold md:text-xs text-slate-800 dark:text-slate-200`}
     >
       <span className="min-w-fit">Sign in with {providerNames[provider]}</span>
     </Typography>

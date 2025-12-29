@@ -23,7 +23,7 @@ export const RegisterModalContents = ({
 }: Pick<RegisterModalProps, 'className' | 'onClose' | 'closeButton'>) => {
   return (
     <div
-      className={`flex flex-col items-center z-20 w-fit rounded-lg bg-slate-100 p-4 shadow-lg dark:shadow-white/40 ${className}`}
+      className={`flex flex-col items-center z-20 w-fit rounded-lg bg-slate-100 dark:bg-slate-900 p-4 shadow-lg dark:shadow-white/40 ${className}`}
     >
       <div className="flex flex-col h-fit w-full">
         {closeButton && (
@@ -35,7 +35,7 @@ export const RegisterModalContents = ({
         )}
         <Typography
           variant="h1"
-          className="font-display text-2xl font-bold text-slate-600 grow-1 self-center text-center px-4 mt-1 mb-2"
+          className="font-display text-2xl font-bold text-slate-600 dark:text-slate-400 grow-1 self-center text-center px-4 mt-1 mb-2"
         >
           Sign In / Sign Up
         </Typography>

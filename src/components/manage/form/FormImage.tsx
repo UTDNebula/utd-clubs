@@ -21,7 +21,11 @@ const FormImage = ({
 
   return (
     <div className="w-full h-full max-h-96 flex flex-col justify-center items-center gap-2 p-8 rounded-md bg-royal/10 has-[:hover]:bg-royal/20 transition-colors relative">
-      {label && <p className="text-xs font-bold text-slate-700">{label}</p>}
+      {label && (
+        <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+          {label}
+        </p>
+      )}
       {previewUrl ? (
         <>
           {previewUrl && (
@@ -32,15 +36,21 @@ const FormImage = ({
               className="max-h-full rounded-lg"
             />
           )}
-          {file?.name && <p className="text-xs text-slate-700">{file.name}</p>}
+          {file?.name && (
+            <p className="text-xs text-slate-800 dark:text-slate-200">
+              {file.name}
+            </p>
+          )}
         </>
       ) : (
         <>
           <CloudUploadIcon />
-          <p className="text-xs font-bold text-slate-700">
+          <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
             Drag or choose a file to upload
           </p>
-          <p className="text-xs font-bold text-slate-700">JPEG, PNG, or SVG</p>
+          <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+            JPEG, PNG, or SVG
+          </p>
         </>
       )}
       <input

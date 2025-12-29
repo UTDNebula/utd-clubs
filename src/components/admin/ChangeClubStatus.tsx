@@ -53,13 +53,13 @@ export default function ChangeClubStatus({ status: initial, club }: Props) {
       case 'rejected':
         return 'bg-red-200 text-red-800';
       default:
-        return 'bg-slate-200 text-slate-800';
+        return 'bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200';
     }
   };
 
   return (
     <Panel heading="Status">
-      <div className="ml-2 mb-4 text-slate-600 text-sm">
+      <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
         <p>
           Pending and rejected organizations are not shown anywhere on UTD
           Clubs.

@@ -16,7 +16,7 @@ const SettingsInput = ({
 }: SettingsInputProps) => {
   return (
     <div className="mb-2">
-      <label className="mb-2 block text-xs font-medium text-slate-500">
+      <label className="mb-2 block text-xs font-medium text-slate-600 dark:text-slate-400">
         {label}
       </label>
       <input
