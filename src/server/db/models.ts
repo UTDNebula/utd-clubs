@@ -35,6 +35,13 @@ export const selectUser = createSelectSchema(user);
 export type InsertUser = z.infer<typeof insertUser>;
 export type SelectUser = z.infer<typeof selectUser>;
 
+// Schema definition for officers table
+export const insertOfficer = createInsertSchema(officers);
+export const selectOfficer = createSelectSchema(officers);
+
+export type InsertOfficer = z.infer<typeof insertOfficer>;
+export type SelectOfficer = z.infer<typeof selectOfficer>;
+
 // Schema definition for userMetadata table
 export const insertUserMetadata = createInsertSchema(userMetadata);
 export const selectUserMetadata = createSelectSchema(userMetadata);
@@ -44,17 +51,9 @@ export type SelectUserMetadata = z.infer<typeof selectUserMetadata>;
 
 // With user
 export const insertUserMetadataWithUser = insertUserMetadata.extend({
-  user: selectUser.nullable(),
-});
-export const selectUserMetadataWithUser = selectUserMetadata.extend({
-  user: selectUser.nullable(),
-});
-
-// With user, non-nullable
-export const insertUserMetadataWithNonNullableUser = insertUserMetadata.extend({
   user: selectUser,
 });
-export const selectUserMetadataWithNonNullableUser = selectUserMetadata.extend({
+export const selectUserMetadataWithUser = selectUserMetadata.extend({
   user: selectUser,
 });
 
@@ -64,13 +63,6 @@ export type InsertUserMetadataWithUser = z.infer<
 export type SelectUserMetadataWithUser = z.infer<
   typeof selectUserMetadataWithUser
 >;
-
-// Schema definition for officers table
-export const insertOfficer = createInsertSchema(officers);
-export const selectOfficer = createSelectSchema(officers);
-
-export type InsertOfficer = z.infer<typeof insertOfficer>;
-export type SelectOfficer = z.infer<typeof selectOfficer>;
 
 // Schema definition for userMetadataToClubs table
 export const insertUserMetadataToClubs =
@@ -88,27 +80,17 @@ export type SelectUserMetadataToClubs = z.infer<
 // With club
 export const selectUserMetadataToClubsWithClub =
   selectUserMetadataToClubs.extend({
-    club: selectClub.nullable(),
+    club: selectClub,
   });
 
 export type SelectUserMetadataToClubsWithClub = z.infer<
   typeof selectUserMetadataToClubsWithClub
 >;
 
-// With club, non-nullable
-export const selectUserMetadataToClubsWithNonNullableClub =
-  selectUserMetadataToClubs.extend({
-    club: selectClub,
-  });
-
-export type SelectUserMetadataToClubsWithNonNullableClub = z.infer<
-  typeof selectUserMetadataToClubsWithNonNullableClub
->;
-
 // With userMetadata
 export const selectUserMetadataToClubsWithUserMetadata =
   selectUserMetadataToClubs.extend({
-    userMetadata: selectUserMetadata.nullable(),
+    userMetadata: selectUserMetadata,
   });
 
 export type SelectUserMetadataToClubsWithUserMetadata = z.infer<
@@ -118,28 +100,9 @@ export type SelectUserMetadataToClubsWithUserMetadata = z.infer<
 // With userMetadata, with user
 export const selectUserMetadataToClubsWithUserMetadataWithUser =
   selectUserMetadataToClubs.extend({
-    userMetadata: selectUserMetadataWithUser.nullable(),
+    userMetadata: selectUserMetadataWithUser,
   });
 
 export type SelectUserMetadataToClubsWithUserMetadataWithUser = z.infer<
   typeof selectUserMetadataToClubsWithUserMetadataWithUser
 >;
-
-// With userMetadata, non-nullable
-export const selectUserMetadataToClubsWithNonNullableUserMetadata =
-  selectUserMetadataToClubs.extend({
-    userMetadata: selectUserMetadata,
-  });
-
-export type SelectUserMetadataToClubsWithNonNullableUserMetadata = z.infer<
-  typeof selectUserMetadataToClubsWithNonNullableUserMetadata
->;
-
-// With userMetadata, non-nullable, with user, non-nullable
-export const selectUserMetadataToClubsWithNonNullableUserMetadataWithUser =
-  selectUserMetadataToClubs.extend({
-    userMetadata: selectUserMetadataWithNonNullableUser,
-  });
-
-export type SelectUserMetadataToClubsWithNonNullableUserMetadataWithUser =
-  z.infer<typeof selectUserMetadataToClubsWithNonNullableUserMetadataWithUser>;

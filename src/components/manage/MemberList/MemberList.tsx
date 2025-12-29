@@ -25,7 +25,6 @@ import { AppRouter } from '@src/server/api/root';
 import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
 import {
   SelectClub,
-  SelectUserMetadataToClubsWithNonNullableUserMetadataWithUser,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -65,7 +64,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
   const api = useTRPC();
 
   const removeMembers = useMutation<
-    SelectUserMetadataToClubsWithNonNullableUserMetadataWithUser[],
+    SelectUserMetadataToClubsWithUserMetadataWithUser[],
     TRPCClientErrorLike<AppRouter>,
     z.infer<typeof removeMembersSchema>
   >(api.club.edit.removeMembers.mutationOptions({}));

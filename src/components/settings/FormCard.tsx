@@ -9,8 +9,8 @@ import { z } from 'zod';
 import ClubSelector from '@src/components/settings/ClubSelector';
 import {
   SelectUserMetadata,
-  selectUserMetadataToClubsWithNonNullableClub,
-  type SelectUserMetadataToClubsWithNonNullableClub,
+  selectUserMetadataToClubsWithClub,
+  type SelectUserMetadataToClubsWithClub,
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import DeleteButton from './DeleteButton';
@@ -18,7 +18,7 @@ import SettingsDropdown from './SettingsDropdown';
 import SettingsInput from './SettingsInput';
 
 type Props = {
-  joinedClubs: SelectUserMetadataToClubsWithNonNullableClub[];
+  joinedClubs: SelectUserMetadataToClubsWithClub[];
   user: SelectUserMetadata;
 };
 
@@ -29,7 +29,7 @@ const settingsSchema = z.object({
   minor: z.string().nullable(),
   year: z.enum(['Freshman', 'Sophomore', 'Junior', 'Senior', 'Grad Student']),
   role: z.enum(['Student', 'Student Organizer', 'Administrator']),
-  joinedClubs: selectUserMetadataToClubsWithNonNullableClub.array(),
+  joinedClubs: selectUserMetadataToClubsWithClub.array(),
 });
 
 export type SettingSchema = z.infer<typeof settingsSchema>;
