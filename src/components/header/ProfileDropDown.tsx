@@ -56,7 +56,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
           }
         }}
         component="button"
-        className={`cursor-pointer ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+        className={`cursor-pointer ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:drop-shadow-[0_0_4px_rgb(255_255_255_/_0.4)]' : ''}`}
       />
       {session && (
         <Popover

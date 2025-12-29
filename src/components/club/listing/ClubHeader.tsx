@@ -22,7 +22,7 @@ const ClubHeader = async ({ club }: { club: Club }) => {
       />
       <div className="relative z-10 flex flex-wrap min-h-64 h-full w-full items-center p-4 md:p-20 gap-4">
         <h1
-          className={`font-display font-bold text-slate-100 text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] ${
+          className={`font-display font-bold text-slate-100 text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] dark:text-shadow-[0_0_16px_rgb(255_255_255_/_0.4)] ${
             club.name.length > 10 ? 'text-3xl' : 'text-5xl'
           }`}
         >

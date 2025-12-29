@@ -101,7 +101,7 @@ export const HomePageSearchBar = () => {
       )}
       <div
         ref={containerRef}
-        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-2 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
+        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:drop-shadow-[0_0_4px_rgb(255_255_255_/_0.4)] pt-2 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
           isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
         }`}
       >
@@ -146,8 +146,9 @@ export const HomePageSearchBar = () => {
                       </InputAdornment>
                     </div>
                   ),
+                  className:
+                    'bg-white dark:bg-haiti ' + params.InputProps.className,
                   sx: {
-                    background: 'white',
                     borderRadius: theme.shape.borderRadius,
                   },
                 },

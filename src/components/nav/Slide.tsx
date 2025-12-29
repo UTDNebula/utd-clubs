@@ -20,7 +20,7 @@ const NewSidebar = ({
     <>
       <IconButton
         onClick={() => setOpen(true)}
-        className={`z-50 ${homepage ? ' drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+        className={`z-50 ${homepage ? ' drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:drop-shadow-[0_0_4px_rgb(255_255_255_/_0.4)]' : ''}`}
         size="large"
       >
         <MenuIcon

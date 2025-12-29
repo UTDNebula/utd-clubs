@@ -21,7 +21,7 @@ export const BaseHeader = async ({ children }: { children?: ReactNode }) => {
         className="object-cover -z-20"
         sizes="120vw"
       />
-      <div className="absolute inset-0 bg-lighten dark:bg-darken -z-10"></div>
+      <div className="absolute inset-0 bg-lighten dark:bg-darken -z-10" />
       <div className="grow basis-0 flex gap-x-2 md:gap-x-4 lg:gap-x-8">
         <NewSidebar userCapabilities={userCapabilities} />
         <Link

@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { authClient } from '@src/utils/auth-client';
 import { useRegisterModal } from '../account/RegisterModalProvider';
 
-const shadowStyle = 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]';
+const shadowStyle =
+  'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:drop-shadow-[0_0_4px_rgb(255_255_255_/_0.4)]';
 
 const icon = <Diversity3Icon fontSize="small" />;
 
@@ -50,6 +51,7 @@ export default function ClubMatchButton({
           className={`rounded-full normal-case whitespace-nowrap ${shadow ? shadowStyle : ''}`}
           startIcon={icon}
           onClick={handleClick}
+          disableElevation
         >
           Club Match
         </Button>
