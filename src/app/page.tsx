@@ -60,7 +60,7 @@ const Home = async () => {
               href="/"
               className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
             >
-              <NebulaLogo className="h-6 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
+              <NebulaLogo className="h-6 w-auto fill-white dark:fill-haiti drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
               <span className="whitespace-nowrap">UTD CLUBS</span>
             </Link>
             <div className="ml-auto flex items-center justify-center gap-2">
@@ -83,7 +83,7 @@ const Home = async () => {
                   rel="noopener"
                   className="group flex items-center gap-1"
                 >
-                  <NebulaLogo className="h-4 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
+                  <NebulaLogo className="h-4 w-auto fill-white dark:fill-haiti drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
                   <span className="border-y-2 border-transparent leading-none decoration-transparent transition group-hover:border-b-inherit group-hover:underline">
                     NEBULA LABS
                   </span>

@@ -293,7 +293,7 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
 
   return (
     <main className="p-4 mb-10">
-      <h1 className="font-display mb-2 text-center text-4xl font-bold text-haiti">
+      <h1 className="font-display mb-2 text-center text-4xl font-bold">
         Club Match
       </h1>
       <p className="mb-8 text-center">

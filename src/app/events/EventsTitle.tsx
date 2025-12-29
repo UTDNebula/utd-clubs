@@ -24,7 +24,7 @@ const EventsTitle = ({ date }: EventsTitleProps) => {
 
   return (
     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-      <h1 className="font-display text-2xl font-bold text-haiti">Events</h1>
+      <h1 className="font-display text-2xl font-bold">Events</h1>
       <div className="flex gap-2 items-center">
         <IconButton
           size="large"

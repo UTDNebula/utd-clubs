@@ -32,7 +32,7 @@ export default async function Auth(props: {
             href="/"
             className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
           >
-            <NebulaLogo className="h-6 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
+            <NebulaLogo className="h-6 w-auto fill-white dark:fill-haiti drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
             UTD CLUBS
           </Link>
         </div>

@@ -28,7 +28,7 @@ export const BaseHeader = async ({ children }: { children?: ReactNode }) => {
           href="/"
           className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center"
         >
-          <NebulaLogo className="h-6 w-auto fill-haiti" />
+          <NebulaLogo className="h-6 w-auto fill-haiti dark:fill-white" />
           <span className="whitespace-nowrap">UTD CLUBS</span>
         </Link>
       </div>
