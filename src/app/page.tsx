@@ -55,7 +55,7 @@ const Home = async () => {
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
           <div className="pointer-events-none *:pointer-events-auto lg:fixed lg:top-0 lg:z-20 flex w-full items-center max-sm:justify-between py-1 md:py-2 px-4 gap-x-2 md:gap-x-4 lg:gap-x-8">
-            <Sidebar hamburger="white" shadow />
+            <Sidebar homepage />
             <Link
               href="/"
               className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"

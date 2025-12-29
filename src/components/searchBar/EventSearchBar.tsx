@@ -39,10 +39,9 @@ export const EventSearchBar = () => {
             input: {
               ...params.InputProps,
               type: 'search',
-              sx: {
-                background: 'white',
-                borderRadius: 'calc(infinity * 1px)',
-              },
+              className:
+                'bg-white dark:bg-haiti rounded-full ' +
+                params.InputProps.className,
             },
           }}
           placeholder="Search for Events"

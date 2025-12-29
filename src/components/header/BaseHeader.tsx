@@ -23,7 +23,7 @@ export const BaseHeader = async ({ children }: { children?: ReactNode }) => {
       />
       <div className="absolute inset-0 bg-lighten dark:bg-darken -z-10"></div>
       <div className="grow basis-0 flex gap-x-2 md:gap-x-4 lg:gap-x-8">
-        <NewSidebar userCapabilities={userCapabilities} hamburger="black" />
+        <NewSidebar userCapabilities={userCapabilities} />
         <Link
           href="/"
           className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center"

@@ -58,10 +58,9 @@ export const ClubSearchBar = () => {
                 </div>
               ),
               type: 'search',
-              sx: {
-                background: 'white',
-                borderRadius: 'calc(infinity * 1px)',
-              },
+              className:
+                'bg-white dark:bg-haiti rounded-full ' +
+                params.InputProps.className,
             },
           }}
           placeholder="Search for Clubs"
