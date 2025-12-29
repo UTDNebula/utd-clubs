@@ -37,7 +37,7 @@ export const BaseHeader = async ({ children }: { children?: ReactNode }) => {
       </div>
       <div className="grow basis-0 flex justify-end items-center gap-x-2">
         <div className="sm:hidden">
-          <ClubMatchButton shadow iconOnly />
+          <ClubMatchButton shadow={false} iconOnly />
         </div>
         <div className="max-sm:hidden">
           <ClubMatchButton shadow />

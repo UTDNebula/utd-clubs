@@ -99,7 +99,7 @@ export default async function EventsPage(props: Params) {
                   <Chip
                     label={tag}
                     key={tag}
-                    className=" rounded-full font-bold transition-colors text-white"
+                    className="rounded-full font-bold transition-colors"
                     color="primary"
                   />
                 );

@@ -23,7 +23,10 @@ export default function DeleteClub({ club }: Props) {
 
   return (
     <>
-      <Panel heading="Delete" className="bg-red-100 border border-red-500">
+      <Panel
+        heading="Delete"
+        className="bg-red-100 dark:bg-red-900 border border-red-500"
+      >
         <div className="ml-2 mb-4 text-slate-800 dark:text-slate-200 text-sm">
           <p>This will permenantly delete this organization from UTD Clubs.</p>
         </div>

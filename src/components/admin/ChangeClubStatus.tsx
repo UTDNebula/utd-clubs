@@ -47,13 +47,13 @@ export default function ChangeClubStatus({ status: initial, club }: Props) {
   const statusColor = () => {
     switch (status) {
       case 'approved':
-        return 'bg-green-200 text-green-800';
+        return 'bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200';
       case 'pending':
-        return 'bg-yellow-200 text-yellow-800';
+        return 'bg-yellow-200 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200';
       case 'rejected':
-        return 'bg-red-200 text-red-800';
+        return 'bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200';
       default:
-        return 'bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200';
+        return 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200';
     }
   };
 

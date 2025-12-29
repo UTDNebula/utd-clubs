@@ -172,7 +172,7 @@ const Details = ({ club }: DetailsProps) => {
                   onChange={(value) => field.handleChange(value)}
                   value={field.state.value}
                   label="Date Founded"
-                  className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-haiti"
+                  className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-haiti"
                   slotProps={{
                     actionBar: {
                       actions: ['accept'],
