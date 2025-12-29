@@ -5,18 +5,12 @@ import { createContext } from 'react';
 import z from 'zod';
 import { AppRouter } from '@src/server/api/root';
 import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
-import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
+import {
+  SelectUserMetadataToClubsWithNonNullableUserMetadata,
+  SelectUserMetadataToClubsWithUserMetadata,
+} from '@src/server/db/models';
 import useMemberListDeletionState from './useMemberListDeletionState';
 import { MemberListAbilities } from './utils';
-
-export type SelectUserMetadataToClubsWithNonNullableUserMetadata = Omit<
-  SelectUserMetadataToClubsWithUserMetadata,
-  'userMetadata'
-> & {
-  [P in 'userMetadata']-?: NonNullable<
-    SelectUserMetadataToClubsWithUserMetadata[P]
-  >;
-};
 
 export interface MemberListContextType {
   memberListDeletionState:
