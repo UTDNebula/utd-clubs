@@ -19,17 +19,14 @@ import { AppRouter } from '@src/server/api/root';
 import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
 import {
   SelectClub,
-  SelectUserMetadataToClubsWithUserMetadata,
+  SelectUserMetadataToClubsWithNonNullableUserMetadataWithUser,
+  SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';
-import {
-  MemberListContext,
-  MemberListContextType,
-  SelectUserMetadataToClubsWithNonNullableUserMetadata,
-} from './MemberListContext';
+import { MemberListContext, MemberListContextType } from './MemberListContext';
 import useMemberListDeletionState from './useMemberListDeletionState';
 import {
   actionColumn,
@@ -40,7 +37,7 @@ import {
 } from './utils';
 
 type MemberListProps = {
-  members: SelectUserMetadataToClubsWithUserMetadata[];
+  members: SelectUserMetadataToClubsWithUserMetadataWithUser[];
   club: SelectClub;
 };
 
@@ -60,7 +57,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
   const api = useTRPC();
 
   const removeMembers = useMutation<
-    SelectUserMetadataToClubsWithNonNullableUserMetadata[],
+    SelectUserMetadataToClubsWithNonNullableUserMetadataWithUser[],
     TRPCClientErrorLike<AppRouter>,
     z.infer<typeof removeMembersSchema>
   >(api.club.edit.removeMembers.mutationOptions({}));
@@ -91,7 +88,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
   const handleOnCellDoubleClick: GridEventListener<'cellDoubleClick'> = (
     params,
   ) => {
-    if (params.colDef.field == 'contactEmail' && !contactEmailsVisible) {
+    if (params.colDef.field == 'accountEmail' && !contactEmailsVisible) {
       showContactEmails(true);
     }
   };

@@ -88,9 +88,16 @@ export const userMetadataToEvents = pgTable(
   }),
 );
 
-export const userMetadataRelation = relations(userMetadata, ({ many }) => ({
-  clubs: many(userMetadataToClubs),
-}));
+export const userMetadataRelation = relations(
+  userMetadata,
+  ({ many, one }) => ({
+    clubs: many(userMetadataToClubs),
+    user: one(user, {
+      fields: [userMetadata.id],
+      references: [user.id],
+    }),
+  }),
+);
 
 export const userMetadataToClubsRelations = relations(
   userMetadataToClubs,

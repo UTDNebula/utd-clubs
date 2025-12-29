@@ -5,9 +5,13 @@ import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import Chip from '@mui/material/Chip';
 import { GridColDef } from '@mui/x-data-grid';
 import { TRPCClientErrorLike } from '@trpc/client';
-import { ReactNode } from 'react';
+import Image, { ImageProps } from 'next/image';
+import { ReactNode, useState } from 'react';
 import { AppRouter } from '@src/server/api/root';
-import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
+import {
+  SelectUserMetadataToClubsWithUserMetadata,
+  SelectUserMetadataToClubsWithUserMetadataWithUser,
+} from '@src/server/db/models';
 import formatListString from '@src/utils/formatListString';
 import {
   ActionsCell,
@@ -72,8 +76,62 @@ export type ToastState = {
   error?: TRPCClientErrorLike<AppRouter>;
 };
 
-export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] =
+const AvatarImage = ({
+  src,
+  initial,
+  alt,
+  ...props
+}: ImageProps & { initial: string }) => {
+  const [imageError, setImageError] = useState(false);
+
+  if (imageError) {
+    // Fallback to first initial if no image
+    return (
+      <div className="flex h-10 w-10 items-center justify-center bg-slate-200 text-slate-500 text-sm font-bold rounded-full">
+        {initial}
+      </div>
+    );
+  }
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={40}
+      height={40}
+      className="rounded-full object-cover object-left z-10"
+      onLoad={() => setImageError(false)}
+      onError={() => setImageError(true)}
+      {...props}
+    />
+  );
+};
+
+export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUser>[] =
   [
+    {
+      field: 'avatar',
+      valueGetter: (_value, row) => {
+        return row.userMetadata?.user?.image;
+      },
+      headerName: 'Avatar',
+      renderHeader: () => '',
+      disableColumnMenu: true,
+      sortable: false,
+      filterable: false,
+      resizable: false,
+      width: 60,
+      renderCell: (params) => {
+        return (
+          <div className="flex items-center h-full">
+            <AvatarImage
+              src={params.value}
+              alt={'Avatar'}
+              initial={params.row.userMetadata?.firstName.charAt(0) ?? '?'}
+            />
+          </div>
+        );
+      },
+    },
     {
       field: 'firstName',
       valueGetter: (_value, row) => {
@@ -84,7 +142,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] =
     },
     {
       field: 'lastName',
-      valueGetter: (value, row) => {
+      valueGetter: (_value, row) => {
         return row.userMetadata?.lastName;
       },
       headerName: 'Last Name',
@@ -101,7 +159,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] =
           {params.colDef.headerName}
         </ColumnHeaderWithIcon>
       ),
-      width: 140,
+      width: 120,
       renderCell: (params) => {
         if (!params.value) return;
         return <Chip label={params.value} />;
@@ -118,7 +176,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] =
           {params.colDef.headerName}
         </ColumnHeaderWithIcon>
       ),
-      width: 230,
+      width: 190,
       renderCell: (params) => {
         if (!params.value) return;
         return <Chip label={params.value} />;
@@ -130,19 +188,18 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] =
         return row.userMetadata?.minor;
       },
       headerName: 'Minor',
-      width: 230,
+      width: 190,
       renderCell: (params) => {
         if (!params.value) return;
         return <Chip label={params.value} />;
       },
     },
     {
-      field: 'contactEmail',
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      field: 'accountEmail',
       valueGetter: (_value, row) => {
-        return 'placeholder@utdallas.edu';
+        return row.userMetadata?.user?.email;
       },
-      headerName: 'Contact Email',
+      headerName: 'Account Email',
       renderHeader: (params) => (
         <ColumnHeaderWithIcon icon={<EmailOutlinedIcon />}>
           {params.colDef.headerName}
@@ -176,7 +233,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadata>[] =
     { field: 'userId', headerName: 'ID', width: 360 },
   ];
 
-export const actionColumn: GridColDef<SelectUserMetadataToClubsWithUserMetadata> =
+export const actionColumn: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUser> =
   {
     field: 'actions',
     type: 'actions',

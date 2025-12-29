@@ -430,7 +430,7 @@ export const clubEditRouter = createTRPCRouter({
       // Return new members
       const newMembers = await ctx.db.query.userMetadataToClubs.findMany({
         where: eq(userMetadataToClubs.clubId, input.clubId),
-        with: { userMetadata: true },
+        with: { userMetadata: { with: { user: true } } },
       });
       return newMembers;
     }),

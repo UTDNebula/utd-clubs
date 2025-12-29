@@ -33,7 +33,7 @@ export function ContactEmailCell(params: GridRenderCellParams) {
         </IconButton>
       </Tooltip>
       {contactEmailsVisible ? (
-        params.value
+        <div className="overflow-hidden overflow-ellipsis">{params.value}</div>
       ) : (
         // Used this method instead of a dotted border in order to decrease
         // space between dots, which is not possible with the other method.
