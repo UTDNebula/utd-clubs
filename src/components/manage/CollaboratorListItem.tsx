@@ -45,14 +45,19 @@ const CollaboratorListItem = withForm({
       form.setFieldValue('officers', next);
     };
 
-    // TODO: Insert code to fetch email by userID
-
     return (
       <div className="flex flex-wrap items-center gap-2 p-2 sm:hover:bg-slate-100 max-sm:bg-slate-100 transition-colors rounded-lg">
         <div className="flex flex-col grow pl-2 pr-4 max-h-full min-h-12 justify-center">
-          <Typography variant="body1">
-            <span>{form.getFieldValue(`officers[${index}].name`)}</span>
-            {self && <span>&nbsp;(You)</span>}
+          <Tooltip
+            title={`User ID: ${form.getFieldValue(`officers[${index}].userId`)}`}
+          >
+            <Typography variant="body1">
+              <span>{form.getFieldValue(`officers[${index}].name`)}</span>
+              {self && <span>&nbsp;(You)</span>}
+            </Typography>
+          </Tooltip>
+          <Typography variant="caption">
+            <span>{form.getFieldValue(`officers[${index}].email`)}</span>
           </Typography>
         </div>
         <div className="flex items-center gap-2 grow justify-end">
@@ -79,7 +84,7 @@ const CollaboratorListItem = withForm({
                     />
                   </div>
                 ) : (
-                  <FormControl className="w-40">
+                  <FormControl className="w-fit">
                     <Select
                       id="collaborator-role-select"
                       value={subField.state.value}
@@ -90,9 +95,10 @@ const CollaboratorListItem = withForm({
                         <OutlinedInput
                           id="collaborator-role-select"
                           readOnly={self || !canTogglePresident}
-                          className="[&>.MuiSelect-select]:bg-white [&>.MuiSelect-select]:rounded-full [&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2"
+                          className="[&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2"
                         />
                       }
+                      className="pr-6 bg-white rounded-full"
                       renderValue={(selected) => (
                         <MemberRoleChip key={selected} memberType={selected} />
                       )}

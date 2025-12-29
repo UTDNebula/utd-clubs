@@ -276,7 +276,7 @@ export const clubEditRouter = createTRPCRouter({
           eq(userMetadataToClubs.clubId, input.clubId),
           inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
         ),
-        with: { userMetadata: true },
+        with: { userMetadata: { with: { user: true } } },
       });
       return newOfficers;
     }),
