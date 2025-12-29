@@ -36,6 +36,7 @@ import useMemberListDeletionState from './useMemberListDeletionState';
 import {
   actionColumn,
   columns,
+  defaultUserSort,
   formatUserListString,
   MemberListAbilities,
   ToastState,
@@ -47,14 +48,12 @@ type MemberListProps = {
 };
 
 const MemberList = ({ members, club }: MemberListProps) => {
-  const membersIndexed = members
-    .sort((a, b) => b.joinedAt.getTime() - a.joinedAt.getTime())
-    .map((member, index) => {
-      return {
-        ...member,
-        id: index,
-      };
-    });
+  const membersIndexed = members.sort(defaultUserSort).map((member, index) => {
+    return {
+      ...member,
+      id: index,
+    };
+  });
 
   /**
    * Hooks and API
@@ -181,7 +180,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
         },
         onSuccess: (newMembers) => {
           setRows(
-            newMembers.map((member, index) => {
+            newMembers.sort(defaultUserSort).map((member, index) => {
               const indexOG = membersIndexed.find(
                 (oldMember) => oldMember.userId === member.userId,
               )?.id;
@@ -220,7 +219,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
     await getMembers.refetch().then((data) => {
       if (data.data) {
         setRows(
-          data.data.map((member, index) => {
+          data.data.sort(defaultUserSort).map((member, index) => {
             return {
               ...member,
               id: index,

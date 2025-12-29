@@ -23,6 +23,14 @@ import {
 } from './CustomRenderCell';
 
 /**
+ * Callback function for sorting an array of users. Sorts by join date, from most recent to oldest
+ */
+export const defaultUserSort = (
+  a: SelectUserMetadataToClubsWithUserMetadataWithUser,
+  b: SelectUserMetadataToClubsWithUserMetadataWithUser,
+) => b.joinedAt.getTime() - a.joinedAt.getTime();
+
+/**
  * Wrapper function for {@linkcode formatListString()} that takes in a list of users and returns the users' first names formatted as a list.
  * @param {SelectUserMetadataToClubsWithUserMetadata | SelectUserMetadataToClubsWithUserMetadata[]} users - Array of users to be formatted (required)
  * @returns {string} Formatted string
