@@ -52,6 +52,7 @@ export const editOfficerSchema = z.object({
     .object({
       userId: z.string(),
       name: z.string(),
+      email: z.string(),
       canRemove: z.boolean(),
       canTogglePresident: z.boolean(),
       position: z.enum(['President', 'Officer']),

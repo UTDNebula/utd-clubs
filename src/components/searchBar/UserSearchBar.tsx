@@ -19,7 +19,7 @@ function getFullName(user: {
 }
 
 type UserSearchBarProps = {
-  passUser: (user: { id: string; name: string }) => void;
+  passUser: (user: { id: string; name: string; email: string }) => void;
   placeholder?: string;
   className?: string;
 };
@@ -93,7 +93,11 @@ export const UserSearchBar = ({
             key={key}
             {...otherProps}
             onClick={() => {
-              passUser({ id: option.id, name: getFullName(option) });
+              passUser({
+                id: option.id,
+                name: getFullName(option),
+                email: option.email,
+              });
               setInput('');
             }}
           >
