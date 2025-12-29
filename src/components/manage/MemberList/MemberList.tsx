@@ -121,19 +121,8 @@ const MemberList = ({ members, club }: MemberListProps) => {
     rowSelectionModel,
   );
 
-  const {
-    deleteUsers,
-    deleteSourceModel,
-    openConfirmDialog,
-    setOpenConfirmDialog,
-  } = memberListDeletionState;
-
-  const deleteRows = useCallback((rowId: GridRowId | GridRowId[]) => {
-    const normalizedGridRowIds = Array.isArray(rowId) ? rowId : [rowId];
-    setRows((prevRows) =>
-      prevRows.filter((row) => !normalizedGridRowIds.includes(row.id)),
-    );
-  }, []);
+  const { deleteUsers, openConfirmDialog, setOpenConfirmDialog } =
+    memberListDeletionState;
 
   const handleCloseDialog = useCallback(() => {
     setOpenConfirmDialog(false);
@@ -168,11 +157,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
               };
             }),
           );
-          // if (deleteSourceModel.source === 'selection') {
-          //   deleteRows([...rowSelectionModel.ids]);
-          // } else {
-          //   deleteRows(deleteSourceModel.rowId!);
-          // }
 
           setToastState({
             open: true,
