@@ -54,7 +54,7 @@ export default function MemberRoleChip({
   return (
     <Chip
       icon={
-        <div className="ml-2 flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
+        <div className="ml-2 flex justify-center items-center text-slate-600 dark:text-slate-400 h-4 *:w-4 *:h-4">
           {isValidElement<SvgIconOwnProps>(icon)
             ? cloneElement(icon, { fontSize: 'small' })
             : icon}

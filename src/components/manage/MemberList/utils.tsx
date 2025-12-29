@@ -54,7 +54,7 @@ export const ColumnHeaderWithIcon = ({
   children,
 }: ColumnHeaderWithIconProps) => (
   <span className="flex gap-1 items-center">
-    <div className="flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
+    <div className="flex justify-center items-center text-slate-600 dark:text-slate-400 h-4 *:w-4 *:h-4">
       {icon}
     </div>
     {/* Matches font weight of header text to default font weight of MUI Data Grid headers */}
@@ -87,7 +87,7 @@ const AvatarImage = ({
   if (imageError) {
     // Fallback to first initial if no image
     return (
-      <div className="flex h-10 w-10 items-center justify-center bg-slate-200 text-slate-500 text-sm font-bold rounded-full">
+      <div className="flex h-10 w-10 items-center justify-center bg-slate-200 dark:bg-slate-800 text-slate-500 text-sm font-bold rounded-full">
         {initial}
       </div>
     );

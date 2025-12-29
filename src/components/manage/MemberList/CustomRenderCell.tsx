@@ -23,7 +23,7 @@ export function ContactEmailCell(params: GridRenderCellParams) {
     <div className="flex gap-1 items-center h-full">
       <Tooltip title={contactEmailsVisible ? 'Hide' : 'Show'}>
         <IconButton size="small" onClick={handleOnClick}>
-          <div className="flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
+          <div className="flex justify-center items-center text-slate-600 dark:text-slate-400 h-4 *:w-4 *:h-4">
             {contactEmailsVisible ? (
               <VisibilityOutlinedIcon />
             ) : (
@@ -40,7 +40,7 @@ export function ContactEmailCell(params: GridRenderCellParams) {
         //
         // Sine function adds variation to number of dots. This is
         // deterministic based off the row ID (i.e. row number)
-        <span className="text-gray-600 select-none tracking-tighter">
+        <span className="text-slate-600 dark:text-slate-400 select-none tracking-tighter">
           {'•'.repeat(12 + Math.sin(Number(params.id.valueOf()) * 2) * 3)}
         </span>
       )}
