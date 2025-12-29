@@ -13,6 +13,19 @@ import { authClient } from '@src/utils/auth-client';
 import MemberRoleChip, { MemberTypes } from '../MemberRoleChip';
 import { MemberListContext } from './MemberListContext';
 
+export function SmallTextCell(params: GridRenderCellParams) {
+  return (
+    <div className="flex items-center h-full">
+      <Typography
+        variant="body2"
+        className=" overflow-hidden overflow-ellipsis"
+      >
+        {params.value}
+      </Typography>
+    </div>
+  );
+}
+
 export function JoinedAtCell(params: GridRenderCellParams) {
   const { expandTimestamps } = useContext(MemberListContext);
 
@@ -86,16 +99,24 @@ export function ContactEmailCell(params: GridRenderCellParams) {
         </IconButton>
       </Tooltip>
       {contactEmailsVisible ? (
-        <div className="overflow-hidden overflow-ellipsis">{params.value}</div>
+        <Typography
+          variant="body2"
+          className="overflow-hidden overflow-ellipsis"
+        >
+          {params.value}
+        </Typography>
       ) : (
         // Used this method instead of a dotted border in order to decrease
         // space between dots, which is not possible with the other method.
         //
         // Sine function adds variation to number of dots. This is
         // deterministic based off the row ID (i.e. row number)
-        <span className="text-gray-600 select-none tracking-tighter">
+        <Typography
+          variant="body2"
+          className="text-gray-600 select-none tracking-tighter"
+        >
           {'•'.repeat(12 + Math.sin(Number(params.id.valueOf()) * 2) * 3)}
-        </span>
+        </Typography>
       )}
     </div>
   );

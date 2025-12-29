@@ -19,6 +19,7 @@ import {
   ContactEmailCell,
   JoinedAtCell,
   MemberTypeCell,
+  SmallTextCell,
 } from './CustomRenderCell';
 
 /**
@@ -244,7 +245,12 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
       width: 140,
       renderCell: (params) => <MemberTypeCell {...params} />,
     },
-    { field: 'userId', headerName: 'ID', width: 360 },
+    {
+      field: 'userId',
+      headerName: 'ID',
+      width: 320,
+      renderCell: (params) => <SmallTextCell {...params} />,
+    },
   ];
 
 export const actionColumn: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUser> =
