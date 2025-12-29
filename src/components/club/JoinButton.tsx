@@ -85,7 +85,16 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
           {displayMemberType && memberState?.joinedAt && (
             <>
               <br />
-              Joined on {memberState?.joinedAt.toLocaleString()}
+              Joined on{' '}
+              {memberState?.joinedAt.toLocaleString('en-us', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true,
+              })}
             </>
           )}
         </div>
