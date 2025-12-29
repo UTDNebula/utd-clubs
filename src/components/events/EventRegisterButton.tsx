@@ -2,7 +2,7 @@
 
 import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
-import { Button, Skeleton } from '@mui/material';
+import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -18,28 +18,28 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
-  const { data: joined, isPending } = useQuery(
-    api.event.joinedEvent.queryOptions({ id: eventId }),
+  const { data: registerState, isPending } = useQuery(
+    api.event.registerState.queryOptions({ id: eventId }),
   );
 
   const [optimisticJoined, setOptimisticJoined] = useState<boolean>(false);
 
   useEffect(() => {
-    setOptimisticJoined(joined ?? false);
-  }, [joined]);
+    setOptimisticJoined(registerState?.registered ?? false);
+  }, [registerState?.registered]);
 
   const join = useMutation({
     ...api.event.joinEvent.mutationOptions(),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [
-          ['event', 'joinedEvent'],
+          ['event', 'registerState'],
           { input: { id: eventId }, type: 'query' },
         ],
       });
     },
     onError: () => {
-      setOptimisticJoined(joined ?? false);
+      setOptimisticJoined(registerState?.registered ?? false);
     },
   });
 
@@ -54,14 +54,15 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
       });
     },
     onError: () => {
-      setOptimisticJoined(joined ?? false);
+      setOptimisticJoined(registerState?.registered ?? false);
     },
   });
 
   const router = useRouter();
 
   let useAuthPage = false;
-
+  // Although this feature is named similarly, it is unrelated to the event registration button.
+  // Rather, it relates to the sign in/sign up authentication modal.
   const { setShowRegisterModal } = useRegisterModal(() => {
     useAuthPage = true;
   });
@@ -96,16 +97,34 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
   };
 
   return (
-    <Button
-      onClick={onClick}
-      loading={isPending || join.isPending || leave.isPending}
-      variant="contained"
-      className="normal-case"
-      size={isHeader ? 'large' : 'small'}
-      startIcon={displayJoined ? <CheckIcon /> : <AddIcon />}
+    <Tooltip
+      title={
+        <div className="text-center">
+          <span className="font-bold">
+            {displayJoined
+              ? 'Click to unregister from event'
+              : 'Click to register for event'}
+          </span>
+          {displayJoined && registerState?.registeredAt && (
+            <>
+              <br />
+              Joined on {registerState?.registeredAt.toLocaleString()}
+            </>
+          )}
+        </div>
+      }
     >
-      {displayJoined ? 'Registered' : 'Register'}
-    </Button>
+      <Button
+        onClick={onClick}
+        loading={isPending || join.isPending || leave.isPending}
+        variant="contained"
+        className="normal-case"
+        size={isHeader ? 'large' : 'small'}
+        startIcon={displayJoined ? <CheckIcon /> : <AddIcon />}
+      >
+        {displayJoined ? 'Registered' : 'Register'}
+      </Button>
+    </Tooltip>
   );
 };
 

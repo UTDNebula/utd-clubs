@@ -232,6 +232,25 @@ export const eventRouter = createTRPCRouter({
         }),
       );
     }),
+  registerState: publicProcedure
+    .input(joinLeaveSchema)
+    .query(async ({ input, ctx }) => {
+      if (!ctx.session) return null;
+
+      const eventId = input.id;
+      const userId = ctx.session.user.id;
+      const result = await ctx.db.query.userMetadataToEvents.findFirst({
+        where: (userMetadataToEvents) =>
+          and(
+            eq(userMetadataToEvents.userId, userId),
+            eq(userMetadataToEvents.eventId, eventId),
+          ),
+      });
+      return {
+        registered: Boolean(result),
+        registeredAt: result?.registeredAt ?? null,
+      };
+    }),
   joinEvent: protectedProcedure
     .input(joinLeaveSchema)
     .mutation(async ({ input, ctx }) => {

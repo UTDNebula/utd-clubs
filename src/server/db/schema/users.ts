@@ -82,10 +82,9 @@ export const userMetadataToEvents = pgTable(
     eventId: text('event_id')
       .notNull()
       .references(() => events.id, { onDelete: 'no action' }),
+    registeredAt: timestamp('registered_at').defaultNow().notNull(),
   },
-  (table) => ({
-    pk: primaryKey(table.userId, table.eventId),
-  }),
+  (t) => [primaryKey({ columns: [t.userId, t.eventId] })],
 );
 
 export const userMetadataRelation = relations(
