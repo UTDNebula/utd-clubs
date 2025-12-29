@@ -108,7 +108,7 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
           {displayJoined && registerState?.registeredAt && (
             <>
               <br />
-              Joined on{' '}
+              Registered on{' '}
               {registerState?.registeredAt.toLocaleString('en-us', {
                 month: 'short',
                 day: 'numeric',
