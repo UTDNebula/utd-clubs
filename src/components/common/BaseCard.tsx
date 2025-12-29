@@ -21,7 +21,7 @@ export const BaseCard = ({
   const hasBgClass = className.includes('bg-');
   return (
     <div
-      className={`${baseClasses} ${hasBgClass ? '' : 'bg-white'} ${variantClasses[variant]} ${className}`}
+      className={`${baseClasses} ${hasBgClass ? '' : 'bg-white dark:bg-haiti'} ${variantClasses[variant]} ${className}`}
     >
       {children}
     </div>

@@ -32,7 +32,7 @@ async function SettingsForm({
     <div className="m-auto w-full rounded-xl p-4">
       <div>
         <div className="h-24 rounded-t-3xl bg-linear-to-r from-[#5A49F7] from-[4.36%] via-[#9403D8] via-[49.74%] to-[#FD9365] p-6" />
-        <div className="bg-white p-6">
+        <div className="bg-white dark:bg-haiti p-6">
           <h1 className="font-display py-2 text-3xl font-semibold">Settings</h1>
           <FormCard user={userData} clubs={formatted} />
         </div>

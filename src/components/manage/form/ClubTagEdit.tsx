@@ -46,7 +46,7 @@ export const ClubTagEdit = ({
           {...params}
           placeholder="Search tags or add custom"
           label="Tags"
-          className="[&>.MuiInputBase-root]:bg-white"
+          className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-haiti"
           slotProps={{
             input: {
               ...params.InputProps,

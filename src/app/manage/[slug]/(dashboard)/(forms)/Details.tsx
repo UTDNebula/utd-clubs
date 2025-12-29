@@ -152,7 +152,7 @@ const Details = ({ club }: DetailsProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="grow-100 [&>.MuiInputBase-root]:bg-white"
+                  className="grow-100 [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-haiti"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
@@ -172,7 +172,7 @@ const Details = ({ club }: DetailsProps) => {
                   onChange={(value) => field.handleChange(value)}
                   value={field.state.value}
                   label="Date Founded"
-                  className="grow [&>.MuiPickersInputBase-root]:bg-white"
+                  className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-haiti"
                   slotProps={{
                     actionBar: {
                       actions: ['accept'],
@@ -201,7 +201,7 @@ const Details = ({ club }: DetailsProps) => {
                   onBlur={field.handleBlur}
                   value={field.state.value}
                   label="Description"
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-haiti"
                   multiline
                   minRows={4}
                   error={!field.state.meta.isValid}

@@ -41,7 +41,7 @@ const EventsTitle = ({ date }: EventsTitleProps) => {
               setDate(newValue);
             }
           }}
-          className="[&>.MuiInputBase-root]:bg-white"
+          className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-haiti"
           slotProps={{
             actionBar: {
               actions: ['today', 'accept'],
