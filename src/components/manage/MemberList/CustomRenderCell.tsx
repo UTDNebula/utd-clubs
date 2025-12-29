@@ -4,12 +4,60 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { GridRenderCellParams } from '@mui/x-data-grid';
+import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import { useContext } from 'react';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
 import { authClient } from '@src/utils/auth-client';
 import MemberRoleChip, { MemberTypes } from '../MemberRoleChip';
 import { MemberListContext } from './MemberListContext';
+
+export function JoinedAtCell(params: GridRenderCellParams) {
+  const { expandTimestamps } = useContext(MemberListContext);
+
+  const localeDateString = params.row.joinedAt.toLocaleString('en-us', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  });
+
+  const distanceDateString = formatDistanceStrict(
+    params.row.joinedAt,
+    new Date(),
+    {
+      addSuffix: true,
+    },
+  );
+
+  return (
+    <Tooltip
+      title={localeDateString}
+      enterDelay={0}
+      placement="top"
+      arrow
+      slotProps={{
+        popper: {
+          modifiers: [{ name: 'offset', options: { offset: [0, -8] } }],
+        },
+      }}
+    >
+      <Typography
+        variant="body2"
+        className="flex items-center h-full text-wrap"
+      >
+        {expandTimestamps
+          ? localeDateString
+          : distanceDateString.charAt(0).toUpperCase() +
+            distanceDateString.slice(1)}
+      </Typography>
+    </Tooltip>
+  );
+}
 
 export function ContactEmailCell(params: GridRenderCellParams) {
   const { contactEmailsVisible, showContactEmails } =

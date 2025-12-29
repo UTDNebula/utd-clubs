@@ -17,6 +17,7 @@ export interface MemberListContextType {
     | ReturnType<typeof useMemberListDeletionState>
     | undefined;
   memberListAbilities: MemberListAbilities;
+  expandTimestamps: boolean;
   contactEmailsVisible: boolean;
   showContactEmails: (visibility: boolean) => void;
   removeMembers:
@@ -44,6 +45,7 @@ export const MemberListContext = createContext<MemberListContextType>({
     downloadCSV: true,
     viewAccountEmail: true,
   },
+  expandTimestamps: false,
   contactEmailsVisible: false,
   showContactEmails: () => {},
   removeMembers: undefined,

@@ -12,7 +12,13 @@ import {
 } from '@mui/x-data-grid';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
-import { SyntheticEvent, useCallback, useMemo, useState } from 'react';
+import {
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import z from 'zod';
 import Confirmation from '@src/components/Confirmation';
 import { AppRouter } from '@src/server/api/root';
@@ -78,6 +84,34 @@ const MemberList = ({ members, club }: MemberListProps) => {
       type: 'include',
       ids: new Set<GridRowId>(),
     });
+
+  /*
+   * Join timestamp modifier key detection
+   */
+
+  const [expandTimestamps, setExpandTimestamps] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey) {
+        setExpandTimestamps(true);
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (!event.ctrlKey || !event.shiftKey) {
+        setExpandTimestamps(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   /*
    * Contact emails visibility
@@ -226,6 +260,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
     () => ({
       memberListDeletionState,
       memberListAbilities,
+      expandTimestamps,
       contactEmailsVisible,
       showContactEmails,
       removeMembers,
@@ -237,6 +272,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
     [
       memberListDeletionState,
       memberListAbilities,
+      expandTimestamps,
       contactEmailsVisible,
       removeMembers,
       getMembers,
@@ -279,7 +315,13 @@ const MemberList = ({ members, club }: MemberListProps) => {
           slotProps={{ toolbar: { club: club } as GridSlotProps['toolbar'] }}
           showToolbar
           initialState={{
-            columns: { columnVisibilityModel: { userId: false, minor: false } },
+            columns: {
+              columnVisibilityModel: {
+                userId: false,
+                major: false,
+                minor: false,
+              },
+            },
             pagination: { paginationModel: { pageSize: 25 } },
           }}
           pageSizeOptions={[25]}
