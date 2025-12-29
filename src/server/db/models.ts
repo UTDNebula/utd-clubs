@@ -85,6 +85,26 @@ export type SelectUserMetadataToClubs = z.infer<
   typeof selectUserMetadataToClubs
 >;
 
+// With club
+export const selectUserMetadataToClubsWithClub =
+  selectUserMetadataToClubs.extend({
+    club: selectClub.nullable(),
+  });
+
+export type SelectUserMetadataToClubsWithClub = z.infer<
+  typeof selectUserMetadataToClubsWithClub
+>;
+
+// With club, non-nullable
+export const selectUserMetadataToClubsWithNonNullableClub =
+  selectUserMetadataToClubs.extend({
+    club: selectClub,
+  });
+
+export type SelectUserMetadataToClubsWithNonNullableClub = z.infer<
+  typeof selectUserMetadataToClubsWithNonNullableClub
+>;
+
 // With userMetadata
 export const selectUserMetadataToClubsWithUserMetadata =
   selectUserMetadataToClubs.extend({

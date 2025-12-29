@@ -14,28 +14,34 @@ type Props = {
 export default function ClubSelector({ control }: Props) {
   const { fields, remove } = useFieldArray({
     control,
-    name: 'clubs',
+    name: 'joinedClubs',
     keyName: 'club.id',
   });
   return (
     <div className="-mt-4 max-w-2xl">
       <div className="flex w-full flex-wrap">
-        {fields.map((club, i) => (
+        {fields.map((joinedClub, i) => (
           <div
             className="m-2 flex min-w-[10rem] items-center justify-center rounded-full border p-2"
-            key={club.id}
+            key={joinedClub.club.id}
           >
-            {club.profileImage && (
+            {joinedClub.club.profileImage && (
               <Image
-                src={club.profileImage}
-                alt={club.name + ' logo'}
+                src={joinedClub.club.profileImage}
+                alt={joinedClub.club.name + ' logo'}
                 width={40}
                 height={40}
                 className="-pl-1 rounded-full pr-1"
               />
             )}
-            <p className="truncate p-1 text-xs font-bold">{club.name}</p>
-
+            <div>
+              <p className="truncate p-1 text-xs font-bold">
+                {joinedClub.club.name}
+              </p>
+              <p className="truncate p-1 text-xs">
+                Joined on {joinedClub.joinedAt.toLocaleString()}
+              </p>
+            </div>
             <button
               type="button"
               className="ml-2 rounded-full px-1 text-xs font-bold text-black"
