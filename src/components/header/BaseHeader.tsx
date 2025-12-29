@@ -13,7 +13,7 @@ import { ProfileDropDown } from './ProfileDropDown';
 export const BaseHeader = async ({ children }: { children?: ReactNode }) => {
   const userCapabilities = await api.userMetadata.getUserSidebarCapabilities();
   return (
-    <div className="sticky top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-2 sm:px-4 bg-lighten dark:bg-darken flex-wrap sm:flex-nowrap">
+    <div className="sticky top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-2 sm:px-4 flex-wrap sm:flex-nowrap">
       <Image
         src={gradientBG}
         alt="gradient background"
@@ -21,7 +21,7 @@ export const BaseHeader = async ({ children }: { children?: ReactNode }) => {
         className="object-cover -z-20"
         sizes="120vw"
       />
-      <div className="absolute inset-0 bg-lighten -z-10"></div>
+      <div className="absolute inset-0 bg-lighten dark:bg-darken -z-10"></div>
       <div className="grow basis-0 flex gap-x-2 md:gap-x-4 lg:gap-x-8">
         <NewSidebar userCapabilities={userCapabilities} hamburger="black" />
         <Link
