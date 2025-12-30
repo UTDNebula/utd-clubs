@@ -66,12 +66,12 @@ const OfficerListItem = withForm({
 
     return (
       <Box
-        className={`grid sm:gap-2 max-sm:gap-4 p-2 max-sm:pt-4 transition-colors rounded-lg
+        className={`relative grid sm:gap-2 transition-colors rounded-lg
           ${isDragging ? '*:invisible' : `max-sm:bg-slate-100 ${isSorting ? '' : 'sm:hover:bg-slate-100'}`}`}
         sx={{
           gridTemplateAreas: {
             sm: `'handle name position buttons'`,
-            xs: `'handle name buttons' 'position position position'`,
+            xs: `'handle name buttons' 'handle position buttons'`,
           },
           gridTemplateColumns: {
             sm: `auto 1fr 1fr auto`,
@@ -92,7 +92,7 @@ const OfficerListItem = withForm({
         >
           <DragIndicatorIcon />
         </div>
-        <div style={{ gridArea: 'name' }}>
+        <div style={{ gridArea: 'name' }} className="max-sm:mt-3 sm:my-2">
           <form.Field name={`officers[${index}].name`}>
             {(subField) => (
               <TextField
@@ -118,7 +118,10 @@ const OfficerListItem = withForm({
             )}
           </form.Field>
         </div>
-        <div style={{ gridArea: 'position' }}>
+        <div
+          style={{ gridArea: 'position' }}
+          className="max-sm:mt-3 max-sm:mb-3 sm:my-2"
+        >
           <form.Field name={`officers[${index}].position`}>
             {(subField) => (
               <TextField
@@ -144,8 +147,11 @@ const OfficerListItem = withForm({
             )}
           </form.Field>
         </div>
-        <div style={{ gridArea: 'buttons' }}>
-          <Tooltip title="Remove">
+        <div
+          style={{ gridArea: 'buttons' }}
+          className="flex max-sm:h=fill sm:h-fit max-sm:ml-2 sm:my-2 mr-2"
+        >
+          <Tooltip title="Remove" className="h-fit self-center">
             <IconButton aria-label="remove" onClick={handleRemove}>
               <DeleteIcon />
             </IconButton>
