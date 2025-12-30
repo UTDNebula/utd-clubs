@@ -125,14 +125,14 @@ const Contacts = ({ club }: ContactsProps) => {
     }
   };
 
-  // Flag for if user presses a reorder button
-  const [isReordered, setIsReordered] = useState(false);
-
   const currentContacts =
     useStore(form.store, (state) => state.values.contacts) || [];
   const available = startContacts.filter(
     (p) => !currentContacts.map((c) => c.platform).includes(p),
   );
+
+  // Flag for if user presses a reorder button
+  const [isReordered, setIsReordered] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -232,6 +232,11 @@ const Contacts = ({ club }: ContactsProps) => {
             {activeReorderPlatform ? (
               <ContactListItem
                 key={activeReorderPlatform}
+                overlayData={form
+                  .getFieldValue('contacts')
+                  .find(
+                    (contact) => contact.platform === activeReorderPlatform,
+                  )}
                 index={form
                   .getFieldValue('contacts')
                   .findIndex(
@@ -240,7 +245,6 @@ const Contacts = ({ club }: ContactsProps) => {
                 form={form}
                 removeItem={removeItem}
                 onReorder={() => setIsReordered(true)}
-                dragOverlay
               />
             ) : null}
           </DragOverlay>

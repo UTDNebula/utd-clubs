@@ -344,7 +344,9 @@ export const clubRouter = createTRPCRouter({
             contacts: {
               orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
             },
-            officers: true,
+            officers: {
+              orderBy: (officers, { asc }) => asc(officers.displayOrder),
+            },
           },
         });
         return bySlug;

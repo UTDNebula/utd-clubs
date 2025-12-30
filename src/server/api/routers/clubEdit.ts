@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, asc, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@src/server/db';
 import { selectContact } from '@src/server/db/models';
@@ -71,10 +71,12 @@ const editOfficerSchema = z.object({
     .array(),
   created: z
     .object({
+      id: z.string().optional(),
       name: z.string(),
       position: z.string(),
     })
     .array(),
+  order: z.string().array().optional(),
 });
 
 const deleteSchema = z.object({ clubId: z.string() });
@@ -146,24 +148,26 @@ export const clubEditRouter = createTRPCRouter({
       await Promise.allSettled(promises);
 
       // Created
-      let nextFreeDisplayOrder = await ctx.db.$count(
-        contacts,
-        eq(contacts.clubId, input.clubId),
-      );
+      const original = await ctx.db
+        .select()
+        .from(officers)
+        .where(eq(officers.clubId, input.clubId))
+        .orderBy(asc(officers.displayOrder));
+      let nextFreeDisplayOrder =
+        original.findLast((item) => item.displayOrder !== null)?.displayOrder ??
+        -1;
       if (input.created.length) {
         await ctx.db
           .insert(contacts)
           .values(
-            input.created.map((contact) => {
-              return {
-                clubId: input.clubId,
-                platform: contact.platform,
-                url: contact.url,
-                displayOrder:
-                  input.order?.indexOf(contact.platform) ??
-                  nextFreeDisplayOrder++,
-              };
-            }),
+            input.created.map((contact) => ({
+              clubId: input.clubId,
+              platform: contact.platform,
+              url: contact.url,
+              displayOrder:
+                input.order?.indexOf(contact.platform) ??
+                ++nextFreeDisplayOrder,
+            })),
           )
           .onConflictDoNothing();
       }
@@ -320,6 +324,8 @@ export const clubEditRouter = createTRPCRouter({
         });
       }
 
+      console.log('received input:', input);
+
       // Deleted
       if (input.deleted.length) {
         await ctx.db
@@ -349,15 +355,39 @@ export const clubEditRouter = createTRPCRouter({
       await Promise.allSettled(promises);
 
       // Created
+      const original = await ctx.db
+        .select()
+        .from(officers)
+        .where(eq(officers.clubId, input.clubId))
+        .orderBy(asc(officers.displayOrder));
+      let nextFreeDisplayOrder =
+        original.findLast((item) => item.displayOrder !== null)?.displayOrder ??
+        -1;
       if (input.created.length) {
         await ctx.db.insert(officers).values(
           input.created.map((officer) => ({
             clubId: input.clubId,
             name: officer.name,
             position: officer.position,
-            // displayOrder: -1, // TODO: Calculate this value
+            displayOrder:
+              (officer.id !== undefined
+                ? input.order?.indexOf(officer.id)
+                : null) ?? ++nextFreeDisplayOrder,
           })),
         );
+      }
+
+      // Display order
+      if (input.order?.length) {
+        const promises: Promise<unknown>[] = [];
+        input.order.forEach((id, index) => {
+          const promise = ctx.db
+            .update(officers)
+            .set({ displayOrder: index })
+            .where(and(eq(officers.clubId, input.clubId), eq(officers.id, id)));
+          promises.push(promise);
+        });
+        await Promise.allSettled(promises);
       }
 
       // Updated at
@@ -371,6 +401,7 @@ export const clubEditRouter = createTRPCRouter({
       // Return new officers
       const newListedOfficers = await ctx.db.query.officers.findMany({
         where: eq(officers.clubId, input.clubId),
+        orderBy: (officers, { asc }) => asc(officers.displayOrder),
       });
       return newListedOfficers;
     }),

@@ -14,7 +14,7 @@ type ContactListItemProps = {
   index: number;
   removeItem: (index: number) => void;
   onReorder?: () => void;
-  dragOverlay?: boolean;
+  overlayData?: FormData['contacts'][number];
 };
 
 const ContactListItem = withForm({
@@ -31,7 +31,7 @@ const ContactListItem = withForm({
     onReorder: () => {},
     dragOverlay: false,
   } as ContactListItemProps,
-  render: function Render({ form, index, removeItem }) {
+  render: function Render({ form, index, removeItem, overlayData }) {
     const {
       attributes,
       listeners,
@@ -45,7 +45,6 @@ const ContactListItem = withForm({
     const style = {
       transform: CSS.Transform.toString(transform),
       transition,
-      // opacity: isDragging ? 0.4 : 1,
       zIndex: isDragging ? 1 : 0,
     };
 
@@ -96,18 +95,12 @@ const ContactListItem = withForm({
             style={{ gridArea: 'url' }}
             className="max-sm:mx-2 max-sm:mb-2 sm:my-2"
           >
-            {/* TODO: Fix the URL flashing to the URL at the new position.
-             * I have determined it is caused by the below component re-rendering
-             * and thus getting the old field value at `index`, but I do not know
-             * how to prevent this. I've wasted a couple hours just on this and
-             * do not wish to continue.
-             */}
             <form.Field name={`contacts[${index}].url`}>
               {(subField) => (
                 <TextField
                   onChange={(e) => subField.handleChange(e.target.value)}
                   onBlur={subField.handleBlur}
-                  value={subField.state.value}
+                  value={overlayData?.url ?? subField.state.value}
                   label={
                     subField.state.value === 'email' ? 'Email Address' : 'URL'
                   }

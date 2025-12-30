@@ -1,10 +1,20 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, TextField, Tooltip } from '@mui/material';
 import z from 'zod';
 import { withForm } from '@src/utils/form';
-import { editListedOfficerSchema } from '@src/utils/formSchemas';
+import { type editListedOfficerSchema } from '@src/utils/formSchemas';
 
 type FormData = z.infer<typeof editListedOfficerSchema>;
+
+type OfficerListItemProps = {
+  index: number;
+  removeItem: (index: number) => void;
+  onReorder?: () => void;
+  overlayData?: FormData['officers'][number];
+};
 
 const OfficerListItem = withForm({
   // These values are only used for type-checking, and are not used at runtime
@@ -22,8 +32,27 @@ const OfficerListItem = withForm({
     removeItem: (index: number) => {
       console.log(index);
     },
-  },
-  render: function Render({ form, index, removeItem }) {
+    id: '',
+  } as OfficerListItemProps,
+  render: function Render({ form, index, removeItem, overlayData }) {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+      isSorting,
+    } = useSortable({
+      id: form.getFieldValue(`officers[${index}].id`),
+    });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      zIndex: isDragging ? 1 : 0,
+    };
+
     const handleRemove = () => {
       removeItem(index);
       const current = form.getFieldValue('officers') as
@@ -33,27 +62,43 @@ const OfficerListItem = withForm({
       form.setFieldValue('officers', next);
     };
 
+    console.log('isDragging', isDragging);
+
     return (
       <Box
-        className="grid sm:gap-2 max-sm:gap-4 p-2 max-sm:pt-4 sm:hover:bg-slate-100 max-sm:bg-slate-100 transition-colors rounded-lg"
+        className={`grid sm:gap-2 max-sm:gap-4 p-2 max-sm:pt-4 transition-colors rounded-lg
+          ${isDragging ? '*:invisible' : `max-sm:bg-slate-100 ${isSorting ? '' : 'sm:hover:bg-slate-100'}`}`}
         sx={{
           gridTemplateAreas: {
-            sm: `'name position buttons'`,
-            xs: `'name buttons' 'position position'`,
+            sm: `'handle name position buttons'`,
+            xs: `'handle name buttons' 'position position position'`,
           },
           gridTemplateColumns: {
-            sm: `1fr 1fr auto`,
-            xs: `1fr auto`,
+            sm: `auto 1fr 1fr auto`,
+            xs: `auto 1fr auto`,
           },
         }}
+        ref={setNodeRef}
+        style={style}
       >
+        {isDragging && (
+          <div className="absolute inset-0 m-1 outline-royal/50 outline-2 rounded-lg visible!" />
+        )}
+        <div
+          style={{ gridArea: 'handle' }}
+          className="h-full flex items-center select-none cursor-grab rounded-md touch-none max-sm:p-4 sm:p-2"
+          {...attributes}
+          {...listeners}
+        >
+          <DragIndicatorIcon />
+        </div>
         <div style={{ gridArea: 'name' }}>
           <form.Field name={`officers[${index}].name`}>
             {(subField) => (
               <TextField
                 onChange={(e) => subField.handleChange(e.target.value)}
                 onBlur={subField.handleBlur}
-                value={subField.state.value}
+                value={overlayData?.name ?? subField.state.value}
                 label="Name"
                 className="w-full [&>.MuiInputBase-root]:bg-white"
                 size="small"
@@ -79,7 +124,7 @@ const OfficerListItem = withForm({
               <TextField
                 onChange={(e) => subField.handleChange(e.target.value)}
                 onBlur={subField.handleBlur}
-                value={subField.state.value}
+                value={overlayData?.position ?? subField.state.value}
                 label="Position"
                 className="w-full [&>.MuiInputBase-root]:bg-white"
                 size="small"
