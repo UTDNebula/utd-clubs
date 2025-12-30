@@ -1,6 +1,9 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, TextField, Tooltip, Typography } from '@mui/material';
 import type z from 'zod';
 import { contactNames } from '@src/server/db/schema/contacts';
@@ -29,6 +32,22 @@ const ContactListItem = withForm({
     onReorder: () => {},
   } as ContactListItemProps,
   render: function Render({ form, index, removeItem, onReorder }) {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({ id: form.getFieldValue(`contacts[${index}].platform`) });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      // opacity: isDragging ? 0.4 : 1,
+      zIndex: isDragging ? 1 : 0,
+    };
+
     const handleRemove = () => {
       removeItem(index);
       const current = form.getFieldValue('contacts') as
@@ -38,23 +57,35 @@ const ContactListItem = withForm({
       form.setFieldValue('contacts', next);
     };
 
-    // form.moveFieldValues("contacts",)
-
     return (
       <>
         <Box
-          className="grid sm:gap-2 max-sm:gap-4 p-2 sm:hover:bg-slate-100 max-sm:bg-slate-100 transition-colors rounded-lg"
+          className={`relative grid sm:gap-2 max-sm:gap-4 p-2 ${isDragging ? '*:invisible' : 'max-sm:bg-slate-100 sm:hover:bg-slate-100'} transition-colors rounded-lg`}
           sx={{
             gridTemplateAreas: {
-              sm: `'name url buttons'`,
-              xs: `'name buttons' 'url url'`,
+              sm: `'handle name url buttons'`,
+              xs: `'handle name buttons' 'url url url'`,
             },
             gridTemplateColumns: {
-              sm: `auto 1fr auto`,
-              xs: `1fr auto`,
+              sm: `auto auto 1fr auto`,
+              xs: `auto 1fr auto`,
             },
           }}
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
         >
+          {isDragging && (
+            <div className="absolute inset-0 m-1 outline-royal/50 outline-2 rounded-lg visible!"></div>
+          )}
+          <div
+            style={{ gridArea: 'handle' }}
+            className="h-full flex items-center select-none cursor-grab"
+            {...attributes}
+            {...listeners}
+          >
+            <DragIndicatorIcon />
+          </div>
           <div style={{ gridArea: 'name' }} className="h-full">
             <Typography className="flex min-w-32 px-2 h-full items-center">
               {contactNames[form.getFieldValue(`contacts[${index}].platform`)]}
