@@ -157,15 +157,15 @@ const Contacts = ({ club }: ContactsProps) => {
         return arrayMove(contacts, oldIndex, newIndex);
       });
     }
-    setActiveReorderId(null);
+    setActiveReorderPlatform(null);
   };
 
   const handleReorderDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    setActiveReorderId(active.id);
+    setActiveReorderPlatform(active.id);
   };
 
-  const [activeReorderId, setActiveReorderId] =
+  const [activeReorderPlatform, setActiveReorderPlatform] =
     useState<UniqueIdentifier | null>(null);
 
   return (
@@ -229,15 +229,18 @@ const Contacts = ({ club }: ContactsProps) => {
             </form.Field>
           </SortableContext>
           <DragOverlay className="opacity-80">
-            {activeReorderId ? (
+            {activeReorderPlatform ? (
               <ContactListItem
-                key={activeReorderId}
+                key={activeReorderPlatform}
                 index={form
                   .getFieldValue('contacts')
-                  .findIndex((contact) => contact.platform === activeReorderId)}
+                  .findIndex(
+                    (contact) => contact.platform === activeReorderPlatform,
+                  )}
                 form={form}
                 removeItem={removeItem}
                 onReorder={() => setIsReordered(true)}
+                dragOverlay
               />
             ) : null}
           </DragOverlay>

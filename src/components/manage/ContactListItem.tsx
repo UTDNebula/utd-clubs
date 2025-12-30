@@ -1,7 +1,5 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, TextField, Tooltip, Typography } from '@mui/material';
@@ -16,6 +14,7 @@ type ContactListItemProps = {
   index: number;
   removeItem: (index: number) => void;
   onReorder?: () => void;
+  dragOverlay?: boolean;
 };
 
 const ContactListItem = withForm({
@@ -30,8 +29,9 @@ const ContactListItem = withForm({
       console.log(index);
     },
     onReorder: () => {},
+    dragOverlay: false,
   } as ContactListItemProps,
-  render: function Render({ form, index, removeItem, onReorder }) {
+  render: function Render({ form, index, removeItem }) {
     const {
       attributes,
       listeners,
@@ -39,6 +39,7 @@ const ContactListItem = withForm({
       transform,
       transition,
       isDragging,
+      isSorting,
     } = useSortable({ id: form.getFieldValue(`contacts[${index}].platform`) });
 
     const style = {
@@ -60,7 +61,8 @@ const ContactListItem = withForm({
     return (
       <>
         <Box
-          className={`relative grid sm:gap-2 max-sm:gap-4 p-2 ${isDragging ? '*:invisible' : 'max-sm:bg-slate-100 sm:hover:bg-slate-100'} transition-colors rounded-lg`}
+          className={`relative grid sm:gap-2 max-sm:gap-4 p-2 transition-colors rounded-lg
+            ${isDragging ? '*:invisible' : `max-sm:bg-slate-100 ${isSorting ? '' : 'sm:hover:bg-slate-100'}`}`}
           sx={{
             gridTemplateAreas: {
               sm: `'handle name url buttons'`,
@@ -76,11 +78,11 @@ const ContactListItem = withForm({
           {...attributes}
         >
           {isDragging && (
-            <div className="absolute inset-0 m-1 outline-royal/50 outline-2 rounded-lg visible!"></div>
+            <div className="absolute inset-0 m-1 outline-royal/50 outline-2 rounded-lg visible!" />
           )}
           <div
             style={{ gridArea: 'handle' }}
-            className="h-full flex items-center select-none cursor-grab"
+            className="h-full flex items-center select-none cursor-grab rounded-md"
             {...attributes}
             {...listeners}
           >
@@ -92,6 +94,12 @@ const ContactListItem = withForm({
             </Typography>
           </div>
           <div style={{ gridArea: 'url' }} className="">
+            {/* TODO: Fix the URL flashing to the URL at the new position.
+             * I have determined it is caused by the below component re-rendering
+             * and thus getting the old field value at `index`, but I do not know
+             * how to prevent this. I've wasted a couple hours just on this and
+             * do not wish to continue.
+             */}
             <form.Field name={`contacts[${index}].url`}>
               {(subField) => (
                 <TextField
@@ -120,34 +128,6 @@ const ContactListItem = withForm({
             </form.Field>
           </div>
           <div style={{ gridArea: 'buttons' }} className="flex h-fit">
-            <div className="flex flex-col gap-1">
-              <Tooltip title="Move up" placement="left">
-                <IconButton
-                  onClick={() => {
-                    form.moveFieldValues('contacts', index, index - 1);
-                    onReorder?.();
-                  }}
-                  disabled={index === 0}
-                  size="small"
-                  className="p-0"
-                >
-                  <ArrowDropUpIcon fontSize="inherit" />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Move down" placement="left">
-                <IconButton
-                  onClick={() => {
-                    form.moveFieldValues('contacts', index, index + 1);
-                    onReorder?.();
-                  }}
-                  disabled={index === form.getFieldValue('contacts').length - 1}
-                  size="small"
-                  className="p-0"
-                >
-                  <ArrowDropDownIcon fontSize="inherit" />
-                </IconButton>
-              </Tooltip>
-            </div>
             <Tooltip title="Remove">
               <IconButton aria-label="remove" onClick={handleRemove}>
                 <DeleteIcon />
