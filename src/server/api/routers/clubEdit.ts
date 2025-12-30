@@ -117,6 +117,8 @@ export const clubEditRouter = createTRPCRouter({
           code: 'UNAUTHORIZED',
         });
 
+      console.log('received input:', input);
+
       // Deleted
       if (input.deleted.length) {
         await ctx.db
@@ -145,22 +147,50 @@ export const clubEditRouter = createTRPCRouter({
       }
       await Promise.allSettled(promises);
 
+      let nextFreeDisplayOrder = await ctx.db.$count(
+        contacts,
+        eq(contacts.clubId, input.clubId),
+      );
+
+      console.log('nextFreeDisplayOrder', nextFreeDisplayOrder);
+
       // Created
       if (input.created.length) {
         await ctx.db
           .insert(contacts)
           .values(
-            input.created.map((contact) => ({
-              clubId: input.clubId,
-              platform: contact.platform,
-              url: contact.url,
-              // displayOrder: -1, // TODO: Calculate this value
-            })),
+            input.created.map((contact) => {
+              return {
+                clubId: input.clubId,
+                platform: contact.platform,
+                url: contact.url,
+                displayOrder:
+                  input.order?.indexOf(contact.platform) ??
+                  nextFreeDisplayOrder++,
+              };
+            }),
           )
           .onConflictDoNothing();
       }
 
       console.log('Received order: ', input.order);
+
+      if (input.order?.length) {
+        const promises: Promise<unknown>[] = [];
+        input.order.forEach((platform, index) => {
+          const promise = ctx.db
+            .update(contacts)
+            .set({ displayOrder: index })
+            .where(
+              and(
+                eq(contacts.clubId, input.clubId),
+                eq(contacts.platform, platform),
+              ),
+            );
+          promises.push(promise);
+        });
+        await Promise.allSettled(promises);
+      }
 
       // Updated at
       await ctx.db
@@ -173,6 +203,7 @@ export const clubEditRouter = createTRPCRouter({
       // Return new contacts
       const newContacts = await ctx.db.query.contacts.findMany({
         where: eq(contacts.clubId, input.clubId),
+        orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
       });
       return newContacts;
     }),

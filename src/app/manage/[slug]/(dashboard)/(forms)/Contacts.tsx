@@ -56,7 +56,18 @@ const Contacts = ({ club }: ContactsProps) => {
       // Extra check for if user reorders, makes a change, then undoes reorder
       let hasReorder = false;
 
+      console.log('contacts to iterate', value.contacts);
+
       value.contacts.forEach((contact, index) => {
+        if (
+          isReordered &&
+          contact.platform !== defaultValues.contacts[index]?.platform
+        ) {
+          hasReorder = true;
+        }
+
+        order.push(contact.platform);
+
         // If it has no ID, it's created
         if (!hasId(contact)) {
           created.push(contact);
@@ -69,16 +80,11 @@ const Contacts = ({ club }: ContactsProps) => {
         if (isDirty) {
           modified.push(contact);
         }
-
-        if (
-          isReordered &&
-          contact.platform !== defaultValues.contacts[index]?.platform
-        ) {
-          hasReorder = true;
-        }
-
-        order.push(contact.platform);
       });
+
+      console.log('order', order);
+
+      console.log('hasReorder', hasReorder);
 
       const updated = await editContacts.mutateAsync({
         clubId: club.id,
