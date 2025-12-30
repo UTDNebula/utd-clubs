@@ -117,8 +117,6 @@ export const clubEditRouter = createTRPCRouter({
           code: 'UNAUTHORIZED',
         });
 
-      console.log('received input:', input);
-
       // Deleted
       if (input.deleted.length) {
         await ctx.db
@@ -147,14 +145,11 @@ export const clubEditRouter = createTRPCRouter({
       }
       await Promise.allSettled(promises);
 
+      // Created
       let nextFreeDisplayOrder = await ctx.db.$count(
         contacts,
         eq(contacts.clubId, input.clubId),
       );
-
-      console.log('nextFreeDisplayOrder', nextFreeDisplayOrder);
-
-      // Created
       if (input.created.length) {
         await ctx.db
           .insert(contacts)
@@ -173,8 +168,7 @@ export const clubEditRouter = createTRPCRouter({
           .onConflictDoNothing();
       }
 
-      console.log('Received order: ', input.order);
-
+      // Display order
       if (input.order?.length) {
         const promises: Promise<unknown>[] = [];
         input.order.forEach((platform, index) => {

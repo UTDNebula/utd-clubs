@@ -113,8 +113,6 @@ export const clubRouter = createTRPCRouter({
         },
       });
 
-      // console.log('return contacts', byId?.contacts);
-
       return byId;
     } catch (e) {
       console.error(e);

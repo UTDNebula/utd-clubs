@@ -51,12 +51,8 @@ const Contacts = ({ club }: ContactsProps) => {
       const modified: ContactWithId[] = [];
       const order: FormData['contacts'][number]['platform'][] = [];
 
-      console.log('isReordered', isReordered);
-
       // Extra check for if user reorders, makes a change, then undoes reorder
       let hasReorder = false;
-
-      console.log('contacts to iterate', value.contacts);
 
       value.contacts.forEach((contact, index) => {
         if (
@@ -81,10 +77,6 @@ const Contacts = ({ club }: ContactsProps) => {
           modified.push(contact);
         }
       });
-
-      console.log('order', order);
-
-      console.log('hasReorder', hasReorder);
 
       const updated = await editContacts.mutateAsync({
         clubId: club.id,
