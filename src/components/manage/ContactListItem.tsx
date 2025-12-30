@@ -61,7 +61,7 @@ const ContactListItem = withForm({
     return (
       <>
         <Box
-          className={`relative grid sm:gap-2 max-sm:gap-4 p-2 transition-colors rounded-lg
+          className={`relative grid gap-2 transition-colors rounded-lg h-fit
             ${isDragging ? '*:invisible' : `max-sm:bg-slate-100 ${isSorting ? '' : 'sm:hover:bg-slate-100'}`}`}
           sx={{
             gridTemplateAreas: {
@@ -75,25 +75,27 @@ const ContactListItem = withForm({
           }}
           ref={setNodeRef}
           style={style}
-          {...attributes}
         >
           {isDragging && (
             <div className="absolute inset-0 m-1 outline-royal/50 outline-2 rounded-lg visible!" />
           )}
           <div
             style={{ gridArea: 'handle' }}
-            className="h-full flex items-center select-none cursor-grab rounded-md"
+            className="h-full flex items-center select-none cursor-grab rounded-md touch-none max-sm:p-4 sm:p-2"
             {...attributes}
             {...listeners}
           >
             <DragIndicatorIcon />
           </div>
-          <div style={{ gridArea: 'name' }} className="h-full">
+          <div style={{ gridArea: 'name' }} className="">
             <Typography className="flex min-w-32 px-2 h-full items-center">
               {contactNames[form.getFieldValue(`contacts[${index}].platform`)]}
             </Typography>
           </div>
-          <div style={{ gridArea: 'url' }} className="">
+          <div
+            style={{ gridArea: 'url' }}
+            className="max-sm:mx-2 max-sm:mb-2 sm:my-2"
+          >
             {/* TODO: Fix the URL flashing to the URL at the new position.
              * I have determined it is caused by the below component re-rendering
              * and thus getting the old field value at `index`, but I do not know
@@ -127,7 +129,10 @@ const ContactListItem = withForm({
               )}
             </form.Field>
           </div>
-          <div style={{ gridArea: 'buttons' }} className="flex h-fit">
+          <div
+            style={{ gridArea: 'buttons' }}
+            className="flex h-fit max-sm:mt-2 max-sm:mb-0 sm:my-2 mr-2"
+          >
             <Tooltip title="Remove">
               <IconButton aria-label="remove" onClick={handleRemove}>
                 <DeleteIcon />
