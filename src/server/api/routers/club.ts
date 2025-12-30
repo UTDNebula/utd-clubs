@@ -339,8 +339,7 @@ export const clubRouter = createTRPCRouter({
       try {
         const bySlug = await ctx.db.query.club.findFirst({
           where: (club) =>
-            // and(eq(club.slug, slug), eq(club.approved, 'approved')),
-            eq(club.slug, slug),
+            and(eq(club.slug, slug), eq(club.approved, 'approved')),
           with: {
             contacts: {
               orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
