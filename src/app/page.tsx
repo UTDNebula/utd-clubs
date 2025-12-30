@@ -8,12 +8,14 @@ import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import Sidebar from '@src/components/nav/Sidebar';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
+import { AllTags } from '@src/components/AllTags';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
 const Home = async () => {
   const tags = await api.club.topTags();
+  const allTags = await api.club.distinctTags();
 
   return (
     <SearchStoreProvider>
@@ -101,6 +103,13 @@ const Home = async () => {
                     className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
                   />
                 ))}
+              </div>
+              <div className="pointer-events-auto justify-center mt-6">
+                <AllTags 
+                    name="All Tags" 
+                    className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
+                    options={allTags}
+                  />
               </div>
             </div>
           </section>
