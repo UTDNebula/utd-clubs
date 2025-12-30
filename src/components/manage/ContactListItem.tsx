@@ -12,6 +12,7 @@ type FormData = z.infer<typeof editClubContactSchema>;
 type ContactListItemProps = {
   index: number;
   removeItem: (index: number) => void;
+  onReorder?: () => void;
 };
 
 const ContactListItem = withForm({
@@ -25,8 +26,9 @@ const ContactListItem = withForm({
     removeItem: (index: number) => {
       console.log(index);
     },
+    onReorder: () => {},
   } as ContactListItemProps,
-  render: function Render({ form, index, removeItem }) {
+  render: function Render({ form, index, removeItem, onReorder }) {
     const handleRemove = () => {
       removeItem(index);
       const current = form.getFieldValue('contacts') as
@@ -90,9 +92,10 @@ const ContactListItem = withForm({
             <div className="flex flex-col gap-1">
               <Tooltip title="Move up" placement="left">
                 <IconButton
-                  onClick={() =>
-                    form.moveFieldValues('contacts', index, index - 1)
-                  }
+                  onClick={() => {
+                    form.moveFieldValues('contacts', index, index - 1);
+                    onReorder?.();
+                  }}
                   disabled={index === 0}
                   size="small"
                   className="p-0"
@@ -102,9 +105,10 @@ const ContactListItem = withForm({
               </Tooltip>
               <Tooltip title="Move down" placement="left">
                 <IconButton
-                  onClick={() =>
-                    form.moveFieldValues('contacts', index, index + 1)
-                  }
+                  onClick={() => {
+                    form.moveFieldValues('contacts', index, index + 1);
+                    onReorder?.();
+                  }}
                   disabled={index === form.getFieldValue('contacts').length - 1}
                   size="small"
                   className="p-0"

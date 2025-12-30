@@ -120,6 +120,13 @@
       "when": 1765938072382,
       "tag": "20251217022112_peaceful_nighthawk",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1767057050272,
+      "tag": "20251230011050_stormy_hercules",
+      "breakpoints": true
     }
   ]
 }

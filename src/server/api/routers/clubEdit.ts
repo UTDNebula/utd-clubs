@@ -37,8 +37,9 @@ async function isUserPresident(userId: string, clubId: string) {
 const editContactSchema = z.object({
   clubId: z.string(),
   deleted: selectContact.shape.platform.array(),
-  modified: selectContact.array(),
-  created: selectContact.omit({ clubId: true }).array(),
+  modified: selectContact.omit({ displayOrder: true }).array(),
+  created: selectContact.omit({ clubId: true, displayOrder: true }).array(),
+  order: selectContact.shape.platform.array().optional(),
 });
 
 export const editCollaboratorSchema = z.object({
@@ -153,10 +154,13 @@ export const clubEditRouter = createTRPCRouter({
               clubId: input.clubId,
               platform: contact.platform,
               url: contact.url,
+              // displayOrder: -1, // TODO: Calculate this value
             })),
           )
           .onConflictDoNothing();
       }
+
+      console.log('Received order: ', input.order);
 
       // Updated at
       await ctx.db
@@ -326,6 +330,7 @@ export const clubEditRouter = createTRPCRouter({
             clubId: input.clubId,
             name: officer.name,
             position: officer.position,
+            // displayOrder: -1, // TODO: Calculate this value
           })),
         );
       }

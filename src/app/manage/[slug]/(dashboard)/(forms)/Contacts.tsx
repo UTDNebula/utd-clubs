@@ -49,6 +49,12 @@ const Contacts = ({ club }: ContactsProps) => {
       // Separate created vs modified
       const created: FormData['contacts'] = [];
       const modified: ContactWithId[] = [];
+      const order: FormData['contacts'][number]['platform'][] = [];
+
+      console.log('isReordered', isReordered);
+
+      // Extra check for if user reorders, makes a change, then undoes reorder
+      let hasReorder = false;
 
       value.contacts.forEach((contact, index) => {
         // If it has no ID, it's created
@@ -63,14 +69,26 @@ const Contacts = ({ club }: ContactsProps) => {
         if (isDirty) {
           modified.push(contact);
         }
+
+        if (
+          isReordered &&
+          contact.platform !== defaultValues.contacts[index]?.platform
+        ) {
+          hasReorder = true;
+        }
+
+        order.push(contact.platform);
       });
+
       const updated = await editContacts.mutateAsync({
         clubId: club.id,
         deleted: deletedIds,
         modified: modified,
         created: created,
+        order: hasReorder ? order : undefined,
       });
       setDeletedIds([]);
+      setIsReordered(false);
       const newContacts = typedDefaultValues(updated);
       setDefaultValues({ contacts: newContacts });
       formApi.reset({ contacts: newContacts });
@@ -91,6 +109,9 @@ const Contacts = ({ club }: ContactsProps) => {
     }
   };
 
+  // Flag for if user presses a reorder button
+  const [isReordered, setIsReordered] = useState(false);
+
   const currentContacts =
     useStore(form.store, (state) => state.values.contacts) || [];
   const available = startContacts.filter(
@@ -110,28 +131,13 @@ const Contacts = ({ club }: ContactsProps) => {
           {(field) => (
             <div className="flex flex-col gap-2 max-w-full">
               {field.state.value.map((value, index) => (
-                <>
-                  <ContactListItem
-                    key={value.platform}
-                    index={index}
-                    form={form}
-                    removeItem={removeItem}
-                  />
-                  {/* <div>
-                    <Button
-                      onClick={() => field.moveValue(index, index - 1)}
-                      disabled={index === 0}
-                    >
-                      Move up
-                    </Button>
-                    <Button
-                      onClick={() => field.moveValue(index, index + 1)}
-                      disabled={index === field.state.value.length - 1}
-                    >
-                      Move down
-                    </Button>
-                  </div> */}
-                </>
+                <ContactListItem
+                  key={value.platform}
+                  index={index}
+                  form={form}
+                  removeItem={removeItem}
+                  onReorder={() => setIsReordered(true)}
+                />
               ))}
               {available.length > 0 && (
                 <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors rounded-lg">
@@ -165,6 +171,7 @@ const Contacts = ({ club }: ContactsProps) => {
             <form.FormResetButton
               onClick={() => {
                 setDeletedIds([]);
+                setIsReordered(false);
                 form.reset();
               }}
             />
