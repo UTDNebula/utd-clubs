@@ -21,9 +21,18 @@ type UserInfoProps = {
 type UserRoleEnum = (typeof roleEnum.enumValues)[number];
 
 const UserRoleOptions: SelectOption<UserRoleEnum>[] = [
-  { value: 'Student' },
-  { value: 'Student Organizer' },
-  { value: 'Administrator' },
+  {
+    value: 'Student',
+    label: 'Student',
+  },
+  {
+    value: 'Student Organizer',
+    label: 'Organizer',
+  },
+  {
+    value: 'Administrator',
+    label: 'Admin',
+  },
 ];
 
 export default function UserInfo({ clubs, user }: UserInfoProps) {
@@ -96,8 +105,25 @@ export default function UserInfo({ clubs, user }: UserInfoProps) {
           </div>
           <div className="flex flex-wrap gap-4">
             <form.AppField name="year">
-              {(field) => <field.TextField label="Class of" />}
+              {(field) => (
+                <field.Autocomplete
+                  freeSolo
+                  label="Class of"
+                  options={[
+                    'Freshman',
+                    'Sophomore',
+                    'Junior',
+                    'Senior',
+                    'Grad Student',
+                  ]}
+                />
+              )}
             </form.AppField>
+            {/* <form.AppField name="role">
+              {(field) => (
+                <field.Autocomplete label="Role" options={UserRoleOptions} />
+              )}
+            </form.AppField> */}
             <form.AppField name="role">
               {(field) => (
                 <field.Select label="Role" options={UserRoleOptions} disabled />
