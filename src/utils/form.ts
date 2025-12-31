@@ -14,7 +14,7 @@ export const { useAppForm, withForm } = createFormHook({
   // We'll learn more about these options later
   fieldComponents: {},
   formComponents: {
-    FormResetButton,
-    FormSubmitButton,
+    ResetButton: FormResetButton,
+    SubmitButton: FormSubmitButton,
   },
 });

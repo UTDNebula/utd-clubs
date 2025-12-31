@@ -127,10 +127,10 @@ const CreateClubForm = () => {
         </div>
         <div className="flex flex-wrap justify-end items-center gap-2">
           <form.AppForm>
-            <form.FormResetButton />
+            <form.ResetButton />
           </form.AppForm>
           <form.AppForm>
-            <form.FormSubmitButton />
+            <form.SubmitButton />
           </form.AppForm>
         </div>
       </Panel>
