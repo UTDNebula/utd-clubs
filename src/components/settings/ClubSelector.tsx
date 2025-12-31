@@ -4,11 +4,11 @@ import {
   type Control,
   type UseFormRegister,
 } from 'react-hook-form';
-import { type SettingSchema } from '@src/components/settings/FormCard';
+import { AccountSettingsSchema } from '@src/utils/formSchemas';
 
 type Props = {
-  register: UseFormRegister<SettingSchema>;
-  control: Control<SettingSchema>;
+  register: UseFormRegister<AccountSettingsSchema>;
+  control: Control<AccountSettingsSchema>;
 };
 
 export default function ClubSelector({ control }: Props) {

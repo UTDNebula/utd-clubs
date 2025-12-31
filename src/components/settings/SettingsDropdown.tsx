@@ -1,13 +1,13 @@
+import { AccountSettingsSchema } from '@src/utils/formSchemas';
 import { type UseFormRegister } from 'react-hook-form';
-import { type SettingSchema } from './FormCard';
 
 type SettingsDropdownProps = {
   options: string[];
   label: string;
   disabled?: boolean;
   defaultValue: string;
-  name: keyof SettingSchema;
-  register: UseFormRegister<SettingSchema>;
+  name: keyof AccountSettingsSchema;
+  register: UseFormRegister<AccountSettingsSchema>;
 };
 
 const SettingsDropdown = ({

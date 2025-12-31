@@ -1,3 +1,5 @@
+'use client';
+
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button } from '@mui/material';
 import { useRouter } from 'next/navigation';

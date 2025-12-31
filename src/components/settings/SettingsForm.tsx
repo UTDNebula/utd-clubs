@@ -4,7 +4,10 @@ import { eq } from 'drizzle-orm';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { userMetadata } from '@src/server/db/schema/users';
-import FormCard from './FormCard';
+import Clubs from './forms/Clubs';
+import DeleteAccount from './forms/DeleteAccount';
+import UserInfo from './forms/UserInfo';
+import SettingsHeader from './SettingsHeader';
 
 async function SettingsForm({
   session,
@@ -29,14 +32,11 @@ async function SettingsForm({
   const formatted = clubs.map(({ club }) => club);
 
   return (
-    <div className="m-auto w-full rounded-xl p-4">
-      <div>
-        <div className="h-24 rounded-t-3xl bg-linear-to-r from-[#5A49F7] from-[4.36%] via-[#9403D8] via-[49.74%] to-[#FD9365] p-6" />
-        <div className="bg-white p-6">
-          <h1 className="font-display py-2 text-3xl font-semibold">Settings</h1>
-          <FormCard user={userData} clubs={formatted} />
-        </div>
-      </div>
+    <div className="flex flex-col gap-8 w-full max-w-6xl">
+      <SettingsHeader />
+      <UserInfo user={userData} clubs={formatted} />
+      <Clubs clubs={formatted} />
+      <DeleteAccount />
     </div>
   );
 }

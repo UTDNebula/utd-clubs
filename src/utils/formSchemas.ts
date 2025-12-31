@@ -1,5 +1,18 @@
 import { z } from 'zod';
+import { selectClub } from '@src/server/db/models';
 import { contactSchema } from './contact';
+
+export const accountSettingsSchema = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  major: z.string().min(1),
+  minor: z.string().nullable(),
+  year: z.enum(['Freshman', 'Sophomore', 'Junior', 'Senior', 'Grad Student']),
+  role: z.enum(['Student', 'Student Organizer', 'Administrator']),
+  clubs: selectClub.pick({ name: true, id: true, profileImage: true }).array(),
+});
+
+export type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
 
 export const createClubSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
