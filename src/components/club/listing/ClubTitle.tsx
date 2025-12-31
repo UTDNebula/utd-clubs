@@ -38,14 +38,7 @@ const ClubTitle = async ({
               <Chip
                 label={tag}
                 key={tag}
-                className="font-semibold"
-                sx={{
-                  backgroundColor: 'var(--color-cornflower-100)',
-                  color: 'var(--color-cornflower-600)',
-                  '&:hover': {
-                    backgroundColor: 'var(--color-cornflower-200)',
-                  },
-                }}
+                className="font-semibold bg-cornflower-100 text-cornflower-600 hover:bg-cornflower-200"
               />
             ))}
           </div>
