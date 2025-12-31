@@ -11,14 +11,7 @@ export default function ClubContactCard({ club }: ClubContactCardProps) {
     <BaseCard className="flex flex-col bg-neutral-50 shadow-sm p-5 gap-2">
       <h2 className="text-xl font-bold text-slate-900 mb-2">Contact</h2>
       {club.contacts && club.contacts.length > 0 ? (
-        club.contacts.map((contact) => (
-          <div
-            key={contact.platform}
-            className="bg-white shadow-sm rounded-4xl hover:bg-gray-100 transition-colors duration-200"
-          >
-            <ContactButton contact={contact} />
-          </div>
-        ))
+        club.contacts.map((contact) => <ContactButton contact={contact} />)
       ) : (
         <span className="text-slate-500 text-sm">No contact info</span>
       )}

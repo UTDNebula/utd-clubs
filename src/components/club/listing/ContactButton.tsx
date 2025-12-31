@@ -18,7 +18,7 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
           contact.platform === 'email' ? `mailto:${contact.url}` : contact.url
         }
         target="_blank"
-        className="inline-block w-full"
+        className="inline-block w-full bg-white shadow-sm rounded-4xl hover:bg-gray-100 transition-colors duration-200"
       >
         <IconButton
           className="group"
