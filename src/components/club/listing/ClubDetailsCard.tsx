@@ -18,15 +18,15 @@ export default function ClubDetailsCard({
       club.updatedAt ? (
         <>
           {club.numMembers && (
-            <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
+            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
               <span className="font-medium text-slate-500">Members</span>
-              <span className="text-slate-500">{club.numMembers}</span>
+              <span className="ml-auto text-slate-500">{club.numMembers}</span>
             </div>
           )}
           {club.foundingDate && (
-            <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
+            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
               <span className="font-medium text-slate-500">Founded</span>
-              <span className="text-slate-50club0">
+              <span className="ml-auto text-slate-500">
                 {club.foundingDate.toLocaleDateString('en-US', {
                   month: 'short',
                   year: 'numeric',
@@ -35,9 +35,9 @@ export default function ClubDetailsCard({
             </div>
           )}
           {lastEventDate && (
-            <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
+            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
               <span className="font-medium text-slate-500">Last Event</span>
-              <span className="text-slate-500">
+              <span className="ml-auto text-slate-500">
                 {lastEventDate.toLocaleDateString('en-US', {
                   month: 'short',
                   year: 'numeric',
@@ -46,9 +46,9 @@ export default function ClubDetailsCard({
             </div>
           )}
           {club.updatedAt && (
-            <div className="flex flex-row w-full justify-between py-1 border-b border-slate-100 last:border-0">
+            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
               <span className="font-medium text-slate-500">Updated</span>
-              <span className="text-slate-500">
+              <span className="ml-auto text-slate-500">
                 {club.updatedAt.toLocaleDateString('en-US', {
                   month: 'short',
                   year: 'numeric',
