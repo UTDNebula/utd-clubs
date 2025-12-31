@@ -2,13 +2,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
+import { AllTags } from '@src/components/AllTags';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
 import ClubMatchButton from '@src/components/header/ClubMatchButton';
 import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
 import Sidebar from '@src/components/nav/Sidebar';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
-import { AllTags } from '@src/components/AllTags';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
@@ -105,11 +105,11 @@ const Home = async () => {
                 ))}
               </div>
               <div className="pointer-events-auto justify-center mt-6">
-                <AllTags 
-                    name="All Tags" 
-                    className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
-                    options={allTags}
-                  />
+                <AllTags
+                  name="All Tags"
+                  className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
+                  options={allTags}
+                />
               </div>
             </div>
           </section>
