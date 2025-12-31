@@ -11,7 +11,7 @@ type ClubOfficerProps = {
 };
 const ClubOfficer = ({ officer }: ClubOfficerProps) => {
   return (
-    <div className="flex flex-row items-center gap-4 py-3" key={officer.id}>
+    <div className="flex flex-row items-center gap-4 py-1" key={officer.id}>
       <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-slate-100">
         {officer.image ? (
           <Image
