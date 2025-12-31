@@ -3,6 +3,7 @@ import {
   FormResetButton,
   FormSubmitButton,
 } from '@src/components/form/FormButtons';
+import FormSelect from '@src/components/form/FormSelect';
 import FormTextField from '@src/components/form/FormTextField';
 
 // export useFieldContext for use in your custom components
@@ -15,6 +16,7 @@ export const { useAppForm, withForm } = createFormHook({
   // We'll learn more about these options later
   fieldComponents: {
     TextField: FormTextField,
+    Select: FormSelect,
   },
   formComponents: {
     ResetButton: FormResetButton,

@@ -1,10 +1,11 @@
 'use client';
 
-import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { SelectOption } from '@src/components/form/FormSelect';
 import Panel from '@src/components/form/Panel';
 import { SelectUserMetadata, type SelectClub } from '@src/server/db/models';
+import { roleEnum } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import {
@@ -16,6 +17,14 @@ type UserInfoProps = {
   clubs: SelectClub[];
   user: SelectUserMetadata;
 };
+
+type UserRoleEnum = (typeof roleEnum.enumValues)[number];
+
+const UserRoleOptions: SelectOption<UserRoleEnum>[] = [
+  { value: 'Student' },
+  { value: 'Student Organizer' },
+  { value: 'Administrator' },
+];
 
 export default function UserInfo({ clubs, user }: UserInfoProps) {
   const router = useRouter();
@@ -90,7 +99,9 @@ export default function UserInfo({ clubs, user }: UserInfoProps) {
               {(field) => <field.TextField label="Class of" />}
             </form.AppField>
             <form.AppField name="role">
-              {(field) => <field.TextField label="Role" />}
+              {(field) => (
+                <field.Select label="Role" options={UserRoleOptions} disabled />
+              )}
             </form.AppField>
           </div>
         </div>

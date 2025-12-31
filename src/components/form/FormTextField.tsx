@@ -8,7 +8,7 @@ export default function FormTextField({ label }: { label: string }) {
       value={field.state.value}
       onBlur={field.handleBlur}
       onChange={(e) => field.handleChange(e.target.value)}
-      className="grow-100 [&>.MuiInputBase-root]:bg-white"
+      className="[&>.MuiInputBase-root]:bg-white"
       size="small"
       error={!field.state.meta.isValid}
       helperText={
