@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import Link from 'next/link';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { authClient } from '@src/utils/auth-client';
 import { useRegisterModal } from '../account/RegisterModalProvider';
