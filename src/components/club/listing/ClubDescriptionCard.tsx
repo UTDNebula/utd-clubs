@@ -10,7 +10,7 @@ export default function ClubDescriptionCard({
   club,
 }: ClubDescriptionCardProps) {
   return (
-    <BaseCard className="bg-neutral-50 border-slate-200 shadow-sm p-10 grow text-slate-700">
+    <BaseCard className="bg-neutral-50 shadow-sm p-10 grow text-slate-700">
       <ExpandableMarkdownText
         text={
           club.description.length > 0 ? club.description : '**Check us out!**'

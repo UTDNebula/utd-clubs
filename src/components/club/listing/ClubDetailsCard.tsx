@@ -10,7 +10,7 @@ export default function ClubDetailsCard({
   lastEventDate,
 }: ClubDetailsCardProps) {
   return (
-    <BaseCard className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-5 gap-2 text-sm text-slate-600">
+    <BaseCard className="flex flex-col bg-neutral-50 shadow-sm p-5 gap-2 text-sm text-slate-600">
       <h2 className="text-xl font-bold text-slate-900 mb-2">Details</h2>
       {club.numMembers ||
       club.foundingDate ||

@@ -8,7 +8,7 @@ type ClubContactCardProps = {
 
 export default function ClubContactCard({ club }: ClubContactCardProps) {
   return (
-    <BaseCard className="flex flex-col bg-neutral-50 border-slate-200 shadow-sm p-5 gap-2">
+    <BaseCard className="flex flex-col bg-neutral-50 shadow-sm p-5 gap-2">
       <h2 className="text-xl font-bold text-slate-900 mb-2">Contact</h2>
       {club.contacts && club.contacts.length > 0 ? (
         club.contacts.map((contact) => (

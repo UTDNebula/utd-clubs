@@ -56,7 +56,7 @@ export default function OfficerList({
   return (
     <div
       id="officer-card-wrapper"
-      className="flex flex-col gap-2 bg-neutral-50 border-slate-200 shadow-sm p-6 rounded-lg transition-all duration-500 overflow-hidden"
+      className="flex flex-col gap-2 bg-neutral-50 shadow-sm p-6 rounded-lg transition-all duration-500 overflow-hidden"
       style={containerStyle}
     >
       <h2 className="text-xl font-bold text-slate-900 mb-2">Officers</h2>
