@@ -20,7 +20,6 @@ const ExpandableMarkdownText = ({
 
     const content = container.firstElementChild as HTMLElement;
     if (content) {
-      console.log(content.scrollHeight, content.offsetHeight);
       setIsOverflowing(content.scrollHeight > content.offsetHeight); // scrollHeight is the total height, offsetHeight is the visible height
     }
   }, [text, maxLines]);
