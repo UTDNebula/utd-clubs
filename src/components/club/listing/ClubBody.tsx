@@ -25,7 +25,7 @@ const ClubBody = async ({
   return (
     <section
       id="club-body"
-      className="w-full rounded-lg grid grid-cols-1 md:grid-cols-5 gap-5 items-start mt-8"
+      className="w-full rounded-lg grid grid-cols-1 lg:grid-cols-5 gap-5 items-start mt-8"
     >
       <div
         id="club-content-left"
