@@ -119,16 +119,16 @@ export default function UserInfo({ clubs, user }: UserInfoProps) {
                 />
               )}
             </form.AppField>
-            {/* <form.AppField name="role">
+            <form.AppField name="role">
               {(field) => (
                 <field.Autocomplete label="Role" options={UserRoleOptions} />
               )}
-            </form.AppField> */}
-            <form.AppField name="role">
+            </form.AppField>
+            {/* <form.AppField name="role">
               {(field) => (
                 <field.Select label="Role" options={UserRoleOptions} disabled />
               )}
-            </form.AppField>
+            </form.AppField> */}
           </div>
         </div>
         <div className="flex flex-wrap justify-end items-center gap-2">

@@ -1,30 +1,69 @@
 import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useFieldContext } from '@src/utils/form';
 import { SelectOption } from './FormSelect';
 import { StyledTextField } from './FormTextField';
 
-type FormAutocompletePropsBase = {
-  label: string;
-  options: SelectOption[];
-  freeSolo?: boolean;
+type FormAutocompletePropsBase<
+  Value,
+  Multiple extends boolean | undefined,
+  DisableClearable extends boolean | undefined,
+  FreeSolo extends boolean | undefined,
+> = {
+  label: ReactNode;
+  options: SelectOption<Value>[];
   multiple?: never; // Figure out how to implement this later
-  disableClearable?: boolean;
+  disableClearable?: DisableClearable;
+  freeSolo?: FreeSolo;
 };
 
-// Omit<
-//   AutocompleteProps<string, undefined, undefined, undefined>,
-//   keyof FormAutocompletePropsBase
-// > &
-type FormAutocompleteProps = FormAutocompletePropsBase;
+// interface FormAutocompleteProps<
+//   Value,
+//   Multiple extends boolean | undefined,
+//   DisableClearable extends boolean | undefined,
+//   FreeSolo extends boolean | undefined,
+// > extends FormAutocompletePropsBase<
+//       Value,
+//       Multiple,
+//       DisableClearable,
+//       FreeSolo
+//     >,
+//     Omit<
+//       AutocompleteProps<Value, Multiple, DisableClearable, FreeSolo>,
+//       | keyof FormAutocompletePropsBase<
+//           Value,
+//           Multiple,
+//           DisableClearable,
+//           FreeSolo
+//         >
+//       | 'renderInput'
+//     > {}
 
-export default function FormAutocomplete({
+interface FormAutocompleteProps<
+  Value,
+  Multiple extends boolean | undefined,
+  DisableClearable extends boolean | undefined,
+  FreeSolo extends boolean | undefined,
+> {
+  label: ReactNode;
+  options: SelectOption<Value>[];
+  multiple?: never; // Figure out how to implement this later
+  disableClearable?: DisableClearable;
+  freeSolo?: FreeSolo;
+}
+
+export default function FormAutocomplete<
+  Value,
+  Multiple extends boolean | undefined = false,
+  DisableClearable extends boolean | undefined = false,
+  FreeSolo extends boolean | undefined = false,
+>({
   label,
   options,
   freeSolo,
   ...props
-}: FormAutocompleteProps) {
+}: FormAutocompleteProps<Value, Multiple, DisableClearable, FreeSolo>) {
   const field = useFieldContext<string>();
   const normalizedOptions = options?.map((option) => {
     if (typeof option === 'string') {
@@ -43,66 +82,70 @@ export default function FormAutocomplete({
   );
 
   return (
-    <div>
-      <Autocomplete
-        // disableClearable
-        className="w-64"
-        size="small"
-        freeSolo={freeSolo}
-        onBlur={field.handleBlur}
-        value={selectedObject}
-        onChange={(_e, newValue) => {
+    <Autocomplete
+      // disableClearable
+      className="w-64"
+      size="small"
+      freeSolo={freeSolo}
+      onBlur={field.handleBlur}
+      value={selectedObject}
+      onChange={(_e, newValue) => {
+        if (!freeSolo) {
           if (typeof newValue === 'string') {
-            if (!freeSolo) field.handleChange(newValue);
+            field.handleChange(newValue);
+          } else if (typeof newValue?.value === 'string') {
+            field.handleChange(newValue?.value ?? newValue?.label ?? '');
           } else {
-            if (!freeSolo)
-              field.handleChange(newValue?.value ?? newValue?.label ?? '');
+            field.handleChange('Unknown value');
           }
-        }}
-        inputValue={freeSolo ? field.state.value : undefined}
-        onInputChange={(_e, newValue) => {
-          if (freeSolo) field.handleChange(newValue);
-        }}
-        options={normalizedOptions}
-        isOptionEqualToValue={(option, value) =>
-          option.value === value.value && option.label === value.label
         }
-        getOptionLabel={(option) => {
-          if (typeof option === 'string') {
-            return option;
-          } else {
-            return option.label ?? option.value ?? 'Unknown option';
-          }
-        }}
-        renderOption={(props, option) => {
-          const { key, ...optionProps } = props;
+      }}
+      inputValue={freeSolo ? field.state.value : undefined}
+      onInputChange={(_e, newValue) => {
+        if (freeSolo) field.handleChange(newValue);
+      }}
+      options={normalizedOptions}
+      isOptionEqualToValue={(option, value) =>
+        option.value === value.value && option.label === value.label
+      }
+      getOptionLabel={(option) => {
+        if (typeof option === 'string') {
+          return option;
+        } else {
           return (
-            <Box
-              key={key}
-              component="li"
-              sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-              {...optionProps}
-            >
-              {option.label ?? option.value}
-            </Box>
+            option.label ??
+            (typeof option.value === 'string' ? option.value : null) ??
+            'Unknown option label'
           );
-        }}
-        renderInput={(params) => (
-          <StyledTextField
-            {...params}
-            label={label}
-            error={!field.state.meta.isValid}
-            helperText={
-              !field.state.meta.isValid
-                ? field.state.meta.errors
-                    .map((err) => err?.message)
-                    .join('. ') + '.'
-                : undefined
-            }
-          />
-        )}
-        {...props}
-      />
-    </div>
+        }
+      }}
+      renderOption={(props, option) => {
+        const { key, ...optionProps } = props;
+        return (
+          <Box
+            key={key}
+            component="li"
+            sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+            {...optionProps}
+          >
+            {option.label ?? String(option.value)}
+          </Box>
+        );
+      }}
+      renderInput={(params) => (
+        <StyledTextField
+          {...params}
+          label={label}
+          error={!field.state.meta.isValid}
+          helperText={
+            !field.state.meta.isValid
+              ? field.state.meta.errors.map((err) => err?.message).join('. ') +
+                '.'
+              : undefined
+          }
+        />
+      )}
+      {...props}
+    />
   );
 }
