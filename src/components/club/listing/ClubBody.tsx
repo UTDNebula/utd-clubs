@@ -25,20 +25,14 @@ const ClubBody = async ({
   return (
     <section
       id="club-body"
-      className="w-full rounded-lg grid grid-cols-1 lg:grid-cols-5 gap-5 items-start mt-8"
+      className="w-full rounded-lg grid grid-cols-1 md:grid-cols-[256px_1fr] gap-4 items-start mt-8"
     >
-      <div
-        id="club-content-left"
-        className="md:col-span-1 flex flex-col gap-4 h-full"
-      >
+      <div id="club-content-left" className="flex flex-col gap-4 h-full">
         <ClubDetailsCard club={club} lastEventDate={lastEventDate} />
         <ClubContactCard club={club} />
         <OfficerList officers={club.officers} />
       </div>
-      <div
-        id="club-content-right"
-        className="md:col-span-4 flex flex-col gap-4"
-      >
+      <div id="club-content-right" className="flex flex-col gap-4">
         <ClubDescriptionCard club={club} />
         <ClubUpcomingEventsCard
           club={club}
