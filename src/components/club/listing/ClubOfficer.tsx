@@ -1,13 +1,8 @@
 import Image from 'next/image';
+import { SelectOfficer } from '@src/server/db/models';
 
 type ClubOfficerProps = {
-  officer: {
-    id: string;
-    name: string;
-    clubId: string;
-    position: string;
-    image?: string;
-  };
+  officer: SelectOfficer & { image?: string };
 };
 const ClubOfficer = ({ officer }: ClubOfficerProps) => {
   return (
