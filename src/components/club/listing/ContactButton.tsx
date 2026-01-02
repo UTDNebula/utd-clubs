@@ -33,15 +33,17 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
           contact.platform === 'email' ? `mailto:${contact.url}` : contact.url
         }
         target="_blank"
-        className="inline-block w-full bg-white shadow-sm rounded-4xl hover:bg-gray-100 transition-colors duration-200"
+        className="flex items-center justify-start w-full bg-white shadow-sm rounded-4xl hover:bg-gray-100 transition-colors duration-200 pr-2"
       >
         <IconButton
-          className="group hover:bg-inherit"
+          className="group hover:bg-inherit flex-shrink-0" 
           size="medium"
         >
           {logo[contact.platform]}
         </IconButton>
-        <span>{contactDisplay(contact)}</span>
+        <span className='text-sm truncate min-w-0'>
+          {contactDisplay(contact)}
+        </span>
       </Link>
     </Tooltip>
   );
