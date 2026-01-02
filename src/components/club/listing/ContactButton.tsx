@@ -6,16 +6,44 @@ import { contactNames } from '@src/server/db/schema/contacts';
 
 function contactDisplay(contact: SelectContact) {
   switch (contact.platform) {
-    case "discord":   return contact.url.split('://')[1]?.replace("www.", "").replace(/\/+$/, "") ?? contact.platform
-    case "instagram": return contact.url.indexOf("instagram.com/") >= 0 ? "@" + contact.url.split("instagram.com/")[1]!.replace(/\/+$/, "") : contact.platform;
-    case "website":   return contact.url.replace("http://", "").replace("https://", "").replace("www.", "").replace(/\/+$/, "");
-    case "email":     return contact.url
-    case "twitter":   return contact.url.indexOf(".com/") > 0 ? "@" + contact.url.split(".com/")[1]!.replace(/\/+$/, "") : contact.platform;
-    case "facebook":  return contact.url.indexOf(".com/") > 0 ? "@" + contact.url.split(".com/")[1]!.replace(/\/+$/, "") : contact.platform;
-    case "youtube":   return contact.url.indexOf("youtube.com/@") >= 0 ? contact.url.split("youtube.com/")[1]!.replace(/\/+$/, "") : contact.platform;
-    case "twitch":    return contact.url.split("twitch.tv/")[1]?.replace(/\/+$/, "") ?? contact.platform;
-    case "linkedIn":  return contact.platform;
-    default: return contact.platform;
+    case 'discord':
+      return (
+        contact.url.split('://')[1]?.replace('www.', '').replace(/\/+$/, '') ??
+        contact.platform
+      );
+    case 'instagram':
+      return contact.url.indexOf('instagram.com/') >= 0
+        ? '@' + contact.url.split('instagram.com/')[1]!.replace(/\/+$/, '')
+        : contact.platform;
+    case 'website':
+      return contact.url
+        .replace('http://', '')
+        .replace('https://', '')
+        .replace('www.', '')
+        .replace(/\/+$/, '');
+    case 'email':
+      return contact.url;
+    case 'twitter':
+      return contact.url.indexOf('.com/') > 0
+        ? '@' + contact.url.split('.com/')[1]!.replace(/\/+$/, '')
+        : contact.platform;
+    case 'facebook':
+      return contact.url.indexOf('.com/') > 0
+        ? '@' + contact.url.split('.com/')[1]!.replace(/\/+$/, '')
+        : contact.platform;
+    case 'youtube':
+      return contact.url.indexOf('youtube.com/@') >= 0
+        ? contact.url.split('youtube.com/')[1]!.replace(/\/+$/, '')
+        : contact.platform;
+    case 'twitch':
+      return (
+        contact.url.split('twitch.tv/')[1]?.replace(/\/+$/, '') ??
+        contact.platform
+      );
+    case 'linkedIn':
+      return contact.platform;
+    default:
+      return contact.platform;
   }
 }
 
@@ -36,12 +64,12 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
         className="flex items-center justify-start w-full bg-white shadow-sm rounded-4xl hover:bg-gray-100 transition-colors duration-200 pr-2"
       >
         <IconButton
-          className="group hover:bg-inherit flex-shrink-0" 
+          className="group hover:bg-inherit flex-shrink-0"
           size="medium"
         >
           {logo[contact.platform]}
         </IconButton>
-        <span className='text-sm truncate min-w-0'>
+        <span className="text-sm truncate min-w-0">
           {contactDisplay(contact)}
         </span>
       </Link>
