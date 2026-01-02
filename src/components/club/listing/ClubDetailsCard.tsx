@@ -20,7 +20,7 @@ export default function ClubDetailsCard({
           {club.numMembers && (
             <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
               <span className="font-medium text-slate-500">Members</span>
-              <span className="ml-auto text-slate-500">{club.numMembers}</span>
+              <span className="ml-auto text-slate-500">{`${club.numMembers} ${club.numMembers !== 1 ? 'people' : 'person'}`}</span>
             </div>
           )}
           {club.foundingDate && (
