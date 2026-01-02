@@ -1,13 +1,13 @@
 'use client';
 
 import { useLayoutEffect, useRef, useState } from 'react';
-import { RouterOutputs } from '@src/trpc/shared';
+import { SelectOfficer } from '@src/server/db/models';
 import ClubOfficer from './ClubOfficer';
 
 export default function OfficerList({
   officers,
 }: {
-  officers: NonNullable<RouterOutputs['club']['getDirectoryInfo']>['officers'];
+  officers: SelectOfficer[];
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [maxHeight, setMaxHeight] = useState<number | null>(null);
