@@ -15,7 +15,7 @@ const ClubOfficer = ({ officer }: ClubOfficerProps) => {
         {officer.name.charAt(0)}
       </Avatar>
       <div className="flex flex-col min-w-0">
-        <p className="text-sm font-semibold text-slate-700 truncate">
+        <p className="text-sm font-semibold text-slate-700 break-words line-clamp-2">
           {officer.name}
         </p>
         <p className="text-sm break-words whitespace-normal text-slate-400 leading-tight">
