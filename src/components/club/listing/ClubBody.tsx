@@ -17,18 +17,15 @@ const ClubBody = async ({
   const events = await api.event.byClubId({
     clubId: club.id,
     sortByDate: true,
-    // currentTime: now,
+    currentTime: now,
   });
-  const upcomingEvents = events.filter((e) => e.endTime >= now);
-  const lastEventDate =
-    events.filter((e) => e.startTime <= now).reverse()[0]?.endTime ?? null;
   return (
     <section
       id="club-body"
       className="w-full rounded-lg grid grid-cols-1 md:grid-cols-[256px_1fr] gap-4 items-start"
     >
       <div id="club-content-left" className="flex flex-col gap-4 h-full">
-        <ClubDetailsCard club={club} lastEventDate={lastEventDate} />
+        <ClubDetailsCard club={club} lastEventDate={club.lastEventDate} />
         <ClubContactCard club={club} />
         <OfficerList officers={club.officers} />
       </div>
@@ -36,7 +33,7 @@ const ClubBody = async ({
         <ClubDescriptionCard club={club} />
         <ClubUpcomingEventsCard
           club={club}
-          upcomingEvents={upcomingEvents}
+          upcomingEvents={events}
           oneYearAgo={oneYearAgo}
         />
       </div>
