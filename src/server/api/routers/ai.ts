@@ -1,5 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
-import { eq } from 'drizzle-orm';
+import { and, eq, isNotNull } from 'drizzle-orm';
 import { club } from '@src/server/db/schema/club';
 import {
   userAiCache,
@@ -78,7 +78,7 @@ export const aiRouter = createTRPCRouter({
           .select()
           .from(club)
           .orderBy(club.name)
-          .where(eq(club.approved, 'approved'))
+          .where(and(eq(club.approved, 'approved'), isNotNull(club.updatedAt)))
       ).filter((club) => !joined?.clubs.find((c) => c.clubId == club.id)); // filter out clubs the user is in
 
       const prompt = `Analyze this student's preferences and recommend 9 organizations,
