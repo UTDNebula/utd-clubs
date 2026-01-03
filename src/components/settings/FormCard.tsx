@@ -8,9 +8,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import ClubSelector from '@src/components/settings/ClubSelector';
 import {
-  selectClub,
   SelectUserMetadata,
-  type SelectClub,
+  selectUserMetadataToClubsWithClub,
+  type SelectUserMetadataToClubsWithClub,
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import DeleteButton from './DeleteButton';
@@ -18,7 +18,7 @@ import SettingsDropdown from './SettingsDropdown';
 import SettingsInput from './SettingsInput';
 
 type Props = {
-  clubs: SelectClub[];
+  joinedClubs: SelectUserMetadataToClubsWithClub[];
   user: SelectUserMetadata;
 };
 
@@ -29,17 +29,17 @@ const settingsSchema = z.object({
   minor: z.string().nullable(),
   year: z.enum(['Freshman', 'Sophomore', 'Junior', 'Senior', 'Grad Student']),
   role: z.enum(['Student', 'Student Organizer', 'Administrator']),
-  clubs: selectClub.pick({ name: true, id: true, profileImage: true }).array(),
+  joinedClubs: selectUserMetadataToClubsWithClub.array(),
 });
 
 export type SettingSchema = z.infer<typeof settingsSchema>;
 
-export default function FormCard({ clubs, user }: Props) {
+export default function FormCard({ joinedClubs, user }: Props) {
   const router = useRouter();
   const { register, handleSubmit, control } = useForm<SettingSchema>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
-      clubs,
+      joinedClubs,
       firstName: user.firstName,
       lastName: user.lastName,
       major: user.major,
@@ -61,7 +61,7 @@ export default function FormCard({ clubs, user }: Props) {
     <form
       onSubmit={handleSubmit((data) => {
         mutate({
-          clubs: data.clubs.map((club) => club.id),
+          clubs: data.joinedClubs.map((joinedClub) => joinedClub.club.id),
           updateUser: {
             ...data,
           },

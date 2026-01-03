@@ -5,10 +5,7 @@ import { createContext } from 'react';
 import z from 'zod';
 import { AppRouter } from '@src/server/api/root';
 import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
-import {
-  SelectUserMetadataToClubsWithNonNullableUserMetadata,
-  SelectUserMetadataToClubsWithUserMetadata,
-} from '@src/server/db/models';
+import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
 import useMemberListDeletionState from './useMemberListDeletionState';
 import { MemberListAbilities } from './utils';
 
@@ -17,11 +14,12 @@ export interface MemberListContextType {
     | ReturnType<typeof useMemberListDeletionState>
     | undefined;
   memberListAbilities: MemberListAbilities;
+  expandTimestamps: boolean;
   contactEmailsVisible: boolean;
   showContactEmails: (visibility: boolean) => void;
   removeMembers:
     | UseMutationResult<
-        SelectUserMetadataToClubsWithNonNullableUserMetadata[],
+        SelectUserMetadataToClubsWithUserMetadata[],
         TRPCClientErrorLike<AppRouter>,
         z.infer<typeof removeMembersSchema>
       >
@@ -44,6 +42,7 @@ export const MemberListContext = createContext<MemberListContextType>({
     downloadCSV: true,
     viewAccountEmail: true,
   },
+  expandTimestamps: false,
   contactEmailsVisible: false,
   showContactEmails: () => {},
   removeMembers: undefined,
