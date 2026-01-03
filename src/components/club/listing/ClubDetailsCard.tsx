@@ -4,13 +4,18 @@ import { RouterOutputs } from '@src/trpc/shared';
 type ClubDetailsCardProps = {
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
   lastEventDate: Date | null;
+  id?: string;
 };
 export default function ClubDetailsCard({
   club,
   lastEventDate,
+  id,
 }: ClubDetailsCardProps) {
   return (
-    <BaseCard className="flex flex-col bg-neutral-50 shadow-sm p-5 gap-2 text-sm text-slate-600">
+    <BaseCard
+      className="flex flex-col bg-neutral-50 shadow-sm p-5 gap-2 text-sm text-slate-600"
+      id={id}
+    >
       <h2 className="text-xl font-bold text-slate-900 mb-2">Details</h2>
       {club.numMembers ||
       club.foundingDate ||

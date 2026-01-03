@@ -14,24 +14,31 @@ const ClubBody = async ({
   const now = new Date();
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(now.getFullYear() - 1);
+
   const events = await api.event.byClubId({
     clubId: club.id,
     sortByDate: true,
     currentTime: now,
   });
+
   return (
     <section
       id="club-body"
       className="w-full rounded-lg grid grid-cols-1 md:grid-cols-[256px_1fr] gap-4 items-start"
     >
       <div id="club-content-left" className="flex flex-col gap-4 h-full">
-        <ClubDetailsCard club={club} lastEventDate={club.lastEventDate} />
-        <ClubContactCard club={club} />
-        <OfficerList officers={club.officers} />
+        <ClubDetailsCard
+          id="details"
+          club={club}
+          lastEventDate={club.lastEventDate}
+        />
+        <ClubContactCard id="contact" club={club} />
+        <OfficerList id="officers" officers={club.officers} />
       </div>
       <div id="club-content-right" className="flex flex-col gap-4">
-        <ClubDescriptionCard club={club} />
+        <ClubDescriptionCard id="description" club={club} />
         <ClubUpcomingEventsCard
+          id="upcoming-events"
           club={club}
           upcomingEvents={events}
           oneYearAgo={oneYearAgo}

@@ -4,11 +4,15 @@ import ContactButton from './ContactButton';
 
 type ClubContactCardProps = {
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
+  id?: string;
 };
 
-export default function ClubContactCard({ club }: ClubContactCardProps) {
+export default function ClubContactCard({ club, id }: ClubContactCardProps) {
   return (
-    <BaseCard className="flex flex-col bg-neutral-50 shadow-sm p-5 gap-2">
+    <BaseCard
+      className="flex flex-col bg-neutral-50 shadow-sm p-5 gap-2"
+      id={id}
+    >
       <h2 className="text-xl font-bold text-slate-900 mb-2">Contact</h2>
       {club.contacts && club.contacts.length > 0 ? (
         club.contacts.map((contact) => (

@@ -6,8 +6,10 @@ import ClubOfficer from './ClubOfficer';
 
 export default function OfficerList({
   officers,
+  id,
 }: {
   officers: SelectOfficer[];
+  id?: string;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [maxHeight, setMaxHeight] = useState<number | null>(null);
@@ -21,7 +23,9 @@ export default function OfficerList({
 
     const updateHeight = () => {
       const rightSide = document.getElementById('club-content-right');
-      const officerContainer = document.getElementById('officer-card-wrapper'); // Finds the card wrapper
+      const officerContainer = document.getElementById(
+        id || 'officer-card-wrapper',
+      ); // Finds the card wrapper
 
       if (!rightSide || !officerContainer || !contentRef.current) return;
 
@@ -55,7 +59,7 @@ export default function OfficerList({
 
   return (
     <div
-      id="officer-card-wrapper"
+      id={id || 'officer-card-wrapper'}
       className="flex flex-col gap-2 bg-neutral-50 shadow-sm p-6 rounded-lg transition-all duration-500 overflow-hidden"
       style={containerStyle}
     >
