@@ -81,7 +81,7 @@ export default function OfficerList({
         <div className="mt-2 pt-2 border-t border-slate-300 z-10">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full text-sm font-semibold text-royal hover:text-cornflower-800 text-center"
+            className="w-full text-sm font-semibold text-royal hover:text-cornflower-800 hover:underline text-center"
           >
             {isExpanded ? 'Show less' : 'See all officers'}
           </button>
