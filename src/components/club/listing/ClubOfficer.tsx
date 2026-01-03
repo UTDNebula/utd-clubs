@@ -2,15 +2,14 @@ import { Avatar } from '@mui/material';
 import { SelectOfficer } from '@src/server/db/models';
 
 type ClubOfficerProps = {
-  officer: SelectOfficer & { image?: string };
+  officer: SelectOfficer;
 };
 const ClubOfficer = ({ officer }: ClubOfficerProps) => {
   return (
     <div className="flex flex-row items-center gap-4 py-1" key={officer.id}>
       <Avatar
-        src={officer.image ?? undefined}
         alt={officer.name}
-        className="flex h-10 w-10 items-center justify-center bg-slate-200 text-slate-500 text-sm font-bold"
+        className="h-10 w-10 bg-slate-200 text-slate-500 text-sm font-bold"
       >
         {officer.name.charAt(0)}
       </Avatar>
