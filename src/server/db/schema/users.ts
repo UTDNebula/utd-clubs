@@ -6,6 +6,7 @@ import {
   pgTable,
   primaryKey,
   text,
+  timestamp,
 } from 'drizzle-orm/pg-core';
 import { user } from './auth';
 import { club } from './club';
@@ -67,10 +68,9 @@ export const userMetadataToClubs = pgTable(
     memberType: clubRoleEnum('member_type')
       .$default(() => 'Member')
       .notNull(),
+    joinedAt: timestamp('joined_at').defaultNow().notNull(),
   },
-  (t) => ({
-    pk: primaryKey(t.userId, t.clubId),
-  }),
+  (t) => [primaryKey({ columns: [t.userId, t.clubId] })],
 );
 
 export const userMetadataToEvents = pgTable(
@@ -82,15 +82,21 @@ export const userMetadataToEvents = pgTable(
     eventId: text('event_id')
       .notNull()
       .references(() => events.id, { onDelete: 'no action' }),
+    registeredAt: timestamp('registered_at').defaultNow().notNull(),
   },
-  (table) => ({
-    pk: primaryKey(table.userId, table.eventId),
-  }),
+  (t) => [primaryKey({ columns: [t.userId, t.eventId] })],
 );
 
-export const userMetadataRelation = relations(userMetadata, ({ many }) => ({
-  clubs: many(userMetadataToClubs),
-}));
+export const userMetadataRelation = relations(
+  userMetadata,
+  ({ many, one }) => ({
+    clubs: many(userMetadataToClubs),
+    user: one(user, {
+      fields: [userMetadata.id],
+      references: [user.id],
+    }),
+  }),
+);
 
 export const userMetadataToClubsRelations = relations(
   userMetadataToClubs,
@@ -127,8 +133,26 @@ export type ClubMatchResults = {
   benefit: string;
 }[];
 
+export type ClubMatchResponses = {
+  major: string;
+  year: string;
+  proximity: string;
+  categories: string[];
+  hobbies: string[];
+  gender?: string | undefined;
+  timeCommitment: string;
+  specificCultures?: string | undefined;
+  hobbyDetails?: string | undefined;
+  otherAcademicInterests?: string | undefined;
+  genderOther?: string | undefined;
+  newExperiences?: string | undefined;
+  involvementGoals?: string[] | undefined;
+  skills?: string[] | undefined;
+};
+
 export const userAiCache = pgTable('user_ai_cache', {
   id: text('id').notNull().primaryKey(),
   clubMatch: jsonb('clubMatch').$type<ClubMatchResults>(),
   clubMatchLimit: integer('clubMatchLimit').$default(() => 100),
+  responses: jsonb('responses').$type<ClubMatchResponses>(),
 });

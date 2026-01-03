@@ -78,6 +78,11 @@ const editOfficerSchema = z.object({
 
 const deleteSchema = z.object({ id: z.string() });
 
+export const removeMembersSchema = z.object({
+  clubId: z.string(),
+  ids: z.union([z.string().default(''), z.string().default('').array()]),
+});
+
 export const clubEditRouter = createTRPCRouter({
   data: protectedProcedure
     .input(editClubDetailsSchema)
@@ -173,7 +178,7 @@ export const clubEditRouter = createTRPCRouter({
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
       if (!isOfficer) {
         throw new TRPCError({
-          message: 'must be an officer to modify this club',
+          message: 'You must be an officer to modify this club',
           code: 'UNAUTHORIZED',
         });
       }
@@ -183,8 +188,20 @@ export const clubEditRouter = createTRPCRouter({
       );
       if (!isPresident && (input.deleted.length || input.modified.length)) {
         throw new TRPCError({
-          message: 'only a president can remove or modify people',
+          message: 'Only an admin can remove or modify people',
           code: 'UNAUTHORIZED',
+        });
+      }
+      if (input.deleted.includes(ctx.session.user.id)) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Cannot remove yourself',
+        });
+      }
+      if (input.modified.some((ele) => ele.userId === ctx.session.user.id)) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Cannot promote or demote yourself',
         });
       }
 
@@ -259,7 +276,7 @@ export const clubEditRouter = createTRPCRouter({
           eq(userMetadataToClubs.clubId, input.clubId),
           inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
         ),
-        with: { userMetadata: true },
+        with: { userMetadata: { with: { user: true } } },
       });
       return newOfficers;
     }),
@@ -389,5 +406,54 @@ export const clubEditRouter = createTRPCRouter({
           approved: 'approved',
         })
         .where(eq(club.id, input.id));
+    }),
+  removeMembers: protectedProcedure
+    .input(removeMembersSchema)
+    .mutation(async ({ input, ctx }) => {
+      const isPresident = await isUserPresident(
+        ctx.session.user.id,
+        input.clubId,
+      );
+      if (!isPresident)
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Must be a club admin to remove members',
+        });
+
+      if (
+        Array.isArray(input.ids)
+          ? input.ids.includes(ctx.session.user.id)
+          : ctx.session.user.id == input.ids
+      ) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Cannot remove yourself',
+        });
+      }
+
+      const result = await ctx.db
+        .delete(userMetadataToClubs)
+        .where(
+          and(
+            eq(userMetadataToClubs.clubId, input.clubId),
+            Array.isArray(input.ids)
+              ? inArray(userMetadataToClubs.userId, input.ids)
+              : eq(userMetadataToClubs.userId, input.ids),
+          ),
+        );
+
+      if (result.rowCount === 0) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `User was not found in club`,
+        });
+      }
+
+      // Return new members
+      const newMembers = await ctx.db.query.userMetadataToClubs.findMany({
+        where: eq(userMetadataToClubs.clubId, input.clubId),
+        with: { userMetadata: { with: { user: true } } },
+      });
+      return newMembers;
     }),
 });

@@ -1,7 +1,12 @@
+import { TRPCError } from '@trpc/server';
 import { and, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 import { club } from '@src/server/db/schema/club';
-import { userMetadataToClubs } from '@src/server/db/schema/users';
+import { events } from '@src/server/db/schema/events';
+import {
+  userMetadataToClubs,
+  userMetadataToEvents,
+} from '@src/server/db/schema/users';
 import { callStorageAPI } from '@src/utils/storage';
 import { adminProcedure, createTRPCRouter } from '../trpc';
 import { editCollaboratorSchema } from './clubEdit';
@@ -102,21 +107,13 @@ export const adminRouter = createTRPCRouter({
           });
       }
 
-      // Updated at
-      await ctx.db
-        .update(club)
-        .set({
-          updatedAt: new Date(),
-        })
-        .where(eq(club.id, input.clubId));
-
       // Return new officers
       const newOfficers = await ctx.db.query.userMetadataToClubs.findMany({
         where: and(
           eq(userMetadataToClubs.clubId, input.clubId),
           inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
         ),
-        with: { userMetadata: true },
+        with: { userMetadata: { with: { user: true } } },
       });
       return newOfficers;
     }),
@@ -144,5 +141,25 @@ export const adminRouter = createTRPCRouter({
         console.error(e);
         throw e;
       }
+    }),
+  deleteEvent: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const event = await ctx.db.query.events.findFirst({
+        where: (e) => eq(e.id, input.id),
+      });
+
+      if (!event) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Event not found' });
+      }
+
+      await callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`);
+
+      await ctx.db
+        .delete(userMetadataToEvents)
+        .where(eq(userMetadataToEvents.eventId, input.id));
+      await ctx.db.delete(events).where(eq(events.id, input.id));
+
+      return { success: true };
     }),
 });
