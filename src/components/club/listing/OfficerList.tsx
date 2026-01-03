@@ -47,7 +47,7 @@ export default function OfficerList({
     if (contentRef.current) observer.observe(contentRef.current);
 
     return () => observer.disconnect();
-  }, [officers]);
+  }, [officers, id]);
 
   // dynamically determine css height in expanded or normal states
   const containerStyle =

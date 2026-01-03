@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, inArray, lte } from 'drizzle-orm';
 import { z } from 'zod';
 import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
@@ -127,6 +127,7 @@ export const adminRouter = createTRPCRouter({
     .input(bySlugSchema)
     .query(async ({ input: { slug }, ctx }) => {
       try {
+        // Fetch club by slug
         const bySlug = await ctx.db.query.club.findFirst({
           where: (club) => eq(club.slug, slug),
           with: {
@@ -141,10 +142,25 @@ export const adminRouter = createTRPCRouter({
         });
 
         if (!bySlug) return null;
+
+        // Fetch latest event date
+        const lastEvent = await ctx.db.query.events.findFirst({
+          where: (events) =>
+            and(
+              eq(events.clubId, bySlug.id),
+              lte(events.startTime, new Date()),
+            ), // find the end time of events that have started before now
+          orderBy: (events) => [desc(events.endTime)],
+          columns: {
+            endTime: true,
+          },
+        });
+
         const { userMetadataToClubs, ...clubData } = bySlug; // clubData doesn't have userMetadataToClubs field
         return {
           ...clubData,
           numMembers: userMetadataToClubs.length,
+          lastEventDate: lastEvent?.endTime ?? null,
         };
       } catch (e) {
         console.error(e);
