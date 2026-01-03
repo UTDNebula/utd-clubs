@@ -9,12 +9,12 @@ function contactDisplay(contact: SelectContact) {
     case 'discord':
       return (
         contact.url.split('://')[1]?.replace('www.', '').replace(/\/+$/, '') ??
-        contact.platform
+        contactNames[contact.platform]
       );
     case 'instagram':
       return contact.url.indexOf('instagram.com/') >= 0
         ? '@' + contact.url.split('instagram.com/')[1]!.replace(/\/+$/, '')
-        : contact.platform;
+        : contactNames[contact.platform];
     case 'website':
       return contact.url
         .replace('http://', '')
@@ -26,22 +26,24 @@ function contactDisplay(contact: SelectContact) {
     case 'twitter':
       return contact.url.indexOf('.com/') > 0
         ? '@' + contact.url.split('.com/')[1]!.replace(/\/+$/, '')
-        : contact.platform;
+        : contactNames[contact.platform];
     case 'facebook':
       return contact.url.indexOf('.com/') > 0
         ? '@' + contact.url.split('.com/')[1]!.replace(/\/+$/, '')
-        : contact.platform;
+        : contactNames[contact.platform];
     case 'youtube':
       return contact.url.indexOf('youtube.com/@') >= 0
         ? contact.url.split('youtube.com/')[1]!.replace(/\/+$/, '')
-        : contact.platform;
+        : contactNames[contact.platform];
     case 'twitch':
       return (
         contact.url.split('twitch.tv/')[1]?.replace(/\/+$/, '') ??
-        contact.platform
+        contactNames[contact.platform]
       );
     case 'linkedIn':
-      return contact.platform;
+      return contactNames[contact.platform];
+    case 'other':
+      return contactNames[contact.platform];
     default:
       return contact.platform;
   }
