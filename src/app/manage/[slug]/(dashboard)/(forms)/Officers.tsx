@@ -74,17 +74,17 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
       const modified: OfficerWithId[] = [];
       const order: NonNullable<FormData['officers'][number]['id']>[] = [];
 
-      // Extra check for if user reorders, makes a change, then undoes reorder
       let hasReorder = false;
 
       value.officers.forEach((officer, index) => {
+        // Extra check for if user reorders, makes a change, then undoes reorder
         if (isReordered && officer.id !== defaultValues.officers[index]?.id) {
           hasReorder = true;
         }
 
         if (officer.id) order.push(officer.id);
 
-        // If it has no ID, it's created
+        // If it has no ID or the ID starts with "new", it's created
         if (!hasId(officer)) {
           created.push(officer);
           return;
@@ -131,6 +131,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
   // Flag for if user presses a reorder button
   const [isReordered, setIsReordered] = useState(false);
 
+  // Detectors for when user interacts with a grab handle
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -141,6 +142,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
   const handleReorderDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
+    // Reorder only if moved to a new location
     if (active.id !== over?.id) {
       form.setFieldValue('officers', (officers) => {
         const oldIndex = officers.findIndex(
@@ -162,6 +164,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
     setActiveReorderId(active.id);
   };
 
+  // ID of the item currently being reordered
   const [activeReorderId, setActiveReorderId] =
     useState<UniqueIdentifier | null>(null);
 
@@ -187,11 +190,10 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
           onDragEnd={handleReorderDragEnd}
         >
           <SortableContext
-            // TODO: Remove temporary `?? index` cause that'll definitely break things
-            items={currentOfficers.map((officer, index) => {
-              console.log(index, officer.id);
-              return officer.id!;
-            })}
+            // `officer.id` is non-null asserted because items will always have an ID:
+            //   - Items from the server will have a Nano ID
+            //   - New items created by the client will have a temporary ID, as seen on line 221
+            items={currentOfficers.map((officer) => officer.id!)}
             strategy={verticalListSortingStrategy}
           >
             <form.Field name="officers">
@@ -213,6 +215,9 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
                       field.pushValue({
                         name: '',
                         position: 'Officer',
+                        // Temporary ID used for drag-and-drop sorting purposes.
+                        // Will be replaced with a Nano ID by the server.
+                        // This temporary ID must be detectable by `hasId()` on line 48.
                         id: `new-${currentOfficers.length}`,
                       });
                     }}
@@ -223,6 +228,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
               )}
             </form.Field>
           </SortableContext>
+          {/* List item that sticks to the cursor */}
           <DragOverlay className="opacity-80">
             {activeReorderId ? (
               <OfficerListItem

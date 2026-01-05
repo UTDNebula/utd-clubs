@@ -324,8 +324,6 @@ export const clubEditRouter = createTRPCRouter({
         });
       }
 
-      console.log('received input:', input);
-
       // Deleted
       if (input.deleted.length) {
         await ctx.db

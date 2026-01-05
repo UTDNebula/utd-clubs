@@ -69,10 +69,10 @@ const Contacts = ({ club }: ContactsProps) => {
       const modified: ContactWithId[] = [];
       const order: FormData['contacts'][number]['platform'][] = [];
 
-      // Extra check for if user reorders, makes a change, then undoes reorder
       let hasReorder = false;
 
       value.contacts.forEach((contact, index) => {
+        // Extra check for if user reorders, makes a change, then undoes reorder
         if (
           isReordered &&
           contact.platform !== defaultValues.contacts[index]?.platform
@@ -134,6 +134,7 @@ const Contacts = ({ club }: ContactsProps) => {
   // Flag for if user presses a reorder button
   const [isReordered, setIsReordered] = useState(false);
 
+  // Detectors for when user interacts with a grab handle
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -144,6 +145,7 @@ const Contacts = ({ club }: ContactsProps) => {
   const handleReorderDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
+    // Reorder only if moved to a new location
     if (active.id !== over?.id) {
       form.setFieldValue('contacts', (contacts) => {
         const oldIndex = contacts.findIndex(
@@ -165,6 +167,7 @@ const Contacts = ({ club }: ContactsProps) => {
     setActiveReorderPlatform(active.id);
   };
 
+  // Platform (ID) of the item currently being reordered
   const [activeReorderPlatform, setActiveReorderPlatform] =
     useState<UniqueIdentifier | null>(null);
 
@@ -228,6 +231,7 @@ const Contacts = ({ club }: ContactsProps) => {
               )}
             </form.Field>
           </SortableContext>
+          {/* List item that sticks to the cursor */}
           <DragOverlay className="opacity-80">
             {activeReorderPlatform ? (
               <ContactListItem

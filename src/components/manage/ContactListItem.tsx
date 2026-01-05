@@ -42,6 +42,8 @@ const ContactListItem = withForm({
       isSorting,
     } = useSortable({ id: form.getFieldValue(`contacts[${index}].platform`) });
 
+    // Styles related to drag and drop sorting.
+    // This follows the convention of `dnd-kit` documentation using the `style` prop
     const style = {
       transform: CSS.Transform.toString(transform),
       transition,
@@ -60,6 +62,9 @@ const ContactListItem = withForm({
     return (
       <>
         <Box
+          // isDragging: If true, hide visibility of children but keep them in document flow (to maintain size of list item)
+          //   - Do NOT use the `hidden` class, as this removes children from the document flow
+          // isSorting: If true, disable hover state, to prevent visual noise when reordering items
           className={`relative grid gap-2 transition-colors rounded-lg h-fit
             ${isDragging ? '*:invisible' : `max-sm:bg-slate-100 ${isSorting ? '' : 'sm:hover:bg-slate-100'}`}`}
           sx={{
@@ -76,13 +81,14 @@ const ContactListItem = withForm({
           style={style}
         >
           {isDragging && (
+            // Placeholder/ghost element indicator. Note the `visible!` to ensure this element remains visible
             <div className="absolute inset-0 m-1 outline-royal/50 outline-2 rounded-lg visible!" />
           )}
           <div
             style={{ gridArea: 'handle' }}
             className="h-full flex items-center select-none cursor-grab rounded-md touch-none max-sm:p-4 sm:p-2"
-            {...attributes}
-            {...listeners}
+            {...attributes} // Makes handle tabbable for keyboard input
+            {...listeners} // Turns element into a drag handle
           >
             <DragIndicatorIcon />
           </div>
