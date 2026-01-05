@@ -6,6 +6,7 @@ import {
   pgTable,
   primaryKey,
   text,
+  timestamp,
 } from 'drizzle-orm/pg-core';
 import { user } from './auth';
 import { club } from './club';
@@ -67,10 +68,9 @@ export const userMetadataToClubs = pgTable(
     memberType: clubRoleEnum('member_type')
       .$default(() => 'Member')
       .notNull(),
+    joinedAt: timestamp('joined_at').defaultNow().notNull(),
   },
-  (t) => ({
-    pk: primaryKey(t.userId, t.clubId),
-  }),
+  (t) => [primaryKey({ columns: [t.userId, t.clubId] })],
 );
 
 export const userMetadataToEvents = pgTable(
@@ -82,10 +82,9 @@ export const userMetadataToEvents = pgTable(
     eventId: text('event_id')
       .notNull()
       .references(() => events.id, { onDelete: 'no action' }),
+    registeredAt: timestamp('registered_at').defaultNow().notNull(),
   },
-  (table) => ({
-    pk: primaryKey(table.userId, table.eventId),
-  }),
+  (t) => [primaryKey({ columns: [t.userId, t.eventId] })],
 );
 
 export const userMetadataRelation = relations(

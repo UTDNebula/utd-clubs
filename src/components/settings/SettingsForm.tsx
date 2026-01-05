@@ -20,16 +20,12 @@ async function SettingsForm({
     where: eq(userMetadata.id, user.id),
   });
   if (!userData) return null;
-  const clubs = await db.query.userMetadataToClubs.findMany({
+  const joinedClubs = await db.query.userMetadataToClubs.findMany({
     where: (joinTable) => eq(joinTable.userId, user.id),
     with: { club: true },
-    columns: {
-      clubId: false,
-      userId: false,
-    },
   });
 
-  const formatted = clubs.map(({ club }) => club);
+  const formatted = joinedClubs.map(({ club }) => club);
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl">

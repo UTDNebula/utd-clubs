@@ -17,6 +17,7 @@ export default function ClubSelector({ control }: Props) {
     name: 'clubs',
     keyName: 'club.id',
   });
+
   return (
     <div className="-mt-4 max-w-2xl">
       <div className="flex w-full flex-wrap">
@@ -34,8 +35,23 @@ export default function ClubSelector({ control }: Props) {
                 className="-pl-1 rounded-full pr-1"
               />
             )}
-            <p className="truncate p-1 text-xs font-bold">{club.name}</p>
-
+            <div>
+              <p className="truncate p-1 text-xs font-bold">
+                {club.name}
+              </p>
+              <p className="truncate p-1 text-xs">
+                Joined on{' '}
+                {/* {joinedClub.joinedAt.toLocaleString('en-us', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: true,
+                })} */}
+              </p>
+            </div>
             <button
               type="button"
               className="ml-2 rounded-full px-1 text-xs font-bold text-black"
