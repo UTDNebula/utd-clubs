@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { userMetadata } from '@src/server/db/schema/users';
-import Clubs from './forms/Clubs';
+import JoinedClubs from './forms/JoinedClubs';
 import DeleteAccount from './forms/DeleteAccount';
 import UserInfo from './forms/UserInfo';
 import SettingsHeader from './SettingsHeader';
@@ -25,13 +25,13 @@ async function SettingsForm({
     with: { club: true },
   });
 
-  const formatted = joinedClubs.map(({ club }) => club);
+  // const formatted = joinedClubs.map(({ club }) => club);
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl">
       <SettingsHeader />
-      <UserInfo user={userData} clubs={formatted} />
-      <Clubs clubs={formatted} />
+      <UserInfo user={userData} />
+      <JoinedClubs joinedClubs={joinedClubs} />
       <DeleteAccount />
     </div>
   );

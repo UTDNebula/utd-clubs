@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { SelectOption } from '@src/components/form/FormSelect';
 import Panel from '@src/components/form/Panel';
-import { SelectUserMetadata, type SelectClub } from '@src/server/db/models';
+import { SelectUserMetadata } from '@src/server/db/models';
 import { roleEnum } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -14,7 +14,6 @@ import {
 } from '@src/utils/formSchemas';
 
 type UserInfoProps = {
-  clubs: SelectClub[];
   user: SelectUserMetadata;
 };
 
@@ -35,7 +34,7 @@ const UserRoleOptions: SelectOption<UserRoleEnum>[] = [
   },
 ];
 
-export default function UserInfo({ clubs, user }: UserInfoProps) {
+export default function UserInfo({ user }: UserInfoProps) {
   const router = useRouter();
   const api = useTRPC();
 
@@ -48,7 +47,6 @@ export default function UserInfo({ clubs, user }: UserInfoProps) {
   );
 
   const defaultValues: AccountSettingsSchema = {
-    clubs,
     firstName: user.firstName,
     lastName: user.lastName,
     major: user.major,

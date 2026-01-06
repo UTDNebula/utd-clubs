@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { selectClub } from '@src/server/db/models';
 import { contactSchema } from './contact';
 
 export const accountSettingsSchema = z.object({
@@ -9,7 +8,6 @@ export const accountSettingsSchema = z.object({
   minor: z.string().nullable(),
   year: z.enum(['Freshman', 'Sophomore', 'Junior', 'Senior', 'Grad Student']),
   role: z.enum(['Student', 'Student Organizer', 'Administrator']),
-  clubs: selectClub.pick({ name: true, id: true, profileImage: true }).array(),
 });
 
 export type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
