@@ -6,10 +6,9 @@ import { api } from '@src/trpc/server';
 const ClubUpcomingEvents = async ({ clubId }: { clubId: string }) => {
   const now = TZDateMini.tz('America/Chicago');
 
-  const data = await api.event.byClubId({
-    clubId: clubId,
+  const data = await api.event.clubUpcoming({
+    clubId,
     currentTime: now,
-    sortByDate: true,
   });
 
   return (
