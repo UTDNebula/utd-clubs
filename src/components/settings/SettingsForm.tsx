@@ -4,8 +4,8 @@ import { eq } from 'drizzle-orm';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { userMetadata } from '@src/server/db/schema/users';
-import JoinedClubs from './forms/JoinedClubs';
 import DeleteAccount from './forms/DeleteAccount';
+import JoinedClubs from './forms/JoinedClubs';
 import UserInfo from './forms/UserInfo';
 import SettingsHeader from './SettingsHeader';
 
@@ -18,6 +18,7 @@ async function SettingsForm({
 
   const userData = await db.query.userMetadata.findFirst({
     where: eq(userMetadata.id, user.id),
+    with: { clubs: true },
   });
   if (!userData) return null;
   const joinedClubs = await db.query.userMetadataToClubs.findMany({

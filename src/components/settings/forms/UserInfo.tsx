@@ -1,10 +1,10 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { SelectOption } from '@src/components/form/FormSelect';
-import Panel from '@src/components/form/Panel';
-import { SelectUserMetadata } from '@src/server/db/models';
+import Panel, { PanelSkeleton } from '@src/components/form/Panel';
+import { SelectUserMetadataWithClubs } from '@src/server/db/models';
 import { roleEnum } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -14,7 +14,7 @@ import {
 } from '@src/utils/formSchemas';
 
 type UserInfoProps = {
-  user: SelectUserMetadata;
+  user: SelectUserMetadataWithClubs;
 };
 
 type UserRoleEnum = (typeof roleEnum.enumValues)[number];
@@ -35,45 +35,58 @@ const UserRoleOptions: SelectOption<UserRoleEnum>[] = [
 ];
 
 export default function UserInfo({ user }: UserInfoProps) {
-  const router = useRouter();
   const api = useTRPC();
 
-  const editAccountMutation = useMutation(
-    api.userMetadata.updateById.mutationOptions({
-      // onSuccess: () => {
-      //   router.refresh();
-      // },
-    }),
+  const queryClient = useQueryClient();
+  const userQuery = useQuery(
+    api.userMetadata.byId.queryOptions({ id: user.id }, { initialData: user }),
   );
 
-  const defaultValues: AccountSettingsSchema = {
-    firstName: user.firstName,
-    lastName: user.lastName,
-    major: user.major,
-    minor: user.minor,
-    role: user.role,
-    year: user.year,
-  };
+  const editAccountMutation = useMutation(
+    api.userMetadata.updateById.mutationOptions({}),
+  );
+
+  const userData = userQuery.data;
+  const [defaultValues, setDefaultValues] = useState<
+    AccountSettingsSchema | undefined
+  >({
+    firstName: userData?.firstName ?? '',
+    lastName: userData?.lastName ?? '',
+    major: userData?.major ?? '',
+    minor: userData?.minor ?? '',
+    role: userData?.role ?? 'Student',
+    year: userData?.year ?? 'Freshman',
+  });
 
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
       console.log('submit please');
+
+      const updated = await editAccountMutation.mutateAsync({
+        updateUser: value,
+      });
+
+      console.log(updated);
+
+      if (updated) {
+        queryClient.invalidateQueries(
+          api.userMetadata.byId.queryOptions(
+            { id: user.id },
+            { initialData: updated },
+          ),
+        );
+        formApi.reset();
+      }
+      if (editAccountMutation.isError) console.log(editAccountMutation.error);
+
+      setDefaultValues(updated);
+      formApi.reset(updated);
     },
     validators: { onChange: accountSettingsSchema },
   });
 
-  // const { register, handleSubmit, control } = useForm<AccountSettingsSchema>({
-  //   resolver: zodResolver(accountSettingsSchema),
-  //   defaultValues: {
-  //     clubs,
-  //     firstName: user.firstName,
-  //     lastName: user.lastName,
-  //     major: user.major,
-  //     minor: user.minor,
-  //     role: user.role,
-  //   },
-  // });
+  if (!userQuery.isSuccess) return <PanelSkeleton />;
 
   return (
     <form
