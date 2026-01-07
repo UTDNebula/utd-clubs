@@ -21,7 +21,7 @@ const deleteSchema = z.object({
 
 const changeClubStatusSchema = z.object({
   clubId: z.string(),
-  status: z.enum(['approved', 'pending', 'rejected']),
+  status: z.enum(club.approved.enumValues),
 });
 
 export const adminRouter = createTRPCRouter({
@@ -43,6 +43,8 @@ export const adminRouter = createTRPCRouter({
   deleteClub: adminProcedure
     .input(deleteSchema)
     .mutation(async ({ ctx, input }) => {
+      await callStorageAPI('DELETE', `${input.id}-profile`);
+      await callStorageAPI('DELETE', `${input.id}-banner`);
       await ctx.db.delete(club).where(eq(club.id, input.id));
     }),
   updateOfficers: adminProcedure

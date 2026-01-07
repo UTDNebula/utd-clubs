@@ -76,7 +76,7 @@ const editOfficerSchema = z.object({
     .array(),
 });
 
-const deleteSchema = z.object({ clubId: z.string() });
+const deleteSchema = z.object({ id: z.string() });
 
 export const removeMembersSchema = z.object({
   clubId: z.string(),
@@ -374,16 +374,38 @@ export const clubEditRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(deleteSchema)
     .mutation(async ({ input, ctx }) => {
-      const isPresident = await isUserPresident(
-        ctx.session.user.id,
-        input.clubId,
-      );
+      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
       if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
-      await callStorageAPI('DELETE', `${input.clubId}-profile`);
-      await callStorageAPI('DELETE', `${input.clubId}-banner`);
+      await callStorageAPI('DELETE', `${input.id}-profile`);
+      await callStorageAPI('DELETE', `${input.id}-banner`);
+      await ctx.db.delete(club).where(eq(club.id, input.id));
+    }),
+  markDeleted: protectedProcedure
+    .input(deleteSchema)
+    .mutation(async ({ input, ctx }) => {
+      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
+      if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
-      await ctx.db.delete(club).where(eq(club.id, input.clubId));
+      await ctx.db
+        .update(club)
+        .set({
+          approved: 'deleted',
+        })
+        .where(and(eq(club.id, input.id), eq(club.approved, 'approved')));
+    }),
+  restore: protectedProcedure
+    .input(deleteSchema)
+    .mutation(async ({ input, ctx }) => {
+      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
+      if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+      await ctx.db
+        .update(club)
+        .set({
+          approved: 'approved',
+        })
+        .where(eq(club.id, input.id));
     }),
   removeMembers: protectedProcedure
     .input(removeMembersSchema)
