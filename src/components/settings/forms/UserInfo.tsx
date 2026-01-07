@@ -1,9 +1,9 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { SelectOption } from '@src/components/form/FormSelect';
-import Panel, { PanelSkeleton } from '@src/components/form/Panel';
+import Panel from '@src/components/form/Panel';
 import { SelectUserMetadataWithClubs } from '@src/server/db/models';
 import { roleEnum } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
@@ -37,56 +37,36 @@ const UserRoleOptions: SelectOption<UserRoleEnum>[] = [
 export default function UserInfo({ user }: UserInfoProps) {
   const api = useTRPC();
 
-  const queryClient = useQueryClient();
-  const userQuery = useQuery(
-    api.userMetadata.byId.queryOptions({ id: user.id }, { initialData: user }),
-  );
-
   const editAccountMutation = useMutation(
     api.userMetadata.updateById.mutationOptions({}),
   );
 
-  const userData = userQuery.data;
-  const [defaultValues, setDefaultValues] = useState<
-    AccountSettingsSchema | undefined
-  >({
-    firstName: userData?.firstName ?? '',
-    lastName: userData?.lastName ?? '',
-    major: userData?.major ?? '',
-    minor: userData?.minor ?? '',
-    role: userData?.role ?? 'Student',
-    year: userData?.year ?? 'Freshman',
+  const [defaultValues, setDefaultValues] = useState<AccountSettingsSchema>({
+    firstName: user?.firstName ?? '',
+    lastName: user?.lastName ?? '',
+    major: user?.major ?? '',
+    minor: user?.minor ?? '',
+    role: user?.role ?? 'Student',
+    year: user?.year ?? 'Freshman',
   });
 
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
-      console.log('submit please');
-
-      const updated = await editAccountMutation.mutateAsync({
-        updateUser: value,
-      });
-
-      console.log(updated);
-
-      if (updated) {
-        queryClient.invalidateQueries(
-          api.userMetadata.byId.queryOptions(
-            { id: user.id },
-            { initialData: updated },
-          ),
-        );
-        formApi.reset();
+      try {
+        const updated = await editAccountMutation.mutateAsync({
+          updateUser: value,
+        });
+        if (updated) {
+          setDefaultValues(updated);
+          formApi.reset(updated);
+        }
+      } catch (e) {
+        console.error(e);
       }
-      if (editAccountMutation.isError) console.log(editAccountMutation.error);
-
-      setDefaultValues(updated);
-      formApi.reset(updated);
     },
     validators: { onChange: accountSettingsSchema },
   });
-
-  if (!userQuery.isSuccess) return <PanelSkeleton />;
 
   return (
     <form
