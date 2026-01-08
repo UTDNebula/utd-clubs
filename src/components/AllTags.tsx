@@ -1,23 +1,22 @@
 'use client';
 
-import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
+import Button from '@mui/material/Button';
 import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { type SelectChangeEvent } from '@mui/material/Select';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 
 export const AllTags = ({
-  name,
-  className,
   options = [],
+  label = '•••',
 }: {
-  name: string;
-  className?: string;
   options?: string[];
+  label?: string;
 }) => {
   const { tags, setTags, setShouldFocus } = useSearchStore((s) => s);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const open = Boolean(anchorEl);
   const didChangeRef = useRef(false);
 
   function scrollToResults() {
@@ -27,17 +26,24 @@ export const AllTags = ({
     });
   }
 
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
+  const handleOpen = (e: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleChange = (tag: string) => {
     didChangeRef.current = true;
-    const next = event.target.value as string[];
-    setTags(next);
+
+    setTags(
+      tags.includes(tag) ? tags.filter((t) => t !== tag) : [...tags, tag],
+    );
   };
 
   const handleClose = () => {
+    setAnchorEl(null);
+
     if (!didChangeRef.current) return;
     didChangeRef.current = false;
 
-    setShouldFocus(false);
     scrollToResults();
     setShouldFocus(true);
   };
@@ -45,30 +51,30 @@ export const AllTags = ({
   const sorted = [...new Set(options)].sort((a, b) => a.localeCompare(b));
 
   return (
-    <FormControl className={className}>
-      <Select
-        id="all-tags-select"
-        multiple
+    <>
+      <Button
+        variant="contained"
+        disableElevation
         size="small"
-        value={tags}
-        onChange={handleChange}
-        onClose={handleClose}
-        displayEmpty
-        renderValue={() => name}
-        className="rounded-full font-bold text-white"
-        MenuProps={{ PaperProps: { className: 'max-h-60 rounded-xl' } }}
+        className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
+        onClick={handleOpen}
       >
-        <MenuItem disabled value="">
-          <em>Select any tags</em>
-        </MenuItem>
+        {label}
+      </Button>
 
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{ className: 'max-h-40 mt-2 rounded-xl' }}
+        MenuListProps={{ onClick: (e) => e.stopPropagation() }}
+      >
         {sorted.map((tag) => (
-          <MenuItem key={tag} value={tag}>
-            <Checkbox checked={tags.includes(tag)} />
+          <MenuItem key={tag} onClick={() => handleChange(tag)}>
             <ListItemText primary={tag} />
           </MenuItem>
         ))}
-      </Select>
-    </FormControl>
+      </Menu>
+    </>
   );
 };

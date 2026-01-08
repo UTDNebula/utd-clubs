@@ -95,7 +95,7 @@ const Home = async () => {
                 Discover the Best Clubs and Organizations at UTD
               </h1>
               <HomePageSearchBar />
-              <div className="pointer-events-auto mt-8 flex max-w-2xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
+              <div className="pointer-events-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
                 {tags.map((tag) => (
                   <TagPill
                     name={tag}
@@ -103,13 +103,7 @@ const Home = async () => {
                     className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
                   />
                 ))}
-              </div>
-              <div className="pointer-events-auto justify-center mt-6">
-                <AllTags
-                  name="All Tags"
-                  className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
-                  options={allTags}
-                />
+                <AllTags options={allTags} />
               </div>
             </div>
           </section>
