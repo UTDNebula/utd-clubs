@@ -48,7 +48,7 @@ export const AllTags = ({
     setShouldFocus(true);
   };
 
-  const sorted = [...new Set(options)].sort((a, b) => a.localeCompare(b));
+  const sorted = options.sort((a, b) => a.localeCompare(b));
 
   return (
     <>
@@ -66,8 +66,10 @@ export const AllTags = ({
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        PaperProps={{ className: 'max-h-40 mt-2 rounded-xl' }}
-        MenuListProps={{ onClick: (e) => e.stopPropagation() }}
+        slotProps={{
+          paper: { className: 'max-h-40 mt-2 rounded-xl' },
+          list: { onClick: (e: React.MouseEvent) => e.stopPropagation() },
+        }}
       >
         {sorted.map((tag) => (
           <MenuItem key={tag} onClick={() => handleChange(tag)}>
