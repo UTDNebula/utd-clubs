@@ -1,12 +1,12 @@
 import EventIcon from '@mui/icons-material/Event';
 import PreviewIcon from '@mui/icons-material/Preview';
-import { Button, Tooltip } from '@mui/material';
+import { Button } from '@mui/material';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Collaborators from '@src/app/manage/[slug]/(dashboard)/(forms)/Collaborators';
+import DeleteClub from '@src/app/manage/[slug]/(dashboard)/(forms)/DeleteClub';
 import AdminHeader from '@src/components/admin/AdminHeader';
 import ChangeClubStatus from '@src/components/admin/ChangeClubStatus';
-import DeleteClub from '@src/components/admin/DeleteClub';
 import ClubHeader from '@src/components/club/listing/ClubHeader';
 import ClubInfoSegment from '@src/components/club/listing/ClubInfoSegment';
 import ClubUpcomingEvents from '@src/components/club/listing/ClubUpcomingEvents';
@@ -34,21 +34,18 @@ export default async function Page(props: Props) {
           club.name,
         ]}
       >
-        {club.approved === 'approved' && (
-          <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-            <Tooltip title="Coming soon">
-              <span>
-                <Button
-                  variant="contained"
-                  className="normal-case whitespace-nowrap"
-                  startIcon={<EventIcon />}
-                  size="large"
-                  disabled
-                >
-                  Events
-                </Button>
-              </span>
-            </Tooltip>
+        <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
+          <Link href={`/admin/clubs/${club.slug}/events`}>
+            <Button
+              variant="contained"
+              className="normal-case whitespace-nowrap"
+              startIcon={<EventIcon />}
+              size="large"
+            >
+              Events
+            </Button>
+          </Link>
+          {club.approved === 'approved' && (
             <Link href={`/directory/${club.slug}`}>
               <Button
                 variant="contained"
@@ -59,14 +56,14 @@ export default async function Page(props: Props) {
                 Listing
               </Button>
             </Link>
-          </div>
-        )}
+          )}
+        </div>
       </AdminHeader>
       <div className="flex w-full flex-col items-center">
         <div className="flex flex-col gap-8 w-full max-w-6xl">
-          <ChangeClubStatus status={club.approved} club={club} />
+          <ChangeClubStatus club={club} />
           <Collaborators club={club} officers={officers} role="Admin" />
-          <DeleteClub club={club} />
+          <DeleteClub view="admin" club={club} />
           {club.approved !== 'approved' && (
             <div className="mb-5 flex flex-col space-y-4 p-4">
               <ClubHeader club={club} />

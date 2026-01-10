@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BaseCard } from '@src/components/common/BaseCard';
 import EventDeleteButton from '@src/components/events/EventDeleteButton';
 import EventEditButton from '@src/components/events/EventEditButton';
 import EventRegisterButton from '@src/components/events/EventRegisterButton';
@@ -37,7 +38,7 @@ export default async function EventsPage(props: Params) {
     <>
       <EventHeader />
       <main className="mb-5 flex flex-col space-y-4 p-4">
-        <section className="relative min-h-48 rounded-lg overflow-hidden">
+        <BaseCard className="relative min-h-48 overflow-hidden">
           <Image
             src={club.bannerImage ?? '/images/wideWave.jpg'}
             alt={club.name + ' banner'}
@@ -70,9 +71,9 @@ export default async function EventsPage(props: Params) {
               <EventRegisterButton isHeader eventId={event.id} />
             </div>
           </div>
-        </section>
-        <section className="w-full rounded-lg bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
-          <div>
+        </BaseCard>
+        <BaseCard className="w-full bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
+          <div className="md:max-w-1/4">
             {src && (
               <Image
                 src={src}
@@ -116,7 +117,7 @@ export default async function EventsPage(props: Params) {
               </Button>
             </Link>
           </div>
-        </section>
+        </BaseCard>
       </main>
     </>
   );

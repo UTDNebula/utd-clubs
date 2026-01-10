@@ -1,18 +1,18 @@
 import { TZDateMini } from '@date-fns/tz';
+import { BaseCard } from '@src/components/common/BaseCard';
 import EventCard from '@src/components/events/EventCard';
 import { api } from '@src/trpc/server';
 
 const ClubUpcomingEvents = async ({ clubId }: { clubId: string }) => {
   const now = TZDateMini.tz('America/Chicago');
 
-  const data = await api.event.byClubId({
-    clubId: clubId,
+  const data = await api.event.clubUpcoming({
+    clubId,
     currentTime: now,
-    sortByDate: true,
   });
 
   return (
-    <div className="w-full rounded-lg bg-slate-100 p-6 md:p-10">
+    <BaseCard className="w-full bg-slate-100 p-6 md:p-10">
       <h2 className="text-2xl font-semibold text-gray-800">Upcoming Events</h2>
       <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
         {data.length > 0 ? (
@@ -23,7 +23,7 @@ const ClubUpcomingEvents = async ({ clubId }: { clubId: string }) => {
           </div>
         )}
       </div>
-    </div>
+    </BaseCard>
   );
 };
 

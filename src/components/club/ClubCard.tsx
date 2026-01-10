@@ -3,6 +3,7 @@
 import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BaseCard } from '@src/components/common/BaseCard';
 import type { SelectClub as Club } from '@src/server/db/models';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
 
@@ -13,8 +14,9 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
   const name = club.name;
 
   return (
-    <div
-      className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col rounded-lg bg-white shadow-2xl md:min-h-[600px]"
+    <BaseCard
+      variant="interactive"
+      className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col md:min-h-[600px]"
       data-club-result
     >
       <Link
@@ -36,25 +38,26 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
         </div>
 
         <div className="flex flex-col space-y-2 p-6">
-          <p className="line-clamp-2 text-2xl font-medium text-slate-800 md:text-xl">
+          <p className="line-clamp-2 text-xl font-medium text-slate-800">
             {name}
           </p>
-          <p className="line-clamp-9 text-base text-slate-600 md:text-sm">
-            {desc}
-          </p>
+          <p className="line-clamp-9 text-base text-slate-600">{desc}</p>
         </div>
       </Link>
 
       <div className="m-5 mt-0 flex flex-row space-x-2">
         <JoinButton clubId={club.id} clubSlug={club.slug} />
       </div>
-    </div>
+    </BaseCard>
   );
 };
 
 export const ClubCardSkeleton = () => {
   return (
-    <div className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between rounded-lg bg-white shadow-2xl md:min-h-[600px]">
+    <BaseCard
+      variant="interactive"
+      className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between md:min-h-[600px]"
+    >
       <div className="grow flex flex-col">
         <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
           <Skeleton
@@ -63,24 +66,18 @@ export const ClubCardSkeleton = () => {
           />
         </div>
         <div className="flex flex-col space-y-2 p-6">
-          <Skeleton
-            variant="text"
-            className="text-2xl font-medium md:text-xl"
-          />
-          <Skeleton
-            variant="text"
-            className="text-2xl font-medium md:text-xl w-1/2"
-          />
-          <Skeleton variant="text" className="text-base md:text-sm" />
-          <Skeleton variant="text" className="text-base md:text-sm" />
-          <Skeleton variant="text" className="text-base md:text-sm" />
-          <Skeleton variant="text" className="text-base md:text-sm w-1/4" />
+          <Skeleton variant="text" className="text-xl font-medium" />
+          <Skeleton variant="text" className="text-xl font-medium w-1/2" />
+          <Skeleton variant="text" className="text-base" />
+          <Skeleton variant="text" className="text-base" />
+          <Skeleton variant="text" className="text-base" />
+          <Skeleton variant="text" className="text-base w-1/4" />
         </div>
       </div>
       <div className="m-5 mt-0 flex flex-row space-x-2">
         <JoinButtonSkeleton />
       </div>
-    </div>
+    </BaseCard>
   );
 };
 

@@ -12,16 +12,21 @@ import { useTRPC } from '@src/trpc/react';
 export default function EventDeleteButton({
   isHeader,
   event,
+  view = 'manage',
 }: {
   isHeader?: boolean;
   event: SelectEvent;
+  view?: 'manage' | 'admin';
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const api = useTRPC();
   const deleteEvent = useMutation(
-    api.event.delete.mutationOptions({
+    (view === 'manage'
+      ? api.event.delete
+      : api.admin.deleteEvent
+    ).mutationOptions({
       onSuccess: () => {
         setOpen(false);
         router.refresh();

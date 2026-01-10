@@ -86,10 +86,7 @@ export const userMetadataRouter = createTRPCRouter({
         },
       });
 
-      let events = rows.map((item) => ({
-        ...item.event,
-        liked: true,
-      }));
+      let events = rows.map((item) => item.event);
 
       if (currentTime) {
         events = events.filter((ev) => ev.endTime >= currentTime);
