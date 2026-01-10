@@ -13,6 +13,7 @@ export const TagPill = ({
   className?: string;
 }) => {
   const addTag = useSearchStore((state) => state.addTag);
+  const setShouldFocus = useSearchStore((state) => state.setShouldFocus);
 
   function scroll() {
     window.scrollTo({
@@ -31,6 +32,7 @@ export const TagPill = ({
       onClick={() => {
         addTag(name);
         scroll();
+        setShouldFocus(true);
       }}
       onDelete={removeTag}
     />

@@ -42,18 +42,16 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
           </div>
         </div>
         <div className="flex h-full flex-col p-5 space-y-2.5">
-          <h3 className="font-bold">{event.name}</h3>
-          <h4 className="text-xs font-bold">
+          <h3 className="text-xl font-medium">{event.name}</h3>
+          <div className="text-base font-medium">
             {view !== 'manage' && view !== 'admin' && event.club.name}
-            <div>
-              <span className="text-royal">
-                <ClientEventTime
-                  startTime={event.startTime}
-                  endTime={event.endTime}
-                />
-              </span>
+            <div className="text-royal">
+              <ClientEventTime
+                startTime={event.startTime}
+                endTime={event.endTime}
+              />
             </div>
-          </h4>
+          </div>
         </div>
       </Link>
       <div className="m-4 mt-0 flex flex-row gap-2">
@@ -99,8 +97,8 @@ export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
           />
         </div>
         <div className="flex h-full flex-col p-5 space-y-2.5">
-          <Skeleton variant="text" className="font-bold" />
-          <Skeleton variant="text" className="text-xs font-bold" />
+          <Skeleton variant="text" className="text-xl font-medium" />
+          <Skeleton variant="text" className="text-base font-medium" />
         </div>
         <div className="m-4 mt-0 flex flex-row gap-2">
           {!manageView && <EventRegisterButtonSkeleton />}

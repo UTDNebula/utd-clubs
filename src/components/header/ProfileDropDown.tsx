@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { authClient } from '@src/utils/auth-client';
 import { useRegisterModal } from '../account/RegisterModalProvider';
@@ -28,6 +29,8 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
   const [open, setOpen] = useState(false);
 
   const { setShowRegisterModal } = useRegisterModal();
+
+  const router = useRouter();
 
   // Close on scroll
   useEffect(() => {
@@ -102,7 +105,14 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
               </MenuItem>
               <MenuItem
                 onClick={async () => {
-                  await authClient.signOut();
+                  await authClient.signOut({
+                    fetchOptions: {
+                      onSuccess: () => {
+                        router.push('/');
+                        router.refresh();
+                      },
+                    },
+                  });
                   setOpen(false);
                 }}
               >

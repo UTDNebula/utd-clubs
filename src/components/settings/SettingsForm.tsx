@@ -17,16 +17,10 @@ async function SettingsForm({
     where: eq(userMetadata.id, user.id),
   });
   if (!userData) return null;
-  const clubs = await db.query.userMetadataToClubs.findMany({
+  const joinedClubs = await db.query.userMetadataToClubs.findMany({
     where: (joinTable) => eq(joinTable.userId, user.id),
     with: { club: true },
-    columns: {
-      clubId: false,
-      userId: false,
-    },
   });
-
-  const formatted = clubs.map(({ club }) => club);
 
   return (
     <div className="m-auto w-full rounded-xl p-4">
@@ -34,7 +28,7 @@ async function SettingsForm({
         <div className="h-24 rounded-t-3xl bg-linear-to-r from-[#5A49F7] from-[4.36%] via-[#9403D8] via-[49.74%] to-[#FD9365] p-6" />
         <div className="bg-white dark:bg-haiti p-6">
           <h1 className="font-display py-2 text-3xl font-semibold">Settings</h1>
-          <FormCard user={userData} clubs={formatted} />
+          <FormCard user={userData} joinedClubs={joinedClubs} />
         </div>
       </div>
     </div>

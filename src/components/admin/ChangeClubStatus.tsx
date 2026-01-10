@@ -15,11 +15,11 @@ import Panel from '@src/components/form/Panel';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 
-type Props = { status: 'approved' | 'pending' | 'rejected'; club: SelectClub };
+type Props = { club: SelectClub };
 
-export default function ChangeClubStatus({ status: initial, club }: Props) {
+export default function ChangeClubStatus({ club }: Props) {
   const router = useRouter();
-  const [status, setStatus] = useState<Props['status']>(initial);
+  const [status, setStatus] = useState<SelectClub['approved']>(club.approved);
   const api = useTRPC();
   const changeClubStatus = useMutation(
     api.admin.changeClubStatus.mutationOptions({
@@ -41,6 +41,10 @@ export default function ChangeClubStatus({ status: initial, club }: Props) {
         changeClubStatus.mutate({ clubId: club.id, status: 'rejected' });
         setStatus('rejected');
         break;
+      case 'deleted':
+        changeClubStatus.mutate({ clubId: club.id, status: 'deleted' });
+        setStatus('deleted');
+        break;
     }
   }
 
@@ -52,6 +56,8 @@ export default function ChangeClubStatus({ status: initial, club }: Props) {
         return 'bg-yellow-200 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200';
       case 'rejected':
         return 'bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200';
+      case 'deleted':
+        return 'bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200';
       default:
         return 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200';
     }
@@ -60,10 +66,7 @@ export default function ChangeClubStatus({ status: initial, club }: Props) {
   return (
     <Panel heading="Status">
       <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
-        <p>
-          Pending and rejected organizations are not shown anywhere on UTD
-          Clubs.
-        </p>
+        <p>Only accepted organizations are shown on UTD Clubs.</p>
       </div>
       <div className="m-2 mt-0 flex flex-col gap-4">
         <FormControl fullWidth>
@@ -78,6 +81,7 @@ export default function ChangeClubStatus({ status: initial, club }: Props) {
             <MenuItem value="approved">Approved</MenuItem>
             <MenuItem value="pending">Pending</MenuItem>
             <MenuItem value="rejected">Rejected</MenuItem>
+            <MenuItem value="deleted">Pending Deletion</MenuItem>
           </Select>
         </FormControl>
         <Alert severity="info">

@@ -1,6 +1,7 @@
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import ScheduleIcon from '@mui/icons-material/Schedule';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import Chip from '@mui/material/Chip';
 import { GridColDef } from '@mui/x-data-grid';
@@ -16,8 +17,18 @@ import formatListString from '@src/utils/formatListString';
 import {
   ActionsCell,
   ContactEmailCell,
+  JoinedAtCell,
   MemberTypeCell,
+  SmallTextCell,
 } from './CustomRenderCell';
+
+/**
+ * Callback function for sorting an array of users. Sorts by join date, from most recent to oldest
+ */
+export const defaultUserSort = (
+  a: SelectUserMetadataToClubsWithUserMetadataWithUser,
+  b: SelectUserMetadataToClubsWithUserMetadataWithUser,
+) => b.joinedAt.getTime() - a.joinedAt.getTime();
 
 /**
  * Wrapper function for {@linkcode formatListString()} that takes in a list of users and returns the users' first names formatted as a list.
@@ -138,7 +149,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
         return row.userMetadata?.firstName;
       },
       headerName: 'First Name',
-      width: 130,
+      width: 165,
     },
     {
       field: 'lastName',
@@ -146,7 +157,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
         return row.userMetadata?.lastName;
       },
       headerName: 'Last Name',
-      width: 130,
+      width: 165,
     },
     {
       field: 'year',
@@ -176,7 +187,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
           {params.colDef.headerName}
         </ColumnHeaderWithIcon>
       ),
-      width: 190,
+      width: 200,
       renderCell: (params) => {
         if (!params.value) return;
         return <Chip label={params.value} />;
@@ -188,11 +199,23 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
         return row.userMetadata?.minor;
       },
       headerName: 'Minor',
-      width: 190,
+      width: 200,
       renderCell: (params) => {
         if (!params.value) return;
         return <Chip label={params.value} />;
       },
+    },
+    {
+      field: 'joinedAt',
+      type: 'dateTime',
+      headerName: 'Joined',
+      renderHeader: (params) => (
+        <ColumnHeaderWithIcon icon={<ScheduleIcon />}>
+          {params.colDef.headerName}
+        </ColumnHeaderWithIcon>
+      ),
+      width: 120,
+      renderCell: (params) => <JoinedAtCell {...params} />,
     },
     {
       field: 'accountEmail',
@@ -230,7 +253,12 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
       width: 140,
       renderCell: (params) => <MemberTypeCell {...params} />,
     },
-    { field: 'userId', headerName: 'ID', width: 360 },
+    {
+      field: 'userId',
+      headerName: 'ID',
+      width: 320,
+      renderCell: (params) => <SmallTextCell {...params} />,
+    },
   ];
 
 export const actionColumn: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUser> =

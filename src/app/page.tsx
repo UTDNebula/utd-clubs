@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
+import { AllTags } from '@src/components/AllTags';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
 import ClubMatchButton from '@src/components/header/ClubMatchButton';
 import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
@@ -15,6 +16,7 @@ import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
 const Home = async () => {
   const tags = await api.club.topTags();
+  const allTags = await api.club.distinctTags();
 
   return (
     <SearchStoreProvider>
@@ -82,7 +84,7 @@ const Home = async () => {
                 Discover the Best Clubs and Organizations at UTD
               </h1>
               <HomePageSearchBar />
-              <div className="pointer-events-auto mt-8 flex max-w-2xl flex-wrap justify-center gap-x-2 gap-y-2 text-white dark:text-haiti">
+              <div className="pointer-events-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-x-2 gap-y-2 text-white dark:text-haiti">
                 {tags.map((tag) => (
                   <TagPill
                     name={tag}
@@ -90,6 +92,7 @@ const Home = async () => {
                     className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:drop-shadow-[0_0_4px_rgb(255_255_255_/_0.4)]"
                   />
                 ))}
+                <AllTags options={allTags} />
               </div>
             </div>
           </section>

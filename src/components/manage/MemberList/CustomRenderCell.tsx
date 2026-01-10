@@ -4,12 +4,78 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { GridRenderCellParams } from '@mui/x-data-grid';
+import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import { useContext } from 'react';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
 import { authClient } from '@src/utils/auth-client';
 import MemberRoleChip, { MemberTypes } from '../MemberRoleChip';
 import { MemberListContext } from './MemberListContext';
+
+export function SmallTextCell(params: GridRenderCellParams) {
+  return (
+    <div className="flex items-center h-full">
+      <Typography
+        variant="body2"
+        className=" overflow-hidden overflow-ellipsis"
+      >
+        {params.value}
+      </Typography>
+    </div>
+  );
+}
+
+export function JoinedAtCell(params: GridRenderCellParams) {
+  const { expandTimestamps } = useContext(MemberListContext);
+
+  const localeDateString = params.row.joinedAt.toLocaleString('en-us', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  });
+
+  const distanceDateString = formatDistanceStrict(
+    params.row.joinedAt,
+    new Date(),
+    {
+      addSuffix: true,
+    },
+  );
+
+  return (
+    <Tooltip
+      title={localeDateString}
+      enterDelay={0}
+      placement="top"
+      arrow
+      slotProps={{
+        popper: {
+          modifiers: [
+            {
+              name: 'offset',
+              options: { offset: [0, expandTimestamps ? -12 : -24] },
+            },
+          ],
+        },
+      }}
+    >
+      <Typography
+        variant="body2"
+        className="flex items-center h-full text-wrap"
+      >
+        {expandTimestamps
+          ? localeDateString
+          : distanceDateString.charAt(0).toUpperCase() +
+            distanceDateString.slice(1)}
+      </Typography>
+    </Tooltip>
+  );
+}
 
 export function ContactEmailCell(params: GridRenderCellParams) {
   const { contactEmailsVisible, showContactEmails } =
@@ -33,16 +99,24 @@ export function ContactEmailCell(params: GridRenderCellParams) {
         </IconButton>
       </Tooltip>
       {contactEmailsVisible ? (
-        <div className="overflow-hidden overflow-ellipsis">{params.value}</div>
+        <Typography
+          variant="body2"
+          className="overflow-hidden overflow-ellipsis"
+        >
+          {params.value}
+        </Typography>
       ) : (
         // Used this method instead of a dotted border in order to decrease
         // space between dots, which is not possible with the other method.
         //
         // Sine function adds variation to number of dots. This is
         // deterministic based off the row ID (i.e. row number)
-        <span className="text-slate-600 dark:text-slate-400 select-none tracking-tighter">
+        <Typography
+          variant="body2"
+          className="text-gray-600 dark:text-slate-400 select-none tracking-tighter"
+        >
           {'•'.repeat(12 + Math.sin(Number(params.id.valueOf()) * 2) * 3)}
-        </span>
+        </Typography>
       )}
     </div>
   );

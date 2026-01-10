@@ -38,10 +38,10 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
         </div>
 
         <div className="flex flex-col space-y-2 p-6">
-          <p className="line-clamp-2 text-2xl font-medium text-slate-800 dark:text-slate-200 md:text-xl">
+          <p className="line-clamp-2 text-xl font-medium text-slate-800 dark:text-slate-200">
             {name}
           </p>
-          <p className="line-clamp-9 text-base text-slate-600 dark:text-slate-400 md:text-sm">
+          <p className="line-clamp-9 text-base text-slate-600 dark:text-slate-400">
             {desc}
           </p>
         </div>
@@ -68,18 +68,12 @@ export const ClubCardSkeleton = () => {
           />
         </div>
         <div className="flex flex-col space-y-2 p-6">
-          <Skeleton
-            variant="text"
-            className="text-2xl font-medium md:text-xl"
-          />
-          <Skeleton
-            variant="text"
-            className="text-2xl font-medium md:text-xl w-1/2"
-          />
-          <Skeleton variant="text" className="text-base md:text-sm" />
-          <Skeleton variant="text" className="text-base md:text-sm" />
-          <Skeleton variant="text" className="text-base md:text-sm" />
-          <Skeleton variant="text" className="text-base md:text-sm w-1/4" />
+          <Skeleton variant="text" className="text-xl font-medium" />
+          <Skeleton variant="text" className="text-xl font-medium w-1/2" />
+          <Skeleton variant="text" className="text-base" />
+          <Skeleton variant="text" className="text-base" />
+          <Skeleton variant="text" className="text-base" />
+          <Skeleton variant="text" className="text-base w-1/4" />
         </div>
       </div>
       <div className="m-5 mt-0 flex flex-row space-x-2">
