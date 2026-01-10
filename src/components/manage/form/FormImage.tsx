@@ -45,7 +45,7 @@ const FormImage = ({
       )}
       <input
         type="file"
-        accept="image/jpeg,image/png,image/svg+xml"
+        accept="image/jpeg,image/jpg,image/png,image/svg+xml"
         onBlur={onBlur}
         onChange={onChange}
         className="absolute inset-0 cursor-pointer text-transparent"
