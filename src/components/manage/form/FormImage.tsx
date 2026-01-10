@@ -25,7 +25,7 @@ const FormImage = ({
   const previewUrl = file ? URL.createObjectURL(file) : fallbackUrl;
 
   return (
-    <div className={className ?? ''}>
+    <div className={className}>
       <div className="w-full lg:h-96 max-lg:h-48 flex flex-col justify-center items-center gap-2 p-8 rounded-md bg-royal/10 has-[:hover]:bg-royal/20 transition-colors relative">
         {label && <p className="text-xs font-bold text-slate-700">{label}</p>}
         {previewUrl ? (

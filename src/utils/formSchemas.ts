@@ -29,7 +29,7 @@ const fileSchema = z
   )
   .refine(
     (file) => !file || file.size <= MAX_FILE_SIZE,
-    'Max image size is 5MB.',
+    'Max image size is 5MB',
   );
 
 export const editClubFormSchema = z.object({
