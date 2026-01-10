@@ -25,11 +25,11 @@ const fileSchema = z
   .nullable()
   .refine(
     (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
-    'Only .jpeg, .png, and .svg formats are supported.',
+    'Only JPEG, PNG, and SVG formats are supported',
   )
   .refine(
     (file) => !file || file.size <= MAX_FILE_SIZE,
-    `Max image size is 5MB.`,
+    'Max image size is 5MB.',
   );
 
 export const editClubFormSchema = z.object({
@@ -114,8 +114,14 @@ export const editSlugSchema = z.object({
 
 export const createEventSchema = z.object({
   clubId: z.string(),
-  name: z.string().min(1).max(100, 'Character limit reached'),
-  location: z.string().min(1).max(100, 'Character limit reached'),
+  name: z
+    .string()
+    .min(3, 'Name must be at least 3 characters')
+    .max(100, 'Character limit reached'),
+  location: z
+    .string()
+    .min(1, 'Location must be at least 3 characters')
+    .max(100, 'Character limit reached'),
   description: z.string().max(1000, 'Character limit reached'),
   startTime: z.date(),
   endTime: z.date(),

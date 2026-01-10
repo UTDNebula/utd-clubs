@@ -182,6 +182,13 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                     const file = e.target.files?.[0] ?? null;
                     field.handleChange(file);
                   }}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
                 />
               )}
             </form.Field>
