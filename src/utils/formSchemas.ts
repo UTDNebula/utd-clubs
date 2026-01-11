@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { studentClassificationEnum } from '@src/server/db/schema/users';
 import { contactSchema } from './contact';
 
 export const accountSettingsSchema = z.object({
@@ -6,8 +7,17 @@ export const accountSettingsSchema = z.object({
   lastName: z.string().min(1),
   major: z.string().min(1),
   minor: z.string().nullable(),
-  year: z.enum(['Freshman', 'Sophomore', 'Junior', 'Senior', 'Grad Student']),
   role: z.enum(['Student', 'Student Organizer', 'Administrator']),
+  studentClassification: z.enum(studentClassificationEnum.enumValues),
+  graduationDate: z.date().nullable(),
+  contactEmail: z
+    .email({
+      error: 'Use your UT Dallas email',
+      pattern:
+        /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)*utdallas\.edu$/i,
+    })
+    .min(1, 'Contact email is required')
+    .nullable(),
 });
 
 export type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
@@ -17,6 +27,7 @@ export const accountOnboardingSchema = z.object({
   lastName: z.string().nullable(),
   major: z.string().nullable(),
   minor: z.string().nullable(),
+  studentClassification: z.enum(studentClassificationEnum.enumValues),
   graduationDate: z.date().nullable(),
   contactEmail: z
     .email({
