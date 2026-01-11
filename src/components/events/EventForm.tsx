@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
-import Panel, { PanelSkeleton } from '@src/components/form/Panel';
+import Panel, { PanelSkeleton } from '@src/components/common/Panel';
 import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';

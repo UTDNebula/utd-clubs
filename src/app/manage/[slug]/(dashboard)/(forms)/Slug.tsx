@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Confirmation from '@src/components/Confirmation';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
