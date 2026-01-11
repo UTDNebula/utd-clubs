@@ -112,38 +112,50 @@ const Details = ({ club }: DetailsProps) => {
       <Panel heading="Details">
         <div className="m-2 flex flex-col gap-4">
           <div className="flex flex-wrap gap-4">
-            <div className="grow w-48 lg:max-h-96 max-lg:max-h-48">
-              <form.Field name="profileImage">
-                {(field) => (
-                  <FormImage
-                    label="Profile Image"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    fallbackUrl={clubDetails!.profileImage ?? undefined}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0] ?? null;
-                      field.handleChange(file);
-                    }}
-                  />
-                )}
-              </form.Field>
-            </div>
-            <div className="grow w-48 lg:max-h-96 max-lg:max-h-48">
-              <form.Field name="bannerImage">
-                {(field) => (
-                  <FormImage
-                    label="Banner Image"
-                    onBlur={field.handleBlur}
-                    value={field.state.value}
-                    fallbackUrl={clubDetails!.bannerImage ?? undefined}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0] ?? null;
-                      field.handleChange(file);
-                    }}
-                  />
-                )}
-              </form.Field>
-            </div>
+            <form.Field name="profileImage">
+              {(field) => (
+                <FormImage
+                  label="Profile Image"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  fallbackUrl={clubDetails!.profileImage ?? undefined}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    field.handleChange(file);
+                  }}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
+                  className="grow w-48"
+                />
+              )}
+            </form.Field>
+            <form.Field name="bannerImage">
+              {(field) => (
+                <FormImage
+                  label="Banner Image"
+                  onBlur={field.handleBlur}
+                  value={field.state.value}
+                  fallbackUrl={clubDetails!.bannerImage ?? undefined}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    field.handleChange(file);
+                  }}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
+                  className="grow w-48"
+                />
+              )}
+            </form.Field>
           </div>
           <div className="flex flex-wrap gap-4">
             <form.Field name="name">
