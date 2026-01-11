@@ -25,12 +25,12 @@ export const chipStyles: ChipStyles = {
   },
   Officer: {
     label: 'Collaborator',
-    colorClass: 'bg-royal/30',
+    colorClass: 'bg-royal/30 dark:bg-cornflower-300/30',
     icon: <HandymanIcon fontSize="small" />,
   },
   President: {
     label: 'Admin',
-    colorClass: 'bg-rose-200',
+    colorClass: 'bg-rose-200 dark:bg-rose-900',
     icon: <GavelIcon fontSize="small" />,
   },
 };

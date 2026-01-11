@@ -98,7 +98,7 @@ const CollaboratorListItem = withForm({
                           className="[&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2"
                         />
                       }
-                      className="pr-6 bg-white rounded-full"
+                      className="pr-6 bg-white dark:bg-haiti rounded-full"
                       renderValue={(selected) => (
                         <MemberRoleChip key={selected} memberType={selected} />
                       )}
