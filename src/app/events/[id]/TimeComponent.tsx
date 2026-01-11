@@ -12,7 +12,7 @@ const TimeComponent = (props: Props) => {
   const dateString = format(date, 'EEE, LLLL d, yyyy, hh:mm');
 
   return (
-    <p className="text-sm text-slate-100 dark:text-slate-900 text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:text-shadow-[0_0_4px_rgb(255_255_255_/_0.4)]">
+    <p className="text-sm text-slate-100 dark:text-slate-900 text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
       {dateString}
     </p>
   );

@@ -49,9 +49,9 @@ const Home = async () => {
             <Sidebar homepage />
             <Link
               href="/"
-              className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center text-white dark:text-haiti text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:text-shadow-[0_0_4px_rgb(255_255_255_/_0.4)] dark:text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:text-shadow-[0_0_4px_rgb(255_255_255_/_0.4)]"
+              className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center text-white dark:text-haiti text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
             >
-              <NebulaLogo className="h-6 w-auto fill-white dark:fill-haiti drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:drop-shadow-[0_0_4px_rgb(255_255_255_/_0.4)]" />
+              <NebulaLogo className="h-6 w-auto fill-white dark:fill-haiti drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
               <span className="whitespace-nowrap">UTD CLUBS</span>
             </Link>
             <div className="ml-auto flex items-center justify-center gap-2">
@@ -66,7 +66,7 @@ const Home = async () => {
           </div>
           <section className="h-screen">
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
-              <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white dark:text-haiti text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:text-shadow-[0_0_4px_rgb(255_255_255_/_0.4)]">
+              <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white dark:text-haiti text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">
                 <span className="leading-none">POWERED BY</span>
                 <a
                   href="https://www.utdnebula.com/"
@@ -74,13 +74,13 @@ const Home = async () => {
                   rel="noopener"
                   className="group flex items-center gap-1"
                 >
-                  <NebulaLogo className="h-4 w-auto fill-white dark:fill-haiti drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:drop-shadow-[0_0_4px_rgb(255_255_255_/_0.4)]" />
+                  <NebulaLogo className="h-4 w-auto fill-white dark:fill-haiti drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
                   <span className="border-y-2 border-transparent leading-none decoration-transparent transition group-hover:border-b-inherit group-hover:underline">
                     NEBULA LABS
                   </span>
                 </a>
               </h2>
-              <h1 className="font-display mb-4 max-w-3xl px-5 text-center text-2xl font-semibold text-white dark:text-haiti text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] dark:text-shadow-[0_0_16px_rgb(255_255_255_/_0.4)] md:px-0 md:text-6xl">
+              <h1 className="font-display mb-4 max-w-3xl px-5 text-center text-2xl font-semibold text-white dark:text-haiti text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] md:px-0 md:text-6xl">
                 Discover the Best Clubs and Organizations at UTD
               </h1>
               <HomePageSearchBar />
@@ -89,7 +89,7 @@ const Home = async () => {
                   <TagPill
                     name={tag}
                     key={tag}
-                    className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] dark:drop-shadow-[0_0_4px_rgb(255_255_255_/_0.4)]"
+                    className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
                   />
                 ))}
                 <AllTags options={allTags} />
