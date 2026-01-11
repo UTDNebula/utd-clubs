@@ -1,20 +1,22 @@
 import { z } from 'zod';
 import { contactSchema } from './contact';
 
+const tagsSchema = z
+  .array(z.string())
+  .min(2, 'Select at least 2 tags')
+  .refine(
+    (tags) => tags.every((tag) => tag.length <= 100),
+    'Character limit reached',
+  )
+  .refine(
+    (tags) => tags.every((tag) => !tag.includes(',')),
+    'Tags cannot contain commas',
+  );
+
 export const createClubSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   description: z.string().min(1, 'Description is required'),
-  tags: z
-    .array(z.string())
-    .min(2, 'Select at least 2 tags')
-    .refine(
-      (tags) => tags.every((tag) => tag.length <= 100),
-      'Character limit reached',
-    )
-    .refine(
-      (tags) => tags.every((tag) => !tag.includes(',')),
-      'Tags cannot contain commas',
-    ),
+  tags: tagsSchema,
 });
 
 export const editClubContactSchema = z.object({
@@ -31,17 +33,7 @@ export const editClubFormSchema = z.object({
     .string()
     .min(1, 'Description is required')
     .max(5000, 'Character limit reached'),
-  tags: z
-    .array(z.string())
-    .min(2, 'Select at least 2 tags')
-    .refine(
-      (tags) => tags.every((tag) => tag.length <= 100),
-      'Character limit reached',
-    )
-    .refine(
-      (tags) => tags.every((tag) => !tag.includes(',')),
-      'Tags cannot contain commas',
-    ),
+  tags: tagsSchema,
   profileImage: z.file().nullable(),
   bannerImage: z.file().nullable(),
   foundingDate: z.date().nullable(),
@@ -57,17 +49,7 @@ export const editClubDetailsSchema = z.object({
     .string()
     .min(1, 'Description is required')
     .max(5000, 'Character limit reached'),
-  tags: z
-    .array(z.string())
-    .min(2, 'Select at least 2 tags')
-    .refine(
-      (tags) => tags.every((tag) => tag.length <= 100),
-      'Character limit reached',
-    )
-    .refine(
-      (tags) => tags.every((tag) => !tag.includes(',')),
-      'Tags cannot contain commas',
-    ),
+  tags: tagsSchema,
   profileImage: z.url().optional(),
   bannerImage: z.url().optional(),
   foundingDate: z.date().nullable(),
