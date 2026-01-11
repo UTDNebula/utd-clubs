@@ -30,7 +30,7 @@ const Panel = ({
         ${className ?? ''}`}
       id={id}
     >
-      <div className="flex items-center gap-2 ml-2">
+      <div className={`flex items-center gap-2 ${smallPadding ? '' : 'ml-2'}`}>
         {startAdornment}
         {heading && (
           <Typography variant="h2" className="text-xl font-bold text-haiti">
