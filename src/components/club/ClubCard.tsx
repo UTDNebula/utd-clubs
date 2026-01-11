@@ -23,8 +23,8 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
         href={manageView ? `/manage/${club.slug}` : `/directory/${club.slug}`}
         className="grow flex flex-col"
       >
-        <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
-          <div className="absolute inset-0 h-full w-full bg-gray-200" />
+        <div className="relative aspect-square overflow-hidden rounded-t-lg">
+          <div className="absolute inset-0 h-full w-full bg-white" />
           {club.profileImage && (
             <Image
               src={club.profileImage}
@@ -32,7 +32,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
               alt={club.name + ' logo'}
               priority={priority}
               sizes="20rem"
-              className="object-cover select-none"
+              className="object-contain select-none"
             />
           )}
         </div>
@@ -59,7 +59,7 @@ export const ClubCardSkeleton = () => {
       className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between md:min-h-[600px]"
     >
       <div className="grow flex flex-col">
-        <div className="relative h-48 overflow-hidden rounded-t-lg sm:h-56 md:h-64 lg:h-72">
+        <div className="relative aspect-square overflow-hidden rounded-t-lg">
           <Skeleton
             variant="rectangular"
             className="absolute inset-0 h-full w-full bg-gray-200"

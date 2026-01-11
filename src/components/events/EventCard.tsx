@@ -34,7 +34,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
               fill
               src={src}
               alt="event image"
-              className="object-cover object-left"
+              className="object-cover object-center"
             />
           )}
           <div className="absolute inset-0 p-2">
