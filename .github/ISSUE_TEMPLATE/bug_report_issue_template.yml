@@ -31,7 +31,9 @@ body:
       label: Version
       description: What version of our software are you running?
       options:
-        - Pre-release (Development)
+        - clubs.utdnebula.com
+        - dev.clubs.utdnebula.com
+        - a branch (specify above)
     validations:
       required: true
   - type: dropdown

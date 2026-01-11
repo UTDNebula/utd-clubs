@@ -1,0 +1,1 @@
+ALTER TABLE "user_metadata_to_events" ADD COLUMN "registered_at" timestamp DEFAULT now() NOT NULL;

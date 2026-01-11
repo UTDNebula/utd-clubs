@@ -22,8 +22,8 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
-  const { data: memberType, isPending } = useQuery(
-    api.club.memberType.queryOptions({ id: clubId }),
+  const { data: memberState, isPending } = useQuery(
+    api.club.memberState.queryOptions({ id: clubId }),
   );
 
   const [optimisticMemberType, setOptimisticMemberType] = useState<
@@ -31,21 +31,21 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   >(null);
 
   useEffect(() => {
-    setOptimisticMemberType(memberType ?? null);
-  }, [memberType]);
+    setOptimisticMemberType(memberState?.memberType ?? null);
+  }, [memberState?.memberType]);
 
   const joinLeave = useMutation(
     api.club.joinLeave.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: [
-            ['club', 'memberType'],
+            ['club', 'memberState'],
             { input: { id: clubId }, type: 'query' },
           ],
         });
       },
       onError: () => {
-        setOptimisticMemberType(memberType ?? null);
+        setOptimisticMemberType(memberState?.memberType ?? null);
       },
     }),
   );
@@ -77,7 +77,28 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
   return (
     <Tooltip
-      title={displayMemberType ? 'Click to leave club' : 'Click to join club'}
+      title={
+        <div className="text-center">
+          <span className="font-bold">
+            {displayMemberType ? 'Click to leave club' : 'Click to join club'}
+          </span>
+          {displayMemberType && memberState?.joinedAt && (
+            <>
+              <br />
+              Joined on{' '}
+              {memberState?.joinedAt.toLocaleString('en-us', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true,
+              })}
+            </>
+          )}
+        </div>
+      }
     >
       <Button
         variant="contained"

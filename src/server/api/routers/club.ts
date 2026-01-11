@@ -163,7 +163,7 @@ export const clubRouter = createTRPCRouter({
   }),
   topTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = (await ctx.db.select().from(usedTags).limit(7)).map(
+      const tags = (await ctx.db.select().from(usedTags).limit(5)).map(
         (obj) => obj.tag,
       );
       return tags;
@@ -228,6 +228,27 @@ export const clubRouter = createTRPCRouter({
         )?.memberType ?? null
       );
     }),
+  memberState: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input, ctx }) => {
+      if (!ctx.session) return null;
+
+      const result = await ctx.db.query.userMetadataToClubs.findFirst({
+        where: and(
+          eq(userMetadataToClubs.clubId, input.id),
+          eq(userMetadataToClubs.userId, ctx.session.user.id),
+          inArray(userMetadataToClubs.memberType, [
+            'Member',
+            'Officer',
+            'President',
+          ]),
+        ),
+      });
+      return {
+        memberType: result?.memberType ?? null,
+        joinedAt: result?.joinedAt ?? null,
+      };
+    }),
   joinLeave: protectedProcedure
     .input(joinLeaveSchema)
     .mutation(async ({ ctx, input }) => {
@@ -252,7 +273,7 @@ export const clubRouter = createTRPCRouter({
       } else {
         await ctx.db
           .insert(userMetadataToClubs)
-          .values({ userId: joinUserId, clubId });
+          .values({ userId: joinUserId, clubId, joinedAt: new Date() });
       }
       return dataExists;
     }),

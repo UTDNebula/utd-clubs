@@ -12,14 +12,19 @@ import {
 } from '@mui/x-data-grid';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
-import { SyntheticEvent, useCallback, useMemo, useState } from 'react';
+import {
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import z from 'zod';
 import Confirmation from '@src/components/Confirmation';
 import { AppRouter } from '@src/server/api/root';
 import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
 import {
   SelectClub,
-  SelectUserMetadataToClubsWithNonNullableUserMetadataWithUser,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -31,6 +36,7 @@ import useMemberListDeletionState from './useMemberListDeletionState';
 import {
   actionColumn,
   columns,
+  defaultUserSort,
   formatUserListString,
   MemberListAbilities,
   ToastState,
@@ -42,7 +48,7 @@ type MemberListProps = {
 };
 
 const MemberList = ({ members, club }: MemberListProps) => {
-  const membersIndexed = members.map((member, index) => {
+  const membersIndexed = members.sort(defaultUserSort).map((member, index) => {
     return {
       ...member,
       id: index,
@@ -57,7 +63,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
   const api = useTRPC();
 
   const removeMembers = useMutation<
-    SelectUserMetadataToClubsWithNonNullableUserMetadataWithUser[],
+    SelectUserMetadataToClubsWithUserMetadataWithUser[],
     TRPCClientErrorLike<AppRouter>,
     z.infer<typeof removeMembersSchema>
   >(api.club.edit.removeMembers.mutationOptions({}));
@@ -78,6 +84,34 @@ const MemberList = ({ members, club }: MemberListProps) => {
       type: 'include',
       ids: new Set<GridRowId>(),
     });
+
+  /*
+   * Join timestamp modifier key detection
+   */
+
+  const [expandTimestamps, setExpandTimestamps] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey) {
+        setExpandTimestamps(true);
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (!event.ctrlKey || !event.shiftKey) {
+        setExpandTimestamps(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   /*
    * Contact emails visibility
@@ -146,7 +180,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
         },
         onSuccess: (newMembers) => {
           setRows(
-            newMembers.map((member, index) => {
+            newMembers.sort(defaultUserSort).map((member, index) => {
               const indexOG = membersIndexed.find(
                 (oldMember) => oldMember.userId === member.userId,
               )?.id;
@@ -185,7 +219,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
     await getMembers.refetch().then((data) => {
       if (data.data) {
         setRows(
-          data.data.map((member, index) => {
+          data.data.sort(defaultUserSort).map((member, index) => {
             return {
               ...member,
               id: index,
@@ -226,6 +260,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
     () => ({
       memberListDeletionState,
       memberListAbilities,
+      expandTimestamps,
       contactEmailsVisible,
       showContactEmails,
       removeMembers,
@@ -237,6 +272,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
     [
       memberListDeletionState,
       memberListAbilities,
+      expandTimestamps,
       contactEmailsVisible,
       removeMembers,
       getMembers,
@@ -279,7 +315,13 @@ const MemberList = ({ members, club }: MemberListProps) => {
           slotProps={{ toolbar: { club: club } as GridSlotProps['toolbar'] }}
           showToolbar
           initialState={{
-            columns: { columnVisibilityModel: { userId: false, minor: false } },
+            columns: {
+              columnVisibilityModel: {
+                userId: false,
+                major: false,
+                minor: false,
+              },
+            },
             pagination: { paginationModel: { pageSize: 25 } },
           }}
           pageSizeOptions={[25]}
