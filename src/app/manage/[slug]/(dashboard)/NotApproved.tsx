@@ -2,14 +2,14 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Panel from '@src/components/form/Panel';
 import { SelectClub } from '@src/server/db/models';
 
-const NotAccepted = ({
+const NotApproved = ({
   status,
 }: {
   status: Exclude<SelectClub['approved'], 'approved'>;
 }) => {
   return (
     <Panel
-      className="bg-cornflower-50"
+      className="bg-cornflower-50 dark:bg-cornflower-900"
       startAdornment={<AccessTimeIcon />}
       heading={
         <>
@@ -54,4 +54,4 @@ const NotAccepted = ({
   );
 };
 
-export default NotAccepted;
+export default NotApproved;
