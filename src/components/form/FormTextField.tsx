@@ -13,7 +13,18 @@ export function StyledTextField(props: StyledTextFieldProps) {
   );
 }
 
-export default function FormTextField({ label }: { label: string }) {
+type FormTextFieldFieldPropsBase = { label: string };
+
+type FormTextFieldFieldProps = Omit<
+  TextFieldProps,
+  keyof FormTextFieldFieldPropsBase
+> &
+  FormTextFieldFieldPropsBase;
+
+export default function FormTextField({
+  label,
+  ...props
+}: FormTextFieldFieldProps) {
   const field = useFieldContext<string>();
   return (
     <StyledTextField
@@ -27,6 +38,7 @@ export default function FormTextField({ label }: { label: string }) {
           : undefined
       }
       label={label}
+      {...props}
     />
   );
 }
