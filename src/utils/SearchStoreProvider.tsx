@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, useContext, useRef, type ReactNode } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { createContext, useContext, useRef } from 'react';
 import { useStore } from 'zustand';
 import {
   createSearchStore,
@@ -14,19 +15,13 @@ export const SearchStoreContext = createContext<SearchStoreApi | undefined>(
   undefined,
 );
 
-type SearchStoreProviderProps = {
-  initialSearch?: string;
-  initialTags?: string[];
-  children: ReactNode;
-};
-
-export const SearchStoreProvider = ({
-  initialSearch,
-  initialTags,
-  children,
-}: SearchStoreProviderProps) => {
+export const SearchStoreProvider = ({ children }: React.PropsWithChildren) => {
   const storeRef = useRef<SearchStoreApi | null>(null);
+  const searchParams = useSearchParams();
   if (!storeRef.current) {
+    const initialSearch = searchParams.get('search') ?? undefined;
+    const tagsParam = searchParams.get('tags');
+    const initialTags = tagsParam ? tagsParam.split(',') : undefined;
     const defaultInitStateWithParams = {
       ...defaultInitState,
       search: initialSearch ?? defaultInitState.search,

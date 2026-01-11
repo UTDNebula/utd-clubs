@@ -13,25 +13,12 @@ import NebulaLogo from '@src/icons/NebulaLogo';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
-const Home = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) => {
-  let { search, tags } = await searchParams;
-  if (Array.isArray(search)) {
-    search = search[0];
-  }
-  if (Array.isArray(tags)) {
-    tags = tags[0];
-  }
-  tags = tags ? tags.split(',') : [];
-
-  const topTags = await api.club.topTags();
+const Home = async () => {
+  const tags = await api.club.topTags();
   const allTags = await api.club.distinctTags();
 
   return (
-    <SearchStoreProvider initialSearch={search} initialTags={tags}>
+    <SearchStoreProvider>
       <main className="relative">
         <div className="absolute inset-0 z-0">
           <div className="relative h-[120vh]">
@@ -109,7 +96,7 @@ const Home = async ({
               </h1>
               <HomePageSearchBar />
               <div className="pointer-events-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
-                {topTags.map((tag) => (
+                {tags.map((tag) => (
                   <TagPill
                     name={tag}
                     key={tag}

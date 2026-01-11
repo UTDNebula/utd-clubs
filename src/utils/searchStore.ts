@@ -19,7 +19,6 @@ export type SearchAction = {
 function setSearchQueryParam(search: string) {
   if (typeof window === 'undefined') return;
   const url = new URL(window.location.href);
-  console.log('setSearchQueryParam', search);
   if (search) {
     url.searchParams.set('search', search);
   } else {
