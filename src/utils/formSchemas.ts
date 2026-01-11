@@ -12,6 +12,26 @@ export const accountSettingsSchema = z.object({
 
 export type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
 
+export const accountOnboardingSchema = z.object({
+  firstName: z.string().min(1, 'Name is required'),
+  lastName: z.string().nullable(),
+  major: z.string().nullable(),
+  minor: z.string().nullable(),
+  graduationDate: z.date().nullable(),
+  contactEmail: z
+    .email({
+      error: 'Use your UT Dallas email',
+      pattern:
+        /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)*utdallas\.edu$/i,
+    })
+    .min(1, 'Contact email is required'),
+});
+
+export type AccountOnboardingSchema = z.infer<typeof accountOnboardingSchema>;
+// export type AccountOnboardingSchema = Partial<
+//   z.infer<typeof accountOnboardingSchema>
+// >;
+
 export const createClubSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   description: z.string().min(1, 'Description is required'),
