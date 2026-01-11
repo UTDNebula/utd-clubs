@@ -1,3 +1,4 @@
+import { TZDateMini } from '@date-fns/tz';
 import { api } from '@src/trpc/server';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClubContactCard from './ClubContactCard';
@@ -11,13 +12,10 @@ const ClubBody = async ({
 }: {
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }) => {
-  const now = new Date();
-  const oneYearAgo = new Date();
-  oneYearAgo.setFullYear(now.getFullYear() - 1);
+  const now = TZDateMini.tz('America/Chicago');
 
-  const events = await api.event.byClubId({
+  const events = await api.event.clubUpcoming({
     clubId: club.id,
-    sortByDate: true,
     currentTime: now,
   });
 
@@ -41,7 +39,6 @@ const ClubBody = async ({
           id="upcoming-events"
           club={club}
           upcomingEvents={events}
-          oneYearAgo={oneYearAgo}
         />
       </div>
     </section>

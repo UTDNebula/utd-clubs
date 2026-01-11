@@ -156,7 +156,7 @@ export const clubRouter = createTRPCRouter({
   }),
   topTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = (await ctx.db.select().from(usedTags).limit(7)).map(
+      const tags = (await ctx.db.select().from(usedTags).limit(5)).map(
         (obj) => obj.tag,
       );
       return tags;
@@ -221,6 +221,27 @@ export const clubRouter = createTRPCRouter({
         )?.memberType ?? null
       );
     }),
+  memberState: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input, ctx }) => {
+      if (!ctx.session) return null;
+
+      const result = await ctx.db.query.userMetadataToClubs.findFirst({
+        where: and(
+          eq(userMetadataToClubs.clubId, input.id),
+          eq(userMetadataToClubs.userId, ctx.session.user.id),
+          inArray(userMetadataToClubs.memberType, [
+            'Member',
+            'Officer',
+            'President',
+          ]),
+        ),
+      });
+      return {
+        memberType: result?.memberType ?? null,
+        joinedAt: result?.joinedAt ?? null,
+      };
+    }),
   joinLeave: protectedProcedure
     .input(joinLeaveSchema)
     .mutation(async ({ ctx, input }) => {
@@ -245,7 +266,7 @@ export const clubRouter = createTRPCRouter({
       } else {
         await ctx.db
           .insert(userMetadataToClubs)
-          .values({ userId: joinUserId, clubId });
+          .values({ userId: joinUserId, clubId, joinedAt: new Date() });
       }
       return dataExists;
     }),
@@ -296,7 +317,7 @@ export const clubRouter = createTRPCRouter({
           eq(userMetadataToClubs.clubId, input.id),
           inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
         ),
-        with: { userMetadata: true },
+        with: { userMetadata: { with: { user: true } } },
       });
       return officers;
     }),
@@ -307,6 +328,15 @@ export const clubRouter = createTRPCRouter({
         where: eq(officersTable.clubId, input.id),
       });
       return officers;
+    }),
+  getMembers: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input, ctx }) => {
+      const members = await ctx.db.query.userMetadataToClubs.findMany({
+        where: eq(userMetadataToClubs.clubId, input.id),
+        with: { userMetadata: { with: { user: true } } },
+      });
+      return members;
     }),
   isActive: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     const hasPresident = await ctx.db.query.userMetadataToClubs.findFirst({

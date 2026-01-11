@@ -17,15 +17,17 @@ import theme from '@src/utils/theme';
 import useDebounce from '@src/utils/useDebounce';
 
 export const HomePageSearchBar = () => {
-  const [search, setSearch] = useState<string>('');
-  const debouncedSearch = useDebounce(search, 300);
   const {
+    search: initialSearch,
     setSearch: updateSearch,
     tags,
     setTags,
     setShouldFocus,
     isFetching,
   } = useSearchStore((state) => state);
+  const [search, setSearch] = useState<string>(initialSearch);
+  const debouncedSearch = useDebounce(search, 300);
+
   const api = useTRPC();
   const { data } = useQuery(
     api.club.tagSearch.queryOptions(

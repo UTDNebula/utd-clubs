@@ -33,7 +33,10 @@ const byClubIdSchema = z.object({
   currentTime: z.optional(z.date()),
   sortByDate: z.boolean().default(false),
 });
-
+const clubUpcomingEventsSchema = z.object({
+  clubId: z.string(),
+  currentTime: z.date().optional(),
+});
 const byDateRangeSchema = z.object({
   startTime: z.date(),
   endTime: z.date(),
@@ -81,6 +84,33 @@ export const eventRouter = createTRPCRouter({
       } catch (e) {
         console.error(e);
 
+        throw e;
+      }
+    }),
+  clubUpcoming: publicProcedure
+    .input(clubUpcomingEventsSchema)
+    .query(async ({ input, ctx }) => {
+      const { clubId, currentTime } = input;
+
+      try {
+        const now = currentTime ?? new Date();
+        const threeMonthsLater = add(now, { months: 3 });
+
+        const upcomingEvents = await ctx.db.query.events.findMany({
+          where: (event) =>
+            and(
+              eq(event.clubId, clubId),
+              gte(event.endTime, now),
+              lte(event.startTime, threeMonthsLater),
+            ),
+          orderBy: (event, { asc }) => [asc(event.startTime)],
+          with: { club: true },
+          limit: 20,
+        });
+
+        return upcomingEvents;
+      } catch (e) {
+        console.error(e);
         throw e;
       }
     }),
@@ -231,6 +261,25 @@ export const eventRouter = createTRPCRouter({
             ),
         }),
       );
+    }),
+  registerState: publicProcedure
+    .input(joinLeaveSchema)
+    .query(async ({ input, ctx }) => {
+      if (!ctx.session) return null;
+
+      const eventId = input.id;
+      const userId = ctx.session.user.id;
+      const result = await ctx.db.query.userMetadataToEvents.findFirst({
+        where: (userMetadataToEvents) =>
+          and(
+            eq(userMetadataToEvents.userId, userId),
+            eq(userMetadataToEvents.eventId, eventId),
+          ),
+      });
+      return {
+        registered: Boolean(result),
+        registeredAt: result?.registeredAt ?? null,
+      };
     }),
   joinEvent: protectedProcedure
     .input(joinLeaveSchema)
