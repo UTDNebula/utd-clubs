@@ -59,7 +59,7 @@ export const ClubSearchBar = () => {
               ),
               type: 'search',
               className:
-                'bg-white dark:bg-haiti rounded-full ' +
+                'bg-white dark:bg-neutral-900 rounded-full ' +
                 params.InputProps.className,
             },
           }}

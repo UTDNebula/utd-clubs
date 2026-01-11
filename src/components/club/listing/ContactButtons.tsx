@@ -20,7 +20,10 @@ const ContactButtons = ({ contacts }: ContactButtonProps) => {
             target="_blank"
             className="inline-block"
           >
-            <IconButton className="group bg-white dark:bg-haiti" size="large">
+            <IconButton
+              className="group bg-white dark:bg-neutral-900"
+              size="large"
+            >
               {logo[item.platform]}
             </IconButton>
           </Link>

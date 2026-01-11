@@ -64,7 +64,7 @@ const ContactListItem = withForm({
                   label={
                     subField.state.value === 'email' ? 'Email Address' : 'URL'
                   }
-                  className="w-full [&>.MuiInputBase-root]:bg-white  dark:[&>.MuiInputBase-root]:bg-haiti"
+                  className="w-full [&>.MuiInputBase-root]:bg-white  dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   size="small"
                   error={!subField.state.meta.isValid}
                   helperText={

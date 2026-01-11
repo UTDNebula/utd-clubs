@@ -55,7 +55,7 @@ const CreateClubForm = () => {
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-haiti"
+                className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                 size="small"
                 error={field.state.meta.isTouched && !field.state.meta.isValid}
                 helperText={
@@ -78,7 +78,7 @@ const CreateClubForm = () => {
                 onBlur={field.handleBlur}
                 value={field.state.value}
                 label="Description"
-                className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-haiti"
+                className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                 multiline
                 minRows={4}
                 error={field.state.meta.isTouched && !field.state.meta.isValid}

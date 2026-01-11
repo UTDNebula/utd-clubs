@@ -33,7 +33,7 @@ export default function DebouncedInput({
       value={value}
       onChange={(e) => setValue(e.target.value)}
       size="small"
-      className={`[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-haiti min-w-16 [&>.MuiInputBase-root]:max-h-8 text-xs ${props.className ?? ''}`}
+      className={`[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900 min-w-16 [&>.MuiInputBase-root]:max-h-8 text-xs ${props.className ?? ''}`}
     />
   );
 }

@@ -147,7 +147,8 @@ export const HomePageSearchBar = () => {
                     </div>
                   ),
                   className:
-                    'bg-white dark:bg-haiti ' + params.InputProps.className,
+                    'bg-white dark:bg-neutral-900 ' +
+                    params.InputProps.className,
                   sx: {
                     borderRadius: theme.shape.borderRadius,
                   },

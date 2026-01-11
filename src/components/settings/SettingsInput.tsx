@@ -22,7 +22,7 @@ const SettingsInput = ({
       <input
         type="text"
         defaultValue={defaultValue}
-        className="box-border w-full rounded-full border bg-white dark:bg-haiti p-2"
+        className="box-border w-full rounded-full border bg-white dark:bg-neutral-900 p-2"
         {...register(name)}
       />
     </div>

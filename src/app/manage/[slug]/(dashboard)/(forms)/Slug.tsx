@@ -221,7 +221,7 @@ const Slug = ({ club, role }: DetailsProps) => {
                     onBlur={field.handleBlur}
                     value={field.state.value}
                     label="URL"
-                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-haiti"
+                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                     size="small"
                     disabled={role !== 'President'}
                     error={
