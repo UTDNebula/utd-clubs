@@ -6,7 +6,7 @@ import Select, { SelectProps } from '@mui/material/Select';
 import { ReactNode } from 'react';
 import { useFieldContext } from '@src/utils/form';
 
-interface SelectOptionBase<T = string> {
+export interface SelectOptionBase<T = string> {
   label: string;
   value: T;
   disabled?: boolean;
@@ -33,6 +33,7 @@ export default function FormSelect({
   label,
   options,
   children,
+  className,
   ...props
 }: FormSelectProps) {
   const field = useFieldContext<string>();
@@ -45,7 +46,7 @@ export default function FormSelect({
   });
 
   return (
-    <FormControl className="w-64">
+    <FormControl className={`w-64 ${className}`}>
       <InputLabel>{label}</InputLabel>
       <GenericSelect
         value={field.state.value}

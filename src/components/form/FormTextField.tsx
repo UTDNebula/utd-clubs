@@ -6,9 +6,9 @@ type StyledTextFieldProps = TextFieldProps;
 export function StyledTextField(props: StyledTextFieldProps) {
   return (
     <TextField
-      className="[&>.MuiInputBase-root]:bg-white"
       size="small"
       {...props}
+      className={`[&>.MuiInputBase-root]:bg-white w-64 ${props.className}`}
     />
   );
 }

@@ -1,9 +1,35 @@
-import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
+/*
+ * # NOTE ABOUT THE `FormAutocomplete` COMPONENT
+ * This component is still a work in progress due to its complexity, so it is
+ * best to re-implement an Autocomplete component yourself and add any features
+ * you may need.
+ *
+ * Things that are broken:
+ * - Filtering options
+ * - `multiple` prop
+ * - Using `AutocompleteProps`
+ * - ...and probably a lot more
+ */
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import Autocomplete, {
+  AutocompleteProps,
+  createFilterOptions,
+} from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import { ReactNode, useMemo } from 'react';
 import { useFieldContext } from '@src/utils/form';
-import { SelectOption } from './FormSelect';
+import { SelectOption, SelectOptionBase } from './FormSelect';
 import { StyledTextField } from './FormTextField';
+
+const filterOptions = createFilterOptions<SelectOptionBase>({
+  matchFrom: 'any',
+  stringify: (option) => {
+    return option.label ?? option.value;
+  },
+  trim: true,
+});
 
 type FormAutocompletePropsBase<
   Value,
@@ -51,6 +77,7 @@ interface FormAutocompleteProps<
   multiple?: never; // Figure out how to implement this later
   disableClearable?: DisableClearable;
   freeSolo?: FreeSolo;
+  className?: string;
 }
 
 export default function FormAutocomplete<
@@ -62,6 +89,7 @@ export default function FormAutocomplete<
   label,
   options,
   freeSolo,
+  className,
   ...props
 }: FormAutocompleteProps<Value, Multiple, DisableClearable, FreeSolo>) {
   const field = useFieldContext<string>();
@@ -73,21 +101,21 @@ export default function FormAutocomplete<
     }
   });
 
-  const selectedObject = useMemo(
-    () =>
-      normalizedOptions.find(
-        (option) => (option.value ?? option.label) === field.state.value,
-      ),
-    [field.state.value, normalizedOptions],
-  );
+  const selectedObject = useMemo(() => {
+    const found = normalizedOptions.find(
+      (option) => (option.value ?? option.label) === field.state.value,
+    );
+    return found ?? null;
+  }, [field.state.value, normalizedOptions]);
 
   return (
     <Autocomplete
       // disableClearable
-      className="w-64"
+      className={`w-64 ${className}`}
       size="small"
       freeSolo={freeSolo}
       onBlur={field.handleBlur}
+      /* @ts-expect-error MUI complains about switching from uncontrolled to controlled, so we set selectedObject to null on line 108 and expect this error */
       value={selectedObject}
       onChange={(_e, newValue) => {
         if (!freeSolo) {
@@ -119,6 +147,19 @@ export default function FormAutocomplete<
           );
         }
       }}
+      getOptionKey={(option) => {
+        if (typeof option === 'string') {
+          return option.replaceAll(' ', '');
+        } else {
+          return (
+            (typeof option.value === 'string'
+              ? option.value.replaceAll(' ', '')
+              : null) ??
+            option.label?.replaceAll(' ', '') ??
+            'UnknownKey'
+          );
+        }
+      }}
       renderOption={(props, option) => {
         const { key, ...optionProps } = props;
         return (
@@ -143,8 +184,10 @@ export default function FormAutocomplete<
                 '.'
               : undefined
           }
+          className="w-full"
         />
       )}
+      // filterOptions={filterOptions}
       {...props}
     />
   );

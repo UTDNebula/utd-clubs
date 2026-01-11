@@ -4,6 +4,7 @@ import {
   FormResetButton,
   FormSubmitButton,
 } from '@src/components/form/FormButtons';
+import FormFieldSet from '@src/components/form/FormFieldSet';
 import FormSelect from '@src/components/form/FormSelect';
 import FormTextField from '@src/components/form/FormTextField';
 
@@ -23,5 +24,6 @@ export const { useAppForm, withForm } = createFormHook({
   formComponents: {
     ResetButton: FormResetButton,
     SubmitButton: FormSubmitButton,
+    FieldSet: FormFieldSet,
   },
 });

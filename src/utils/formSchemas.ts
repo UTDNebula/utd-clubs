@@ -3,9 +3,9 @@ import { studentClassificationEnum } from '@src/server/db/schema/users';
 import { contactSchema } from './contact';
 
 export const accountSettingsSchema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  major: z.string().min(1),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  major: z.string().min(1, 'College major is required'),
   minor: z.string().nullable(),
   role: z.enum(['Student', 'Student Organizer', 'Administrator']),
   studentClassification: z.enum(studentClassificationEnum.enumValues),
@@ -16,7 +16,6 @@ export const accountSettingsSchema = z.object({
       pattern:
         /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)*utdallas\.edu$/i,
     })
-    .min(1, 'Contact email is required')
     .nullable(),
 });
 
