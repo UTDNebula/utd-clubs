@@ -23,6 +23,25 @@ export const editClubContactSchema = z.object({
   contacts: contactSchema.array(),
 });
 
+export const MAX_FILE_SIZE = 5 * 1024 * 1024;
+export const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/svg+xml',
+];
+const fileSchema = z
+  .file()
+  .nullable()
+  .refine(
+    (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
+    'Only JPEG, PNG, and SVG formats are supported',
+  )
+  .refine(
+    (file) => !file || file.size <= MAX_FILE_SIZE,
+    'Max image size is 5MB',
+  );
+
 export const editClubFormSchema = z.object({
   id: z.string(),
   name: z
@@ -34,8 +53,8 @@ export const editClubFormSchema = z.object({
     .min(1, 'Description is required')
     .max(5000, 'Character limit reached'),
   tags: tagsSchema,
-  profileImage: z.file().nullable(),
-  bannerImage: z.file().nullable(),
+  profileImage: fileSchema,
+  bannerImage: fileSchema,
   foundingDate: z.date().nullable(),
 });
 
@@ -103,8 +122,14 @@ export const editSlugSchema = z.object({
 
 export const createEventSchema = z.object({
   clubId: z.string(),
-  name: z.string().min(1).max(100, 'Character limit reached'),
-  location: z.string().min(1).max(100, 'Character limit reached'),
+  name: z
+    .string()
+    .min(3, 'Name must be at least 3 characters')
+    .max(100, 'Character limit reached'),
+  location: z
+    .string()
+    .min(1, 'Location must be at least 3 characters')
+    .max(100, 'Character limit reached'),
   description: z.string().max(1000, 'Character limit reached'),
   startTime: z.date(),
   endTime: z.date(),
@@ -122,7 +147,7 @@ export const eventFormSchema = z.object({
   description: z.string().max(1000, 'Character limit reached'),
   startTime: z.date(),
   endTime: z.date(),
-  image: z.file().nullable(),
+  image: fileSchema,
 });
 
 const characterLimitError = 'Character limit reached';
