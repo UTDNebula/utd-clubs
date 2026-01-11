@@ -41,7 +41,7 @@ const Home = async () => {
               <StarDoodle className="w-18 h-18 fill-white dark:fill-haiti absolute top-[15%] right-[15%] w-[clamp(56px,7vw,72px)] animate-spin [animation-direction:reverse] [animation-duration:77s]" />
               <StarDoodle className="w-12 h-12 fill-white dark:fill-haiti hidden md:block absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin [animation-duration:60s]" />
             </section>
-            <section className="absolute top-[100vh] z-10 h-[20vh] w-full bg-linear-to-t from-[rgb(246,246,246)] dark:from-black to-transparent"></section>
+            <section className="absolute top-[100vh] z-10 h-[20vh] w-full bg-linear-to-t from-[#f6f6f6] dark:from-[#101010] to-transparent"></section>
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
