@@ -25,11 +25,7 @@ const NewSidebar = ({
       >
         <MenuIcon
           fontSize="inherit"
-          className={
-            homepage
-              ? 'fill-white dark:fill-haiti'
-              : 'fill-haiti dark:fill-white'
-          }
+          className={homepage ? 'fill-white' : 'fill-haiti dark:fill-white'}
         />
       </IconButton>
       <Drawer
