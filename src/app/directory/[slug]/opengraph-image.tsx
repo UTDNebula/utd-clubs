@@ -73,17 +73,19 @@ export default async function Image({ params }: { params: { slug: string } }) {
           <div
             style={{
               display: 'flex',
+              position: 'relative',
               alignItems: 'center',
               justifyContent: 'center',
               width: 400,
               height: 400,
               borderRadius: '50%',
-              backgroundColor: 'white', // The white background
+              backgroundColor: 'white',
               border: '6px solid white',
-              boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+              boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
               overflow: 'hidden',
             }}
           >
+            {/* Profile Image */}
             <img
               src={clubData.profileImage}
               alt={clubData.name + ' logo'}
@@ -91,6 +93,33 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
+              }}
+            />
+
+            {/* Glossy Overlay */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background:
+                  'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%)',
+                borderRadius: '50%',
+              }}
+            />
+
+            {/* Inset shadow */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderRadius: '50%',
+                boxShadow: 'inset 0 0 25px rgba(0,0,0,0.25)',
               }}
             />
           </div>
