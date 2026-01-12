@@ -123,7 +123,6 @@ export const minors = [
   'Neuroscience',
   'Psychology',
   'Speech, Language, and Hearing Sciences',
-  'Arts Management and Leadership',
   'Criminology',
   'Economics',
   'Geography',
