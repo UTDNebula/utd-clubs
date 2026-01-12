@@ -55,9 +55,24 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
 
       // If we have overflow, remove 1 more tag to make space for the overflow Chip
       if (validCount < tags.length) {
-        setVisibleCount(Math.max(0, validCount - 1));
+        if (validCount > 0) {
+          const containerRight = container.getBoundingClientRect().right;
+          const lastChildRight =
+            children[validCount - 1]!.getBoundingClientRect().right;
+          const remainingSpace = containerRight - lastChildRight;
+
+          const overflowWidth = tags.length - validCount == 1 ? 63 : 75; // estimated width of the overflow chip
+
+          if (remainingSpace < GAP + overflowWidth) {
+            setVisibleCount(Math.max(0, validCount - 1)); // make space for overflow chip
+          } else {
+            setVisibleCount(validCount); // enough space
+          }
+        } else {
+          setVisibleCount(0); // no tags fit, show only overflow
+        }
       } else {
-        setVisibleCount(tags.length);
+        setVisibleCount(tags.length); // all tags fit
       }
 
       setIsReady(true);
@@ -106,9 +121,9 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
       {hasOverflow && (
         <div className="flex" data-overflow="true">
           <Chip
-            label={`+${overflowTags.length} tags`}
+            label={`+${overflowTags.length} ${overflowTags.length === 1 ? 'tag' : 'tags'}`}
             onClick={handleMenuOpen}
-            className="font-bold bg-cornflower-100 text-cornflower-700 hover:bg-slate-300 cursor-pointer"
+            className="font-bold bg-cornflower-100 text-cornflower-600 hover:bg-slate-300 cursor-pointer"
           />
           <Menu
             anchorEl={anchorEl}
