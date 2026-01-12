@@ -23,9 +23,9 @@ export type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
 
 export const accountOnboardingSchema = z.object({
   firstName: z.string().min(1, 'Name is required'),
-  lastName: z.string().nullable(),
-  major: z.string().nullable(),
-  minor: z.string().nullable(),
+  lastName: z.string().optional(),
+  major: z.string().optional(),
+  minor: z.string().nullable().optional(),
   studentClassification: z.enum(studentClassificationEnum.enumValues),
   graduationDate: z.date().nullable(),
   contactEmail: z
@@ -34,7 +34,8 @@ export const accountOnboardingSchema = z.object({
       pattern:
         /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)*utdallas\.edu$/i,
     })
-    .min(1, 'Contact email is required'),
+    .min(1, 'Contact email is required')
+    .nullable(),
 });
 
 export type AccountOnboardingSchema = z.infer<typeof accountOnboardingSchema>;

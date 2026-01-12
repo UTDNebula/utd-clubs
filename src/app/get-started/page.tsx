@@ -51,7 +51,6 @@ export default async function Page() {
         <OnboardingForm
           userMetadata={userMetadata}
           withLayout
-          hideMobileStepper
         />
       </div>
     </main>

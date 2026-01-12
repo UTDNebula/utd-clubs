@@ -16,7 +16,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 const byIdSchema = z.object({ id: z.string().uuid() });
 
 const updateByIdSchema = z.object({
-  updateUser: insertUserMetadata.omit({ id: true }),
+  updateUser: insertUserMetadata.partial().omit({ id: true }),
   clubs: z.string().array().optional(),
 });
 const nameOrEmailSchema = z.object({
