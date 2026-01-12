@@ -13,7 +13,9 @@ const ClubTitle = async ({
       id="club-tile"
       className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-0 mt-2"
     >
-      <div className="flex flex-row gap-4 w-full md:w-auto flex-grow items-start">
+      <div
+        className={`flex ${club.name.length > 40 ? 'flex-col ' : 'flex-row '} md:flex-row gap-4 w-full md:w-auto flex-grow items-start`}
+      >
         {club.profileImage && (
           <Image
             src={club.profileImage}
@@ -30,8 +32,10 @@ const ClubTitle = async ({
             <h1
               className={`font-display font-bold text-slate-800 ${
                 club.name.length > 40
-                  ? 'text-2xl md:text-3xl'
-                  : 'text-4xl md:text-5xl'
+                  ? 'text-xl md:text-3xl'
+                  : club.name.length > 12
+                    ? 'text-2xl md:text-5xl'
+                    : 'text-4xl md:text-5xl'
               }`}
             >
               {club.name}
