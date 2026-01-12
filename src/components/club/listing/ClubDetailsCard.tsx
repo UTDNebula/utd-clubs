@@ -12,12 +12,7 @@ export default function ClubDetailsCard({
   id,
 }: ClubDetailsCardProps) {
   return (
-    <Panel
-      className="bg-neutral-50 shadow-sm text-sm"
-      id={id}
-      smallPadding
-      heading="Details"
-    >
+    <Panel className="shadow-sm text-sm" id={id} smallPadding heading="Details">
       {club.numMembers ||
       club.foundingDate ||
       lastEventDate ||

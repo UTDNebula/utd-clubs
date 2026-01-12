@@ -60,7 +60,7 @@ export default function OfficerList({
   return (
     <div
       id={id || 'officer-card-wrapper'}
-      className="flex flex-col gap-2 bg-neutral-50 shadow-sm p-6 rounded-lg transition-all duration-500 overflow-hidden"
+      className="flex flex-col gap-2 bg-white shadow-sm p-6 rounded-lg transition-all duration-500 overflow-hidden"
       style={containerStyle}
     >
       <h2 className="text-xl font-bold text-slate-900 mb-2">Officers</h2>
@@ -77,7 +77,7 @@ export default function OfficerList({
 
         {/* fade overlay only shows if content is taller than right side AND not expanded */}
         {needsTruncation && !isExpanded && (
-          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-neutral-50 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
         )}
       </div>
 

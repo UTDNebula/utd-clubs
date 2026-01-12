@@ -19,7 +19,7 @@ export default function ClubUpcomingEventsCard({
 
   return (
     <Panel
-      className="bg-neutral-50 shadow-sm text-sm"
+      className="shadow-sm text-sm"
       id={id}
       smallPadding
       heading="Upcoming Events"
