@@ -11,6 +11,7 @@ interface PanelPropsBase {
 
 interface PanelProps extends PanelPropsBase {
   className?: string;
+  style?: React.CSSProperties;
   id?: string;
   children?: ReactNode;
 }
@@ -22,6 +23,7 @@ const Panel = ({
   endAdornment,
   smallPadding = false,
   className,
+  style,
   id,
 }: PanelProps) => {
   return (
@@ -29,6 +31,7 @@ const Panel = ({
       className={`flex flex-col gap-2 ${smallPadding ? 'p-5' : 'sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4'} min-w-0 max-w-6xl
         ${className ?? ''}`}
       {...(id ? { id } : {})}
+      style={style}
     >
       {(startAdornment || heading || endAdornment) && (
         <div
