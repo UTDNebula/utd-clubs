@@ -7,7 +7,7 @@ import { ListItemText, Menu, MenuItem } from '@mui/material';
 // Constants for layout calculation
 const GAP = 4; // gap-1 is 4px
 const CHIP_HEIGHT = 32; // Standard MUI Chip height
-const ROW_BUFFER = 5; // Small buffer for rendering quirks
+const ROW_BUFFER = 5; // Small buffer for row ends
 
 export const ClubTags = ({ tags }: { tags: string[] }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -41,14 +41,10 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
       // Iterate through rendered chips to see which ones fit within maxHeight
       for (let i = 0; i < children.length; i++) {
         const child = children[i] as HTMLElement;
-        
-        // Use offsetTop to determine which "row" the item is on
-        // If the bottom of the child exceeds our calculated max height, it's overflowing
-        if (child.offsetTop + child.offsetHeight <= maxHeight + container.offsetTop) {
+        if (child.offsetTop + child.offsetHeight <= maxHeight + container.offsetTop)
           validCount++;
-        } else {
+        else
           break;
-        }
       }
 
       // If we have overflow, we might need to remove one more to fit the "..." button
@@ -62,10 +58,9 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
       setIsReady(true);
     };
 
-    // Initial calculation
+    // initial calculation
     calculateVisibleTags();
-
-    // Re-calculate on resize
+    // recalculate on resize
     const observer = new ResizeObserver(calculateVisibleTags);
     observer.observe(containerRef.current);
 
@@ -81,9 +76,7 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
       ref={containerRef} 
       className={`flex flex-wrap gap-1 mt-2 ${!isReady ? 'invisible' : ''}`}
     >
-      {/* Scenario 1: During calculation (invisible), render ALL tags to measure them.
-         Scenario 2: After calculation, render only VISIBLE tags.
-      */}
+      {/* Render all tags invisibly first to measure, then only the tags that fit */}
       {(isReady ? visibleTags : tags).map((tag) => (
         <div key={tag} className="flex"> 
           <Chip
