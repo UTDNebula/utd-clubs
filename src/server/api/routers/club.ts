@@ -482,7 +482,7 @@ export const clubRouter = createTRPCRouter({
               ? sql`id @@@ 
                 paradedb.boolean(
                   should =>ARRAY[
-                    paradedb.boost(10,paradedb.match('name',${input.search},distance=>1)),
+                    paradedb.boost(10,paradedb.match('name',${input.search},distance=>2)),
                     paradedb.boost(1,paradedb.match('description',${input.search},distance=>1)),
                     paradedb.boost(5,paradedb.match('tags',${input.search},distance=>1))
                   ])`
