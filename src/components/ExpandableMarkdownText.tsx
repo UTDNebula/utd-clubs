@@ -25,13 +25,13 @@ const ExpandableMarkdownText = ({
   }, [text, maxLines]);
 
   return (
-    <div className="[&_.prose]:max-w-none" ref={containerRef}>
+    <div className="flex flex-col [&_.prose]:max-w-none" ref={containerRef}>
       <MarkdownText text={text} expanded={expanded} maxLines={maxLines} />
       {/* Read more / Read less */}
       {isOverflowing && (
         <button
           type="button"
-          className="mt-2 text-sm font-medium text-royal hover:text-cornflower-800 hover:underline"
+          className="mt-2 text-xs md:text-sm self-end md:self-start font-medium text-royal hover:text-cornflower-800 hover:underline"
           onClick={() => setExpanded((v) => !v)}
         >
           {expanded ? 'Read less' : 'Read more'}

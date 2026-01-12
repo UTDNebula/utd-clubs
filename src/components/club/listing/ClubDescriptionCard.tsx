@@ -12,7 +12,7 @@ export default function ClubDescriptionCard({
   id,
 }: ClubDescriptionCardProps) {
   return (
-    <Panel className="shadow-sm text-sm !p-10 text-slate-700" id={id}>
+    <Panel className="shadow-sm !p-10 text-slate-700" id={id}>
       <ExpandableMarkdownText
         text={
           club.description.length > 0 ? club.description : '**Check us out!**'
