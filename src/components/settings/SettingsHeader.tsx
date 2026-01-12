@@ -1,11 +1,12 @@
-import Image from 'next/image';
+import Avatar from '@mui/material/Avatar';
 import Panel from '@src/components/form/Panel';
+import { SelectUser } from '@src/server/db/models';
 
 type SettingsHeaderProps = {
-  userImageURL?: string;
+  user?: Omit<SelectUser, 'image'> & Partial<Pick<SelectUser, 'image'>>;
 };
 
-export default function SettingsHeader({ userImageURL }: SettingsHeaderProps) {
+export default function SettingsHeader({ user }: SettingsHeaderProps) {
   return (
     <Panel className="bg-linear-to-r from-[#5A49F7] from-[4.36%] via-[#9403D8] via-[49.74%] to-[#FD9365]">
       <div className="flex gap-4 max-sm:flex-col-reverse sm:flex-row pl-2">
@@ -17,15 +18,11 @@ export default function SettingsHeader({ userImageURL }: SettingsHeaderProps) {
             Manage your account preferences and joined clubs
           </span>
         </div>
-        {userImageURL && (
+        {user?.image && (
           <div className="max-sm:mx-auto sm:ml-auto">
-            <Image
-              src={userImageURL}
-              alt="Profile logo"
-              width={72}
-              height={72}
-              className="rounded-full"
-            />
+            <Avatar src={user.image} className="w-18 h-18 rounded-full">
+              {user.name.charAt(0)}
+            </Avatar>
           </div>
         )}
       </div>

@@ -28,7 +28,7 @@ async function SettingsForm({
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl">
-      <SettingsHeader userImageURL={user.image ?? ''} />
+      <SettingsHeader user={user} />
       <UserInfo user={userData} />
       <JoinedClubs joinedClubs={joinedClubs} />
       <DeleteAccount />
