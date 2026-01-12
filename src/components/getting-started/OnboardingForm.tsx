@@ -194,10 +194,14 @@ export default function OnboardingForm({
       type={activeStep.current === steps.length - 2 ? 'submit' : undefined}
       variant="contained"
       className="normal-case"
-      disabled={!form.state.isValid}
+      disabled={activeStep.current === steps.length - 2 && !form.state.isValid}
       loading={form.state.isSubmitting}
       loadingPosition="start"
-      color={form.state.isValid ? 'primary' : 'inherit'}
+      color={
+        activeStep.current === steps.length - 2 && !form.state.isValid
+          ? 'inherit'
+          : 'primary'
+      }
       onClick={handleNext}
     >
       {activeStep.current < steps.length - 2

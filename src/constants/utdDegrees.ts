@@ -1,4 +1,5 @@
 export const majors = [
+  'Undecided',
   'Accounting',
   'Accounting and Analytics',
   'Actuarial Science',
