@@ -1,5 +1,3 @@
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Button } from '@mui/material';
 import { type Metadata } from 'next';
 import type z from 'zod';
 import EventCard from '@src/components/events/EventCard';
