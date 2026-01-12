@@ -2,17 +2,19 @@
 
 import { ListItemText, Menu, MenuItem } from '@mui/material';
 import Chip from '@mui/material/Chip';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 // Constants for layout calculation
-const GAP = 4; // gap-1 is 4px
-const CHIP_HEIGHT = 32; // Standard MUI Chip height
-const ROW_BUFFER = 5; // Small buffer for row ends
+const GAP = 4;
+const CHIP_HEIGHT = 32;
+const ROW_BUFFER = 5;
 
 export const ClubTags = ({ tags }: { tags: string[] }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(tags.length);
-  const [isReady, setIsReady] = useState(false); // only rendering calculated layout after mount (prevent hydration issue)
+
+  const [isReady, setIsReady] = useState(false); // if false, all tags are rendered invisibly for measurement
+  const lastWidthRef = useRef(0);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -26,7 +28,7 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
   };
 
   useLayoutEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || isReady) return; // only measure when not ready (full list is rendered)
 
     const calculateVisibleTags = () => {
       const container = containerRef.current;
@@ -39,9 +41,10 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
 
       let validCount = 0;
 
-      // Iterate through rendered chips to see which ones fit within maxHeight
       for (let i = 0; i < children.length; i++) {
         const child = children[i] as HTMLElement;
+        if (child.dataset.overflow) continue; // Skip overflow chip
+
         if (
           child.offsetTop + child.offsetHeight <=
           maxHeight + container.offsetTop
@@ -60,14 +63,26 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
       setIsReady(true);
     };
 
-    // initial calculation
     calculateVisibleTags();
-    // recalculate on resize
-    const observer = new ResizeObserver(calculateVisibleTags);
-    observer.observe(containerRef.current);
+  }, [tags, isReady]);
 
+  // observe container width changes to re-trigger measurement
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentRect.width !== lastWidthRef.current) {
+          // only trigger width changes
+          lastWidthRef.current = entry.contentRect.width;
+          setIsReady(false); //trigger re-measurement
+        }
+      }
+    });
+
+    observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, [tags]);
+  }, []);
 
   const visibleTags = tags.slice(0, isReady ? visibleCount : tags.length);
   const overflowTags = tags.slice(visibleCount);
@@ -76,9 +91,9 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
   return (
     <div
       ref={containerRef}
-      className={`flex flex-wrap gap-1 mt-2 ${!isReady ? 'invisible' : ''}`}
+      className={`flex flex-wrap gap-1 mt-2 ${!isReady ? 'invisible' : ''}`} // hide container when measuring
     >
-      {/* Render all tags invisibly first to measure, then only the tags that fit */}
+      {/* Render all tags invisibly first to measure, then only the tags that fit visibly */}
       {(isReady ? visibleTags : tags).map((tag) => (
         <div key={tag} className="flex">
           <Chip
@@ -88,15 +103,13 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
         </div>
       ))}
 
-      {/* Overflow Trigger & Menu */}
       {hasOverflow && (
-        <div className="flex">
+        <div className="flex" data-overflow="true">
           <Chip
             label={`+${overflowTags.length} tags`}
             onClick={handleMenuOpen}
             className="font-bold bg-cornflower-100 text-cornflower-700 hover:bg-slate-300 cursor-pointer"
           />
-
           <Menu
             anchorEl={anchorEl}
             open={open}
