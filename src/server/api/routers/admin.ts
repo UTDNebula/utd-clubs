@@ -133,12 +133,16 @@ export const adminRouter = createTRPCRouter({
         const bySlug = await ctx.db.query.club.findFirst({
           where: (club) => eq(club.slug, slug),
           with: {
-            contacts: true,
-            officers: true,
             userMetadataToClubs: {
               columns: {
                 userId: true, // Only fetch the ID to keep the payload small
               },
+            },
+            contacts: {
+              orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+            },
+            officers: {
+              orderBy: (officers, { asc }) => asc(officers.displayOrder),
             },
           },
         });

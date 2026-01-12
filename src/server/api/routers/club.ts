@@ -89,7 +89,11 @@ export const clubRouter = createTRPCRouter({
     try {
       const byId = await ctx.db.query.club.findFirst({
         where: (club) => eq(club.id, id),
-        with: { contacts: true },
+        with: {
+          contacts: {
+            orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+          },
+        },
       });
 
       return byId;
@@ -103,7 +107,11 @@ export const clubRouter = createTRPCRouter({
     try {
       const byId = await ctx.db.query.club.findFirst({
         where: (club) => eq(club.slug, slug),
-        with: { contacts: true },
+        with: {
+          contacts: {
+            orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+          },
+        },
       });
 
       return byId;
@@ -356,12 +364,16 @@ export const clubRouter = createTRPCRouter({
           where: (club) =>
             and(eq(club.slug, slug), eq(club.approved, 'approved')),
           with: {
-            contacts: true,
-            officers: true,
             userMetadataToClubs: {
               columns: {
                 userId: true, // Only fetch the ID to keep the payload small
               },
+            },
+            contacts: {
+              orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+            },
+            officers: {
+              orderBy: (officers, { asc }) => asc(officers.displayOrder),
             },
           },
         });

@@ -1,6 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef, useState } from 'react';
+import Panel from '@src/components/common/Panel';
 import { SelectOfficer } from '@src/server/db/models';
 import ClubOfficer from './ClubOfficer';
 
@@ -58,12 +59,13 @@ export default function OfficerList({
         : { height: 'auto' };
 
   return (
-    <div
-      id={id || 'officer-card-wrapper'}
-      className="flex flex-col gap-2 bg-white shadow-sm p-5 rounded-lg transition-all duration-500 overflow-hidden"
+    <Panel
+      className="text-sm"
+      id={id}
+      smallPadding
+      heading="Officers"
       style={containerStyle}
     >
-      <h2 className="text-xl font-bold text-slate-900 mb-2">Officers</h2>
       <div className="relative flex-1 min-h-0 overflow-hidden">
         <div ref={contentRef} className="flex flex-col gap-4">
           {officers.length > 0 ? (
@@ -85,12 +87,12 @@ export default function OfficerList({
         <div className="mt-2 pt-2 border-t border-slate-300 z-10">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full text-sm font-semibold text-royal hover:text-cornflower-800 hover:underline text-center"
+            className="w-full text-sm font-semibold text-royal text-royal hover:text-royalDark underline decoration-transparent hover:decoration-inherit transition text-center"
           >
             {isExpanded ? 'Show less' : 'See all officers'}
           </button>
         </div>
       )}
-    </div>
+    </Panel>
   );
 }
