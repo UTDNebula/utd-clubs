@@ -10,7 +10,7 @@ type BaseCardProps = {
 const baseClasses = 'rounded-lg';
 
 const variantClasses: Record<CardVariant, string> = {
-  flat: 'shadow-none',
+  flat: 'shadow-sm',
   interactive: 'shadow-lg transition-all hover:shadow-xl',
 };
 
