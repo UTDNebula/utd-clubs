@@ -1,0 +1,1 @@
+ALTER TABLE "user_ai_cache" ADD COLUMN "responses" jsonb;

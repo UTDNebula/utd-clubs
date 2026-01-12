@@ -3,12 +3,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import CollaboratorListItem from '@src/components/manage/CollaboratorListItem';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 import type {
   SelectClub,
-  SelectUserMetadataToClubsWithUserMetadata,
+  SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -17,7 +17,7 @@ import { editOfficerSchema } from '@src/utils/formSchemas';
 type FormData = z.infer<typeof editOfficerSchema>;
 
 function typedDefaultValues(
-  officers: SelectUserMetadataToClubsWithUserMetadata[],
+  officers: SelectUserMetadataToClubsWithUserMetadataWithUser[],
   role: 'Officer' | 'President' | 'Admin',
   userId: string | undefined,
 ): FormData['officers'] {
@@ -25,6 +25,7 @@ function typedDefaultValues(
     userId: officer.userId,
     name:
       officer.userMetadata?.firstName + ' ' + officer.userMetadata?.lastName,
+    email: officer.userMetadata?.user?.email ?? '',
     // Can remove if self or President
     canRemove:
       role === 'President' || role === 'Admin' || officer.userId === userId,
@@ -35,7 +36,7 @@ function typedDefaultValues(
 
 type CollaboratorsProps = {
   club: SelectClub;
-  officers: SelectUserMetadataToClubsWithUserMetadata[];
+  officers: SelectUserMetadataToClubsWithUserMetadataWithUser[];
   role: 'Officer' | 'President' | 'Admin';
   userId?: string;
 };
@@ -150,6 +151,7 @@ const Collaborators = ({
                   field.pushValue({
                     userId: user.id,
                     name: user.name,
+                    email: user.email,
                     position: 'Officer',
                     canRemove: role === 'President' || role === 'Admin',
                     canTogglePresident:

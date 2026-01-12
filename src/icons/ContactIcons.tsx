@@ -9,12 +9,12 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import SvgIcon from '@mui/material/SvgIcon';
 
 interface IconProps {
-  className: string;
+  className?: string;
 }
 
 export const Discord = ({ className }: IconProps) => {
   return (
-    <SvgIcon className={className}>
+    <SvgIcon className={className ?? ''}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -27,7 +27,7 @@ export const Discord = ({ className }: IconProps) => {
 };
 export const Twitch = ({ className }: IconProps) => {
   return (
-    <SvgIcon className={className}>
+    <SvgIcon className={className ?? ''}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

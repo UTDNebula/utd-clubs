@@ -1,0 +1,1 @@
+ALTER TABLE "user_metadata_to_clubs" ADD COLUMN "joined_at" timestamp DEFAULT now() NOT NULL;

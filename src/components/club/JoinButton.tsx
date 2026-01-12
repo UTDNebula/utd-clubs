@@ -7,7 +7,7 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
@@ -22,19 +22,30 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
-  const { data: memberType, isPending } = useQuery(
-    api.club.memberType.queryOptions({ id: clubId }),
+  const { data: memberState, isPending } = useQuery(
+    api.club.memberState.queryOptions({ id: clubId }),
   );
+
+  const [optimisticMemberType, setOptimisticMemberType] = useState<
+    string | null
+  >(null);
+
+  useEffect(() => {
+    setOptimisticMemberType(memberState?.memberType ?? null);
+  }, [memberState?.memberType]);
 
   const joinLeave = useMutation(
     api.club.joinLeave.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: [
-            ['club', 'memberType'],
+            ['club', 'memberState'],
             { input: { id: clubId }, type: 'query' },
           ],
         });
+      },
+      onError: () => {
+        setOptimisticMemberType(memberState?.memberType ?? null);
       },
     }),
   );
@@ -47,7 +58,9 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
     useAuthPage = true;
   });
 
-  if (memberType === 'Officer' || memberType === 'President') {
+  const displayMemberType = optimisticMemberType;
+
+  if (displayMemberType === 'Officer' || displayMemberType === 'President') {
     return (
       <Link href={`/manage/${clubSlug ?? clubId}`}>
         <Button
@@ -63,11 +76,34 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   }
 
   return (
-    <Tooltip title={memberType ? 'Click to leave club' : 'Click to join club'}>
+    <Tooltip
+      title={
+        <div className="text-center">
+          <span className="font-bold">
+            {displayMemberType ? 'Click to leave club' : 'Click to join club'}
+          </span>
+          {displayMemberType && memberState?.joinedAt && (
+            <>
+              <br />
+              Joined on{' '}
+              {memberState?.joinedAt.toLocaleString('en-us', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true,
+              })}
+            </>
+          )}
+        </div>
+      }
+    >
       <Button
         variant="contained"
         size={isHeader ? 'large' : 'small'}
-        startIcon={memberType ? <CheckIcon /> : <AddIcon />}
+        startIcon={displayMemberType ? <CheckIcon /> : <AddIcon />}
         onClick={async (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -86,12 +122,14 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
             return;
           }
 
+          const newMemberType = displayMemberType ? null : 'Member';
+          setOptimisticMemberType(newMemberType);
           void joinLeave.mutateAsync({ clubId: clubId });
         }}
         className="normal-case"
         loading={isPending || joinLeave.isPending}
       >
-        {memberType ? 'Joined' : 'Join'}
+        {displayMemberType ? 'Joined' : 'Join'}
       </Button>
     </Tooltip>
   );

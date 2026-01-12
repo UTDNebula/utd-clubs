@@ -33,7 +33,10 @@ const byClubIdSchema = z.object({
   currentTime: z.optional(z.date()),
   sortByDate: z.boolean().default(false),
 });
-
+const clubUpcomingEventsSchema = z.object({
+  clubId: z.string(),
+  currentTime: z.date().optional(),
+});
 const byDateRangeSchema = z.object({
   startTime: z.date(),
   endTime: z.date(),
@@ -84,6 +87,33 @@ export const eventRouter = createTRPCRouter({
         throw e;
       }
     }),
+  clubUpcoming: publicProcedure
+    .input(clubUpcomingEventsSchema)
+    .query(async ({ input, ctx }) => {
+      const { clubId, currentTime } = input;
+
+      try {
+        const now = currentTime ?? new Date();
+        const threeMonthsLater = add(now, { months: 3 });
+
+        const upcomingEvents = await ctx.db.query.events.findMany({
+          where: (event) =>
+            and(
+              eq(event.clubId, clubId),
+              gte(event.endTime, now),
+              lte(event.startTime, threeMonthsLater),
+            ),
+          orderBy: (event, { asc }) => [asc(event.startTime)],
+          with: { club: true },
+          limit: 20,
+        });
+
+        return upcomingEvents;
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    }),
   byDateRange: publicProcedure
     .input(byDateRangeSchema)
     .query(async ({ input, ctx }) => {
@@ -97,9 +127,16 @@ export const eventRouter = createTRPCRouter({
               lte(event.endTime, endTime),
             );
           },
+          with: {
+            club: true,
+          },
         });
 
-        const parsed = events.map((e) => selectEvent.parse(e));
+        const approvedEvents = events.filter(
+          (e) => e.club.approved === 'approved',
+        );
+
+        const parsed = approvedEvents.map((e) => selectEvent.parse(e));
         return parsed;
       } catch (e) {
         console.error(e);
@@ -138,26 +175,12 @@ export const eventRouter = createTRPCRouter({
         },
         limit: 20,
       });
-      if (ctx.session) {
-        const user = ctx.session.user;
-        const eventsWithLike = await Promise.all(
-          events.map(async (ev) => {
-            const liked = !!(await ctx.db.query.userMetadataToEvents.findFirst({
-              where: (userMetadataToEvents) =>
-                and(
-                  eq(userMetadataToEvents.userId, user.id),
-                  eq(userMetadataToEvents.eventId, ev.id),
-                ),
-            }));
-            return { ...ev, liked: liked };
-          }),
-        );
-        return { events: eventsWithLike };
-      }
+      const approvedEvents = events.filter(
+        (e) => e.club.approved === 'approved',
+      );
+
       return {
-        events: events.map((event) => {
-          return { ...event, liked: false };
-        }),
+        events: approvedEvents,
       };
     }),
   findByFilters: publicProcedure
@@ -202,26 +225,9 @@ export const eventRouter = createTRPCRouter({
         },
         limit: 20,
       });
-      if (ctx.session) {
-        const user = ctx.session.user;
-        const eventsWithLike = await Promise.all(
-          events.map(async (ev) => {
-            const liked = !!(await ctx.db.query.userMetadataToEvents.findFirst({
-              where: (userMetadataToEvents) =>
-                and(
-                  eq(userMetadataToEvents.userId, user.id),
-                  eq(userMetadataToEvents.eventId, ev.id),
-                ),
-            }));
-            return { ...ev, liked: liked };
-          }),
-        );
-        return { events: eventsWithLike };
-      }
+
       return {
-        events: events.map((event) => {
-          return { ...event, liked: false };
-        }),
+        events: events,
       };
     }),
   byId: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
@@ -255,6 +261,25 @@ export const eventRouter = createTRPCRouter({
             ),
         }),
       );
+    }),
+  registerState: publicProcedure
+    .input(joinLeaveSchema)
+    .query(async ({ input, ctx }) => {
+      if (!ctx.session) return null;
+
+      const eventId = input.id;
+      const userId = ctx.session.user.id;
+      const result = await ctx.db.query.userMetadataToEvents.findFirst({
+        where: (userMetadataToEvents) =>
+          and(
+            eq(userMetadataToEvents.userId, userId),
+            eq(userMetadataToEvents.eventId, eventId),
+          ),
+      });
+      return {
+        registered: Boolean(result),
+        registeredAt: result?.registeredAt ?? null,
+      };
     }),
   joinEvent: protectedProcedure
     .input(joinLeaveSchema)
@@ -393,7 +418,11 @@ export const eventRouter = createTRPCRouter({
         },
       });
 
-      return events;
+      const approvedEvents = events.filter(
+        (e) => e.club.approved === 'approved',
+      );
+
+      return approvedEvents;
     } catch (e) {
       console.log(e);
       throw e;

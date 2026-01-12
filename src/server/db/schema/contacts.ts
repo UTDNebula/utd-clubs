@@ -1,5 +1,11 @@
 import { relations } from 'drizzle-orm';
-import { pgEnum, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
+import {
+  integer,
+  pgEnum,
+  pgTable,
+  primaryKey,
+  text,
+} from 'drizzle-orm/pg-core';
 import { club } from './club';
 
 export const platformEnum = pgEnum('platform', [
@@ -23,10 +29,9 @@ export const contacts = pgTable(
     clubId: text('club_id')
       .notNull()
       .references(() => club.id, { onDelete: 'cascade' }),
+    displayOrder: integer('display_order'),
   },
-  (table) => ({
-    pk: primaryKey(table.platform, table.clubId),
-  }),
+  (t) => [primaryKey({ columns: [t.platform, t.clubId] })],
 );
 
 export const contactsRelation = relations(contacts, ({ one }) => ({

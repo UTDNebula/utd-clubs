@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
-import Panel, { PanelSkeleton } from '@src/components/form/Panel';
+import Panel, { PanelSkeleton } from '@src/components/common/Panel';
 import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -26,7 +26,7 @@ type EventFormProps =
   | {
       mode: 'edit';
       club: SelectClub;
-      event: RouterOutputs['event']['findByFilters']['events'][number];
+      event: RouterOutputs['event']['byId'];
     };
 
 interface EventDetails {
@@ -182,6 +182,13 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                     const file = e.target.files?.[0] ?? null;
                     field.handleChange(file);
                   }}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
                 />
               )}
             </form.Field>

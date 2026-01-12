@@ -4,6 +4,7 @@ import EventCard from '@src/components/events/EventCard';
 import { EventHeader } from '@src/components/header/BaseHeader';
 import { api } from '@src/trpc/server';
 import { eventParamsSchema } from '@src/utils/eventFilter';
+import EventsNone from './EventsNone';
 import EventsTitle from './EventsTitle';
 
 export const metadata: Metadata = {
@@ -33,6 +34,11 @@ const Events = async (props: {
           {events.map((event) => {
             return <EventCard key={event.id} event={event} />;
           })}
+          {events.length > 0 ? (
+            events.map((event) => <EventCard key={event.id} event={event} />)
+          ) : (
+            <EventsNone date={parsed.date} />
+          )}
         </div>
       </main>
     </>
