@@ -24,7 +24,7 @@ const ClubBody = async ({
       id="club-body"
       className="w-full rounded-lg grid grid-cols-1 md:grid-cols-[256px_1fr] gap-4 items-start"
     >
-      <div id="club-content-left" className="flex flex-col gap-4 h-full">
+      <div id="club-content-left" className="flex flex-col gap-4 h-full order-2 md:order-1">
         <ClubDetailsCard
           id="details"
           club={club}
@@ -33,7 +33,7 @@ const ClubBody = async ({
         <ClubContactCard id="contact" club={club} />
         <OfficerList id="officers" officers={club.officers} />
       </div>
-      <div id="club-content-right" className="flex flex-col gap-4">
+      <div id="club-content-right" className="flex flex-col gap-4 order-1 md:order-2">
         <ClubDescriptionCard id="description" club={club} />
         <ClubUpcomingEventsCard
           id="upcoming-events"
