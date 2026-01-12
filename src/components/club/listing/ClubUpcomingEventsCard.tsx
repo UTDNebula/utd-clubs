@@ -18,12 +18,7 @@ export default function ClubUpcomingEventsCard({
   oneYearAgo.setFullYear(now.getFullYear() - 1);
 
   return (
-    <Panel
-      className="shadow-sm text-sm"
-      id={id}
-      smallPadding
-      heading="Upcoming Events"
-    >
+    <Panel className="text-sm" id={id} smallPadding heading="Upcoming Events">
       <div className="flex flex-wrap w-full justify-evenly items-center gap-4 mt-5">
         {upcomingEvents.length > 0 ? (
           upcomingEvents.map((event) => (
