@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import Link from 'next/link';
 import { logo } from '@src/icons/ContactIcons';
 import type { SelectContact } from '@src/server/db/models';
@@ -63,17 +63,17 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
           contact.platform === 'email' ? `mailto:${contact.url}` : contact.url
         }
         target="_blank"
-        className="flex items-center justify-start w-full bg-white shadow-sm rounded-4xl hover:bg-gray-100 transition-colors duration-200 pr-2"
       >
-        <IconButton
-          className="group hover:bg-inherit flex-shrink-0"
-          size="medium"
+        <Button
+          variant="contained"
+          className="normal-case bg-white hover:bg-slate-100 shadow-sm w-full text-black font-normal justify-start"
+          startIcon={logo[contact.platform]}
+          size="large"
         >
-          {logo[contact.platform]}
-        </IconButton>
-        <span className="text-sm truncate min-w-0">
-          {contactDisplay(contact)}
-        </span>
+          <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+            {contactDisplay(contact)}
+          </span>
+        </Button>
       </Link>
     </Tooltip>
   );
