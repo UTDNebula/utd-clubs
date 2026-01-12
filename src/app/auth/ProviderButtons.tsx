@@ -24,7 +24,7 @@ const ProviderButton = ({
       void authClient.signIn.social({
         provider: provider,
         callbackURL: callbackUrl ?? window.location.href,
-        newUserCallbackURL: "/get-started"
+        newUserCallbackURL: '/get-started',
       });
     }}
     className="bg-white normal-case whitespace-nowrap min-w-max"

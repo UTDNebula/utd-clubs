@@ -48,10 +48,7 @@ export default async function Page() {
             <ProfileDropDown />
           </div>
         </div>
-        <OnboardingForm
-          userMetadata={userMetadata}
-          withLayout
-        />
+        <OnboardingForm userMetadata={userMetadata} withLayout />
       </div>
     </main>
   );
