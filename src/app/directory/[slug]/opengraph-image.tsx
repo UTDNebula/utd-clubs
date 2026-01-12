@@ -78,7 +78,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               justifyContent: 'center',
               width: 400,
               height: 400,
-              borderRadius: '50%',
+              borderRadius: '10%',
               backgroundColor: 'white',
               border: '6px solid white',
               boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
@@ -106,7 +106,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 bottom: 0,
                 background:
                   'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%)',
-                borderRadius: '50%',
+                borderRadius: '10%',
               }}
             />
 
@@ -118,7 +118,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                borderRadius: '50%',
+                borderRadius: '10%',
                 boxShadow: 'inset 0 0 25px rgba(0,0,0,0.25)',
               }}
             />
