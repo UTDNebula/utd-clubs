@@ -11,7 +11,7 @@ const ClubTitle = async ({
   return (
     <section
       id="club-tile"
-      className="w-full rounded-lg flex flex-row md:flex-col items-start md:flex-row justify-between gap-4 mb-0 mt-2"
+      className="w-full rounded-lg flex flex-wrap md:flex-nowrap items-start md:items-center justify-between gap-4 mb-0 mt-2"
     >
       {club.profileImage && (
         <Image
@@ -22,7 +22,7 @@ const ClubTitle = async ({
           className="rounded-lg w-20 md:w-32 h-auto"
         />
       )}
-      <div className="flex flex-col flex-grow w-full overflow-hidden">
+      <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
         {club.name && (
           <h1
             className={`font-display font-bold text-slate-800 ${
@@ -36,7 +36,7 @@ const ClubTitle = async ({
         )}
         {club.tags && club.tags.length > 0 && <ClubTags tags={club.tags} />}
       </div>
-      <div className="ml-auto flex items-center gap-x-6">
+      <div className="flex items-center gap-x-6 w-full md:w-auto md:ml-auto justify-end md:justify-start">
         <JoinButton isHeader clubId={club.id} clubSlug={club.slug} />
       </div>
     </section>
