@@ -1,3 +1,5 @@
+import { Tooltip } from '@mui/material';
+import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import Panel from '@src/components/common/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
 
@@ -38,23 +40,35 @@ export default function ClubDetailsCard({
           {lastEventDate && (
             <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
               <span className="font-medium text-slate-500">Last Event</span>
-              <span className="ml-auto text-slate-500">
-                {lastEventDate.toLocaleDateString('en-US', {
+              <Tooltip
+                title={lastEventDate.toLocaleDateString('en-US', {
                   month: 'short',
                   year: 'numeric',
                 })}
-              </span>
+              >
+                <span className="ml-auto text-slate-500">
+                  {formatDistanceStrict(lastEventDate, new Date(), {
+                    addSuffix: true,
+                  })}
+                </span>
+              </Tooltip>
             </div>
           )}
           {club.updatedAt && (
             <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
               <span className="font-medium text-slate-500">Updated</span>
-              <span className="ml-auto text-slate-500">
-                {club.updatedAt.toLocaleDateString('en-US', {
+              <Tooltip
+                title={club.updatedAt.toLocaleDateString('en-US', {
                   month: 'short',
                   year: 'numeric',
                 })}
-              </span>
+              >
+                <span className="ml-auto text-slate-500">
+                  {formatDistanceStrict(club.updatedAt, new Date(), {
+                    addSuffix: true,
+                  })}
+                </span>
+              </Tooltip>
             </div>
           )}
         </>
