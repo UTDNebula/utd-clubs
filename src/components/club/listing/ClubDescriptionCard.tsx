@@ -1,4 +1,4 @@
-import { BaseCard } from '@src/components/common/BaseCard';
+import Panel from '@src/components/common/Panel';
 import ExpandableMarkdownText from '@src/components/ExpandableMarkdownText';
 import { RouterOutputs } from '@src/trpc/shared';
 
@@ -12,8 +12,8 @@ export default function ClubDescriptionCard({
   id,
 }: ClubDescriptionCardProps) {
   return (
-    <BaseCard
-      className="bg-neutral-50 shadow-sm p-10 grow text-slate-700"
+    <Panel
+      className="bg-neutral-50 shadow-sm text-sm !p-10 text-slate-700"
       id={id}
     >
       <ExpandableMarkdownText
@@ -22,6 +22,6 @@ export default function ClubDescriptionCard({
         }
         maxLines={10}
       />
-    </BaseCard>
+    </Panel>
   );
 }

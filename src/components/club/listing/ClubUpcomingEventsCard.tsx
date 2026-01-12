@@ -1,4 +1,4 @@
-import { BaseCard } from '@src/components/common/BaseCard';
+import Panel from '@src/components/common/Panel';
 import EventCard from '@src/components/events/EventCard';
 import { RouterOutputs } from '@src/trpc/shared';
 
@@ -18,8 +18,12 @@ export default function ClubUpcomingEventsCard({
   oneYearAgo.setFullYear(now.getFullYear() - 1);
 
   return (
-    <BaseCard className="flex flex-col bg-neutral-50 shadow-sm p-5" id={id}>
-      <h2 className="text-xl font-bold text-slate-900 mb-2">Upcoming Events</h2>
+    <Panel
+      className="bg-neutral-50 shadow-sm text-sm"
+      id={id}
+      smallPadding
+      heading="Upcoming Events"
+    >
       <div className="flex flex-wrap w-full justify-evenly items-center gap-4 mt-5">
         {upcomingEvents.length > 0 ? (
           upcomingEvents.map((event) => (
@@ -33,6 +37,6 @@ export default function ClubUpcomingEventsCard({
           </div>
         )}
       </div>
-    </BaseCard>
+    </Panel>
   );
 }

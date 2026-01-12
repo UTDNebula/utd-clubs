@@ -1,4 +1,4 @@
-import { BaseCard } from '@src/components/common/BaseCard';
+import Panel from '@src/components/common/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
 
 type ClubDetailsCardProps = {
@@ -12,11 +12,12 @@ export default function ClubDetailsCard({
   id,
 }: ClubDetailsCardProps) {
   return (
-    <BaseCard
-      className="flex flex-col bg-neutral-50 shadow-sm p-5 gap-2 text-sm text-slate-600"
+    <Panel
+      className="bg-neutral-50 shadow-sm text-sm"
       id={id}
+      smallPadding
+      heading="Details"
     >
-      <h2 className="text-xl font-bold text-slate-900 mb-2">Details</h2>
       {club.numMembers ||
       club.foundingDate ||
       lastEventDate ||
@@ -65,6 +66,6 @@ export default function ClubDetailsCard({
       ) : (
         <span className="text-slate-500">No details</span>
       )}
-    </BaseCard>
+    </Panel>
   );
 }
