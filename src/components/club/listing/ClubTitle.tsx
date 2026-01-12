@@ -1,7 +1,7 @@
 import Image from 'next/image';
+import { ClubTags } from '@src/components/common/ClubTags';
 import { type RouterOutputs } from '@src/trpc/shared';
 import JoinButton from '../JoinButton';
-import { ClubTags } from '@src/components/common/ClubTags';
 
 const ClubTitle = async ({
   club,
@@ -34,9 +34,7 @@ const ClubTitle = async ({
             {club.name}
           </h1>
         )}
-        {club.tags && club.tags.length > 0 && (
-          <ClubTags tags={club.tags} />
-        )}
+        {club.tags && club.tags.length > 0 && <ClubTags tags={club.tags} />}
       </div>
       <div className="ml-auto flex items-center gap-x-6">
         <JoinButton isHeader clubId={club.id} clubSlug={club.slug} />

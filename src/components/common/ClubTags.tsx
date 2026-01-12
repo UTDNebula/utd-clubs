@@ -1,8 +1,8 @@
 'use client';
 
+import { ListItemText, Menu, MenuItem } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import { useLayoutEffect, useRef, useState } from 'react';
-import { ListItemText, Menu, MenuItem } from '@mui/material';
 
 // Constants for layout calculation
 const GAP = 4; // gap-1 is 4px
@@ -34,27 +34,29 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
 
       const children = Array.from(container.children) as HTMLElement[];
       const maxLines = window.innerWidth < 768 ? 1 : 2; // 1 line on mobile
-      const maxHeight = (CHIP_HEIGHT * maxLines) + ((maxLines - 1) * GAP) + ROW_BUFFER;
+      const maxHeight =
+        CHIP_HEIGHT * maxLines + (maxLines - 1) * GAP + ROW_BUFFER;
 
       let validCount = 0;
 
       // Iterate through rendered chips to see which ones fit within maxHeight
       for (let i = 0; i < children.length; i++) {
         const child = children[i] as HTMLElement;
-        if (child.offsetTop + child.offsetHeight <= maxHeight + container.offsetTop)
+        if (
+          child.offsetTop + child.offsetHeight <=
+          maxHeight + container.offsetTop
+        )
           validCount++;
-        else
-          break;
+        else break;
       }
 
-      // If we have overflow, we might need to remove one more to fit the "..." button
-      // This is a heuristic: if we aren't showing all, reduce by 1 to make room for AllTags button
+      // If we have overflow, remove 1 more tag to make space for the overflow Chip
       if (validCount < tags.length) {
         setVisibleCount(Math.max(0, validCount - 1));
       } else {
         setVisibleCount(tags.length);
       }
-      
+
       setIsReady(true);
     };
 
@@ -72,13 +74,13 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
   const hasOverflow = overflowTags.length > 0 && isReady;
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={`flex flex-wrap gap-1 mt-2 ${!isReady ? 'invisible' : ''}`}
     >
       {/* Render all tags invisibly first to measure, then only the tags that fit */}
       {(isReady ? visibleTags : tags).map((tag) => (
-        <div key={tag} className="flex"> 
+        <div key={tag} className="flex">
           <Chip
             label={tag}
             className="font-semibold bg-cornflower-100 text-cornflower-600 hover:bg-cornflower-200"
@@ -92,9 +94,9 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
           <Chip
             label={`+${overflowTags.length} tags`}
             onClick={handleMenuOpen}
-            className="font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 cursor-pointer"
+            className="font-bold bg-cornflower-100 text-cornflower-700 hover:bg-slate-300 cursor-pointer"
           />
-          
+
           <Menu
             anchorEl={anchorEl}
             open={open}
