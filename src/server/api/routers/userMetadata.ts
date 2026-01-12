@@ -13,7 +13,7 @@ import { user as users } from '@src/server/db/schema/auth';
 import { userMetadata, userMetadataToClubs } from '@src/server/db/schema/users';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
-const byIdSchema = z.object({ id: z.string().uuid() });
+const byIdSchema = z.object({ id: z.string() });
 
 const updateByIdSchema = z.object({
   updateUser: insertUserMetadata.partial().omit({ id: true }),
