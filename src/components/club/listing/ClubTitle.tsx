@@ -26,7 +26,9 @@ const ClubTitle = async ({
         {club.name && (
           <h1
             className={`font-display font-bold text-slate-800 ${
-              club.name.length > 40 ? 'text-2xl md:text-3xl' : 'text-4xl md:text-5xl'
+              club.name.length > 40
+                ? 'text-2xl md:text-3xl'
+                : 'text-4xl md:text-5xl'
             }`}
           >
             {club.name}
