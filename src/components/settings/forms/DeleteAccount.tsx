@@ -1,4 +1,4 @@
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import DeleteButton from '../DeleteButton';
 
 export default function DeleteAccount() {

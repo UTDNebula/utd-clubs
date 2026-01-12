@@ -10,7 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { MouseEvent, useCallback, useState } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import { SelectUserMetadataWithClubs } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';

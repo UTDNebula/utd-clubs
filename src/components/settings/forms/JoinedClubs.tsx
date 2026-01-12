@@ -13,7 +13,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import Confirmation from '@src/components/Confirmation';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import MemberRoleChip from '@src/components/manage/MemberRoleChip';
 import {
   SelectClub,
