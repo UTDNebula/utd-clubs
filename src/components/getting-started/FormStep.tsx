@@ -1,4 +1,8 @@
-import { ReactNode, Ref } from 'react';
+import Typography from '@mui/material/Typography';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Link from 'next/link';
+import { ReactNode } from 'react';
+import { studentClassificationEnum } from '@src/server/db/schema/users';
 import { withForm } from '@src/utils/form';
 import { AccountOnboardingSchema } from '@src/utils/formSchemas';
 
@@ -6,6 +10,7 @@ export type StepObject = {
   id: string | number;
   label: string;
   description?: string;
+  hidden?: boolean;
 };
 
 type FormData = Partial<AccountOnboardingSchema>;
@@ -14,71 +19,188 @@ const FormStep = withForm({
   defaultValues: {} as FormData,
   props: {
     step: {} as StepObject | undefined,
-    // id: '',
     active: false as boolean | undefined,
-    // ref: null as Ref<HTMLDivElement> | undefined,
-    // ref: undefined as ((node: HTMLDivElement) => HTMLDivElement) | undefined,
   },
   render: function Render({ form, step, active }) {
     let FormStepData: ReactNode;
 
     switch (step?.id) {
-      case 1:
+      case 0:
         FormStepData = (
           <div className="flex flex-col gap-6">
-            <div className="flex flex-wrap gap-6">
-              <form.AppField name="firstName">
-                {(field) => (
-                  <field.TextField label="First Name" className="grow" />
-                )}
-              </form.AppField>
-              <form.AppField name="lastName">
-                {(field) => (
-                  <field.TextField label="Last Name" className="grow" />
-                )}
-              </form.AppField>
-            </div>
-            <div className="flex flex-wrap gap-6">
-              <form.AppField name="firstName">
-                {(field) => (
-                  <field.TextField label="First Name" className="grow" />
-                )}
-              </form.AppField>
-              <form.AppField name="lastName">
-                {(field) => (
-                  <field.TextField label="Last Name" className="grow" />
-                )}
-              </form.AppField>
-            </div>
-            <div className="flex flex-wrap gap-6">
-              <form.AppField name="firstName">
-                {(field) => (
-                  <field.TextField label="First Name" className="grow" />
-                )}
-              </form.AppField>
-              <form.AppField name="lastName">
-                {(field) => (
-                  <field.TextField label="Last Name" className="grow" />
-                )}
-              </form.AppField>
+            <div className="flex flex-col gap-2 ml-3.5">
+              <Typography
+                variant="h1"
+                className="font-display text-4xl font-bold"
+              >
+                Get Started
+              </Typography>
+              <Typography variant="body1">
+                Welcome to UTD Clubs! Let&apos;s get you set up.
+              </Typography>
             </div>
           </div>
         );
         break;
+      case 1:
+        FormStepData = (
+          <FormStepDataPanel title="Name">
+            <form.Question question="Please check that your name is correct. This is how you will appear to fellow students on UTD Clubs.">
+              <form.AppField name="firstName">
+                {(field) => (
+                  <field.TextField label="First Name" className="grow" />
+                )}
+              </form.AppField>
+              <form.AppField name="lastName">
+                {(field) => (
+                  <field.TextField label="Last Name" className="grow" />
+                )}
+              </form.AppField>
+            </form.Question>
+          </FormStepDataPanel>
+        );
+        break;
       case 2:
-        FormStepData = <div>step 2</div>;
+        FormStepData = (
+          <FormStepDataPanel title="College Info">
+            <form.Question
+              question={
+                'Enter your college major or "Undecided". If applicable, add your college minor.'
+              }
+            >
+              <form.AppField name="major">
+                {(field) => <field.TextField label="Major" className="grow" />}
+              </form.AppField>
+              <form.AppField name="minor">
+                {(field) => <field.TextField label="Minor" className="grow" />}
+              </form.AppField>
+            </form.Question>
+            <form.Question question="Are you a student? When do you graduate?">
+              <form.AppField name="studentClassification">
+                {(field) => (
+                  <field.Select
+                    label="Classification"
+                    options={studentClassificationEnum.enumValues}
+                    className="grow"
+                  />
+                )}
+              </form.AppField>
+              <form.AppField name="graduationDate">
+                {(field) => {
+                  return (
+                    <DatePicker
+                      onChange={(value) => {
+                        field.handleChange(value);
+                      }}
+                      value={field.state.value}
+                      label="Graduation Date"
+                      className="[&>.MuiPickersInputBase-root]:bg-white w-64 grow"
+                      slotProps={{
+                        actionBar: {
+                          actions: ['accept'],
+                        },
+                        textField: {
+                          size: 'small',
+                          error: !field.state.meta.isValid,
+                          helperText: !field.state.meta.isValid
+                            ? (
+                                field.state.meta.errors as unknown as {
+                                  message: string;
+                                }[]
+                              )
+                                .map((err) => err?.message)
+                                .join('. ') + '.'
+                            : undefined,
+                        },
+                      }}
+                      timezone="UTC"
+                      views={['year', 'month']}
+                      openTo="year"
+                    />
+                  );
+                }}
+              </form.AppField>
+            </form.Question>
+          </FormStepDataPanel>
+        );
         break;
       case 3:
-        FormStepData = <div>step 3</div>;
+        FormStepData = (
+          <FormStepDataPanel title="Contact Email">
+            <form.Question question="Please enter your UTD email so club and event organizers can contact you.">
+              <form.AppField name="contactEmail">
+                {(field) => (
+                  <div className="grow">
+                    <field.TextField
+                      label="UTD Email"
+                      placeholder="abc123456@utdallas.edu"
+                      className="w-full"
+                    />
+                  </div>
+                )}
+              </form.AppField>
+            </form.Question>
+          </FormStepDataPanel>
+        );
+        break;
+      case 4:
+        FormStepData = (
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2 ml-3.5">
+              <Typography
+                variant="h1"
+                className="font-display text-4xl font-bold"
+              >
+                Thank you!
+              </Typography>
+              <Typography variant="body1">
+                You are now ready to use UTD Clubs. You can always change
+                everything later in your{' '}
+                <Link href={'/settings'} className="text-royal underline">
+                  account settings
+                </Link>
+                .
+              </Typography>
+            </div>
+          </div>
+        );
         break;
       default:
-        FormStepData = <div></div>;
+        FormStepData = (
+          <div>
+            <Typography variant="body1">
+              Whoops! You aren&apos;t supposed to see this...
+            </Typography>
+          </div>
+        );
         break;
     }
     return (
-      <div id={active ? 'active-form-step' : undefined}>{FormStepData}</div>
+      <div id={active ? 'active-form-step' : undefined} className="mx-2">
+        {FormStepData}
+      </div>
     );
   },
 });
 
 export default FormStep;
+
+function FormStepDataPanel({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <Typography
+        variant="h2"
+        className="font-display text-2xl font-bold ml-3.5"
+      >
+        {title}
+      </Typography>
+      <div className="flex flex-col gap-12">{children}</div>
+    </div>
+  );
+}

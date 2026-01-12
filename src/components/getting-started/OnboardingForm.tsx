@@ -1,20 +1,15 @@
 'use client';
 
-import { LeakRemoveTwoTone } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import MobileStepper from '@mui/material/MobileStepper';
 import Slide from '@mui/material/Slide';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
 import Stepper from '@mui/material/Stepper';
+import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useRouter } from 'next/navigation';
+import { MouseEvent, useCallback, useState } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
 import Panel from '@src/components/form/Panel';
 import { SelectUserMetadataWithClubs } from '@src/server/db/models';
@@ -27,24 +22,12 @@ import {
 import FormStep, { StepObject } from './FormStep';
 
 export const steps: StepObject[] = [
-  { id: 1, label: 'Step 1' },
-  { id: 2, label: 'Step 2' },
-  { id: 3, label: 'Step 3' },
+  { id: 0, label: 'Get Started' },
+  { id: 1, label: 'Name' },
+  { id: 2, label: 'College Info' },
+  { id: 3, label: 'Contact Email' },
+  { id: 4, label: 'Finish', hidden: true },
 ];
-
-// function usePrevious<T>(value: T): T | undefined {
-//   const currentRef = useRef<T>(value);
-//   const previousRef = useRef<T>(undefined);
-
-//   useEffect(() => {
-//     if (currentRef.current !== value) {
-//       previousRef.current = currentRef.current;
-//       previousRef.current = value;
-//     }
-//   }, [value]);
-
-//   return previousRef.current;
-// }
 
 type OnboardingFormProps = {
   userMetadata?: SelectUserMetadataWithClubs;
@@ -57,6 +40,8 @@ export default function OnboardingForm({
   withLayout = false,
   hideMobileStepper = false,
 }: OnboardingFormProps) {
+  const router = useRouter();
+
   const api = useTRPC();
 
   const editAccountMutation = useMutation(
@@ -100,6 +85,11 @@ export default function OnboardingForm({
               : null,
           };
 
+          setActiveStep((prev) => ({
+            current: steps.length - 1,
+            previous: prev.current,
+          }));
+
           setDefaultValues(updatedFixed);
           formApi.reset(updatedFixed);
         }
@@ -114,40 +104,19 @@ export default function OnboardingForm({
    * Steps
    */
 
-  // const [activeStep, setActiveStep] = useState(1);
   const [activeStep, setActiveStep] = useState({
-    current: 1,
+    current: 0,
     previous: undefined as number | undefined,
   });
-  // const prevActiveStep = usePrevious(activeStep);
 
   const [transitioning, setTransitioning] = useState(false);
   const [mounting, setMounting] = useState(true);
-  // const mounting = useRef(true);
-  // let mounting = true;
-
-  // useEffect(() => {
-  //   if (activeStep) {
-  //     setTransitioning(true);
-
-  //     const timer = setTimeout(() => {
-  //       setTransitioning(false);
-  //     }, 250);
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [activeStep]);
 
   const [completedSteps, setCompletedSteps] = useState<Record<number, boolean>>(
     {},
   );
-  // const [completedStepIds, setCompletedStepIds] = useState<
-  //   Record<StepObject['id'], boolean>
-  // >({});
 
   const [formHeight, setFormHeight] = useState(0);
-  // const formStepRef = useRef<HTMLDivElement>(null);
-  // const [formStepRef, setFormStepRef] = useState<HTMLDivElement>(null);
 
   const measureFormStepRef = useCallback((node: HTMLDivElement | null) => {
     if (node !== null) {
@@ -158,11 +127,8 @@ export default function OnboardingForm({
       }, 250);
 
       setMounting(false);
-      // mounting.current = false;
-      // mounting = false;
 
       const height = node.clientHeight;
-      console.log('node height', height);
       setFormHeight(height);
 
       const observer = new ResizeObserver((entries) => {
@@ -178,42 +144,11 @@ export default function OnboardingForm({
         clearTimeout(timer);
       };
     }
-    // formStepRef.current = node;
   }, []);
 
-  const updateHeight = () => {
-    // if (setFormStepRef.current) {
-    //   const height = setFormStepRef.current.clientHeight;
-    //   console.log('height', height);
-    //   setFormHeight(height);
-    // }
-  };
-
-  // useLayoutEffect(() => {
-  //   // console.log('useLayoutEffect');
-  //   // if (formStepRef.current) {
-  //   //   const height = formStepRef.current.clientHeight;
-  //   //   console.log('height', height);
-  //   //   setFormHeight(height);
-  //   // }
-
-  //   if (formStepRef.current) {
-  //     const observer = new ResizeObserver((entries) => {
-  //       entries.forEach((entry) => {
-  //         setFormHeight(entry.contentRect.height);
-  //       });
-  //     });
-
-  //     observer.observe(formStepRef.current);
-
-  //     return () => {
-  //       observer.disconnect();
-  //     };
-  //   }
-  // }, []);
-
-  const handleNext = () => {
-    if (activeStep.current < steps.length) {
+  const handleNext = (event: MouseEvent<HTMLButtonElement>) => {
+    if (activeStep.current < steps.length - 2) {
+      event.preventDefault();
       setActiveStep((prev) => ({
         current: prev.current + 1,
         previous: prev.current,
@@ -222,6 +157,8 @@ export default function OnboardingForm({
         ...prevCompletedSteps,
         [activeStep.current]: true,
       }));
+    } else if (activeStep.current === steps.length - 1) {
+      router.push('/');
     }
   };
 
@@ -240,32 +177,36 @@ export default function OnboardingForm({
 
   const BackButton = (
     <Button
-      className="normal-case"
+      className={`normal-case ${activeStep.current === steps.length - 1 ? 'invisible' : ''}`}
       loadingPosition="start"
       color="primary"
       onClick={handleBack}
-      disabled={activeStep.current === 1}
+      disabled={
+        activeStep.current === 0 || activeStep.current === steps.length - 1
+      }
     >
       Back
     </Button>
   );
 
-  // const handleSwitch = () => {
-  //   const element = document.getElementById('active-form-step');
-
-  //   element?.offsetHeight;
-  // };
-
   const NextButton = (
     <Button
-      // type={activeStep < steps.length ? undefined : 'submit'}
+      type={activeStep.current === steps.length - 2 ? 'submit' : undefined}
       variant="contained"
       className="normal-case"
+      disabled={!form.state.isValid}
+      loading={form.state.isSubmitting}
       loadingPosition="start"
-      color="primary"
+      color={form.state.isValid ? 'primary' : 'inherit'}
       onClick={handleNext}
     >
-      {activeStep.current < steps.length ? 'Next' : 'Finish'}
+      {activeStep.current < steps.length - 2
+        ? activeStep.current === 0
+          ? 'Start'
+          : 'Next'
+        : activeStep.current !== steps.length - 1
+          ? 'Submit'
+          : 'Continue'}
     </Button>
   );
 
@@ -278,44 +219,49 @@ export default function OnboardingForm({
       }}
       className="flex flex-col gap-8 w-full"
     >
-      <BaseCard className="p-4 overflow-clip">
+      <BaseCard className="p-4 overflow-clip max-sm:hidden">
         <div>
           <Stepper>
-            {steps.map((step, index) => (
-              // <Step key={step.label} completed={completedSteps[index + 1]}>
-              <Step key={step.label} completed={index < activeStep.current}>
-                <StepButton
-                  color="inherit"
-                  onClick={() => {
-                    setActiveStep((prev) => ({
-                      current: index + 1,
-                      previous: prev.current,
-                    }));
-                  }}
-                  disabled={index > activeStep.current}
+            {steps
+              .filter((ele) => !ele.hidden)
+              .map((step, index) => (
+                <Step
+                  key={step.label}
+                  completed={index < activeStep.current}
+                  active={index === activeStep.current}
                 >
-                  {step.label}
-                </StepButton>
-              </Step>
-            ))}
+                  <StepButton
+                    color="inherit"
+                    onClick={() => {
+                      setActiveStep((prev) => ({
+                        current: index,
+                        previous: prev.current,
+                      }));
+                    }}
+                    disabled={
+                      index - 1 > activeStep.current ||
+                      activeStep.current === steps.length - 1
+                    }
+                  >
+                    {step.label}
+                  </StepButton>
+                </Step>
+              ))}
           </Stepper>
         </div>
       </BaseCard>
       <Panel className="shadow-lg overflow-clip">
-        {/* <Slide in direction="left" timeout={500} mountOnEnter unmountOnExit> */}
         <div>
-          <h1 className="font-display text-4xl font-bold ml-2">Get Started</h1>
-          {/* <p>{`Transitioning: ${transitioning}`}</p> */}
           {/* {`Welcome, ${userMetadata?.firstName}`} */}
 
           <div
-            className="relative ml-2 my-4 transition-[height] duration-250 ease-in-out"
+            className="relative max-sm:mb-2 sm:mb-4 transition-[height] duration-250 ease-in-out"
             style={
               mounting
                 ? undefined
                 : {
                     height: `${formHeight}px`,
-                    transitionDuration: transitioning ? '250' : '0',
+                    // transitionDuration: transitioning ? '250' : '0',
                   }
             }
           >
@@ -324,30 +270,29 @@ export default function OnboardingForm({
             </div>
 
             {steps.map((step, index) => {
-              const stepNumber =
-                steps.findIndex((searchStep) => searchStep.id === step.id) + 1;
+              const stepNumber = steps.findIndex(
+                (searchStep) => searchStep.id === step.id,
+              );
 
               const isActive = activeStep.current === stepNumber;
-              // if (isActive) console.log('IN!');
 
-              const direction = activeStep.previous
-                ? activeStep.current > activeStep.previous
-                  ? // on next
-                    activeStep.current === stepNumber
-                    ? // entering
-                      'left'
-                    : // exiting
-                      'right'
-                  : // on back
-                    activeStep.current === stepNumber
-                    ? // entering
-                      'right'
-                    : // exiting
-                      'left'
-                : // on mount
-                  'left';
-
-              // console.log(isActive, activeStep.current === stepNumber);
+              const direction =
+                activeStep.previous !== undefined
+                  ? activeStep.current > activeStep.previous
+                    ? // on next
+                      activeStep.current === stepNumber
+                      ? // entering
+                        'left'
+                      : // exiting
+                        'right'
+                    : // on back
+                      activeStep.current === stepNumber
+                      ? // entering
+                        'right'
+                      : // exiting
+                        'left'
+                  : // on mount
+                    'left';
 
               return (
                 <Slide
@@ -358,12 +303,8 @@ export default function OnboardingForm({
                   unmountOnExit
                   in={isActive}
                   className={`absolute top-0 left-0 ${mounting ? 'invisible' : ''}`}
-                  // easing={{ enter: 'linear', exit: 'linear' }}
                 >
                   <div ref={isActive ? measureFormStepRef : undefined}>
-                    {/* <p>{`active: ${activeStep.current}`}</p>
-                    <p>{`prev: ${activeStep.previous}`}</p>
-                    <p>{`stepNumber: ${stepNumber}`}</p> */}
                     <FormStep form={form} step={step} active={isActive} />
                   </div>
                 </Slide>
@@ -378,7 +319,6 @@ export default function OnboardingForm({
             {NextButton}
           </div>
         </div>
-        {/* </Slide> */}
       </Panel>
       <div
         className={`${hideMobileStepper ? 'hidden' : 'max-sm:visible sm:hidden'}`}
@@ -387,7 +327,7 @@ export default function OnboardingForm({
           variant="text"
           backButton={BackButton}
           nextButton={NextButton}
-          steps={steps.length}
+          steps={steps.length - 1}
           activeStep={activeStep.current - 1}
           position="bottom"
           className="shadow-black/20 shadow-[0_-4px_15px_-3px]"
