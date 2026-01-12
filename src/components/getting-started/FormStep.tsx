@@ -13,16 +13,16 @@ type FormData = Partial<AccountOnboardingSchema>;
 const FormStep = withForm({
   defaultValues: {} as FormData,
   props: {
-    step: {} as StepObject,
+    step: {} as StepObject | undefined,
     // id: '',
-    active: false,
+    active: false as boolean | undefined,
     // ref: null as Ref<HTMLDivElement> | undefined,
     // ref: undefined as ((node: HTMLDivElement) => HTMLDivElement) | undefined,
   },
   render: function Render({ form, step, active }) {
     let FormStepData: ReactNode;
 
-    switch (step.id) {
+    switch (step?.id) {
       case 1:
         FormStepData = (
           <div className="flex flex-col gap-6">
@@ -76,9 +76,7 @@ const FormStep = withForm({
         break;
     }
     return (
-      <div id={active ? 'active-form-step' : undefined}>
-        {FormStepData}
-      </div>
+      <div id={active ? 'active-form-step' : undefined}>{FormStepData}</div>
     );
   },
 });

@@ -122,18 +122,21 @@ export default function OnboardingForm({
   // const prevActiveStep = usePrevious(activeStep);
 
   const [transitioning, setTransitioning] = useState(false);
+  const [mounting, setMounting] = useState(true);
+  // const mounting = useRef(true);
+  // let mounting = true;
 
-  useEffect(() => {
-    if (activeStep) {
-      setTransitioning(true);
+  // useEffect(() => {
+  //   if (activeStep) {
+  //     setTransitioning(true);
 
-      const timer = setTimeout(() => {
-        setTransitioning(false);
-      }, 250);
+  //     const timer = setTimeout(() => {
+  //       setTransitioning(false);
+  //     }, 250);
 
-      return () => clearTimeout(timer);
-    }
-  }, [activeStep]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [activeStep]);
 
   const [completedSteps, setCompletedSteps] = useState<Record<number, boolean>>(
     {},
@@ -148,6 +151,16 @@ export default function OnboardingForm({
 
   const measureFormStepRef = useCallback((node: HTMLDivElement | null) => {
     if (node !== null) {
+      setTransitioning(true);
+
+      const timer = setTimeout(() => {
+        setTransitioning(false);
+      }, 250);
+
+      setMounting(false);
+      // mounting.current = false;
+      // mounting = false;
+
       const height = node.clientHeight;
       console.log('node height', height);
       setFormHeight(height);
@@ -162,6 +175,7 @@ export default function OnboardingForm({
 
       return () => {
         observer.disconnect();
+        clearTimeout(timer);
       };
     }
     // formStepRef.current = node;
@@ -291,16 +305,24 @@ export default function OnboardingForm({
         {/* <Slide in direction="left" timeout={500} mountOnEnter unmountOnExit> */}
         <div>
           <h1 className="font-display text-4xl font-bold ml-2">Get Started</h1>
-          <p>{`Transitioning: ${transitioning}`}</p>
+          {/* <p>{`Transitioning: ${transitioning}`}</p> */}
           {/* {`Welcome, ${userMetadata?.firstName}`} */}
 
           <div
             className="relative ml-2 my-4 transition-[height] duration-250 ease-in-out"
-            style={{
-              height: `${formHeight}px`,
-              // transitionDuration: transitioning ? '250' : '0',
-            }}
+            style={
+              mounting
+                ? undefined
+                : {
+                    height: `${formHeight}px`,
+                    transitionDuration: transitioning ? '250' : '0',
+                  }
+            }
           >
+            <div className="invisible">
+              <FormStep form={form} step={steps[0]} active={false} />
+            </div>
+
             {steps.map((step, index) => {
               const stepNumber =
                 steps.findIndex((searchStep) => searchStep.id === step.id) + 1;
@@ -335,7 +357,7 @@ export default function OnboardingForm({
                   mountOnEnter
                   unmountOnExit
                   in={isActive}
-                  className="absolute top-0 left-0"
+                  className={`absolute top-0 left-0 ${mounting ? 'invisible' : ''}`}
                   // easing={{ enter: 'linear', exit: 'linear' }}
                 >
                   <div ref={isActive ? measureFormStepRef : undefined}>
@@ -375,7 +397,9 @@ export default function OnboardingForm({
   );
 
   return withLayout ? (
-    <div className="flex w-full flex-col items-center p-4">
+    <div
+      className={`flex w-full flex-col items-center p-4 ${hideMobileStepper ? '' : 'max-sm:pb-10'}`}
+    >
       <div className="w-full max-w-6xl">{OnboardingFormElement}</div>
     </div>
   ) : (

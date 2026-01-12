@@ -32,7 +32,7 @@ export default async function Page() {
         />
       </div>
       <div className="relative z-20">
-        <div className="sticky top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-2 sm:px-4 flex-wrap sm:flex-nowrap min-h-17">
+        <div className="top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-2 sm:px-4 flex-wrap sm:flex-nowrap min-h-17">
           <div className="grow basis-0 flex gap-x-2 md:gap-x-4 lg:gap-x-8">
             <Sidebar hamburger="white" shadow />
             <Link
