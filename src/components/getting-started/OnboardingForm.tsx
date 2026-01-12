@@ -222,6 +222,7 @@ export default function OnboardingForm({
         form.handleSubmit();
       }}
       className="flex flex-col gap-8 w-full"
+      noValidate
     >
       <BaseCard className="p-4 overflow-clip max-sm:hidden">
         <div>

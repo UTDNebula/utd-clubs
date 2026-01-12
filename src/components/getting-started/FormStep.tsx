@@ -49,7 +49,11 @@ const FormStep = withForm({
             <form.Question question="Please check that your name is correct. This is how you will appear to fellow students on UTD Clubs.">
               <form.AppField name="firstName">
                 {(field) => (
-                  <field.TextField label="First Name" className="grow" />
+                  <field.TextField
+                    label="First Name"
+                    className="grow"
+                    required
+                  />
                 )}
               </form.AppField>
               <form.AppField name="lastName">
@@ -148,6 +152,7 @@ const FormStep = withForm({
                       label="UTD Email"
                       placeholder="abc123456@utdallas.edu"
                       className="w-full"
+                      required
                     />
                   </div>
                 )}
