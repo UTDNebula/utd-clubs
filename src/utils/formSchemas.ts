@@ -39,9 +39,6 @@ export const accountOnboardingSchema = z.object({
 });
 
 export type AccountOnboardingSchema = z.infer<typeof accountOnboardingSchema>;
-// export type AccountOnboardingSchema = Partial<
-//   z.infer<typeof accountOnboardingSchema>
-// >;
 
 const tagsSchema = z
   .array(z.string())

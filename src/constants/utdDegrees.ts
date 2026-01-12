@@ -1,3 +1,6 @@
+/**
+ *Source: https://academics.utdallas.edu/degrees
+ */
 export const majors = [
   'Undecided',
   'Accounting',
@@ -94,6 +97,9 @@ export const majors = [
   'Visual and Performing Arts',
 ];
 
+/**
+ * Source: https://catalog.utdallas.edu/current/undergraduate/minors
+ */
 export const minors = [
   'African American and African Diaspora Studies',
   'Art History',
