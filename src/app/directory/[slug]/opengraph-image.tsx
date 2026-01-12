@@ -70,18 +70,30 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
         {/* Profile Image */}
         {clubData.profileImage && (
-          <img
-            src={clubData.profileImage}
-            alt={clubData.name + ' logo'}
+          <div
             style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               width: 400,
               height: 400,
               borderRadius: '50%',
-              objectFit: 'cover',
+              backgroundColor: 'white', // The white background
               border: '6px solid white',
               boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+              overflow: 'hidden',
             }}
-          />
+          >
+            <img
+              src={clubData.profileImage}
+              alt={clubData.name + ' logo'}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
+          </div>
         )}
       </div>
     ),
