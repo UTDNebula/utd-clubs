@@ -31,9 +31,6 @@ const Events = async (props: {
       <main className="w-full p-4">
         <EventsTitle date={parsed.date} />
         <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
-          {events.map((event) => {
-            return <EventCard key={event.id} event={event} />;
-          })}
           {events.length > 0 ? (
             events.map((event) => <EventCard key={event.id} event={event} />)
           ) : (
