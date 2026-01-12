@@ -28,7 +28,7 @@ const Panel = ({
     <BaseCard
       className={`flex flex-col gap-2 ${smallPadding ? 'p-5' : 'sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4'} min-w-0 max-w-6xl
         ${className ?? ''}`}
-      id={id}
+      {...(id ? { id } : {})}
     >
       {(startAdornment || heading || endAdornment) && (
         <div

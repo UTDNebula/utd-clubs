@@ -18,12 +18,12 @@ export const BaseCard = ({
   children,
   variant = 'flat',
   className = '',
-  id = '',
+  id,
 }: BaseCardProps) => {
   const hasBgClass = className.includes('bg-');
   return (
     <div
-      id={id}
+      {...(id ? { id } : {})}
       className={`${baseClasses} ${hasBgClass ? '' : 'bg-white'} ${variantClasses[variant]} ${className}`}
     >
       {children}
