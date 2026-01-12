@@ -33,7 +33,7 @@ export default function OfficerList({
       const officerTop = officerContainer.getBoundingClientRect().top;
 
       // The height of the officer card at start should be the distance between officer's top and the right side's bottom
-      const targetHeight = rightBottom - officerTop;
+      const targetHeight = rightBottom - officerTop; // will be negative in mobile -> sets truncation to true, but maxHeight is default 300px
       const contentHeight = contentRef.current.scrollHeight + 80; // height of the full officer card + padding/header space
       setMaxHeight(targetHeight > 300 ? targetHeight : 300); // at least 300px to show 2 officers
       setNeedsTruncation(contentHeight > targetHeight && officers.length > 0); // if no officers, no truncation -- just show error text
