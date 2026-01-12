@@ -22,19 +22,36 @@ export default async function Image({ params }: { params: { slug: string } }) {
       (
         <div
           style={{
-            fontSize: 48,
-            background: 'white',
+            position: 'relative',
             width: '100%',
             height: '100%',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
+            color: 'white',
           }}
         >
-          Club Not Found
+          {/* BG Gradient Image */}
+          <img
+            // @ts-expect-error ArrayBuffers are allowed as an img source
+            src={gradientBuffer}
+            alt="background gradient"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              zIndex: -1,
+            }}
+          />
         </div>
       ),
-      { ...size },
+      {
+        ...size,
+      },
     );
   }
 
@@ -63,7 +80,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             left: 0,
             width: '100%',
             height: '100%',
-            objectFit: 'cover', // Makes a full circle always without distortion (crops)
+            objectFit: 'cover',
             zIndex: -1,
           }}
         />
@@ -92,7 +109,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
+                objectFit: 'cover', // Makes a full circle always without distortion (crops)
               }}
             />
 
