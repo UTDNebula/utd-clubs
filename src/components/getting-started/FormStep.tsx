@@ -2,6 +2,7 @@ import Typography from '@mui/material/Typography';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Link from 'next/link';
 import { ReactNode } from 'react';
+import { majors, minors } from '@src/constants/utdDegrees';
 import { studentClassificationEnum } from '@src/server/db/schema/users';
 import { withForm } from '@src/utils/form';
 import { AccountOnboardingSchema } from '@src/utils/formSchemas';
@@ -69,10 +70,22 @@ const FormStep = withForm({
               }
             >
               <form.AppField name="major">
-                {(field) => <field.TextField label="Major" className="grow" />}
+                {(field) => (
+                  <field.AutocompleteFreeSolo
+                    label="Major"
+                    options={majors}
+                    className="grow"
+                  />
+                )}
               </form.AppField>
               <form.AppField name="minor">
-                {(field) => <field.TextField label="Minor" className="grow" />}
+                {(field) => (
+                  <field.AutocompleteFreeSolo
+                    label="Minor"
+                    options={minors}
+                    className="grow"
+                  />
+                )}
               </form.AppField>
             </form.Question>
             <form.Question question="Are you a student? When do you graduate?">

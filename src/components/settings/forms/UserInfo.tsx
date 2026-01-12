@@ -7,6 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import Panel from '@src/components/form/Panel';
+import { majors, minors } from '@src/constants/utdDegrees';
 import { SelectUserMetadataWithClubs } from '@src/server/db/models';
 import { studentClassificationEnum } from '@src/server/db/schema/users';
 import { useTRPC } from '@src/trpc/react';
@@ -106,17 +107,20 @@ export default function UserInfo({ user }: UserInfoProps) {
               <div className="flex flex-wrap gap-6">
                 <form.AppField name="major">
                   {(field) => (
-                    <field.Autocomplete
+                    <field.AutocompleteFreeSolo
                       label="Major"
-                      freeSolo
-                      options={['Computer Science']}
-                      className="w-64 grow"
+                      options={majors}
+                      className="grow"
                     />
                   )}
                 </form.AppField>
                 <form.AppField name="minor">
                   {(field) => (
-                    <field.TextField label="Minor" className="grow" />
+                    <field.AutocompleteFreeSolo
+                      label="Minor"
+                      options={minors}
+                      className="grow"
+                    />
                   )}
                 </form.AppField>
               </div>
