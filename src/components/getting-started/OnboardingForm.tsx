@@ -6,7 +6,6 @@ import Slide from '@mui/material/Slide';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
 import Stepper from '@mui/material/Stepper';
-import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { MouseEvent, useCallback, useState } from 'react';
@@ -31,7 +30,13 @@ export const steps: StepObject[] = [
 
 type OnboardingFormProps = {
   userMetadata?: SelectUserMetadataWithClubs;
+  /**
+   * Include div's for centering and keeping content within a max width
+   */
   withLayout?: boolean;
+  /**
+   * Disables switching to the mobile stepper on smaller screens
+   */
   hideMobileStepper?: boolean;
 };
 
@@ -109,28 +114,29 @@ export default function OnboardingForm({
     previous: undefined as number | undefined,
   });
 
-  const [transitioning, setTransitioning] = useState(false);
+  // State that indicates the page is still loading, so temporarily hide everything
   const [mounting, setMounting] = useState(true);
 
-  const [completedSteps, setCompletedSteps] = useState<Record<number, boolean>>(
-    {},
-  );
-
+  // Because form steps are positioned absolutely on top of one another, they do
+  // not affect the document flow and thus the height of the parent does not
+  // adjust to the different height of steps.
+  // This variable is determined by the height of the active step, and is used
+  // to set the height of its parent.
   const [formHeight, setFormHeight] = useState(0);
 
+  // Ref that refers to the component for the active step
   const measureFormStepRef = useCallback((node: HTMLDivElement | null) => {
     if (node !== null) {
-      setTransitioning(true);
-
-      const timer = setTimeout(() => {
-        setTransitioning(false);
-      }, 250);
-
+      // Permanently removes the flag that the page is still loading
+      // Ideally, this would go in another location, but here works fine for now
       setMounting(false);
 
       const height = node.clientHeight;
       setFormHeight(height);
 
+      // As user interacts with the form, the height of the component may change naturally.
+      // Thus, the parent height will need to be adjusted whenever the active step
+      // component changes size.
       const observer = new ResizeObserver((entries) => {
         entries.forEach((entry) => {
           setFormHeight(entry.contentRect.height);
@@ -141,33 +147,27 @@ export default function OnboardingForm({
 
       return () => {
         observer.disconnect();
-        clearTimeout(timer);
       };
     }
   }, []);
 
   const handleNext = (event: MouseEvent<HTMLButtonElement>) => {
     if (activeStep.current < steps.length - 2) {
+      // Prevents submit button from activating prematurely when navigating
+      // from the penultimate step to the last step
       event.preventDefault();
       setActiveStep((prev) => ({
         current: prev.current + 1,
         previous: prev.current,
       }));
-      setCompletedSteps((prevCompletedSteps) => ({
-        ...prevCompletedSteps,
-        [activeStep.current]: true,
-      }));
     } else if (activeStep.current === steps.length - 1) {
+      // When user clicks Continue button on success screen
       router.push('/');
     }
   };
 
   const handleBack = () => {
     if (activeStep.current > 0) {
-      setCompletedSteps((prevCompletedSteps) => ({
-        ...prevCompletedSteps,
-        [activeStep.current]: false,
-      }));
       setActiveStep((prev) => ({
         current: prev.current - 1,
         previous: prev.current,
@@ -252,19 +252,18 @@ export default function OnboardingForm({
       </BaseCard>
       <Panel className="shadow-lg overflow-clip">
         <div>
-          {/* {`Welcome, ${userMetadata?.firstName}`} */}
-
           <div
             className="relative max-sm:mb-2 sm:mb-4 transition-[height] duration-250 ease-in-out"
             style={
+              // Only programmatically set the height once everything has loaded
               mounting
                 ? undefined
                 : {
                     height: `${formHeight}px`,
-                    // transitionDuration: transitioning ? '250' : '0',
                   }
             }
           >
+            {/* Hidden step component used only to correctly size the parent when the page loads */}
             <div className="invisible">
               <FormStep form={form} step={steps[0]} active={false} />
             </div>
@@ -276,6 +275,7 @@ export default function OnboardingForm({
 
               const isActive = activeStep.current === stepNumber;
 
+              // Determines the direction of the slide transition
               const direction =
                 activeStep.previous !== undefined
                   ? activeStep.current > activeStep.previous
@@ -311,7 +311,6 @@ export default function OnboardingForm({
               );
             })}
           </div>
-
           <div
             className={`flex flex-row justify-end items-center gap-2 ${hideMobileStepper ? '' : 'max-sm:hidden sm:visible'}`}
           >
