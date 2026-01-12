@@ -15,7 +15,7 @@ import type { AnyFieldApi } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import { Binoculars } from '@src/icons/OtherIcons';
 import { SelectUserMetadata } from '@src/server/db/models';
 import { ClubMatchResponses } from '@src/server/db/schema/users';

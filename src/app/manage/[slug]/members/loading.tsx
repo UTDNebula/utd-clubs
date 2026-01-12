@@ -1,4 +1,4 @@
-import { PanelSkeleton } from '@src/components/form/Panel';
+import { PanelSkeleton } from '@src/components/common/Panel';
 import ManageHeader from '@src/components/manage/ManageHeader';
 
 export default function Loading() {

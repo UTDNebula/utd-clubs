@@ -6,6 +6,7 @@ import {
   eq,
   ilike,
   inArray,
+  lte,
   sql,
 } from 'drizzle-orm';
 import { google } from 'googleapis';
@@ -358,10 +359,16 @@ export const clubRouter = createTRPCRouter({
     .input(bySlugSchema)
     .query(async ({ input: { slug }, ctx }) => {
       try {
+        // Fetch club by slug
         const bySlug = await ctx.db.query.club.findFirst({
           where: (club) =>
             and(eq(club.slug, slug), eq(club.approved, 'approved')),
           with: {
+            userMetadataToClubs: {
+              columns: {
+                userId: true, // Only fetch the ID to keep the payload small
+              },
+            },
             contacts: {
               orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
             },
@@ -370,7 +377,28 @@ export const clubRouter = createTRPCRouter({
             },
           },
         });
-        return bySlug;
+
+        if (!bySlug) return null;
+
+        // Fetch latest event date
+        const lastEvent = await ctx.db.query.events.findFirst({
+          where: (events) =>
+            and(
+              eq(events.clubId, bySlug.id),
+              lte(events.startTime, new Date()),
+            ), // find the end time of events that have started before now
+          orderBy: (events) => [desc(events.endTime)],
+          columns: {
+            endTime: true,
+          },
+        });
+
+        const { userMetadataToClubs, ...clubData } = bySlug; // clubData doesn't have userMetadataToClubs field
+        return {
+          ...clubData,
+          numMembers: userMetadataToClubs.length,
+          lastEventDate: lastEvent?.endTime ?? null,
+        };
       } catch (e) {
         console.error(e);
         throw e;

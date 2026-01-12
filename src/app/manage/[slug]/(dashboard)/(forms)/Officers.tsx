@@ -24,7 +24,7 @@ import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import OfficerListItem from '@src/components/manage/OfficerListItem';
 import type { SelectClub, SelectOfficer } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';

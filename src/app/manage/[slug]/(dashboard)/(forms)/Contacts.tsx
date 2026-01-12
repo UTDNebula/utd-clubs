@@ -23,7 +23,7 @@ import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import ContactListItem from '@src/components/manage/ContactListItem';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { contactNames, startContacts } from '@src/server/db/schema/contacts';

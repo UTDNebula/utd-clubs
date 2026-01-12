@@ -4,7 +4,7 @@ import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
-import Panel, { PanelSkeleton } from '@src/components/form/Panel';
+import Panel, { PanelSkeleton } from '@src/components/common/Panel';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
 import { SelectClub } from '@src/server/db/models';
