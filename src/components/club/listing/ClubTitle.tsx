@@ -11,32 +11,36 @@ const ClubTitle = async ({
   return (
     <section
       id="club-tile"
-      className="w-full rounded-lg flex flex-wrap md:flex-nowrap items-start md:items-center justify-between gap-4 mb-0 mt-2"
+      className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-0 mt-2"
     >
-      {club.profileImage && (
-        <Image
-          src={club.profileImage}
-          alt={club.name + ' logo'}
-          width={128}
-          height={128}
-          className="rounded-lg w-20 md:w-32 h-auto"
-        />
-      )}
-      <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
-        {club.name && (
-          <h1
-            className={`font-display font-bold text-slate-800 ${
-              club.name.length > 40
-                ? 'text-2xl md:text-3xl'
-                : 'text-4xl md:text-5xl'
-            }`}
-          >
-            {club.name}
-          </h1>
+      <div className="flex flex-row gap-4 w-full md:w-auto flex-grow items-start">
+        {club.profileImage && (
+          <Image
+            src={club.profileImage}
+            alt={club.name + ' logo'}
+            width={128}
+            height={128}
+            // flex-shrink-0 prevents the image from squishing if text is long
+            className="rounded-lg w-20 md:w-32 h-auto flex-shrink-0"
+          />
         )}
-        {club.tags && club.tags.length > 0 && <ClubTags tags={club.tags} />}
+        
+        <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
+          {club.name && (
+            <h1
+              className={`font-display font-bold text-slate-800 ${
+                club.name.length > 40
+                  ? 'text-2xl md:text-3xl'
+                  : 'text-4xl md:text-5xl'
+              }`}
+            >
+              {club.name}
+            </h1>
+          )}
+          {club.tags && club.tags.length > 0 && <ClubTags tags={club.tags} />}
+        </div>
       </div>
-      <div className="flex items-center gap-x-6 w-full md:w-auto md:ml-auto justify-end md:justify-start">
+      <div className="w-full md:w-auto flex-shrink-0 flex md:ml-auto justify-end">
         <JoinButton isHeader clubId={club.id} clubSlug={club.slug} />
       </div>
     </section>
