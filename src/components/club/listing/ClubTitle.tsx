@@ -1,7 +1,7 @@
-import Chip from '@mui/material/Chip';
 import Image from 'next/image';
 import { type RouterOutputs } from '@src/trpc/shared';
 import JoinButton from '../JoinButton';
+import { ClubTags } from '@src/components/common/ClubTags';
 
 const ClubTitle = async ({
   club,
@@ -22,7 +22,7 @@ const ClubTitle = async ({
           className="rounded-lg w-20 md:w-32 h-auto"
         />
       )}
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow w-full overflow-hidden">
         {club.name && (
           <h1
             className={`font-display font-bold text-slate-800 ${
@@ -34,16 +34,8 @@ const ClubTitle = async ({
             {club.name}
           </h1>
         )}
-        {club.tags && (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {club.tags.map((tag) => (
-              <Chip
-                label={tag}
-                key={tag}
-                className="font-semibold bg-cornflower-100 text-cornflower-600 hover:bg-cornflower-200"
-              />
-            ))}
-          </div>
+        {club.tags && club.tags.length > 0 && (
+          <ClubTags tags={club.tags} />
         )}
       </div>
       <div className="ml-auto flex items-center gap-x-6">
