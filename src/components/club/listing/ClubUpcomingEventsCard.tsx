@@ -19,10 +19,16 @@ export default function ClubUpcomingEventsCard({
 
   return (
     <Panel className="text-sm" id={id} smallPadding heading="Upcoming Events">
-      <div className="flex flex-wrap w-full justify-evenly items-center gap-4 mt-5">
+      <div
+        className="flex w-full gap-4 mt-5 items-center 
+          flex-nowrap justify-start overflow-x-auto pb-4 px-4
+          md:flex-wrap md:justify-evenly md:overflow-visible md:pb-0 md:px-0"
+      >
         {upcomingEvents.length > 0 ? (
           upcomingEvents.map((event) => (
-            <EventCard key={event.id} event={event} />
+            <div key={event.id} className="flex-shrink-0">
+              <EventCard event={event} />
+            </div>
           ))
         ) : (
           <div className="w-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl text-md font-medium text-gray-700">
