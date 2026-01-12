@@ -24,7 +24,7 @@ const ClubTitle = async ({
             className="rounded-lg w-20 md:w-32 h-auto flex-shrink-0"
           />
         )}
-        
+
         <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
           {club.name && (
             <h1
