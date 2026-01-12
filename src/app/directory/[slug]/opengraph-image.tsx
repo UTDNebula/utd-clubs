@@ -2,25 +2,19 @@ import { eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
 import { db } from '@src/server/db';
 
-// Import your schema tables if needed, e.g.: import { clubs } from '@src/server/db/schema';
-
-export const runtime = 'edge'; // Faster generation
-
+export const runtime = 'edge';
 export const alt = 'Club Details';
-export const size = { width: 1200, height: 630 };
+export const size = { width: 630, height: 630 };
 export const contentType = 'image/png';
 
 export default async function Image({ params }: { params: { slug: string } }) {
-  // 1. Get the slug
   const slug = params.slug;
 
-  // 2. Fetch data (Reusing your DB logic)
-  const found = await db.query.club.findFirst({
+  const clubData = await db.query.club.findFirst({
     where: (club) => eq(club.slug, slug),
   });
 
-  // 3. Handle missing data
-  if (!found) {
+  if (!clubData) {
     return new ImageResponse(
       (
         <div
@@ -41,61 +35,68 @@ export default async function Image({ params }: { params: { slug: string } }) {
     );
   }
 
-  // 4. Return the generated image
-  const clubImage = found.profileImage;
-
   return new ImageResponse(
     (
       <div
         style={{
-          background: '#1a1a1a', // Dark background
+          // 1. Set container to relative so the BG can be absolute inside it
+          position: 'relative',
           width: '100%',
           height: '100%',
           display: 'flex',
+          // Ensure content centers properly on top of the BG
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           color: 'white',
+          // REMOVED solid background: background: '#1a1a1a',
         }}
       >
-        {/* Render the Club Image if it exists */}
-        {clubImage && (
+        {/* 2. The Background Image Layer */}
+        <img
+          src={'/images/wideWave.jpg'} // Use the imported image source
+          alt="background gradient"
+          style={{
+            position: 'absolute', // Take it out of normal flow
+            top: 0,
+            left: 0,
+            width: '100%', // Stretch to fill container
+            height: '100%',
+            objectFit: 'cover', // Ensure it covers the area without stretching weirdly
+            zIndex: -1, // Send it to the back
+          }}
+        />
+
+        {/* 3. Your Content Layer (sits on top because zIndex default is 0) */}
+        {/* Only render the logo circle if a profileImage exists */}
+        {clubData.profileImage && (
           <img
-            src={clubImage}
-            alt={found.name}
+            src={clubData.profileImage}
+            alt={clubData.name + ' logo'}
             style={{
               width: 150,
               height: 150,
-              borderRadius: 75, // Circular image
+              borderRadius: '50%', // '50%' is safer than '75' for perfect circles
               objectFit: 'cover',
               marginBottom: 20,
               border: '4px solid white',
+              // Optional: add a slight shadow to make it pop off the gradient
+              boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
             }}
           />
         )}
 
-        {/* Club Name */}
+        {/* Highly recommended: Add the Club Name text below the logo */}
         <div
           style={{
-            fontSize: 60,
+            fontSize: 50,
             fontWeight: 'bold',
             textAlign: 'center',
-            padding: '0 40px',
-            lineHeight: 1.2,
+            padding: '0 20px',
+            textShadow: '0 2px 4px rgba(0,0,0,0.3)', // Adds readability over gradients
           }}
         >
-          {found.name}
-        </div>
-
-        {/* Branding Footer */}
-        <div
-          style={{
-            fontSize: 24,
-            marginTop: 20,
-            opacity: 0.7,
-          }}
-        >
-          UTD Clubs Directory
+          {clubData.name}
         </div>
       </div>
     ),
