@@ -14,7 +14,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
     where: (club) => eq(club.slug, slug),
   });
   const gradientBuffer = await fetch(
-    new URL('../../opengraph-club-preview-bg.png', import.meta.url)
+    new URL('../../opengraph-club-preview-bg.png', import.meta.url),
   ).then((res) => res.arrayBuffer());
 
   if (!clubData) {
@@ -52,23 +52,23 @@ export default async function Image({ params }: { params: { slug: string } }) {
           color: 'white',
         }}
       >
-        {/* 2. The Background Image Layer */}
+        {/* BG Gradient Image */}
         <img
-        // @ts-ignore
-          src={gradientBuffer} // Use the imported image source
+          // @ts-expect-error ArrayBuffers are allowed as an img source
+          src={gradientBuffer}
           alt="background gradient"
           style={{
-            position: 'absolute', // Take it out of normal flow
+            position: 'absolute',
             top: 0,
             left: 0,
-            width: '100%', // Stretch to fill container
+            width: '100%',
             height: '100%',
-            objectFit: 'cover', // Ensure it covers the area without stretching weirdly
-            zIndex: -1, // Send it to the back
+            objectFit: 'cover', // Makes a full circle always without distortion (crops)
+            zIndex: -1,
           }}
         />
 
-        {/* 3. Your Content Layer (sits on top because zIndex default is 0) */}
+        {/* Profile Image */}
         {clubData.profileImage && (
           <img
             src={clubData.profileImage}
@@ -78,7 +78,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
               height: 400,
               borderRadius: '50%',
               objectFit: 'cover',
-              marginBottom: 20,
               border: '6px solid white',
               boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
             }}
