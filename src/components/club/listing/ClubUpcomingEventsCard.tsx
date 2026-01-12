@@ -26,7 +26,7 @@ export default function ClubUpcomingEventsCard({
       >
         {upcomingEvents.length > 0 ? (
           upcomingEvents.map((event) => (
-            <div key={event.id} className="flex-shrink-0">
+            <div key={event.id} className="shrink-0">
               <EventCard event={event} />
             </div>
           ))
