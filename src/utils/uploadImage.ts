@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@src/trpc/react';
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from './formSchemas';
 
 export function useUploadToUploadURL() {
   const api = useTRPC();
@@ -19,11 +20,11 @@ export function useUploadToUploadURL() {
         throw new Error('No file uploaded.');
       }
 
-      if (!['image/jpeg', 'image/png', 'image/svg+xml'].includes(file.type)) {
+      if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
         throw new Error('File must be an image.');
       }
 
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > MAX_FILE_SIZE) {
         throw new Error('File must be less than 5MB');
       }
 

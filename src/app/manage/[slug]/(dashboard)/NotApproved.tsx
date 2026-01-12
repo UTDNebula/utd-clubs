@@ -1,7 +1,12 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
+import { SelectClub } from '@src/server/db/models';
 
-const NotAccepted = ({ status }: { status: 'pending' | 'rejected' }) => {
+const NotAccepted = ({
+  status,
+}: {
+  status: Exclude<SelectClub['approved'], 'approved'>;
+}) => {
   return (
     <Panel
       className="bg-cornflower-50"
@@ -10,6 +15,8 @@ const NotAccepted = ({ status }: { status: 'pending' | 'rejected' }) => {
         <>
           {status === 'pending' && 'Your organization is pending review.'}
           {status === 'rejected' && 'Your organization has been rejected.'}
+          {status === 'deleted' &&
+            'Your organization has been marked for deletion.'}
         </>
       }
     >
@@ -20,6 +27,9 @@ const NotAccepted = ({ status }: { status: 'pending' | 'rejected' }) => {
             While we work on approving it, please take the time to fill out more
             information below.
           </p>
+        )}
+        {status === 'deleted' && (
+          <p>An admin can restore it at the bottom of the page.</p>
         )}
         <p>
           If you have any questions, please reach out on our{' '}

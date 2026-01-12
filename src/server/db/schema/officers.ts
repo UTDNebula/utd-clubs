@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { club } from './club';
 
 export const officers = pgTable('officers', {
@@ -9,6 +9,7 @@ export const officers = pgTable('officers', {
     .references(() => club.id),
   name: text('name').notNull(),
   position: text('position').notNull(),
+  displayOrder: integer('display_order'),
 });
 
 export const officersToClubs = relations(officers, ({ one }) => ({

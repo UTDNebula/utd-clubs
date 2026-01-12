@@ -4,13 +4,12 @@ import { Button } from '@mui/material';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Collaborators from '@src/app/manage/[slug]/(dashboard)/(forms)/Collaborators';
+import DeleteClub from '@src/app/manage/[slug]/(dashboard)/(forms)/DeleteClub';
 import AdminHeader from '@src/components/admin/AdminHeader';
 import ChangeClubStatus from '@src/components/admin/ChangeClubStatus';
-import DeleteClub from '@src/components/admin/DeleteClub';
+import ClubBody from '@src/components/club/listing/ClubBody';
 import ClubHeader from '@src/components/club/listing/ClubHeader';
-import ClubInfoSegment from '@src/components/club/listing/ClubInfoSegment';
-import ClubUpcomingEvents from '@src/components/club/listing/ClubUpcomingEvents';
-import ContactInformation from '@src/components/club/listing/ContactInformation';
+import ClubTitle from '@src/components/club/listing/ClubTitle';
 import { api } from '@src/trpc/server';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -61,15 +60,14 @@ export default async function Page(props: Props) {
       </AdminHeader>
       <div className="flex w-full flex-col items-center">
         <div className="flex flex-col gap-8 w-full max-w-6xl">
-          <ChangeClubStatus status={club.approved} club={club} />
+          <ChangeClubStatus club={club} />
           <Collaborators club={club} officers={officers} role="Admin" />
-          <DeleteClub club={club} />
+          <DeleteClub view="admin" club={club} />
           {club.approved !== 'approved' && (
             <div className="mb-5 flex flex-col space-y-4 p-4">
               <ClubHeader club={club} />
-              <ClubInfoSegment club={club} />
-              {club.contacts.length > 0 && <ContactInformation club={club} />}
-              {club.updatedAt && <ClubUpcomingEvents clubId={club.id} />}
+              <ClubTitle club={club} />
+              <ClubBody club={club} />
             </div>
           )}
         </div>

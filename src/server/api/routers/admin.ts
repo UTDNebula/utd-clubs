@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, inArray, lte } from 'drizzle-orm';
 import { z } from 'zod';
 import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
@@ -21,7 +21,7 @@ const deleteSchema = z.object({
 
 const changeClubStatusSchema = z.object({
   clubId: z.string(),
-  status: z.enum(['approved', 'pending', 'rejected']),
+  status: z.enum(club.approved.enumValues),
 });
 
 export const adminRouter = createTRPCRouter({
@@ -43,6 +43,8 @@ export const adminRouter = createTRPCRouter({
   deleteClub: adminProcedure
     .input(deleteSchema)
     .mutation(async ({ ctx, input }) => {
+      await callStorageAPI('DELETE', `${input.id}-profile`);
+      await callStorageAPI('DELETE', `${input.id}-banner`);
       await ctx.db.delete(club).where(eq(club.id, input.id));
     }),
   updateOfficers: adminProcedure
@@ -127,14 +129,45 @@ export const adminRouter = createTRPCRouter({
     .input(bySlugSchema)
     .query(async ({ input: { slug }, ctx }) => {
       try {
+        // Fetch club by slug
         const bySlug = await ctx.db.query.club.findFirst({
           where: (club) => eq(club.slug, slug),
           with: {
-            contacts: true,
-            officers: true,
+            userMetadataToClubs: {
+              columns: {
+                userId: true, // Only fetch the ID to keep the payload small
+              },
+            },
+            contacts: {
+              orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+            },
+            officers: {
+              orderBy: (officers, { asc }) => asc(officers.displayOrder),
+            },
           },
         });
-        return bySlug;
+
+        if (!bySlug) return null;
+
+        // Fetch latest event date
+        const lastEvent = await ctx.db.query.events.findFirst({
+          where: (events) =>
+            and(
+              eq(events.clubId, bySlug.id),
+              lte(events.startTime, new Date()),
+            ), // find the end time of events that have started before now
+          orderBy: (events) => [desc(events.endTime)],
+          columns: {
+            endTime: true,
+          },
+        });
+
+        const { userMetadataToClubs, ...clubData } = bySlug; // clubData doesn't have userMetadataToClubs field
+        return {
+          ...clubData,
+          numMembers: userMetadataToClubs.length,
+          lastEventDate: lastEvent?.endTime ?? null,
+        };
       } catch (e) {
         console.error(e);
         throw e;

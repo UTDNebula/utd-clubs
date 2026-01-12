@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, asc, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@src/server/db';
 import { selectContact } from '@src/server/db/models';
@@ -37,8 +37,9 @@ async function isUserPresident(userId: string, clubId: string) {
 const editContactSchema = z.object({
   clubId: z.string(),
   deleted: selectContact.shape.platform.array(),
-  modified: selectContact.array(),
-  created: selectContact.omit({ clubId: true }).array(),
+  modified: selectContact.omit({ displayOrder: true }).array(),
+  created: selectContact.omit({ clubId: true, displayOrder: true }).array(),
+  order: selectContact.shape.platform.array().optional(),
 });
 
 export const editCollaboratorSchema = z.object({
@@ -70,13 +71,15 @@ const editOfficerSchema = z.object({
     .array(),
   created: z
     .object({
+      id: z.string().optional(),
       name: z.string(),
       position: z.string(),
     })
     .array(),
+  order: z.string().array().optional(),
 });
 
-const deleteSchema = z.object({ clubId: z.string() });
+const deleteSchema = z.object({ id: z.string() });
 
 export const removeMembersSchema = z.object({
   clubId: z.string(),
@@ -145,6 +148,14 @@ export const clubEditRouter = createTRPCRouter({
       await Promise.allSettled(promises);
 
       // Created
+      const original = await ctx.db
+        .select()
+        .from(officers)
+        .where(eq(officers.clubId, input.clubId))
+        .orderBy(asc(officers.displayOrder));
+      let nextFreeDisplayOrder =
+        original.findLast((item) => item.displayOrder !== null)?.displayOrder ??
+        -1;
       if (input.created.length) {
         await ctx.db
           .insert(contacts)
@@ -153,9 +164,30 @@ export const clubEditRouter = createTRPCRouter({
               clubId: input.clubId,
               platform: contact.platform,
               url: contact.url,
+              displayOrder:
+                input.order?.indexOf(contact.platform) ??
+                ++nextFreeDisplayOrder,
             })),
           )
           .onConflictDoNothing();
+      }
+
+      // Display order
+      if (input.order?.length) {
+        const promises: Promise<unknown>[] = [];
+        input.order.forEach((platform, index) => {
+          const promise = ctx.db
+            .update(contacts)
+            .set({ displayOrder: index })
+            .where(
+              and(
+                eq(contacts.clubId, input.clubId),
+                eq(contacts.platform, platform),
+              ),
+            );
+          promises.push(promise);
+        });
+        await Promise.allSettled(promises);
       }
 
       // Updated at
@@ -169,6 +201,7 @@ export const clubEditRouter = createTRPCRouter({
       // Return new contacts
       const newContacts = await ctx.db.query.contacts.findMany({
         where: eq(contacts.clubId, input.clubId),
+        orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
       });
       return newContacts;
     }),
@@ -320,14 +353,39 @@ export const clubEditRouter = createTRPCRouter({
       await Promise.allSettled(promises);
 
       // Created
+      const original = await ctx.db
+        .select()
+        .from(officers)
+        .where(eq(officers.clubId, input.clubId))
+        .orderBy(asc(officers.displayOrder));
+      let nextFreeDisplayOrder =
+        original.findLast((item) => item.displayOrder !== null)?.displayOrder ??
+        -1;
       if (input.created.length) {
         await ctx.db.insert(officers).values(
           input.created.map((officer) => ({
             clubId: input.clubId,
             name: officer.name,
             position: officer.position,
+            displayOrder:
+              (officer.id !== undefined
+                ? input.order?.indexOf(officer.id)
+                : null) ?? ++nextFreeDisplayOrder,
           })),
         );
+      }
+
+      // Display order
+      if (input.order?.length) {
+        const promises: Promise<unknown>[] = [];
+        input.order.forEach((id, index) => {
+          const promise = ctx.db
+            .update(officers)
+            .set({ displayOrder: index })
+            .where(and(eq(officers.clubId, input.clubId), eq(officers.id, id)));
+          promises.push(promise);
+        });
+        await Promise.allSettled(promises);
       }
 
       // Updated at
@@ -341,6 +399,7 @@ export const clubEditRouter = createTRPCRouter({
       // Return new officers
       const newListedOfficers = await ctx.db.query.officers.findMany({
         where: eq(officers.clubId, input.clubId),
+        orderBy: (officers, { asc }) => asc(officers.displayOrder),
       });
       return newListedOfficers;
     }),
@@ -374,16 +433,38 @@ export const clubEditRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(deleteSchema)
     .mutation(async ({ input, ctx }) => {
-      const isPresident = await isUserPresident(
-        ctx.session.user.id,
-        input.clubId,
-      );
+      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
       if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
-      await callStorageAPI('DELETE', `${input.clubId}-profile`);
-      await callStorageAPI('DELETE', `${input.clubId}-banner`);
+      await callStorageAPI('DELETE', `${input.id}-profile`);
+      await callStorageAPI('DELETE', `${input.id}-banner`);
+      await ctx.db.delete(club).where(eq(club.id, input.id));
+    }),
+  markDeleted: protectedProcedure
+    .input(deleteSchema)
+    .mutation(async ({ input, ctx }) => {
+      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
+      if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
-      await ctx.db.delete(club).where(eq(club.id, input.clubId));
+      await ctx.db
+        .update(club)
+        .set({
+          approved: 'deleted',
+        })
+        .where(and(eq(club.id, input.id), eq(club.approved, 'approved')));
+    }),
+  restore: protectedProcedure
+    .input(deleteSchema)
+    .mutation(async ({ input, ctx }) => {
+      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
+      if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+      await ctx.db
+        .update(club)
+        .set({
+          approved: 'approved',
+        })
+        .where(eq(club.id, input.id));
     }),
   removeMembers: protectedProcedure
     .input(removeMembersSchema)
