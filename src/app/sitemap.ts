@@ -16,8 +16,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   //Fetch all events
   const events = await api.event.byDateRange({
-    startTime: new Date(),
-    endTime: new Date('9999-12-31T23:59:59'),
+    startTime: new Date(new Date().setMonth(new Date().getMonth() - 2)), // 2 months ago
+    endTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
   });
 
   return [
