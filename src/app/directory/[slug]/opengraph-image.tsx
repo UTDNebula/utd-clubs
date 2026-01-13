@@ -17,7 +17,11 @@ export default async function Image({ params }: { params: { slug: string } }) {
   });
 
   const gradientBuffer = await fetch(
-    new URL('../../opengraph-club-preview-bg.png', import.meta.url),
+    new URL('../../../../public/images/landingGradient.png', import.meta.url),
+  ).then((res) => res.arrayBuffer());
+
+  const logoBuffer = await fetch(
+    new URL('../../../../public/nebula-logo.png', import.meta.url),
   ).then((res) => res.arrayBuffer());
 
   const background = (
@@ -137,11 +141,29 @@ export default async function Image({ params }: { params: { slug: string } }) {
           <div
             style={{
               display: 'flex',
-              fontSize: '40px',
-              marginBottom: '20px',
+              position: 'relative',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 50,
+              height: 50,
+              borderRadius: '0px', // '10%' works differently in some Satori versions, px is safer
+              border: '0px solid white',
+              overflow: 'hidden',
             }}
           >
-            ⚛️
+            <img
+              // @ts-expect-error ArrayBuffers are allowed as an img source
+              src={logoBuffer}
+              alt="background gradient"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+              }}
+            />
           </div>
 
           <h1
