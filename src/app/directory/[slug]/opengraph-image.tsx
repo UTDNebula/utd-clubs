@@ -137,7 +137,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               textShadow: '0 2px 10px rgba(0,0,0,0.2)',
             }}
           >
-            {clubData.name}
+            {clubData.name + " - UTD CLUBS"}
           </h1>
 
           {/* Tags Container */}
@@ -147,8 +147,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 <div
                   key={index}
                   style={{
-                    backgroundColor: '#dae8fc', // Light Blue (adjust to match cornflower-100)
-                    color: '#2a5dad', // Dark Blue (adjust to match cornflower-600)
+                    backgroundColor: '#d3caff', // Light Blue (adjust to match cornflower-100)
+                    color: '#5455cc', // Dark Blue (adjust to match cornflower-600)
                     padding: '8px 16px',
                     borderRadius: '20px',
                     fontSize: '20px',
