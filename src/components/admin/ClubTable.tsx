@@ -2,7 +2,6 @@
 
 import {
   Button,
-  Chip,
   Paper,
   Table,
   TableBody,
@@ -27,6 +26,7 @@ import Link from 'next/link';
 import { useMemo, useRef, useState } from 'react';
 import { RouterOutputs } from '@src/trpc/shared';
 import { fuzzyFilter } from '@src/utils/table';
+import { ClubTags } from '../common/ClubTags';
 import Filter from './Filter';
 import StatusFilter from './StatusFilter';
 
@@ -71,11 +71,7 @@ export default function ClubTable({
           const tags = info.getValue() as string[];
           return (
             <div className="flex flex-wrap gap-1">
-              {tags.map((tag) => {
-                return (
-                  <Chip label={tag} key={tag} size="small" color="primary" />
-                );
-              })}
+              <ClubTags tags={tags} size="small" />
             </div>
           );
         },

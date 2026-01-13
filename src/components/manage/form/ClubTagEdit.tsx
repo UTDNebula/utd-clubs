@@ -2,10 +2,10 @@
 
 import TagIcon from '@mui/icons-material/Tag';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import { useQuery } from '@tanstack/react-query';
+import { TagChip } from '@src/components/common/TagChip';
 import { useTRPC } from '@src/trpc/react';
 
 export const ClubTagEdit = ({
@@ -68,11 +68,10 @@ export const ClubTagEdit = ({
         return value.map((option: string, index: number) => {
           const { key, ...itemProps } = getItemProps({ index });
           return (
-            <Chip
+            <TagChip
               key={key}
               icon={<TagIcon color="inherit" />}
-              label={option}
-              color="primary"
+              tag={option}
               {...itemProps}
             />
           );

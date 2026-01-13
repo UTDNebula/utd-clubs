@@ -1,9 +1,10 @@
-import { Button, Chip } from '@mui/material';
+import { Button } from '@mui/material';
 import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BaseCard } from '@src/components/common/BaseCard';
+import { ClubTags } from '@src/components/common/ClubTags';
 import EventDeleteButton from '@src/components/events/EventDeleteButton';
 import EventEditButton from '@src/components/events/EventEditButton';
 import EventRegisterButton from '@src/components/events/EventRegisterButton';
@@ -92,16 +93,7 @@ export default async function EventsPage(props: Params) {
               </div>
             ))}
             <div className="flex flex-wrap gap-1 mt-2">
-              {club.tags.map((tag) => {
-                return (
-                  <Chip
-                    label={tag}
-                    key={tag}
-                    className=" rounded-full font-bold transition-colors text-white"
-                    color="primary"
-                  />
-                );
-              })}
+              <ClubTags tags={club.tags} />
             </div>
           </div>
           <div className="grow text-slate-700">
