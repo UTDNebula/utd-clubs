@@ -2,6 +2,8 @@ import { eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
 import { db } from '@src/server/db';
 
+// REMOVE THIS: import { TagChip } from '@src/components/common/TagChip';
+
 export const runtime = 'edge';
 export const alt = 'Club Details';
 export const size = { width: 1200, height: 630 };
@@ -30,8 +32,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
         width: '100%',
         height: '100%',
         objectFit: 'cover',
-        // REMOVED zIndex: -1.
-        // Placing this element first in the parent achieves the same effect in Satori.
       }}
     />
   );
@@ -88,14 +88,13 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 justifyContent: 'center',
                 width: 350,
                 height: 350,
-                borderRadius: '10%',
+                borderRadius: '35px', // '10%' works differently in some Satori versions, px is safer
                 backgroundColor: 'white',
                 border: '6px solid white',
                 boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
                 overflow: 'hidden',
               }}
             >
-              {/* Profile Image */}
               <img
                 src={clubData.profileImage}
                 alt={clubData.name + ' logo'}
@@ -103,31 +102,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                }}
-              />
-              {/* Glossy Overlay */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background:
-                    'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%)',
-                  borderRadius: '10%',
-                }}
-              />
-              {/* Inset shadow */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  borderRadius: '10%',
-                  boxShadow: 'inset 0 0 25px rgba(0,0,0,0.25)',
                 }}
               />
             </div>
@@ -147,7 +121,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
           <div
             style={{
               display: 'flex',
-              alignSelf: 'center',
               fontSize: '40px',
               marginBottom: '20px',
             }}
@@ -161,21 +134,33 @@ export default async function Image({ params }: { params: { slug: string } }) {
               fontWeight: 'bold',
               margin: '0 0 20px 0',
               lineHeight: 1.1,
+              textShadow: '0 2px 10px rgba(0,0,0,0.2)',
             }}
           >
-            {clubData.name + ' - UTD CLUBS'}
+            {clubData.name}
           </h1>
 
+          {/* Tags Container */}
           {clubData.tags && (
-            <p
-              style={{
-                fontSize: '30px',
-                margin: '0 0 30px 0',
-                opacity: 0.9,
-              }}
-            >
-              adjfkldjf
-            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+              {clubData.tags.map((tag, index) => (
+                <div
+                  key={index}
+                  style={{
+                    backgroundColor: '#dae8fc', // Light Blue (adjust to match cornflower-100)
+                    color: '#2a5dad', // Dark Blue (adjust to match cornflower-600)
+                    padding: '8px 16px',
+                    borderRadius: '20px',
+                    fontSize: '20px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  {tag}
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>
