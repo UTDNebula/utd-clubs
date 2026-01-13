@@ -29,19 +29,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: 'https://clubs.utdnebula.com/community',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
+      priority: 0.7,
     },
     {
       url: 'https://clubs.utdnebula.com/club-match',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
       priority: 1,
     },
     ...allClubs.map((club) => ({
       url: 'https://clubs.utdnebula.com/directory/' + club.slug,
-      lastModified: new Date(),
+      lastModified: club.updatedAt ?? new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.9,
     })),
@@ -49,11 +45,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: 'https://clubs.utdnebula.com/directory/create',
       lastModified: new Date(),
       changeFrequency: 'yearly' as const,
-      priority: 0.8,
+      priority: 0.6,
     },
     ...events.map((event) => ({
       url: 'https://clubs.utdnebula.com/events/' + event.id,
-      lastModified: new Date(),
+      lastModified: event.updatedAt,
       changeFrequency: 'monthly' as const,
       priority: 0.9,
     })),
@@ -61,12 +57,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: 'https://clubs.utdnebula.com/events',
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 1,
-    },
-    {
-      url: 'https://clubs.utdnebula.com/settings',
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
       priority: 1,
     },
   ];
