@@ -1,7 +1,7 @@
 'use client';
 
-import Chip from '@mui/material/Chip';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import { TagChip } from './common/TagChip';
 
 export const TagPill = ({
   name,
@@ -23,12 +23,11 @@ export const TagPill = ({
   }
 
   return (
-    <Chip
-      label={name}
+    <TagChip
+      tag={name}
       className={
         'rounded-full font-bold transition-colors ' + (className ?? '')
       }
-      color="primary"
       onClick={() => {
         addTag(name);
         scroll();
