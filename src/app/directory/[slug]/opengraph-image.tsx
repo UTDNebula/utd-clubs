@@ -88,22 +88,38 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 justifyContent: 'center',
                 width: 350,
                 height: 350,
-                borderRadius: '35px', // '10%' works differently in some Satori versions, px is safer
-                backgroundColor: 'white',
-                border: '6px solid white',
+                borderRadius: '0px', // '10%' works differently in some Satori versions, px is safer
+                backgroundColor: 'rgba(220, 240, 255, 0.14)',
+                border: '0px solid white',
                 boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
                 overflow: 'hidden',
               }}
             >
-              <img
-                src={clubData.profileImage}
-                alt={clubData.name + ' logo'}
+              <div
                 style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
+                  display: 'flex',
+                  position: 'relative',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '70%',
+                  height: '70%',
+                  borderRadius: '0px', // '10%' works differently in some Satori versions, px is safer
+                  backgroundColor: 'white',
+                  border: '0px solid white',
+                  boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+                  overflow: 'hidden',
                 }}
-              />
+              >
+                <img
+                  src={clubData.profileImage}
+                  alt={clubData.name + ' logo'}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </div>
             </div>
           )}
         </div>
@@ -137,7 +153,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               textShadow: '0 2px 10px rgba(0,0,0,0.2)',
             }}
           >
-            {clubData.name + " - UTD CLUBS"}
+            {clubData.name + ' - UTD CLUBS'}
           </h1>
 
           {/* Tags Container */}
