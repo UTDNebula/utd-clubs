@@ -67,7 +67,7 @@ export function useUploadToUploadURL() {
         throw new Error('Failed to get file URL.');
       }
 
-      return fileResponse.data.media_link;
+      return fileResponse.data.public_url;
     },
   });
 }

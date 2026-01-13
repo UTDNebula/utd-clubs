@@ -11,6 +11,7 @@ type GetPostResponse = {
   media_link: string;
   created: string;
   updated: string;
+  public_url: string;
 };
 
 type DeleteResponse = 1;
