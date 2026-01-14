@@ -8,12 +8,13 @@ import { ClubEvents, RegisteredEvents } from './communityEvents';
 
 export const metadata: Metadata = {
   title: 'My Community',
-  description: 'Community Page',
+  description: 'Your clubs & events, all in one place.',
   alternates: {
     canonical: 'https://clubs.utdnebula.com/community',
   },
   openGraph: {
     url: 'https://clubs.utdnebula.com/community',
+    description: 'Your clubs & events, all in one place.',
   },
 };
 

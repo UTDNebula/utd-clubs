@@ -14,14 +14,14 @@ import RedoClubMatchButton from './RedoClubMatchButton';
 export const metadata: Metadata = {
   title: 'Club Match Results',
   description:
-    'Find your club match! Generate club recommendations based on a simple form.',
+    'Find the perfect club for you! Sign in to find orgs tailored to your preferences.',
   alternates: {
     canonical: 'https://clubs.utdnebula.com/club-match/results',
   },
   openGraph: {
     url: 'https://clubs.utdnebula.com/club-match/results',
     description:
-      'Find your club match! Generate club recommendations based on a simple form.',
+      'Find the perfect club for you! Sign in to find orgs tailored to your preferences.',
   },
 };
 

@@ -1,4 +1,5 @@
 import { Button } from '@mui/material';
+import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -8,6 +9,18 @@ import ManageHeader from '@src/components/manage/ManageHeader';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
+
+export const metadata: Metadata = {
+  title: 'Manage Clubs',
+  description: 'Sign in to edit your club listings.',
+  alternates: {
+    canonical: 'https://clubs.utdnebula.com/manage',
+  },
+  openGraph: {
+    url: 'https://clubs.utdnebula.com/manage',
+    description: 'Sign in to edit your club listings.',
+  },
+};
 
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
