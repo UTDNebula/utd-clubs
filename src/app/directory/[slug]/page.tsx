@@ -6,6 +6,7 @@ import ClubHeader from '@src/components/club/listing/ClubHeader';
 import { ClubNotClaimed } from '@src/components/club/listing/ClubNotClaimed';
 import ClubTitle from '@src/components/club/listing/ClubTitle';
 import Header from '@src/components/header/BaseHeader';
+import { convertMarkdownToPlaintext } from '@src/modules/markdown';
 import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
 
@@ -58,12 +59,27 @@ export async function generateMetadata(props: {
       description: 'Organization not found',
     };
 
+  // show first paragraph if it's long enough. Otherwise show the entire description
+  let cleanDescription = `Learn more about ${found.name} on UTD Clubs!`;
+  const textDescription = found.description.replace(/^#+.*$/gm, '');
+
+  if (textDescription.length > 0) {
+    const firstParagraph = textDescription.split('\n')[0];
+    if (firstParagraph) {
+      const plainFirstParagraph = convertMarkdownToPlaintext(firstParagraph);
+      cleanDescription =
+        plainFirstParagraph.length > 60
+          ? plainFirstParagraph
+          : convertMarkdownToPlaintext(textDescription);
+    }
+  }
+
   return {
     title: `${found.name}`,
-    description: `${found.name} on UTD Clubs`,
+    description: cleanDescription,
     openGraph: {
       url: `https://clubs.utdnebula.com/directory/${found.slug}`,
-      description: `${found.name} on UTD Clubs`,
+      description: cleanDescription,
     },
     alternates: {
       canonical: `https://clubs.utdnebula.com/directory/${found.slug}`,

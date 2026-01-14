@@ -10,6 +10,7 @@ import EventEditButton from '@src/components/events/EventEditButton';
 import EventRegisterButton from '@src/components/events/EventRegisterButton';
 import { EventHeader } from '@src/components/header/BaseHeader';
 import MarkdownText from '@src/components/MarkdownText';
+import { convertMarkdownToPlaintext } from '@src/modules/markdown';
 import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
 import CountdownTimer from './CountdownTimer';
@@ -131,15 +132,30 @@ export async function generateMetadata(props: {
       description: 'Event not found',
     };
 
+  let cleanDescription = `${found.name} from ${found.club.name} on UTD Clubs`;
+  const textDescription = found.description.replace(/^#+.*$/gm, '');
+
+  // show first paragraph if it's long enough. Otherwise show the entire description
+  if (textDescription.length > 0) {
+    const firstParagraph = textDescription.split('\n')[0];
+    if (firstParagraph) {
+      const plainFirstParagraph = convertMarkdownToPlaintext(firstParagraph);
+      cleanDescription =
+        plainFirstParagraph.length > 60
+          ? plainFirstParagraph
+          : convertMarkdownToPlaintext(textDescription);
+    }
+  }
+
   return {
     title: `${found.name}`,
-    description: `${found.name} from ${found.club.name} on UTD Clubs`,
+    description: cleanDescription,
     alternates: {
       canonical: `https://clubs.utdnebula.com/events/${found.id}`,
     },
     openGraph: {
       url: `https://clubs.utdnebula.com/events/${found.id}`,
-      description: `${found.name} from ${found.club.name} on UTD Clubs`,
+      description: cleanDescription,
     },
   };
 }
