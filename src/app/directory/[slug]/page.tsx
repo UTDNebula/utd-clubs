@@ -81,6 +81,9 @@ export async function generateMetadata(props: {
       url: `https://clubs.utdnebula.com/directory/${found.slug}`,
       description: cleanDescription,
     },
+    twitter: {
+      card: 'summary_large_image',
+    },
     alternates: {
       canonical: `https://clubs.utdnebula.com/directory/${found.slug}`,
     },
