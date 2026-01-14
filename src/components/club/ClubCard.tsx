@@ -4,9 +4,9 @@ import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BaseCard } from '@src/components/common/BaseCard';
+import { convertMarkdownToPlaintext } from '@src/modules/markdown';
 import type { SelectClub as Club } from '@src/server/db/models';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
-import { convertMarkdownToPlaintext } from '@src/modules/markdown';
 
 type Props = { club: Club; priority?: boolean; manageView?: boolean };
 
