@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query'; // 1. Import this
 import { useEffect } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
@@ -17,9 +17,10 @@ const ClubDirectoryGrid = () => {
   } = useSearchStore((state) => state);
   const api = useTRPC();
 
-  const { data, isFetching } = useQuery(
-    api.club.search.queryOptions({ search, tags, limit: 9 }),
-  );
+  const { data, isFetching, isPlaceholderData } = useQuery({
+    ...api.club.search.queryOptions({ search, tags, limit: 9 }),
+    placeholderData: keepPreviousData, 
+  });
 
   const showNoResults = !isFetching && data && data.clubs.length === 0;
 
@@ -45,7 +46,7 @@ const ClubDirectoryGrid = () => {
 
   return (
     <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">
-      {isFetching ? (
+      {isFetching && !data ? (
         <>
           {Array.from({ length: 9 }).map((_, index) => (
             <ClubCardSkeleton key={`skeleton-${index}`} />
@@ -56,12 +57,15 @@ const ClubDirectoryGrid = () => {
           No clubs found matching your search
         </div>
       ) : (
-        <>
+        <div 
+          className={`contents transition-opacity duration-300 ${isFetching ? 'opacity-50' : 'opacity-100'}`}
+        >
           {data?.clubs.map((club) => (
             <ClubCard key={club.id} club={club} priority />
           ))}
-          {data?.clubs.length === 9 && <InfiniteScrollGrid />}
-        </>
+          {/* Only show infinite scroll if not fetching */}
+          {!isPlaceholderData && data?.clubs.length === 9 && <InfiniteScrollGrid />}
+        </div>
       )}
     </div>
   );
