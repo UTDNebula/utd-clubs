@@ -6,11 +6,12 @@ import Link from 'next/link';
 import { BaseCard } from '@src/components/common/BaseCard';
 import type { SelectClub as Club } from '@src/server/db/models';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
+import { convertMarkdownToPlaintext } from '@src/modules/markdown';
 
 type Props = { club: Club; priority?: boolean; manageView?: boolean };
 
 const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
-  const desc = club.description;
+  const desc = convertMarkdownToPlaintext(club.description);
   const name = club.name;
 
   return (
