@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery, keepPreviousData } from '@tanstack/react-query'; // 1. Import this
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
@@ -19,21 +19,18 @@ const ClubDirectoryGrid = () => {
 
   const { data, isFetching, isPlaceholderData } = useQuery({
     ...api.club.search.queryOptions({ search, tags, limit: 9 }),
-    placeholderData: keepPreviousData, 
+    placeholderData: keepPreviousData,
   });
 
   const showNoResults = !isFetching && data && data.clubs.length === 0;
 
   useEffect(() => {
     setSearchBarLoading(isFetching);
-    // Focus on the first club card after the user hits Enter and the results load
     if (shouldFocus && !isFetching && !showNoResults) {
       setShouldFocus(false);
       const firstClubCard = document.querySelector('[data-club-result]');
       if (firstClubCard instanceof HTMLElement) {
-        firstClubCard.focus({
-          preventScroll: true,
-        });
+        firstClubCard.focus({ preventScroll: true });
       }
     }
   }, [
@@ -45,7 +42,11 @@ const ClubDirectoryGrid = () => {
   ]);
 
   return (
-    <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">
+    <div
+      className={`grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4 transition-opacity duration-300 ${
+        isPlaceholderData ? 'opacity-50 pointer-events-none' : 'opacity-100'
+      }`}
+    >
       {isFetching && !data ? (
         <>
           {Array.from({ length: 9 }).map((_, index) => (
@@ -57,15 +58,15 @@ const ClubDirectoryGrid = () => {
           No clubs found matching your search
         </div>
       ) : (
-        <div 
-          className={`contents transition-opacity duration-300 ${isFetching ? 'opacity-50' : 'opacity-100'}`}
-        >
+        <>
           {data?.clubs.map((club) => (
             <ClubCard key={club.id} club={club} priority />
           ))}
           {/* Only show infinite scroll if not fetching */}
-          {!isPlaceholderData && data?.clubs.length === 9 && <InfiniteScrollGrid />}
-        </div>
+          {!isPlaceholderData && data?.clubs.length === 9 && (
+            <InfiniteScrollGrid />
+          )}
+        </>
       )}
     </div>
   );
