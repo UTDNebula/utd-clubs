@@ -1,5 +1,5 @@
 /**
- *Source: https://academics.utdallas.edu/degrees
+ * Source: https://academics.utdallas.edu/degrees
  */
 export const majors = [
   'Undecided',

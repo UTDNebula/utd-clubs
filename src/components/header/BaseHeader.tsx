@@ -27,15 +27,6 @@ export type HeaderItemVisibility = {
   menu?: boolean;
   logo?: boolean;
   children?: boolean;
-  /**
-   * Visibility options for the header search bar
-   * - `true` Automatically switches between "full" or "compact" based on screen size
-   * - `false` Disabled
-   * - `"full"` Always show full search bar
-   * - `"compact"` Always show collapsed search button
-   * @default true
-   */
-  search?: true | false | 'full' | 'compact';
   clubMatch?: boolean;
   account?: boolean;
 };
@@ -73,7 +64,6 @@ export const BaseHeader = async ({
     menu: menuVisibility = true,
     logo: logoVisibility = true,
     children: childrenVisibility = true,
-    search: searchVisibility = true,
     clubMatch: clubMatchVisibility = true,
     account: accountVisibility = true,
   } = {},

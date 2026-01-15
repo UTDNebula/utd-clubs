@@ -27,7 +27,6 @@ async function SettingsForm({
     api.userMetadata.byId({ id: user.id }),
     api.club.getMemberClubsMetadata(),
   ]).then(([userDataResult, joinedClubsResult]) => {
-    console.log('then');
     if (userDataResult.status === 'fulfilled' && userDataResult.value) {
       userData = userDataResult.value;
     } else if (userDataResult.status === 'rejected') {
