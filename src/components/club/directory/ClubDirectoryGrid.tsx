@@ -44,7 +44,7 @@ const ClubDirectoryGrid = () => {
 
   return (
     <div
-      className={`grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4 transition-opacity duration-300`}
+      className={`grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4 transition-opacity duration-300 pb-40`}
     >
       {isFetching && !data ? (
         <>
