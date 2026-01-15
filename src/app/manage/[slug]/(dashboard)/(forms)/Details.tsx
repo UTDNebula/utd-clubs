@@ -19,6 +19,7 @@ type DetailsProps = {
 interface ClubDetails {
   id: string;
   name: string;
+  alias: string | null;
   description: string;
   foundingDate: Date | null;
   tags: string[];
@@ -39,6 +40,7 @@ const Details = ({ club }: DetailsProps) => {
   const defaultValues: ClubDetails = {
     id: clubDetails?.id ?? '',
     name: clubDetails?.name ?? '',
+    alias: clubDetails?.alias ?? null,
     description: clubDetails?.description ?? '',
     foundingDate: clubDetails?.foundingDate ?? null,
     tags: clubDetails?.tags ?? [],
@@ -175,6 +177,26 @@ const Details = ({ club }: DetailsProps) => {
                       : undefined
                   }
                   label="Name"
+                />
+              )}
+            </form.Field>
+            <form.Field name="alias">
+              {(field) => (
+                <TextField
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className="grow [&>.MuiInputBase-root]:bg-white"
+                  size="small"
+                  error={!field.state.meta.isValid}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
+                  label="Alias"
                 />
               )}
             </form.Field>

@@ -547,6 +547,7 @@ export const clubRouter = createTRPCRouter({
         columns: {
           id: true,
           name: true,
+          alias: true,
           description: true,
           foundingDate: true,
           tags: true,

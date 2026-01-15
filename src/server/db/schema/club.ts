@@ -31,6 +31,7 @@ export const club = pgTable(
       .primaryKey(),
     slug: text('slug').notNull(),
     name: text('name').notNull(),
+    alias: text('alias'),
     foundingDate: timestamp('founding_date'),
     updatedAt: timestamp('updated_at'),
     description: text('description').notNull(),
