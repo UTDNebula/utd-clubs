@@ -13,7 +13,11 @@ function contactDisplay(contact: SelectContact) {
       );
     case 'instagram':
       return contact.url.indexOf('instagram.com/') >= 0
-        ? '@' + contact.url.split('instagram.com/')[1]!.replace(/\/+$/, '')
+        ? '@' +
+            contact.url
+              .split('instagram.com/')[1]!
+              .replace(/\/+$/, '')
+              .split(/[/?#]/)[0]
         : contactNames[contact.platform];
     case 'website':
       return contact.url
