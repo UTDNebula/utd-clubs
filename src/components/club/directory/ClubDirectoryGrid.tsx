@@ -61,10 +61,12 @@ const ClubDirectoryGrid = () => {
           {data?.clubs.map((club) => (
             <motion.div
               key={club.id}
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
+              layout="position"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               transition={{
                 layout: { type: 'spring', stiffness: 120, damping: 20 },
                 opacity: { duration: 0.3 },
