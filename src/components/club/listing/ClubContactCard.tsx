@@ -9,7 +9,7 @@ type ClubContactCardProps = {
 
 export default function ClubContactCard({ club, id }: ClubContactCardProps) {
   return (
-    <Panel className="text-sm" id={id} smallPadding heading="Contact">
+    <Panel id={id} smallPadding heading="Contact">
       {club.contacts && club.contacts.length > 0 ? (
         club.contacts.map((contact) => (
           <ContactButton key={contact.platform} contact={contact} />

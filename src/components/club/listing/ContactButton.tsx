@@ -66,11 +66,11 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
       >
         <Button
           variant="contained"
-          className="normal-case bg-white hover:bg-slate-100 shadow-sm w-full text-black font-normal justify-start"
+          className="normal-case bg-white hover:bg-slate-100 shadow-sm w-full text-black font-normal justify-start pl-3 pr-1"
           startIcon={logo[contact.platform]}
           size="large"
         >
-          <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+          <span className="overflow-hidden text-sm text-ellipsis whitespace-nowrap">
             {contactDisplay(contact)}
           </span>
         </Button>
