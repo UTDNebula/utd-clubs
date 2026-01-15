@@ -79,11 +79,18 @@ export const clubRelations = relations(club, ({ many }) => ({
   userMetadataToClubs: many(userMetadataToClubs),
 }));
 
-// TODO add schema for search index
 export const usedTags = pgMaterializedView('used_tags', {
   tag: text('tag').notNull(),
   count: integer('count').notNull(),
   id: integer('id').notNull(),
-}).as(
-  sql`select UNNEST(${club.tags}) as tag, COUNT(${club.tags}) as count, from club order by count desc`,
-);
+}).as(sql`
+  SELECT 
+    tag, 
+    COUNT(*) as count, 
+    ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC)::integer as id 
+  FROM (
+    SELECT UNNEST(${club.tags}) as tag FROM ${club}
+  ) sub 
+  GROUP BY tag 
+  ORDER BY count DESC
+`);
