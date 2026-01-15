@@ -335,7 +335,10 @@ export const clubRouter = createTRPCRouter({
       const officers = await ctx.db.query.officers.findMany({
         where: eq(officersTable.clubId, input.id),
       });
-      return officers;
+      return officers.sort(
+        // Infinity makes items without a `displayOrder` go to the end
+        (a, b) => (a.displayOrder ?? Infinity) - (b.displayOrder ?? Infinity),
+      );
     }),
   getMembers: publicProcedure
     .input(byIdSchema)
