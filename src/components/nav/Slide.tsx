@@ -5,15 +5,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Drawer, IconButton } from '@mui/material';
 import { useState } from 'react';
 import { type personalCats } from '@src/constants/categories';
+import { ContentComponentColor } from '../header/BaseHeader';
 import NavMenu from './NavMenu';
 
 const NewSidebar = ({
   userCapabilities,
-  hamburger = 'black',
+  hamburgerColor = 'dark',
   shadow = false,
 }: {
   userCapabilities: Array<(typeof personalCats)[number]>;
-  hamburger?: 'white' | 'black';
+  hamburgerColor?: ContentComponentColor;
   shadow?: boolean;
 }) => {
   const [open, setOpen] = useState(false);
@@ -27,7 +28,15 @@ const NewSidebar = ({
       >
         <MenuIcon
           fontSize="inherit"
-          className={hamburger === 'black' ? 'fill-black' : 'fill-white'}
+          className={`${
+            hamburgerColor?.startsWith('light') ? 'fill-white' : 'fill-haiti'
+          } ${
+            hamburgerColor === 'lightDark'
+              ? 'dark:fill-haiti'
+              : hamburgerColor === 'darkLight'
+                ? 'dark:fill-white'
+                : ''
+          }`}
         />
       </IconButton>
       <Drawer

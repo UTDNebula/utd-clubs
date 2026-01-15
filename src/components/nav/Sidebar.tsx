@@ -1,14 +1,15 @@
 'use server';
 
 import { api } from '@src/trpc/server';
+import { ContentComponentColor } from '../header/BaseHeader';
 import NewSidebar from './Slide';
 
 // Keep in mind that in all routes we need pl-72 for the sidebar
 const Sidebar = async ({
-  hamburger = 'black',
+  hamburgerColor = 'dark',
   shadow = false,
 }: {
-  hamburger?: 'white' | 'black';
+  hamburgerColor?: ContentComponentColor;
   shadow?: boolean;
 }) => {
   const userSidebarCapabilities =
@@ -16,7 +17,7 @@ const Sidebar = async ({
   return (
     <NewSidebar
       userCapabilities={userSidebarCapabilities}
-      hamburger={hamburger}
+      hamburgerColor={hamburgerColor}
       shadow={shadow}
     />
   );
