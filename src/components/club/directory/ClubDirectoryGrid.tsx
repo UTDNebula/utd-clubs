@@ -1,6 +1,7 @@
 'use client';
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
@@ -58,15 +59,28 @@ const ClubDirectoryGrid = () => {
           No clubs found matching your search
         </div>
       ) : (
-        <>
+        <AnimatePresence mode="popLayout">
           {data?.clubs.map((club) => (
-            <ClubCard key={club.id} club={club} priority />
+            <motion.div
+              key={club.id}
+              layout
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{
+                layout: { type: 'spring', stiffness: 120, damping: 20 },
+                opacity: { duration: 0.3 },
+              }}
+              className="h-full w-full"
+            >
+              <ClubCard club={club} priority />
+            </motion.div>
           ))}
           {/* Only show infinite scroll if not fetching */}
           {!isPlaceholderData && data?.clubs.length === 9 && (
             <InfiniteScrollGrid />
           )}
-        </>
+        </AnimatePresence>
       )}
     </div>
   );
