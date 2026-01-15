@@ -1,11 +1,12 @@
 'use client';
 
 import Button from '@mui/material/Button';
-import MobileStepper from '@mui/material/MobileStepper';
 import Slide from '@mui/material/Slide';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
 import Stepper from '@mui/material/Stepper';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/system/useMediaQuery';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { MouseEvent, useCallback, useState } from 'react';
@@ -34,18 +35,15 @@ type OnboardingFormProps = {
    * Include div's for centering and keeping content within a max width
    */
   withLayout?: boolean;
-  /**
-   * Disables switching to the mobile stepper on smaller screens
-   */
-  hideMobileStepper?: boolean;
 };
 
 export default function OnboardingForm({
   userMetadata,
   withLayout = false,
-  hideMobileStepper = false,
 }: OnboardingFormProps) {
   const router = useRouter();
+
+  const theme = useTheme();
 
   const api = useTRPC();
 
@@ -224,9 +222,11 @@ export default function OnboardingForm({
       className="flex flex-col gap-8 w-full"
       noValidate
     >
-      <BaseCard className="p-4 overflow-clip max-sm:hidden">
+      <BaseCard className="max-sm:px-0 sm:px-2 py-4 overflow-clip">
         <div>
-          <Stepper>
+          <Stepper
+            alternativeLabel={useMediaQuery(theme.breakpoints.down('sm'))}
+          >
             {steps
               .filter((ele) => !ele.hidden)
               .map((step, index) => (
@@ -256,94 +256,75 @@ export default function OnboardingForm({
         </div>
       </BaseCard>
       <Panel className="shadow-lg overflow-clip">
-        <div>
-          <div
-            className="relative max-sm:mb-2 sm:mb-4 transition-[height] duration-250 ease-in-out"
-            style={
-              // Only programmatically set the height once everything has loaded
-              mounting
-                ? undefined
-                : {
-                    height: `${formHeight}px`,
-                  }
-            }
-          >
-            {/* Hidden step component used only to correctly size the parent when the page loads */}
-            <div className="invisible">
-              <FormStep form={form} step={steps[0]} active={false} />
-            </div>
-
-            {steps.map((step, index) => {
-              const stepNumber = steps.findIndex(
-                (searchStep) => searchStep.id === step.id,
-              );
-
-              const isActive = activeStep.current === stepNumber;
-
-              // Determines the direction of the slide transition
-              const direction =
-                activeStep.previous !== undefined
-                  ? activeStep.current > activeStep.previous
-                    ? // on next
-                      activeStep.current === stepNumber
-                      ? // entering
-                        'left'
-                      : // exiting
-                        'right'
-                    : // on back
-                      activeStep.current === stepNumber
-                      ? // entering
-                        'right'
-                      : // exiting
-                        'left'
-                  : // on mount
-                    'left';
-
-              return (
-                <Slide
-                  key={index}
-                  direction={direction}
-                  timeout={250}
-                  mountOnEnter
-                  unmountOnExit
-                  in={isActive}
-                  className={`absolute top-0 left-0 ${mounting ? 'invisible' : ''}`}
-                >
-                  <div ref={isActive ? measureFormStepRef : undefined}>
-                    <FormStep form={form} step={step} active={isActive} />
-                  </div>
-                </Slide>
-              );
-            })}
+        <div
+          className="relative mb-4 transition-[height] duration-250 ease-in-out"
+          style={
+            // Only programmatically set the height once everything has loaded
+            mounting
+              ? undefined
+              : {
+                  height: `${formHeight}px`,
+                }
+          }
+        >
+          {/* Hidden step component used only to correctly size the parent when the page loads */}
+          <div className="invisible">
+            <FormStep form={form} step={steps[0]} active={false} />
           </div>
-          <div
-            className={`flex flex-row justify-end items-center gap-2 ${hideMobileStepper ? '' : 'max-sm:hidden sm:visible'}`}
-          >
-            {BackButton}
-            {NextButton}
-          </div>
+
+          {steps.map((step, index) => {
+            const stepNumber = steps.findIndex(
+              (searchStep) => searchStep.id === step.id,
+            );
+
+            const isActive = activeStep.current === stepNumber;
+
+            // Determines the direction of the slide transition
+            const direction =
+              activeStep.previous !== undefined
+                ? activeStep.current > activeStep.previous
+                  ? // on next
+                    activeStep.current === stepNumber
+                    ? // entering
+                      'left'
+                    : // exiting
+                      'right'
+                  : // on back
+                    activeStep.current === stepNumber
+                    ? // entering
+                      'right'
+                    : // exiting
+                      'left'
+                : // on mount
+                  'left';
+
+            return (
+              <Slide
+                key={index}
+                direction={direction}
+                timeout={250}
+                mountOnEnter
+                unmountOnExit
+                in={isActive}
+                className={`absolute top-0 left-0 ${mounting ? 'invisible' : ''}`}
+              >
+                <div ref={isActive ? measureFormStepRef : undefined}>
+                  <FormStep form={form} step={step} active={isActive} />
+                </div>
+              </Slide>
+            );
+          })}
+        </div>
+        <div className="flex flex-row justify-end items-center gap-2">
+          {BackButton}
+          {NextButton}
         </div>
       </Panel>
-      <div
-        className={`${hideMobileStepper ? 'hidden' : 'max-sm:visible sm:hidden'}`}
-      >
-        <MobileStepper
-          variant="text"
-          backButton={BackButton}
-          nextButton={NextButton}
-          steps={steps.length - 1}
-          activeStep={activeStep.current - 1}
-          position="bottom"
-          className="shadow-black/20 shadow-[0_-4px_15px_-3px]"
-        />
-      </div>
     </form>
   );
 
   return withLayout ? (
-    <div
-      className={`flex w-full flex-col items-center p-4 ${hideMobileStepper ? '' : 'max-sm:pb-10'}`}
-    >
+    <div className="flex w-full flex-col items-center p-4">
       <div className="w-full max-w-6xl">{OnboardingFormElement}</div>
     </div>
   ) : (
