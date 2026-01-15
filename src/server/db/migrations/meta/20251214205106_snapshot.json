@@ -1,6 +1,6 @@
 {
-  "id": "7d19e857-a574-473d-8575-b23b05a1b43b",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "5fa34390-b9eb-427a-b353-bf44ae5d9971",
+  "prevId": "1ce0775f-8840-45b1-ab1e-51307ed81d08",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -629,12 +629,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "display_order": {
-          "name": "display_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
@@ -812,12 +806,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "display_order": {
-          "name": "display_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
@@ -861,12 +849,6 @@
         "clubMatchLimit": {
           "name": "clubMatchLimit",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "responses": {
-          "name": "responses",
-          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         }
@@ -965,13 +947,6 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
-        },
-        "joined_at": {
-          "name": "joined_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
@@ -1032,13 +1007,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "registered_at": {
-          "name": "registered_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
@@ -1092,8 +1060,7 @@
       "values": [
         "approved",
         "rejected",
-        "pending",
-        "deleted"
+        "pending"
       ]
     },
     "public.platform": {
