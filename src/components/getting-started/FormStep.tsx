@@ -45,7 +45,7 @@ const FormStep = withForm({
         break;
       case 1:
         FormStepData = (
-          <FormStepDataPanel title="Name">
+          <FormStepContent title="Name">
             <form.Question question="Please check that your name is correct. This is how you will appear to fellow students on UTD Clubs.">
               <form.AppField name="firstName">
                 {(field) => (
@@ -62,12 +62,12 @@ const FormStep = withForm({
                 )}
               </form.AppField>
             </form.Question>
-          </FormStepDataPanel>
+          </FormStepContent>
         );
         break;
       case 2:
         FormStepData = (
-          <FormStepDataPanel title="College Info">
+          <FormStepContent title="College Info">
             <form.Question
               question={
                 'Enter your college major or "Undecided". If applicable, add your college minor.'
@@ -138,12 +138,12 @@ const FormStep = withForm({
                 }}
               </form.AppField>
             </form.Question>
-          </FormStepDataPanel>
+          </FormStepContent>
         );
         break;
       case 3:
         FormStepData = (
-          <FormStepDataPanel title="Contact Email">
+          <FormStepContent title="Contact Email">
             <form.Question question="Please enter your UTD email so club and event organizers can contact you.">
               <form.AppField name="contactEmail">
                 {(field) => (
@@ -158,7 +158,7 @@ const FormStep = withForm({
                 )}
               </form.AppField>
             </form.Question>
-          </FormStepDataPanel>
+          </FormStepContent>
         );
         break;
       case 4:
@@ -203,7 +203,7 @@ const FormStep = withForm({
 
 export default FormStep;
 
-function FormStepDataPanel({
+function FormStepContent({
   title,
   children,
 }: {
@@ -212,10 +212,7 @@ function FormStepDataPanel({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <Typography
-        variant="h2"
-        className="font-display text-2xl font-bold ml-3.5"
-      >
+      <Typography variant="h2" className="font-display text-2xl font-bold">
         {title}
       </Typography>
       <div className="flex flex-col gap-12">{children}</div>

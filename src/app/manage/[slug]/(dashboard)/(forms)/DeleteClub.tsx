@@ -93,11 +93,10 @@ export default function DeleteClub({ view, club }: Props) {
             <p>This will restore your organization from pending deletion.</p>
           )}
         </div>
-        <div className="m-2 mt-0 flex flex-col gap-4">
+        <div className="m-2 mt-0">
           <Button
             variant="contained"
             className="normal-case"
-            size="small"
             color="error"
             startIcon={
               view === 'manage' && club.approved === 'deleted' ? (
@@ -117,8 +116,8 @@ export default function DeleteClub({ view, club }: Props) {
             }}
           >
             {view === 'manage' && club.approved === 'deleted'
-              ? 'Restore'
-              : 'Delete'}
+              ? 'Restore Club'
+              : 'Delete Club'}
           </Button>
         </div>
       </Panel>

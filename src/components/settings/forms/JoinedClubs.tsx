@@ -133,7 +133,7 @@ function ClubListItem({
                 alt={club.name + ' logo'}
                 width={40}
                 height={40}
-                className="rounded-full"
+                className="rounded-sm"
               />
             )}
           </div>
@@ -167,7 +167,7 @@ function ClubListItem({
                 <MemberRoleChip memberType={joinedClub.memberType} />
                 <Button
                   LinkComponent={Link}
-                  href={`/manage/${club.slug ?? club.id}`}
+                  href={`/manage/${club.slug}`}
                   variant="contained"
                   size="small"
                   className="normal-case"

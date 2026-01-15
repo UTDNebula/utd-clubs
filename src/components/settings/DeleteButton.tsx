@@ -25,7 +25,12 @@ export default function DeleteButton() {
       <Confirmation
         open={open}
         onClose={() => setOpen(false)}
-        contentText="This will clear all your account data and remove it from the platform."
+        contentText={
+          <>
+            This will permenantly delete your account. <br />
+            All your account data will be cleared and removed from the platform.
+          </>
+        }
         onConfirm={async () => {
           await authClient.deleteUser();
           router.push('/');

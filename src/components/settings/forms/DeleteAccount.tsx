@@ -10,7 +10,7 @@ export default function DeleteAccount() {
       <div className="ml-2 mb-4 text-slate-800 text-sm">
         <p>This will permenantly delete your account from UTD Clubs.</p>
       </div>
-      <div>
+      <div className="m-2 mt-0">
         <DeleteButton />
       </div>
     </Panel>

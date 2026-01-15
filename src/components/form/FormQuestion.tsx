@@ -12,7 +12,7 @@ export default function FormQuestion({
 }: FormQuestionProps) {
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2 ml-3.5">
+      <div className="flex flex-col gap-2">
         <Typography variant="body1">{question}</Typography>
       </div>
       <div className="flex flex-wrap gap-6 w-full">{children}</div>
