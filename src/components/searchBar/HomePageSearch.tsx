@@ -82,6 +82,14 @@ export const HomePageSearchBar = () => {
     }
   }
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Optional: Check if we are not already sticky to avoid jumping if the user scrolls back up
+    if (!isSticky) {
+      inputRef.current?.focus();
+    }
+  }, [isSticky]);
+
   function onSubmit() {
     setOpen(false);
     // Blur the input while results load
