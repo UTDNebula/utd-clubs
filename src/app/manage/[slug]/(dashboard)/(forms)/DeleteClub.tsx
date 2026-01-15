@@ -64,35 +64,37 @@ export default function DeleteClub({ view, club }: Props) {
             : 'Delete'
         }
         className="bg-red-100 border border-red-500"
-      >
-        <div className="ml-2 mb-4 text-slate-800 text-sm">
-          {view === 'admin' && (
-            <p>
-              This will permenantly delete this organization from UTD Clubs.
-            </p>
-          )}
-          {view === 'manage' && club.approved === 'approved' && (
-            <>
+        description={
+          <div className="text-slate-800">
+            {view === 'admin' && (
               <p>
-                This will mark your organization as pending deletion from UTD
-                Clubs.
-              </p>
-              <p>
-                A UTD Clubs admin will review your request and delete it
-                permanently.
-              </p>
-            </>
-          )}
-          {view === 'manage' &&
-            (club.approved === 'pending' || club.approved === 'rejected') && (
-              <p>
-                This will permenantly delete your organization from UTD Clubs.
+                This will permenantly delete this organization from UTD Clubs.
               </p>
             )}
-          {view === 'manage' && club.approved === 'deleted' && (
-            <p>This will restore your organization from pending deletion.</p>
-          )}
-        </div>
+            {view === 'manage' && club.approved === 'approved' && (
+              <>
+                <p>
+                  This will mark your organization as pending deletion from UTD
+                  Clubs.
+                </p>
+                <p>
+                  A UTD Clubs admin will review your request and delete it
+                  permanently.
+                </p>
+              </>
+            )}
+            {view === 'manage' &&
+              (club.approved === 'pending' || club.approved === 'rejected') && (
+                <p>
+                  This will permenantly delete your organization from UTD Clubs.
+                </p>
+              )}
+            {view === 'manage' && club.approved === 'deleted' && (
+              <p>This will restore your organization from pending deletion.</p>
+            )}
+          </div>
+        }
+      >
         <div className="m-2 mt-0">
           <Button
             variant="contained"

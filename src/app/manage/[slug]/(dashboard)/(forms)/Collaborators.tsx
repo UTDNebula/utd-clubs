@@ -119,18 +119,22 @@ const Collaborators = ({
         form.handleSubmit();
       }}
     >
-      <Panel heading="Collaborators">
-        <div className="ml-2 mb-4 text-slate-600 text-sm">
-          <p>
-            Users in this list can edit {role === 'Admin' ? 'a' : 'your'}{' '}
-            organization&apos;s information and events.
-          </p>
-          <p>Admins in this list can manage other collaborators.</p>
-          <p>
-            To add someone as a collaborator, they must have a UTD Clubs
-            account.
-          </p>
-        </div>
+      <Panel
+        heading="Collaborators"
+        description={
+          <>
+            <p>
+              Users in this list can edit {role === 'Admin' ? 'a' : 'your'}{' '}
+              organization&apos;s information and events.
+            </p>
+            <p>Admins in this list can manage other collaborators.</p>
+            <p>
+              To add someone as a collaborator, they must have a UTD Clubs
+              account.
+            </p>
+          </>
+        }
+      >
         <form.Field name="officers">
           {(field) => (
             <div className="flex flex-col gap-2">

@@ -176,13 +176,17 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
         form.handleSubmit();
       }}
     >
-      <Panel heading="Listed Officers">
-        <div className="ml-2 mb-4 text-slate-600 text-sm">
-          <p>
-            People&apos;s names on this list will appear on your public
-            organization listing.
-          </p>
-        </div>
+      <Panel
+        heading="Listed Officers"
+        description={
+          <>
+            <p>
+              People&apos;s names on this list will appear on your public
+              organization listing.
+            </p>
+          </>
+        }
+      >
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}

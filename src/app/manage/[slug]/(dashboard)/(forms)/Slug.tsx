@@ -173,22 +173,28 @@ const Slug = ({ club, role }: DetailsProps) => {
           setConfirmationOpen(true);
         }}
       >
-        <Panel heading="Listing URL">
-          <div className="ml-2 mb-4 text-slate-600 text-sm">
-            <p>
-              This is the URL of your organization&apos;s listing in the
-              directory.
-            </p>
-            <p>
-              Currently it is{' '}
-              <Link
-                href={`https://clubs.utdnebula.com/directory/${club.slug}`}
-                className="text-royal underline"
-              >{`https://clubs.utdnebula.com/directory/${club.slug}`}</Link>
-              .
-            </p>
-            <p>Your URL may only use lowercase letters, numbers, and dashes.</p>
-          </div>
+        <Panel
+          heading="Listing URL"
+          description={
+            <>
+              <p>
+                This is the URL of your organization&apos;s listing in the
+                directory.
+              </p>
+              <p>
+                Currently it is{' '}
+                <Link
+                  href={`https://clubs.utdnebula.com/directory/${club.slug}`}
+                  className="text-royal underline"
+                >{`https://clubs.utdnebula.com/directory/${club.slug}`}</Link>
+                .
+              </p>
+              <p>
+                Your URL may only use lowercase letters, numbers, and dashes.
+              </p>
+            </>
+          }
+        >
           <div className="m-2 mt-0 flex flex-col gap-4">
             <form.Field
               name="slug"

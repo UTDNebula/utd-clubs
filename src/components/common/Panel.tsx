@@ -4,6 +4,7 @@ import { BaseCard } from '@src/components/common/BaseCard';
 
 interface PanelPropsBase {
   heading?: ReactNode;
+  description?: ReactNode;
   startAdornment?: React.JSX.Element;
   endAdornment?: React.JSX.Element;
   smallPadding?: boolean;
@@ -19,6 +20,7 @@ interface PanelProps extends PanelPropsBase {
 const Panel = ({
   children,
   heading,
+  description,
   startAdornment,
   endAdornment,
   smallPadding = false,
@@ -44,6 +46,13 @@ const Panel = ({
             </Typography>
           )}
           {endAdornment}
+        </div>
+      )}
+      {description && (
+        <div
+          className={`mb-4 text-slate-600 text-sm ${smallPadding ? '' : 'ml-2'}`}
+        >
+          {description}
         </div>
       )}
       {children}
