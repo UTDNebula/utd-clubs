@@ -17,7 +17,6 @@ const ClubEventHeader = async ({ club }: { club: Club }) => {
         alt="Club banner"
         fill
         className="object-cover object-center"
-        priority
       />
     </BaseCard>
   );
