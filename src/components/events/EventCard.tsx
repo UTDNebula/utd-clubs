@@ -28,7 +28,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
     >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full">
-          <div className="absolute inset-0 h-full w-full bg-neutral-200 dark:text-slate-800" />
+          <div className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-900" />
           {src && (
             <Image
               fill
