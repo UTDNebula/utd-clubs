@@ -68,6 +68,13 @@ export const HomePageSearchBar = () => {
     };
   }, []);
 
+  // if the url already has search or tag params, scroll straight to the results
+  useEffect(() => {
+    if (initialSearch.length > 0 || tags.length > 0) {
+      scroll();
+    }
+  }, [initialSearch.length, tags.length]);
+
   function scroll() {
     window.scrollTo({
       top: window.innerHeight * 0.85,
