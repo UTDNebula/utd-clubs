@@ -1,5 +1,6 @@
 'use client';
 
+import { formatDistanceStrict } from 'date-fns';
 import { useEffect, useState } from 'react';
 import Panel from '@src/components/common/Panel';
 
@@ -36,27 +37,66 @@ const calculateTimeRemaining = (eventStartTime: number) => {
   };
 };
 
-type CountdownTimerProps = {
+type EventCountdownCardProps = {
   startTime: Date;
+  endTime: Date;
   id?: string;
 };
 
-export default function CountdownTimer({ startTime, id }: CountdownTimerProps) {
+export default function EventCountdownCard({
+  startTime,
+  endTime,
+  id,
+}: EventCountdownCardProps) {
   const eventStartTime = startTime.getTime();
+  const eventEndTime = startTime.getTime();
+
+  const now = Date.now();
 
   const [timeRemaining, setTimeRemaining] = useState(
     calculateTimeRemaining(eventStartTime),
   );
+  const [endsIn, setEndsIn] = useState(
+    formatDistanceStrict(endTime, now, {
+      addSuffix: true,
+    }),
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
+      const now = Date.now();
       setTimeRemaining(calculateTimeRemaining(eventStartTime));
+      setEndsIn(
+        formatDistanceStrict(endTime, now, {
+          addSuffix: true,
+        }),
+      );
     }, 1000);
 
     return () => clearInterval(interval);
   }, [eventStartTime]);
 
-  if (Date.now() > eventStartTime) return null;
+  if (now > eventStartTime) {
+    if (now < eventEndTime) {
+      return (
+        <Panel id={id} smallPadding className="text-center">
+          <p className="font-display text-2xl">Happening Now</p>
+          <p className="text-sm font-medium text-slate-500">Ends {endsIn}</p>
+        </Panel>
+      );
+    }
+    return (
+      <Panel id={id} smallPadding className="text-center">
+        <p className="font-display text-2xl">Event Over</p>
+        <p className="text-sm font-medium text-slate-500">
+          Ended{' '}
+          {formatDistanceStrict(endTime, now, {
+            addSuffix: true,
+          })}
+        </p>
+      </Panel>
+    );
+  }
 
   return (
     <Panel id={id} smallPadding heading="Event Starts In">

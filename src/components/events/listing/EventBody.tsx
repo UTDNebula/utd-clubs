@@ -31,7 +31,11 @@ const EventBody = async ({
         id="club-content-left"
         className="flex flex-col gap-4 h-full order-2 md:order-1"
       >
-        <EventCountdownCard id="countdown" startTime={event.startTime} />
+        <EventCountdownCard
+          id="countdown"
+          startTime={event.startTime}
+          endTime={event.endTime}
+        />
         <EventHostClubCard id="host" club={event.club} />
         <EventDetailsCard id="details" event={event} />
         <ClubContactCard id="contact" club={event.club} />
