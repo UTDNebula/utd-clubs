@@ -45,7 +45,7 @@ const discordStyling =
 const instagramStyling =
   'text-[#ff0069] transition-colors group-hover:text-[#ff0069]/60';
 const twitterStyling =
-  'text-[#14171a] transition-colors group-hover:text-[#14171a]/60';
+  'text-[#14171a] dark:text-white transition-colors group-hover:text-[#14171a]/60 dark:text-white/80';
 const facebookStyling =
   'text-[#1877f2] transition-colors group-hover:text-[#1877f2]/80';
 const youtubeStyling =
@@ -56,7 +56,7 @@ const linkedInStyling =
   'text-[#0a66c2] transition-colors group-hover:text-[#0a66c2]/80';
 
 const genericStyling =
-  'text-slate-500 transition-colors group-hover:text-slate-500/80';
+  'text-slate-600 dark:text-slate-400 transition-colors group-hover:text-slate-600/80 dark:group-hover:text-slate-400/80';
 
 export const logo = {
   discord: <Discord className={discordStyling} />,
