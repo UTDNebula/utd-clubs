@@ -26,7 +26,7 @@ const ProviderButton = ({
         callbackURL: callbackUrl ?? window.location.href,
       });
     }}
-    className="bg-white dark:bg-neutral-900 normal-case whitespace-nowrap min-w-max"
+    className="bg-white dark:bg-neutral-800 normal-case whitespace-nowrap min-w-max"
     startIcon={AuthIcons[provider]}
   >
     <Typography
