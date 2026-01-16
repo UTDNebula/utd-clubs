@@ -26,7 +26,7 @@ const FormImage = ({
 
   return (
     <div className={className}>
-      <div className="w-full lg:h-96 max-lg:h-48 flex flex-col justify-center items-center gap-2 p-8 rounded-md bg-royal/10 has-[:hover]:bg-royal/20 transition-colors relative">
+      <div className="w-full lg:h-96 max-lg:h-48 flex flex-col justify-center items-center gap-2 p-8 rounded-md bg-cornflower-50 dark:bg-cornflower-950 has-[:hover]:bg-cornflower-100 dark:has-[:hover]:bg-cornflower-900 transition-colors relative">
         {label && (
           <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
             {label}

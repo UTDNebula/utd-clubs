@@ -9,7 +9,7 @@ const NotApproved = ({
 }) => {
   return (
     <Panel
-      className="bg-cornflower-50 dark:bg-cornflower-900"
+      className="bg-cornflower-50 dark:bg-cornflower-950"
       startAdornment={<AccessTimeIcon />}
       heading={
         <>
@@ -35,14 +35,14 @@ const NotApproved = ({
           If you have any questions, please reach out on our{' '}
           <a
             href="https://discord.utdnebula.com/"
-            className="text-royal underline decoration-transparent hover:decoration-inherit transition"
+            className="text-royal dark:text-cornflower-300 underline decoration-transparent hover:decoration-inherit transition"
           >
             Discord
           </a>{' '}
           or{' '}
           <a
             href="https://www.instagram.com/utdnebula/"
-            className="text-royal underline decoration-transparent hover:decoration-inherit transition"
+            className="text-royal dark:text-cornflower-300 underline decoration-transparent hover:decoration-inherit transition"
           >
             {' '}
             Instagram
