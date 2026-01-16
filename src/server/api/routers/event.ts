@@ -32,6 +32,14 @@ const byClubIdSchema = z.object({
   clubId: z.string().default(''),
   currentTime: z.optional(z.date()),
   sortByDate: z.boolean().default(false),
+  page: z.number().int().positive().optional(),
+  pageSize: z.number().int().positive().optional(),
+});
+const countByClubIdSchema = z.object({
+  clubId: z.string(),
+  // Will be implemented later
+  // includePast: z.boolean().optional(),
+  // currentTime: z.coerce.data().optional(),
 });
 const clubUpcomingEventsSchema = z.object({
   clubId: z.string(),
@@ -67,6 +75,9 @@ export const eventRouter = createTRPCRouter({
     .input(byClubIdSchema)
     .query(async ({ input, ctx }) => {
       const { clubId, currentTime, sortByDate } = input;
+      const page = Math.max(1, input.page ?? 1);
+      const pageSize = Math.max(1, Math.min(50, input.pageSize ?? 12));
+      const offset = (page - 1) * pageSize;
 
       try {
         const events = await ctx.db.query.events.findMany({
@@ -78,9 +89,43 @@ export const eventRouter = createTRPCRouter({
           with: {
             club: true,
           },
+          limit: pageSize,
+          offset: offset,
+        });
+        //TESTING, WILL DELETE AFTER
+        console.log('byClubId events fetched', {
+          clubId: input.clubId,
+          count: events.length,
+          events,
         });
 
         return events;
+      } catch (e) {
+        console.error(e);
+
+        throw e;
+      }
+    }),
+  countByClubId: publicProcedure
+    .input(countByClubIdSchema)
+    .query(async ({ input, ctx }) => {
+      const { clubId } = input;
+
+      try {
+        const result = await ctx.db
+          .select({ count: sql<number>`count(*)` })
+          .from(events)
+          .where(eq(events.clubId, clubId));
+        const count = result[0]?.count ?? 0;
+
+        //TESTING, WILL DELETE AFTER
+        console.log('byClubId events count', {
+          clubId: input.clubId,
+          count: count,
+          result,
+        });
+
+        return count;
       } catch (e) {
         console.error(e);
 
