@@ -513,12 +513,15 @@ export const eventRouter = createTRPCRouter({
       if (!isOfficer) {
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
-      await ctx.db.update(club).set({
-        calendarSyncToken: null,
-        calendarId: null,
-        calendarName: null,
-        calendarGoogleAccountId: null,
-      });
+      await ctx.db
+        .update(club)
+        .set({
+          calendarSyncToken: null,
+          calendarId: null,
+          calendarName: null,
+          calendarGoogleAccountId: null,
+        })
+        .where(eq(club.id, input.clubId));
 
       return { success: true };
     }),
