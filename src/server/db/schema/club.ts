@@ -58,7 +58,7 @@ export const club = pgTable(
   },
   (t) => [
     index('club_search_idx')
-      .using('bm25', t.id, t.name, t.description, t.tags, t.approved)
+      .using('bm25', t.id, t.name, t.alias, t.description, t.tags, t.approved)
       .with({
         key_field: 'id',
         text_fields: `'${JSON.stringify({
