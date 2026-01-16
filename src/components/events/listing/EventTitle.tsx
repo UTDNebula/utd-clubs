@@ -1,7 +1,15 @@
-import Image from 'next/image';
-import { ClubTags } from '@src/components/common/ClubTags';
+import { TZDateMini } from '@date-fns/tz';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import EventIcon from '@mui/icons-material/Event';
+import LocationPinIcon from '@mui/icons-material/LocationPin';
+import { Divider } from '@mui/material';
+import {
+  format,
+  formatDuration,
+  intervalToDuration,
+  isSameDay,
+} from 'date-fns';
 import EventRegisterButton from '@src/components/events/EventRegisterButton';
-import { SelectClub } from '@src/server/db/models';
 import { type RouterOutputs } from '@src/trpc/shared';
 
 const EventTitle = async ({
@@ -9,12 +17,15 @@ const EventTitle = async ({
 }: {
   event: NonNullable<RouterOutputs['event']['getListingInfo']>;
 }) => {
+  const startTime = new TZDateMini(event.startTime, 'America/Chicago');
+  const endTime = new TZDateMini(event.endTime, 'America/Chicago');
+
   return (
     <section
       id="event-title"
       className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-0 mt-2"
     >
-      <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
+      <div className="flex flex-col gap-2 flex-grow min-w-0 overflow-hidden">
         {event.name && (
           <h1
             className={`font-display font-bold text-slate-800 ${
@@ -28,7 +39,27 @@ const EventTitle = async ({
             {event.name}
           </h1>
         )}
-        <div>When | Duration | Loacation</div>
+        <div className="flex flex-wrap gap-2 text-slate-600 items-center">
+          <span className="flex gap-2 items-center">
+            <EventIcon />
+            {format(startTime, 'EEE, LLLL d, yyyy @ h:mm a')}
+          </span>
+          <Divider orientation="vertical" flexItem />
+          <span className="flex gap-2 items-center">
+            <AccessTimeIcon />
+            {`Lasts ${formatDuration(
+              intervalToDuration({
+                start: startTime,
+                end: endTime,
+              }),
+            )} (till ${isSameDay(startTime, endTime) ? format(endTime, 'h:mm a') : format(endTime, 'EEE, LLLL d, yyyy @ h:mm a')})`}
+          </span>
+          <Divider orientation="vertical" flexItem />
+          <span className="flex gap-2 items-center">
+            <LocationPinIcon />
+            {event.location}
+          </span>
+        </div>
       </div>
       <div className="w-full md:w-auto flex-shrink-0 flex md:ml-auto justify-end">
         <EventRegisterButton
