@@ -9,7 +9,9 @@ export const fuzzyFilter: FilterFn<
   const aliasRank = rankItem(row.original.alias ?? '', value as string);
   const itemRank = {
     ...nameRank,
-    passed: nameRank.passed || aliasRank.passed,
+    passed:
+      (nameRank.passed || aliasRank.passed) &&
+      (nameRank.rank >= rankings.ACRONYM || aliasRank.rank >= rankings.ACRONYM),
     rank: nameRank.rank + 2 * aliasRank.rank,
   };
   addMeta({ itemRank });
