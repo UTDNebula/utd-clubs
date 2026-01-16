@@ -7,6 +7,7 @@ import {
   ilike,
   inArray,
   lte,
+  or,
   sql,
 } from 'drizzle-orm';
 import { google } from 'googleapis';
@@ -78,7 +79,7 @@ export const clubRouter = createTRPCRouter({
     const { name, limit } = input;
     const clubs = await ctx.db.query.club.findMany({
       where: (club) =>
-        and(ilike(club.name, `%${name}%`), eq(club.approved, 'approved')),
+        and(eq(club.approved, 'approved'), or(ilike(club.name, `%${name}%`), ilike(club.alias, `%${name}%`))),
       limit,
     });
 
