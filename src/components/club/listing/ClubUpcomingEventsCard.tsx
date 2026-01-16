@@ -31,7 +31,7 @@ export default function ClubUpcomingEventsCard({
             </div>
           ))
         ) : (
-          <div className="w-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl text-md font-medium text-gray-700">
+          <div className="w-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl text-md font-medium text-slate-600 dark:text-slate-400">
             {club.updatedAt == null || club.updatedAt < oneYearAgo
               ? 'No info about upcoming events'
               : 'There are no upcoming events'}

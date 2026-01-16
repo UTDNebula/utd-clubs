@@ -15,7 +15,9 @@ export default function ClubContactCard({ club, id }: ClubContactCardProps) {
           <ContactButton key={contact.platform} contact={contact} />
         ))
       ) : (
-        <span className="text-slate-500 text-sm">No contact info</span>
+        <span className="text-slate-600 dark:text-slate-400 text-sm">
+          No contact info
+        </span>
       )}
     </Panel>
   );

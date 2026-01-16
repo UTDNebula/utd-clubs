@@ -113,7 +113,7 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
         <div key={tag} className="flex">
           <Chip
             label={tag}
-            className="font-semibold bg-cornflower-100 text-cornflower-600 hover:bg-cornflower-200"
+            className="font-semibold bg-cornflower-100 dark:bg-cornflower-900 text-cornflower-600 dark:text-cornflower-400 hover:bg-cornflower-200 dark:hover:bg-cornflower-800"
           />
         </div>
       ))}
@@ -123,7 +123,7 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
           <Chip
             label={`+${overflowTags.length} ${overflowTags.length === 1 ? 'tag' : 'tags'}`}
             onClick={handleMenuOpen}
-            className="font-bold bg-cornflower-100 text-cornflower-600 hover:bg-slate-300 cursor-pointer"
+            className="font-bold bg-cornflower-100 dark:bg-cornflower-900 text-cornflower-600 dark:text-cornflower-400 hover:bg-slate-300 dark:hover:bg-slate-700 cursor-pointer"
           />
           <Menu
             anchorEl={anchorEl}

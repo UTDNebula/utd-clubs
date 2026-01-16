@@ -73,13 +73,15 @@ export default function OfficerList({
               <ClubOfficer key={officer.name} officer={officer} />
             ))
           ) : (
-            <span className="text-slate-500 text-sm">No officers listed</span>
+            <span className="text-slate-600 dark:text-slate-400 text-sm">
+              No officers listed
+            </span>
           )}
         </div>
 
         {/* fade overlay only shows if content is taller than right side AND not expanded */}
         {needsTruncation && !isExpanded && (
-          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-neutral-900 to-transparent pointer-events-none" />
         )}
       </div>
 

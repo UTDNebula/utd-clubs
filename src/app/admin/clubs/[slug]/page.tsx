@@ -64,7 +64,7 @@ export default async function Page(props: Props) {
           <Collaborators club={club} officers={officers} role="Admin" />
           <DeleteClub view="admin" club={club} />
           {club.approved !== 'approved' && (
-            <div className="mb-5 flex flex-col space-y-4 p-4">
+            <div className="mb-5 flex flex-col gap-y-6 p-4 max-w-6xl mx-auto">
               <ClubHeader club={club} />
               <ClubTitle club={club} />
               <ClubBody club={club} />
