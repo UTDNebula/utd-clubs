@@ -79,7 +79,10 @@ export const clubRouter = createTRPCRouter({
     const { name, limit } = input;
     const clubs = await ctx.db.query.club.findMany({
       where: (club) =>
-        and(eq(club.approved, 'approved'), or(ilike(club.name, `%${name}%`), ilike(club.alias, `%${name}%`))),
+        and(
+          eq(club.approved, 'approved'),
+          or(ilike(club.name, `%${name}%`), ilike(club.alias, `%${name}%`)),
+        ),
       limit,
     });
 
