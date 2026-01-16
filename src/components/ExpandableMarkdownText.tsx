@@ -31,7 +31,7 @@ const ExpandableMarkdownText = ({
       {isOverflowing && (
         <button
           type="button"
-          className="-mb-4 md:mb-0 mt-4 md:mt-2 text-[13px] md:text-sm self-end md:self-start font-medium text-royal hover:text-royalDark underline decoration-transparent hover:decoration-inherit transition"
+          className="-mb-4 md:mb-0 mt-4 md:mt-2 text-[13px] md:text-sm self-end md:self-start font-medium text-royal dark:text-cornflower-300 hover:text-royalDark dark:hover:text-cornflower-400 underline decoration-transparent hover:decoration-inherit transition"
           onClick={() => setExpanded((v) => !v)}
         >
           {expanded ? 'Read less' : 'Read more'}

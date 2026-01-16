@@ -183,7 +183,7 @@ const Slug = ({ club, role }: DetailsProps) => {
               Currently it is{' '}
               <Link
                 href={`https://clubs.utdnebula.com/directory/${club.slug}`}
-                className="text-royal underline"
+                className="text-royal dark:text-cornflower-300 underline"
               >{`https://clubs.utdnebula.com/directory/${club.slug}`}</Link>
               .
             </p>

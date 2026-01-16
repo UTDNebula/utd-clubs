@@ -229,7 +229,7 @@ const Details = ({ club }: DetailsProps) => {
                           href="https://www.markdownguide.org/basic-syntax/"
                           rel="noreferrer"
                           target="_blank"
-                          className="text-royal underline"
+                          className="text-royal dark:text-cornflower-300 underline"
                         >
                           Markdown
                         </a>

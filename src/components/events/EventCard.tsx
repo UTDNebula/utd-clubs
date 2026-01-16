@@ -45,7 +45,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
           <h3 className="text-xl font-medium">{event.name}</h3>
           <div className="text-base font-medium">
             {view !== 'manage' && view !== 'admin' && event.club.name}
-            <div className="text-royal">
+            <div className="text-royal dark:text-cornflower-300">
               <ClientEventTime
                 startTime={event.startTime}
                 endTime={event.endTime}
