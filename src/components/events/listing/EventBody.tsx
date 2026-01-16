@@ -3,6 +3,7 @@ import ClubContactCard from '@src/components/club/listing/ClubContactCard';
 import ClubUpcomingEventsCard from '@src/components/club/listing/ClubUpcomingEventsCard';
 import { api } from '@src/trpc/server';
 import { type RouterOutputs } from '@src/trpc/shared';
+import EventCountdownCard from './EventCountdownCard';
 import EventDescriptionCard from './EventDescriptionCard';
 import EventDetailsCard from './EventDetailsCard';
 import EventHostClubCard from './EventHostClubCard';
@@ -30,6 +31,7 @@ const EventBody = async ({
         id="club-content-left"
         className="flex flex-col gap-4 h-full order-2 md:order-1"
       >
+        <EventCountdownCard id="countdown" startTime={event.startTime} />
         <EventHostClubCard id="host" club={event.club} />
         <EventDetailsCard id="details" event={event} />
         <ClubContactCard id="contact" club={event.club} />
