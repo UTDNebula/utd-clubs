@@ -53,6 +53,7 @@ export default function EventCountdownCard({
 
   const now = Date.now();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [timeRemaining, setTimeRemaining] = useState(
     calculateTimeRemaining(eventStartTime),
   );
@@ -63,6 +64,8 @@ export default function EventCountdownCard({
   );
 
   useEffect(() => {
+    if (isLoading) setIsLoading(false);
+
     const interval = setInterval(() => {
       const now = Date.now();
       setTimeRemaining(calculateTimeRemaining(eventStartTime));
@@ -74,7 +77,11 @@ export default function EventCountdownCard({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [eventStartTime, eventEndTime]);
+  }, [isLoading, eventStartTime, eventEndTime]);
+
+  if (isLoading) {
+    return <Panel id={id} smallPadding heading="Event Starts In" />;
+  }
 
   if (now > eventStartTime) {
     if (now < eventEndTime) {
