@@ -64,7 +64,7 @@ export const ClubCardSkeleton = () => {
         <div className="relative aspect-square overflow-hidden rounded-t-lg">
           <Skeleton
             variant="rectangular"
-            className="absolute inset-0 h-full w-full bg-slate-200 dark:bg-slate-800"
+            className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-800"
           />
         </div>
         <div className="flex flex-col space-y-2 p-6">

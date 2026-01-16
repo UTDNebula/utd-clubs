@@ -66,7 +66,7 @@ const ContactListItem = withForm({
           //   - Do NOT use the `hidden` class, as this removes children from the document flow
           // isSorting: If true, disable hover state, to prevent visual noise when reordering items
           className={`relative grid gap-2 transition-colors rounded-lg h-fit
-            ${isDragging ? '*:invisible' : `max-sm:bg-slate-100 dark:max-sm:bg-slate-900 ${isSorting ? '' : 'sm:hover:bg-slate-100 dark:sm:hover:bg-slate-900'}`}`}
+            ${isDragging ? '*:invisible' : `max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 ${isSorting ? '' : 'sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800'}`}`}
           sx={{
             gridTemplateAreas: {
               sm: `'handle name url buttons'`,

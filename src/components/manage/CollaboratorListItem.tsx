@@ -46,7 +46,7 @@ const CollaboratorListItem = withForm({
     };
 
     return (
-      <div className="flex flex-wrap items-center gap-2 p-2 sm:hover:bg-slate-100 dark:sm:hover:bg-slate-900 max-sm:bg-slate-100 dark:max-sm:bg-slate-900 transition-colors rounded-lg">
+      <div className="flex flex-wrap items-center gap-2 p-2 sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800 max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 transition-colors rounded-lg">
         <div className="flex flex-col grow pl-2 pr-4 max-h-full min-h-12 justify-center">
           <Tooltip
             title={`User ID: ${form.getFieldValue(`officers[${index}].userId`)}`}

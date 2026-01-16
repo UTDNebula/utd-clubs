@@ -98,7 +98,7 @@ const AvatarImage = ({
   if (imageError) {
     // Fallback to first initial if no image
     return (
-      <div className="flex h-10 w-10 items-center justify-center bg-slate-200 dark:bg-slate-800 text-slate-500 text-sm font-bold rounded-full">
+      <div className="flex h-10 w-10 items-center justify-center bg-neutral-200 dark:bg-neutral-800 text-slate-500 text-sm font-bold rounded-full">
         {initial}
       </div>
     );

@@ -66,7 +66,7 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
       >
         <Button
           variant="contained"
-          className="normal-case bg-white dark:bg-[#101010] hover:bg-slate-100 dark:hover:bg-slate-900 shadow-sm w-full text-haiti dark:text-white font-normal justify-start"
+          className="normal-case bg-white dark:bg-[#101010] hover:bg-neutral-100 dark:hover:bg-neutral-900 shadow-sm w-full text-haiti dark:text-white font-normal justify-start"
           startIcon={logo[contact.platform]}
           size="large"
         >

@@ -9,7 +9,7 @@ const ClubOfficer = ({ officer }: ClubOfficerProps) => {
     <div className="flex flex-row items-center gap-4 py-1" key={officer.id}>
       <Avatar
         alt={officer.name}
-        className="h-10 w-10 bg-slate-200 dark:bg-slate-800 text-slate-500 text-sm font-bold"
+        className="h-10 w-10 bg-neutral-200 dark:bg-neutral-800 text-slate-500 text-sm font-bold"
       >
         {officer.name.charAt(0)}
       </Avatar>

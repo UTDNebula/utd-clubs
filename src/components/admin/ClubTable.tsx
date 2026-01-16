@@ -153,7 +153,7 @@ export default function ClubTable({
           className="w-full text-left text-sm text-slate-600 dark:text-slate-400"
           sx={{ tableLayout: 'fixed' }}
         >
-          <TableHead className="bg-slate-100 dark:bg-slate-900 text-xs text-slate-800 dark:text-slate-200 uppercase">
+          <TableHead className="bg-neutral-100 dark:bg-neutral-900 text-xs text-slate-800 dark:text-slate-200 uppercase">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

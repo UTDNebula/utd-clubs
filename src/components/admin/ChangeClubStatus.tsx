@@ -59,7 +59,7 @@ export default function ChangeClubStatus({ club }: Props) {
       case 'deleted':
         return 'bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200';
       default:
-        return 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200';
+        return 'bg-neutral-200 dark:bg-neutral-800 text-slate-800 dark:text-slate-200';
     }
   };
 
