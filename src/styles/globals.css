@@ -83,3 +83,7 @@
 @utility bg-darken {
   background-color: rgba(0, 0, 0, 0.6);
 }
+
+@utility bg-slightly-darken {
+  background-color: rgba(0, 0, 0, 0.3);
+}
