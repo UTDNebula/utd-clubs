@@ -90,10 +90,14 @@ export const HomePageSearchBar = () => {
   }
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // autofocus keyboard on the search bar
   useEffect(() => {
-    // Optional: Check if we are not already sticky to avoid jumping if the user scrolls back up
     if (!isSticky) {
+      // avoid jumping if the user scrolls back up
       inputRef.current?.focus();
+      if (inputRef.current) {
+        inputRef.current.value = inputRef.current.value; // set cursor to the end
+      }
     }
   }, [isSticky]);
 
