@@ -29,20 +29,27 @@ function contactDisplay(contact: SelectContact) {
       return contact.url;
     case 'twitter':
       return contact.url.indexOf('.com/') > 0
-        ? '@' + contact.url.split('.com/')[1]!.replace(/\/+$/, '')
+        ? '@' +
+            contact.url.split('.com/')[1]!.replace(/\/+$/, '').split(/[/?#]/)[0]
         : contactNames[contact.platform];
     case 'facebook':
       return contact.url.indexOf('.com/') > 0
-        ? '@' + contact.url.split('.com/')[1]!.replace(/\/+$/, '')
+        ? '@' +
+            contact.url.split('.com/')[1]!.replace(/\/+$/, '').split(/[/?#]/)[0]
         : contactNames[contact.platform];
     case 'youtube':
       return contact.url.indexOf('youtube.com/@') >= 0
-        ? contact.url.split('youtube.com/')[1]!.replace(/\/+$/, '')
+        ? contact.url
+            .split('youtube.com/')[1]!
+            .replace(/\/+$/, '')
+            .split(/[/?#]/)[0]
         : contactNames[contact.platform];
     case 'twitch':
       return (
-        contact.url.split('twitch.tv/')[1]?.replace(/\/+$/, '') ??
-        contactNames[contact.platform]
+        contact.url
+          .split('twitch.tv/')[1]
+          ?.replace(/\/+$/, '')
+          .split(/[/?#]/)[0] ?? contactNames[contact.platform]
       );
     case 'linkedIn':
       return contactNames[contact.platform];
