@@ -4,7 +4,7 @@ interface Props {
   className?: string;
 }
 
-export default function NebulaLogo(props: Props) {
+export default function StarDoodle(props: Props) {
   return (
     <svg
       viewBox="0 0 73 74"
