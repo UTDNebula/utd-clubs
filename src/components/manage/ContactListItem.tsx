@@ -1,4 +1,7 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, TextField, Tooltip, Typography } from '@mui/material';
 import type z from 'zod';
 import { contactNames } from '@src/server/db/schema/contacts';
@@ -10,6 +13,8 @@ type FormData = z.infer<typeof editClubContactSchema>;
 type ContactListItemProps = {
   index: number;
   removeItem: (index: number) => void;
+  onReorder?: () => void;
+  overlayData?: FormData['contacts'][number];
 };
 
 const ContactListItem = withForm({
@@ -23,8 +28,28 @@ const ContactListItem = withForm({
     removeItem: (index: number) => {
       console.log(index);
     },
+    onReorder: () => {},
+    dragOverlay: false,
   } as ContactListItemProps,
-  render: function Render({ form, index, removeItem }) {
+  render: function Render({ form, index, removeItem, overlayData }) {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+      isSorting,
+    } = useSortable({ id: form.getFieldValue(`contacts[${index}].platform`) });
+
+    // Styles related to drag and drop sorting.
+    // This follows the convention of `dnd-kit` documentation using the `style` prop
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      zIndex: isDragging ? 1 : 0,
+    };
+
     const handleRemove = () => {
       removeItem(index);
       const current = form.getFieldValue('contacts') as
@@ -37,30 +62,51 @@ const ContactListItem = withForm({
     return (
       <>
         <Box
-          className="grid sm:gap-2 max-sm:gap-4 p-2 sm:hover:bg-slate-100 dark:sm:hover:bg-slate-900 max-sm:bg-slate-100 dark:max-sm:bg-slate-900 transition-colors rounded-lg"
+          // isDragging: If true, hide visibility of children but keep them in document flow (to maintain size of list item)
+          //   - Do NOT use the `hidden` class, as this removes children from the document flow
+          // isSorting: If true, disable hover state, to prevent visual noise when reordering items
+          className={`relative grid gap-2 transition-colors rounded-lg h-fit
+            ${isDragging ? '*:invisible' : `max-sm:bg-slate-100 dark:max-sm:bg-slate-900 ${isSorting ? '' : 'sm:hover:bg-slate-100 dark:sm:hover:bg-slate-900'}`}`}
           sx={{
             gridTemplateAreas: {
-              sm: `'name url buttons'`,
-              xs: `'name buttons' 'url url'`,
+              sm: `'handle name url buttons'`,
+              xs: `'handle name buttons' 'url url url'`,
             },
             gridTemplateColumns: {
-              sm: `auto 1fr auto`,
-              xs: `1fr auto`,
+              sm: `auto auto 1fr auto`,
+              xs: `auto 1fr auto`,
             },
           }}
+          ref={setNodeRef}
+          style={style}
         >
-          <div style={{ gridArea: 'name' }} className="h-full">
+          {isDragging && (
+            // Placeholder/ghost element indicator. Note the `visible!` to ensure this element remains visible
+            <div className="absolute inset-0 m-1 outline-royal/50 outline-2 rounded-lg visible!" />
+          )}
+          <div
+            style={{ gridArea: 'handle' }}
+            className="h-full flex items-center select-none cursor-grab rounded-md touch-none max-sm:p-4 sm:p-2"
+            {...attributes} // Makes handle tabbable for keyboard input
+            {...listeners} // Turns element into a drag handle
+          >
+            <DragIndicatorIcon />
+          </div>
+          <div style={{ gridArea: 'name' }} className="">
             <Typography className="flex min-w-32 px-2 h-full items-center">
               {contactNames[form.getFieldValue(`contacts[${index}].platform`)]}
             </Typography>
           </div>
-          <div style={{ gridArea: 'url' }} className="">
+          <div
+            style={{ gridArea: 'url' }}
+            className="max-sm:mx-2 max-sm:mb-2 sm:my-2"
+          >
             <form.Field name={`contacts[${index}].url`}>
               {(subField) => (
                 <TextField
                   onChange={(e) => subField.handleChange(e.target.value)}
                   onBlur={subField.handleBlur}
-                  value={subField.state.value}
+                  value={overlayData?.url ?? subField.state.value}
                   label={
                     subField.state.value === 'email' ? 'Email Address' : 'URL'
                   }
@@ -82,7 +128,10 @@ const ContactListItem = withForm({
               )}
             </form.Field>
           </div>
-          <div style={{ gridArea: 'buttons' }}>
+          <div
+            style={{ gridArea: 'buttons' }}
+            className="flex h-fit max-sm:mt-2 max-sm:mb-0 sm:my-2 mr-2"
+          >
             <Tooltip title="Remove">
               <IconButton aria-label="remove" onClick={handleRemove}>
                 <DeleteIcon />

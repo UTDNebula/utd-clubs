@@ -1,5 +1,5 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import { SelectClub } from '@src/server/db/models';
 
 const NotApproved = ({

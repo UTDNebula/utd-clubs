@@ -4,7 +4,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Alert, Button, TextField } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import { useTRPC } from '@src/trpc/react';
 
 export default function TagSwapper() {

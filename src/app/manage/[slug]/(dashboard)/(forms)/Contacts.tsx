@@ -1,11 +1,29 @@
 'use client';
 
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  UniqueIdentifier,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { Button, Typography } from '@mui/material';
 import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
-import Panel from '@src/components/form/Panel';
+import Panel from '@src/components/common/Panel';
 import ContactListItem from '@src/components/manage/ContactListItem';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { contactNames, startContacts } from '@src/server/db/schema/contacts';
@@ -49,8 +67,21 @@ const Contacts = ({ club }: ContactsProps) => {
       // Separate created vs modified
       const created: FormData['contacts'] = [];
       const modified: ContactWithId[] = [];
+      const order: FormData['contacts'][number]['platform'][] = [];
+
+      let hasReorder = false;
 
       value.contacts.forEach((contact, index) => {
+        // Extra check for if user reorders, makes a change, then undoes reorder
+        if (
+          isReordered &&
+          contact.platform !== defaultValues.contacts[index]?.platform
+        ) {
+          hasReorder = true;
+        }
+
+        order.push(contact.platform);
+
         // If it has no ID, it's created
         if (!hasId(contact)) {
           created.push(contact);
@@ -64,13 +95,16 @@ const Contacts = ({ club }: ContactsProps) => {
           modified.push(contact);
         }
       });
+
       const updated = await editContacts.mutateAsync({
         clubId: club.id,
         deleted: deletedIds,
         modified: modified,
         created: created,
+        order: hasReorder ? order : undefined,
       });
       setDeletedIds([]);
+      setIsReordered(false);
       const newContacts = typedDefaultValues(updated);
       setDefaultValues({ contacts: newContacts });
       formApi.reset({ contacts: newContacts });
@@ -97,6 +131,46 @@ const Contacts = ({ club }: ContactsProps) => {
     (p) => !currentContacts.map((c) => c.platform).includes(p),
   );
 
+  // Flag for if user presses a reorder button
+  const [isReordered, setIsReordered] = useState(false);
+
+  // Detectors for when user interacts with a grab handle
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const handleReorderDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    // Reorder only if moved to a new location
+    if (active.id !== over?.id) {
+      form.setFieldValue('contacts', (contacts) => {
+        const oldIndex = contacts.findIndex(
+          (contact) => contact.platform === active.id,
+        );
+        const newIndex = contacts.findIndex(
+          (contact) => contact.platform === over?.id,
+        );
+
+        setIsReordered(true);
+        return arrayMove(contacts, oldIndex, newIndex);
+      });
+    }
+    setActiveReorderPlatform(null);
+  };
+
+  const handleReorderDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setActiveReorderPlatform(active.id);
+  };
+
+  // Platform (ID) of the item currently being reordered
+  const [activeReorderPlatform, setActiveReorderPlatform] =
+    useState<UniqueIdentifier | null>(null);
+
   return (
     <form
       onSubmit={(e) => {
@@ -106,49 +180,85 @@ const Contacts = ({ club }: ContactsProps) => {
       }}
     >
       <Panel heading="Contact Information">
-        <form.Field name="contacts">
-          {(field) => (
-            <div className="flex flex-col gap-2 max-w-full">
-              {field.state.value.map((value, index) => (
-                <ContactListItem
-                  key={value.platform}
-                  index={index}
-                  form={form}
-                  removeItem={removeItem}
-                />
-              ))}
-              {available.length > 0 && (
-                <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors rounded-lg">
-                  <Typography
-                    variant="button"
-                    className="flex shrink-0 items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 sm:pl-4 max-sm:pt-4 max-h-full text-base text-slate-600 dark:text-slate-400 normal-case"
-                  >
-                    Add Contact...
-                  </Typography>
-                  <div className="flex flex-wrap relative p-2 gap-2 overflow-x-auto">
-                    {available.map((platform) => (
-                      <Button
-                        key={platform}
-                        variant="contained"
-                        value={platform}
-                        className="normal-case min-w-fit"
-                        onClick={() => field.pushValue({ platform, url: '' })}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleReorderDragStart}
+          onDragEnd={handleReorderDragEnd}
+        >
+          <SortableContext
+            items={currentContacts.map((contact) => contact.platform)}
+            strategy={verticalListSortingStrategy}
+          >
+            <form.Field name="contacts" mode="array">
+              {(field) => (
+                <div className="flex flex-col gap-2 max-w-full">
+                  {field.state.value.map((value, index) => (
+                    <ContactListItem
+                      key={value.platform}
+                      index={index}
+                      form={form}
+                      removeItem={removeItem}
+                      onReorder={() => setIsReordered(true)}
+                    />
+                  ))}
+                  {available.length > 0 && (
+                    <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors rounded-lg">
+                      <Typography
+                        variant="button"
+                        className="flex shrink-0 items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 sm:pl-4 max-sm:pt-4 max-h-full text-base text-slate-600 dark:text-slate-400 normal-case"
                       >
-                        {contactNames[platform]}
-                      </Button>
-                    ))}
-                  </div>
+                        Add Contact...
+                      </Typography>
+                      <div className="flex flex-wrap relative p-2 gap-2 overflow-x-auto">
+                        {available.map((platform) => (
+                          <Button
+                            key={platform}
+                            variant="contained"
+                            value={platform}
+                            className="normal-case min-w-fit"
+                            onClick={() =>
+                              field.pushValue({ platform, url: '' })
+                            }
+                          >
+                            {contactNames[platform]}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-          )}
-        </form.Field>
-
+            </form.Field>
+          </SortableContext>
+          {/* List item that sticks to the cursor */}
+          <DragOverlay className="opacity-80">
+            {activeReorderPlatform ? (
+              <ContactListItem
+                key={activeReorderPlatform}
+                overlayData={form
+                  .getFieldValue('contacts')
+                  .find(
+                    (contact) => contact.platform === activeReorderPlatform,
+                  )}
+                index={form
+                  .getFieldValue('contacts')
+                  .findIndex(
+                    (contact) => contact.platform === activeReorderPlatform,
+                  )}
+                form={form}
+                removeItem={removeItem}
+                onReorder={() => setIsReordered(true)}
+              />
+            ) : null}
+          </DragOverlay>
+        </DndContext>
         <div className="flex flex-wrap justify-end items-center gap-2">
           <form.AppForm>
             <form.FormResetButton
               onClick={() => {
                 setDeletedIds([]);
+                setIsReordered(false);
                 form.reset();
               }}
             />
