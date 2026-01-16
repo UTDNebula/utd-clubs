@@ -12,7 +12,7 @@ export default function EventDetailsCard({ event, id }: EventDetailsCardProps) {
     <Panel className="text-sm" id={id} smallPadding heading="Details">
       {event.numParticipants || event.updatedAt ? (
         <>
-          {event.numParticipants && (
+          {event.numParticipants !== 0 && (
             <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
               <span className="font-medium text-slate-500">Participants</span>
               <span className="ml-auto text-slate-500">{`${event.numParticipants} ${event.numParticipants !== 1 ? 'people' : 'person'}`}</span>
