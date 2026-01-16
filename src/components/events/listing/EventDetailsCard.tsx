@@ -1,7 +1,6 @@
 import { Tooltip } from '@mui/material';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import Panel from '@src/components/common/Panel';
-import { SelectEvent } from '@src/server/db/models';
 import { RouterOutputs } from '@src/trpc/shared';
 
 type EventDetailsCardProps = {
