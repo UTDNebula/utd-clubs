@@ -1,9 +1,12 @@
 import Panel from '@src/components/common/Panel';
+import { SelectClub } from '@src/server/db/models';
 import { RouterOutputs } from '@src/trpc/shared';
 import ContactButton from './ContactButton';
 
 type ClubContactCardProps = {
-  club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
+  club:
+    | NonNullable<RouterOutputs['club']['getDirectoryInfo']>
+    | NonNullable<RouterOutputs['event']['getListingInfo']>['club'];
   id?: string;
 };
 

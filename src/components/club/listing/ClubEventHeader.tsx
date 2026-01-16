@@ -9,7 +9,7 @@ type Club = SelectClub & {
   contacts?: Contacts[];
   tags: string[];
 };
-const ClubHeader = async ({ club }: { club: Club }) => {
+const ClubEventHeader = async ({ club }: { club: Club }) => {
   return (
     <BaseCard className="relative w-full aspect-[4.5/1] overflow-hidden">
       <Image
@@ -23,4 +23,4 @@ const ClubHeader = async ({ club }: { club: Club }) => {
   );
 };
 
-export default ClubHeader;
+export default ClubEventHeader;

@@ -10,7 +10,7 @@ const ClubTitle = async ({
 }) => {
   return (
     <section
-      id="club-tile"
+      id="club-title"
       className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-0 mt-2"
     >
       <div

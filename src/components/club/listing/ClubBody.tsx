@@ -13,6 +13,8 @@ const ClubBody = async ({
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
 }) => {
   const now = TZDateMini.tz('America/Chicago');
+  const oneYearAgo = TZDateMini.tz('America/Chicago');
+  oneYearAgo.setFullYear(now.getFullYear() - 1);
 
   const events = await api.event.clubUpcoming({
     clubId: club.id,
@@ -43,8 +45,13 @@ const ClubBody = async ({
         <ClubDescriptionCard id="description" club={club} />
         <ClubUpcomingEventsCard
           id="upcoming-events"
-          club={club}
+          heading="Upcoming Events"
           upcomingEvents={events}
+          emptyText={
+            club.updatedAt == null || club.updatedAt < oneYearAgo
+              ? 'No info about upcoming events'
+              : 'There are no upcoming events'
+          }
         />
       </div>
     </section>

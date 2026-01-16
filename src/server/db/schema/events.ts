@@ -1,6 +1,7 @@
 import { relations, sql } from 'drizzle-orm';
 import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { club } from './club';
+import { userMetadataToEvents } from './users';
 
 export const events = pgTable('events', {
   id: text('id')
@@ -23,6 +24,7 @@ export const events = pgTable('events', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export const eventsRelation = relations(events, ({ one }) => ({
+export const eventsRelation = relations(events, ({ one, many }) => ({
   club: one(club, { fields: [events.clubId], references: [club.id] }),
+  userMetadataToEvents: many(userMetadataToEvents),
 }));

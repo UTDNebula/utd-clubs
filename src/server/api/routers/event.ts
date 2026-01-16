@@ -246,6 +246,41 @@ export const eventRouter = createTRPCRouter({
       throw e;
     }
   }),
+  getListingInfo: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input: { id }, ctx }) => {
+      try {
+        // Fetch event by id
+        const byId = await ctx.db.query.events.findFirst({
+          where: (event) => eq(event.id, id),
+          with: {
+            club: {
+              with: {
+                contacts: {
+                  orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+                },
+              },
+            },
+            userMetadataToEvents: {
+              columns: {
+                userId: true, // Only fetch the ID to keep the payload small
+              },
+            },
+          },
+        });
+
+        if (!byId) return null;
+
+        const { userMetadataToEvents, ...eventData } = byId; // eventData doesn't have userMetadataToEvents field
+        return {
+          ...eventData,
+          numParticipants: userMetadataToEvents.length,
+        };
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    }),
   joinedEvent: publicProcedure
     .input(joinLeaveSchema)
     .query(async ({ input, ctx }) => {
@@ -361,6 +396,7 @@ export const eventRouter = createTRPCRouter({
           startTime: data.startTime,
           endTime: data.endTime,
           image: data.image,
+          updatedAt: new Date(),
         })
         .where(eq(events.id, id))
         .returning({ id: events.id });

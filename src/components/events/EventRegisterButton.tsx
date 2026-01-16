@@ -4,17 +4,26 @@ import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import EventEditButton from './EventEditButton';
 
-type buttonProps = {
+type EventRegisterButtonProps = {
   isHeader?: boolean;
+  clubId: string;
+  clubSlug: string;
   eventId: string;
 };
-const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
+const EventRegisterButton = ({
+  isHeader,
+  clubId,
+  clubSlug,
+  eventId,
+}: EventRegisterButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
@@ -96,44 +105,57 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
     }
   };
 
+  const { data: memberType } = useQuery(
+    api.club.memberType.queryOptions({ id: clubId }),
+  );
+
   return (
-    <Tooltip
-      title={
-        <div className="text-center">
-          <span className="font-bold">
-            {displayJoined
-              ? 'Click to unregister from event'
-              : 'Click to register for event'}
-          </span>
-          {displayJoined && registerState?.registeredAt && (
-            <>
-              <br />
-              Registered on{' '}
-              {registerState?.registeredAt.toLocaleString('en-us', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true,
-              })}
-            </>
-          )}
-        </div>
-      }
-    >
-      <Button
-        onClick={onClick}
-        loading={isPending || join.isPending || leave.isPending}
-        variant="contained"
-        className="normal-case"
-        size={isHeader ? 'large' : 'small'}
-        startIcon={displayJoined ? <CheckIcon /> : <AddIcon />}
+    <div className="flex items-center gap-2">
+      {(memberType === 'President' || memberType === 'Officer') && (
+        <EventEditButton
+          isHeader={isHeader}
+          clubSlug={clubSlug}
+          eventId={eventId}
+        />
+      )}
+      <Tooltip
+        title={
+          <div className="text-center">
+            <span className="font-bold">
+              {displayJoined
+                ? 'Click to unregister from event'
+                : 'Click to register for event'}
+            </span>
+            {displayJoined && registerState?.registeredAt && (
+              <>
+                <br />
+                Registered on{' '}
+                {registerState?.registeredAt.toLocaleString('en-us', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: true,
+                })}
+              </>
+            )}
+          </div>
+        }
       >
-        {displayJoined ? 'Registered' : 'Register'}
-      </Button>
-    </Tooltip>
+        <Button
+          onClick={onClick}
+          loading={isPending || join.isPending || leave.isPending}
+          variant="contained"
+          className="normal-case"
+          size={isHeader ? 'large' : 'small'}
+          startIcon={displayJoined ? <CheckIcon /> : <AddIcon />}
+        >
+          {displayJoined ? 'Registered' : 'Register'}
+        </Button>
+      </Tooltip>
+    </div>
   );
 };
 

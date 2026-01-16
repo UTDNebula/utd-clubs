@@ -47,9 +47,6 @@ export const userMetadata = pgTable('user_metadata', {
   lastName: text('last_name').notNull(),
   major: text('major').notNull(),
   minor: text('minor'),
-  year: yearEnum('year')
-    .$default(() => 'Freshman')
-    .notNull(),
   role: roleEnum('role')
     .$default(() => 'Student')
     .notNull(),
