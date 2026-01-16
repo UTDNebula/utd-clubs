@@ -113,7 +113,7 @@ export function ContactEmailCell(params: GridRenderCellParams) {
         // deterministic based off the row ID (i.e. row number)
         <Typography
           variant="body2"
-          className="text-gray-600 dark:text-slate-400 select-none tracking-tighter"
+          className="text-slate-600 dark:text-slate-400 select-none tracking-tighter"
         >
           {'•'.repeat(12 + Math.sin(Number(params.id.valueOf()) * 2) * 3)}
         </Typography>
