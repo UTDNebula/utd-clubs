@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
@@ -21,7 +21,10 @@ export const ClubSearchBar = () => {
   const { data, isFetching } = useQuery(
     api.club.byName.queryOptions(
       { name: debouncedSearch },
-      { enabled: !!debouncedSearch },
+      {
+        enabled: !!debouncedSearch,
+        placeholderData: keepPreviousData,
+      },
     ),
   );
 
@@ -32,7 +35,7 @@ export const ClubSearchBar = () => {
       className="w-full"
       aria-label="search"
       inputValue={input}
-      options={data ?? []}
+      options={input == '' ? [] : (data ?? [])}
       filterOptions={(o) => o}
       onInputChange={(e, value) => {
         setInput(value);
