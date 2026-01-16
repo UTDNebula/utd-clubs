@@ -47,7 +47,9 @@ const TextInput = ({ id, label, disabled, field }: SharedInputProps) => {
       {label && (
         <label htmlFor={id} className="whitespace-pre-line">
           {label}
-          {required && <span className="text-red-600"> *</span>}
+          {required && (
+            <span className="text-red-600 dark:text-red-400"> *</span>
+          )}
         </label>
       )}
       <TextField
@@ -85,7 +87,7 @@ const SelectInput = ({
     <FormControl className="flex flex-col gap-1">
       <label htmlFor={id} className="whitespace-pre-line">
         {label}
-        {required && <span className="text-red-600"> *</span>}
+        {required && <span className="text-red-600 dark:text-red-400"> *</span>}
       </label>
       <Select
         id={id}
@@ -138,7 +140,7 @@ const RadioInput = ({
     <FormControl className="flex flex-col gap-1">
       <label htmlFor={id} className="whitespace-pre-line">
         {label}
-        {required && <span className="text-red-600"> *</span>}
+        {required && <span className="text-red-600 dark:text-red-400"> *</span>}
       </label>
       <RadioGroup
         value={field.state.value ?? ''}
@@ -207,7 +209,7 @@ const SelectMultipleInput = ({
     <FormControl className="flex flex-col gap-1">
       <label htmlFor={id} className="whitespace-pre-line">
         {label}
-        {required && <span className="text-red-600"> *</span>}
+        {required && <span className="text-red-600 dark:text-red-400"> *</span>}
       </label>
       <Select
         labelId={`${id}-label`}
