@@ -29,7 +29,6 @@ export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const id = params.id;
 
   const event = await api.event.byId({ id: params.id });
   if (!event)

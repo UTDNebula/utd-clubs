@@ -1,5 +1,4 @@
 import Panel from '@src/components/common/Panel';
-import { SelectClub } from '@src/server/db/models';
 import { RouterOutputs } from '@src/trpc/shared';
 import ContactButton from './ContactButton';
 

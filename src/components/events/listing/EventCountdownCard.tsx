@@ -57,7 +57,7 @@ export default function EventCountdownCard({
     calculateTimeRemaining(eventStartTime),
   );
   const [endsIn, setEndsIn] = useState(
-    formatDistanceStrict(endTime, now, {
+    formatDistanceStrict(eventEndTime, now, {
       addSuffix: true,
     }),
   );
@@ -67,14 +67,14 @@ export default function EventCountdownCard({
       const now = Date.now();
       setTimeRemaining(calculateTimeRemaining(eventStartTime));
       setEndsIn(
-        formatDistanceStrict(endTime, now, {
+        formatDistanceStrict(eventEndTime, now, {
           addSuffix: true,
         }),
       );
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [eventStartTime]);
+  }, [eventStartTime, eventEndTime]);
 
   if (now > eventStartTime) {
     if (now < eventEndTime) {
