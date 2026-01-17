@@ -70,7 +70,7 @@ const OfficerListItem = withForm({
         //   - Do NOT use the `hidden` class, as this removes children from the document flow
         // isSorting: If true, disable hover state, to prevent visual noise when reordering items
         className={`relative grid sm:gap-2 transition-colors rounded-lg
-          ${isDragging ? '*:invisible' : `max-sm:bg-slate-100 ${isSorting ? '' : 'sm:hover:bg-slate-100'}`}`}
+          ${isDragging ? '*:invisible' : `max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 ${isSorting ? '' : 'sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800'}`}`}
         sx={{
           gridTemplateAreas: {
             sm: `'handle name position buttons'`,
@@ -104,7 +104,7 @@ const OfficerListItem = withForm({
                 onBlur={subField.handleBlur}
                 value={overlayData?.name ?? subField.state.value}
                 label="Name"
-                className="w-full [&>.MuiInputBase-root]:bg-white"
+                className="w-full [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                 size="small"
                 error={!subField.state.meta.isValid}
                 helperText={
@@ -133,7 +133,7 @@ const OfficerListItem = withForm({
                 onBlur={subField.handleBlur}
                 value={overlayData?.position ?? subField.state.value}
                 label="Position"
-                className="w-full [&>.MuiInputBase-root]:bg-white"
+                className="w-full [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                 size="small"
                 error={!subField.state.meta.isValid}
                 helperText={

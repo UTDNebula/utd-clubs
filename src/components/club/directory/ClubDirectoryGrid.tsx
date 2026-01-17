@@ -52,7 +52,7 @@ const ClubDirectoryGrid = () => {
           ))}
         </>
       ) : showNoResults ? (
-        <div className="mt-32 mb-24 col-span-full text-center text-4xl font-bold text-slate-500">
+        <div className="mt-32 mb-24 col-span-full text-center text-4xl font-bold text-slate-600 dark:text-slate-400">
           No clubs found matching your search
         </div>
       ) : (

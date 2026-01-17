@@ -47,7 +47,9 @@ const TextInput = ({ id, label, disabled, field }: SharedInputProps) => {
       {label && (
         <label htmlFor={id} className="whitespace-pre-line">
           {label}
-          {required && <span className="text-red-600"> *</span>}
+          {required && (
+            <span className="text-red-600 dark:text-red-400"> *</span>
+          )}
         </label>
       )}
       <TextField
@@ -85,7 +87,7 @@ const SelectInput = ({
     <FormControl className="flex flex-col gap-1">
       <label htmlFor={id} className="whitespace-pre-line">
         {label}
-        {required && <span className="text-red-600"> *</span>}
+        {required && <span className="text-red-600 dark:text-red-400"> *</span>}
       </label>
       <Select
         id={id}
@@ -138,7 +140,7 @@ const RadioInput = ({
     <FormControl className="flex flex-col gap-1">
       <label htmlFor={id} className="whitespace-pre-line">
         {label}
-        {required && <span className="text-red-600"> *</span>}
+        {required && <span className="text-red-600 dark:text-red-400"> *</span>}
       </label>
       <RadioGroup
         value={field.state.value ?? ''}
@@ -176,7 +178,7 @@ const RadioInput = ({
                         .join('. ') + '.'
                     : undefined
                 }
-                className="ml-2 [&>.Mui-disabled.MuiInputBase-root]:bg-gray-200"
+                className="ml-2 [&>.Mui-disabled.MuiInputBase-root]:bg-neutral-200 dark:[&>.Mui-disabled.MuiInputBase-root]:bg-neutral-800"
               />
             )}
           </div>
@@ -207,7 +209,7 @@ const SelectMultipleInput = ({
     <FormControl className="flex flex-col gap-1">
       <label htmlFor={id} className="whitespace-pre-line">
         {label}
-        {required && <span className="text-red-600"> *</span>}
+        {required && <span className="text-red-600 dark:text-red-400"> *</span>}
       </label>
       <Select
         labelId={`${id}-label`}
@@ -293,7 +295,7 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
 
   return (
     <main className="p-4 mb-10">
-      <h1 className="font-display mb-2 text-center text-4xl font-bold text-haiti">
+      <h1 className="font-display mb-2 text-center text-4xl font-bold">
         Club Match
       </h1>
       <p className="mb-8 text-center">

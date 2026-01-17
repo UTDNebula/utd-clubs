@@ -48,7 +48,7 @@ export default async function EventsPage(props: Params) {
           <div className="relative z-10 flex flex-wrap min-h-48 h-full w-full items-center p-4 md:p-20 gap-4">
             <div className="flex flex-col gap-4">
               <h1
-                className={`font-display font-bold text-slate-100 text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] ${
+                className={`font-display font-bold text-slate-100 dark:text-slate-900 text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] ${
                   event.name.length > 10 ? 'text-3xl' : 'text-5xl'
                 }`}
               >
@@ -72,7 +72,7 @@ export default async function EventsPage(props: Params) {
             </div>
           </div>
         </BaseCard>
-        <BaseCard className="w-full bg-slate-100 p-10 flex flex-col items-start justify-between md:flex-row gap-4">
+        <BaseCard className="w-full p-10 flex flex-col items-start justify-between md:flex-row gap-4">
           <div className="md:max-w-1/4">
             {src && (
               <Image
@@ -85,8 +85,10 @@ export default async function EventsPage(props: Params) {
             )}
             {clubDescription.map((details, index) => (
               <div key={details} className="mt-2 flex w-36 justify-between">
-                <p className="text-sm text-slate-400">{details}</p>
-                <p className="text-right text-sm text-slate-600">
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  {details}
+                </p>
+                <p className="text-right text-sm text-slate-800 dark:text-slate-200">
                   {clubDetails[index]}
                 </p>
               </div>
@@ -97,14 +99,14 @@ export default async function EventsPage(props: Params) {
                   <Chip
                     label={tag}
                     key={tag}
-                    className=" rounded-full font-bold transition-colors text-white"
+                    className="rounded-full font-bold transition-colors"
                     color="primary"
                   />
                 );
               })}
             </div>
           </div>
-          <div className="grow text-slate-700">
+          <div className="grow text-slate-800 dark:text-slate-200">
             <MarkdownText text={event.description} />
           </div>
           <div className="flex flex-col gap-4">

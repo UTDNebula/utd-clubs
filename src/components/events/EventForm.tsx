@@ -198,7 +198,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
@@ -218,7 +218,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
@@ -241,7 +241,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   onBlur={field.handleBlur}
                   value={field.state.value}
                   label="Description"
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   multiline
                   minRows={4}
                   error={!field.state.meta.isValid}
@@ -257,7 +257,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                           href="https://www.markdownguide.org/basic-syntax/"
                           rel="noreferrer"
                           target="_blank"
-                          className="text-royal underline"
+                          className="text-royal dark:text-cornflower-300 underline"
                         >
                           Markdown
                         </a>
@@ -275,7 +275,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                     onChange={(value) => value && field.handleChange(value)}
                     value={field.state.value}
                     label="Start"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white"
+                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
                     slotProps={{
                       actionBar: {
                         actions: ['accept'],
@@ -299,7 +299,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                     onChange={(value) => value && field.handleChange(value)}
                     value={field.state.value}
                     label="End"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white"
+                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
                     slotProps={{
                       actionBar: {
                         actions: ['accept'],

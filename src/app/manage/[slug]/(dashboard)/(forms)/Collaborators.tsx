@@ -120,7 +120,7 @@ const Collaborators = ({
       }}
     >
       <Panel heading="Collaborators">
-        <div className="ml-2 mb-4 text-slate-600 text-sm">
+        <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
           <p>
             Users in this list can edit {role === 'Admin' ? 'a' : 'your'}{' '}
             organization&apos;s information and events.

@@ -9,12 +9,10 @@ import NavMenu from './NavMenu';
 
 const NewSidebar = ({
   userCapabilities,
-  hamburger = 'black',
-  shadow = false,
+  homepage = false,
 }: {
   userCapabilities: Array<(typeof personalCats)[number]>;
-  hamburger?: 'white' | 'black';
-  shadow?: boolean;
+  homepage?: boolean;
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -22,12 +20,12 @@ const NewSidebar = ({
     <>
       <IconButton
         onClick={() => setOpen(true)}
-        className={`z-50 ${shadow ? ' drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+        className={`z-50 ${homepage ? ' drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
         size="large"
       >
         <MenuIcon
           fontSize="inherit"
-          className={hamburger === 'black' ? 'fill-black' : 'fill-white'}
+          className={homepage ? 'fill-white' : 'fill-haiti dark:fill-white'}
         />
       </IconButton>
       <Drawer
@@ -35,7 +33,9 @@ const NewSidebar = ({
         onClose={() => setOpen(false)}
         slotProps={{
           paper: {
-            className: 'w-3/4 gap-4 bg-slate-100 py-6 shadow-lg sm:max-w-sm',
+            className:
+              'w-3/4 gap-4 bg-light dark:bg-dark py-6 shadow-lg dark:shadow-xl sm:max-w-sm',
+            elevation: 0,
           },
         }}
       >
