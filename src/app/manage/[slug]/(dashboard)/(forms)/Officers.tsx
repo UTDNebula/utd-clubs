@@ -22,7 +22,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import z from 'zod';
 import Panel from '@src/components/common/Panel';
 import OfficerListItem from '@src/components/manage/OfficerListItem';
@@ -120,7 +120,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
   const removeItem = (index: number) => {
     const current = form.getFieldValue('officers')[index];
     const id = current?.id;
-    if (current && id) {
+    if (current && id && !id.startsWith('new')) {
       setDeletedIds((prev) => [...prev, id]);
     }
   };
