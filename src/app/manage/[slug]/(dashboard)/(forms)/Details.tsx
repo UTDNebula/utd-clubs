@@ -164,7 +164,7 @@ const Details = ({ club }: DetailsProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="grow-100 [&>.MuiInputBase-root]:bg-white"
+                  className="grow-100 [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
@@ -184,7 +184,7 @@ const Details = ({ club }: DetailsProps) => {
                   onChange={(value) => field.handleChange(value)}
                   value={field.state.value}
                   label="Date Founded"
-                  className="grow [&>.MuiPickersInputBase-root]:bg-white"
+                  className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
                   slotProps={{
                     actionBar: {
                       actions: ['accept'],
@@ -213,7 +213,7 @@ const Details = ({ club }: DetailsProps) => {
                   onBlur={field.handleBlur}
                   value={field.state.value}
                   label="Description"
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   multiline
                   minRows={4}
                   error={!field.state.meta.isValid}
@@ -229,7 +229,7 @@ const Details = ({ club }: DetailsProps) => {
                           href="https://www.markdownguide.org/basic-syntax/"
                           rel="noreferrer"
                           target="_blank"
-                          className="text-royal underline"
+                          className="text-royal dark:text-cornflower-300 underline"
                         >
                           Markdown
                         </a>

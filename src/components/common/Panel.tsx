@@ -39,7 +39,7 @@ const Panel = ({
         >
           {startAdornment}
           {heading && (
-            <Typography variant="h2" className="text-xl font-bold text-haiti">
+            <Typography variant="h2" className="text-xl font-bold">
               {heading}
             </Typography>
           )}

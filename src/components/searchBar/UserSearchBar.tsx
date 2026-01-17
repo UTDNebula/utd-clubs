@@ -70,10 +70,9 @@ export const UserSearchBar = ({
             input: {
               ...params.InputProps,
               type: 'search',
-              sx: {
-                background: 'white',
-                borderRadius: 'calc(infinity * 1px)',
-              },
+              className:
+                'bg-white dark:bg-neutral-900 rounded-full ' +
+                params.InputProps.className,
               endAdornment: (
                 <>
                   {loading ? (

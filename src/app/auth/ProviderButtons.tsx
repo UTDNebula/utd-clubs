@@ -26,11 +26,11 @@ const ProviderButton = ({
         callbackURL: callbackUrl ?? window.location.href,
       });
     }}
-    className="bg-white normal-case whitespace-nowrap min-w-max"
+    className="bg-white hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 normal-case whitespace-nowrap min-w-max"
     startIcon={AuthIcons[provider]}
   >
     <Typography
-      className={`text-base font-extrabold md:text-xs text-slate-700`}
+      className={`text-base font-extrabold md:text-xs text-slate-800 dark:text-slate-200`}
     >
       <span className="min-w-fit">Sign in with {providerNames[provider]}</span>
     </Typography>

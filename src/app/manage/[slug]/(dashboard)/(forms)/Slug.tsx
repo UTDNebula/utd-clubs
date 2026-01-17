@@ -174,7 +174,7 @@ const Slug = ({ club, role }: DetailsProps) => {
         }}
       >
         <Panel heading="Listing URL">
-          <div className="ml-2 mb-4 text-slate-600 text-sm">
+          <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
             <p>
               This is the URL of your organization&apos;s listing in the
               directory.
@@ -183,7 +183,7 @@ const Slug = ({ club, role }: DetailsProps) => {
               Currently it is{' '}
               <Link
                 href={`https://clubs.utdnebula.com/directory/${club.slug}`}
-                className="text-royal underline"
+                className="text-royal dark:text-cornflower-300 underline"
               >{`https://clubs.utdnebula.com/directory/${club.slug}`}</Link>
               .
             </p>
@@ -221,7 +221,7 @@ const Slug = ({ club, role }: DetailsProps) => {
                     onBlur={field.handleBlur}
                     value={field.state.value}
                     label="URL"
-                    className="[&>.MuiInputBase-root]:bg-white"
+                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                     size="small"
                     disabled={role !== 'President'}
                     error={
