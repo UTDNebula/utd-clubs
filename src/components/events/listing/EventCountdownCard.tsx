@@ -88,14 +88,16 @@ export default function EventCountdownCard({
       return (
         <Panel id={id} smallPadding className="text-center">
           <p className="font-display text-2xl">Happening Now</p>
-          <p className="text-sm font-medium text-slate-500">Ends {endsIn}</p>
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+            Ends {endsIn}
+          </p>
         </Panel>
       );
     }
     return (
       <Panel id={id} smallPadding className="text-center">
         <p className="font-display text-2xl">Event Over</p>
-        <p className="text-sm font-medium text-slate-500">
+        <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
           Ended{' '}
           {formatDistanceStrict(endTime, now, {
             addSuffix: true,
@@ -110,19 +112,27 @@ export default function EventCountdownCard({
       <div className="grid grid-cols-4 gap-2 w-fit text-center mx-auto">
         <div className="flex flex-col">
           <p className="font-display text-2xl">{timeRemaining.days}</p>
-          <p className="text-[0.625rem] font-medium text-slate-500">Days</p>
+          <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+            Days
+          </p>
         </div>
         <div className="flex flex-col">
           <p className="font-display text-2xl">{timeRemaining.hours}</p>
-          <p className="text-[0.625rem] font-medium text-slate-500">Hours</p>
+          <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+            Hours
+          </p>
         </div>
         <div className="flex flex-col">
           <p className="font-display text-2xl">{timeRemaining.minutes}</p>
-          <p className="text-[0.625rem] font-medium text-slate-500">Minutes</p>
+          <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+            Minutes
+          </p>
         </div>
         <div className="flex flex-col">
           <p className="font-display text-2xl">{timeRemaining.seconds}</p>
-          <p className="text-[0.625rem] font-medium text-slate-500">Seconds</p>
+          <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+            Seconds
+          </p>
         </div>
       </div>
     </Panel>

@@ -28,7 +28,7 @@ export default function EventHostClubCard({
           />
         )}
 
-        <p className="text-sm font-semibold text-slate-700 break-words line-clamp-2">
+        <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 break-words line-clamp-2">
           {club.name}
         </p>
       </Link>

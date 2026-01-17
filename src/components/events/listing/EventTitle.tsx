@@ -28,7 +28,7 @@ const EventTitle = async ({
       <div className="flex flex-col gap-2 flex-grow min-w-0 overflow-hidden">
         {event.name && (
           <h1
-            className={`font-display font-bold text-slate-800 ${
+            className={`font-display font-bold text-slate-800 dark:text-slate-200 ${
               event.name.length > 40
                 ? 'text-xl md:text-3xl'
                 : event.name.length > 12
@@ -39,7 +39,7 @@ const EventTitle = async ({
             {event.name}
           </h1>
         )}
-        <div className="flex flex-wrap gap-2 text-slate-600 items-center">
+        <div className="flex flex-wrap gap-2 text-slate-600 dark:text-slate-400 items-center">
           <span className="flex gap-2 items-center">
             <EventIcon />
             {format(startTime, 'EEE, LLLL d, yyyy @ h:mm a')}
