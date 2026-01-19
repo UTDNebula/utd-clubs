@@ -26,10 +26,9 @@ const Base = ({ children, className }: BaseProps) => {
 };
 
 const EventTimeAlert = ({ event }: EventTimeAlertProps) => {
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    setNow(Date.now());
     const intervalId = setInterval(() => {
       setNow(Date.now());
     }, 1000);

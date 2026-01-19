@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-const calculateTimeRemaining = (eventStartTime: number) => {
-  const timeUntilStart = eventStartTime - Date.now();
+const calculateTimeRemaining = (now: number, eventStartTime: number) => {
+  const timeUntilStart = eventStartTime - now;
 
   if (timeUntilStart < 0)
     return {
@@ -49,22 +49,21 @@ const calculateTimeRemaining = (eventStartTime: number) => {
 const CountdownTimer = ({ startTime }: { startTime: Date }) => {
   const eventStartTime = startTime.getTime();
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [timeRemaining, setTimeRemaining] = useState(
-    calculateTimeRemaining(eventStartTime),
-  );
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    if (isLoading) setIsLoading(false);
-
     const interval = setInterval(() => {
-      setTimeRemaining(calculateTimeRemaining(eventStartTime));
+      setNow(Date.now());
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isLoading, eventStartTime]);
+  }, [eventStartTime]);
 
-  if (isLoading || Date.now() > eventStartTime) return;
+  const timeRemaining = calculateTimeRemaining(now, eventStartTime);
+
+  if (now > eventStartTime) {
+    return null;
+  }
 
   return (
     <>
