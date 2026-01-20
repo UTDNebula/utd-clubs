@@ -47,7 +47,7 @@ const EventBody = async ({
         <EventDescriptionCard id="description" event={event} />
         <ClubUpcomingEventsCard
           id="upcoming-events"
-          heading="Other Events"
+          heading="Other Events From This Club"
           upcomingEvents={events}
           emptyText="No other events"
         />
