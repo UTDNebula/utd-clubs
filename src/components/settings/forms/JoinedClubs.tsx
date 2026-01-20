@@ -15,10 +15,7 @@ import { useState } from 'react';
 import Panel from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
 import MemberRoleChip from '@src/components/manage/MemberRoleChip';
-import {
-  SelectClub,
-  SelectUserMetadataToClubsWithClub,
-} from '@src/server/db/models';
+import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 
 type ClubsProps = {
@@ -88,28 +85,13 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
   );
 }
 
-type ClubListItemPropsBase = {
+type ClubListItemProps = {
   onLeave?: () => void;
+  joinedClub: SelectUserMetadataToClubsWithClub;
 };
 
-type ClubListItemProps = ClubListItemPropsBase &
-  (
-    | {
-        joinedClub: SelectUserMetadataToClubsWithClub;
-        club?: never;
-      }
-    | {
-        joinedClub?: never;
-        club: SelectClub;
-      }
-  );
-
-function ClubListItem({
-  joinedClub,
-  club: clubProp,
-  onLeave,
-}: ClubListItemProps) {
-  const club = joinedClub?.club ?? clubProp!;
+function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
+  const club = joinedClub?.club;
 
   const clubApproved = club.approved === 'approved';
 
