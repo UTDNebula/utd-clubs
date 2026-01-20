@@ -22,7 +22,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import z from 'zod';
 import Panel from '@src/components/common/Panel';
 import OfficerListItem from '@src/components/manage/OfficerListItem';
