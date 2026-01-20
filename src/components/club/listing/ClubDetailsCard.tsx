@@ -17,7 +17,7 @@ export default function ClubDetailsCard({
 
   if (club.numMembers !== 0) {
     items.push(
-      <div key="members" className="flex flex-row flex-wrap gap-1">
+      <div key="members" className="flex flex-row flex-wrap gap-1 py-1">
         <span className="font-medium text-slate-600 dark:text-slate-400">
           Members
         </span>
@@ -27,7 +27,7 @@ export default function ClubDetailsCard({
   }
   if (club.foundingDate) {
     items.push(
-      <div key="foundingDate" className="flex flex-row flex-wrap gap-1">
+      <div key="foundingDate" className="flex flex-row flex-wrap gap-1 py-1">
         <span className="font-medium text-slate-600 dark:text-slate-400">
           Founded
         </span>
@@ -42,7 +42,7 @@ export default function ClubDetailsCard({
   }
   if (lastEventDate) {
     items.push(
-      <div key="lastEventDate" className="flex flex-row flex-wrap gap-1">
+      <div key="lastEventDate" className="flex flex-row flex-wrap gap-1 py-1">
         <span className="font-medium text-slate-600 dark:text-slate-400">
           Last Event
         </span>
@@ -63,7 +63,7 @@ export default function ClubDetailsCard({
   }
   if (club.updatedAt) {
     items.push(
-      <div key="updatedAt" className="flex flex-row flex-wrap gap-1">
+      <div key="updatedAt" className="flex flex-row flex-wrap gap-1 py-1">
         <span className="font-medium text-slate-600 dark:text-slate-400">
           Updated
         </span>
@@ -84,7 +84,7 @@ export default function ClubDetailsCard({
   }
 
   return (
-    <Panel className="text-sm" id={id} smallPadding heading="Details">
+    <Panel className="text-sm !gap-1" id={id} smallPadding heading="Details">
       {items.length ? (
         items.flatMap((item, index) => {
           const row = [item];

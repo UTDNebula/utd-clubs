@@ -12,7 +12,7 @@ export default function EventDetailsCard({ event, id }: EventDetailsCardProps) {
 
   if (event.numParticipants !== 0) {
     items.push(
-      <div key="participants" className="flex flex-row flex-wrap gap-1">
+      <div key="participants" className="flex flex-row flex-wrap gap-1 py-1">
         <span className="font-medium text-slate-600 dark:text-slate-400">
           Participants
         </span>
@@ -22,7 +22,7 @@ export default function EventDetailsCard({ event, id }: EventDetailsCardProps) {
   }
   if (event.updatedAt) {
     items.push(
-      <div key="updated" className="flex flex-row flex-wrap gap-1">
+      <div key="updated" className="flex flex-row flex-wrap gap-1 py-1">
         <span className="font-medium text-slate-600 dark:text-slate-400">
           Updated
         </span>
