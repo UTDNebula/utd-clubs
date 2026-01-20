@@ -8,9 +8,19 @@ import {
   formatDuration,
   intervalToDuration,
   isSameDay,
+  type FormatDistanceToken,
 } from 'date-fns';
 import EventRegisterButton from '@src/components/events/EventRegisterButton';
 import { type RouterOutputs } from '@src/trpc/shared';
+
+const distanceTokenUnits: Partial<Record<FormatDistanceToken, string>> = {
+  xSeconds: 's',
+  xMinutes: 'm',
+  xHours: 'h',
+  xDays: 'd',
+  xMonths: 'mo',
+  xYears: 'y',
+};
 
 const EventTitle = async ({
   event,
@@ -23,9 +33,9 @@ const EventTitle = async ({
   return (
     <section
       id="event-title"
-      className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-0 mt-2"
+      className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
     >
-      <div className="flex flex-col gap-2 flex-grow min-w-0 overflow-hidden">
+      <div className="flex flex-col gap-4 flex-grow min-w-0 overflow-hidden">
         {event.name && (
           <h1
             className={`font-display font-bold text-slate-800 dark:text-slate-200 ${
@@ -39,24 +49,30 @@ const EventTitle = async ({
             {event.name}
           </h1>
         )}
-        <div className="flex flex-wrap gap-2 text-slate-600 dark:text-slate-400 items-center">
+        <div className="flex flex-wrap flex-col lg:flex-row gap-4 text-slate-600 dark:text-slate-400 lg:items-center text-sm md:text-base">
           <span className="flex gap-2 items-center">
-            <EventIcon />
+            <EventIcon className="text-xl md:text-2xl" />
             {format(startTime, 'EEE, LLLL d, yyyy @ h:mm a')}
           </span>
-          <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem className="hidden lg:flex" />
           <span className="flex gap-2 items-center">
-            <AccessTimeIcon />
+            <AccessTimeIcon className="text-xl md:text-2xl" />
             {`Lasts ${formatDuration(
               intervalToDuration({
                 start: startTime,
                 end: endTime,
               }),
+              {
+                locale: {
+                  formatDistance: (token, count) =>
+                    `${count}${distanceTokenUnits[token] ?? ''}`,
+                },
+              },
             )} (till ${isSameDay(startTime, endTime) ? format(endTime, 'h:mm a') : format(endTime, 'EEE, LLLL d, yyyy @ h:mm a')})`}
           </span>
-          <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem className="hidden lg:flex" />
           <span className="flex gap-2 items-center">
-            <LocationPinIcon />
+            <LocationPinIcon className="text-xl md:text-2xl" />
             {event.location}
           </span>
         </div>

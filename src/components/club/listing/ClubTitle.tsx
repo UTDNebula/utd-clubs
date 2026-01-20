@@ -11,7 +11,7 @@ const ClubTitle = async ({
   return (
     <section
       id="club-title"
-      className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-0 mt-2"
+      className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
     >
       <div
         className={`flex ${club.name.length > 40 ? 'flex-col ' : 'flex-row '} md:flex-row gap-4 w-full md:w-auto flex-grow items-start`}
