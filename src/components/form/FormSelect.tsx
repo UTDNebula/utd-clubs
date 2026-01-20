@@ -52,7 +52,7 @@ export default function FormSelect({
         value={field.state.value}
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
-        className="bg-white"
+        className="bg-white dark:bg-neutral-900"
         size="small"
         error={!field.state.meta.isValid}
         label={label}

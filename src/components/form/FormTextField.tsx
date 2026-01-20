@@ -8,7 +8,7 @@ export function StyledTextField(props: StyledTextFieldProps) {
     <TextField
       size="small"
       {...props}
-      className={`[&>.MuiInputBase-root]:bg-white w-64 ${props.className}`}
+      className={`[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900 w-64 ${props.className}`}
     />
   );
 }

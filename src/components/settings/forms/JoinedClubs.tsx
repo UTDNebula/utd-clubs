@@ -100,7 +100,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
     joinedClub?.memberType === 'President';
 
   return (
-    <div className="flex flex-wrap items-center gap-2 p-2 min-h-16 sm:hover:bg-slate-100 max-sm:bg-slate-100 transition-colors rounded-lg">
+    <div className="flex flex-wrap items-center gap-2 p-2 min-h-16 max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800 transition-colors rounded-lg">
       <Tooltip title="Click to view club directory page" disableInteractive>
         <Link
           href={club.approved === 'approved' ? `/directory/${club.slug}` : ''}
@@ -122,7 +122,10 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
           <div className="flex flex-col grow pl-2 justify-center">
             <Typography variant="body1">{club.name}</Typography>
             {joinedClub && (
-              <Typography variant="caption" className="text-slate-600">
+              <Typography
+                variant="caption"
+                className="text-neutral-600 dark:text-neutral-400"
+              >
                 <span>{`Joined on ${joinedClub?.joinedAt.toLocaleString(
                   'en-us',
                   {
@@ -143,7 +146,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
       <div className="flex items-center gap-2 grow justify-end">
         {canManage && (
           <Chip
-            className="h-fit rounded-full bg-white border-1 border-slate-400 [&>.MuiChip-label]:inline-block [&>.MuiChip-label]:p-1.5"
+            className="h-fit rounded-full bg-white dark:bg-neutral-900 border-1 border-neutral-400 dark:border-neutral-600 [&>.MuiChip-label]:inline-block [&>.MuiChip-label]:p-1.5"
             label={
               <div className="flex gap-2">
                 <MemberRoleChip memberType={joinedClub.memberType} />

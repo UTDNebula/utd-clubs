@@ -111,7 +111,7 @@ const FormStep = withForm({
                       }}
                       value={field.state.value}
                       label="Graduation Date"
-                      className="[&>.MuiPickersInputBase-root]:bg-white w-64 grow"
+                      className="[&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900 w-64 grow"
                       slotProps={{
                         actionBar: {
                           actions: ['accept'],
