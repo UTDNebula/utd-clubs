@@ -120,7 +120,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
   const removeItem = (index: number) => {
     const current = form.getFieldValue('officers')[index];
     const id = current?.id;
-    if (current && id) {
+    if (current && id && !id.startsWith('new')) {
       setDeletedIds((prev) => [...prev, id]);
     }
   };

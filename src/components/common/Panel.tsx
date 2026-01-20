@@ -41,7 +41,7 @@ const Panel = ({
         >
           {startAdornment}
           {heading && (
-            <Typography variant="h2" className="text-xl font-bold text-haiti">
+            <Typography variant="h2" className="text-xl font-bold">
               {heading}
             </Typography>
           )}
@@ -50,7 +50,7 @@ const Panel = ({
       )}
       {description && (
         <div
-          className={`mb-4 text-slate-600 text-sm ${smallPadding ? '' : 'ml-2'}`}
+          className={`mb-4 text-slate-600 dark:text-slate-400 text-sm ${smallPadding ? '' : 'ml-2'}`}
         >
           {description}
         </div>

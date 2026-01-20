@@ -21,15 +21,19 @@ export default function ClubDetailsCard({
       club.updatedAt ? (
         <>
           {club.numMembers && (
-            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
-              <span className="font-medium text-slate-500">Members</span>
-              <span className="ml-auto text-slate-500">{`${club.numMembers} ${club.numMembers !== 1 ? 'people' : 'person'}`}</span>
+            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 dark:border-slate-800 last:border-0">
+              <span className="font-medium text-slate-600 dark:text-slate-400">
+                Members
+              </span>
+              <span className="ml-auto text-slate-800 dark:text-slate-200">{`${club.numMembers} ${club.numMembers !== 1 ? 'people' : 'person'}`}</span>
             </div>
           )}
           {club.foundingDate && (
-            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
-              <span className="font-medium text-slate-500">Founded</span>
-              <span className="ml-auto text-slate-500">
+            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 dark:border-slate-800 last:border-0">
+              <span className="font-medium text-slate-600 dark:text-slate-400">
+                Founded
+              </span>
+              <span className="ml-auto text-slate-800 dark:text-slate-200">
                 {club.foundingDate.toLocaleDateString('en-US', {
                   month: 'short',
                   year: 'numeric',
@@ -38,15 +42,17 @@ export default function ClubDetailsCard({
             </div>
           )}
           {lastEventDate && (
-            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
-              <span className="font-medium text-slate-500">Last Event</span>
+            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 dark:border-slate-800 last:border-0">
+              <span className="font-medium text-slate-600 dark:text-slate-400">
+                Last Event
+              </span>
               <Tooltip
                 title={lastEventDate.toLocaleDateString('en-US', {
                   month: 'short',
                   year: 'numeric',
                 })}
               >
-                <span className="ml-auto text-slate-500">
+                <span className="ml-auto text-slate-800 dark:text-slate-200">
                   {formatDistanceStrict(lastEventDate, new Date(), {
                     addSuffix: true,
                   })}
@@ -55,15 +61,17 @@ export default function ClubDetailsCard({
             </div>
           )}
           {club.updatedAt && (
-            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
-              <span className="font-medium text-slate-500">Updated</span>
+            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 dark:border-slate-800 last:border-0">
+              <span className="font-medium text-slate-600 dark:text-slate-400">
+                Updated
+              </span>
               <Tooltip
                 title={club.updatedAt.toLocaleDateString('en-US', {
                   month: 'short',
                   year: 'numeric',
                 })}
               >
-                <span className="ml-auto text-slate-500">
+                <span className="ml-auto text-slate-800 dark:text-slate-200">
                   {formatDistanceStrict(club.updatedAt, new Date(), {
                     addSuffix: true,
                   })}
@@ -73,7 +81,7 @@ export default function ClubDetailsCard({
           )}
         </>
       ) : (
-        <span className="text-slate-500">No details</span>
+        <span className="text-slate-600 dark:text-slate-400">No details</span>
       )}
     </Panel>
   );

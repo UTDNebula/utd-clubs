@@ -63,9 +63,9 @@ export default function DeleteClub({ view, club }: Props) {
             ? 'Restore'
             : 'Delete'
         }
-        className="bg-red-100 border border-red-500"
+        className="bg-red-100 dark:bg-red-950 border border-red-500 dark:border-red-700"
         description={
-          <div className="text-slate-800">
+          <div className="text-slate-800 dark:text-slate-200">
             {view === 'admin' && (
               <p>
                 This will permenantly delete this organization from UTD Clubs.

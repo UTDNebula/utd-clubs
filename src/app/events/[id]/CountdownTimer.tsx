@@ -68,15 +68,17 @@ const CountdownTimer = ({ startTime }: { startTime: Date }) => {
 
   return (
     <>
-      <p className="text-sm font-semibold text-gray-600">Starts in</p>
+      <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+        Starts in
+      </p>
       <div className="mt-5 flex justify-start"></div>
-      <div className="flex text-3xl font-medium text-gray-600">
+      <div className="flex text-3xl font-medium text-slate-800 dark:text-slate-200">
         <p className="mr-6">{timeRemaining.days}</p>
         <p className="mr-9">{timeRemaining.hours}</p>
         <p className="mr-11">{timeRemaining.minutes}</p>
         <p>{timeRemaining.seconds}</p>
       </div>
-      <div className="mt-5 flex justify-start text-sm font-medium text-gray-400">
+      <div className="mt-5 flex justify-start text-sm font-medium text-slate-600 dark:text-slate-400">
         <p className="mr-7">Days</p>
         <p className="mr-6">Hours</p>
         <p className="mr-6">Minutes</p>

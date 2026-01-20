@@ -52,7 +52,7 @@ type BaseHeaderProps = {
    * - `"dark"` UI elements are black
    * - `"lightDark"` UI elements are white in light mode and black in dark mode
    * - `"darkLight"` UI elements are black in light mode and white in dark mode
-   * @default "dark"
+   * @default "darkLight"
    */
   color?: 'light' | 'dark' | 'lightDark' | 'darkLight';
 };
@@ -69,7 +69,7 @@ export const BaseHeader = async ({
   } = {},
   transparent = false,
   disableSticky = false,
-  color = 'dark',
+  color = 'darkLight',
 }: BaseHeaderProps) => {
   const userCapabilities = await api.userMetadata.getUserSidebarCapabilities();
   return (
@@ -85,7 +85,7 @@ export const BaseHeader = async ({
             className="object-cover -z-20"
             sizes="120vw"
           />
-          <div className="absolute inset-0 bg-lighten -z-10"></div>
+          <div className="absolute inset-0 bg-lighten dark:bg-darken -z-10"></div>
         </>
       )}
       <div className="grow basis-0 flex gap-x-2 md:gap-x-4 lg:gap-x-8">
@@ -132,7 +132,7 @@ export const BaseHeader = async ({
         {clubMatchVisibility && (
           <>
             <div className="sm:hidden">
-              <ClubMatchButton iconOnly />
+              <ClubMatchButton shadow={false} iconOnly />
             </div>
             <div className="max-sm:hidden">
               <ClubMatchButton />

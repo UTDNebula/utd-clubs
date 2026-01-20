@@ -50,6 +50,7 @@ export default function ClubMatchButton({
           className={`rounded-full normal-case whitespace-nowrap ${shadow ? shadowStyle : ''}`}
           startIcon={icon}
           onClick={handleClick}
+          disableElevation
         >
           Club Match
         </Button>

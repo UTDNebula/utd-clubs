@@ -28,7 +28,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
     >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full">
-          <div className="absolute inset-0 h-full w-full bg-gray-200" />
+          <div className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-900" />
           {src && (
             <Image
               fill
@@ -45,7 +45,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
           <h3 className="text-xl font-medium">{event.name}</h3>
           <div className="text-base font-medium">
             {view !== 'manage' && view !== 'admin' && event.club.name}
-            <div className="text-royal">
+            <div className="text-royal dark:text-cornflower-300">
               <ClientEventTime
                 startTime={event.startTime}
                 endTime={event.endTime}
@@ -91,7 +91,10 @@ export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
     >
       <div className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full">
-          <div className="absolute inset-0 h-full w-full bg-gray-200" />
+          <Skeleton
+            variant="rectangular"
+            className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-800"
+          />
         </div>
         <div className="flex h-full flex-col p-5 space-y-2.5">
           <Skeleton variant="text" className="text-xl font-medium" />
