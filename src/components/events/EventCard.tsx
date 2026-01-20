@@ -7,7 +7,6 @@ import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime';
 import EventDeleteButton from './EventDeleteButton';
-import EventEditButton from './EventEditButton';
 import EventRegisterButton, {
   EventRegisterButtonPreview,
   EventRegisterButtonSkeleton,
