@@ -27,6 +27,7 @@ export default async function Page() {
           className="select-none -z-20"
           draggable={false}
         />
+        <div className="absolute inset-0 dark:bg-slightly-darken" />
       </div>
       <div className="relative z-20">
         <BaseHeader

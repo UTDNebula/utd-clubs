@@ -21,7 +21,7 @@ export default function FormFieldSet({
     <div role="group" aria-label={name ?? title} className="flex gap-4">
       {icon && (
         <Tooltip title={title} className="h-fit">
-          <div className="text-neutral-500">{icon}</div>
+          <div className="text-neutral-500 dark:text-neutral-400">{icon}</div>
         </Tooltip>
       )}
       <div className="w-full">{children}</div>
