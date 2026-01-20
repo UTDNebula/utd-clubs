@@ -109,8 +109,8 @@ const EventRegisterButton = ({
   );
 
   return (
-    <div className="flex items-center gap-2">
-      {(memberType === 'President' || memberType === 'Officer') && (
+    <>
+      {isHeader && (memberType === 'President' || memberType === 'Officer') && (
         <EventEditButton
           isHeader={isHeader}
           clubSlug={clubSlug}
@@ -154,7 +154,15 @@ const EventRegisterButton = ({
           {displayJoined ? 'Registered' : 'Register'}
         </Button>
       </Tooltip>
-    </div>
+      {!isHeader &&
+        (memberType === 'President' || memberType === 'Officer') && (
+          <EventEditButton
+            isHeader={isHeader}
+            clubSlug={clubSlug}
+            eventId={eventId}
+          />
+        )}
+    </>
   );
 };
 

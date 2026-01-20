@@ -77,7 +77,7 @@ const EventTitle = async ({
           </span>
         </div>
       </div>
-      <div className="w-full md:w-auto flex-shrink-0 flex md:ml-auto justify-end">
+      <div className="w-full md:w-auto flex-shrink-0 flex md:ml-auto justify-end flex items-center gap-2">
         <EventRegisterButton
           isHeader
           clubId={event.club.id}

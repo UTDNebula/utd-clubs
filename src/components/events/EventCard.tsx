@@ -54,7 +54,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
           </div>
         </div>
       </Link>
-      <div className="m-4 mt-0 flex flex-row gap-2">
+      <div className="m-4 mt-0 flex flex-wrap gap-2">
         {view === 'normal' && (
           <EventRegisterButton
             clubId={event.club.id}
@@ -67,7 +67,11 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
             <Alert severity="info">Synced from Google Calendar.</Alert>
           ) : (
             <>
-              <EventEditButton clubSlug={event.club.slug} eventId={event.id} />
+              <EventRegisterButton
+                clubId={event.club.id}
+                clubSlug={event.club.slug}
+                eventId={event.id}
+              />
               <EventDeleteButton event={event} />
             </>
           ))}
