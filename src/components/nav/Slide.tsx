@@ -4,8 +4,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Drawer, IconButton } from '@mui/material';
 import { useState } from 'react';
+import type { ContentComponentColor } from '@src/components/header/BaseHeader';
 import { type personalCats } from '@src/constants/categories';
-import { ContentComponentColor } from '../header/BaseHeader';
 import NavMenu from './NavMenu';
 
 const NewSidebar = ({

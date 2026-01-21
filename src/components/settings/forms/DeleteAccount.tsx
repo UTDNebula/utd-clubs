@@ -1,5 +1,5 @@
 import Panel from '@src/components/common/Panel';
-import DeleteButton from '../DeleteButton';
+import DeleteButton from '@src/components/settings/DeleteButton';
 
 export default function DeleteAccount() {
   return (
