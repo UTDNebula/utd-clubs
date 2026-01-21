@@ -22,6 +22,15 @@ const EventBody = async ({
     })
   ).filter((e) => e.id !== event.id);
 
+  const clubUpcomingEventsCard = (
+    <ClubUpcomingEventsCard
+      id="upcoming-events"
+      heading="Other Events From This Club"
+      upcomingEvents={events}
+      emptyText="No other events"
+    />
+  );
+
   return (
     <section
       id="event-body"
@@ -39,18 +48,14 @@ const EventBody = async ({
         <EventHostClubCard id="host" club={event.club} />
         <EventDetailsCard id="details" event={event} />
         <ClubContactCard id="contact" club={event.club} />
+        <div className="block md:hidden">{clubUpcomingEventsCard}</div>
       </div>
       <div
         id="club-content-right"
         className="flex flex-col gap-4 order-1 md:order-2"
       >
         <EventDescriptionCard id="description" event={event} />
-        <ClubUpcomingEventsCard
-          id="upcoming-events"
-          heading="Other Events From This Club"
-          upcomingEvents={events}
-          emptyText="No other events"
-        />
+        <div className="hidden md:block">{clubUpcomingEventsCard}</div>
       </div>
     </section>
   );
