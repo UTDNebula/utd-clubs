@@ -27,9 +27,14 @@ export default function EventDetailsCard({ event, id }: EventDetailsCardProps) {
           Updated
         </span>
         <Tooltip
-          title={event.updatedAt.toLocaleDateString('en-US', {
+          title={event.updatedAt.toLocaleString('en-us', {
             month: 'short',
+            day: 'numeric',
             year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
           })}
         >
           <span className="ml-auto text-slate-800 dark:text-slate-200">
