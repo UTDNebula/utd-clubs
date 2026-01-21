@@ -69,6 +69,7 @@ export default function EventDescriptionCard({
               src={event.image}
               alt="Event poster fullscreen"
               fill
+              unoptimized
               className="object-contain"
             />
           </div>
