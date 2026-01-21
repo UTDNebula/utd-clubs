@@ -14,7 +14,7 @@ import { z } from 'zod';
 import { club, usedTags } from '@src/server/db/schema/club';
 import { officers as officersTable } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { syncCalendar } from '@src/utils/calendar';
+import { syncCalendar, watchCalendar } from '@src/utils/calendar';
 import { createClubSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
 import {
@@ -539,7 +539,9 @@ export const clubRouter = createTRPCRouter({
       oauth2Client.setCredentials({
         access_token: await getGoogleAccessToken(ctx.session.user.id),
       });
-      return await syncCalendar(input.clubId, false, oauth2Client);
+      const sync = await syncCalendar(input.clubId, false, oauth2Client); // one-time sync
+      await watchCalendar(input.clubId); // create the webhook to sync updates in the future
+      return sync;
     }),
 
   details: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
