@@ -14,8 +14,11 @@ import {
 import { PgTable } from 'drizzle-orm/pg-core';
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
+import { nanoid } from 'nanoid';
 import z from 'zod';
 import { dbWithSessions } from '@src/server/db';
+import { account } from '@src/server/db/schema/auth';
+import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
 import { club as clubTable } from '@src/server/db/schema/club';
 import { events as eventTable } from '@src/server/db/schema/events';
 import { userMetadataToEvents } from '@src/server/db/schema/users';
@@ -192,6 +195,102 @@ function generateEvent(clubId: string, event: z.infer<typeof eventSchema>) {
     createdAt: new Date(event.created),
     updatedAt: new Date(event.updated),
   };
+}
+
+export async function getAuthForClub(clubId: string): Promise<OAuth2Client> {
+  const clubData = await db.query.club.findFirst({
+    where: eq(clubTable.id, clubId),
+    columns: { calendarGoogleAccountId: true },
+  });
+
+  if (!clubData?.calendarGoogleAccountId) {
+    throw new Error('Club has no linked Google Calendar');
+  }
+
+  const googleAccount = await db.query.account.findFirst({
+    where: and(
+      eq(account.userId, clubData.calendarGoogleAccountId),
+      eq(account.providerId, 'google'),
+    ),
+    columns: { refreshToken: true },
+  });
+
+  if (!googleAccount?.refreshToken) {
+    throw new Error('User has no Google refresh token');
+  }
+
+  // create new auth client for creating and deleting a calendar watch
+  const auth = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback/google`, // BetterAuth handles this
+    // TODO: need to set perms in GCP i think
+  );
+
+  auth.setCredentials({ refresh_token: googleAccount.refreshToken });
+  return auth;
+}
+
+export async function watchCalendar(clubId: string) {
+  const auth = await getAuthForClub(clubId);
+  const clubData = await db.query.club.findFirst({
+    where: eq(clubTable.id, clubId),
+  });
+
+  if (!clubData || !clubData.calendarId || !clubData.calendarGoogleAccountId)
+    throw new Error('Club has no Calendar to sync');
+
+  // randomized id for the channel and token for verification
+  const channelId = nanoid();
+  const token = nanoid();
+
+  // create webhook
+  const response = await google.calendar('v3').events.watch({
+    auth,
+    calendarId: clubData.calendarId,
+    requestBody: {
+      id: channelId,
+      type: 'web_hook',
+      address: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/calendar`,
+      token: token,
+    },
+  });
+
+  // insert the new webhook connection for the club
+  const expires = response.data.expiration
+    ? new Date(parseInt(response.data.expiration))
+    : addDays(new Date(), 7); // default to 7 days
+  await db.insert(calendarWebhooks).values({
+    id: channelId,
+    resourceId: response.data.resourceId!, // it will work, because I don't know what I'll do if it doesn't
+    clubId: clubId,
+    token: token,
+    expiration: expires,
+  });
+
+  return { channelId, expires };
+}
+
+export async function stopWatching(
+  channelId: string,
+  resourceId: string,
+  clubId: string,
+) {
+  try {
+    const auth = await getAuthForClub(clubId);
+    await google.calendar('v3').channels.stop({
+      auth,
+      requestBody: {
+        id: channelId,
+        resourceId: resourceId,
+      },
+    });
+  } catch (e) {
+    console.error('Could not stop channel', e);
+  }
+
+  // Delete webhook from data
+  await db.delete(calendarWebhooks).where(eq(calendarWebhooks.id, channelId));
 }
 
 const buildConflictUpdateColumns = <
