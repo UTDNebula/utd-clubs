@@ -40,7 +40,7 @@ export default function EventDescriptionCard({
           text={
             event.description.length > 0
               ? event.description
-              : '**Check us out!**'
+              : 'No description provided'
           }
           maxLines={10}
         />
