@@ -42,17 +42,21 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
   const disableSync = useMutation(trpc.event.disableSync.mutationOptions());
 
   return (
-    <Panel heading="Google Calendar Sync">
-      <div className="ml-2 mb-2 text-slate-600 dark:text-slate-400 text-sm">
-        <p>
-          If your organization uses a shared Google Calendar we can pull its
-          events into UTD Clubs.
-        </p>
-        <p>
-          The sync will be active as long as you are a collaborator on this
-          organization.
-        </p>
-      </div>
+    <Panel
+      heading="Google Calendar Sync"
+      description={
+        <>
+          <p>
+            If your organization uses a shared Google Calendar we can pull its
+            events into UTD Clubs.
+          </p>
+          <p>
+            The sync will be active as long as you are a collaborator on this
+            organization.
+          </p>
+        </>
+      }
+    >
       <div className="m-2 flex flex-col gap-4">
         {!hasScopes ? (
           <Button

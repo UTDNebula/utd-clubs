@@ -162,7 +162,12 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
     {
       field: 'year',
       valueGetter: (_value, row) => {
-        return row.userMetadata?.year;
+        return `Class of '${row.userMetadata?.graduationDate?.toLocaleString(
+          'en-us',
+          {
+            year: '2-digit',
+          },
+        )}`;
       },
       headerName: 'Year',
       renderHeader: (params) => (
