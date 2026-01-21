@@ -229,15 +229,15 @@ export async function watchCalendar(clubId: string) {
   const existingWebhook = await db.query.calendarWebhooks.findFirst({
     where: and(
       eq(calendarWebhooks.clubId, clubId),
-      gt(calendarWebhooks.expiration, new Date()) // Check if expiration is in the future
+      gt(calendarWebhooks.expiration, new Date()), // Check if expiration is in the future
     ),
   });
 
   if (existingWebhook) {
     console.log(`Club ${clubId} is already being watched.`);
     return {
-      channelId: existingWebhook.id, 
-      expiration: existingWebhook.expiration 
+      channelId: existingWebhook.id,
+      expiration: existingWebhook.expiration,
     };
   }
 
