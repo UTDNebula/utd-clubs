@@ -261,7 +261,7 @@ export async function watchCalendar(clubId: string) {
     requestBody: {
       id: channelId,
       type: 'web_hook',
-      address: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/calendar`,
+      address: `${process.env.GOOGLE_WEBHOOK_URL || process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/calendar`,
       token: token,
     },
   });
