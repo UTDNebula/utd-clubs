@@ -1,6 +1,5 @@
 'use client';
 
-import { time } from 'console';
 import { Skeleton } from '@mui/material';
 import { formatDistanceStrict } from 'date-fns';
 import { useEffect, useState } from 'react';
