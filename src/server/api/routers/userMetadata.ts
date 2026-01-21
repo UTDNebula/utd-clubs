@@ -211,6 +211,8 @@ export const userMetadataRouter = createTRPCRouter({
       })
     ) {
       capabilites.push('Manage Clubs');
+    } else {
+      capabilites.push('Create Club');
     }
     if (
       (
