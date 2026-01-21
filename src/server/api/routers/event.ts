@@ -105,7 +105,7 @@ export const eventRouter = createTRPCRouter({
             ),
           orderBy: (event, { asc }) => [asc(event.startTime)],
           with: { club: true },
-          limit: 20,
+          limit: 18,
         });
 
         return upcomingEvents;
