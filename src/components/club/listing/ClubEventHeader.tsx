@@ -9,18 +9,21 @@ type Club = SelectClub & {
   contacts?: Contacts[];
   tags: string[];
 };
-const ClubHeader = async ({ club }: { club: Club }) => {
+const ClubEventHeader = async ({ club }: { club: Club }) => {
+  if (!club.bannerImage) {
+    return null;
+  }
+
   return (
     <BaseCard className="relative w-full aspect-[4.5/1] overflow-hidden">
       <Image
-        src={club.bannerImage ?? club.profileImage ?? '/images/wideWave.jpg'}
+        src={club.bannerImage}
         alt="Club banner"
         fill
         className="object-cover object-center"
-        priority
       />
     </BaseCard>
   );
 };
 
-export default ClubHeader;
+export default ClubEventHeader;

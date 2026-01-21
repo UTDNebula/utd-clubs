@@ -12,10 +12,12 @@ export default function ClubDescriptionCard({
   id,
 }: ClubDescriptionCardProps) {
   return (
-    <Panel className="!p-10 text-slate-700" id={id}>
+    <Panel className="!p-10" id={id}>
       <ExpandableMarkdownText
         text={
-          club.description.length > 0 ? club.description : '**Check us out!**'
+          club.description.length > 0
+            ? club.description
+            : 'No description provided'
         }
         maxLines={10}
       />

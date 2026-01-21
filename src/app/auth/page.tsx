@@ -27,6 +27,7 @@ export default async function Auth(props: {
             className="select-none"
           />
         </div>
+        <div className="fixed inset-0 dark:bg-slightly-darken" />
         <div className="z-10">
           <Link
             href="/"

@@ -135,10 +135,7 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
             </div>
           </div>
         ) : (
-          <Typography
-            variant="h2"
-            className="text-base font-semibold text-haiti"
-          >
+          <Typography variant="h2" className="text-base font-semibold">
             <span className="hidden sm:inline">
               {'Club Members for ' + club.name}
             </span>

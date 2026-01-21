@@ -11,6 +11,7 @@ import {
 } from 'drizzle-orm';
 import { google } from 'googleapis';
 import { z } from 'zod';
+import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { club, usedTags } from '@src/server/db/schema/club';
 import { officers as officersTable } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
@@ -173,6 +174,24 @@ export const clubRouter = createTRPCRouter({
       return [];
     }
   }),
+  getMemberClubsMetadata: protectedProcedure.query(
+    async ({
+      ctx,
+    }): Promise<SelectUserMetadataToClubsWithClub[] | undefined> => {
+      const results = await ctx.db.query.userMetadataToClubs.findMany({
+        where: and(
+          eq(userMetadataToClubs.userId, ctx.session.user.id),
+          inArray(userMetadataToClubs.memberType, [
+            'Member',
+            'Officer',
+            'President',
+          ]),
+        ),
+        with: { club: true },
+      });
+      return results;
+    },
+  ),
   getMemberClubs: protectedProcedure.query(async ({ ctx }) => {
     const results = await ctx.db.query.userMetadataToClubs.findMany({
       where: and(
@@ -335,7 +354,10 @@ export const clubRouter = createTRPCRouter({
       const officers = await ctx.db.query.officers.findMany({
         where: eq(officersTable.clubId, input.id),
       });
-      return officers;
+      return officers.sort(
+        // Infinity makes items without a `displayOrder` go to the end
+        (a, b) => (a.displayOrder ?? Infinity) - (b.displayOrder ?? Infinity),
+      );
     }),
   getMembers: publicProcedure
     .input(byIdSchema)

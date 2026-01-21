@@ -73,21 +73,23 @@ export default function OfficerList({
               <ClubOfficer key={officer.name} officer={officer} />
             ))
           ) : (
-            <span className="text-slate-500 text-sm">No officers listed</span>
+            <span className="text-slate-600 dark:text-slate-400 text-sm">
+              No officers listed
+            </span>
           )}
         </div>
 
         {/* fade overlay only shows if content is taller than right side AND not expanded */}
         {needsTruncation && !isExpanded && (
-          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-white dark:from-neutral-900 to-transparent pointer-events-none" />
         )}
       </div>
 
       {needsTruncation && (
-        <div className="mt-2 pt-2 border-t border-slate-300 z-10">
+        <div className="mt-2 pt-2 border-t border-slate-300 dark:border-slate-700 z-10">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full text-sm font-semibold text-royal text-royal hover:text-royalDark underline decoration-transparent hover:decoration-inherit transition text-center"
+            className="w-full text-sm font-semibold text-royal dark:text-cornflower-300 hover:text-royalDark dark:hover:text-cornflower-400 underline decoration-transparent hover:decoration-inherit transition text-center"
           >
             {isExpanded ? 'Show less' : 'See all officers'}
           </button>

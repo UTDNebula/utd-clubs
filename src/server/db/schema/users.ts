@@ -1,5 +1,6 @@
 import { relations } from 'drizzle-orm';
 import {
+  date,
   integer,
   jsonb,
   pgEnum,
@@ -12,27 +13,11 @@ import { user } from './auth';
 import { club } from './club';
 import { events } from './events';
 
-export const yearEnum = pgEnum('year', [
-  'Freshman',
-  'Sophomore',
-  'Junior',
-  'Senior',
-  'Grad Student',
-]);
-
-export const roleEnum = pgEnum('role', [
+export const studentClassificationEnum = pgEnum('student_classification', [
   'Student',
-  'Student Organizer',
-  'Administrator',
-]);
-
-export const careerEnum = pgEnum('career', [
-  'Healthcare',
-  'Art and Music',
-  'Engineering',
-  'Business',
-  'Sciences',
-  'Public Service',
+  'Graduate Student',
+  'Alum',
+  'Prospective Student',
 ]);
 
 export const clubRoleEnum = pgEnum('member_type', [
@@ -47,13 +32,11 @@ export const userMetadata = pgTable('user_metadata', {
   lastName: text('last_name').notNull(),
   major: text('major').notNull(),
   minor: text('minor'),
-  year: yearEnum('year')
-    .$default(() => 'Freshman')
+  studentClassification: studentClassificationEnum('student_classification')
+    .default('Student')
     .notNull(),
-  role: roleEnum('role')
-    .$default(() => 'Student')
-    .notNull(),
-  career: careerEnum('career').$default(() => 'Engineering'),
+  graduationDate: date('graduation_date', { mode: 'date' }),
+  contactEmail: text('contact_email'),
 });
 
 export const userMetadataToClubs = pgTable(

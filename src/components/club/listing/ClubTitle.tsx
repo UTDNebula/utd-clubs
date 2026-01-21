@@ -10,8 +10,8 @@ const ClubTitle = async ({
 }) => {
   return (
     <section
-      id="club-tile"
-      className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-0 mt-2"
+      id="club-title"
+      className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
     >
       <div
         className={`flex ${club.name.length > 40 ? 'flex-col ' : 'flex-row '} md:flex-row gap-4 w-full md:w-auto flex-grow items-start`}
@@ -30,7 +30,7 @@ const ClubTitle = async ({
         <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
           {club.name && (
             <h1
-              className={`font-display font-bold text-slate-800 ${
+              className={`font-display font-bold text-slate-800 dark:text-slate-200 ${
                 club.name.length > 40
                   ? 'text-xl md:text-3xl'
                   : club.name.length > 12

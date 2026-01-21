@@ -148,6 +148,13 @@
       "when": 1767057050272,
       "tag": "20251230011050_stormy_hercules",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1768101826854,
+      "tag": "20260111032346_user-metadata-split-year",
+      "breakpoints": true
     }
   ]
 }
