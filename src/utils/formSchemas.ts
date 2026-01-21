@@ -166,11 +166,12 @@ export const createEventSchema = z.object({
     .max(100, 'Character limit reached'),
   location: z
     .string()
-    .min(1, 'Location must be at least 3 characters')
+    .min(1, 'Location is required')
     .max(100, 'Character limit reached'),
   description: z.string().max(1000, 'Character limit reached'),
-  startTime: z.date(),
-  endTime: z.date(),
+  startTime: z.date('Invalid date'),
+  endTime: z.date('Invalid date'),
+  image: fileSchema,
 });
 
 export const updateEventSchema = createEventSchema.extend({
@@ -180,11 +181,17 @@ export const updateEventSchema = createEventSchema.extend({
 
 export const eventFormSchema = z.object({
   clubId: z.string(),
-  name: z.string().min(1).max(100, 'Character limit reached'),
-  location: z.string().min(1).max(100, 'Character limit reached'),
+  name: z
+    .string()
+    .min(3, 'Name must be at least 3 characters')
+    .max(100, 'Character limit reached'),
+  location: z
+    .string()
+    .min(1, 'Location is required')
+    .max(100, 'Character limit reached'),
   description: z.string().max(1000, 'Character limit reached'),
-  startTime: z.date(),
-  endTime: z.date(),
+  startTime: z.date('Invalid date'),
+  endTime: z.date('Invalid date'),
   image: fileSchema,
 });
 
