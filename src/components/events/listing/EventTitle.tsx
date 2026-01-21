@@ -57,7 +57,7 @@ const EventTitle = async ({
           <Divider orientation="vertical" flexItem className="hidden lg:flex" />
           <span className="flex gap-2 items-center">
             <AccessTimeIcon className="text-xl md:text-2xl" />
-            {startTime === endTime
+            {startTime.getTime() === endTime.getTime()
               ? 'No end time specified'
               : `Lasts ${formatDuration(
                   intervalToDuration({
