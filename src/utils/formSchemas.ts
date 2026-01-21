@@ -27,7 +27,7 @@ export const accountOnboardingSchema = z.object({
   major: z.string().optional(),
   minor: z.string().nullable().optional(),
   studentClassification: z.enum(studentClassificationEnum.enumValues),
-  graduationDate: z.date().nullable().optional(),
+  graduationDate: z.date().nullable(),
   contactEmail: z
     .email({
       error: 'Use your UT Dallas email',

@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Slide from '@mui/material/Slide';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
+import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/system/useMediaQuery';
@@ -164,6 +165,10 @@ export default function OnboardingForm({
   }, []);
 
   const handleNext = (event: MouseEvent<HTMLButtonElement>) => {
+    // Validates mounted fields and prevents user from navigating if there exist errors
+    form.validate('change');
+    if (!form.state.isFieldsValid) return;
+
     if (activeStep.current < steps.length - (hasFinish ? 2 : 1)) {
       // Prevents submit button from activating prematurely when navigating
       // from the penultimate step to the last step
@@ -179,6 +184,10 @@ export default function OnboardingForm({
   };
 
   const handleBack = () => {
+    // Validates mounted fields and prevents user from navigating if there exist errors
+    form.validate('change');
+    if (!form.state.isFieldsValid) return;
+
     if (activeStep.current > 0) {
       setActiveStep((prev) => ({
         current: prev.current - 1,
@@ -191,10 +200,12 @@ export default function OnboardingForm({
     <Button
       className={`normal-case ${activeStep.current === steps.length - 1 ? 'invisible' : ''}`}
       loadingPosition="start"
-      color="primary"
+      color={!form.state.isFieldsValid ? 'inherit' : 'primary'}
       onClick={handleBack}
       disabled={
-        activeStep.current === 0 || activeStep.current === steps.length - 1
+        activeStep.current === 0 ||
+        activeStep.current === steps.length - 1 ||
+        !form.state.isFieldsValid
       }
     >
       Back
@@ -210,18 +221,10 @@ export default function OnboardingForm({
       }
       variant="contained"
       className="normal-case"
-      disabled={
-        activeStep.current === steps.length - (hasFinish ? 2 : 1) &&
-        !form.state.isValid
-      }
+      disabled={!form.state.isFieldsValid}
       loading={form.state.isSubmitting}
       loadingPosition="start"
-      color={
-        activeStep.current === steps.length - (hasFinish ? 2 : 1) &&
-        !form.state.isValid
-          ? 'inherit'
-          : 'primary'
-      }
+      color={!form.state.isFieldsValid ? 'inherit' : 'primary'}
       onClick={handleNext}
     >
       {activeStep.current < steps.length - (hasFinish ? 2 : 1)
@@ -260,6 +263,10 @@ export default function OnboardingForm({
                     <StepButton
                       color="inherit"
                       onClick={() => {
+                        // Validates mounted fields and prevents user from navigating if there exist errors
+                        form.validate('change');
+                        if (!form.state.isFieldsValid) return;
+
                         setActiveStep((prev) => ({
                           current: index,
                           previous: prev.current,
@@ -267,10 +274,19 @@ export default function OnboardingForm({
                       }}
                       disabled={
                         index - 1 > activeStep.current ||
-                        activeStep.current === steps.length - 1
+                        activeStep.current === steps.length - 1 ||
+                        !form.state.isFieldsValid
                       }
                     >
-                      {step.label}
+                      <StepLabel
+                        className="cursor-pointer"
+                        error={
+                          !form.state.isFieldsValid &&
+                          index === activeStep.current
+                        }
+                      >
+                        {step.label}
+                      </StepLabel>
                     </StepButton>
                   </Step>
                 );
