@@ -88,7 +88,7 @@ const OnboardingFormStep = withForm({
                         onChange={(value) => {
                           field.handleChange(value);
                         }}
-                        value={field.state.value}
+                        value={field.state.value ?? null}
                         label="Graduation Date"
                         className="[&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900 w-64 grow"
                         slotProps={{
