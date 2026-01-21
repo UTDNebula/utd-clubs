@@ -57,18 +57,20 @@ const EventTitle = async ({
           <Divider orientation="vertical" flexItem className="hidden lg:flex" />
           <span className="flex gap-2 items-center">
             <AccessTimeIcon className="text-xl md:text-2xl" />
-            {`Lasts ${formatDuration(
-              intervalToDuration({
-                start: startTime,
-                end: endTime,
-              }),
-              {
-                locale: {
-                  formatDistance: (token, count) =>
-                    `${count}${distanceTokenUnits[token] ?? ''}`,
-                },
-              },
-            )} (till ${isSameDay(startTime, endTime) ? format(endTime, 'h:mm a') : format(endTime, 'EEE, LLLL d, yyyy @ h:mm a')})`}
+            {startTime === endTime
+              ? 'No end time specified'
+              : `Lasts ${formatDuration(
+                  intervalToDuration({
+                    start: startTime,
+                    end: endTime,
+                  }),
+                  {
+                    locale: {
+                      formatDistance: (token, count) =>
+                        `${count}${distanceTokenUnits[token] ?? ''}`,
+                    },
+                  },
+                )} (till ${isSameDay(startTime, endTime) ? format(endTime, 'h:mm a') : format(endTime, 'EEE, LLLL d, yyyy @ h:mm a')})`}
           </span>
           <Divider orientation="vertical" flexItem className="hidden lg:flex" />
           <span className="flex gap-2 items-center">
