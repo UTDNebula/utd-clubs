@@ -101,7 +101,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
 
   return (
     <div className="flex flex-wrap items-center gap-2 p-2 min-h-16 max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800 transition-colors rounded-lg">
-      <Tooltip title="Click to view club directory page" disableInteractive>
+      <Tooltip title="View club directory page" disableInteractive>
         <Link
           href={club.approved === 'approved' ? `/directory/${club.slug}` : ''}
           className={`flex gap-2 pl-2 pr-4 items-center ${club.approved !== 'approved' ? 'pointer-events-none' : ''}`}

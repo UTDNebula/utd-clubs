@@ -14,7 +14,10 @@ import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
 import { useAppForm } from '@src/utils/form';
-import { eventFormSchema } from '@src/utils/formSchemas';
+import {
+  createEventFormSchema,
+  editEventFormSchema,
+} from '@src/utils/formSchemas';
 import EventCard, { EventCardSkeleton } from './EventCard';
 
 type EventFormProps =
@@ -150,7 +153,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
       );
     },
     validators: {
-      onChange: eventFormSchema,
+      onChange: mode === 'create' ? createEventFormSchema : editEventFormSchema,
     },
   });
 

@@ -3,12 +3,20 @@
 import { TZDateMini } from '@date-fns/tz';
 import { format, isSameDay, isSameYear } from 'date-fns';
 
+function isInvalidDateStrict(date: Date) {
+  return date instanceof Date && Number.isNaN(date.getTime());
+}
+
 type ClientEventTimeProps = {
   startTime: Date;
   endTime: Date;
 };
 
 const ClientEventTime = ({ startTime, endTime }: ClientEventTimeProps) => {
+  if (isInvalidDateStrict(startTime) || isInvalidDateStrict(endTime)) {
+    return null;
+  }
+
   const tzStartTime = new TZDateMini(startTime, 'America/Chicago');
   const tzEndTime = new TZDateMini(endTime, 'America/Chicago');
 
