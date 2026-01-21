@@ -1,3 +1,4 @@
+import { PeopleAlt } from '@mui/icons-material';
 import { eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
 import { db } from '@src/server/db';
@@ -186,6 +187,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           >
             {clubData.userMetadataToClubs.length > 1 && (
               <>
+                <PeopleAlt />
                 <div style={{ display: 'flex', margin: '0 10px 0 0' }}>
                   {clubData.userMetadataToClubs.length} members
                 </div>
