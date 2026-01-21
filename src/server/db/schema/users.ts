@@ -13,34 +13,11 @@ import { user } from './auth';
 import { club } from './club';
 import { events } from './events';
 
-export const yearEnum = pgEnum('year', [
-  'Freshman',
-  'Sophomore',
-  'Junior',
-  'Senior',
-  'Grad Student',
-]);
-
-export const roleEnum = pgEnum('role', [
-  'Student',
-  'Student Organizer',
-  'Administrator',
-]);
-
 export const studentClassificationEnum = pgEnum('student_classification', [
   'Student',
   'Graduate Student',
   'Alum',
   'Prospective Student',
-]);
-
-export const careerEnum = pgEnum('career', [
-  'Healthcare',
-  'Art and Music',
-  'Engineering',
-  'Business',
-  'Sciences',
-  'Public Service',
 ]);
 
 export const clubRoleEnum = pgEnum('member_type', [
@@ -59,10 +36,6 @@ export const userMetadata = pgTable('user_metadata', {
     .default('Student')
     .notNull(),
   graduationDate: date('graduation_date', { mode: 'date' }),
-  role: roleEnum('role')
-    .$default(() => 'Student')
-    .notNull(),
-  career: careerEnum('career').$default(() => 'Engineering'),
   contactEmail: text('contact_email'),
 });
 
