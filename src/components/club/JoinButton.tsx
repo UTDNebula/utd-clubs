@@ -80,7 +80,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       title={
         <div className="text-center">
           <span className="font-bold">
-            {displayMemberType ? 'Click to leave club' : 'Click to join club'}
+            {displayMemberType ? 'Leave club' : 'Join club'}
           </span>
           {displayMemberType && memberState?.joinedAt && (
             <>

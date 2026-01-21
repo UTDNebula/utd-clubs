@@ -121,9 +121,7 @@ const EventRegisterButton = ({
         title={
           <div className="text-center">
             <span className="font-bold">
-              {displayJoined
-                ? 'Click to unregister from event'
-                : 'Click to register for event'}
+              {displayJoined ? 'Unregister from event' : 'Register for event'}
             </span>
             {displayJoined && registerState?.registeredAt && (
               <>
