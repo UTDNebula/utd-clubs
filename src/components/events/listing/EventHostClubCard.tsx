@@ -24,7 +24,7 @@ export default function EventHostClubCard({
             width={32}
             height={32}
             // flex-shrink-0 prevents the image from squishing if text is long
-            className="rounded-lg w-20 md:w-32 h-auto flex-shrink-0"
+            className="rounded-lg w-20 h-auto flex-shrink-0"
           />
         )}
 
