@@ -22,6 +22,7 @@ import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
 import { club as clubTable } from '@src/server/db/schema/club';
 import { events as eventTable } from '@src/server/db/schema/events';
 import { userMetadataToEvents } from '@src/server/db/schema/users';
+import { getGoogleAccessToken } from './googleAuth';
 
 const db = dbWithSessions;
 
@@ -207,17 +208,7 @@ export async function getAuthForClub(clubId: string): Promise<OAuth2Client> {
     throw new Error('Club has no linked Google Calendar');
   }
 
-  const googleAccount = await db.query.account.findFirst({
-    where: and(
-      eq(account.userId, clubData.calendarGoogleAccountId),
-      eq(account.providerId, 'google'),
-    ),
-    columns: { refreshToken: true },
-  });
-
-  if (!googleAccount?.refreshToken) {
-    throw new Error('User has no Google refresh token');
-  }
+  const accessToken = await getGoogleAccessToken(clubData.calendarGoogleAccountId);
 
   // create new auth client for creating and deleting a calendar watch
   const auth = new google.auth.OAuth2(
@@ -227,7 +218,7 @@ export async function getAuthForClub(clubId: string): Promise<OAuth2Client> {
     // TODO: need to set perms in GCP i think
   );
 
-  auth.setCredentials({ refresh_token: googleAccount.refreshToken });
+  auth.setCredentials({ access_token: accessToken });
   return auth;
 }
 
