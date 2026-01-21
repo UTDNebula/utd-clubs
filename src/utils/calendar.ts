@@ -17,7 +17,6 @@ import { google } from 'googleapis';
 import { nanoid } from 'nanoid';
 import z from 'zod';
 import { dbWithSessions } from '@src/server/db';
-import { account } from '@src/server/db/schema/auth';
 import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
 import { club as clubTable } from '@src/server/db/schema/club';
 import { events as eventTable } from '@src/server/db/schema/events';
@@ -208,7 +207,9 @@ export async function getAuthForClub(clubId: string): Promise<OAuth2Client> {
     throw new Error('Club has no linked Google Calendar');
   }
 
-  const accessToken = await getGoogleAccessToken(clubData.calendarGoogleAccountId);
+  const accessToken = await getGoogleAccessToken(
+    clubData.calendarGoogleAccountId,
+  );
 
   // create new auth client for creating and deleting a calendar watch
   const auth = new google.auth.OAuth2(
