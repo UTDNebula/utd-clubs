@@ -7,6 +7,7 @@ import {
   eq,
   getTableColumns,
   getTableName,
+  gt,
   inArray,
   SQL,
   sql,
@@ -224,6 +225,23 @@ export async function getAuthForClub(clubId: string): Promise<OAuth2Client> {
 }
 
 export async function watchCalendar(clubId: string) {
+  // check if webhook exists
+  const existingWebhook = await db.query.calendarWebhooks.findFirst({
+    where: and(
+      eq(calendarWebhooks.clubId, clubId),
+      gt(calendarWebhooks.expiration, new Date()) // Check if expiration is in the future
+    ),
+  });
+
+  if (existingWebhook) {
+    console.log(`Club ${clubId} is already being watched.`);
+    return {
+      channelId: existingWebhook.id, 
+      expiration: existingWebhook.expiration 
+    };
+  }
+
+  // get auth & club data
   const auth = await getAuthForClub(clubId);
   const clubData = await db.query.club.findFirst({
     where: eq(clubTable.id, clubId),
@@ -232,7 +250,7 @@ export async function watchCalendar(clubId: string) {
   if (!clubData || !clubData.calendarId || !clubData.calendarGoogleAccountId)
     throw new Error('Club has no Calendar to sync');
 
-  // randomized id for the channel and token for verification
+  // randomized id for new channel and token for verification
   const channelId = nanoid();
   const token = nanoid();
 
