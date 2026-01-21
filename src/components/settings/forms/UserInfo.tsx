@@ -33,7 +33,6 @@ export default function UserInfo({ user }: UserInfoProps) {
     lastName: user?.lastName ?? '',
     major: user?.major ?? '',
     minor: user?.minor ?? '',
-    role: user?.role ?? 'Student',
     studentClassification: user?.studentClassification ?? 'Student',
     // `user.graduation` is automatically set with a time zone, which shows the wrong month in the date picker
     // Add the timezone offset (in milliseconds) to convert back to UTC

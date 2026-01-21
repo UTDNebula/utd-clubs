@@ -7,7 +7,6 @@ export const accountSettingsSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   major: z.string().min(1, 'College major is required'),
   minor: z.string().nullable(),
-  role: z.enum(['Student', 'Student Organizer', 'Administrator']),
   studentClassification: z.enum(studentClassificationEnum.enumValues),
   graduationDate: z.date().nullable(),
   contactEmail: z
