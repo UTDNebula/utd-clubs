@@ -1,5 +1,7 @@
 'use client';
 
+import { time } from 'console';
+import { Skeleton } from '@mui/material';
 import { formatDistanceStrict } from 'date-fns';
 import { useEffect, useState } from 'react';
 import Panel from '@src/components/common/Panel';
@@ -30,10 +32,10 @@ const calculateTimeRemaining = (eventStartTime: number) => {
   );
 
   return {
-    days: timeUntilStartInDays.toString(),
-    hours: timeUntilStartInHours.toString(),
-    minutes: timeUntilStartInMinutes.toString(),
-    seconds: timeUntilStartInSeconds.toString(),
+    days: timeUntilStartInDays,
+    hours: timeUntilStartInHours,
+    minutes: timeUntilStartInMinutes,
+    seconds: timeUntilStartInSeconds,
   };
 };
 
@@ -49,7 +51,7 @@ export default function EventCountdownCard({
   id,
 }: EventCountdownCardProps) {
   const eventStartTime = startTime.getTime();
-  const eventEndTime = startTime.getTime();
+  const eventEndTime = endTime.getTime();
 
   const now = Date.now();
 
@@ -80,7 +82,52 @@ export default function EventCountdownCard({
   }, [isLoading, eventStartTime, eventEndTime]);
 
   if (isLoading) {
-    return <Panel id={id} smallPadding heading="Event Starts In" />;
+    return (
+      <Panel id={id} smallPadding heading="Event Starts In">
+        <div className="grid grid-cols-4 gap-2 w-fit text-center mx-auto">
+          <div className="flex flex-col items-center">
+            <Skeleton>
+              <p className="font-display text-2xl">00</p>
+            </Skeleton>
+            <Skeleton>
+              <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+                Days
+              </p>
+            </Skeleton>
+          </div>
+          <div className="flex flex-col items-center">
+            <Skeleton>
+              <p className="font-display text-2xl">00</p>
+            </Skeleton>
+            <Skeleton>
+              <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+                Hours
+              </p>
+            </Skeleton>
+          </div>
+          <div className="flex flex-col items-center">
+            <Skeleton>
+              <p className="font-display text-2xl">00</p>
+            </Skeleton>
+            <Skeleton>
+              <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+                Minutes
+              </p>
+            </Skeleton>
+          </div>
+          <div className="flex flex-col items-center">
+            <Skeleton>
+              <p className="font-display text-2xl">00</p>
+            </Skeleton>
+            <Skeleton>
+              <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+                Seconds
+              </p>
+            </Skeleton>
+          </div>
+        </div>
+      </Panel>
+    );
   }
 
   if (now > eventStartTime) {
@@ -109,27 +156,43 @@ export default function EventCountdownCard({
 
   return (
     <Panel id={id} smallPadding heading="Event Starts In">
-      <div className="grid grid-cols-4 gap-2 w-fit text-center mx-auto">
+      <div className="grid grid-flow-col auto-cols-fr gap-2 w-fit text-center mx-auto">
+        {timeRemaining.days !== 0 && (
+          <div className="flex flex-col">
+            <p className="font-display text-2xl">
+              {timeRemaining.days.toString().padStart(2, '0')}
+            </p>
+            <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+              Days
+            </p>
+          </div>
+        )}
+        {(timeRemaining.days !== 0 || timeRemaining.hours !== 0) && (
+          <div className="flex flex-col">
+            <p className="font-display text-2xl">
+              {timeRemaining.hours.toString().padStart(2, '0')}
+            </p>
+            <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+              Hours
+            </p>
+          </div>
+        )}
+        {(timeRemaining.days !== 0 ||
+          timeRemaining.hours !== 0 ||
+          timeRemaining.minutes !== 0) && (
+          <div className="flex flex-col">
+            <p className="font-display text-2xl">
+              {timeRemaining.minutes.toString().padStart(2, '0')}
+            </p>
+            <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
+              Minutes
+            </p>
+          </div>
+        )}
         <div className="flex flex-col">
-          <p className="font-display text-2xl">{timeRemaining.days}</p>
-          <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
-            Days
+          <p className="font-display text-2xl">
+            {timeRemaining.seconds.toString().padStart(2, '0')}
           </p>
-        </div>
-        <div className="flex flex-col">
-          <p className="font-display text-2xl">{timeRemaining.hours}</p>
-          <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
-            Hours
-          </p>
-        </div>
-        <div className="flex flex-col">
-          <p className="font-display text-2xl">{timeRemaining.minutes}</p>
-          <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
-            Minutes
-          </p>
-        </div>
-        <div className="flex flex-col">
-          <p className="font-display text-2xl">{timeRemaining.seconds}</p>
           <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
             Seconds
           </p>
