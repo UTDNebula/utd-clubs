@@ -14,7 +14,7 @@ export default function EventHostClubCard({
   return (
     <Panel className="text-sm" id={id} smallPadding heading="Host Club">
       <Link
-        className="flex gap-2 items-center"
+        className="flex gap-2 items-center p-2 rounded-lg bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors shadow-sm dark:shadow-md"
         href={`/directory/${club.slug}`}
       >
         {club.profileImage && (
@@ -24,7 +24,7 @@ export default function EventHostClubCard({
             width={32}
             height={32}
             // flex-shrink-0 prevents the image from squishing if text is long
-            className="rounded-lg w-20 h-auto flex-shrink-0"
+            className="rounded-lg w-12 h-auto flex-shrink-0"
           />
         )}
 
