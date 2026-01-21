@@ -155,7 +155,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               alignContent: 'center',
               width: '70%',
               fontFamily: 'Inter',
-              fontSize: '20px',
+              fontSize: '25px',
               margin: '0 0 20px 0',
             }}
           >
@@ -241,7 +241,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                     color: '#573dff',
                     padding: '8px 16px',
                     borderRadius: '20px',
-                    fontSize: '20px',
+                    fontSize: '23px',
                     fontFamily: 'Inter',
                     fontWeight: 600,
                     display: 'flex',
