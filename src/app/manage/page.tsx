@@ -33,7 +33,7 @@ export default async function Page() {
             </Link>
           </div>
         </ManageHeader>
-        <div className="flex justify-evenly h-full w-full flex-wrap gap-4 p-4">
+        <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">
           {clubs.map((club) => (
             <ClubCard key={club.id} club={club} manageView />
           ))}
