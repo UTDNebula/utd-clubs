@@ -1,3 +1,4 @@
+import AddIcon from '@mui/icons-material/Add';
 import { Button } from '@mui/material';
 import { headers } from 'next/headers';
 import Link from 'next/link';
@@ -25,6 +26,7 @@ export default async function Page() {
               <Button
                 variant="contained"
                 className="normal-case whitespace-nowrap"
+                startIcon={<AddIcon />}
               >
                 Create New Club
               </Button>
