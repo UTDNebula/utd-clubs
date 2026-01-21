@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { MouseEvent, useCallback, useState } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
 import Panel from '@src/components/common/Panel';
+import { WizardStepObject } from '@src/components/form/FormWizard';
 import { SelectUserMetadataWithClubs } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -19,15 +20,27 @@ import {
   accountOnboardingSchema,
   AccountOnboardingSchema,
 } from '@src/utils/formSchemas';
-import FormStep, { StepObject } from './FormStep';
+import OnboardingFormStep from './OnboardingFormStep';
 
-export const steps: StepObject[] = [
-  { id: 0, label: 'Get Started' },
+// "Source of truth" array that contains the actual steps of the form
+const stepsBody = [
   { id: 1, label: 'Name' },
   { id: 2, label: 'College Info' },
   { id: 3, label: 'Contact Email' },
-  { id: 4, label: 'Finish', hidden: true },
+] as const satisfies readonly WizardStepObject[];
+
+// Extracts a union of all the ids used in rawSteps
+export type stepIds = (typeof stepsBody)[number]['id'];
+
+// Creates the generic array of WizardStepObjects
+export const steps: readonly WizardStepObject[] = [
+  { variant: 'start', label: 'Get Started', hidden: true },
+  ...stepsBody,
+  { variant: 'finish', label: 'Finish', hidden: true },
 ];
+
+const hasStart = steps.find((step) => step.variant === 'start');
+const hasFinish = steps.find((step) => step.variant === 'finish');
 
 type OnboardingFormProps = {
   userMetadata?: SelectUserMetadataWithClubs;
@@ -107,6 +120,7 @@ export default function OnboardingForm({
    * Steps
    */
 
+  // Is 0-indexed
   const [activeStep, setActiveStep] = useState({
     current: 0,
     previous: undefined as number | undefined,
@@ -150,7 +164,7 @@ export default function OnboardingForm({
   }, []);
 
   const handleNext = (event: MouseEvent<HTMLButtonElement>) => {
-    if (activeStep.current < steps.length - 2) {
+    if (activeStep.current < steps.length - (hasFinish ? 2 : 1)) {
       // Prevents submit button from activating prematurely when navigating
       // from the penultimate step to the last step
       event.preventDefault();
@@ -158,7 +172,7 @@ export default function OnboardingForm({
         current: prev.current + 1,
         previous: prev.current,
       }));
-    } else if (activeStep.current === steps.length - 1) {
+    } else if (activeStep.current === steps.length - (hasFinish ? 1 : 0)) {
       // When user clicks Continue button on success screen
       router.push('/');
     }
@@ -189,24 +203,32 @@ export default function OnboardingForm({
 
   const NextButton = (
     <Button
-      type={activeStep.current === steps.length - 2 ? 'submit' : undefined}
+      type={
+        activeStep.current === steps.length - (hasFinish ? 2 : 1)
+          ? 'submit'
+          : undefined
+      }
       variant="contained"
       className="normal-case"
-      disabled={activeStep.current === steps.length - 2 && !form.state.isValid}
+      disabled={
+        activeStep.current === steps.length - (hasFinish ? 2 : 1) &&
+        !form.state.isValid
+      }
       loading={form.state.isSubmitting}
       loadingPosition="start"
       color={
-        activeStep.current === steps.length - 2 && !form.state.isValid
+        activeStep.current === steps.length - (hasFinish ? 2 : 1) &&
+        !form.state.isValid
           ? 'inherit'
           : 'primary'
       }
       onClick={handleNext}
     >
-      {activeStep.current < steps.length - 2
-        ? activeStep.current === 0
+      {activeStep.current < steps.length - (hasFinish ? 2 : 1)
+        ? hasStart && activeStep.current === 0
           ? 'Start'
           : 'Next'
-        : activeStep.current !== steps.length - 1
+        : activeStep.current !== steps.length - (hasFinish ? 1 : 0)
           ? 'Submit'
           : 'Continue'}
     </Button>
@@ -227,31 +249,33 @@ export default function OnboardingForm({
           <Stepper
             alternativeLabel={useMediaQuery(theme.breakpoints.down('sm'))}
           >
-            {steps
-              .filter((ele) => !ele.hidden)
-              .map((step, index) => (
-                <Step
-                  key={step.label}
-                  completed={index < activeStep.current}
-                  active={index === activeStep.current}
-                >
-                  <StepButton
-                    color="inherit"
-                    onClick={() => {
-                      setActiveStep((prev) => ({
-                        current: index,
-                        previous: prev.current,
-                      }));
-                    }}
-                    disabled={
-                      index - 1 > activeStep.current ||
-                      activeStep.current === steps.length - 1
-                    }
+            {steps.map((step, index) => {
+              if (!step.hidden) {
+                return (
+                  <Step
+                    key={step.label}
+                    completed={index < activeStep.current}
+                    active={index === activeStep.current}
                   >
-                    {step.label}
-                  </StepButton>
-                </Step>
-              ))}
+                    <StepButton
+                      color="inherit"
+                      onClick={() => {
+                        setActiveStep((prev) => ({
+                          current: index,
+                          previous: prev.current,
+                        }));
+                      }}
+                      disabled={
+                        index - 1 > activeStep.current ||
+                        activeStep.current === steps.length - 1
+                      }
+                    >
+                      {step.label}
+                    </StepButton>
+                  </Step>
+                );
+              }
+            })}
           </Stepper>
         </div>
       </BaseCard>
@@ -269,28 +293,24 @@ export default function OnboardingForm({
         >
           {/* Hidden step component used only to correctly size the parent when the page loads */}
           <div className="invisible">
-            <FormStep form={form} step={steps[0]} active={false} />
+            <OnboardingFormStep form={form} step={steps[0]} active={false} />
           </div>
 
           {steps.map((step, index) => {
-            const stepNumber = steps.findIndex(
-              (searchStep) => searchStep.id === step.id,
-            );
-
-            const isActive = activeStep.current === stepNumber;
+            const isActive = activeStep.current === index;
 
             // Determines the direction of the slide transition
             const direction =
               activeStep.previous !== undefined
                 ? activeStep.current > activeStep.previous
                   ? // on next
-                    activeStep.current === stepNumber
+                    activeStep.current === index
                     ? // entering
                       'left'
                     : // exiting
                       'right'
                   : // on back
-                    activeStep.current === stepNumber
+                    activeStep.current === index
                     ? // entering
                       'right'
                     : // exiting
@@ -309,7 +329,11 @@ export default function OnboardingForm({
                 className={`absolute top-0 left-0 ${mounting ? 'invisible' : ''}`}
               >
                 <div ref={isActive ? measureFormStepRef : undefined}>
-                  <FormStep form={form} step={step} active={isActive} />
+                  <OnboardingFormStep
+                    form={form}
+                    step={step}
+                    active={isActive}
+                  />
                 </div>
               </Slide>
             );
