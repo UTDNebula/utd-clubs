@@ -23,7 +23,7 @@ import {
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
 import { dateSchema, order } from '@src/utils/eventFilter';
-import { createEventSchema, updateEventSchema } from '@src/utils/formSchemas';
+import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
 import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
@@ -370,7 +370,7 @@ export const eventRouter = createTRPCRouter({
       return newEvent.id;
     }),
   update: protectedProcedure
-    .input(updateEventSchema)
+    .input(editEventSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, clubId, ...data } = input;
       const userId = ctx.session.user.id;
