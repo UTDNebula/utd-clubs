@@ -1,7 +1,5 @@
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
-import FormAutocomplete, {
-  FormAutocompleteFreeSolo,
-} from '@src/components/form/FormAutocomplete';
+import { FormAutocompleteFreeSolo } from '@src/components/form/FormAutocomplete';
 import {
   FormResetButton,
   FormSubmitButton,
@@ -22,7 +20,6 @@ export const { useAppForm, withForm } = createFormHook({
   fieldComponents: {
     TextField: FormTextField,
     Select: FormSelect,
-    Autocomplete: FormAutocomplete,
     AutocompleteFreeSolo: FormAutocompleteFreeSolo,
   },
   formComponents: {
