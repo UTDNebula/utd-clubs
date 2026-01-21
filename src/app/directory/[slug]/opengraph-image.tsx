@@ -1,4 +1,3 @@
-import { PeopleAlt } from '@mui/icons-material';
 import { eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
 import { db } from '@src/server/db';
@@ -28,6 +27,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
   const logoBuffer = await fetch(
     new URL('../../../../public/nebula-logo.png', import.meta.url),
+  ).then((res) => res.arrayBuffer());
+
+  const people_alt_icon_buffer = await fetch(
+    new URL('../../../../public/icons/people_alt.svg', import.meta.url),
   ).then((res) => res.arrayBuffer());
 
   const baiJamjureeBuffer = await loadGoogleFont('Bai Jamjuree', 700);
@@ -130,35 +133,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
             paddingRight: '40px',
           }}
         >
-          {/* Logo/Icon Placeholder */}
-          <div
-            style={{
-              display: 'flex',
-              position: 'relative',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 50,
-              height: 50,
-              borderRadius: '0px', // '10%' works differently in some Satori versions, px is safer
-              border: '0px solid white',
-              overflow: 'hidden',
-            }}
-          >
-            <img
-              // @ts-expect-error ArrayBuffers are allowed as an img source
-              src={logoBuffer}
-              alt="background gradient"
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-              }}
-            />
-          </div>
-
           <h1
             style={{
               fontFamily: 'Bai Jamjuree',
@@ -185,9 +159,36 @@ export default async function Image({ params }: { params: { slug: string } }) {
               margin: '0 0 20px 0',
             }}
           >
+            {/* Number of members */}
             {clubData.userMetadataToClubs.length > 1 && (
               <>
-                <PeopleAlt />
+                <div
+                  style={{
+                    display: 'flex',
+                    position: 'relative',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 40,
+                    height: 40,
+                    borderRadius: '0px', // '10%' works differently in some Satori versions, px is safer
+                    border: '0px solid white',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <img
+                    // @ts-expect-error ArrayBuffers are allowed as an img source
+                    src={people_alt_icon_buffer}
+                    alt="background gradient"
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                    }}
+                  />
+                </div>
                 <div style={{ display: 'flex', margin: '0 10px 0 0' }}>
                   {clubData.userMetadataToClubs.length} members
                 </div>
@@ -200,6 +201,34 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 />
               </>
             )}
+            {/* Nebula Logo */}
+            <div
+              style={{
+                display: 'flex',
+                position: 'relative',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 40,
+                height: 40,
+                borderRadius: '0px', // '10%' works differently in some Satori versions, px is safer
+                border: '0px solid white',
+                overflow: 'hidden',
+              }}
+            >
+              <img
+                // @ts-expect-error ArrayBuffers are allowed as an img source
+                src={logoBuffer}
+                alt="background gradient"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                }}
+              />
+            </div>
             <div style={{ display: 'flex' }}>Check it out on UTD CLUBS</div>
           </div>
           {clubData.tags && (
