@@ -120,7 +120,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
   const removeItem = (index: number) => {
     const current = form.getFieldValue('officers')[index];
     const id = current?.id;
-    if (current && id) {
+    if (current && id && !id.startsWith('new')) {
       setDeletedIds((prev) => [...prev, id]);
     }
   };
@@ -176,13 +176,17 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
         form.handleSubmit();
       }}
     >
-      <Panel heading="Listed Officers">
-        <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
-          <p>
-            People&apos;s names on this list will appear on your public
-            organization listing.
-          </p>
-        </div>
+      <Panel
+        heading="Listed Officers"
+        description={
+          <>
+            <p>
+              People&apos;s names on this list will appear on your public
+              organization listing.
+            </p>
+          </>
+        }
+      >
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -247,7 +251,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
         </DndContext>
         <div className="flex flex-wrap justify-end items-center gap-2">
           <form.AppForm>
-            <form.FormResetButton
+            <form.ResetButton
               onClick={() => {
                 setDeletedIds([]);
                 setIsReordered(false);
@@ -256,7 +260,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
             />
           </form.AppForm>
           <form.AppForm>
-            <form.FormSubmitButton />
+            <form.SubmitButton />
           </form.AppForm>
         </div>
       </Panel>

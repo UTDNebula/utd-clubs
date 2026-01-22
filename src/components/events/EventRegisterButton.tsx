@@ -9,12 +9,20 @@ import { useRef } from 'react';
 import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import EventEditButton from './EventEditButton';
 
-type buttonProps = {
+type EventRegisterButtonProps = {
   isHeader?: boolean;
+  clubId: string;
+  clubSlug: string;
   eventId: string;
 };
-const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
+const EventRegisterButton = ({
+  isHeader,
+  clubId,
+  clubSlug,
+  eventId,
+}: EventRegisterButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
@@ -99,44 +107,63 @@ const EventRegisterButton = ({ isHeader, eventId }: buttonProps) => {
     toggleRegistration.mutate({ id: eventId });
   };
 
+  const { data: memberType } = useQuery(
+    api.club.memberType.queryOptions({ id: clubId }),
+  );
+
   return (
-    <Tooltip
-      title={
-        <div className="text-center">
-          <span className="font-bold">
-            {registered
-              ? 'Click to unregister from event'
-              : 'Click to register for event'}
-          </span>
-          {registered && registerState?.registeredAt && (
-            <>
-              <br />
-              Registered on{' '}
-              {registerState?.registeredAt.toLocaleString('en-us', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true,
-              })}
-            </>
-          )}
-        </div>
-      }
-    >
-      <Button
-        onClick={onClick}
-        loading={isPending || toggleRegistration.isPending}
-        variant="contained"
-        className="normal-case"
-        size={isHeader ? 'large' : 'small'}
-        startIcon={registered ? <CheckIcon /> : <AddIcon />}
+    <>
+      {isHeader && (memberType === 'President' || memberType === 'Officer') && (
+        <EventEditButton
+          isHeader={isHeader}
+          clubSlug={clubSlug}
+          eventId={eventId}
+        />
+      )}
+      <Tooltip
+        title={
+          <div className="text-center">
+            <span className="font-bold">
+              {registered ? 'Unregister from event' : 'Register for event'}
+            </span>
+            {registered && registerState?.registeredAt && (
+              <>
+                <br />
+                Registered on{' '}
+                {registerState?.registeredAt.toLocaleString('en-us', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: true,
+                })}
+              </>
+            )}
+          </div>
+        }
       >
-        {registered ? 'Registered' : 'Register'}
-      </Button>
-    </Tooltip>
+        <Button
+          onClick={onClick}
+          loading={isPending || toggleRegistration.isPending}
+          variant="contained"
+          className="normal-case"
+          size={isHeader ? 'large' : 'small'}
+          startIcon={registered ? <CheckIcon /> : <AddIcon />}
+        >
+          {registered ? 'Registered' : 'Register'}
+        </Button>
+      </Tooltip>
+      {!isHeader &&
+        (memberType === 'President' || memberType === 'Officer') && (
+          <EventEditButton
+            isHeader={isHeader}
+            clubSlug={clubSlug}
+            eventId={eventId}
+          />
+        )}
+    </>
   );
 };
 

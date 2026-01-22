@@ -18,7 +18,7 @@ export default function EventEditButton({
       <Button
         variant="contained"
         size={isHeader ? 'large' : 'small'}
-        className="normal-case"
+        className={`normal-case ${isHeader ? 'bg-white hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800' : 'bg-white hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700'} text-haiti dark:text-white`}
         startIcon={<EditIcon />}
       >
         Edit
