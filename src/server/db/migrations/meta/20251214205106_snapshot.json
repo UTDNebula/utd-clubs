@@ -1,6 +1,6 @@
 {
-  "id": "00000000-0000-0000-0000-000000000000",
-  "prevId": "",
+  "id": "5fa34390-b9eb-427a-b353-bf44ae5d9971",
+  "prevId": "1ce0775f-8840-45b1-ab1e-51307ed81d08",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -21,7 +21,6 @@
           "name": "admin_userId_user_metadata_id_fk",
           "tableFrom": "admin",
           "tableTo": "user_metadata",
-          "schemaTo": "public",
           "columnsFrom": [
             "userId"
           ],
@@ -34,12 +33,12 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.user_ai_cache": {
-      "name": "user_ai_cache",
+    "public.account": {
+      "name": "account",
       "schema": "",
       "columns": {
         "id": {
@@ -48,98 +47,14 @@
           "primaryKey": true,
           "notNull": true
         },
-        "clubMatch": {
-          "name": "clubMatch",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "clubMatchLimit": {
-          "name": "clubMatchLimit",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "responses": {
-          "name": "responses",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {},
-      "policies": {},
-      "isRLSEnabled": false
-    },
-    "public.officers": {
-      "name": "officers",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "club_id": {
-          "name": "club_id",
+        "account_id": {
+          "name": "account_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "position": {
-          "name": "position",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "display_order": {
-          "name": "display_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "officers_club_id_club_id_fk": {
-          "name": "officers_club_id_club_id_fk",
-          "tableFrom": "officers",
-          "tableTo": "club",
-          "schemaTo": "public",
-          "columnsFrom": [
-            "club_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {},
-      "policies": {},
-      "isRLSEnabled": false
-    },
-    "public.session": {
-      "name": "session",
-      "schema": "",
-      "columns": {
-        "token": {
-          "name": "token",
+        "provider_id": {
+          "name": "provider_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -150,16 +65,120 @@
           "primaryKey": false,
           "notNull": true
         },
+        "access_token": {
+          "name": "access_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_token": {
+          "name": "id_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "access_token_expires_at": {
+          "name": "access_token_expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refresh_token_expires_at": {
+          "name": "refresh_token_expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "scope": {
+          "name": "scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "account_userId_idx": {
+          "name": "account_userId_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "account_user_id_user_id_fk": {
+          "name": "account_user_id_user_id_fk",
+          "tableFrom": "account",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.session": {
+      "name": "session",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
         "expires_at": {
           "name": "expires_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "id": {
-          "name": "id",
+        "token": {
+          "name": "token",
           "type": "text",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "created_at": {
@@ -186,6 +205,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
@@ -194,10 +219,9 @@
           "columns": [
             {
               "expression": "user_id",
+              "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops",
-              "isExpression": false
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -211,7 +235,6 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "schemaTo": "public",
           "columnsFrom": [
             "user_id"
           ],
@@ -225,15 +248,15 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "session_token_unique": {
+          "name": "session_token_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "token"
-          ],
-          "nullsNotDistinct": false,
-          "name": "session_token_unique"
+          ]
         }
       },
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.user": {
@@ -258,18 +281,18 @@
           "primaryKey": false,
           "notNull": true
         },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "email_verified": {
           "name": "email_verified",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
           "default": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -291,15 +314,351 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "user_email_unique": {
+          "name": "user_email_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ],
-          "nullsNotDistinct": false,
-          "name": "user_email_unique"
+          ]
         }
       },
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.verification": {
+      "name": "verification",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "verification_identifier_idx": {
+          "name": "verification_identifier_idx",
+          "columns": [
+            {
+              "expression": "identifier",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.club": {
+      "name": "club",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "nanoid(20)"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "founding_date": {
+          "name": "founding_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tags": {
+          "name": "tags",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::text[]"
+        },
+        "approved": {
+          "name": "approved",
+          "type": "approved_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "profile_image": {
+          "name": "profile_image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "banner_image": {
+          "name": "banner_image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "soc": {
+          "name": "soc",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "page_views": {
+          "name": "page_views",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "calendar_id": {
+          "name": "calendar_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendar_name": {
+          "name": "calendar_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendar_sync_token": {
+          "name": "calendar_sync_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendar_webhook_id": {
+          "name": "calendar_webhook_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendar_webhook_expiration": {
+          "name": "calendar_webhook_expiration",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendarGoogleAccountId": {
+          "name": "calendarGoogleAccountId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "club_search_idx": {
+          "name": "club_search_idx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "description",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "tags",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "approved",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "bm25",
+          "with": {
+            "key_field": "id",
+            "text_fields": "'{\"tags\":{\"tokenizer\":{\"type\":\"keyword\"}},\"name\":{\"tokenizer\":{\"type\":\"default\",\"stemmer\":\"English\"}}}'",
+            "numeric_fields": "'{\"approved\":{\"fast\":true}}'"
+          }
+        },
+        "club_name": {
+          "name": "club_name",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "club_slug_unique": {
+          "name": "club_slug_unique",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "club_calendarGoogleAccountId_user_id_fk": {
+          "name": "club_calendarGoogleAccountId_user_id_fk",
+          "tableFrom": "club",
+          "tableTo": "user",
+          "columnsFrom": [
+            "calendarGoogleAccountId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.contacts": {
+      "name": "contacts",
+      "schema": "",
+      "columns": {
+        "platform": {
+          "name": "platform",
+          "type": "platform",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "club_id": {
+          "name": "club_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "contacts_club_id_club_id_fk": {
+          "name": "contacts_club_id_club_id_fk",
+          "tableFrom": "contacts",
+          "tableTo": "club",
+          "columnsFrom": [
+            "club_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "contacts_platform_club_id_pk": {
+          "name": "contacts_platform_club_id_pk",
+          "columns": [
+            "platform",
+            "club_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.events": {
@@ -344,19 +703,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "location": {
-          "name": "location",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "''"
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "recurrence": {
           "name": "recurrence",
           "type": "text",
@@ -382,6 +728,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "location": {
+          "name": "location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -403,7 +762,6 @@
           "name": "events_club_id_club_id_fk",
           "tableFrom": "events",
           "tableTo": "club",
-          "schemaTo": "public",
           "columnsFrom": [
             "club_id"
           ],
@@ -416,20 +774,26 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.club": {
-      "name": "club",
+    "public.officers": {
+      "name": "officers",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true,
-          "default": "nanoid(20)"
+          "default": "gen_random_uuid()"
+        },
+        "club_id": {
+          "name": "club_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
         "name": {
           "name": "name",
@@ -437,210 +801,64 @@
           "primaryKey": false,
           "notNull": true
         },
-        "description": {
-          "name": "description",
+        "position": {
+          "name": "position",
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "tags": {
-          "name": "tags",
-          "type": "text[]",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'{\"\"}'"
-        },
-        "approved": {
-          "name": "approved",
-          "type": "approved_enum",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'pending'"
-        },
-        "profile_image": {
-          "name": "profile_image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "soc": {
-          "name": "soc",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "page_views": {
-          "name": "page_views",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "banner_image": {
-          "name": "banner_image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "founding_date": {
-          "name": "founding_date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "calendar_id": {
-          "name": "calendar_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "calendar_sync_token": {
-          "name": "calendar_sync_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "calendar_webhook_id": {
-          "name": "calendar_webhook_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "calendar_webhook_expiration": {
-          "name": "calendar_webhook_expiration",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "calendarGoogleAccountId": {
-          "name": "calendarGoogleAccountId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "calendar_name": {
-          "name": "calendar_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         }
       },
-      "indexes": {
-        "club_name": {
-          "name": "club_name",
-          "columns": [
-            {
-              "expression": "name",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops",
-              "isExpression": false
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "club_search_idx": {
-          "name": "club_search_idx",
-          "columns": [
-            {
-              "expression": "id",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "anyelement_bm25_ops",
-              "isExpression": false
-            },
-            {
-              "expression": "name",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "anyelement_bm25_ops",
-              "isExpression": false
-            },
-            {
-              "expression": "description",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "anyelement_bm25_ops",
-              "isExpression": false
-            },
-            {
-              "expression": "tags",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "anyelement_bm25_ops",
-              "isExpression": false
-            },
-            {
-              "expression": "approved",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "anyelement_bm25_ops",
-              "isExpression": false
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "bm25",
-          "with": {
-            "key_field": "id",
-            "text_fields": "{\"tags\":{\"tokenizer\":{\"type\":\"keyword\"}},\"name\":{\"tokenizer\":{\"type\":\"default\",\"stemmer\":\"English\"}}}",
-            "numeric_fields": "{\"approved\":{\"fast\":true}}"
-          }
-        },
-        "club_slug_unique": {
-          "name": "club_slug_unique",
-          "columns": [
-            {
-              "expression": "slug",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops",
-              "isExpression": false
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
-        "club_calendarGoogleAccountId_user_id_fk": {
-          "name": "club_calendarGoogleAccountId_user_id_fk",
-          "tableFrom": "club",
-          "tableTo": "user",
-          "schemaTo": "public",
+        "officers_club_id_club_id_fk": {
+          "name": "officers_club_id_club_id_fk",
+          "tableFrom": "officers",
+          "tableTo": "club",
           "columnsFrom": [
-            "calendarGoogleAccountId"
+            "club_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "set null",
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_ai_cache": {
+      "name": "user_ai_cache",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "clubMatch": {
+          "name": "clubMatch",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clubMatchLimit": {
+          "name": "clubMatchLimit",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.user_metadata": {
@@ -703,332 +921,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {},
       "policies": {},
-      "isRLSEnabled": false
-    },
-    "public.account": {
-      "name": "account",
-      "schema": "",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "provider_id": {
-          "name": "provider_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "account_id": {
-          "name": "account_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "refresh_token": {
-          "name": "refresh_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "access_token": {
-          "name": "access_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "access_token_expires_at": {
-          "name": "access_token_expires_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "scope": {
-          "name": "scope",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "id_token": {
-          "name": "id_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "refresh_token_expires_at": {
-          "name": "refresh_token_expires_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "account_userId_idx": {
-          "name": "account_userId_idx",
-          "columns": [
-            {
-              "expression": "user_id",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops",
-              "isExpression": false
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "account_user_id_user_id_fk": {
-          "name": "account_user_id_user_id_fk",
-          "tableFrom": "account",
-          "tableTo": "user",
-          "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
       "checkConstraints": {},
-      "policies": {},
-      "isRLSEnabled": false
-    },
-    "public.verification": {
-      "name": "verification",
-      "schema": "",
-      "columns": {
-        "identifier": {
-          "name": "identifier",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "value": {
-          "name": "value",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "verification_identifier_idx": {
-          "name": "verification_identifier_idx",
-          "columns": [
-            {
-              "expression": "identifier",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops",
-              "isExpression": false
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {},
-      "policies": {},
-      "isRLSEnabled": false
-    },
-    "public.user_metadata_to_events": {
-      "name": "user_metadata_to_events",
-      "schema": "",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "event_id": {
-          "name": "event_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "registered_at": {
-          "name": "registered_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "user_metadata_to_events_user_id_user_id_fk": {
-          "name": "user_metadata_to_events_user_id_user_id_fk",
-          "tableFrom": "user_metadata_to_events",
-          "tableTo": "user",
-          "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "user_metadata_to_events_event_id_events_id_fk": {
-          "name": "user_metadata_to_events_event_id_events_id_fk",
-          "tableFrom": "user_metadata_to_events",
-          "tableTo": "events",
-          "schemaTo": "public",
-          "columnsFrom": [
-            "event_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "user_metadata_to_events_user_id_event_id_pk": {
-          "name": "user_metadata_to_events_user_id_event_id_pk",
-          "columns": [
-            "user_id",
-            "event_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraints": {},
-      "policies": {},
-      "isRLSEnabled": false
-    },
-    "public.contacts": {
-      "name": "contacts",
-      "schema": "",
-      "columns": {
-        "platform": {
-          "name": "platform",
-          "type": "platform",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "url": {
-          "name": "url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "club_id": {
-          "name": "club_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "display_order": {
-          "name": "display_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "contacts_club_id_club_id_fk": {
-          "name": "contacts_club_id_club_id_fk",
-          "tableFrom": "contacts",
-          "tableTo": "club",
-          "schemaTo": "public",
-          "columnsFrom": [
-            "club_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "contacts_platform_club_id_pk": {
-          "name": "contacts_platform_club_id_pk",
-          "columns": [
-            "platform",
-            "club_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraints": {},
-      "policies": {},
       "isRLSEnabled": false
     },
     "public.user_metadata_to_clubs": {
@@ -1053,24 +947,16 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
-        },
-        "joined_at": {
-          "name": "joined_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "user_metadata_to_clubs_club_id_club_id_fk": {
-          "name": "user_metadata_to_clubs_club_id_club_id_fk",
+        "user_metadata_to_clubs_user_id_user_metadata_id_fk": {
+          "name": "user_metadata_to_clubs_user_id_user_metadata_id_fk",
           "tableFrom": "user_metadata_to_clubs",
-          "tableTo": "club",
-          "schemaTo": "public",
+          "tableTo": "user_metadata",
           "columnsFrom": [
-            "club_id"
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -1078,13 +964,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "user_metadata_to_clubs_user_id_user_metadata_id_fk": {
-          "name": "user_metadata_to_clubs_user_id_user_metadata_id_fk",
+        "user_metadata_to_clubs_club_id_club_id_fk": {
+          "name": "user_metadata_to_clubs_club_id_club_id_fk",
           "tableFrom": "user_metadata_to_clubs",
-          "tableTo": "user_metadata",
-          "schemaTo": "public",
+          "tableTo": "club",
           "columnsFrom": [
-            "user_id"
+            "club_id"
           ],
           "columnsTo": [
             "id"
@@ -1103,44 +988,84 @@
         }
       },
       "uniqueConstraints": {},
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_metadata_to_events": {
+      "name": "user_metadata_to_events",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_metadata_to_events_user_id_user_id_fk": {
+          "name": "user_metadata_to_events_user_id_user_id_fk",
+          "tableFrom": "user_metadata_to_events",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_metadata_to_events_event_id_events_id_fk": {
+          "name": "user_metadata_to_events_event_id_events_id_fk",
+          "tableFrom": "user_metadata_to_events",
+          "tableTo": "events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "user_metadata_to_events_user_id_event_id_pk": {
+          "name": "user_metadata_to_events_user_id_event_id_pk",
+          "columns": [
+            "user_id",
+            "event_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     }
   },
   "enums": {
     "public.approved_enum": {
       "name": "approved_enum",
+      "schema": "public",
       "values": [
         "approved",
         "rejected",
         "pending"
-      ],
-      "schema": "public"
-    },
-    "public.career": {
-      "name": "career",
-      "values": [
-        "Healthcare",
-        "Art and Music",
-        "Engineering",
-        "Business",
-        "Sciences",
-        "Public Service"
-      ],
-      "schema": "public"
-    },
-    "public.member_type": {
-      "name": "member_type",
-      "values": [
-        "President",
-        "Officer",
-        "Member"
-      ],
-      "schema": "public"
+      ]
     },
     "public.platform": {
       "name": "platform",
+      "schema": "public",
       "values": [
         "discord",
         "instagram",
@@ -1152,28 +1077,48 @@
         "twitch",
         "linkedIn",
         "other"
-      ],
-      "schema": "public"
+      ]
+    },
+    "public.career": {
+      "name": "career",
+      "schema": "public",
+      "values": [
+        "Healthcare",
+        "Art and Music",
+        "Engineering",
+        "Business",
+        "Sciences",
+        "Public Service"
+      ]
+    },
+    "public.member_type": {
+      "name": "member_type",
+      "schema": "public",
+      "values": [
+        "President",
+        "Officer",
+        "Member"
+      ]
     },
     "public.role": {
       "name": "role",
+      "schema": "public",
       "values": [
         "Student",
         "Student Organizer",
         "Administrator"
-      ],
-      "schema": "public"
+      ]
     },
     "public.year": {
       "name": "year",
+      "schema": "public",
       "values": [
         "Freshman",
         "Sophomore",
         "Junior",
         "Senior",
         "Grad Student"
-      ],
-      "schema": "public"
+      ]
     }
   },
   "schemas": {},
@@ -1182,49 +1127,36 @@
   "policies": {},
   "views": {
     "public.used_tags": {
-      "name": "used_tags",
-      "schema": "public",
       "columns": {
         "tag": {
           "name": "tag",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "count": {
           "name": "count",
-          "type": "bigint",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "id": {
           "name": "id",
-          "type": "bigint",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
+      "definition": "select UNNEST(\"club\".\"tags\") as tag, COUNT(\"club\".\"tags\") as count, from club order by count desc",
+      "name": "used_tags",
+      "schema": "public",
       "isExisting": false,
-      "definition": "SELECT unnest(tags) AS tag, count(tags) AS count, row_number() OVER (ORDER BY (count(tags)) DESC) AS id FROM club GROUP BY (unnest(tags)) ORDER BY (count(tags)) DESC",
       "materialized": true
     }
   },
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "internal": {
-    "tables": {
-      "club": {
-        "columns": {
-          "tags": {
-            "isArray": true,
-            "dimensions": 1,
-            "rawType": "text"
-          }
-        }
-      }
-    }
+    "tables": {}
   }
 }
