@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
   },
   other: {
     'geo.region': 'US-TX',
