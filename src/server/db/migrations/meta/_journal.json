@@ -148,27 +148,6 @@
       "when": 1767057050272,
       "tag": "20251230011050_stormy_hercules",
       "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1768500925368,
-      "tag": "20260115181525_zippy_tyrannus",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1768521251129,
-      "tag": "20260115235411_handy_fabian_cortez",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1768523940560,
-      "tag": "20260116003900_lethal_franklin_richards",
-      "breakpoints": true
     }
   ]
 }
