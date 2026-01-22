@@ -27,6 +27,7 @@ const ClubDirectoryGrid = () => {
 
   useEffect(() => {
     setSearchBarLoading(isFetching);
+    // Focus on the first club card after the user hits Enter and the results load
     if (shouldFocus && !isFetching && !showNoResults) {
       setShouldFocus(false);
       const firstClubCard = document.querySelector('[data-club-result]');
