@@ -1,9 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
-import { db } from '@src/server/db';
 import NebulaLogo from '@src/icons/NebulaLogo';
-
-// REMOVE THIS: import { TagChip } from '@src/components/common/TagChip';
+import { db } from '@src/server/db';
 
 export const runtime = 'edge';
 export const alt = 'Club Details';
@@ -24,10 +22,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
   const gradientBuffer = await fetch(
     new URL('../../../../public/images/landingGradient.png', import.meta.url),
-  ).then((res) => res.arrayBuffer());
-
-  const logoBuffer = await fetch(
-    new URL('../../../../public/nebula-logo.png', import.meta.url),
   ).then((res) => res.arrayBuffer());
 
   const people_alt_icon_buffer = await fetch(
@@ -105,7 +99,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 justifyContent: 'center',
                 width: 350,
                 height: 350,
-                borderRadius: '20px', // '10%' works differently in some Satori versions, px is safer
+                borderRadius: '20px',
                 backgroundColor: 'white',
                 border: '0px solid white',
                 boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
@@ -163,11 +157,13 @@ export default async function Image({ params }: { params: { slug: string } }) {
           >
             {/* Number of members */}
             {clubData.userMetadataToClubs.length > 1 && (
-              <div style={{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: '12px',
-            }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '12px',
+                }}
+              >
                 <div
                   style={{
                     display: 'flex',
