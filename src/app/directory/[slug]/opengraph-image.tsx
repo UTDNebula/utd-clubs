@@ -130,7 +130,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            width: '55%',
+            width: '95%',
             paddingRight: '40px',
           }}
         >
@@ -153,16 +153,21 @@ export default async function Image({ params }: { params: { slug: string } }) {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'flex-start',
-              alignContent: 'center',
+              alignItems: 'center',
               width: '70%',
               fontFamily: 'Inter',
               fontSize: '25px',
               margin: '0 0 20px 0',
+              gap: '12px',
             }}
           >
             {/* Number of members */}
             {clubData.userMetadataToClubs.length > 1 && (
-              <>
+              <div style={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '12px',
+            }}>
                 <div
                   style={{
                     display: 'flex',
@@ -171,55 +176,46 @@ export default async function Image({ params }: { params: { slug: string } }) {
                     justifyContent: 'center',
                     width: 35,
                     height: 35,
-                    borderRadius: '0px', // '10%' works differently in some Satori versions, px is safer
-                    border: '0px solid white',
-                    overflow: 'hidden',
                   }}
                 >
                   <img
-                    // @ts-expect-error ArrayBuffers are allowed as an img source
+                    // @ts-expect-error ArrayBuffers are allowed
                     src={people_alt_icon_buffer}
                     alt="people icon"
                     style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
                       width: '100%',
                       height: '100%',
                       objectFit: 'contain',
                     }}
                   />
                 </div>
-                <div style={{ display: 'flex', margin: '0 10px 0 0' }}>
+                <div style={{ display: 'flex' }}>
                   {clubData.userMetadataToClubs.length} members
                 </div>
+                {/* Divider */}
                 <div
                   style={{
-                    borderLeft: '2px solid white',
-                    height: '70%',
-                    margin: '4px 10px 0 0',
+                    width: '2px',
+                    height: '35px',
+                    backgroundColor: 'white',
+                    margin: '0 10px',
                   }}
                 />
-              </>
+              </div>
             )}
+
             {/* Nebula Logo */}
             <div
               style={{
                 display: 'flex',
-                position: 'relative',
                 alignItems: 'center',
                 justifyContent: 'center',
                 width: 40,
                 height: 40,
-                borderRadius: '0px', // '10%' works differently in some Satori versions, px is safer
-                border: '0px solid white',
               }}
             >
               <NebulaLogo
                 style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
                   width: '100%',
                   height: '100%',
                   objectFit: 'contain',
