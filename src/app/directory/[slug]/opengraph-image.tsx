@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
 import { db } from '@src/server/db';
+import NebulaLogo from '@src/icons/NebulaLogo';
 
 // REMOVE THIS: import { TagChip } from '@src/components/common/TagChip';
 
@@ -30,7 +31,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
   ).then((res) => res.arrayBuffer());
 
   const people_alt_icon_buffer = await fetch(
-    new URL('../../../../public/icons/people_alt.svg', import.meta.url),
+    new URL('../../../../public/icons/people_alt.png', import.meta.url),
   ).then((res) => res.arrayBuffer());
 
   const baiJamjureeBuffer = await loadGoogleFont('Bai Jamjuree', 700);
@@ -168,8 +169,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
                     position: 'relative',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: 40,
-                    height: 40,
+                    width: 35,
+                    height: 35,
                     borderRadius: '0px', // '10%' works differently in some Satori versions, px is safer
                     border: '0px solid white',
                     overflow: 'hidden',
@@ -178,7 +179,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                   <img
                     // @ts-expect-error ArrayBuffers are allowed as an img source
                     src={people_alt_icon_buffer}
-                    alt="background gradient"
+                    alt="people icon"
                     style={{
                       position: 'absolute',
                       top: 0,
@@ -212,13 +213,9 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 height: 40,
                 borderRadius: '0px', // '10%' works differently in some Satori versions, px is safer
                 border: '0px solid white',
-                overflow: 'hidden',
               }}
             >
-              <img
-                // @ts-expect-error ArrayBuffers are allowed as an img source
-                src={logoBuffer}
-                alt="background gradient"
+              <NebulaLogo
                 style={{
                   position: 'absolute',
                   top: 0,
