@@ -67,7 +67,7 @@ export default function EventCountdownCard({
   });
   const ended = formatDistanceStrict(endTime, now, {
     addSuffix: true,
-  })
+  });
 
   if (now > eventStartTime) {
     if (now < eventEndTime) {
