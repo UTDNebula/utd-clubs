@@ -31,6 +31,7 @@ export const adminRouter = createTRPCRouter({
         id: true,
         slug: true,
         name: true,
+        alias: true,
         foundingDate: false,
         tags: true,
         approved: true,

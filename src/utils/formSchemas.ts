@@ -86,6 +86,11 @@ export const editClubFormSchema = z.object({
     .string()
     .min(3, 'Name must be at least 3 characters')
     .max(100, 'Character limit reached'),
+  alias: z
+    .string()
+    .min(2, 'Alias must be at least 2 characters')
+    .max(100, 'Character limit reached')
+    .nullable(),
   description: z
     .string()
     .min(1, 'Description is required')
@@ -102,6 +107,11 @@ export const editClubDetailsSchema = z.object({
     .string()
     .min(3, 'Name must be at least 3 characters')
     .max(100, 'Character limit reached'),
+  alias: z
+    .string()
+    .min(2, 'Alias must be at least 2 characters')
+    .max(100, 'Character limit reached')
+    .nullable(),
   description: z
     .string()
     .min(1, 'Description is required')

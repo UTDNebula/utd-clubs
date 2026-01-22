@@ -18,6 +18,8 @@ export const studentClassificationEnum = pgEnum('student_classification', [
   'Graduate Student',
   'Alum',
   'Prospective Student',
+  'Faculty',
+  'Staff',
 ]);
 
 export const clubRoleEnum = pgEnum('member_type', [

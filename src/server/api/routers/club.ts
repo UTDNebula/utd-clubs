@@ -7,6 +7,7 @@ import {
   ilike,
   inArray,
   lte,
+  or,
   sql,
 } from 'drizzle-orm';
 import { google } from 'googleapis';
@@ -79,7 +80,10 @@ export const clubRouter = createTRPCRouter({
     const { name, limit } = input;
     const clubs = await ctx.db.query.club.findMany({
       where: (club) =>
-        and(ilike(club.name, `%${name}%`), eq(club.approved, 'approved')),
+        and(
+          eq(club.approved, 'approved'),
+          or(ilike(club.name, `%${name}%`), ilike(club.alias, `%${name}%`)),
+        ),
       limit,
     });
 
@@ -504,7 +508,8 @@ export const clubRouter = createTRPCRouter({
               ? sql`id @@@ 
                 paradedb.boolean(
                   should =>ARRAY[
-                    paradedb.boost(10,paradedb.match('name',${input.search},distance=>1)),
+                    paradedb.boost(20,paradedb.match('alias',${input.search},distance=>2)),
+                    paradedb.boost(10,paradedb.match('name',${input.search},distance=>2)),
                     paradedb.boost(1,paradedb.match('description',${input.search},distance=>1)),
                     paradedb.boost(5,paradedb.match('tags',${input.search},distance=>1))
                   ])`
@@ -569,6 +574,7 @@ export const clubRouter = createTRPCRouter({
         columns: {
           id: true,
           name: true,
+          alias: true,
           description: true,
           foundingDate: true,
           tags: true,
