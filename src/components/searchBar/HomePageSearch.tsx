@@ -92,14 +92,12 @@ export const HomePageSearchBar = () => {
 
   // autofocus keyboard on the search bar
   useEffect(() => {
-    if (!isSticky) {
-      // avoid jumping if the user scrolls back up
-      inputRef.current?.focus();
-      if (inputRef.current) {
-        inputRef.current.value = inputRef.current.value; // set cursor to the end
-      }
+    const input = inputRef.current;
+    input?.focus();
+    if (input) {
+      input.setSelectionRange(input.value.length, input.value.length); // set cursor to the end
     }
-  }, [isSticky]);
+  }, []);
 
   function onSubmit() {
     setOpen(false);
