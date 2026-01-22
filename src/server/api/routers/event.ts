@@ -23,7 +23,7 @@ import {
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
 import { dateSchema, order } from '@src/utils/eventFilter';
-import { createEventSchema, updateEventSchema } from '@src/utils/formSchemas';
+import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
 import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
@@ -105,7 +105,7 @@ export const eventRouter = createTRPCRouter({
             ),
           orderBy: (event, { asc }) => [asc(event.startTime)],
           with: { club: true },
-          limit: 20,
+          limit: 18,
         });
 
         return upcomingEvents;
@@ -246,6 +246,41 @@ export const eventRouter = createTRPCRouter({
       throw e;
     }
   }),
+  getListingInfo: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input: { id }, ctx }) => {
+      try {
+        // Fetch event by id
+        const byId = await ctx.db.query.events.findFirst({
+          where: (event) => eq(event.id, id),
+          with: {
+            club: {
+              with: {
+                contacts: {
+                  orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+                },
+              },
+            },
+            userMetadataToEvents: {
+              columns: {
+                userId: true, // Only fetch the ID to keep the payload small
+              },
+            },
+          },
+        });
+
+        if (!byId) return null;
+
+        const { userMetadataToEvents, ...eventData } = byId; // eventData doesn't have userMetadataToEvents field
+        return {
+          ...eventData,
+          numParticipants: userMetadataToEvents.length,
+        };
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    }),
   joinedEvent: publicProcedure
     .input(joinLeaveSchema)
     .query(async ({ input, ctx }) => {
@@ -335,7 +370,7 @@ export const eventRouter = createTRPCRouter({
       return newEvent.id;
     }),
   update: protectedProcedure
-    .input(updateEventSchema)
+    .input(editEventSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, clubId, ...data } = input;
       const userId = ctx.session.user.id;
@@ -361,6 +396,7 @@ export const eventRouter = createTRPCRouter({
           startTime: data.startTime,
           endTime: data.endTime,
           image: data.image,
+          updatedAt: new Date(),
         })
         .where(eq(events.id, id))
         .returning({ id: events.id });
@@ -468,12 +504,15 @@ export const eventRouter = createTRPCRouter({
       if (!isOfficer) {
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
-      await ctx.db.update(club).set({
-        calendarSyncToken: null,
-        calendarId: null,
-        calendarName: null,
-        calendarGoogleAccountId: null,
-      });
+      await ctx.db
+        .update(club)
+        .set({
+          calendarSyncToken: null,
+          calendarId: null,
+          calendarName: null,
+          calendarGoogleAccountId: null,
+        })
+        .where(eq(club.id, input.clubId));
 
       return { success: true };
     }),

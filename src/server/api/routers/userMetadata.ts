@@ -1,8 +1,13 @@
 import { and, eq, or, sql } from 'drizzle-orm';
+import { headers } from 'next/headers';
 import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
 import { auth } from '@src/server/auth';
-import { insertUserMetadata } from '@src/server/db/models';
+import {
+  insertUserMetadata,
+  SelectUserMetadataToClubs,
+  SelectUserMetadataWithClubs,
+} from '@src/server/db/models';
 import { admin } from '@src/server/db/schema/admin';
 import { user as users } from '@src/server/db/schema/auth';
 import { userMetadata, userMetadataToClubs } from '@src/server/db/schema/users';
@@ -11,8 +16,8 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 const byIdSchema = z.object({ id: z.string() });
 
 const updateByIdSchema = z.object({
-  updateUser: insertUserMetadata.omit({ id: true }),
-  clubs: z.string().array(),
+  updateUser: insertUserMetadata.partial().omit({ id: true }),
+  clubs: z.string().array().optional(),
 });
 const nameOrEmailSchema = z.object({
   search: z.string().default(''),
@@ -24,46 +29,80 @@ const eventsSortSchema = z.object({
 });
 
 export const userMetadataRouter = createTRPCRouter({
-  byId: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    const { id } = input;
-    const userMetadata = await ctx.db.query.userMetadata.findFirst({
-      where: (userMetadata) => eq(userMetadata.id, id),
-      with: { clubs: true },
-    });
+  byId: protectedProcedure
+    .input(byIdSchema)
+    .query(
+      async ({
+        input,
+        ctx,
+      }): Promise<SelectUserMetadataWithClubs | undefined> => {
+        const { id } = input;
+        const userMetadata = await ctx.db.query.userMetadata.findFirst({
+          where: (userMetadata) => eq(userMetadata.id, id),
+          with: { clubs: true },
+        });
 
-    return userMetadata;
-  }),
+        return userMetadata;
+      },
+    ),
   updateById: protectedProcedure
     .input(updateByIdSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { updateUser, clubs } = input;
-      const { user } = ctx.session;
+    .mutation(
+      async ({
+        input,
+        ctx,
+      }): Promise<SelectUserMetadataWithClubs | undefined> => {
+        const { updateUser, clubs } = input;
+        const { user } = ctx.session;
 
-      await ctx.db
-        .update(userMetadata)
-        .set(updateUser)
-        .where(eq(userMetadata.id, user.id));
+        const updatedUser = (
+          await ctx.db
+            .update(userMetadata)
+            .set(updateUser)
+            .where(eq(userMetadata.id, user.id))
+            .returning()
+        )[0];
 
-      if (clubs.length === 0) {
-        await ctx.db
-          .delete(userMetadataToClubs)
-          .where(and(eq(userMetadataToClubs.userId, user.id)));
-        return;
-      }
+        let updatedClubs: SelectUserMetadataToClubs[] = [];
 
-      await ctx.db.delete(userMetadataToClubs).where(
-        and(
-          eq(userMetadataToClubs.userId, user.id),
-          // Invert the condition to delete all clubs that are not in the array
-          sql`${userMetadataToClubs.clubId} NOT IN (${clubs})`,
-        ),
-      );
-      if (user.name != updateUser.firstName + ' ' + updateUser.lastName) {
-        await auth.api.updateUser({
-          body: { name: updateUser.firstName + ' ' + updateUser.lastName },
-        });
-      }
-    }),
+        if (clubs !== undefined) {
+          if (clubs.length === 0) {
+            await ctx.db
+              .delete(userMetadataToClubs)
+              .where(and(eq(userMetadataToClubs.userId, user.id)));
+          } else {
+            updatedClubs = await ctx.db
+              .delete(userMetadataToClubs)
+              .where(
+                and(
+                  eq(userMetadataToClubs.userId, user.id),
+                  // Invert the condition to delete all clubs that are not in the array
+                  sql`${userMetadataToClubs.clubId} NOT IN (${clubs})`,
+                ),
+              )
+              .returning();
+          }
+        }
+
+        // Update `name` field in BetterAuth user information to match user metadata
+        const name = `${updateUser.firstName} ${updateUser.lastName}`;
+        if (user.name != name) {
+          try {
+            await auth.api.updateUser({
+              body: { name },
+              headers: await headers(),
+            });
+          } catch (e) {
+            console.error(
+              `Unable to update name field for${updateUser.firstName ? ` ${name}'s` : ''} user information`,
+              e,
+            );
+          }
+        }
+
+        return { ...updatedUser!, clubs: updatedClubs };
+      },
+    ),
   deleteById: protectedProcedure.mutation(async ({ ctx }) => {
     const { user } = ctx.session;
     await ctx.db.delete(users).where(eq(users.id, user.id));
@@ -172,6 +211,8 @@ export const userMetadataRouter = createTRPCRouter({
       })
     ) {
       capabilites.push('Manage Clubs');
+    } else {
+      capabilites.push('Create Club');
     }
     if (
       (

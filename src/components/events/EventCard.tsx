@@ -7,7 +7,6 @@ import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime';
 import EventDeleteButton from './EventDeleteButton';
-import EventEditButton from './EventEditButton';
 import EventRegisterButton, {
   EventRegisterButtonPreview,
   EventRegisterButtonSkeleton,
@@ -28,7 +27,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
     >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full">
-          <div className="absolute inset-0 h-full w-full bg-gray-200" />
+          <div className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-900" />
           {src && (
             <Image
               fill
@@ -45,7 +44,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
           <h3 className="text-xl font-medium">{event.name}</h3>
           <div className="text-base font-medium">
             {view !== 'manage' && view !== 'admin' && event.club.name}
-            <div className="text-royal">
+            <div className="text-royal dark:text-cornflower-300">
               <ClientEventTime
                 startTime={event.startTime}
                 endTime={event.endTime}
@@ -54,14 +53,24 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
           </div>
         </div>
       </Link>
-      <div className="m-4 mt-0 flex flex-row gap-2">
-        {view === 'normal' && <EventRegisterButton eventId={event.id} />}
+      <div className="m-4 mt-0 flex flex-wrap gap-2">
+        {view === 'normal' && (
+          <EventRegisterButton
+            clubId={event.club.id}
+            clubSlug={event.club.slug}
+            eventId={event.id}
+          />
+        )}
         {view === 'manage' &&
           (event.google ? (
             <Alert severity="info">Synced from Google Calendar.</Alert>
           ) : (
             <>
-              <EventEditButton clubSlug={event.club.slug} eventId={event.id} />
+              <EventRegisterButton
+                clubId={event.club.id}
+                clubSlug={event.club.slug}
+                eventId={event.id}
+              />
               <EventDeleteButton event={event} />
             </>
           ))}
@@ -91,7 +100,10 @@ export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
     >
       <div className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full">
-          <div className="absolute inset-0 h-full w-full bg-gray-200" />
+          <Skeleton
+            variant="rectangular"
+            className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-800"
+          />
         </div>
         <div className="flex h-full flex-col p-5 space-y-2.5">
           <Skeleton variant="text" className="text-xl font-medium" />

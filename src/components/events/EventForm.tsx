@@ -14,7 +14,10 @@ import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
 import { useAppForm } from '@src/utils/form';
-import { eventFormSchema } from '@src/utils/formSchemas';
+import {
+  createEventFormSchema,
+  editEventFormSchema,
+} from '@src/utils/formSchemas';
 import EventCard, { EventCardSkeleton } from './EventCard';
 
 type EventFormProps =
@@ -150,7 +153,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
       );
     },
     validators: {
-      onChange: eventFormSchema,
+      onChange: mode === 'create' ? createEventFormSchema : editEventFormSchema,
     },
   });
 
@@ -198,7 +201,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
@@ -218,7 +221,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
@@ -241,7 +244,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   onBlur={field.handleBlur}
                   value={field.state.value}
                   label="Description"
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   multiline
                   minRows={4}
                   error={!field.state.meta.isValid}
@@ -257,7 +260,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                           href="https://www.markdownguide.org/basic-syntax/"
                           rel="noreferrer"
                           target="_blank"
-                          className="text-royal underline"
+                          className="text-royal dark:text-cornflower-300 underline"
                         >
                           Markdown
                         </a>
@@ -275,7 +278,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                     onChange={(value) => value && field.handleChange(value)}
                     value={field.state.value}
                     label="Start"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white"
+                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
                     slotProps={{
                       actionBar: {
                         actions: ['accept'],
@@ -299,7 +302,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                     onChange={(value) => value && field.handleChange(value)}
                     value={field.state.value}
                     label="End"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white"
+                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
                     slotProps={{
                       actionBar: {
                         actions: ['accept'],
@@ -321,10 +324,10 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
           </div>
           <div className="flex flex-wrap justify-end items-center gap-2">
             <form.AppForm>
-              <form.FormResetButton />
+              <form.ResetButton />
             </form.AppForm>
             <form.AppForm>
-              <form.FormSubmitButton />
+              <form.SubmitButton />
             </form.AppForm>
           </div>
         </Panel>
