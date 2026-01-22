@@ -40,16 +40,16 @@ export const HomePageSearchBar = () => {
     updateSearch(debouncedSearch);
   }, [debouncedSearch, updateSearch]);
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const [headerGradientOpacity, setHeaderGradientOpacity] = useState(1);
   const originalOffset = useRef<number>(0);
 
   useEffect(() => {
     const handleResize = () => {
-      if (containerRef.current) {
+      if (measureRef.current) {
         originalOffset.current =
-          containerRef.current.getBoundingClientRect().top + window.scrollY;
+          measureRef.current.getBoundingClientRect().top + window.scrollY;
       }
     };
     handleResize();
@@ -118,7 +118,7 @@ export const HomePageSearchBar = () => {
         ></div>
       )}
       <div
-        ref={containerRef}
+        ref={isSticky ? null : measureRef}
         className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-2 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
           isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
         }`}
@@ -205,6 +205,7 @@ export const HomePageSearchBar = () => {
       {isSticky && (
         <Autocomplete
           className="pt-2 opacity-0"
+          ref={measureRef}
           options={[]}
           renderInput={(params) => <TextField {...params}></TextField>}
         ></Autocomplete>
