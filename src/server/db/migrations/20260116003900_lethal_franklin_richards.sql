@@ -1,2 +1,0 @@
-DROP INDEX "club_search_idx";--> statement-breakpoint
-CREATE INDEX "club_search_idx" ON "club" USING bm25 ("id","name","alias","description","tags","approved") WITH (key_field=id,text_fields='{"tags":{"tokenizer":{"type":"keyword"}},"name":{"tokenizer":{"type":"default","stemmer":"English"}}}',numeric_fields='{"approved":{"fast":true}}');
