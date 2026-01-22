@@ -1,6 +1,6 @@
 {
-  "id": "a356a85f-992f-4e9f-ad40-382eaa32c686",
-  "prevId": "fc6ca994-7a51-46f4-b455-dfd149d4722b",
+  "id": "e398d096-dd91-46d6-a850-b0d6fb71c97e",
+  "prevId": "a356a85f-992f-4e9f-ad40-382eaa32c686",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1139,7 +1139,9 @@
         "Student",
         "Graduate Student",
         "Alum",
-        "Prospective Student"
+        "Prospective Student",
+        "Faculty",
+        "Staff"
       ]
     }
   },
