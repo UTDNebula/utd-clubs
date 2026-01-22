@@ -20,6 +20,7 @@ export const HomePageSearchBar = () => {
   const {
     search: initialSearch,
     setSearch: updateSearch,
+    shouldScrollDown,
     tags,
     setTags,
     setShouldFocus,
@@ -70,10 +71,8 @@ export const HomePageSearchBar = () => {
 
   // if the url already has search or tag params, scroll straight to the results
   useEffect(() => {
-    if (initialSearch.length > 0 || tags.length > 0) {
-      scroll();
-    }
-  }, [initialSearch.length, tags.length]);
+    if (shouldScrollDown) scroll();
+  }, [shouldScrollDown]);
 
   function scroll() {
     window.scrollTo({

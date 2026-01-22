@@ -26,6 +26,7 @@ export const SearchStoreProvider = ({ children }: React.PropsWithChildren) => {
       ...defaultInitState,
       search: initialSearch ?? defaultInitState.search,
       tags: initialTags ?? defaultInitState.tags,
+      shouldScrollDown: !!(initialSearch || tagsParam),
     };
     storeRef.current = createSearchStore(defaultInitStateWithParams);
   }
