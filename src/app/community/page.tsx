@@ -41,12 +41,12 @@ const Community = async () => {
     <>
       <Header />
       <main className="p-4">
-        <h1 className="font-display text-2xl font-bold mt-2">
-          Community Events
-        </h1>
-        <h2 className="font-display text-xl font-bold mt-4">Registered</h2>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 min-h-16 px-4">
+          <h1 className="font-display text-2xl font-bold">Community Events</h1>
+        </div>
+        <h2 className="font-display text-xl font-bold mt-4 px-4">Registered</h2>
         <RegisteredEvents />
-        <h2 className="font-display text-xl font-bold mt-4">
+        <h2 className="font-display text-xl font-bold mt-4 px-4">
           From Your Joined Clubs
         </h2>
         <ClubEvents />

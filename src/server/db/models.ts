@@ -77,6 +77,21 @@ export type SelectUserMetadataToClubs = z.infer<
   typeof selectUserMetadataToClubs
 >;
 
+// Schema definition for userMetadata table, with userMetadata to club
+export const insertUserMetadataWithClubs = insertUserMetadata.extend({
+  clubs: insertUserMetadataToClubs.array(),
+});
+export const selectUserMetadataWithClubs = selectUserMetadata.extend({
+  clubs: selectUserMetadataToClubs.array(),
+});
+
+export type InsertUserMetadataWithClubs = z.infer<
+  typeof insertUserMetadataWithClubs
+>;
+export type SelectUserMetadataWithClubs = z.infer<
+  typeof selectUserMetadataWithClubs
+>;
+
 // With club
 export const selectUserMetadataToClubsWithClub =
   selectUserMetadataToClubs.extend({

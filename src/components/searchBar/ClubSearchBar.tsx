@@ -8,8 +8,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
@@ -17,11 +17,16 @@ import useDebounce from '@src/utils/useDebounce';
 export const ClubSearchBar = () => {
   const [input, setInput] = useState('');
   const debouncedSearch = useDebounce(input, 300);
+  const router = useRouter();
   const api = useTRPC();
+
   const { data, isFetching } = useQuery(
     api.club.byName.queryOptions(
       { name: debouncedSearch },
-      { enabled: !!debouncedSearch },
+      {
+        enabled: !!debouncedSearch,
+        placeholderData: keepPreviousData,
+      },
     ),
   );
 
@@ -29,11 +34,21 @@ export const ClubSearchBar = () => {
     <Autocomplete
       freeSolo
       disableClearable
+      autoHighlight
       className="w-full"
       aria-label="search"
       inputValue={input}
-      options={data ?? []}
+      options={input === '' ? [] : (data ?? [])}
       filterOptions={(o) => o}
+      onChange={(event, value, reason) => {
+        // navigation
+        if (reason == 'selectOption' && value && typeof value !== 'string') {
+          router.push(`/directory/${value.slug}`);
+        } else if (reason == 'createOption') {
+          // if no exact match, go to home screen search to try misspellings
+          router.push(`/?search=${input}`);
+        }
+      }}
       onInputChange={(e, value) => {
         setInput(value);
       }}
@@ -69,11 +84,9 @@ export const ClubSearchBar = () => {
       renderOption={(props, option) => {
         const { key, ...otherProps } = props;
         return (
-          <Link key={key} href={`/directory/${option.slug}`}>
-            <li {...otherProps}>
-              <Typography variant="body1">{option.name}</Typography>
-            </li>
-          </Link>
+          <li key={key} {...otherProps}>
+            <Typography variant="body1">{option.name}</Typography>
+          </li>
         );
       }}
       getOptionLabel={(option) => {

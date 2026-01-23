@@ -97,6 +97,7 @@ export const clubEditRouter = createTRPCRouter({
         .update(club)
         .set({
           name: input.name,
+          alias: input.alias,
           description: input.description,
           tags: input.tags,
           profileImage: input.profileImage,

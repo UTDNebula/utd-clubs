@@ -4,6 +4,7 @@ export type SearchState = {
   search: string;
   tags: string[];
   shouldFocus: boolean;
+  shouldScrollDown: boolean;
   isFetching: boolean;
 };
 
@@ -42,6 +43,7 @@ export const defaultInitState: SearchState = {
   search: '',
   tags: [],
   shouldFocus: false,
+  shouldScrollDown: false,
   isFetching: false,
 };
 
