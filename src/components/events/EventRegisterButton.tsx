@@ -5,7 +5,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
 import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
@@ -77,11 +76,11 @@ const EventRegisterButton = ({
 
   const router = useRouter();
 
-  const useAuthPage = useRef(false);
+  let useAuthPage = false;
   // Although this feature is named similarly, it is unrelated to the event registration button.
   // Rather, it relates to the sign in/sign up authentication modal.
   const { setShowRegisterModal } = useRegisterModal(() => {
-    useAuthPage.current = true;
+    useAuthPage = true;
   });
 
   const registered = registerState?.registered ?? false;
@@ -94,7 +93,7 @@ const EventRegisterButton = ({
 
     if (!session) {
       // This will use auth page when this EventRegisterButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
-      if (useAuthPage.current) {
+      if (useAuthPage) {
         router.push(
           `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
         );
