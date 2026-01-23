@@ -34,12 +34,7 @@ export default function ClubDetailsCard({
         <span className="ml-auto text-slate-800 dark:text-slate-200">
           {club.foundingDate.toLocaleDateString('en-US', {
             month: 'short',
-            day: 'numeric',
             year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true,
           })}
         </span>
       </div>,
