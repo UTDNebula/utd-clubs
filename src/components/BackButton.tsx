@@ -12,31 +12,26 @@ type BackButtonProps = IconButtonProps & {
 const BackButton = ({ href, ...props }: BackButtonProps) => {
   const router = useRouter();
 
-  const LinkIfHref = ({ children }: { children: React.ReactNode }) => {
-    if (href) {
-      return <Link href={href}>{children}</Link>;
-    }
-    return children;
-  };
+  const button = (
+    <IconButton
+      onClick={
+        href
+          ? undefined
+          : () => {
+              router.back();
+            }
+      }
+      size="large"
+      color="primary"
+      {...props}
+    >
+      <ArrowBackIcon />
+    </IconButton>
+  );
 
   return (
     <div className="flex h-min flex-row align-middle">
-      <LinkIfHref>
-        <IconButton
-          onClick={
-            href
-              ? undefined
-              : () => {
-                  router.back();
-                }
-          }
-          size="large"
-          color="primary"
-          {...props}
-        >
-          <ArrowBackIcon />
-        </IconButton>
-      </LinkIfHref>
+      {href ? <Link href={href}>{button}</Link> : button}
     </div>
   );
 };

@@ -1,12 +1,11 @@
 'use client';
 
-import { Skeleton } from '@mui/material';
 import { formatDistanceStrict } from 'date-fns';
 import { useEffect, useState } from 'react';
 import Panel from '@src/components/common/Panel';
 
-const calculateTimeRemaining = (eventStartTime: number) => {
-  const timeUntilStart = eventStartTime - Date.now();
+const calculateTimeRemaining = (now: number, eventStartTime: number) => {
+  const timeUntilStart = eventStartTime - now;
 
   if (timeUntilStart < 0) {
     return {
@@ -52,82 +51,23 @@ export default function EventCountdownCard({
   const eventStartTime = startTime.getTime();
   const eventEndTime = endTime.getTime();
 
-  const now = Date.now();
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [timeRemaining, setTimeRemaining] = useState(
-    calculateTimeRemaining(eventStartTime),
-  );
-  const [endsIn, setEndsIn] = useState(
-    formatDistanceStrict(eventEndTime, now, {
-      addSuffix: true,
-    }),
-  );
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    if (isLoading) setIsLoading(false);
-
     const interval = setInterval(() => {
-      const now = Date.now();
-      setTimeRemaining(calculateTimeRemaining(eventStartTime));
-      setEndsIn(
-        formatDistanceStrict(eventEndTime, now, {
-          addSuffix: true,
-        }),
-      );
+      setNow(Date.now());
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isLoading, eventStartTime, eventEndTime]);
+  }, [eventStartTime, eventEndTime]);
 
-  if (isLoading) {
-    return (
-      <Panel id={id} smallPadding heading="Event Starts In">
-        <div className="grid grid-cols-4 gap-2 w-fit text-center mx-auto">
-          <div className="flex flex-col items-center">
-            <Skeleton>
-              <p className="font-display text-2xl">00</p>
-            </Skeleton>
-            <Skeleton>
-              <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
-                Days
-              </p>
-            </Skeleton>
-          </div>
-          <div className="flex flex-col items-center">
-            <Skeleton>
-              <p className="font-display text-2xl">00</p>
-            </Skeleton>
-            <Skeleton>
-              <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
-                Hours
-              </p>
-            </Skeleton>
-          </div>
-          <div className="flex flex-col items-center">
-            <Skeleton>
-              <p className="font-display text-2xl">00</p>
-            </Skeleton>
-            <Skeleton>
-              <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
-                Minutes
-              </p>
-            </Skeleton>
-          </div>
-          <div className="flex flex-col items-center">
-            <Skeleton>
-              <p className="font-display text-2xl">00</p>
-            </Skeleton>
-            <Skeleton>
-              <p className="text-[0.625rem] font-medium text-slate-600 dark:text-slate-400">
-                Seconds
-              </p>
-            </Skeleton>
-          </div>
-        </div>
-      </Panel>
-    );
-  }
+  const timeRemaining = calculateTimeRemaining(now, eventStartTime);
+  const endsIn = formatDistanceStrict(eventEndTime, now, {
+    addSuffix: true,
+  });
+  const ended = formatDistanceStrict(endTime, now, {
+    addSuffix: true,
+  });
 
   if (now > eventStartTime) {
     if (now < eventEndTime) {
@@ -144,10 +84,7 @@ export default function EventCountdownCard({
       <Panel id={id} smallPadding className="text-center">
         <p className="font-display text-2xl">Event Over</p>
         <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
-          Ended{' '}
-          {formatDistanceStrict(endTime, now, {
-            addSuffix: true,
-          })}
+          Ended {ended}
         </p>
       </Panel>
     );

@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { createContext, useContext, useRef } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { useStore } from 'zustand';
 import {
   createSearchStore,
@@ -16,9 +16,9 @@ export const SearchStoreContext = createContext<SearchStoreApi | undefined>(
 );
 
 export const SearchStoreProvider = ({ children }: React.PropsWithChildren) => {
-  const storeRef = useRef<SearchStoreApi | null>(null);
   const searchParams = useSearchParams();
-  if (!storeRef.current) {
+
+  const [store] = useState(() => {
     const initialSearch = searchParams.get('search') ?? undefined;
     const tagsParam = searchParams.get('tags');
     const initialTags = tagsParam ? tagsParam.split(',') : undefined;
@@ -28,10 +28,11 @@ export const SearchStoreProvider = ({ children }: React.PropsWithChildren) => {
       tags: initialTags ?? defaultInitState.tags,
       shouldScrollDown: !!(initialSearch || tagsParam),
     };
-    storeRef.current = createSearchStore(defaultInitStateWithParams);
-  }
+    return createSearchStore(defaultInitStateWithParams);
+  });
+
   return (
-    <SearchStoreContext.Provider value={storeRef.current}>
+    <SearchStoreContext.Provider value={store}>
       {children}
     </SearchStoreContext.Provider>
   );

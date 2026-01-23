@@ -316,29 +316,33 @@ export const eventRouter = createTRPCRouter({
         registeredAt: result?.registeredAt ?? null,
       };
     }),
-  joinEvent: protectedProcedure
+  toggleRegistration: protectedProcedure
     .input(joinLeaveSchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ ctx, input }) => {
       const eventId = input.id;
       const userId = ctx.session.user.id;
-      await ctx.db
-        .insert(userMetadataToEvents)
-        .values({ userId: userId, eventId: eventId })
-        .onConflictDoNothing();
-    }),
-  leaveEvent: protectedProcedure
-    .input(joinLeaveSchema)
-    .mutation(async ({ input, ctx }) => {
-      const eventId = input.id;
-      const userId = ctx.session.user.id;
-      await ctx.db
-        .delete(userMetadataToEvents)
-        .where(
+      const dataExists = await ctx.db.query.userMetadataToEvents.findFirst({
+        where: (userMetadataToEvents) =>
           and(
             eq(userMetadataToEvents.userId, userId),
             eq(userMetadataToEvents.eventId, eventId),
           ),
-        );
+      });
+      if (dataExists) {
+        await ctx.db
+          .delete(userMetadataToEvents)
+          .where(
+            and(
+              eq(userMetadataToEvents.userId, userId),
+              eq(userMetadataToEvents.eventId, eventId),
+            ),
+          );
+      } else {
+        await ctx.db
+          .insert(userMetadataToEvents)
+          .values({ userId, eventId, registeredAt: new Date() });
+      }
+      return dataExists;
     }),
   create: protectedProcedure
     .input(createEventSchema)
