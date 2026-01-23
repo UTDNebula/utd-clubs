@@ -3,9 +3,8 @@ import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
 import type { ReactNode } from 'react';
 import ClubMatchButton from '@src/components/header/ClubMatchButton';
+import Sidebar from '@src/components/nav/Sidebar';
 import NebulaLogo from '@src/icons/NebulaLogo';
-import { api } from '@src/trpc/server';
-import NewSidebar from '../nav/Slide';
 import { ClubSearchBar } from '../searchBar/ClubSearchBar';
 import { EventSearchBar } from '../searchBar/EventSearchBar';
 import { ProfileDropDown } from './ProfileDropDown';
@@ -71,7 +70,6 @@ export const BaseHeader = async ({
   disableSticky = false,
   color = 'darkLight',
 }: BaseHeaderProps) => {
-  const userCapabilities = await api.userMetadata.getUserSidebarCapabilities();
   return (
     <div
       className={`${disableSticky ? '' : 'sticky'} top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-2 sm:px-4 flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
@@ -89,12 +87,7 @@ export const BaseHeader = async ({
         </>
       )}
       <div className="grow basis-0 flex gap-x-2 md:gap-x-4 lg:gap-x-8">
-        {menuVisibility && (
-          <NewSidebar
-            userCapabilities={userCapabilities}
-            hamburgerColor={color}
-          />
-        )}
+        {menuVisibility && <Sidebar hamburgerColor={color} />}
         {logoVisibility && (
           <Link
             href="/"

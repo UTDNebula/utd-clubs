@@ -1,10 +1,17 @@
 'use client';
 
+import { Badge } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { IconMap, routeMap, type allCats } from '@src/constants/categories';
 
-const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
+const SidebarItems = ({
+  cat,
+  badge,
+}: {
+  cat: allCats[number];
+  badge?: number | null;
+}) => {
   const Icon = IconMap[cat];
   const route = routeMap[cat];
   const pathName = usePathname();
@@ -24,13 +31,15 @@ const SidebarItems = ({ cat }: { cat: allCats[number] }) => {
       target={route.startsWith('http') ? '_blank' : ''}
     >
       {Icon && (
-        <Icon
-          className={`${
-            active
-              ? 'fill-royal dark:fill-cornflower-300'
-              : 'fill-slate-800 dark:fill-slate-200'
-          } group-hover:fill-royal dark:group-hover:fill-cornflower-300`}
-        />
+        <Badge badgeContent={badge} color="primary">
+          <Icon
+            className={`${
+              active
+                ? 'fill-royal dark:fill-cornflower-300'
+                : 'fill-slate-800 dark:fill-slate-200'
+            } group-hover:fill-royal dark:group-hover:fill-cornflower-300`}
+          />
+        </Badge>
       )}
       <h2
         className={`text-base font-medium capitalize md:text-sm ${active ? 'text-royal dark:text-cornflower-300' : 'text-slate-800 dark:text-slate-200'} transition-colors group-hover:text-royal dark:group-hover:text-cornflower-300`}
