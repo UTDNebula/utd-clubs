@@ -186,7 +186,7 @@ const Details = ({ club }: DetailsProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="grow [&>.MuiInputBase-root]:bg-white"
+                  className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
