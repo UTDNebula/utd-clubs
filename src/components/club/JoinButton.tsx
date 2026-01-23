@@ -7,6 +7,7 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useRef } from 'react';
 import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
@@ -74,10 +75,10 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
   const router = useRouter();
 
-  let useAuthPage = false;
+  const useAuthPage = useRef(false);
 
   const { setShowRegisterModal } = useRegisterModal(() => {
-    useAuthPage = true;
+    useAuthPage.current = true;
   });
 
   const memberType = memberState?.memberType ?? null;
@@ -134,7 +135,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
           if (!session) {
             // This will use auth page when this JoinButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
-            if (useAuthPage) {
+            if (useAuthPage.current) {
               router.push(
                 `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
               );
