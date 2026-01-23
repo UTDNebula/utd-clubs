@@ -69,17 +69,18 @@ export const HomePageSearchBar = () => {
     };
   }, []);
 
-  // if the url already has search or tag params, scroll straight to the results
-  useEffect(() => {
-    if (shouldScrollDown) scroll();
-  }, [shouldScrollDown]);
-
   function scroll() {
     window.scrollTo({
       top: window.innerHeight * 0.85,
       behavior: 'smooth',
     });
   }
+
+  // If the url already has search or tag params, scroll straight to the results
+  useEffect(() => {
+    if (shouldScrollDown) scroll();
+  }, [shouldScrollDown]);
+
   function handleInteraction(shouldScroll: boolean = true) {
     // When we interact again after pressing enter, don't tab to the results once they load
     setShouldFocus(false);
