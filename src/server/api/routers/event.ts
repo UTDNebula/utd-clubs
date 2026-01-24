@@ -16,12 +16,14 @@ import {
 import { OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
 import { selectEvent } from '@src/server/db/models';
+import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
 import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
 import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
+import { stopWatching } from '@src/utils/calendar';
 import { dateSchema, order } from '@src/utils/eventFilter';
 import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
@@ -508,6 +510,9 @@ export const eventRouter = createTRPCRouter({
       if (!isOfficer) {
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
+
+      stopWatching(input.clubId);
+
       await ctx.db
         .update(club)
         .set({

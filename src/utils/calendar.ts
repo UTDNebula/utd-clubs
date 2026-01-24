@@ -19,7 +19,7 @@ import { nanoid } from 'nanoid';
 import z from 'zod';
 import { dbWithSessions } from '@src/server/db';
 import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
-import { club as clubTable } from '@src/server/db/schema/club';
+import { club, club as clubTable } from '@src/server/db/schema/club';
 import { events as eventTable } from '@src/server/db/schema/events';
 import { userMetadataToEvents } from '@src/server/db/schema/users';
 import { getGoogleAccessToken } from './googleAuth';
@@ -226,6 +226,7 @@ export async function getAuthForClub(clubId: string): Promise<OAuth2Client> {
 
 export async function watchCalendar(clubId: string) {
   // check if webhook exists
+  //TODO: what if it's a diff calendar for the same account
   const existingWebhook = await db.query.calendarWebhooks.findFirst({
     where: and(
       eq(calendarWebhooks.clubId, clubId),
@@ -234,12 +235,13 @@ export async function watchCalendar(clubId: string) {
   });
 
   if (existingWebhook) {
-    console.log(`Club ${clubId} is already being watched.`);
+    console.log(`GCal for clubId ${clubId} is already being watched.`);
     return {
       channelId: existingWebhook.id,
       expiration: existingWebhook.expiration,
     };
   }
+  console.log(`GCal for clubId ${clubId} is not being watched yet`);
 
   // get auth & club data
   const auth = await getAuthForClub(clubId);
@@ -248,7 +250,7 @@ export async function watchCalendar(clubId: string) {
   });
 
   if (!clubData || !clubData.calendarId || !clubData.calendarGoogleAccountId)
-    throw new Error('Club has no Calendar to sync');
+    throw new Error(`clubId ${clubId} has no Calendar to sync`);
 
   // randomized id for new channel and token for verification
   const channelId = nanoid();
@@ -278,21 +280,28 @@ export async function watchCalendar(clubId: string) {
     expiration: expires,
   });
 
+  console.log(`GCal for clubId ${clubId} is now being watched`);
+
   return { channelId, expires };
 }
 
-export async function stopWatching(
-  channelId: string,
-  resourceId: string,
-  clubId: string,
-) {
+export async function stopWatching(clubId: string) {
+  const webhook = await db.query.calendarWebhooks.findFirst({
+    where: eq(calendarWebhooks.clubId, clubId),
+  });
+
+  if (!webhook) {
+    console.error(`Could not find webhook for clubID: ${clubId}`);
+    return;
+  }
+
   try {
     const auth = await getAuthForClub(clubId);
     await google.calendar('v3').channels.stop({
       auth,
       requestBody: {
-        id: channelId,
-        resourceId: resourceId,
+        id: webhook.id,
+        resourceId: webhook.resourceId,
       },
     });
   } catch (e) {
@@ -300,7 +309,7 @@ export async function stopWatching(
   }
 
   // Delete webhook from data
-  await db.delete(calendarWebhooks).where(eq(calendarWebhooks.id, channelId));
+  await db.delete(calendarWebhooks).where(eq(calendarWebhooks.id, webhook.id));
 }
 
 const buildConflictUpdateColumns = <
