@@ -1,3 +1,4 @@
+import { TRPCError } from '@trpc/server';
 import {
   and,
   arrayOverlaps,
@@ -26,7 +27,6 @@ import {
   publicProcedure,
 } from '../trpc';
 import { clubEditRouter } from './clubEdit';
-import { TRPCError } from '@trpc/server';
 
 const byNameSchema = z.object({
   name: z.string().default(''),
@@ -570,18 +570,24 @@ export const clubRouter = createTRPCRouter({
         await watchCalendar(input.clubId); // create the webhook to sync updates in the future
         return sync;
       } catch (error) {
-        console.error("Sync failed, reverting DB changes:", (error as {message:string}).message);
-        await ctx.db.update(club).set({
-          calendarId: null,
-          calendarGoogleAccountId: null,
-          calendarName: null,
-          calendarSyncToken: null,
-        }).where(eq(club.id, input.clubId));
+        console.error(
+          'Sync failed, reverting DB changes:',
+          (error as { message: string }).message,
+        );
+        await ctx.db
+          .update(club)
+          .set({
+            calendarId: null,
+            calendarGoogleAccountId: null,
+            calendarName: null,
+            calendarSyncToken: null,
+          })
+          .where(eq(club.id, input.clubId));
 
         throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: `Could not connect calendar: ${(error as {message?: string}).message || 'Unknown error'}`,
-      });
+          code: 'BAD_REQUEST',
+          message: `Could not connect calendar: ${(error as { message?: string }).message || 'Unknown error'}`,
+        });
       }
     }),
 

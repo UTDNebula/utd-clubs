@@ -13,6 +13,7 @@ import {
   sql,
 } from 'drizzle-orm';
 import { PgTable } from 'drizzle-orm/pg-core';
+import { GaxiosError } from 'gaxios';
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
 import { nanoid } from 'nanoid';
@@ -23,7 +24,6 @@ import { club as clubTable } from '@src/server/db/schema/club';
 import { events as eventTable } from '@src/server/db/schema/events';
 import { userMetadataToEvents } from '@src/server/db/schema/users';
 import { getGoogleAccessToken } from './googleAuth';
-import { GaxiosError } from 'gaxios';
 
 const db = dbWithSessions;
 
@@ -54,11 +54,13 @@ export async function syncCalendar(
       auth: auth,
     });
     events = eventsReq.data;
-  } catch(error) {
+  } catch (error) {
     // if sync token is invalid perform a full sync
     if (error instanceof GaxiosError) {
       if (error.status === 410) {
-        console.log(`syncToken for ${club.calendarId} invalid, will perform a full sync`);
+        console.log(
+          `syncToken for ${club.calendarId} invalid, will perform a full sync`,
+        );
         await db
           .update(clubTable)
           .set({ calendarSyncToken: null })
@@ -80,15 +82,15 @@ export async function syncCalendar(
           throw retryError;
         }
       } else if (error.code === 404) {
-        console.error("Google could not find calendar");
+        console.error('Google could not find calendar');
         throw new Error(`Calendar ${club.calendarId} not found.`);
       }
     }
     throw error;
   }
-  
-  console.log("events found: ", events);
-  
+
+  console.log('events found: ', events);
+
   const res = await db.transaction(
     async (tx) => {
       await tx.execute(sql`SET CONSTRAINTS ALL DEFERRED`);
@@ -322,14 +324,14 @@ export async function stopWatching(clubId: string) {
         resourceId: webhook.resourceId,
       },
     });
-    console.log("Stopped channel");
+    console.log('Stopped channel');
   } catch (e) {
     console.error('Could not stop channel', e);
   }
 
   // Delete webhook from data
   await db.delete(calendarWebhooks).where(eq(calendarWebhooks.id, webhook.id));
-  console.log("deleted webhook from db");
+  console.log('deleted webhook from db');
 }
 
 const buildConflictUpdateColumns = <

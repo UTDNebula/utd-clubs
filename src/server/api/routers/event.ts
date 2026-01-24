@@ -512,7 +512,7 @@ export const eventRouter = createTRPCRouter({
 
       // close webhook
       await stopWatching(input.clubId);
-      
+
       // remove google calendar info from the club
       await ctx.db
         .update(club)
