@@ -53,7 +53,6 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const [privateCalendarOpen, setPrivateCalendarOpen] = useState(false);
   const [disableSyncConfirmationOpen, setDisableSyncConfirmationOpen] =
     useState(false);
-  const [loadingDisableSync, setLoadingDisableSync] = useState(false);
 
   return (
     <Panel
@@ -148,14 +147,12 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
               confirmText="Disable Sync"
               confirmColor="primary"
               onConfirm={async () => {
-                setLoadingDisableSync(true);
                 await disableSync.mutateAsync({
                   clubId: club.id,
                 });
-                setLoadingDisableSync(false);
                 router.refresh();
               }}
-              loading={loadingDisableSync}
+              loading={disableSync.isPending}
             />
           </>
         ) : (
