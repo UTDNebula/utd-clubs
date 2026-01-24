@@ -359,7 +359,7 @@ const buildConflictUpdateColumns = <
 const eventSchema = z.object({
   id: z.string(),
   summary: z.string(),
-  description: z.string(),
+  description: z.string().optional(),
   recurrence: z.string().array().optional(),
   recurenceEventId: z.string().optional(),
   etag: z.string(),
