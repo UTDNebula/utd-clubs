@@ -44,33 +44,49 @@ export async function syncCalendar(
   let reset = !club.calendarSyncToken || fullSync;
   let syncToken = reset ? undefined : (club.calendarSyncToken ?? undefined);
   let events;
-  const eventsReq = await google.calendar('v3').events.list({
-    calendarId: club.calendarId,
-    syncToken: syncToken,
-    singleEvents: true,
-    auth: auth,
-  });
 
-  // if sync token is invalid perform a full sync
-  if (eventsReq.status == 410) {
-    await db
-      .update(clubTable)
-      .set({ calendarSyncToken: null })
-      .where(eq(clubTable.id, clubId));
-    syncToken = undefined;
-    events = (
-      await google.calendar('v3').events.list({
-        calendarId: club.calendarId,
-        syncToken: syncToken,
-        singleEvents: true,
-        auth: auth,
-      })
-    ).data;
-    reset = true;
-  } else {
+  try {
+    const eventsReq = await google.calendar('v3').events.list({
+      calendarId: club.calendarId,
+      syncToken: syncToken,
+      singleEvents: true,
+      auth: auth,
+    });
     events = eventsReq.data;
-  }
+  } catch(error: any) {
+    // if sync token is invalid perform a full sync
+    if (error.status === 410) {
+      console.log(`syncToken for ${club.calendarId} invalid, will perform a full sync`);
+      await db
+        .update(clubTable)
+        .set({ calendarSyncToken: null })
+        .where(eq(clubTable.id, clubId));
+      syncToken = undefined;
+      reset = true;
 
+      // retry without sync token
+      try {
+        events = (
+          await google.calendar('v3').events.list({
+            calendarId: club.calendarId,
+            syncToken: syncToken,
+            singleEvents: true,
+            auth: auth,
+          })
+        ).data;
+      } catch (retryError) {
+        throw retryError;
+      }
+    } else if (error.code === 404) {
+      console.error("Google could not find calendar");
+      throw new Error(`Calendar ${club.calendarId} not found.`);
+    } else {
+      throw error;
+    }
+  }
+  
+  console.log("events found: ", events);
+  
   const res = await db.transaction(
     async (tx) => {
       await tx.execute(sql`SET CONSTRAINTS ALL DEFERRED`);
@@ -304,12 +320,14 @@ export async function stopWatching(clubId: string) {
         resourceId: webhook.resourceId,
       },
     });
+    console.log("Stopped channel");
   } catch (e) {
     console.error('Could not stop channel', e);
   }
 
   // Delete webhook from data
   await db.delete(calendarWebhooks).where(eq(calendarWebhooks.id, webhook.id));
+  console.log("deleted webhook from db");
 }
 
 const buildConflictUpdateColumns = <
