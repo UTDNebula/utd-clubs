@@ -19,7 +19,7 @@ import { nanoid } from 'nanoid';
 import z from 'zod';
 import { dbWithSessions } from '@src/server/db';
 import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
-import { club, club as clubTable } from '@src/server/db/schema/club';
+import { club as clubTable } from '@src/server/db/schema/club';
 import { events as eventTable } from '@src/server/db/schema/events';
 import { userMetadataToEvents } from '@src/server/db/schema/users';
 import { getGoogleAccessToken } from './googleAuth';

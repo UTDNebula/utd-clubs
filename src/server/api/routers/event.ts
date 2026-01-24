@@ -16,7 +16,6 @@ import {
 import { OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
 import { selectEvent } from '@src/server/db/models';
-import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
 import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
 import {
@@ -511,8 +510,10 @@ export const eventRouter = createTRPCRouter({
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
+      // close webhook
       stopWatching(input.clubId);
 
+      // remove google calendar info from the club
       await ctx.db
         .update(club)
         .set({
@@ -522,6 +523,11 @@ export const eventRouter = createTRPCRouter({
           calendarGoogleAccountId: null,
         })
         .where(eq(club.id, input.clubId));
+
+      // delete all synced events
+      await ctx.db
+        .delete(events)
+        .where(and(eq(events.clubId, input.clubId), eq(events.google, true))); // delete all the GCal-synced events
 
       return { success: true };
     }),
