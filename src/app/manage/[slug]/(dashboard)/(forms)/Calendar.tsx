@@ -13,6 +13,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Panel from '@src/components/common/Panel';
+import Confirmation from '@src/components/Confirmation';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
@@ -40,6 +41,9 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
   const router = useRouter();
   const syncEvents = useMutation(trpc.club.eventSync.mutationOptions());
   const disableSync = useMutation(trpc.event.disableSync.mutationOptions());
+  const [disableSyncConfirmationOpen, setDisableSyncConfirmationOpen] =
+    useState(false);
+  const [loadingDisableSync, setLoadingDisableSync] = useState(false);
 
   return (
     <Panel
@@ -102,12 +106,7 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
               <Button
                 variant="contained"
                 className="normal-case"
-                onClick={async () => {
-                  await disableSync.mutateAsync({
-                    clubId: club.id,
-                  });
-                  router.refresh();
-                }}
+                onClick={() => setDisableSyncConfirmationOpen(true)}
               >
                 Disable Sync
               </Button>
@@ -127,6 +126,27 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
                 Resync
               </Button>
             </div>
+            <Confirmation
+              open={disableSyncConfirmationOpen}
+              onClose={() => setDisableSyncConfirmationOpen(false)}
+              contentText={
+                <>
+                  Disabling will delete all events synced from{' '}
+                  <b>{selectedCalendar.summary}</b>.
+                </>
+              }
+              confirmText="Disable Sync"
+              confirmColor="primary"
+              onConfirm={async () => {
+                setLoadingDisableSync(true);
+                await disableSync.mutateAsync({
+                  clubId: club.id,
+                });
+                setLoadingDisableSync(false);
+                router.refresh();
+              }}
+              loading={loadingDisableSync}
+            />
           </>
         ) : (
           <>
