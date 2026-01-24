@@ -23,6 +23,7 @@ import { club as clubTable } from '@src/server/db/schema/club';
 import { events as eventTable } from '@src/server/db/schema/events';
 import { userMetadataToEvents } from '@src/server/db/schema/users';
 import { getGoogleAccessToken } from './googleAuth';
+import { GaxiosError } from 'gaxios';
 
 const db = dbWithSessions;
 
@@ -53,36 +54,37 @@ export async function syncCalendar(
       auth: auth,
     });
     events = eventsReq.data;
-  } catch(error: any) {
+  } catch(error) {
     // if sync token is invalid perform a full sync
-    if (error.status === 410) {
-      console.log(`syncToken for ${club.calendarId} invalid, will perform a full sync`);
-      await db
-        .update(clubTable)
-        .set({ calendarSyncToken: null })
-        .where(eq(clubTable.id, clubId));
-      syncToken = undefined;
-      reset = true;
+    if (error instanceof GaxiosError) {
+      if (error.status === 410) {
+        console.log(`syncToken for ${club.calendarId} invalid, will perform a full sync`);
+        await db
+          .update(clubTable)
+          .set({ calendarSyncToken: null })
+          .where(eq(clubTable.id, clubId));
+        syncToken = undefined;
+        reset = true;
 
-      // retry without sync token
-      try {
-        events = (
-          await google.calendar('v3').events.list({
-            calendarId: club.calendarId,
-            syncToken: syncToken,
-            singleEvents: true,
-            auth: auth,
-          })
-        ).data;
-      } catch (retryError) {
-        throw retryError;
+        // retry without sync token
+        try {
+          events = (
+            await google.calendar('v3').events.list({
+              calendarId: club.calendarId,
+              syncToken: syncToken,
+              singleEvents: true,
+              auth: auth,
+            })
+          ).data;
+        } catch (retryError) {
+          throw retryError;
+        }
+      } else if (error.code === 404) {
+        console.error("Google could not find calendar");
+        throw new Error(`Calendar ${club.calendarId} not found.`);
       }
-    } else if (error.code === 404) {
-      console.error("Google could not find calendar");
-      throw new Error(`Calendar ${club.calendarId} not found.`);
-    } else {
-      throw error;
     }
+    throw error;
   }
   
   console.log("events found: ", events);

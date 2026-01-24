@@ -569,8 +569,8 @@ export const clubRouter = createTRPCRouter({
         const sync = await syncCalendar(input.clubId, false, oauth2Client); // one-time sync
         await watchCalendar(input.clubId); // create the webhook to sync updates in the future
         return sync;
-      } catch (error: any) {
-        console.error("Sync failed, reverting DB changes:", error.message);
+      } catch (error) {
+        console.error("Sync failed, reverting DB changes:", (error as {message:string}).message);
         await ctx.db.update(club).set({
           calendarId: null,
           calendarGoogleAccountId: null,
@@ -580,7 +580,7 @@ export const clubRouter = createTRPCRouter({
 
         throw new TRPCError({
         code: 'BAD_REQUEST',
-        message: `Could not connect calendar: ${error.message || 'Unknown error'}`,
+        message: `Could not connect calendar: ${(error as {message?: string}).message || 'Unknown error'}`,
       });
       }
     }),
