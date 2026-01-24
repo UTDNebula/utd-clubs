@@ -81,9 +81,9 @@ export async function syncCalendar(
         } catch (retryError) {
           throw retryError;
         }
-      } else if (error.code === 404) {
-        console.error('Google could not find calendar');
-        throw new Error(`Calendar ${club.calendarId} not found.`);
+      } else if (error.status === 404) {
+        console.error(`Google could not find calendar ${club.calendarId}`);
+        throw error;
       }
     }
     throw error;

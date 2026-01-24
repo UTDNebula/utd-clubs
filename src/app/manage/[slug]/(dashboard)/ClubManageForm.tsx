@@ -42,7 +42,11 @@ const ClubManageForm = async ({
     <div className="flex flex-col gap-8 w-full max-w-6xl">
       {club.approved !== 'approved' && <NotApproved status={club.approved} />}
       <Details club={club} />
-      <Calendar club={club} hasScopes={hasScopesForCalendarSync} />
+      <Calendar
+        club={club}
+        hasScopes={hasScopesForCalendarSync}
+        userEmail={session?.user.email as string}
+      />
       <Slug club={club} role={role} />
       <Officers club={club} listedOfficers={listedOfficers} />
       <Contacts club={club} />

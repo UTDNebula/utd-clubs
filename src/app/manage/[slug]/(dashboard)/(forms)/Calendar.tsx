@@ -21,9 +21,10 @@ import { authClient } from '@src/utils/auth-client';
 type CalendarProps = {
   club: SelectClub;
   hasScopes: boolean;
+  userEmail: string;
 };
 
-const Calendar = ({ club, hasScopes }: CalendarProps) => {
+const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const isSyncing = !!club.calendarId && !!club.calendarName;
   const trpc = useTRPC();
   const { data, isSuccess } = useQuery(
@@ -39,8 +40,17 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
   );
   const pathname = usePathname();
   const router = useRouter();
-  const syncEvents = useMutation(trpc.club.eventSync.mutationOptions());
+  const syncEvents = useMutation(
+    trpc.club.eventSync.mutationOptions({
+      onError: (err) => {
+        if (err.data?.code === 'NOT_FOUND') {
+          setPrivateCalendarOpen(true);
+        }
+      },
+    }),
+  );
   const disableSync = useMutation(trpc.event.disableSync.mutationOptions());
+  const [privateCalendarOpen, setPrivateCalendarOpen] = useState(false);
   const [disableSyncConfirmationOpen, setDisableSyncConfirmationOpen] =
     useState(false);
   const [loadingDisableSync, setLoadingDisableSync] = useState(false);
@@ -197,6 +207,30 @@ const Calendar = ({ club, hasScopes }: CalendarProps) => {
           </>
         )}
       </div>
+      <Confirmation
+        open={privateCalendarOpen}
+        onClose={() => setPrivateCalendarOpen(false)}
+        title={'Calendar sync failed'}
+        contentText={
+          <>
+            <b>{selectedCalendar.summary}</b> is a private calendar. To allow
+            syncing, enable <b>&quot;Make available to public&quot;</b> & set
+            the dropdown to <b>&quot;See all event details&quot;</b> in your
+            calendar&apos;s settings.
+          </>
+        }
+        confirmText="Edit Calendar Settings"
+        confirmColor="primary"
+        onConfirm={async () => {
+          window.open(
+            `https://calendar.google.com/calendar/r/settings/calendar/${btoa(selectedCalendar.id)}?authuser=${userEmail}#:~:text=Make%20available%20to%20public`,
+            '_blank',
+            'noopener,noreferrer',
+          );
+          setPrivateCalendarOpen(false);
+          router.refresh();
+        }}
+      />
     </Panel>
   );
 };

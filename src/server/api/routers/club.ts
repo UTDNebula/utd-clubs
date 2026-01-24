@@ -584,10 +584,22 @@ export const clubRouter = createTRPCRouter({
           })
           .where(eq(club.id, input.clubId));
 
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: `Could not connect calendar: ${(error as { message?: string }).message || 'Unknown error'}`,
-        });
+        if (
+          error &&
+          typeof error === 'object' &&
+          'status' in error &&
+          error.status === 404
+        ) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: `Could not find calendar: ${(error as { message?: string }).message || 'Unknown error'}`,
+          });
+        } else {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: `Could not connect calendar: ${(error as { message?: string }).message || 'Unknown error'}`,
+          });
+        }
       }
     }),
 
