@@ -26,6 +26,7 @@ import {
   publicProcedure,
 } from '../trpc';
 import { clubEditRouter } from './clubEdit';
+import { TRPCError } from '@trpc/server';
 
 const byNameSchema = z.object({
   name: z.string().default(''),
@@ -557,15 +558,31 @@ export const clubRouter = createTRPCRouter({
           calendarId: input.calendarId,
           calendarGoogleAccountId: ctx.session.user.id,
           calendarName: input.calendarName,
+          calendarSyncToken: null,
         })
         .where(eq(club.id, input.clubId));
       const oauth2Client = new google.auth.OAuth2();
       oauth2Client.setCredentials({
         access_token: await getGoogleAccessToken(ctx.session.user.id),
       });
-      const sync = await syncCalendar(input.clubId, false, oauth2Client); // one-time sync
-      await watchCalendar(input.clubId); // create the webhook to sync updates in the future
-      return sync;
+      try {
+        const sync = await syncCalendar(input.clubId, false, oauth2Client); // one-time sync
+        await watchCalendar(input.clubId); // create the webhook to sync updates in the future
+        return sync;
+      } catch (error: any) {
+        console.error("Sync failed, reverting DB changes:", error.message);
+        await ctx.db.update(club).set({
+          calendarId: null,
+          calendarGoogleAccountId: null,
+          calendarName: null,
+          calendarSyncToken: null,
+        }).where(eq(club.id, input.clubId));
+
+        throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: `Could not connect calendar: ${error.message || 'Unknown error'}`,
+      });
+      }
     }),
 
   details: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
