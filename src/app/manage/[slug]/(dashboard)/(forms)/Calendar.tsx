@@ -81,7 +81,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
       }
     >
       <div className="m-2 flex flex-col gap-4">
-        {!hasScopes ? (
+        {!hasScopes || !isSuccess ? ( // if refresh_token doesn't have GCal perms, getUserCalendars will fail
           <Button
             variant="contained"
             className="normal-case w-full"
@@ -92,9 +92,19 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                 scopes: [
                   'https://www.googleapis.com/auth/calendar.events.public.readonly',
                   'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
-                  "https://www.googleapis.com/auth/drive.readonly",
                 ],
                 callbackURL: pathname,
+                fetchOptions: {
+                  onResponse: (context) => {
+                    const url = context.response.headers.get('Location');
+                    if (url) {
+                      const newUrl = new URL(url);
+                      newUrl.searchParams.set('prompt', 'consent');
+                      newUrl.searchParams.set('access_type', 'offline');
+                      window.location.href = newUrl.toString();
+                    }
+                  },
+                },
               });
             }}
           >
