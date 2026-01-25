@@ -113,77 +113,133 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
               ? 'Connecting to Google...'
               : 'Authorize Google Calendar Access'}
           </Button>
-        ) : isSyncing ? (
-          <>
-            <Alert severity="success">
-              Google Calendar sync is active from <b>{club.calendarName}</b>.
-            </Alert>
-            <div className="flex flex-wrap gap-4">
-              <FormControl className="grow" size="small">
-                <InputLabel id="calendar-select-label">
-                  Linked Calendar
-                </InputLabel>
-                <Select
-                  labelId="calendar-select-label"
-                  value={selectedCalendar.id}
-                  label="Linked Calendar"
-                  className="bg-gray-100 dark:bg-gray-900"
-                  disabled
+        ) : data.length > 0 ? (
+          isSyncing ? (
+            <>
+              <Alert severity="success">
+                Google Calendar sync is active from <b>{club.calendarName}</b>.
+              </Alert>
+              <div className="flex flex-wrap gap-4">
+                <FormControl className="grow" size="small">
+                  <InputLabel id="calendar-select-label">
+                    Linked Calendar
+                  </InputLabel>
+                  <Select
+                    labelId="calendar-select-label"
+                    value={selectedCalendar.id}
+                    label="Linked Calendar"
+                    className="bg-gray-100 dark:bg-gray-900"
+                    disabled
+                  >
+                    {isSuccess &&
+                      data.map((calendar) => (
+                        <MenuItem key={calendar.id} value={calendar.id}>
+                          {calendar.summary}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+                <Button
+                  variant="contained"
+                  className="normal-case"
+                  onClick={() => setDisableSyncConfirmationOpen(true)}
                 >
-                  {isSuccess &&
-                    data.map((calendar) => (
-                      <MenuItem key={calendar.id} value={calendar.id}>
-                        {calendar.summary}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-              <Button
-                variant="contained"
-                className="normal-case"
-                onClick={() => setDisableSyncConfirmationOpen(true)}
-              >
-                Disable Sync
-              </Button>
-              <Button
-                variant="contained"
-                className="normal-case"
-                disabled={selectedCalendar.id == ''}
-                onClick={async () => {
-                  await syncEvents.mutateAsync({
-                    calendarId: selectedCalendar.id,
-                    calendarName: selectedCalendar.summary,
+                  Disable Sync
+                </Button>
+                <Button
+                  variant="contained"
+                  className="normal-case"
+                  disabled={selectedCalendar.id == ''}
+                  onClick={async () => {
+                    await syncEvents.mutateAsync({
+                      calendarId: selectedCalendar.id,
+                      calendarName: selectedCalendar.summary,
+                      clubId: club.id,
+                    });
+                    router.refresh();
+                  }}
+                >
+                  Resync
+                </Button>
+              </div>
+              <Confirmation
+                open={disableSyncConfirmationOpen}
+                onClose={() => setDisableSyncConfirmationOpen(false)}
+                contentText={
+                  <>
+                    Disabling will delete all events synced from{' '}
+                    <b>{selectedCalendar.summary}</b>.
+                  </>
+                }
+                confirmText="Disable Sync"
+                confirmColor="primary"
+                onConfirm={async () => {
+                  await disableSync.mutateAsync({
                     clubId: club.id,
                   });
                   router.refresh();
                 }}
-              >
-                Resync
-              </Button>
-            </div>
-            <Confirmation
-              open={disableSyncConfirmationOpen}
-              onClose={() => setDisableSyncConfirmationOpen(false)}
-              contentText={
-                <>
-                  Disabling will delete all events synced from{' '}
-                  <b>{selectedCalendar.summary}</b>.
-                </>
-              }
-              confirmText="Disable Sync"
-              confirmColor="primary"
-              onConfirm={async () => {
-                await disableSync.mutateAsync({
-                  clubId: club.id,
-                });
-                router.refresh();
-              }}
-              loading={disableSync.isPending}
-            />
-          </>
+                loading={disableSync.isPending}
+              />
+            </>
+          ) : (
+            <>
+              <Alert severity="error">
+                Google Calendar sync is not active.
+              </Alert>
+              <div className="flex flex-wrap gap-4">
+                <FormControl className="grow" size="small">
+                  <InputLabel id="calendar-select-label">
+                    Link Calendar
+                  </InputLabel>
+                  <Select
+                    labelId="calendar-select-label"
+                    label="Link Calendar"
+                    value={selectedCalendar.id}
+                    onChange={(e) => {
+                      if (isSuccess) {
+                        const calendar = data.find(
+                          (c) => c.id == e.target.value,
+                        );
+                        if (calendar) {
+                          setSelectedCalendar(calendar);
+                        }
+                      }
+                    }}
+                  >
+                    {isSuccess &&
+                      data.map((calendar) => (
+                        <MenuItem key={calendar.id} value={calendar.id}>
+                          {calendar.summary}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+                <Button
+                  variant="contained"
+                  className="normal-case"
+                  startIcon={<GoogleIcon />}
+                  disabled={selectedCalendar.id == '' || isRefreshing}
+                  onClick={async () => {
+                    setIsRefreshing(true);
+                    await syncEvents.mutateAsync({
+                      calendarId: selectedCalendar.id,
+                      calendarName: selectedCalendar.summary,
+                      clubId: club.id,
+                    });
+                    router.refresh();
+                  }}
+                >
+                  {isRefreshing
+                    ? 'Connecting...'
+                    : 'Enable Google Calendar Sync'}
+                </Button>
+              </div>
+            </>
+          )
         ) : (
           <>
-            <Alert severity="error">Google Calendar sync is not active.</Alert>
+            <Alert severity="error">Account has no calendars</Alert>
             <div className="flex flex-wrap gap-4">
               <FormControl className="grow" size="small">
                 <InputLabel id="calendar-select-label">
@@ -191,41 +247,28 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                 </InputLabel>
                 <Select
                   labelId="calendar-select-label"
-                  label="Link Calendar"
-                  value={selectedCalendar.id}
-                  onChange={(e) => {
-                    if (isSuccess) {
-                      const calendar = data.find((c) => c.id == e.target.value);
-                      if (calendar) {
-                        setSelectedCalendar(calendar);
-                      }
-                    }
-                  }}
+                  label="Link Calendars"
+                  value={'no-calendar-found'}
+                  disabled
                 >
-                  {isSuccess &&
-                    data.map((calendar) => (
-                      <MenuItem key={calendar.id} value={calendar.id}>
-                        {calendar.summary}
-                      </MenuItem>
-                    ))}
+                  <MenuItem value="no-calendar-found">
+                    No Calendar Found
+                  </MenuItem>
                 </Select>
               </FormControl>
               <Button
                 variant="contained"
                 className="normal-case"
                 startIcon={<GoogleIcon />}
-                disabled={selectedCalendar.id == '' || isRefreshing}
                 onClick={async () => {
-                  setIsRefreshing(true);
-                  await syncEvents.mutateAsync({
-                    calendarId: selectedCalendar.id,
-                    calendarName: selectedCalendar.summary,
-                    clubId: club.id,
-                  });
-                  router.refresh();
+                  window.open(
+                    `https://calendar.google.com/calendar/r/?authuser=${userEmail}`,
+                    '_blank',
+                    'noopener,noreferrer',
+                  );
                 }}
               >
-                {isRefreshing ? 'Connecting...' : 'Enable Google Calendar Sync'}
+                {'Visit Google Calendar'}
               </Button>
             </div>
           </>
