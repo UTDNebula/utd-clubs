@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Panel from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
 import type { SelectClub } from '@src/server/db/models';
@@ -30,6 +30,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const { data, isSuccess } = useQuery(
     trpc.event.getUserCalendars.queryOptions(),
   );
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedCalendar, setSelectedCalendar] = useState<{
     id: string;
     summary: string;
@@ -43,6 +44,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const syncEvents = useMutation(
     trpc.club.eventSync.mutationOptions({
       onError: (err) => {
+        setIsRefreshing(false);
         if (err.data?.code === 'NOT_FOUND') {
           setPrivateCalendarOpen(true);
         }
@@ -53,6 +55,14 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const [privateCalendarOpen, setPrivateCalendarOpen] = useState(false);
   const [disableSyncConfirmationOpen, setDisableSyncConfirmationOpen] =
     useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setDisableSyncConfirmationOpen(false);
+      setIsRefreshing(false);
+    }, 0);
+    return () => clearTimeout(t);
+  }, [isSyncing]);
 
   return (
     <Panel
@@ -188,8 +198,9 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                 variant="contained"
                 className="normal-case"
                 startIcon={<GoogleIcon />}
-                disabled={selectedCalendar.id == ''}
+                disabled={selectedCalendar.id == '' || isRefreshing}
                 onClick={async () => {
+                  setIsRefreshing(true);
                   await syncEvents.mutateAsync({
                     calendarId: selectedCalendar.id,
                     calendarName: selectedCalendar.summary,
@@ -198,7 +209,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                   router.refresh();
                 }}
               >
-                Enable Google Calendar Sync
+                {isRefreshing ? 'Connecting...' : 'Enable Google Calendar Sync'}
               </Button>
             </div>
           </>
