@@ -190,6 +190,12 @@ export async function syncCalendar(
   return res;
 }
 function generateEvent(clubId: string, event: z.infer<typeof eventSchema>) {
+  if (event.attachments)
+  {
+    console.log(event.summary, " has attachments", event.attachments);
+    const image = event.attachments.filter((e) => e.mimeType.startsWith('image/'))[0]; // get the first image
+    
+  }
   return {
     id: event.id,
     clubId: clubId,
@@ -376,4 +382,10 @@ const eventSchema = z.object({
   }),
   created: z.iso.datetime(),
   updated: z.iso.datetime(),
+  attachments: z.array(z.object({
+    fileUrl: z.string(),
+    title: z.string(),
+    mimeType: z.string(),
+    fileId: z.string(),
+  })).optional(),
 });

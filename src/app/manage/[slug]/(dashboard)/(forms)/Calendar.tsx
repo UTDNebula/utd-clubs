@@ -92,6 +92,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                 scopes: [
                   'https://www.googleapis.com/auth/calendar.events.public.readonly',
                   'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
+                  "https://www.googleapis.com/auth/drive.readonly",
                 ],
                 callbackURL: pathname,
               });
