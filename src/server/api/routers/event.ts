@@ -34,12 +34,12 @@ const byClubIdSchema = z.object({
   sortByDate: z.boolean().default(false),
   page: z.number().int().positive().optional(),
   pageSize: z.number().int().positive().optional(),
+  includePast: z.boolean().optional().default(false),
 });
 const countByClubIdSchema = z.object({
   clubId: z.string(),
-  // Will be implemented later
-  // includePast: z.boolean().optional(),
-  // currentTime: z.coerce.data().optional(),
+  includePast: z.boolean().optional().default(false),
+  currentTime: z.optional(z.date()),
 });
 const clubUpcomingEventsSchema = z.object({
   clubId: z.string(),
@@ -74,21 +74,21 @@ export const eventRouter = createTRPCRouter({
   byClubId: publicProcedure
     .input(byClubIdSchema)
     .query(async ({ input, ctx }) => {
-      const { clubId, currentTime, sortByDate } = input;
+      const { clubId, currentTime, sortByDate, includePast } = input;
       const page = Math.max(1, input.page ?? 1);
       const pageSize = Math.max(1, Math.min(50, input.pageSize ?? 12));
       const offset = (page - 1) * pageSize;
+      const now = currentTime ?? new Date();
 
       try {
         const events = await ctx.db.query.events.findMany({
-          where: (event) =>
-            currentTime
-              ? and(eq(event.clubId, clubId), gte(event.endTime, currentTime))
-              : eq(event.clubId, clubId),
-          orderBy: sortByDate ? (event) => [event.startTime] : undefined,
-          with: {
-            club: true,
+          where: (event) => {
+            const base = eq(event.clubId, clubId);
+            if (includePast) return base;
+            return and(base, gte(event.endTime, now));
           },
+          orderBy: sortByDate ? (event) => [event.startTime] : undefined,
+          with: { club: true },
           limit: pageSize,
           offset: offset,
         });
@@ -109,13 +109,17 @@ export const eventRouter = createTRPCRouter({
   countByClubId: publicProcedure
     .input(countByClubIdSchema)
     .query(async ({ input, ctx }) => {
-      const { clubId } = input;
+      const { clubId, includePast } = input;
+      const now = input.currentTime ?? new Date();
 
       try {
+        const whereCondition = includePast
+          ? eq(events.clubId, clubId)
+          : and(eq(events.clubId, clubId), gte(events.endTime, now));
         const result = await ctx.db
           .select({ count: sql<number>`count(*)` })
           .from(events)
-          .where(eq(events.clubId, clubId));
+          .where(whereCondition);
         const count = result[0]?.count ?? 0;
 
         //TESTING, WILL DELETE AFTER
