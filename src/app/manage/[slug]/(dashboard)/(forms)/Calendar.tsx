@@ -27,7 +27,7 @@ type CalendarProps = {
 const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const isSyncing = !!club.calendarId && !!club.calendarName;
   const trpc = useTRPC();
-  const { data, isSuccess } = useQuery(
+  const { data, isSuccess, isLoading } = useQuery(
     trpc.event.getUserCalendars.queryOptions(),
   );
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -86,6 +86,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
             variant="contained"
             className="normal-case w-full"
             startIcon={<GoogleIcon />}
+            disabled={isLoading}
             onClick={() => {
               void authClient.linkSocial({
                 provider: 'google',
@@ -108,7 +109,9 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
               });
             }}
           >
-            Authorize Google Calendar Access
+            {isLoading
+              ? 'Connecting to Google...'
+              : 'Authorize Google Calendar Access'}
           </Button>
         ) : isSyncing ? (
           <>
