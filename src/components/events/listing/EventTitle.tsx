@@ -75,7 +75,7 @@ const EventTitle = async ({
           <Divider orientation="vertical" flexItem className="hidden lg:flex" />
           <span className="flex gap-2 items-center">
             <LocationPinIcon className="text-xl md:text-2xl" />
-            {event.location}
+            {event.location || <i>Location not provided</i>}
           </span>
         </div>
       </div>
