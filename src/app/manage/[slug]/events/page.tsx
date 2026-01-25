@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import EventCard from '@src/components/events/EventCard';
 import ManageEventsPagination from '@src/components/events/EventPagination';
+import IncludePastSwitch from '@src/components/events/IncludePastSwitch';
 import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 
@@ -68,6 +69,7 @@ export default async function Page({
               Create Event
             </Button>
           </Link>
+          <IncludePastSwitch checked={includePast} />
         </div>
       </ManageHeader>
       <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
