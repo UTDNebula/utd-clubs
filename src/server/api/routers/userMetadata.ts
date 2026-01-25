@@ -87,6 +87,37 @@ export const userMetadataRouter = createTRPCRouter({
       });
       return await users;
     }),
+  // Search by full name OR by email (useful to find users by their UTD email)
+  searchByNameOrEmail: publicProcedure
+    .input(nameSchema)
+    .query(async ({ input, ctx }) => {
+      const q = (input.name || '').trim();
+
+      // Find matches by full name (first + last)
+      const byName = await ctx.db.query.userMetadata.findMany({
+        where: sql`CONCAT(${userMetadata.firstName},' ',${userMetadata.lastName}) ilike ${'%' + q + '%'}`,
+      });
+
+      // Find users whose email matches the query (searches users table)
+      const byEmailUsers = await ctx.db.query.users.findMany({
+        where: sql`${users.email} ilike ${'%' + q + '%'}`,
+      });
+
+      if (byEmailUsers.length === 0) return byName;
+
+      // Load userMetadata records for matched user ids
+      const ids = byEmailUsers.map((u) => u.id);
+      const byEmailMeta = await ctx.db.query.userMetadata.findMany({
+        where: sql`${userMetadata.id} IN (${ids})`,
+      });
+
+      // Merge unique results (prefer byName order, then byEmail)
+      const map = new Map<string, typeof byName[number]>();
+      byName.forEach((m) => map.set(m.id, m));
+      byEmailMeta.forEach((m) => map.set(m.id, m));
+
+      return Array.from(map.values());
+    }),
   getUserSidebarCapabilities: publicProcedure.query(async ({ ctx }) => {
     const session = ctx.session;
     const capabilites: (typeof personalCats)[number][] = [];
