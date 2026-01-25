@@ -10,6 +10,7 @@ import { api } from '@src/trpc/server';
 type SearchParams = {
   page?: string;
   pageSize?: string;
+  includePast?: string;
 };
 
 export default async function Page({
@@ -24,6 +25,8 @@ export default async function Page({
 
   const page = Number(sp.page) || 1;
   const pageSize = Number(sp.pageSize) || 12;
+  const includePast = sp.includePast === '1';
+  const now = new Date();
 
   const club = await api.club.bySlug({ slug });
   if (!club) {
@@ -35,10 +38,14 @@ export default async function Page({
     sortByDate: true,
     page,
     pageSize,
+    includePast,
+    currentTime: now,
   });
 
   const totalCount = await api.event.countByClubId({
     clubId: club.id,
+    includePast,
+    currentTime: now,
   });
 
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
