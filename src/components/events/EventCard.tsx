@@ -1,6 +1,7 @@
 'use client';
 
-import { Alert, Skeleton } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
+import { Alert, Skeleton, Tooltip } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -58,6 +59,13 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
           <div className="absolute inset-0 p-2 pointer-events-none">
             <EventTimeAlert event={event} />
           </div>
+          {event.google && (
+            <div className="absolute right-0 p-2">
+              <Tooltip title="Synced from Google Calendar.">
+                <GoogleIcon />
+              </Tooltip>
+            </div>
+          )}
         </div>
         <div className="flex h-full flex-col p-5 space-y-2.5">
           <h3 className="text-xl font-medium">{event.name}</h3>
@@ -78,17 +86,29 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
             clubId={event.club.id}
             clubSlug={event.club.slug}
             eventId={event.id}
+            calendarId={event.club.calendarId}
+            fromGoogle={event.google}
           />
         )}
         {view === 'manage' &&
           (event.google ? (
-            <Alert severity="info">Synced from Google Calendar.</Alert>
+            <>
+              <EventRegisterButton
+                clubId={event.club.id}
+                clubSlug={event.club.slug}
+                eventId={event.id}
+                calendarId={event.club.calendarId}
+                fromGoogle={event.google}
+              />
+            </>
           ) : (
             <>
               <EventRegisterButton
                 clubId={event.club.id}
                 clubSlug={event.club.slug}
                 eventId={event.id}
+                calendarId={event.club.calendarId}
+                fromGoogle={event.google}
               />
               <EventDeleteButton event={event} />
             </>

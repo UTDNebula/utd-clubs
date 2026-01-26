@@ -75,7 +75,7 @@ const EventTitle = async ({
           <Divider orientation="vertical" flexItem className="hidden lg:flex" />
           <span className="flex gap-2 items-center">
             <LocationPinIcon className="text-xl md:text-2xl" />
-            {event.location || <i>Location not provided</i>}
+            {event.location || <i>No Location</i>}
           </span>
         </div>
       </div>
@@ -85,6 +85,8 @@ const EventTitle = async ({
           clubId={event.club.id}
           clubSlug={event.club.slug}
           eventId={event.id}
+          calendarId={event.club.calendarId}
+          fromGoogle={event.google}
         />
       </div>
     </section>

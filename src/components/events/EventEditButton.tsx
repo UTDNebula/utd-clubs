@@ -8,20 +8,34 @@ export default function EventEditButton({
   isHeader,
   clubSlug,
   eventId,
+  calendarId,
+  userEmail,
+  fromGoogle,
 }: {
   isHeader?: boolean;
   clubSlug: string;
   eventId: string;
+  calendarId: string | null;
+  userEmail: string;
+  fromGoogle: boolean;
 }) {
   return (
-    <Link href={`/manage/${clubSlug}/events/edit/${eventId}`}>
+    <Link
+      href={
+        fromGoogle
+          ? `https://calendar.google.com/calendar/r/eventedit/${btoa(`${eventId} ${calendarId}`).replace(/=/g, '')}?authuser=${userEmail}`
+          : `/manage/${clubSlug}/events/edit/${eventId}`
+      }
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <Button
         variant="contained"
         size={isHeader ? 'large' : 'small'}
         className={`normal-case ${isHeader ? 'bg-white hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800' : 'bg-white hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700'} text-haiti dark:text-white`}
         startIcon={<EditIcon />}
       >
-        Edit
+        {fromGoogle && isHeader ? 'Edit in Google Calendar' : 'Edit'}
       </Button>
     </Link>
   );

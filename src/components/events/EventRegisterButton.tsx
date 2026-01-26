@@ -16,12 +16,16 @@ type EventRegisterButtonProps = {
   clubId: string;
   clubSlug: string;
   eventId: string;
+  calendarId?: string | null;
+  fromGoogle: boolean;
 };
 const EventRegisterButton = ({
   isHeader,
   clubId,
   clubSlug,
   eventId,
+  calendarId,
+  fromGoogle,
 }: EventRegisterButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
@@ -118,6 +122,9 @@ const EventRegisterButton = ({
           isHeader={isHeader}
           clubSlug={clubSlug}
           eventId={eventId}
+          calendarId={calendarId ?? null}
+          userEmail={session?.user.email as string}
+          fromGoogle={fromGoogle}
         />
       )}
       <Tooltip
@@ -161,6 +168,9 @@ const EventRegisterButton = ({
             isHeader={isHeader}
             clubSlug={clubSlug}
             eventId={eventId}
+            calendarId={calendarId ?? null}
+            userEmail={session?.user.email as string}
+            fromGoogle={fromGoogle}
           />
         )}
     </>
