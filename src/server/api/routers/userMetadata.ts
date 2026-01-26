@@ -1,4 +1,4 @@
-import { and, eq, or, sql } from 'drizzle-orm';
+import { and, eq, or, sql, gte, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
 import { auth } from '@src/server/auth';
@@ -21,6 +21,13 @@ const nameOrEmailSchema = z.object({
 const eventsSortSchema = z.object({
   currentTime: z.optional(z.date()),
   sortByDate: z.boolean().default(false),
+});
+
+const joinedClubEventsSchema = z.object({
+  currentTime: z.optional(z.date()),
+  sortByDate: z.boolean().default(false),
+  page: z.number().int().positive().optional(),
+  pageSize: z.number().int().positive().optional(),
 });
 
 export const userMetadataRouter = createTRPCRouter({
@@ -102,36 +109,42 @@ export const userMetadataRouter = createTRPCRouter({
       return events;
     }),
   getEventsFromJoinedClubs: protectedProcedure
-    .input(eventsSortSchema)
+    .input(joinedClubEventsSchema)
     .query(async ({ input, ctx }) => {
       const { currentTime, sortByDate } = input;
 
-      const rows = await ctx.db.query.userMetadataToClubs.findMany({
-        where: (t) => eq(t.userId, ctx.session.user.id),
-        with: {
-          club: {
-            with: {
-              events: {
-                with: { club: true },
-              },
-            },
-          },
-        },
-      });
+      const page = Math.max(1, input.page ?? 1);
+      const pageSize = Math.max(1, Math.min(50, input.pageSize ?? 12)); 
+      const offset = (page - 1) * pageSize;
 
-      let events = rows.flatMap((row) => row.club.events);
-
-      if (currentTime) {
-        events = events.filter((ev) => ev.endTime >= currentTime);
-      }
-
-      if (sortByDate) {
-        events = events.sort(
-          (a, b) => a.startTime.getTime() - b.startTime.getTime(),
+      const clubRows = await ctx.db
+        .select({ clubId: userMetadataToClubs.clubId })
+        .from(userMetadataToClubs)
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, ctx.session.user.id),
+            inArray(userMetadataToClubs.memberType, ['Member', 'Officer', 'President']),
+          ),
         );
-      }
 
-      return events;
+        const clubIds = clubRows.map((row) => row.clubId);
+        if (clubIds.length === 0) return[];
+
+        const now = currentTime ?? new Date(); 
+
+        const rows = await ctx.db.query.events.findMany({
+          where: (e) =>
+            and(
+              inArray(e.clubId, clubIds),
+              currentTime ? gte(e.endTime, now) : undefined, 
+            ),
+          orderBy: sortByDate ? (e) => [e.startTime] : undefined,
+          with: { club: true },
+          limit: pageSize,
+          offset,
+        })
+
+        return rows;
     }),
   searchByNameOrEmail: publicProcedure
     .input(nameOrEmailSchema)
