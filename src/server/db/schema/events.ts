@@ -1,7 +1,14 @@
 import { relations, sql } from 'drizzle-orm';
-import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { club } from './club';
 import { userMetadataToEvents } from './users';
+
+export const statusEnum = pgEnum('status_enum', [
+  'approved',
+  'rejected',
+  'pending',
+  'deleted',
+]);
 
 export const events = pgTable('events', {
   id: text('id')
@@ -12,6 +19,7 @@ export const events = pgTable('events', {
     .references(() => club.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   description: text('description').default('').notNull(),
+  status: statusEnum('approved').notNull().default('approved'),
   startTime: timestamp('start_time').notNull(),
   endTime: timestamp('end_time').notNull(),
   recurrence: text('recurrence'),
