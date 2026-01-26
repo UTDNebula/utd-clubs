@@ -3,6 +3,7 @@
 import { Alert, Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime';
@@ -19,24 +20,42 @@ interface EventCardProps {
 }
 
 const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
-  const src = event.image ?? event.club.profileImage;
+  const [imgError, setImgError] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  const showEventImage = !!event.image && !imgError;
+
   return (
     <BaseCard
       variant="interactive"
       className="flex h-96 w-64 flex-col overflow-hidden"
     >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
-        <div className="relative h-40 shrink-0 w-full">
-          <div className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-900" />
-          {src && (
+        <div className="relative h-40 shrink-0 w-full bg-neutral-200 dark:bg-neutral-900">
+          {/* shows fallback if event image is loading, error, or no link */}
+          {event.club.profileImage && (!showEventImage || !imgLoaded) && (
             <Image
               fill
-              src={src}
-              alt="event image"
+              src={event.club.profileImage}
+              alt="Club Profile"
               className="object-cover object-center"
             />
           )}
-          <div className="absolute inset-0 p-2">
+          {/* render event image on top*/}
+          {showEventImage && (
+            <Image
+              fill
+              src={event.image!}
+              alt="Event Image"
+              className={`object-cover object-center transition-opacity duration-300 ${
+                imgLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              onError={() => setImgError(true)}
+              onLoad={() => setImgLoaded(true)}
+            />
+          )}
+
+          <div className="absolute inset-0 p-2 pointer-events-none">
             <EventTimeAlert event={event} />
           </div>
         </div>
