@@ -6,13 +6,14 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
 import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
+import { authClient } from '@src/utils/auth-client';
 import { useAppForm } from '@src/utils/form';
 import {
   createEventFormSchema,
@@ -48,6 +49,15 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const updateMutation = useMutation(api.event.update.mutationOptions());
   const uploadImage = useUploadToUploadURL();
   const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  // redirect to GCal if in edit mode and it's a GCal event
+  useEffect(() => {
+    if (mode === 'edit' && event?.google) {
+      // Redirect the user
+      window.location.href = `https://calendar.google.com/calendar/r/eventedit/${btoa(`${event.id} ${event.club.calendarId}`).replace(/=/g, '')}?authuser=${session?.user.email}`;
+    }
+  }, [mode, event]);
 
   const defaultValues = useMemo(() => {
     if (mode === 'edit' && event) {

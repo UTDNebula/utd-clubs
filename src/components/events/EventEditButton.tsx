@@ -26,8 +26,7 @@ export default function EventEditButton({
           ? `https://calendar.google.com/calendar/r/eventedit/${btoa(`${eventId} ${calendarId}`).replace(/=/g, '')}?authuser=${userEmail}`
           : `/manage/${clubSlug}/events/edit/${eventId}`
       }
-      target="_blank"
-      rel="noopener noreferrer"
+      {...(fromGoogle && { target: '_blank', rel: 'noopener noreferrer' })}
     >
       <Button
         variant="contained"
