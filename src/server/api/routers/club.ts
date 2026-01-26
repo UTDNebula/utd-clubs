@@ -7,10 +7,12 @@ import {
   ilike,
   inArray,
   lte,
+  or,
   sql,
 } from 'drizzle-orm';
 import { google } from 'googleapis';
 import { z } from 'zod';
+import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { club, usedTags } from '@src/server/db/schema/club';
 import { officers as officersTable } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
@@ -78,7 +80,10 @@ export const clubRouter = createTRPCRouter({
     const { name, limit } = input;
     const clubs = await ctx.db.query.club.findMany({
       where: (club) =>
-        and(ilike(club.name, `%${name}%`), eq(club.approved, 'approved')),
+        and(
+          eq(club.approved, 'approved'),
+          or(ilike(club.name, `%${name}%`), ilike(club.alias, `%${name}%`)),
+        ),
       limit,
     });
 
@@ -173,6 +178,24 @@ export const clubRouter = createTRPCRouter({
       return [];
     }
   }),
+  getMemberClubsMetadata: protectedProcedure.query(
+    async ({
+      ctx,
+    }): Promise<SelectUserMetadataToClubsWithClub[] | undefined> => {
+      const results = await ctx.db.query.userMetadataToClubs.findMany({
+        where: and(
+          eq(userMetadataToClubs.userId, ctx.session.user.id),
+          inArray(userMetadataToClubs.memberType, [
+            'Member',
+            'Officer',
+            'President',
+          ]),
+        ),
+        with: { club: true },
+      });
+      return results;
+    },
+  ),
   getMemberClubs: protectedProcedure.query(async ({ ctx }) => {
     const results = await ctx.db.query.userMetadataToClubs.findMany({
       where: and(
@@ -485,7 +508,8 @@ export const clubRouter = createTRPCRouter({
               ? sql`id @@@ 
                 paradedb.boolean(
                   should =>ARRAY[
-                    paradedb.boost(10,paradedb.match('name',${input.search},distance=>1)),
+                    paradedb.boost(20,paradedb.match('alias',${input.search},distance=>2)),
+                    paradedb.boost(10,paradedb.match('name',${input.search},distance=>2)),
                     paradedb.boost(1,paradedb.match('description',${input.search},distance=>1)),
                     paradedb.boost(5,paradedb.match('tags',${input.search},distance=>1))
                   ])`
@@ -550,6 +574,7 @@ export const clubRouter = createTRPCRouter({
         columns: {
           id: true,
           name: true,
+          alias: true,
           description: true,
           foundingDate: true,
           tags: true,

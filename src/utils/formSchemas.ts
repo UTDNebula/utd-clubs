@@ -1,5 +1,43 @@
 import { z } from 'zod';
+import { studentClassificationEnum } from '@src/server/db/schema/users';
 import { contactSchema } from './contact';
+
+export const accountSettingsSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  major: z.string().min(1, 'College major is required'),
+  minor: z.string().nullable(),
+  studentClassification: z.enum(studentClassificationEnum.enumValues),
+  graduationDate: z.date().nullable(),
+  contactEmail: z
+    .email({
+      error: 'Use your UT Dallas email',
+      pattern:
+        /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)*utdallas\.edu$/i,
+    })
+    .nullable(),
+});
+
+export type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
+
+export const accountOnboardingSchema = z.object({
+  firstName: z.string().min(1, 'Name is required'),
+  lastName: z.string().optional(),
+  major: z.string().optional(),
+  minor: z.string().nullable().optional(),
+  studentClassification: z.enum(studentClassificationEnum.enumValues),
+  graduationDate: z.date({ error: 'Graduation date is required' }).nullable(),
+  contactEmail: z
+    .email({
+      error: 'Use your UT Dallas email',
+      pattern:
+        /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)*utdallas\.edu$/i,
+    })
+    .min(1, 'Contact email is required')
+    .nullable(),
+});
+
+export type AccountOnboardingSchema = z.infer<typeof accountOnboardingSchema>;
 
 const tagsSchema = z
   .array(z.string())
@@ -48,6 +86,11 @@ export const editClubFormSchema = z.object({
     .string()
     .min(3, 'Name must be at least 3 characters')
     .max(100, 'Character limit reached'),
+  alias: z
+    .string()
+    .min(2, 'Alias must be at least 2 characters')
+    .max(100, 'Character limit reached')
+    .nullable(),
   description: z
     .string()
     .min(1, 'Description is required')
@@ -64,6 +107,11 @@ export const editClubDetailsSchema = z.object({
     .string()
     .min(3, 'Name must be at least 3 characters')
     .max(100, 'Character limit reached'),
+  alias: z
+    .string()
+    .min(2, 'Alias must be at least 2 characters')
+    .max(100, 'Character limit reached')
+    .nullable(),
   description: z
     .string()
     .min(1, 'Description is required')
@@ -120,7 +168,7 @@ export const editSlugSchema = z.object({
     ),
 });
 
-export const createEventSchema = z.object({
+export const createEventFormSchema = z.object({
   clubId: z.string(),
   name: z
     .string()
@@ -128,26 +176,37 @@ export const createEventSchema = z.object({
     .max(100, 'Character limit reached'),
   location: z
     .string()
-    .min(1, 'Location must be at least 3 characters')
+    .min(1, 'Location is required')
     .max(100, 'Character limit reached'),
   description: z.string().max(1000, 'Character limit reached'),
-  startTime: z.date(),
-  endTime: z.date(),
+  startTime: z.date('Invalid date'),
+  endTime: z.date('Invalid date'),
+  image: fileSchema,
 });
 
-export const updateEventSchema = createEventSchema.extend({
+export const createEventSchema = createEventFormSchema.omit({
+  image: true,
+});
+
+export const editEventFormSchema = z.object({
+  clubId: z.string(),
+  name: z
+    .string()
+    .min(3, 'Name must be at least 3 characters')
+    .max(100, 'Character limit reached'),
+  location: z
+    .string()
+    .min(1, 'Location is required')
+    .max(100, 'Character limit reached'),
+  description: z.string().max(1000, 'Character limit reached'),
+  startTime: z.date('Invalid date'),
+  endTime: z.date('Invalid date'),
+  image: fileSchema,
+});
+
+export const editEventSchema = editEventFormSchema.extend({
   image: z.url().nullable(),
   id: z.string(),
-});
-
-export const eventFormSchema = z.object({
-  clubId: z.string(),
-  name: z.string().min(1).max(100, 'Character limit reached'),
-  location: z.string().min(1).max(100, 'Character limit reached'),
-  description: z.string().max(1000, 'Character limit reached'),
-  startTime: z.date(),
-  endTime: z.date(),
-  image: fileSchema,
 });
 
 const characterLimitError = 'Character limit reached';

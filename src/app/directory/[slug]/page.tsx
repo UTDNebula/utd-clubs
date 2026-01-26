@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import ClubBody from '@src/components/club/listing/ClubBody';
-import ClubHeader from '@src/components/club/listing/ClubHeader';
+import ClubEventHeader from '@src/components/club/listing/ClubEventHeader';
 import { ClubNotClaimed } from '@src/components/club/listing/ClubNotClaimed';
 import ClubTitle from '@src/components/club/listing/ClubTitle';
 import Header from '@src/components/header/BaseHeader';
@@ -28,8 +28,8 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
   return (
     <>
       <Header />
-      <main className="mb-5 flex flex-col gap-y-6 p-4 max-w-6xl mx-auto">
-        <ClubHeader club={club} />
+      <main className="mb-5 flex flex-col gap-y-8 p-4 max-w-6xl mx-auto">
+        <ClubEventHeader club={club} />
         <ClubTitle club={club} />
         <ClubBody club={club} />
         {(club.updatedAt == null || club.updatedAt < oneYearAgo) && (

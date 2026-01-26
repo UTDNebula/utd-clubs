@@ -26,8 +26,7 @@ export const TagPill = ({
     <Chip
       label={name}
       className={
-        'rounded-full font-bold transition-colors text-white ' +
-        (className ?? '')
+        'rounded-full font-bold transition-colors ' + (className ?? '')
       }
       color="primary"
       onClick={() => {

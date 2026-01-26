@@ -55,7 +55,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-main ${baiJamjuree.variable}`}>
+      <body
+        className={`bg-light dark:bg-dark ${inter.variable} font-main ${baiJamjuree.variable} text-haiti dark:text-white`}
+      >
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <TRPCReactProvider>
             <ThemeProvider theme={theme}>

@@ -41,7 +41,7 @@ const CreateClubForm = () => {
       }}
     >
       <Panel heading="Create New Organization">
-        <div className="ml-2 mb-4 text-slate-600 text-sm">
+        <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
           <p>
             We&apos;ll start with the basics then get your organization&apos;s
             logo, officers, contact information, and collaborators on the next
@@ -55,7 +55,7 @@ const CreateClubForm = () => {
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="grow [&>.MuiInputBase-root]:bg-white"
+                className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                 size="small"
                 error={field.state.meta.isTouched && !field.state.meta.isValid}
                 helperText={
@@ -78,7 +78,7 @@ const CreateClubForm = () => {
                 onBlur={field.handleBlur}
                 value={field.state.value}
                 label="Description"
-                className="[&>.MuiInputBase-root]:bg-white"
+                className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                 multiline
                 minRows={4}
                 error={field.state.meta.isTouched && !field.state.meta.isValid}
@@ -94,7 +94,7 @@ const CreateClubForm = () => {
                         href="https://www.markdownguide.org/basic-syntax/"
                         rel="noreferrer"
                         target="_blank"
-                        className="text-royal underline"
+                        className="text-royal dark:text-cornflower-300 underline"
                       >
                         Markdown
                       </a>
@@ -127,10 +127,10 @@ const CreateClubForm = () => {
         </div>
         <div className="flex flex-wrap justify-end items-center gap-2">
           <form.AppForm>
-            <form.FormResetButton />
+            <form.ResetButton />
           </form.AppForm>
           <form.AppForm>
-            <form.FormSubmitButton />
+            <form.SubmitButton />
           </form.AppForm>
         </div>
       </Panel>

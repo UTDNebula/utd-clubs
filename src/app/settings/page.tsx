@@ -27,7 +27,7 @@ const Settings = async () => {
   return (
     <>
       <Header />
-      <main className="flex w-full flex-col items-center justify-center">
+      <main className="flex w-full flex-col items-center p-4">
         <SettingsForm session={session} />
       </main>
     </>
