@@ -87,6 +87,8 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
             className="normal-case w-full"
             startIcon={<GoogleIcon />}
             disabled={isLoading}
+            loading={isLoading}
+            loadingPosition="center"
             onClick={() => {
               void authClient.linkSocial({
                 provider: 'google',
@@ -109,9 +111,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
               });
             }}
           >
-            {isLoading
-              ? 'Connecting to Google...'
-              : 'Authorize Google Calendar Access'}
+            Authorize Google Calendar Access
           </Button>
         ) : data.length > 0 ? (
           isSyncing ? (
@@ -220,6 +220,8 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                   className="normal-case"
                   startIcon={<GoogleIcon />}
                   disabled={selectedCalendar.id == '' || isRefreshing}
+                  loading={isRefreshing}
+                  loadingPosition="start"
                   onClick={async () => {
                     setIsRefreshing(true);
                     await syncEvents.mutateAsync({
@@ -230,9 +232,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                     router.refresh();
                   }}
                 >
-                  {isRefreshing
-                    ? 'Connecting...'
-                    : 'Enable Google Calendar Sync'}
+                  Enable Google Calendar Sync
                 </Button>
               </div>
             </>
@@ -268,7 +268,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                   );
                 }}
               >
-                {'Visit Google Calendar'}
+                Visit Google Calendar
               </Button>
             </div>
           </>
