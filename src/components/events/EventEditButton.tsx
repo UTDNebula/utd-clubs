@@ -3,6 +3,7 @@
 import EditIcon from '@mui/icons-material/Edit';
 import { Button } from '@mui/material';
 import Link from 'next/link';
+import { getGcalEventLink } from '@src/modules/googleCalendar';
 
 export default function EventEditButton({
   isHeader,
@@ -23,7 +24,7 @@ export default function EventEditButton({
     <Link
       href={
         fromGoogle
-          ? `https://calendar.google.com/calendar/r/eventedit/${btoa(`${eventId} ${calendarId}`).replace(/=/g, '')}?authuser=${userEmail}`
+          ? getGcalEventLink(eventId, calendarId, userEmail)
           : `/manage/${clubSlug}/events/edit/${eventId}`
       }
       {...(fromGoogle && { target: '_blank', rel: 'noopener noreferrer' })}

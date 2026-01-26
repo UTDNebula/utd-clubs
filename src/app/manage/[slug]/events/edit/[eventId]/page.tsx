@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import EventForm from '@src/components/events/EventForm';
 import ManageHeader from '@src/components/manage/ManageHeader';
+import { getGcalEventLink } from '@src/modules/googleCalendar';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 
@@ -22,7 +23,7 @@ const EditEventPage = async (props: {
 
   if (event?.google) {
     redirect(
-      `https://calendar.google.com/calendar/r/eventedit/${btoa(`${event.id} ${event.club.calendarId}`).replace(/=/g, '')}?authuser=${session?.user.email}`,
+      getGcalEventLink(event.id, event.club.calendarId, session?.user.email),
     );
   }
 
