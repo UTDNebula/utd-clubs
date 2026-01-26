@@ -5,20 +5,27 @@ import ManageEventsPagination from '@src/components/events/EventPagination';
 import IncludePastSwitch from '@src/components/events/IncludePastSwitch';
 import { api } from '@src/trpc/server';
 
+type SearchParams = {
+  page?: string;
+  pageSize?: string;
+  includePast?: string;
+};
+
 type Props = {
-  params: { slug: string };
-  searchParams?: { page?: string; pageSize?: string; includePast?: string };
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<SearchParams>;
 };
 
 export default async function Page({ params, searchParams }: Props) {
-  const sp = searchParams ?? {};
+  const { slug } = await params;
+  const sp = (await searchParams) ?? {};
 
   const page = Number(sp.page) || 1;
   const pageSize = Number(sp.pageSize) || 12;
   const includePast = sp.includePast === '1';
   const now = new Date();
 
-  const club = await api.admin.getDirectoryInfo({ slug: params.slug });
+  const club = await api.admin.getDirectoryInfo({ slug });
   if (!club) {
     notFound();
   }
