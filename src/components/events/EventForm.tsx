@@ -57,7 +57,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
       // Redirect the user
       window.location.href = `https://calendar.google.com/calendar/r/eventedit/${btoa(`${event.id} ${event.club.calendarId}`).replace(/=/g, '')}?authuser=${session?.user.email}`;
     }
-  }, [mode, event]);
+  }, [mode, event, session?.user.email]);
 
   const defaultValues = useMemo(() => {
     if (mode === 'edit' && event) {
