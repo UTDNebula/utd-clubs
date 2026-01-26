@@ -5,6 +5,7 @@ import {
   and,
   between,
   eq,
+  gt,
   gte,
   ilike,
   inArray,
@@ -495,7 +496,12 @@ export const eventRouter = createTRPCRouter({
     }
   }),
   disableSync: protectedProcedure
-    .input(z.object({ clubId: z.string() }))
+    .input(
+      z.object({
+        clubId: z.string(),
+        keepPastEvents: z.boolean().default(true).optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
 
@@ -525,9 +531,13 @@ export const eventRouter = createTRPCRouter({
         .where(eq(club.id, input.clubId));
 
       // delete all synced events
-      await ctx.db
-        .delete(events)
-        .where(and(eq(events.clubId, input.clubId), eq(events.google, true))); // delete all the GCal-synced events
+      await ctx.db.delete(events).where(
+        and(
+          eq(events.clubId, input.clubId),
+          eq(events.google, true),
+          input.keepPastEvents ? gt(events.startTime, new Date()) : undefined, // IF indicated, delete only events that have not yet started
+        ),
+      );
 
       return { success: true };
     }),

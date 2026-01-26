@@ -4,6 +4,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import {
   Alert,
   Button,
+  Checkbox,
   FormControl,
   InputLabel,
   MenuItem,
@@ -55,6 +56,8 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const [privateCalendarOpen, setPrivateCalendarOpen] = useState(false);
   const [disableSyncConfirmationOpen, setDisableSyncConfirmationOpen] =
     useState(false);
+  const [keepPastEventsOnDeletion, setKeepPastEventsOnDeletion] =
+    useState(true);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -142,7 +145,10 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                 <Button
                   variant="contained"
                   className="normal-case"
-                  onClick={() => setDisableSyncConfirmationOpen(true)}
+                  onClick={() => {
+                    setDisableSyncConfirmationOpen(true);
+                    setKeepPastEventsOnDeletion(true);
+                  }}
                 >
                   Disable Sync
                 </Button>
@@ -166,16 +172,30 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                 open={disableSyncConfirmationOpen}
                 onClose={() => setDisableSyncConfirmationOpen(false)}
                 contentText={
-                  <>
-                    Disabling will delete all events synced from{' '}
-                    <b>{selectedCalendar.summary}</b>.
-                  </>
+                  <div>
+                    <p>
+                      Disabling will delete all events synced from{' '}
+                      <b>{selectedCalendar.summary}</b>.
+                    </p>
+                    <div className="flex flex-row items-center">
+                      <Checkbox
+                        checked={keepPastEventsOnDeletion}
+                        onChange={(
+                          event: React.ChangeEvent<HTMLInputElement>,
+                        ) => setKeepPastEventsOnDeletion(event.target.checked)}
+                      />
+                      <p className="text-persimmon-500">
+                        Keep events that have already passed?
+                      </p>
+                    </div>
+                  </div>
                 }
                 confirmText="Disable Sync"
                 confirmColor="primary"
                 onConfirm={async () => {
                   await disableSync.mutateAsync({
                     clubId: club.id,
+                    keepPastEvents: keepPastEventsOnDeletion,
                   });
                   router.refresh();
                 }}
