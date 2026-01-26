@@ -43,7 +43,7 @@ export const RegisteredEvents = async () => {
 };
 
 export const ClubEvents = async ({
-  page, 
+  page,
   pageSize,
 }: {
   page: number;
@@ -102,7 +102,7 @@ export const ClubEvents = async ({
     currentTime: now,
   });
 
-  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize))
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
   return (
     <>

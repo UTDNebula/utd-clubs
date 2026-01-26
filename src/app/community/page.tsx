@@ -6,6 +6,8 @@ import Header from '@src/components/header/BaseHeader';
 import { auth } from '@src/server/auth';
 import { ClubEvents, RegisteredEvents } from './communityEvents';
 
+type SearchParams = { page?: string; pageSize?: string };
+
 export const metadata: Metadata = {
   title: 'My Community',
   description: 'Community Page',
@@ -17,7 +19,14 @@ export const metadata: Metadata = {
   },
 };
 
-const Community = async () => {
+const Community = async ({
+  searchParams,
+}: {
+  searchParams?: Promise<SearchParams>;
+}) => {
+  const sp = (await searchParams) ?? {};
+  const page = Number(sp.page) || 1;
+  const pageSize = Number(sp.pageSize) || 12;
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
@@ -51,7 +60,7 @@ const Community = async () => {
         <h2 className="font-display text-xl font-bold text-haiti mt-4">
           From Your Joined Clubs
         </h2>
-        <ClubEvents />
+        <ClubEvents page={page} pageSize={pageSize} />
       </main>
     </>
   );

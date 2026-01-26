@@ -1,14 +1,14 @@
-import { and, eq, or, sql, gte, inArray } from 'drizzle-orm';
+import { count } from 'console';
+import { and, eq, gte, inArray, or, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
 import { auth } from '@src/server/auth';
 import { insertUserMetadata } from '@src/server/db/models';
 import { admin } from '@src/server/db/schema/admin';
 import { user as users } from '@src/server/db/schema/auth';
+import { events } from '@src/server/db/schema/events';
 import { userMetadata, userMetadataToClubs } from '@src/server/db/schema/users';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
-import { count } from 'console';
-import { events } from '@src/server/db/schema/events';
 
 const byIdSchema = z.object({ id: z.string() });
 
@@ -116,7 +116,7 @@ export const userMetadataRouter = createTRPCRouter({
       const { currentTime, sortByDate } = input;
 
       const page = Math.max(1, input.page ?? 1);
-      const pageSize = Math.max(1, Math.min(50, input.pageSize ?? 12)); 
+      const pageSize = Math.max(1, Math.min(50, input.pageSize ?? 12));
       const offset = (page - 1) * pageSize;
 
       const clubRows = await ctx.db
@@ -125,30 +125,34 @@ export const userMetadataRouter = createTRPCRouter({
         .where(
           and(
             eq(userMetadataToClubs.userId, ctx.session.user.id),
-            inArray(userMetadataToClubs.memberType, ['Member', 'Officer', 'President']),
+            inArray(userMetadataToClubs.memberType, [
+              'Member',
+              'Officer',
+              'President',
+            ]),
           ),
         );
 
-        const clubIds = clubRows.map((row) => row.clubId);
-        if (clubIds.length === 0) return[];
+      const clubIds = clubRows.map((row) => row.clubId);
+      if (clubIds.length === 0) return [];
 
-        const now = currentTime ?? new Date(); 
+      const now = currentTime ?? new Date();
 
-        const rows = await ctx.db.query.events.findMany({
-          where: (e) =>
-            and(
-              inArray(e.clubId, clubIds),
-              currentTime ? gte(e.endTime, now) : undefined, 
-            ),
-          orderBy: sortByDate ? (e) => [e.startTime] : undefined,
-          with: { club: true },
-          limit: pageSize,
-          offset,
-        })
+      const rows = await ctx.db.query.events.findMany({
+        where: (e) =>
+          and(
+            inArray(e.clubId, clubIds),
+            currentTime ? gte(e.endTime, now) : undefined,
+          ),
+        orderBy: sortByDate ? (e) => [e.startTime] : undefined,
+        with: { club: true },
+        limit: pageSize,
+        offset,
+      });
 
-        return rows;
+      return rows;
     }),
-    countEventsFromJoinedClubs: protectedProcedure
+  countEventsFromJoinedClubs: protectedProcedure
     .input(joinedClubEventsSchema)
     .query(async ({ input, ctx }) => {
       const clubRows = await ctx.db
@@ -157,26 +161,30 @@ export const userMetadataRouter = createTRPCRouter({
         .where(
           and(
             eq(userMetadataToClubs.userId, ctx.session.user.id),
-            inArray(userMetadataToClubs.memberType, ['Member', 'Officer', 'President']),
+            inArray(userMetadataToClubs.memberType, [
+              'Member',
+              'Officer',
+              'President',
+            ]),
           ),
         );
 
-        const clubIds = clubRows.map((row) => row.clubId);
-        if (clubIds.length === 0) return 0;
+      const clubIds = clubRows.map((row) => row.clubId);
+      if (clubIds.length === 0) return 0;
 
-        const now = input.currentTime ?? new Date();
+      const now = input.currentTime ?? new Date();
 
-        const whereClause = input.currentTime
-          ? and(inArray(events.clubId, clubIds), gte(events.endTime, now))
-          : inArray(events.clubId, clubIds);
+      const whereClause = input.currentTime
+        ? and(inArray(events.clubId, clubIds), gte(events.endTime, now))
+        : inArray(events.clubId, clubIds);
 
-        const result = await ctx.db
-          .select({ count: sql<number>`count(*)` })
-          .from(events)
-          .where(whereClause);
-        const count = result[0]?.count ?? 0;
+      const result = await ctx.db
+        .select({ count: sql<number>`count(*)` })
+        .from(events)
+        .where(whereClause);
+      const count = result[0]?.count ?? 0;
 
-        return count;
+      return count;
     }),
   searchByNameOrEmail: publicProcedure
     .input(nameOrEmailSchema)

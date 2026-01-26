@@ -92,12 +92,6 @@ export const eventRouter = createTRPCRouter({
           limit: pageSize,
           offset: offset,
         });
-        //TESTING, WILL DELETE AFTER
-        console.log('byClubId events fetched', {
-          clubId: input.clubId,
-          count: events.length,
-          events,
-        });
 
         return events;
       } catch (e) {
@@ -121,13 +115,6 @@ export const eventRouter = createTRPCRouter({
           .from(events)
           .where(whereCondition);
         const count = result[0]?.count ?? 0;
-
-        //TESTING, WILL DELETE AFTER
-        console.log('byClubId events count', {
-          clubId: input.clubId,
-          count: count,
-          result,
-        });
 
         return count;
       } catch (e) {
