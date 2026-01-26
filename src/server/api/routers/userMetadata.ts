@@ -7,6 +7,8 @@ import { admin } from '@src/server/db/schema/admin';
 import { user as users } from '@src/server/db/schema/auth';
 import { userMetadata, userMetadataToClubs } from '@src/server/db/schema/users';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { count } from 'console';
+import { events } from '@src/server/db/schema/events';
 
 const byIdSchema = z.object({ id: z.string() });
 
@@ -145,6 +147,36 @@ export const userMetadataRouter = createTRPCRouter({
         })
 
         return rows;
+    }),
+    countEventsFromJoinedClubs: protectedProcedure
+    .input(joinedClubEventsSchema)
+    .query(async ({ input, ctx }) => {
+      const clubRows = await ctx.db
+        .select({ clubId: userMetadataToClubs.clubId })
+        .from(userMetadataToClubs)
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, ctx.session.user.id),
+            inArray(userMetadataToClubs.memberType, ['Member', 'Officer', 'President']),
+          ),
+        );
+
+        const clubIds = clubRows.map((row) => row.clubId);
+        if (clubIds.length === 0) return 0;
+
+        const now = input.currentTime ?? new Date();
+
+        const whereClause = input.currentTime
+          ? and(inArray(events.clubId, clubIds), gte(events.endTime, now))
+          : inArray(events.clubId, clubIds);
+
+        const result = await ctx.db
+          .select({ count: sql<number>`count(*)` })
+          .from(events)
+          .where(whereClause);
+        const count = result[0]?.count ?? 0;
+
+        return count;
     }),
   searchByNameOrEmail: publicProcedure
     .input(nameOrEmailSchema)
