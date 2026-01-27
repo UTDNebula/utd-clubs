@@ -89,15 +89,14 @@ export async function syncCalendar(
     throw error;
   }
 
-  console.log('events found: ', events);
-
   const res = await db.transaction(
     async (tx) => {
       await tx.execute(sql`SET CONSTRAINTS ALL DEFERRED`);
       if (reset) {
         // SCARY
         await tx
-          .delete(eventTable)
+          .update(eventTable)
+          .set({ status: 'deleted' })
           .where(
             and(eq(eventTable.clubId, clubId), eq(eventTable.google, true)),
           );
