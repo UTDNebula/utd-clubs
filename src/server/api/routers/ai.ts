@@ -72,6 +72,7 @@ export const aiRouter = createTRPCRouter({
           clubs: true,
         },
       });
+
       // Get all clubs
       const clubs = (
         await ctx.db
@@ -80,6 +81,15 @@ export const aiRouter = createTRPCRouter({
           .orderBy(club.name)
           .where(eq(club.approved, 'approved'))
       ).filter((club) => !joined?.clubs.find((c) => c.clubId == club.id)); // filter out clubs the user is in
+
+      // Shuffles clubs
+      // To avoid any bias toward clubs earlier in the list
+      for (let i = clubs.length - 1; i > 0; i--) {
+        // Random earlier index
+        const j = Math.floor(Math.random() * (i + 1));
+        // Swap current and random index
+        [clubs[i], clubs[j]] = [clubs[j]!, clubs[i]!];
+      }
 
       const prompt = `Analyze this student's preferences and recommend 9 organizations,
 ensuring balanced coverage across all selected categories:
