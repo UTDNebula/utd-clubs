@@ -449,12 +449,15 @@ export const eventRouter = createTRPCRouter({
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
-      await callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`);
+      // await callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`);
 
+      // await ctx.db
+      //   .delete(userMetadataToEvents)
+      //   .where(eq(userMetadataToEvents.eventId, input.id));
       await ctx.db
-        .delete(userMetadataToEvents)
-        .where(eq(userMetadataToEvents.eventId, input.id));
-      await ctx.db.delete(events).where(eq(events.id, input.id));
+        .update(events)
+        .set({ status: 'deleted' })
+        .where(eq(events.id, input.id));
 
       return { success: true };
     }),
