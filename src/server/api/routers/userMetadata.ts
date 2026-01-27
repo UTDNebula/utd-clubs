@@ -87,6 +87,35 @@ export const userMetadataRouter = createTRPCRouter({
       });
       return await users;
     }),
+  // Search by full name OR by email (useful for searching UTD emails)
+  searchByNameOrEmail: publicProcedure
+    .input(nameSchema)
+    .query(async ({ input, ctx }) => {
+      const pattern = '%' + input.name + '%';
+      // Limit results for predictable UX
+      const results = await ctx.db.query.userMetadata.findMany({
+        where: sql`(
+          CONCAT(${userMetadata.firstName},' ',${userMetadata.lastName}) ILIKE ${pattern}
+          OR EXISTS (
+            SELECT 1 FROM ${users} WHERE ${users.id} = ${userMetadata.id} AND ${users.email} ILIKE ${pattern}
+          )
+        )`,
+        limit: 10,
+      });
+
+      // Fetch corresponding emails from the users table so frontend can display them
+      if (results.length === 0) return results;
+      const ids = results.map((r) => r.id);
+      const matchedUsers = await ctx.db.query.users.findMany({
+        where: sql`${users.id} IN (${ids})`,
+      });
+      const emailMap: Record<string, string | null> = {};
+      for (const u of matchedUsers) {
+        emailMap[u.id] = u.email ?? null;
+      }
+
+      return results.map((r) => ({ ...r, email: emailMap[r.id] ?? null }));
+    }),
   getUserSidebarCapabilities: publicProcedure.query(async ({ ctx }) => {
     const session = ctx.session;
     const capabilites: (typeof personalCats)[number][] = [];

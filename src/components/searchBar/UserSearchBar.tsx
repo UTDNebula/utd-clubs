@@ -17,7 +17,7 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
   const debouncedSearch = useDebounce(search, 300);
   const api = useTRPC();
   const userQuery = useQuery(
-    api.userMetadata.searchByName.queryOptions(
+    api.userMetadata.searchByNameOrEmail.queryOptions(
       {
         name: debouncedSearch,
       },
@@ -26,7 +26,11 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
   );
   const formattedData = userQuery.isSuccess
     ? userQuery.data.map((val) => {
-        return { name: val.firstName + ' ' + val.lastName, ...val };
+        return {
+          name: val.firstName + ' ' + val.lastName,
+          email: (val as any).email ?? null,
+          ...val,
+        };
       })
     : [];
   return (
@@ -50,19 +54,24 @@ export const UserSearchBar = ({ passUser }: UserSearchBarProps) => {
           debouncedFocused &&
           userQuery.data &&
           userQuery.data.length > 0 && (
-            <SearchResults
-              searchResults={formattedData.map((item) => (
-                <SearchResultsItem
-                  key={item.id}
-                  onClick={() => {
-                    passUser({ id: item.id, name: item.name });
-                    setSearch('');
-                  }}
-                >
-                  {item.name}
-                </SearchResultsItem>
-              ))}
-            />
+              <SearchResults
+                searchResults={formattedData.map((item) => (
+                  <SearchResultsItem
+                    key={item.id}
+                    onClick={() => {
+                      passUser({ id: item.id, name: item.name });
+                      setSearch('');
+                    }}
+                  >
+                    <div className="flex flex-col">
+                      <span>{item.name}</span>
+                      {item.email && (
+                        <span className="text-sm text-gray-500">{item.email}</span>
+                      )}
+                    </div>
+                  </SearchResultsItem>
+                ))}
+              />
           )}
       </div>
     </>
