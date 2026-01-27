@@ -73,9 +73,12 @@ export const eventRouter = createTRPCRouter({
       try {
         const events = await ctx.db.query.events.findMany({
           where: (event) =>
-            currentTime
-              ? and(eq(event.clubId, clubId), gte(event.endTime, currentTime))
-              : eq(event.clubId, clubId),
+            and(
+              eq(event.status, 'approved'),
+              currentTime
+                ? and(eq(event.clubId, clubId), gte(event.endTime, currentTime))
+                : eq(event.clubId, clubId),
+            ),
           orderBy: sortByDate ? (event) => [event.startTime] : undefined,
           with: {
             club: true,
@@ -102,6 +105,7 @@ export const eventRouter = createTRPCRouter({
           where: (event) =>
             and(
               eq(event.clubId, clubId),
+              eq(event.status, 'approved'),
               gte(event.endTime, now),
               lte(event.startTime, threeMonthsLater),
             ),
@@ -125,6 +129,7 @@ export const eventRouter = createTRPCRouter({
         const events = await ctx.db.query.events.findMany({
           where: (event) => {
             return and(
+              eq(event.status, 'approved'),
               gte(event.startTime, startTime),
               lte(event.endTime, endTime),
             );
@@ -165,11 +170,14 @@ export const eventRouter = createTRPCRouter({
       const endUTC = new Date(endCT.getTime());
       const events = await ctx.db.query.events.findMany({
         where: (event) => {
-          return or(
-            between(event.startTime, startUTC, endUTC),
-            between(event.endTime, startUTC, endUTC),
-            and(lte(event.startTime, startUTC), gte(event.endTime, startUTC)),
-            and(lte(event.startTime, endUTC), gte(event.endTime, endUTC)),
+          return and(
+            eq(event.status, 'approved'),
+            or(
+              between(event.startTime, startUTC, endUTC),
+              between(event.endTime, startUTC, endUTC),
+              and(lte(event.startTime, startUTC), gte(event.endTime, startUTC)),
+              and(lte(event.startTime, endUTC), gte(event.endTime, endUTC)),
+            ),
           );
         },
         with: {
@@ -194,14 +202,17 @@ export const eventRouter = createTRPCRouter({
         where: (event) => {
           const whereElements: Array<SQL<unknown> | undefined> = [];
           whereElements.push(
-            or(
-              between(event.startTime, startTime, endTime),
-              between(event.endTime, startTime, endTime),
-              and(
-                lte(event.startTime, startTime),
-                gte(event.endTime, startTime),
+            and(
+              eq(event.status, 'approved'),
+              or(
+                between(event.startTime, startTime, endTime),
+                between(event.endTime, startTime, endTime),
+                and(
+                  lte(event.startTime, startTime),
+                  gte(event.endTime, startTime),
+                ),
+                and(lte(event.startTime, endTime), gte(event.endTime, endTime)),
               ),
-              and(lte(event.startTime, endTime), gte(event.endTime, endTime)),
             ),
           );
 
@@ -237,7 +248,7 @@ export const eventRouter = createTRPCRouter({
 
     try {
       const byId = await ctx.db.query.events.findFirst({
-        where: (event) => eq(event.id, id),
+        where: (event) => and(eq(event.id, id), eq(event.status, 'approved')),
         with: { club: true },
       });
 
@@ -254,7 +265,7 @@ export const eventRouter = createTRPCRouter({
       try {
         // Fetch event by id
         const byId = await ctx.db.query.events.findFirst({
-          where: (event) => eq(event.id, id),
+          where: (event) => and(eq(event.id, id), eq(event.status, 'approved')),
           with: {
             club: {
               with: {
@@ -451,7 +462,8 @@ export const eventRouter = createTRPCRouter({
     const { name, sortByDate } = input;
     try {
       const events = await ctx.db.query.events.findMany({
-        where: (event) => ilike(event.name, `%${name}%`),
+        where: (event) =>
+          and(eq(event.status, 'approved'), ilike(event.name, `%${name}%`)),
         orderBy: sortByDate
           ? (event, { desc }) => [desc(event.startTime)]
           : undefined,
@@ -531,13 +543,16 @@ export const eventRouter = createTRPCRouter({
         .where(eq(club.id, input.clubId));
 
       // delete all synced events
-      await ctx.db.delete(events).where(
-        and(
-          eq(events.clubId, input.clubId),
-          eq(events.google, true),
-          input.keepPastEvents ? gt(events.startTime, new Date()) : undefined, // IF indicated, delete only events that have not yet started
-        ),
-      );
+      await ctx.db
+        .update(events)
+        .set({ status: 'deleted' })
+        .where(
+          and(
+            eq(events.clubId, input.clubId),
+            eq(events.google, true),
+            input.keepPastEvents ? gt(events.startTime, new Date()) : undefined, // IF indicated, delete only events that have not yet started
+          ),
+        );
 
       return { success: true };
     }),
