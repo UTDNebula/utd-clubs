@@ -121,7 +121,7 @@ export async function syncCalendar(
           await tx
             .delete(userMetadataToEvents)
             .where(inArray(userMetadataToEvents.eventId, deletedIds));
-          await tx.delete(clubTable).where(inArray(clubTable.id, deletedIds));
+          await tx.delete(eventTable).where(inArray(eventTable.id, deletedIds));
         }
         try {
           if (newOrUpdated.length > 0) {
