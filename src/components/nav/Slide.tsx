@@ -2,7 +2,7 @@
 
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Drawer, IconButton } from '@mui/material';
+import { Badge, Drawer, IconButton } from '@mui/material';
 import { useState } from 'react';
 import type { ContentComponentColor } from '@src/components/header/BaseHeader';
 import { type personalCats } from '@src/constants/categories';
@@ -10,10 +10,12 @@ import NavMenu from './NavMenu';
 
 const NewSidebar = ({
   userCapabilities,
+  notApprovedCount,
   homepage = false,
   hamburgerColor = 'dark',
 }: {
   userCapabilities: Array<(typeof personalCats)[number]>;
+  notApprovedCount: number | null;
   homepage?: boolean;
   hamburgerColor?: ContentComponentColor;
 }) => {
@@ -26,18 +28,20 @@ const NewSidebar = ({
         className={`z-50 ${homepage ? ' drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
         size="large"
       >
-        <MenuIcon
-          fontSize="inherit"
-          className={`${
-            hamburgerColor?.startsWith('light') ? 'fill-white' : 'fill-haiti'
-          } ${
-            hamburgerColor === 'lightDark'
-              ? 'dark:fill-haiti'
-              : hamburgerColor === 'darkLight'
-                ? 'dark:fill-white'
-                : ''
-          }`}
-        />
+        <Badge badgeContent={notApprovedCount} color="primary">
+          <MenuIcon
+            fontSize="inherit"
+            className={`${
+              hamburgerColor?.startsWith('light') ? 'fill-white' : 'fill-haiti'
+            } ${
+              hamburgerColor === 'lightDark'
+                ? 'dark:fill-haiti'
+                : hamburgerColor === 'darkLight'
+                  ? 'dark:fill-white'
+                  : ''
+            }`}
+          />
+        </Badge>
       </IconButton>
       <Drawer
         open={open}
@@ -50,7 +54,10 @@ const NewSidebar = ({
           },
         }}
       >
-        <NavMenu userCapabilites={userCapabilities} />
+        <NavMenu
+          userCapabilites={userCapabilities}
+          notApprovedCount={notApprovedCount}
+        />
         <IconButton
           onClick={() => setOpen(false)}
           className="absolute top-4 right-4"

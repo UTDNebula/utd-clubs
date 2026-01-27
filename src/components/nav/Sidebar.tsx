@@ -14,9 +14,14 @@ const Sidebar = async ({
 }) => {
   const userSidebarCapabilities =
     await api.userMetadata.getUserSidebarCapabilities();
+  let notApprovedCount = null;
+  if (userSidebarCapabilities.includes('Admin')) {
+    notApprovedCount = await api.admin.notApprovedCount();
+  }
   return (
     <NewSidebar
       userCapabilities={userSidebarCapabilities}
+      notApprovedCount={notApprovedCount}
       homepage={homepage}
       hamburgerColor={hamburgerColor}
     />

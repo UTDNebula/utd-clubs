@@ -11,9 +11,10 @@ import SidebarItems from './SidebarItems';
 
 type NavMenuProps = {
   userCapabilites: Array<(typeof personalCats)[number]>;
+  notApprovedCount: number | null;
 };
 
-const NavMenu = ({ userCapabilites }: NavMenuProps) => {
+const NavMenu = ({ userCapabilites, notApprovedCount }: NavMenuProps) => {
   return (
     <>
       {/* Logo Section */}
@@ -31,9 +32,14 @@ const NavMenu = ({ userCapabilites }: NavMenuProps) => {
             <SidebarItems key={cat} cat={cat} />
           ))}
 
-          {userCapabilites.map((cat) => (
-            <SidebarItems key={cat} cat={cat} />
-          ))}
+          {userCapabilites.map((cat) => {
+            if (cat === 'Admin') {
+              return (
+                <SidebarItems key={cat} cat={cat} badge={notApprovedCount} />
+              );
+            }
+            return <SidebarItems key={cat} cat={cat} />;
+          })}
 
           {moreCats.map((cat) => (
             <SidebarItems key={cat} cat={cat} />

@@ -215,11 +215,9 @@ export const userMetadataRouter = createTRPCRouter({
       capabilites.push('Create Club');
     }
     if (
-      (
-        await ctx.db.query.admin.findMany({
-          where: eq(admin.userId, session.user.id),
-        })
-      ).length === 1
+      await ctx.db.query.admin.findFirst({
+        where: eq(admin.userId, session.user.id),
+      })
     )
       capabilites.push('Admin');
     return capabilites;
