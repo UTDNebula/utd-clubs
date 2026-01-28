@@ -30,6 +30,7 @@ import { contactNames, startContacts } from '@src/server/db/schema/contacts';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubContactSchema } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/Snackbar';
 
 type FormData = z.infer<typeof editClubContactSchema>;
 
@@ -55,7 +56,16 @@ type ContactsProps = {
 
 const Contacts = ({ club }: ContactsProps) => {
   const api = useTRPC();
-  const editContacts = useMutation(api.club.edit.contacts.mutationOptions({}));
+  const editContacts = useMutation(
+    api.club.edit.contacts.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club contacts'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
 
   const [defaultValues, setDefaultValues] = useState({
     contacts: typedDefaultValues(club.contacts),

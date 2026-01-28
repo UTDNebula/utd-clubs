@@ -11,6 +11,7 @@ import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubFormSchema } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/Snackbar';
 
 type DetailsProps = {
   club: SelectClub;
@@ -32,7 +33,16 @@ const Details = ({ club }: DetailsProps) => {
   const clubQuery = useQuery(
     api.club.details.queryOptions({ id: club.id }, { initialData: club }),
   );
-  const editData = useMutation(api.club.edit.data.mutationOptions({}));
+  const editData = useMutation(
+    api.club.edit.data.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club details'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
   const uploadImage = useUploadToUploadURL();
   const queryClient = useQueryClient();
 

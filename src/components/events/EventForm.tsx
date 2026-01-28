@@ -18,6 +18,7 @@ import {
   createEventFormSchema,
   editEventFormSchema,
 } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/Snackbar';
 import EventCard, { EventCardSkeleton } from './EventCard';
 
 type EventFormProps =
@@ -44,8 +45,26 @@ interface EventDetails {
 
 const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const api = useTRPC();
-  const createMutation = useMutation(api.event.create.mutationOptions());
-  const updateMutation = useMutation(api.event.update.mutationOptions());
+  const createMutation = useMutation(
+    api.event.create.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedCustom('Created event!'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
+  const updateMutation = useMutation(
+    api.event.update.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('event'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
   const uploadImage = useUploadToUploadURL();
   const router = useRouter();
 

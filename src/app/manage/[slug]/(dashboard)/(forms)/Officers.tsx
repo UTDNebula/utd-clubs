@@ -30,6 +30,7 @@ import type { SelectClub, SelectOfficer } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editListedOfficerSchema } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/Snackbar';
 
 type FormData = z.infer<typeof editListedOfficerSchema>;
 
@@ -59,7 +60,14 @@ type OfficersProps = {
 const Officers = ({ club, listedOfficers }: OfficersProps) => {
   const api = useTRPC();
   const editOfficers = useMutation(
-    api.club.edit.listedOfficers.mutationOptions({}),
+    api.club.edit.listedOfficers.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club listed officer'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
   );
 
   const [defaultValues, setDefaultValues] = useState({

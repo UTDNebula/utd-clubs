@@ -13,6 +13,7 @@ import type {
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editOfficerSchema } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/Snackbar';
 
 type FormData = z.infer<typeof editOfficerSchema>;
 
@@ -52,7 +53,14 @@ const Collaborators = ({
     (role === 'Admin'
       ? api.admin.updateOfficers
       : api.club.edit.officers
-    ).mutationOptions({}),
+    ).mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club collaborators'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
   );
 
   const [defaultValues, setDefaultValues] = useState({
