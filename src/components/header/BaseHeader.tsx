@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import ClubMatchButton from '@src/components/header/ClubMatchButton';
 import Sidebar from '@src/components/nav/Sidebar';
 import NebulaLogo from '@src/icons/NebulaLogo';
+import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { ClubSearchBar } from '../searchBar/ClubSearchBar';
 import { EventSearchBar } from '../searchBar/EventSearchBar';
 import { ProfileDropDown } from './ProfileDropDown';
@@ -91,7 +92,7 @@ export const BaseHeader = async ({
         {logoVisibility && (
           <Link
             href="/"
-            className={`lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center ${
+            className={`font-display flex gap-2 items-center ${
               color?.startsWith('light') ? 'text-white' : 'text-haiti'
             } ${
               color === 'lightDark'
@@ -101,18 +102,27 @@ export const BaseHeader = async ({
                   : ''
             }`}
           >
-            <NebulaLogo
-              className={`h-6 w-auto ${
-                color?.startsWith('light') ? 'fill-white' : 'fill-haiti'
-              } ${
-                color === 'lightDark'
-                  ? 'dark:fill-haiti'
-                  : color === 'darkLight'
-                    ? 'dark:fill-white'
-                    : ''
-              }`}
-            />
-            <span className="whitespace-nowrap">UTD CLUBS</span>
+            <div className="flex flex-row items-center max-sm:hidden">
+              <UTDClubsLogoStandalone
+                className={`h-10 w-auto ${
+                  color?.startsWith('light') ? 'fill-white' : 'fill-haiti'
+                } ${
+                  color === 'lightDark'
+                    ? 'dark:fill-haiti'
+                    : color === 'darkLight'
+                      ? 'dark:fill-white'
+                      : ''
+                }`}
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="whitespace-nowrap text-lg md:text-xl font-bold leading-5">
+                UTD CLUBS
+              </span>
+              <span className="whitespace-nowrap text-xs md:text-sm font-medium">
+                by Nebula Labs
+              </span>
+            </div>
           </Link>
         )}
       </div>
