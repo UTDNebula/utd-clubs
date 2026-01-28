@@ -1,3 +1,16 @@
+/**
+ * @file Provides a unified snackbar system for the entire codebase.
+ *
+ * To use, call {@linkcode setSnackbar} from any component that is a child of {@linkcode SnackbarProvider}
+ *
+ * @example <caption>Basic usage (using hook)</caption>
+ * const { setSnackbar } = useSnackbar();
+ * setSnackbar("Lorem ipsum dolor sit amet");
+ *
+ * @example <caption>Shortcut (using global ref)</caption>
+ * setSnackbar("Lorem ipsum dolor sit amet");
+ */
+
 'use client';
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -15,6 +28,10 @@ import {
   useRef,
   useState,
 } from 'react';
+
+/*
+ * Snackbar type and defaults
+ */
 
 export type Snackbar = {
   open?: boolean;
@@ -83,9 +100,32 @@ const SnackbarDefault: Snackbar = {
   fitContent: false,
 };
 
+/*
+ * setSnackbar() and global setSnackbar() reference function
+ */
+
+type setSnackbarFn = (snackbar: string | Omit<Snackbar, 'open'>) => void;
+
+let setSnackbarRef: setSnackbarFn = () => {
+  console.warn('Snackbar context not initialized');
+};
+
+/**
+ * Shortcut to accessing the global state of the snackbar system without calling the {@linkcode useSnackbar} hook
+ *
+ * @example <caption>Basic usage</caption>
+ * setSnackbar("Lorem ipsum dolor sit amet");
+ */
+export const setSnackbar: setSnackbarFn = (snackbar) =>
+  setSnackbarRef(snackbar);
+
+/*
+ * Snackbar Context
+ */
+
 interface SnackbarProviderContext {
   snackbar: Snackbar;
-  setSnackbar: (snackbar: string | Omit<Snackbar, 'open'>) => void;
+  setSnackbar: setSnackbarFn;
 }
 
 const SnackbarContextDefault: SnackbarProviderContext = {
@@ -97,7 +137,23 @@ export const SnackbarContext = createContext<SnackbarProviderContext>(
   SnackbarContextDefault,
 );
 
+/**
+ * Hook that grants access to the snackbar system. Allows you to set and read the snackbar
+ *
+ * @example <caption>Basic usage</caption>
+ * const { setSnackbar } = useSnackbar();
+ * setSnackbar("Lorem ipsum dolor sit amet");
+ *
+ * @example <caption>Reading snackbar</caption>
+ * const { snackbar, setSnackbar } = useSnackbar();
+ * setSnackbar("foo bar");
+ * console.log("snackbar.message") // Output: foo bar
+ */
 export const useSnackbar = () => useContext(SnackbarContext);
+
+/*
+ * Provider
+ */
 
 export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   // Timeout timer that resets anytime `setSnackbar()` is called, to ensure users are able to read consecutive snackbars before it closes
@@ -107,7 +163,7 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
     SnackbarContextDefault['snackbar'],
   );
 
-  const setSnackbar: SnackbarProviderContext['setSnackbar'] = (arg) => {
+  const setSnackbar: setSnackbarFn = (arg) => {
     let newSnackbarState: Snackbar = SnackbarDefault;
 
     if (typeof arg === 'string') {
@@ -123,6 +179,14 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
       timeoutIdRef.current = null;
     }
   };
+
+  // Sync global setSnackbarRef with local component state
+  useEffect(() => {
+    setSnackbarRef = setSnackbar;
+    return () => {
+      setSnackbarRef = () => console.warn('Provider unmounted');
+    };
+  });
 
   const handleClose = useCallback(
     (reason?: SnackbarCloseReason | 'dismiss' | 'close') => {
@@ -232,3 +296,31 @@ function getSnackbarTitle(severity: AlertColor) {
 
   return titleStrings[severity];
 }
+
+/**
+ * Snackbar presets that can be used as an input for `setSnackbar()`. Modify this file to add other snackbar presets.
+ *
+ * Presets can also be functions that work as templates. These functions return a Snackbar object and accept any number of arguments.
+ *
+ * @example <caption>Basic usage</caption>
+ * setSnackbar(SnackbarPresets.saved)
+ *
+ * @example <caption>Using a function template</caption>
+ * setSnackbar(SnackbarPresets.savedName("form"))
+ * // OR
+ * setSnackbar(SnackbarPresets["savedName"]("form"))
+ */
+export const SnackbarPresets = {
+  saved: {
+    message: 'Saved!',
+    type: 'success',
+    autoHideDuration: true,
+    fitContent: true,
+  },
+  savedName: (name: string) => ({
+    message: `Saved ${name}!`,
+    type: 'success',
+    autoHideDuration: true,
+    fitContent: true,
+  }),
+} satisfies Record<string, Snackbar | ((...args: never[]) => Snackbar)>;
