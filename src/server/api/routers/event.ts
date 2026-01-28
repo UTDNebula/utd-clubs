@@ -4,6 +4,7 @@ import { add, startOfDay } from 'date-fns';
 import {
   and,
   between,
+  count,
   eq,
   gte,
   ilike,
@@ -111,12 +112,12 @@ export const eventRouter = createTRPCRouter({
           ? eq(events.clubId, clubId)
           : and(eq(events.clubId, clubId), gte(events.endTime, now));
         const result = await ctx.db
-          .select({ count: sql<number>`count(*)` })
+          .select({ value: count() })
           .from(events)
           .where(whereCondition);
-        const count = result[0]?.count ?? 0;
+        const value = result[0]?.value ?? 0;
 
-        return count;
+        return value;
       } catch (e) {
         console.error(e);
 
