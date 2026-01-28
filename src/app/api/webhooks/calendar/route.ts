@@ -5,6 +5,7 @@ import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
 import { getAuthForClub, syncCalendar } from '@src/utils/calendar';
 
 export async function POST(req: NextRequest) {
+  // get headers
   const channelId = req.headers.get('x-goog-channel-id');
   const resourceId = req.headers.get('x-goog-resource-id');
   const resourceState = req.headers.get('x-goog-resource-state');
@@ -14,6 +15,7 @@ export async function POST(req: NextRequest) {
   if (!channelId || !resourceId || !token)
     return new NextResponse('Missing headers', { status: 400 });
 
+  // find webhook in db
   const webhook = await db.query.calendarWebhooks.findFirst({
     where: eq(calendarWebhooks.id, channelId),
   });
@@ -22,6 +24,7 @@ export async function POST(req: NextRequest) {
   if (webhook.token !== token || webhook.resourceId !== resourceId)
     return new NextResponse('Forbidden', { status: 403 });
 
+  // try syncing
   try {
     const auth = await getAuthForClub(webhook.clubId);
     await syncCalendar(webhook.clubId, false, auth); // sync the calendar

@@ -9,6 +9,7 @@ import {
   getTableName,
   gt,
   inArray,
+  not,
   SQL,
   sql,
   type InferInsertModel,
@@ -273,9 +274,8 @@ export async function getAuthForClub(clubId: string): Promise<OAuth2Client> {
   return auth;
 }
 
-export async function watchCalendar(clubId: string) {
+export async function watchCalendar(clubId: string, refresh: boolean = false) {
   // check if webhook exists
-  //TODO: what if it's a diff calendar for the same account
   const existingWebhook = await db.query.calendarWebhooks.findFirst({
     where: and(
       eq(calendarWebhooks.clubId, clubId),
@@ -283,14 +283,16 @@ export async function watchCalendar(clubId: string) {
     ),
   });
 
-  if (existingWebhook) {
+  if (existingWebhook && !refresh) {
     console.log(`GCal for clubId ${clubId} is already being watched.`);
     return {
       channelId: existingWebhook.id,
-      expiration: existingWebhook.expiration,
+      expires: existingWebhook.expiration,
     };
   }
-  console.log(`GCal for clubId ${clubId} is not being watched yet`);
+  if (!refresh)
+    console.log(`GCal for clubId ${clubId} is not being watched yet`);
+  else console.log(`refreshing clubId ${clubId}`);
 
   // get auth & club data
   const auth = await getAuthForClub(clubId);
@@ -338,32 +340,50 @@ export async function watchCalendar(clubId: string) {
   }
 }
 
-export async function stopWatching(clubId: string) {
-  const webhook = await db.query.calendarWebhooks.findFirst({
-    where: eq(calendarWebhooks.clubId, clubId),
-  });
+export async function stopWatching(clubId: string, channelIdToKeep?: string) {
+  let webhooks = [];
+  if (channelIdToKeep) {
+    webhooks = await db.query.calendarWebhooks.findMany({
+      where: and(
+        eq(calendarWebhooks.clubId, clubId),
+        not(eq(calendarWebhooks.id, channelIdToKeep)),
+      ),
+    });
+  } else {
+    webhooks = await db.query.calendarWebhooks.findMany({
+      where: eq(calendarWebhooks.clubId, clubId),
+    });
+  }
 
-  if (!webhook) {
-    console.error(`Could not find webhook for clubID: ${clubId}`);
+  if (!webhooks || webhooks.length == 0) {
+    console.error(`Could not find webhook to delete for clubID: ${clubId}`);
     return;
   }
 
-  try {
-    const auth = await getAuthForClub(clubId);
-    await google.calendar('v3').channels.stop({
-      auth,
-      requestBody: {
-        id: webhook.id,
-        resourceId: webhook.resourceId,
-      },
-    });
-    console.log('Stopped channel');
-  } catch (e) {
-    console.error('Could not stop channel', e);
-  }
+  const auth = await getAuthForClub(clubId);
 
+  await Promise.all(
+    webhooks.map(async (webhook) => {
+      try {
+        await google.calendar('v3').channels.stop({
+          auth,
+          requestBody: {
+            id: webhook.id,
+            resourceId: webhook.resourceId,
+          },
+        });
+        console.log('Stopped channel');
+      } catch (e) {
+        console.error('Could not stop channel', e);
+      }
+    }),
+  );
+
+  const webhookIds = webhooks.map((w) => w.id);
   // Delete webhook from data
-  await db.delete(calendarWebhooks).where(eq(calendarWebhooks.id, webhook.id));
+  await db
+    .delete(calendarWebhooks)
+    .where(inArray(calendarWebhooks.id, webhookIds));
   console.log('deleted webhook from db');
 }
 
