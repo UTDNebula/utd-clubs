@@ -346,4 +346,11 @@ export const SnackbarPresets = {
     autoHideDuration: false,
     showClose: true,
   }),
+  errorCustomMessage: (title: string, message: string) => ({
+    title: title,
+    message: message,
+    type: 'error',
+    autoHideDuration: false,
+    showClose: true,
+  }),
 } satisfies Record<string, Snackbar | ((...args: never[]) => Snackbar)>;

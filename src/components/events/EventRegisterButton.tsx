@@ -9,6 +9,7 @@ import { useRef } from 'react';
 import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import { setSnackbar, SnackbarPresets } from '@src/utils/Snackbar';
 import EventEditButton from './EventEditButton';
 
 type EventRegisterButtonProps = {
@@ -59,7 +60,24 @@ const EventRegisterButton = ({
         });
         return { previousState, queryKey };
       },
-      onError: (_err, _vars, context) => {
+      onSuccess: (context) => {
+        const joined = context?.registeredAt === undefined;
+
+        setSnackbar({
+          message: joined ? 'Registered to event!' : 'Unregistered from event!',
+          type: joined ? 'success' : 'info',
+          autoHideDuration: true,
+          fitContent: true,
+          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+        });
+      },
+      onError: (error, _vars, context) => {
+        setSnackbar(
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
+        );
         if (context?.previousState) {
           queryClient.setQueryData(context.queryKey, context.previousState);
         }
