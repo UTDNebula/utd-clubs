@@ -190,6 +190,7 @@ export const userMetadataRouter = createTRPCRouter({
           sql`
             CONCAT(${userMetadata.firstName}, ' ', ${userMetadata.lastName}) ILIKE ${q}
             OR ${users.email} ILIKE ${q}
+            OR ${userMetadata.contactEmail} ILIKE ${q}
           `,
         );
 
