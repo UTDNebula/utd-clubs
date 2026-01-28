@@ -11,6 +11,7 @@ import {
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useBaseHeaderContext } from '@src/components/header/BaseHeader';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
 
@@ -29,6 +30,8 @@ export const ClubSearchBar = () => {
       },
     ),
   );
+
+  const { showSearchBar } = useBaseHeaderContext();
 
   return (
     <Autocomplete
@@ -57,6 +60,7 @@ export const ClubSearchBar = () => {
           {...params}
           size="small"
           className="w-full"
+          autoFocus={showSearchBar}
           slotProps={{
             input: {
               ...params.InputProps,
