@@ -5,6 +5,7 @@ import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
 import { getAuthForClub, syncCalendar } from '@src/utils/calendar';
 
 export async function POST(req: NextRequest) {
+  console.log('received gcal sync post');
   const channelId = req.headers.get('x-goog-channel-id');
   const resourceId = req.headers.get('x-goog-resource-id');
   const resourceState = req.headers.get('x-goog-resource-state');
@@ -23,8 +24,11 @@ export async function POST(req: NextRequest) {
     return new NextResponse('Forbidden', { status: 403 });
 
   try {
+    console.log('gettign auth');
     const auth = await getAuthForClub(webhook.clubId);
+    console.log('syncing clubs');
     await syncCalendar(webhook.clubId, false, auth); // sync the calendar
+    console.log(`Calendar for ${webhook.clubId} was just synced`);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Sync failed:', error);
