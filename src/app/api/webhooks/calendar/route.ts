@@ -24,14 +24,12 @@ export async function POST(req: NextRequest) {
     return new NextResponse('Forbidden', { status: 403 });
 
   try {
-    console.log('gettign auth');
     const auth = await getAuthForClub(webhook.clubId);
-    console.log('syncing clubs');
     await syncCalendar(webhook.clubId, false, auth); // sync the calendar
     console.log(`Calendar for ${webhook.clubId} was just synced`);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Sync failed:', error);
+    console.error(`Sync failed for clubId: ${webhook.clubId}:`, error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
