@@ -1,4 +1,4 @@
-import { and, eq, gte, inArray, or, sql } from 'drizzle-orm';
+import { and, eq, gte, inArray, or, sql, count } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
@@ -217,12 +217,12 @@ export const userMetadataRouter = createTRPCRouter({
         : inArray(events.clubId, clubIds);
 
       const result = await ctx.db
-        .select({ count: sql<number>`count(*)` })
+        .select({ value: count() })
         .from(events)
         .where(whereClause);
-      const count = result[0]?.count ?? 0;
+      const value = result[0]?.value ?? 0;
 
-      return count;
+      return value;
     }),
   searchByNameOrEmail: publicProcedure
     .input(nameOrEmailSchema)
