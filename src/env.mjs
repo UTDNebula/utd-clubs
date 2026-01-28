@@ -19,7 +19,13 @@ const server = z.object({
   ),
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
-  DATABASE_URL: z.string().min(1),
+  // DATABASE_URL is required in production, but make it optional during
+  // development and test so tools like `next lint` or local scripts that
+  // don't need a live database can run without a configured DATABASE_URL.
+  DATABASE_URL:
+    process.env.NODE_ENV === 'production'
+      ? z.string().min(1)
+      : z.string().min(1).optional(),
   DISCORD_CLIENT_ID: z.string().min(1),
   DISCORD_CLIENT_SECRET: z.string().min(1),
   SENTRY_AUTH_TOKEN: z.string().optional(),
@@ -46,7 +52,9 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
-  NODE_ENV: process.env.NODE_ENV,
+  // Default NODE_ENV to 'development' when not provided so CLI tools
+  // (like `next lint`) that import this file won't fail during zod parsing.
+  NODE_ENV: process.env.NODE_ENV ?? 'development',
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
@@ -74,7 +82,13 @@ const merged = server.merge(client);
 
 let env = /** @type {MergedOutput} */ (process.env);
 
-if (!!process.env.SKIP_ENV_VALIDATION == false) {
+// Skip validation during linting or when SKIP_ENV_VALIDATION is explicitly set.
+const skipValidation =
+  !!process.env.SKIP_ENV_VALIDATION ||
+  process.env.npm_lifecycle_event === 'lint' ||
+  process.argv.some((a) => String(a).toLowerCase().includes('lint'));
+
+if (!skipValidation) {
   const isServer = typeof window === 'undefined';
 
   const parsed = /** @type {MergedSafeParseReturn} */ (
