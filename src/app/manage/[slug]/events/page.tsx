@@ -18,10 +18,10 @@ export default async function Page({
     notFound();
   }
 
-  const events = (await api.event.byClubId({
+  const events = await api.event.byClubId({
     clubId: club.id,
     sortByDate: true,
-  })).reverse();
+  });
 
   return (
     <main>
