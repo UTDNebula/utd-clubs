@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import EventCard from '@src/components/events/EventCard';
-import ManageEventsPagination from '@src/components/events/EventPagination';
+import EventsPagination from '@src/components/events/EventPagination';
 import IncludePastSwitch from '@src/components/events/IncludePastSwitch';
 import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
@@ -78,7 +78,7 @@ export default async function Page({
         ))}
       </div>
       <div className="flex justify-center py-10">
-        <ManageEventsPagination
+        <EventsPagination
           page={page}
           totalPages={totalPages}
           pageSize={pageSize}

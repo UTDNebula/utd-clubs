@@ -5,7 +5,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button } from '@mui/material';
 import Link from 'next/link';
 import EventCard from '@src/components/events/EventCard';
-import ManageEventsPagination from '@src/components/events/EventPagination';
+import EventsPagination from '@src/components/events/EventPagination';
 import { api } from '@src/trpc/server';
 
 export const RegisteredEvents = async () => {
@@ -113,7 +113,7 @@ export const ClubEvents = async ({
       </div>
 
       <div className="flex justify-center py-10">
-        <ManageEventsPagination
+        <EventsPagination
           page={page}
           totalPages={totalPages}
           pageSize={pageSize}
