@@ -520,6 +520,13 @@ export const eventRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
 
+      const clubRecord = await ctx.db.query.club.findFirst({
+        where: eq(club.id, input.clubId),
+        columns: { calendarId: true },
+      });
+
+      if (!clubRecord) throw new TRPCError({ code: 'NOT_FOUND' });
+
       const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
         where: and(
           eq(userMetadataToClubs.userId, userId),
@@ -534,6 +541,21 @@ export const eventRouter = createTRPCRouter({
       // close webhook
       await stopWatching(input.clubId);
 
+      // delete all synced events
+      await ctx.db
+        .update(events)
+        .set({ status: 'deleted' })
+        .where(
+          and(
+            eq(events.clubId, input.clubId),
+            eq(events.google, true),
+            clubRecord.calendarId
+              ? eq(events.calendarId, clubRecord.calendarId)
+              : undefined,
+            input.keepPastEvents ? gt(events.startTime, new Date()) : undefined, // IF indicated, delete only events that have not yet started
+          ),
+        );
+
       // remove google calendar info from the club
       await ctx.db
         .update(club)
@@ -544,18 +566,6 @@ export const eventRouter = createTRPCRouter({
           calendarGoogleAccountId: null,
         })
         .where(eq(club.id, input.clubId));
-
-      // delete all synced events
-      await ctx.db
-        .update(events)
-        .set({ status: 'deleted' })
-        .where(
-          and(
-            eq(events.clubId, input.clubId),
-            eq(events.google, true),
-            input.keepPastEvents ? gt(events.startTime, new Date()) : undefined, // IF indicated, delete only events that have not yet started
-          ),
-        );
 
       return { success: true };
     }),

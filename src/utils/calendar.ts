@@ -92,13 +92,18 @@ export async function syncCalendar(
   const res = await db.transaction(
     async (tx) => {
       await tx.execute(sql`SET CONSTRAINTS ALL DEFERRED`);
-      if (reset) {
+      if (reset && club.calendarId) {
+        // club must have a calendar currently synced before resetting events of the calendar
         // SCARY
         await tx
           .update(eventTable)
           .set({ status: 'deleted' })
           .where(
-            and(eq(eventTable.clubId, clubId), eq(eventTable.google, true)),
+            and(
+              eq(eventTable.clubId, clubId),
+              eq(eventTable.google, true),
+              eq(eventTable.calendarId, club.calendarId),
+            ),
           );
       }
       let pagesRemaining = true;
@@ -146,6 +151,7 @@ export async function syncCalendar(
                   'location',
                   'createdAt',
                   'updatedAt',
+                  'calendarId',
                 ]),
               });
           }
@@ -235,6 +241,7 @@ function generateEvent(
     location: event.location,
     createdAt: new Date(event.created),
     updatedAt: new Date(event.updated),
+    calendarId: event.organizer?.email,
   };
 }
 
@@ -400,6 +407,12 @@ const eventSchema = z.object({
   }),
   created: z.iso.datetime(),
   updated: z.iso.datetime(),
+  organizer: z
+    .object({
+      email: z.string(),
+      displayName: z.string(),
+    })
+    .optional(),
   attachments: z
     .array(
       z.object({
