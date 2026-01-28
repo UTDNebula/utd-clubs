@@ -16,6 +16,7 @@ import {
   AccountSettingsSchema,
   accountSettingsSchema,
 } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/Snackbar';
 
 type UserInfoProps = {
   user: SelectUserMetadataWithClubs;
@@ -25,7 +26,14 @@ export default function UserInfo({ user }: UserInfoProps) {
   const api = useTRPC();
 
   const editAccountMutation = useMutation(
-    api.userMetadata.updateById.mutationOptions({}),
+    api.userMetadata.updateById.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('user info'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
   );
 
   const [defaultValues, setDefaultValues] = useState<AccountSettingsSchema>({

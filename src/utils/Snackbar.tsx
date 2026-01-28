@@ -316,11 +316,26 @@ export const SnackbarPresets = {
     type: 'success',
     autoHideDuration: true,
     fitContent: true,
+    closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
   },
   savedName: (name: string) => ({
     message: `Saved ${name}!`,
     type: 'success',
     autoHideDuration: true,
     fitContent: true,
+    closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+  }),
+  error: {
+    message: 'Failed to save!',
+    type: 'error',
+    autoHideDuration: false,
+    showClose: true,
+  },
+  errorMessage: (message: string) => ({
+    title: `Failed to save!`,
+    message: message,
+    type: 'error',
+    autoHideDuration: false,
+    showClose: true,
   }),
 } satisfies Record<string, Snackbar | ((...args: never[]) => Snackbar)>;
