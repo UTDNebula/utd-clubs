@@ -4,7 +4,7 @@ import Diversity3Icon from '@mui/icons-material/Diversity3';
 import { Button, IconButton } from '@mui/material';
 import Link from 'next/link';
 import { authClient } from '@src/utils/auth-client';
-import { useRegisterModal } from '../account/RegisterModalProvider';
+import { useRegisterModal } from '../global/RegisterModalProvider';
 
 const shadowStyle = 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]';
 

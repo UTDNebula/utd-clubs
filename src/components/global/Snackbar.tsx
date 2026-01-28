@@ -190,8 +190,6 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
 
   const handleClose = useCallback(
     (reason?: SnackbarCloseReason | 'dismiss' | 'close') => {
-      console.log('reason', reason);
-
       if (reason && reason !== 'close' && !snackbar.closeOn?.includes(reason))
         return;
 

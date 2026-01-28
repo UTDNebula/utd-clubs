@@ -4,10 +4,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
-import { RegisterModalProvider } from '@src/components/account/RegisterModalProvider';
+import { RegisterModalProvider } from '@src/components/global/RegisterModalProvider';
+import { SnackbarProvider } from '@src/components/global/Snackbar';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
-import { SnackbarProvider } from '@src/utils/Snackbar';
 import theme from '@src/utils/theme';
 
 const inter = Inter({

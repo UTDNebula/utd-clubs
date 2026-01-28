@@ -25,12 +25,12 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@src/components/common/Panel';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import OfficerListItem from '@src/components/manage/OfficerListItem';
 import type { SelectClub, SelectOfficer } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editListedOfficerSchema } from '@src/utils/formSchemas';
-import { setSnackbar, SnackbarPresets } from '@src/utils/Snackbar';
 
 type FormData = z.infer<typeof editListedOfficerSchema>;
 

@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { RegisterModalContents } from '@src/components/account/RegisterModal';
+import { RegisterModalContents } from '@src/components/global/RegisterModal';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import { auth } from '@src/server/auth';
 
