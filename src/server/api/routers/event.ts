@@ -4,6 +4,7 @@ import { add, startOfDay } from 'date-fns';
 import {
   and,
   between,
+  count,
   eq,
   gte,
   ilike,
@@ -32,6 +33,14 @@ const byClubIdSchema = z.object({
   clubId: z.string().default(''),
   currentTime: z.optional(z.date()),
   sortByDate: z.boolean().default(false),
+  page: z.number().int().positive().optional(),
+  pageSize: z.number().int().positive().optional(),
+  includePast: z.boolean().optional().default(false),
+});
+const countByClubIdSchema = z.object({
+  clubId: z.string(),
+  includePast: z.boolean().optional().default(false),
+  currentTime: z.optional(z.date()),
 });
 const clubUpcomingEventsSchema = z.object({
   clubId: z.string(),
@@ -66,21 +75,49 @@ export const eventRouter = createTRPCRouter({
   byClubId: publicProcedure
     .input(byClubIdSchema)
     .query(async ({ input, ctx }) => {
-      const { clubId, currentTime, sortByDate } = input;
+      const { clubId, currentTime, sortByDate, includePast } = input;
+      const page = Math.max(1, input.page ?? 1);
+      const pageSize = Math.max(1, Math.min(50, input.pageSize ?? 12));
+      const offset = (page - 1) * pageSize;
+      const now = currentTime ?? new Date();
 
       try {
         const events = await ctx.db.query.events.findMany({
-          where: (event) =>
-            currentTime
-              ? and(eq(event.clubId, clubId), gte(event.endTime, currentTime))
-              : eq(event.clubId, clubId),
-          orderBy: sortByDate ? (event) => [event.startTime] : undefined,
-          with: {
-            club: true,
+          where: (event) => {
+            const base = eq(event.clubId, clubId);
+            if (includePast) return base;
+            return and(base, gte(event.endTime, now));
           },
+          orderBy: sortByDate ? (event) => [event.startTime] : undefined,
+          with: { club: true },
+          limit: pageSize,
+          offset: offset,
         });
 
         return events;
+      } catch (e) {
+        console.error(e);
+
+        throw e;
+      }
+    }),
+  countByClubId: publicProcedure
+    .input(countByClubIdSchema)
+    .query(async ({ input, ctx }) => {
+      const { clubId, includePast } = input;
+      const now = input.currentTime ?? new Date();
+
+      try {
+        const whereCondition = includePast
+          ? eq(events.clubId, clubId)
+          : and(eq(events.clubId, clubId), gte(events.endTime, now));
+        const result = await ctx.db
+          .select({ value: count() })
+          .from(events)
+          .where(whereCondition);
+        const value = result[0]?.value ?? 0;
+
+        return value;
       } catch (e) {
         console.error(e);
 

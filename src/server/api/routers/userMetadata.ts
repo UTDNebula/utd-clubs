@@ -1,4 +1,4 @@
-import { and, eq, or, sql } from 'drizzle-orm';
+import { and, count, eq, gte, inArray, or, sql } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
@@ -10,6 +10,7 @@ import {
 } from '@src/server/db/models';
 import { admin } from '@src/server/db/schema/admin';
 import { user as users } from '@src/server/db/schema/auth';
+import { events } from '@src/server/db/schema/events';
 import { userMetadata, userMetadataToClubs } from '@src/server/db/schema/users';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
@@ -26,6 +27,13 @@ const nameOrEmailSchema = z.object({
 const eventsSortSchema = z.object({
   currentTime: z.optional(z.date()),
   sortByDate: z.boolean().default(false),
+});
+
+const joinedClubEventsSchema = z.object({
+  currentTime: z.optional(z.date()),
+  sortByDate: z.boolean().default(false),
+  page: z.number().int().positive().optional(),
+  pageSize: z.number().int().positive().optional(),
 });
 
 export const userMetadataRouter = createTRPCRouter({
@@ -141,36 +149,80 @@ export const userMetadataRouter = createTRPCRouter({
       return events;
     }),
   getEventsFromJoinedClubs: protectedProcedure
-    .input(eventsSortSchema)
+    .input(joinedClubEventsSchema)
     .query(async ({ input, ctx }) => {
       const { currentTime, sortByDate } = input;
 
-      const rows = await ctx.db.query.userMetadataToClubs.findMany({
-        where: (t) => eq(t.userId, ctx.session.user.id),
-        with: {
-          club: {
-            with: {
-              events: {
-                with: { club: true },
-              },
-            },
-          },
-        },
+      const page = Math.max(1, input.page ?? 1);
+      const pageSize = Math.max(1, Math.min(50, input.pageSize ?? 12));
+      const offset = (page - 1) * pageSize;
+
+      const clubRows = await ctx.db
+        .select({ clubId: userMetadataToClubs.clubId })
+        .from(userMetadataToClubs)
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, ctx.session.user.id),
+            inArray(userMetadataToClubs.memberType, [
+              'Member',
+              'Officer',
+              'President',
+            ]),
+          ),
+        );
+
+      const clubIds = clubRows.map((row) => row.clubId);
+      if (clubIds.length === 0) return [];
+
+      const now = currentTime ?? new Date();
+
+      const rows = await ctx.db.query.events.findMany({
+        where: (e) =>
+          and(
+            inArray(e.clubId, clubIds),
+            currentTime ? gte(e.endTime, now) : undefined,
+          ),
+        orderBy: sortByDate ? (e) => [e.startTime] : undefined,
+        with: { club: true },
+        limit: pageSize,
+        offset,
       });
 
-      let events = rows.flatMap((row) => row.club.events);
-
-      if (currentTime) {
-        events = events.filter((ev) => ev.endTime >= currentTime);
-      }
-
-      if (sortByDate) {
-        events = events.sort(
-          (a, b) => a.startTime.getTime() - b.startTime.getTime(),
+      return rows;
+    }),
+  countEventsFromJoinedClubs: protectedProcedure
+    .input(joinedClubEventsSchema)
+    .query(async ({ input, ctx }) => {
+      const clubRows = await ctx.db
+        .select({ clubId: userMetadataToClubs.clubId })
+        .from(userMetadataToClubs)
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, ctx.session.user.id),
+            inArray(userMetadataToClubs.memberType, [
+              'Member',
+              'Officer',
+              'President',
+            ]),
+          ),
         );
-      }
 
-      return events;
+      const clubIds = clubRows.map((row) => row.clubId);
+      if (clubIds.length === 0) return 0;
+
+      const now = input.currentTime ?? new Date();
+
+      const whereClause = input.currentTime
+        ? and(inArray(events.clubId, clubIds), gte(events.endTime, now))
+        : inArray(events.clubId, clubIds);
+
+      const result = await ctx.db
+        .select({ value: count() })
+        .from(events)
+        .where(whereClause);
+      const value = result[0]?.value ?? 0;
+
+      return value;
     }),
   searchByNameOrEmail: publicProcedure
     .input(nameOrEmailSchema)
