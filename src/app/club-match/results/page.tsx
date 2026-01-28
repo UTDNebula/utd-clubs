@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import JoinButton from '@src/components/club/JoinButton';
 import { BaseCard } from '@src/components/common/BaseCard';
-import Header from '@src/components/header/BaseHeader';
+import Header from '@src/components/header/Header';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { signInRoute } from '@src/utils/redirect';

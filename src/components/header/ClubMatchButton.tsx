@@ -27,18 +27,22 @@ export default function ClubMatchButton({
       }
     : undefined;
 
-  const button = iconOnly ? (
+  return iconOnly ? (
     <IconButton
+      LinkComponent={Link}
+      href={session ? '/club-match/results' : ''}
       size="large"
-      className={`rounded-full bg-royal text-white ${shadow ? shadowStyle : ''}`}
+      className={`rounded-full w-10 h-10 bg-[var(--mui-palette-primary-main)] hover:bg-[var(--mui-palette-primary-dark)] text-white dark:text-black ${shadow ? shadowStyle : ''}`}
       onClick={handleClick}
     >
       {icon}
     </IconButton>
   ) : (
     <Button
+      LinkComponent={Link}
+      href={session ? '/club-match/results' : undefined}
       variant="contained"
-      className={`rounded-full normal-case whitespace-nowrap ${shadow ? shadowStyle : ''}`}
+      className={`normal-case px-5 py-2 h-10 whitespace-nowrap ${shadow ? shadowStyle : ''}`}
       startIcon={icon}
       onClick={handleClick}
       disableElevation
@@ -46,6 +50,4 @@ export default function ClubMatchButton({
       Club Match
     </Button>
   );
-
-  return session ? <Link href={'/club-match/results'}>{button}</Link> : button;
 }

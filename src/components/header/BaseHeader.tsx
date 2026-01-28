@@ -1,13 +1,13 @@
+'use client';
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SearchIcon from '@mui/icons-material/Search';
+import { IconButton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
-import type { ReactNode } from 'react';
-import ClubMatchButton from '@src/components/header/ClubMatchButton';
-import Sidebar from '@src/components/nav/Sidebar';
-import NebulaLogo from '@src/icons/NebulaLogo';
+import { useState, type ReactNode } from 'react';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
-import { ClubSearchBar } from '../searchBar/ClubSearchBar';
-import { EventSearchBar } from '../searchBar/EventSearchBar';
 import { ProfileDropDown } from './ProfileDropDown';
 
 /**
@@ -25,15 +25,34 @@ export type ContentComponentColor =
 
 export type HeaderItemVisibility = {
   menu?: boolean;
-  logo?: boolean;
+  /**
+   * Visibility options for the header logo
+   * - `true` Automatically switches between "both" or "text" based on screen size
+   * - `false` Disabled
+   * - `"both"` Always show both the logo icon and text
+   * - `"icon"` Only ever show the logo icon
+   * - `"text"` Only ever show the logo text
+   * @default true
+   */
+  logo?: true | false | 'both' | 'icon' | 'text';
+  /**
+   * Visibility options for the header search bar
+   * - `true` Automatically switches between "full" or "compact" based on screen size
+   * - `false` Disabled
+   * - `"full"` Always show full search bar
+   * - `"compact"` Always show collapsed search button
+   * @default true
+   */
+  search?: true | false | 'full' | 'compact';
   children?: boolean;
-  clubMatch?: boolean;
   account?: boolean;
 };
 
-type BaseHeaderProps = {
-  children?: ReactNode;
-  className?: string;
+export type BaseHeaderPropsBase = {
+  /**
+   * Component displayed for search bar slot. If prop is omitted, search functionality is not displayed
+   */
+  searchBar?: ReactNode;
   /**
    * Manages the visibility of items in the header
    */
@@ -57,23 +76,45 @@ type BaseHeaderProps = {
   color?: 'light' | 'dark' | 'lightDark' | 'darkLight';
 };
 
-export const BaseHeader = async ({
+type BaseHeaderProps = BaseHeaderPropsBase & {
+  children?: ReactNode;
+  className?: string;
+  /**
+   * Component displayed for menu slot
+   */
+  menu?: ReactNode;
+};
+
+export const BaseHeader = ({
   children,
   className,
+  menu,
+  searchBar,
   itemVisibility: {
     menu: menuVisibility = true,
     logo: logoVisibility = true,
+    search: searchVisibility = true,
     children: childrenVisibility = true,
-    clubMatch: clubMatchVisibility = true,
     account: accountVisibility = true,
   } = {},
   transparent = false,
   disableSticky = false,
   color = 'darkLight',
 }: BaseHeaderProps) => {
+  const logoIconVisibility =
+    logoVisibility === true ||
+    logoVisibility === 'both' ||
+    logoVisibility === 'icon';
+  const logoTextVisibility =
+    logoVisibility === true ||
+    logoVisibility === 'both' ||
+    logoVisibility === 'text';
+
+  const [showSearchBar, setShowSearchBar] = useState(false);
+
   return (
     <div
-      className={`${disableSticky ? '' : 'sticky'} top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-2 sm:px-4 flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
+      className={`${disableSticky ? '' : 'sticky'} min-h-17 top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-4 max-sm:pl-2 flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
     >
       {!transparent && (
         <>
@@ -87,82 +128,82 @@ export const BaseHeader = async ({
           <div className="absolute inset-0 bg-lighten dark:bg-darken -z-10"></div>
         </>
       )}
-      <div className="grow basis-0 flex gap-x-2 md:gap-x-4 lg:gap-x-8">
-        {menuVisibility && <Sidebar hamburgerColor={color} />}
-        {logoVisibility && (
-          <Link
-            href="/"
-            className={`font-display flex gap-2 items-center ${
-              color?.startsWith('light') ? 'text-white' : 'text-haiti'
-            } ${
-              color === 'lightDark'
-                ? 'dark:text-haiti'
-                : color === 'darkLight'
-                  ? 'dark:text-white'
-                  : ''
-            }`}
-          >
-            <div className="flex flex-row items-center max-sm:hidden">
-              <UTDClubsLogoStandalone
-                className={`h-10 w-auto ${
-                  color?.startsWith('light') ? 'fill-white' : 'fill-haiti'
+      {!showSearchBar ? (
+        <>
+          <div className="grow basis-0 flex gap-x-2 sm:gap-x-8">
+            {menuVisibility && menu}
+            {logoVisibility && (
+              <Link
+                href="/"
+                className={`font-display flex gap-2 items-center ${
+                  color?.startsWith('light') ? 'text-white' : 'text-haiti'
                 } ${
                   color === 'lightDark'
-                    ? 'dark:fill-haiti'
+                    ? 'dark:text-haiti'
                     : color === 'darkLight'
-                      ? 'dark:fill-white'
+                      ? 'dark:text-white'
                       : ''
                 }`}
-              />
+              >
+                {logoIconVisibility && (
+                  <div
+                    className={`flex flex-row items-center ${logoVisibility === true ? 'max-sm:hidden' : ''}`}
+                  >
+                    <UTDClubsLogoStandalone
+                      className={`h-10 w-auto ${
+                        color?.startsWith('light') ? 'fill-white' : 'fill-haiti'
+                      } ${
+                        color === 'lightDark'
+                          ? 'dark:fill-haiti'
+                          : color === 'darkLight'
+                            ? 'dark:fill-white'
+                            : ''
+                      }`}
+                    />
+                  </div>
+                )}
+                {logoTextVisibility && (
+                  <div className="flex flex-col">
+                    <span className="whitespace-nowrap text-lg md:text-xl font-bold leading-5">
+                      UTD CLUBS
+                    </span>
+                    <span className="whitespace-nowrap text-xs md:text-sm font-medium">
+                      by Nebula Labs
+                    </span>
+                  </div>
+                )}
+              </Link>
+            )}
+          </div>
+          {searchVisibility && (
+            <div
+              className={`order-last max-sm:basis-full basis-128 sm:order-none gap-x-2 md:gap-x-4 lg:gap-x-8 ${searchVisibility === true ? 'max-md:hidden' : ''}`}
+            >
+              {searchBar}
             </div>
-            <div className="flex flex-col">
-              <span className="whitespace-nowrap text-lg md:text-xl font-bold leading-5">
-                UTD CLUBS
-              </span>
-              <span className="whitespace-nowrap text-xs md:text-sm font-medium">
-                by Nebula Labs
-              </span>
-            </div>
-          </Link>
-        )}
-      </div>
-      {childrenVisibility && (
-        <div className="grow order-last basis-full sm:order-none sm:basis-auto gap-x-2 md:gap-x-4 lg:gap-x-8">
-          {children}
+          )}
+          <div className="grow basis-0 flex justify-end items-center gap-x-2">
+            {searchVisibility === true && (
+              <IconButton
+                size="large"
+                className="md:hidden"
+                onClick={() => setShowSearchBar(true)}
+              >
+                <SearchIcon />
+              </IconButton>
+            )}
+            {childrenVisibility && children}
+            {accountVisibility && <ProfileDropDown />}
+          </div>
+        </>
+      ) : (
+        <div className="w-full flex gap-x-2 items-center">
+          <IconButton size="large" onClick={() => setShowSearchBar(false)}>
+            <ArrowBackIcon />
+          </IconButton>
+          {searchVisibility === true && <div className="grow">{searchBar}</div>}
         </div>
       )}
-      <div className="grow basis-0 flex justify-end items-center gap-x-2">
-        {clubMatchVisibility && (
-          <>
-            <div className="sm:hidden">
-              <ClubMatchButton shadow={false} iconOnly />
-            </div>
-            <div className="max-sm:hidden">
-              <ClubMatchButton />
-            </div>
-          </>
-        )}
-
-        {accountVisibility && <ProfileDropDown />}
-      </div>
     </div>
   );
 };
-
-const Header = () => {
-  return (
-    <BaseHeader>
-      <ClubSearchBar />
-    </BaseHeader>
-  );
-};
-
-export const EventHeader = () => {
-  return (
-    <BaseHeader>
-      <EventSearchBar />
-    </BaseHeader>
-  );
-};
-
-export default Header;

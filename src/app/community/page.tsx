@@ -2,7 +2,7 @@ import { type Metadata } from 'next';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import React from 'react';
-import Header from '@src/components/header/BaseHeader';
+import Header from '@src/components/header/Header';
 import { auth } from '@src/server/auth';
 import { ClubEvents, RegisteredEvents } from './communityEvents';
 
