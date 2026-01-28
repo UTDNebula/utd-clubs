@@ -22,7 +22,7 @@ export default async function Page({ params, searchParams }: Props) {
 
   const page = Number(sp.page) || 1;
   const pageSize = Number(sp.pageSize) || 12;
-  const includePast = sp.includePast === '1';
+  const includePast = sp.includePast === 'true';
   const now = new Date();
 
   const club = await api.admin.getDirectoryInfo({ slug });

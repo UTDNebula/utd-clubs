@@ -26,7 +26,7 @@ export default async function Page({
 
   const page = Number(sp.page) || 1;
   const pageSize = Number(sp.pageSize) || 12;
-  const includePast = sp.includePast === '1';
+  const includePast = sp.includePast === 'true';
   const now = new Date();
 
   const club = await api.club.bySlug({ slug });

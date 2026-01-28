@@ -18,7 +18,7 @@ export default function IncludePastSwitch({ checked }: { checked: boolean }) {
           onChange={(_, nextChecked) => {
             const next = new URLSearchParams(searchParams.toString());
 
-            next.set('includePast', nextChecked ? '1' : '0');
+            next.set('includePast', nextChecked ? 'true' : 'false');
             next.set('page', '1');
             router.replace(`${pathname}?${next.toString()}`);
           }}
