@@ -11,6 +11,7 @@ import {
   inArray,
   SQL,
   sql,
+  type InferInsertModel,
 } from 'drizzle-orm';
 import { PgTable } from 'drizzle-orm/pg-core';
 import { GaxiosError } from 'gaxios';
@@ -22,7 +23,6 @@ import { dbWithSessions } from '@src/server/db';
 import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
 import { club as clubTable } from '@src/server/db/schema/club';
 import { events as eventTable } from '@src/server/db/schema/events';
-import { userMetadataToEvents } from '@src/server/db/schema/users';
 import { getGoogleAccessToken } from './googleAuth';
 
 const db = dbWithSessions;
@@ -118,10 +118,13 @@ export async function syncCalendar(
             .map((e) => e.id)
             .filter((e) => e != undefined);
 
+          // await tx
+          //   .delete(userMetadataToEvents)
+          //   .where(inArray(userMetadataToEvents.eventId, deletedIds));
           await tx
-            .delete(userMetadataToEvents)
-            .where(inArray(userMetadataToEvents.eventId, deletedIds));
-          await tx.delete(eventTable).where(inArray(eventTable.id, deletedIds));
+            .update(eventTable)
+            .set({ status: 'deleted' })
+            .where(inArray(eventTable.id, deletedIds));
         }
         try {
           if (newOrUpdated.length > 0) {
@@ -133,6 +136,7 @@ export async function syncCalendar(
                 set: buildConflictUpdateColumns(eventTable, [
                   'name',
                   'description',
+                  'status',
                   'image',
                   'startTime',
                   'endTime',
@@ -189,7 +193,10 @@ export async function syncCalendar(
   );
   return res;
 }
-function generateEvent(clubId: string, event: z.infer<typeof eventSchema>) {
+function generateEvent(
+  clubId: string,
+  event: z.infer<typeof eventSchema>,
+): InferInsertModel<typeof eventTable> {
   let imageUrl: string | null = null;
 
   if (event.attachments) {
@@ -205,6 +212,7 @@ function generateEvent(clubId: string, event: z.infer<typeof eventSchema>) {
     id: event.id,
     clubId: clubId,
     name: event.summary,
+    status: 'approved',
     description: event.description,
     image: imageUrl,
     recurrence: JSON.stringify(event.recurrence),
@@ -289,32 +297,36 @@ export async function watchCalendar(clubId: string) {
   const token = nanoid();
 
   // create webhook
-  const response = await google.calendar('v3').events.watch({
-    auth,
-    calendarId: clubData.calendarId,
-    requestBody: {
+  try {
+    const response = await google.calendar('v3').events.watch({
+      auth,
+      calendarId: clubData.calendarId,
+      requestBody: {
+        id: channelId,
+        type: 'web_hook',
+        address: `${process.env.GOOGLE_WEBHOOK_URL || process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/calendar`,
+        token: token,
+      },
+    });
+
+    // insert the new webhook connection for the club
+    const expires = response.data.expiration
+      ? new Date(parseInt(response.data.expiration))
+      : addDays(new Date(), 7); // default to 7 days
+    await db.insert(calendarWebhooks).values({
       id: channelId,
-      type: 'web_hook',
-      address: `${process.env.GOOGLE_WEBHOOK_URL || process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/calendar`,
+      resourceId: response.data.resourceId!, // it will work, because I don't know what I'll do if it doesn't
+      clubId: clubId,
       token: token,
-    },
-  });
+      expiration: expires,
+    });
 
-  // insert the new webhook connection for the club
-  const expires = response.data.expiration
-    ? new Date(parseInt(response.data.expiration))
-    : addDays(new Date(), 7); // default to 7 days
-  await db.insert(calendarWebhooks).values({
-    id: channelId,
-    resourceId: response.data.resourceId!, // it will work, because I don't know what I'll do if it doesn't
-    clubId: clubId,
-    token: token,
-    expiration: expires,
-  });
+    console.log(`GCal for clubId ${clubId} is now being watched`);
 
-  console.log(`GCal for clubId ${clubId} is now being watched`);
-
-  return { channelId, expires };
+    return { channelId, expires };
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function stopWatching(clubId: string) {
