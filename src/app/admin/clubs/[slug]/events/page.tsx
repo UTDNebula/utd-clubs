@@ -13,10 +13,12 @@ export default async function Page(props: Props) {
     notFound();
   }
 
-  const events = (await api.event.byClubId({
-    clubId: club.id,
-    sortByDate: true,
-  })).reverse();
+  const events = (
+    await api.event.byClubId({
+      clubId: club.id,
+      sortByDate: true,
+    })
+  ).reverse();
 
   return (
     <>
