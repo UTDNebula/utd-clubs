@@ -24,6 +24,7 @@ const Header = async (props: BaseHeaderProps) => {
       searchBar={<ClubSearchBar />}
       {...props}
     >
+      {props.children}
       <DefaultHeaderItems />
     </BaseHeader>
   );
