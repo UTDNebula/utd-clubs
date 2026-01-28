@@ -6,13 +6,7 @@ import { IconButton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
-import {
-  createContext,
-  useContext,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { ProfileDropDown } from './ProfileDropDown';
 
