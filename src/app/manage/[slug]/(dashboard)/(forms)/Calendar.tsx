@@ -44,6 +44,19 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const router = useRouter();
   const syncEvents = useMutation(
     trpc.club.eventSync.mutationOptions({
+      onSuccess: (result) => {
+        setIsRefreshing(false);
+        // Check for the partial success flag
+        if (
+          result &&
+          typeof result === 'object' &&
+          'status' in result &&
+          result.status === 'ONE_TIME_SYNC'
+        ) {
+          setOnetimeSyncOpen(true);
+        }
+        router.refresh();
+      },
       onError: (err) => {
         setIsRefreshing(false);
         if (err.data?.code === 'NOT_FOUND') {
@@ -54,6 +67,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   );
   const disableSync = useMutation(trpc.event.disableSync.mutationOptions());
   const [privateCalendarOpen, setPrivateCalendarOpen] = useState(false);
+  const [onetimeSyncOpen, setOnetimeSyncOpen] = useState(false);
   const [disableSyncConfirmationOpen, setDisableSyncConfirmationOpen] =
     useState(false);
   const [keepPastEventsOnDeletion, setKeepPastEventsOnDeletion] =
@@ -191,7 +205,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                   </div>
                 }
                 confirmText="Disable Sync"
-                confirmColor="primary"
+                confirmColor="error"
                 onConfirm={async () => {
                   await disableSync.mutateAsync({
                     clubId: club.id,
@@ -315,6 +329,24 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
             'noopener,noreferrer',
           );
           setPrivateCalendarOpen(false);
+          router.refresh();
+        }}
+      />
+      <Confirmation
+        open={onetimeSyncOpen}
+        onClose={() => setOnetimeSyncOpen(false)}
+        title={'Cannot Live-Sync Calendar'}
+        contentText={
+          <>
+            <b>{selectedCalendar.summary}</b> does not allow live syncing of
+            events, so we imported all the events <i>currently</i> in the
+            calendar. If you make any changes, you will have to re-sync.
+          </>
+        }
+        confirmText="Import events once"
+        confirmColor="primary"
+        onConfirm={async () => {
+          setOnetimeSyncOpen(false);
           router.refresh();
         }}
       />

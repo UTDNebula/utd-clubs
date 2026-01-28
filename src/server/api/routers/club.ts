@@ -567,8 +567,22 @@ export const clubRouter = createTRPCRouter({
       });
       try {
         const sync = await syncCalendar(input.clubId, false, oauth2Client); // one-time sync
-        await watchCalendar(input.clubId); // create the webhook to sync updates in the future
-        return sync;
+        try {
+          await watchCalendar(input.clubId); // create the webhook to sync updates in the future
+          return sync;
+        } catch (error) {
+          // if webhook wasn't established, it's okay because events have synced
+          if (
+            error &&
+            typeof error === 'object' &&
+            'message' in error &&
+            error.message ===
+              'Push notifications are not supported by this resource.'
+          ) {
+            return { status: 'ONE_TIME_SYNC', data: sync };
+          }
+          throw error; // if it's not a webhook subscription issue
+        }
       } catch (error) {
         console.error(
           'Sync failed, reverting DB changes:',
