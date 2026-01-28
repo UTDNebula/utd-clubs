@@ -121,12 +121,17 @@ export const BaseHeader = ({
     logoVisibility === 'both' ||
     logoVisibility === 'text';
 
+  const fullSearchBarVisibility =
+    searchVisibility === true || searchVisibility === 'full';
+  const compactSearchBarVisibility =
+    searchVisibility === true || searchVisibility === 'compact';
+
   const [showSearchBar, setShowSearchBar] = useState(false);
 
   return (
     <BaseHeaderContext.Provider value={{ showSearchBar }}>
       <div
-        className={`${disableSticky ? '' : 'sticky'} min-h-17 top-0 z-50 flex w-full justify-between items-center gap-y-0 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-4 max-sm:pl-2 flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
+        className={`${disableSticky ? '' : 'sticky'} min-h-17 top-0 z-50 flex w-full justify-between items-center gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-4 max-sm:pl-2 flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
       >
         {!transparent && (
           <>
@@ -189,7 +194,7 @@ export const BaseHeader = ({
                 </Link>
               )}
             </div>
-            {searchVisibility && (
+            {fullSearchBarVisibility && (
               <div
                 className={`order-last max-sm:basis-full basis-128 sm:order-none gap-x-2 md:gap-x-4 lg:gap-x-8 ${searchVisibility === true ? 'max-md:hidden' : ''} ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
               >
@@ -199,10 +204,10 @@ export const BaseHeader = ({
             <div
               className={`grow basis-0 flex justify-end items-center gap-x-2 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
             >
-              {searchVisibility === true && (
+              {compactSearchBarVisibility && (
                 <IconButton
                   size="large"
-                  className="md:hidden"
+                  className={`${searchVisibility === true ? 'md:hidden' : ''}`}
                   onClick={() => setShowSearchBar(true)}
                 >
                   <SearchIcon />
@@ -213,13 +218,15 @@ export const BaseHeader = ({
             </div>
           </>
         ) : (
-          <div className="w-full flex gap-x-2 items-center">
-            <IconButton size="large" onClick={() => setShowSearchBar(false)}>
-              <ArrowBackIcon />
-            </IconButton>
-            {searchVisibility === true && (
-              <div className="grow">{searchBar}</div>
-            )}
+          <div className="w-full flex justify-center">
+            <div className="w-full max-w-128 flex gap-x-2 items-center">
+              <IconButton size="large" onClick={() => setShowSearchBar(false)}>
+                <ArrowBackIcon />
+              </IconButton>
+              {compactSearchBarVisibility && (
+                <div className="grow">{searchBar}</div>
+              )}
+            </div>
           </div>
         )}
       </div>
