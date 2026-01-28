@@ -6,10 +6,10 @@ import { ClubSearchBar } from '../searchBar/ClubSearchBar';
 import { EventSearchBar } from '../searchBar/EventSearchBar';
 import { BaseHeader, BaseHeaderPropsBase } from './BaseHeader';
 
-const defaultHeaderItems = (
+const DefaultHeaderItems = () => (
   <>
     <div className="sm:hidden">
-      <ClubMatchButton shadow={false} iconOnly />
+      <ClubMatchButton iconOnly />
     </div>
     <div className="max-sm:hidden">
       <ClubMatchButton />
@@ -20,11 +20,11 @@ const defaultHeaderItems = (
 const Header = async (props: BaseHeaderPropsBase) => {
   return (
     <BaseHeader
-      menu={<Sidebar hamburgerColor={props.color} />}
+      menu={<Sidebar homepage={props.shadow} hamburgerColor={props.color} />}
       searchBar={<ClubSearchBar />}
       {...props}
     >
-      {defaultHeaderItems}
+      <DefaultHeaderItems />
     </BaseHeader>
   );
 };
@@ -32,11 +32,11 @@ const Header = async (props: BaseHeaderPropsBase) => {
 export const EventHeader = async (props: BaseHeaderPropsBase) => {
   return (
     <BaseHeader
-      menu={<Sidebar hamburgerColor={props.color} />}
+      menu={<Sidebar homepage={props.shadow} hamburgerColor={props.color} />}
       searchBar={<EventSearchBar />}
       {...props}
     >
-      {defaultHeaderItems}
+      <DefaultHeaderItems />
     </BaseHeader>
   );
 };

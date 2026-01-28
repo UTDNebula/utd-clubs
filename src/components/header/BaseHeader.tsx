@@ -49,6 +49,7 @@ export type HeaderItemVisibility = {
 };
 
 export type BaseHeaderPropsBase = {
+  className?: string;
   /**
    * Component displayed for search bar slot. If prop is omitted, search functionality is not displayed
    */
@@ -59,10 +60,17 @@ export type BaseHeaderPropsBase = {
   itemVisibility?: HeaderItemVisibility;
   /**
    * Hides the background gradient on the header
+   * @default false
    */
   transparent?: boolean;
   /**
+   * Adds text and drop shadows to header items
+   * @default false
+   */
+  shadow?: boolean;
+  /**
    * Stops the header from sticking to the top of the page
+   * @default false
    */
   disableSticky?: boolean;
   /**
@@ -78,7 +86,6 @@ export type BaseHeaderPropsBase = {
 
 type BaseHeaderProps = BaseHeaderPropsBase & {
   children?: ReactNode;
-  className?: string;
   /**
    * Component displayed for menu slot
    */
@@ -98,6 +105,7 @@ export const BaseHeader = ({
     account: accountVisibility = true,
   } = {},
   transparent = false,
+  shadow = false,
   disableSticky = false,
   color = 'darkLight',
 }: BaseHeaderProps) => {
@@ -143,7 +151,7 @@ export const BaseHeader = ({
                     : color === 'darkLight'
                       ? 'dark:text-white'
                       : ''
-                }`}
+                } ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
               >
                 {logoIconVisibility && (
                   <div
@@ -177,12 +185,14 @@ export const BaseHeader = ({
           </div>
           {searchVisibility && (
             <div
-              className={`order-last max-sm:basis-full basis-128 sm:order-none gap-x-2 md:gap-x-4 lg:gap-x-8 ${searchVisibility === true ? 'max-md:hidden' : ''}`}
+              className={`order-last max-sm:basis-full basis-128 sm:order-none gap-x-2 md:gap-x-4 lg:gap-x-8 ${searchVisibility === true ? 'max-md:hidden' : ''} ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
             >
               {searchBar}
             </div>
           )}
-          <div className="grow basis-0 flex justify-end items-center gap-x-2">
+          <div
+            className={`grow basis-0 flex justify-end items-center gap-x-2 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+          >
             {searchVisibility === true && (
               <IconButton
                 size="large"
