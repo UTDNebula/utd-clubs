@@ -233,6 +233,7 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
         onClick={() => {
           handleClose('dismiss');
         }}
+        className={`${snackbar.closeOn?.includes('dismiss') ? 'cursor-pointer' : ''}`}
       >
         {snackbar.type === 'default' ? (
           <SnackbarContent
@@ -320,6 +321,13 @@ export const SnackbarPresets = {
   },
   savedName: (name: string) => ({
     message: `Saved ${name}!`,
+    type: 'success',
+    autoHideDuration: true,
+    fitContent: true,
+    closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+  }),
+  savedCustom: (message: string) => ({
+    message: message,
     type: 'success',
     autoHideDuration: true,
     fitContent: true,
