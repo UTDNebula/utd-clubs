@@ -30,6 +30,7 @@ export const events = pgTable('events', {
   image: text('image'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  calendarId: text('calendar_id'),
 });
 
 export const eventsRelation = relations(events, ({ one, many }) => ({
