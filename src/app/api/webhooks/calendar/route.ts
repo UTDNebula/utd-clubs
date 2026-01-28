@@ -5,7 +5,6 @@ import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
 import { getAuthForClub, syncCalendar } from '@src/utils/calendar';
 
 export async function POST(req: NextRequest) {
-  console.log('received gcal sync post');
   const channelId = req.headers.get('x-goog-channel-id');
   const resourceId = req.headers.get('x-goog-resource-id');
   const resourceState = req.headers.get('x-goog-resource-state');

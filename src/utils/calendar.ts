@@ -207,8 +207,9 @@ function generateEvent(
   let imageUrl: string | null = null;
 
   if (event.attachments) {
+    const allowedTypes = ['image/jpeg', 'image/png'];
     const image = event.attachments.filter((e) =>
-      e.mimeType.startsWith('image/'),
+      allowedTypes.includes(e.mimeType),
     )[0]; // get the first image
 
     if (image?.fileId) {
