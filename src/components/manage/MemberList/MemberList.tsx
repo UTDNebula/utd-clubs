@@ -1,7 +1,5 @@
 'use client';
 
-import Alert from '@mui/material/Alert';
-import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import {
   DataGrid,
   GridEventListener,
@@ -12,13 +10,7 @@ import {
 } from '@mui/x-data-grid';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
-import {
-  SyntheticEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import z from 'zod';
 import Confirmation from '@src/components/Confirmation';
 import { AppRouter } from '@src/server/api/root';
@@ -29,6 +21,7 @@ import {
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import { useSnackbar } from '@src/utils/Snackbar';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';
 import { MemberListContext, MemberListContextType } from './MemberListContext';
@@ -39,7 +32,6 @@ import {
   defaultUserSort,
   formatUserListString,
   MemberListAbilities,
-  ToastState,
 } from './utils';
 
 type MemberListProps = {
@@ -72,6 +64,8 @@ const MemberList = ({ members, club }: MemberListProps) => {
   const getMembers = useQuery(
     api.club.getMembers.queryOptions({ id: club.id }, { enabled: false }),
   );
+
+  const { setSnackbar } = useSnackbar();
 
   /*
    * DataGrid controlled component props
@@ -128,25 +122,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
   };
 
   /*
-   * Toast
-   */
-
-  const [toastState, setToastState] = useState<ToastState>({
-    open: false,
-  });
-
-  const handleCloseToast = useCallback(
-    (event: SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-
-      setToastState({ ...toastState, open: false });
-    },
-    [toastState],
-  );
-
-  /*
    * Row/Member Deletion
    */
 
@@ -192,23 +167,36 @@ const MemberList = ({ members, club }: MemberListProps) => {
             }),
           );
 
-          setToastState({
-            open: true,
+          setSnackbar({
             type: 'success',
-            string: `Successfully removed ${userListString}!`,
+            message: `Successfully removed ${userListString}!`,
+            autoHideDuration: true,
           });
         },
         onError: (error) => {
-          setToastState({
-            open: true,
+          setSnackbar({
             type: 'error',
-            string: `Couldn't remove ${userListString}!`,
-            error: error,
+            message: (
+              <>
+                {`Couldn't remove ${userListString}!`}
+                <br />
+                {`Reason: ${error.message}`}
+              </>
+            ),
+            autoHideDuration: false,
+            showClose: true,
           });
         },
       },
     );
-  }, [deleteUsers, removeMembers, club.id, handleCloseDialog, membersIndexed]);
+  }, [
+    deleteUsers,
+    removeMembers,
+    club.id,
+    handleCloseDialog,
+    setSnackbar,
+    membersIndexed,
+  ]);
 
   /*
    * Refresh button
@@ -285,24 +273,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl">
       <MemberListContext.Provider value={MemberListContextValues}>
-        <Snackbar
-          open={toastState.open}
-          autoHideDuration={6000}
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          onClose={handleCloseToast}
-        >
-          <Alert
-            onClose={handleCloseToast}
-            severity={toastState.type}
-            variant="filled"
-            sx={{ width: '100%' }}
-          >
-            <p>{toastState.string}</p>
-            {toastState.type === 'error' && toastState.error && (
-              <p>Reason: {toastState.error.message}</p>
-            )}
-          </Alert>
-        </Snackbar>
         <DataGrid
           rows={rows}
           columns={actionedColumns}

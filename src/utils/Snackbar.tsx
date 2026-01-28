@@ -38,9 +38,10 @@ export type Snackbar = {
   /**
    * Number of milliseconds to wait until snackbar is automatically dismissed. When calling `setSnackbar` again, this countdown will reset.
    * If `null`, snackbar will not automatically dismiss.
+   * If `true`, will use default value of `6000`
    * @default null
    */
-  autoHideDuration?: number | null;
+  autoHideDuration?: number | boolean | null;
   /**
    * Specifies what reasons the snackbar is allowed to close on.
    * - `"timeout"` - Close when `autoHideDuration` elapses
@@ -141,9 +142,12 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   // Handles closing of snackbar after a duration
   useEffect(() => {
     if (snackbar.autoHideDuration) {
-      timeoutIdRef.current = setTimeout(() => {
-        handleClose('timeout');
-      }, snackbar.autoHideDuration);
+      timeoutIdRef.current = setTimeout(
+        () => {
+          handleClose('timeout');
+        },
+        snackbar.autoHideDuration === true ? 6000 : snackbar.autoHideDuration,
+      );
     }
 
     return () => {
