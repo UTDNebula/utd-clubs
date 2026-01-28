@@ -197,6 +197,7 @@ export async function syncCalendar(
     },
     { deferrable: true },
   );
+  console.log(`Synced events for clubId: ${clubId}`);
   return res;
 }
 function generateEvent(

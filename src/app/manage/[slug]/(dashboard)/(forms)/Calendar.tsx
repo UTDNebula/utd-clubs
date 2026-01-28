@@ -170,6 +170,8 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                   variant="contained"
                   className="normal-case"
                   disabled={selectedCalendar.id == ''}
+                  loading={syncEvents.isPending}
+                  loadingPosition="start"
                   onClick={async () => {
                     await syncEvents.mutateAsync({
                       calendarId: selectedCalendar.id,
