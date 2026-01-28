@@ -1,10 +1,10 @@
 'use server';
 
 import ClubMatchButton from '@src/components/header/ClubMatchButton';
-import Sidebar from '../nav/Sidebar';
-import { ClubSearchBar } from '../searchBar/ClubSearchBar';
-import { EventSearchBar } from '../searchBar/EventSearchBar';
-import { BaseHeader, BaseHeaderPropsBase } from './BaseHeader';
+import Sidebar from '@src/components/nav/Sidebar';
+import { ClubSearchBar } from '@src/components/searchBar/ClubSearchBar';
+import { EventSearchBar } from '@src/components/searchBar/EventSearchBar';
+import { BaseHeader, BaseHeaderProps } from './BaseHeader';
 
 const DefaultHeaderItems = () => (
   <>
@@ -17,7 +17,7 @@ const DefaultHeaderItems = () => (
   </>
 );
 
-const Header = async (props: BaseHeaderPropsBase) => {
+const Header = async (props: BaseHeaderProps) => {
   return (
     <BaseHeader
       menu={<Sidebar homepage={props.shadow} hamburgerColor={props.color} />}
@@ -29,16 +29,8 @@ const Header = async (props: BaseHeaderPropsBase) => {
   );
 };
 
-export const EventHeader = async (props: BaseHeaderPropsBase) => {
-  return (
-    <BaseHeader
-      menu={<Sidebar homepage={props.shadow} hamburgerColor={props.color} />}
-      searchBar={<EventSearchBar />}
-      {...props}
-    >
-      <DefaultHeaderItems />
-    </BaseHeader>
-  );
+export const EventHeader = async (props: BaseHeaderProps) => {
+  return <Header searchBar={<EventSearchBar />} {...props} />;
 };
 
 export default Header;

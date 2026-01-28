@@ -1,13 +1,9 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import { AllTags } from '@src/components/AllTags';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
-import ClubMatchButton from '@src/components/header/ClubMatchButton';
 import Header from '@src/components/header/Header';
-import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
-import Sidebar from '@src/components/nav/Sidebar';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';

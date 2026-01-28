@@ -48,8 +48,13 @@ export type HeaderItemVisibility = {
   account?: boolean;
 };
 
-export type BaseHeaderPropsBase = {
+export type BaseHeaderProps = {
+  children?: ReactNode;
   className?: string;
+  /**
+   * Component displayed for menu slot
+   */
+  menu?: ReactNode;
   /**
    * Component displayed for search bar slot. If prop is omitted, search functionality is not displayed
    */
@@ -82,14 +87,6 @@ export type BaseHeaderPropsBase = {
    * @default "darkLight"
    */
   color?: 'light' | 'dark' | 'lightDark' | 'darkLight';
-};
-
-type BaseHeaderProps = BaseHeaderPropsBase & {
-  children?: ReactNode;
-  /**
-   * Component displayed for menu slot
-   */
-  menu?: ReactNode;
 };
 
 export const BaseHeader = ({
