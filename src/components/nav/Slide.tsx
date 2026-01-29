@@ -49,7 +49,7 @@ const NewSidebar = ({
         slotProps={{
           paper: {
             className:
-              'w-3/4 gap-4 bg-light dark:bg-dark py-6 shadow-lg dark:shadow-xl sm:max-w-sm',
+              'w-7/8 gap-4 bg-light dark:bg-dark py-6 shadow-lg dark:shadow-xl sm:max-w-sm',
             elevation: 0,
           },
         }}
