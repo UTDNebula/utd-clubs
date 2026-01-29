@@ -146,7 +146,7 @@ export const BaseHeader = ({
               src={gradientBG}
               alt="gradient background"
               fill
-              className="object-cover -z-20"
+              className="object-cover -z-20 select-none"
               sizes="120vw"
             />
             <div className="absolute inset-0 bg-lighten dark:bg-darken -z-10"></div>
@@ -159,7 +159,7 @@ export const BaseHeader = ({
               {logoVisibility && (
                 <Link
                   href="/"
-                  className={`font-display flex gap-2 items-center ${
+                  className={`font-display flex gap-2 items-center select-none ${
                     color?.startsWith('light') ? 'text-white' : 'text-haiti'
                   } ${
                     color === 'lightDark'

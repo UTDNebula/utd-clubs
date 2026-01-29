@@ -19,7 +19,7 @@ const NavMenu = ({ userCapabilites, notApprovedCount }: NavMenuProps) => {
     <>
       {/* Logo Section */}
       <div className="flex w-full justify-center pt-14 pb-14">
-        <Link className="flex items-center gap-2" href="/">
+        <Link className="flex items-center gap-2 select-none" href="/">
           <UTDClubsLogoCombination
             duotone
             className="h-16 w-auto"
