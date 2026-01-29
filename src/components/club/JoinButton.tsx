@@ -85,16 +85,16 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
   if (memberType === 'Officer' || memberType === 'President') {
     return (
-      <Link href={`/manage/${clubSlug ?? clubId}`}>
-        <Button
-          variant="contained"
-          size={isHeader ? 'large' : 'small'}
-          className="normal-case"
-          startIcon={<TuneIcon />}
-        >
-          Manage
-        </Button>
-      </Link>
+      <Button
+        LinkComponent={Link}
+        href={`/manage/${clubSlug ?? clubId}`}
+        variant="contained"
+        size={isHeader ? 'large' : 'small'}
+        className="normal-case"
+        startIcon={<TuneIcon />}
+      >
+        Manage
+      </Button>
     );
   }
 

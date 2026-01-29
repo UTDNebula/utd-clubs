@@ -27,7 +27,31 @@ export default function ClubMatchButton({
       }
     : undefined;
 
-  const button = iconOnly ? (
+  if (session) {
+    return iconOnly ? (
+      <IconButton
+        component={Link}
+        href="/club-match/results"
+        size="large"
+        className={`rounded-full bg-royal text-white ${shadow ? shadowStyle : ''}`}
+      >
+        {icon}
+      </IconButton>
+    ) : (
+      <Button
+        LinkComponent={Link}
+        href="/club-match/results"
+        variant="contained"
+        className={`rounded-full normal-case whitespace-nowrap ${shadow ? shadowStyle : ''}`}
+        startIcon={icon}
+        disableElevation
+      >
+        Club Match
+      </Button>
+    );
+  }
+
+  return iconOnly ? (
     <IconButton
       size="large"
       className={`rounded-full bg-royal text-white ${shadow ? shadowStyle : ''}`}
@@ -46,6 +70,4 @@ export default function ClubMatchButton({
       Club Match
     </Button>
   );
-
-  return session ? <Link href={'/club-match/results'}>{button}</Link> : button;
 }

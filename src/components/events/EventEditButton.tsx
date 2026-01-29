@@ -14,15 +14,15 @@ export default function EventEditButton({
   eventId: string;
 }) {
   return (
-    <Link href={`/manage/${clubSlug}/events/edit/${eventId}`}>
-      <Button
-        variant="contained"
-        size={isHeader ? 'large' : 'small'}
-        className={`normal-case ${isHeader ? 'bg-white hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800' : 'bg-white hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700'} text-haiti dark:text-white`}
-        startIcon={<EditIcon />}
-      >
-        Edit
-      </Button>
-    </Link>
+    <Button
+      LinkComponent={Link}
+      href={`/manage/${clubSlug}/events/edit/${eventId}`}
+      variant="contained"
+      size={isHeader ? 'large' : 'small'}
+      className={`normal-case ${isHeader ? 'bg-white hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800' : 'bg-white hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700'} text-haiti dark:text-white`}
+      startIcon={<EditIcon />}
+    >
+      Edit
+    </Button>
   );
 }

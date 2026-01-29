@@ -34,27 +34,27 @@ export default async function Page(props: Props) {
         ]}
       >
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Link href={`/admin/clubs/${club.slug}/events`}>
+          <Button
+            LinkComponent={Link}
+            href={`/admin/clubs/${club.slug}/events`}
+            variant="contained"
+            className="normal-case whitespace-nowrap"
+            startIcon={<EventIcon />}
+            size="large"
+          >
+            Events
+          </Button>
+          {club.approved === 'approved' && (
             <Button
+              LinkComponent={Link}
+              href={`/directory/${club.slug}`}
               variant="contained"
               className="normal-case whitespace-nowrap"
-              startIcon={<EventIcon />}
+              startIcon={<PreviewIcon />}
               size="large"
             >
-              Events
+              Listing
             </Button>
-          </Link>
-          {club.approved === 'approved' && (
-            <Link href={`/directory/${club.slug}`}>
-              <Button
-                variant="contained"
-                className="normal-case whitespace-nowrap"
-                startIcon={<PreviewIcon />}
-                size="large"
-              >
-                Listing
-              </Button>
-            </Link>
           )}
         </div>
       </AdminHeader>
