@@ -246,7 +246,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
           case 'Officer':
             return 'Collaborator';
           default:
-            return value;
+            return 'Follower';
         }
       },
       headerName: 'Role',
