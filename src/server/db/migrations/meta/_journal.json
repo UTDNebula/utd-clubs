@@ -197,6 +197,13 @@
       "when": 1769565049145,
       "tag": "20260128015049_sudden_white_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1769716600684,
+      "tag": "20260129195640_heavy_tenebrous",
+      "breakpoints": true
     }
   ]
 }
