@@ -6,6 +6,7 @@ import ClubDescriptionCard from './ClubDescriptionCard';
 import ClubDetailsCard from './ClubDetailsCard';
 import ClubUpcomingEventsCard from './ClubUpcomingEventsCard';
 import OfficerList from './OfficerList';
+import ClubMembershipFormsCard from './ClubMembershipFormsCard';
 
 const ClubBody = async ({
   club,
@@ -43,6 +44,16 @@ const ClubBody = async ({
         className="flex flex-col gap-4 order-1 md:order-2"
       >
         <ClubDescriptionCard id="description" club={club} />
+        <ClubMembershipFormsCard
+          id="membership-forms"
+          heading="Membership Forms"
+          upcomingEvents={events}
+          emptyText={
+            club.updatedAt == null || club.updatedAt < oneYearAgo
+              ? 'No info about upcoming events'
+              : 'There are no upcoming events'
+          }
+        />
         <ClubUpcomingEventsCard
           id="upcoming-events"
           heading="Upcoming Events"
