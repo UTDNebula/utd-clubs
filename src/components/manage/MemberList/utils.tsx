@@ -213,7 +213,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
     {
       field: 'joinedAt',
       type: 'dateTime',
-      headerName: 'Joined',
+      headerName: 'Followed',
       renderHeader: (params) => (
         <ColumnHeaderWithIcon icon={<ScheduleIcon />}>
           {params.colDef.headerName}

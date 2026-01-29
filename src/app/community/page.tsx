@@ -47,7 +47,7 @@ const Community = async () => {
         <h2 className="font-display text-xl font-bold mt-4 px-4">Registered</h2>
         <RegisteredEvents />
         <h2 className="font-display text-xl font-bold mt-4 px-4">
-          From Your Joined Clubs
+          From Your Followed Clubs
         </h2>
         <ClubEvents />
       </main>
