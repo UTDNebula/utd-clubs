@@ -61,6 +61,8 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
         setIsRefreshing(false);
         if (err.data?.code === 'NOT_FOUND') {
           setPrivateCalendarOpen(true);
+        } else if (err.data?.code == 'FORBIDDEN') {
+          setCalendarAlreadyInUse(true);
         }
       },
     }),
@@ -72,6 +74,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
     useState(false);
   const [keepPastEventsOnDeletion, setKeepPastEventsOnDeletion] =
     useState(true);
+  const [calendarAlreadyInUse, setCalendarAlreadyInUse] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -351,6 +354,23 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
         confirmColor="primary"
         onConfirm={async () => {
           setOnetimeSyncOpen(false);
+          router.refresh();
+        }}
+      />
+      <Confirmation
+        open={calendarAlreadyInUse}
+        onClose={() => setCalendarAlreadyInUse(false)}
+        title={'Cannot Add Calendar'}
+        contentText={
+          <>
+            <b>{selectedCalendar.summary}</b> is already selected by a different
+            club. Please try a different calendar.
+          </>
+        }
+        confirmText="Choose Different Calendar"
+        confirmColor="error"
+        onConfirm={async () => {
+          setCalendarAlreadyInUse(false);
           router.refresh();
         }}
       />
