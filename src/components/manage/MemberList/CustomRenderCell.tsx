@@ -131,11 +131,7 @@ const RoleToMemberType: Record<string, MemberTypes> = {
 export function MemberTypeCell(params: GridRenderCellParams) {
   if (!params.value) return;
   return (
-    <MemberRoleChip
-      memberType={
-        RoleToMemberType[params.value] ?? RoleToMemberType.Follower ?? 'Member'
-      }
-    />
+    <MemberRoleChip memberType={RoleToMemberType[params.value] ?? 'Member'} />
   );
 }
 
