@@ -98,7 +98,9 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
       }
     >
       <div className="m-2 flex flex-col gap-4">
-        {!hasScopes || !isSuccess ? ( // if refresh_token doesn't have GCal perms, getUserCalendars will fail
+        {!hasScopes ||
+        (!isSuccess && // if refresh_token doesn't have GCal perms, getUserCalendars's isSuccess will fail
+          !isSyncing) ? ( // if there is already a calendar assigned tho (by someone else), show that
           <Button
             variant="contained"
             className="normal-case w-full"
@@ -130,7 +132,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
           >
             Authorize Google Calendar Access
           </Button>
-        ) : data.length > 0 ? (
+        ) : (data && data.length > 0) || isSyncing ? ( // found calendars for the user or the club already has a selected calendar (regardless of user)
           isSyncing ? (
             <>
               <Alert severity="success">

@@ -486,7 +486,7 @@ export const eventRouter = createTRPCRouter({
     }
   }),
   getUserCalendars: protectedProcedure.query(async ({ ctx }) => {
-    const accessToken = await getGoogleAccessToken(ctx.session.user.id);
+    const accessToken = await getGoogleAccessToken(ctx.session.user.id, true);
     const googleOauthClient = new OAuth2Client();
     googleOauthClient.setCredentials({ access_token: accessToken });
     try {
