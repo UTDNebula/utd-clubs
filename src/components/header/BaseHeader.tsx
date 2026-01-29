@@ -209,7 +209,7 @@ export const BaseHeader = ({
               </div>
             )}
             <div
-              className={`grow basis-0 flex justify-end items-center gap-x-2 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+              className={`grow basis-0 flex justify-end items-center gap-x-2 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.2)]' : ''}`}
             >
               {compactSearchBarVisibility && searchBar && (
                 <IconButton
