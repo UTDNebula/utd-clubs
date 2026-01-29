@@ -138,7 +138,7 @@ export const BaseHeader = ({
   return (
     <BaseHeaderContext.Provider value={{ openCompactSearchBar }}>
       <div
-        className={`${disableSticky ? '' : 'sticky'} min-h-17 top-0 z-50 flex w-full justify-between items-center gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-4 max-sm:pl-2 flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
+        className={`${disableSticky ? '' : 'sticky'} min-h-17 top-0 z-50 flex w-full justify-between items-center gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-4 ${menu ? 'max-sm:pl-2' : ''} flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
       >
         {!transparent && (
           <>
@@ -201,7 +201,7 @@ export const BaseHeader = ({
                 </Link>
               )}
             </div>
-            {fullSearchBarVisibility && (
+            {fullSearchBarVisibility && searchBar && (
               <div
                 className={`order-last max-sm:basis-full basis-128 sm:order-none gap-x-2 md:gap-x-4 lg:gap-x-8 ${searchVisibility === true ? 'max-md:hidden' : ''} ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
               >
@@ -211,7 +211,7 @@ export const BaseHeader = ({
             <div
               className={`grow basis-0 flex justify-end items-center gap-x-2 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
             >
-              {compactSearchBarVisibility && (
+              {compactSearchBarVisibility && searchBar && (
                 <IconButton
                   size="large"
                   className={`${searchVisibility === true ? 'md:hidden' : ''}`}
