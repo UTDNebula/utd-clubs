@@ -20,14 +20,14 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
     <>
       <ManageHeader club={club} hrefBack="/manage">
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Link href={`/manage/${slug}/members`}>
+          <Link href={`/manage/${slug}/followers`}>
             <Button
               variant="contained"
               className="normal-case whitespace-nowrap"
               startIcon={<PeopleIcon />}
               size="large"
             >
-              Members
+              Followers
             </Button>
           </Link>
           <Link href={`/manage/${slug}/events`}>

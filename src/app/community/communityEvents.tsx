@@ -62,7 +62,7 @@ export const ClubEvents = async ({
     return (
       <div className="flex flex-col items-center gap-4 mt-4">
         <p className="font-bold text-slate-500">
-          You haven&apos;t joined any clubs.
+          You aren&apos;t following any clubs.
         </p>
         <Link href="/">
           <Button
@@ -82,7 +82,7 @@ export const ClubEvents = async ({
     return (
       <div className="flex flex-col items-center gap-4 mt-4">
         <p className="font-bold text-slate-500">
-          Your joined clubs don&apos;t have any events.
+          Your followed clubs don&apos;t have any events.
         </p>
         <Link href="/events">
           <Button

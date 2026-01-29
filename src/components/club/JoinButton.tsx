@@ -103,12 +103,12 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       title={
         <div className="text-center">
           <span className="font-bold">
-            {memberType ? 'Leave club' : 'Join club'}
+            {memberType ? 'Unfollow' : 'Follow'}
           </span>
           {memberType && memberState?.joinedAt && (
             <>
               <br />
-              Joined on{' '}
+              Following since{' '}
               {memberState?.joinedAt.toLocaleString('en-us', {
                 month: 'short',
                 day: 'numeric',
@@ -150,7 +150,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
         className="normal-case"
         loading={isPending || joinLeave.isPending}
       >
-        {memberType ? 'Joined' : 'Join'}
+        {memberType ? 'Following' : 'Follow'}
       </Button>
     </Tooltip>
   );
@@ -170,7 +170,7 @@ export const JoinButtonSkeleton = ({ isHeader }: JoinButtonSkeletonProps) => {
         size={isHeader ? 'large' : 'small'}
         className="normal-case"
       >
-        Join
+        Follow
       </Button>
     </Skeleton>
   );

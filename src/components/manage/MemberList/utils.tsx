@@ -213,7 +213,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
     {
       field: 'joinedAt',
       type: 'dateTime',
-      headerName: 'Joined',
+      headerName: 'Followed',
       renderHeader: (params) => (
         <ColumnHeaderWithIcon icon={<ScheduleIcon />}>
           {params.colDef.headerName}
@@ -246,7 +246,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
           case 'Officer':
             return 'Collaborator';
           default:
-            return value;
+            return 'Follower';
         }
       },
       headerName: 'Role',
