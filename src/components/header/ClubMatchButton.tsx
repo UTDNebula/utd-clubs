@@ -34,7 +34,7 @@ export default function ClubMatchButton({
       LinkComponent={Link}
       {...hrefConditionalProp}
       size="large"
-      className={`rounded-full w-10 h-10 bg-[var(--mui-palette-primary-main)] hover:bg-[var(--mui-palette-primary-dark)] text-white dark:text-black ${shadow ? shadowStyle : ''}`}
+      className={`rounded-full w-10 h-10 bg-[var(--mui-palette-primary-main)] hover:bg-[var(--mui-palette-primary-dark)] text-white dark:text-haiti ${shadow ? shadowStyle : ''}`}
       onClick={handleClick}
     >
       {icon}
