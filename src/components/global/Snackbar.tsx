@@ -34,7 +34,7 @@ import {
  */
 
 export type Snackbar = {
-  open?: boolean;
+  key?: number;
   /**
    * Message displayed in snackbar
    */
@@ -86,12 +86,16 @@ export type Snackbar = {
    * @default false
    */
   fitContent?: boolean;
+  /**
+   * If true, will immediately update the current snackbar without triggering an animation
+   * @default false
+   */
+  updateCurrent?: boolean;
 };
 
 const SnackbarDefault: Snackbar = {
   message: '',
   title: false,
-  open: false,
   type: 'default',
   autoHideDuration: null,
   closeOn: ['timeout', 'escapeKeyDown'],
@@ -104,7 +108,7 @@ const SnackbarDefault: Snackbar = {
  * setSnackbar() and global setSnackbar() reference function
  */
 
-type setSnackbarFn = (snackbar: string | Omit<Snackbar, 'open'>) => void;
+type setSnackbarFn = (snackbar: string | Snackbar) => Snackbar | void;
 
 let setSnackbarRef: setSnackbarFn = () => {
   console.warn('Snackbar context not initialized');
@@ -159,6 +163,8 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   // Timeout timer that resets anytime `setSnackbar()` is called, to ensure users are able to read consecutive snackbars before it closes
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [open, setOpen] = useState(false);
+
   const [snackbar, setSnackbarState] = useState<Snackbar>(
     SnackbarContextDefault['snackbar'],
   );
@@ -172,12 +178,22 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
       newSnackbarState = { ...newSnackbarState, ...arg };
     }
 
-    setSnackbarState({ ...newSnackbarState, open: true });
+    newSnackbarState = {
+      ...newSnackbarState,
+      key: newSnackbarState.updateCurrent
+        ? snackbar?.key
+        : new Date().getTime(),
+    };
+
+    setSnackbarState({ ...newSnackbarState });
+    setOpen(true);
 
     if (timeoutIdRef.current) {
       clearTimeout(timeoutIdRef.current);
       timeoutIdRef.current = null;
     }
+
+    return newSnackbarState;
   };
 
   // Sync global setSnackbarRef with local component state
@@ -193,10 +209,7 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
       if (reason && reason !== 'close' && !snackbar.closeOn?.includes(reason))
         return;
 
-      setSnackbarState((prevSnackbar) => ({
-        ...prevSnackbar,
-        open: false,
-      }));
+      setOpen(false);
     },
     [snackbar.closeOn],
   );
@@ -223,7 +236,8 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
     <SnackbarContext.Provider value={{ snackbar, setSnackbar }}>
       {children}
       <Snackbar
-        open={snackbar.open}
+        open={open}
+        key={snackbar.key}
         onClose={(_event, reason) => {
           handleClose(reason);
         }}
