@@ -19,7 +19,7 @@ export const EventSearchBar = () => {
     ),
   );
 
-  const { showSearchBar } = useBaseHeaderContext();
+  const { openCompactSearchBar } = useBaseHeaderContext();
 
   return (
     <Autocomplete
@@ -38,7 +38,8 @@ export const EventSearchBar = () => {
           {...params}
           size="small"
           className="w-full"
-          autoFocus={showSearchBar}
+          // Focus small screen search bar whenever user presses search icon button
+          autoFocus={openCompactSearchBar}
           slotProps={{
             input: {
               ...params.InputProps,

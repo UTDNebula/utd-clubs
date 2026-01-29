@@ -26,7 +26,7 @@ export type ContentComponentColor =
 export type HeaderItemVisibility = {
   menu?: boolean;
   /**
-   * Visibility options for the header logo
+   * Visibility options for the header logo. Valid options:
    * - `true` Automatically switches between "both" or "text" based on screen size
    * - `false` Disabled
    * - `"both"` Always show both the logo icon and text
@@ -36,7 +36,7 @@ export type HeaderItemVisibility = {
    */
   logo?: true | false | 'both' | 'icon' | 'text';
   /**
-   * Visibility options for the header search bar
+   * Visibility options for the header search bar. Valid options:
    * - `true` Automatically switches between "full" or "compact" based on screen size
    * - `false` Disabled
    * - `"full"` Always show full search bar
@@ -79,17 +79,22 @@ export type BaseHeaderProps = {
    */
   disableSticky?: boolean;
   /**
-   * Determines the color of UI elements
+   * Determines the color of UI elements. Valid options:
    * - `"light"` UI elements are white
    * - `"dark"` UI elements are black
    * - `"lightDark"` UI elements are white in light mode and black in dark mode
    * - `"darkLight"` UI elements are black in light mode and white in dark mode
    * @default "darkLight"
    */
-  color?: 'light' | 'dark' | 'lightDark' | 'darkLight';
+  color?: ContentComponentColor;
 };
 
-export const BaseHeaderContext = createContext({ showSearchBar: false });
+/**
+ * Context for child components of BaseHeader
+ */
+export const BaseHeaderContext = createContext({
+  openCompactSearchBar: false,
+});
 
 export function useBaseHeaderContext() {
   return useContext(BaseHeaderContext);
@@ -121,15 +126,17 @@ export const BaseHeader = ({
     logoVisibility === 'both' ||
     logoVisibility === 'text';
 
+  // Main search bar
   const fullSearchBarVisibility =
     searchVisibility === true || searchVisibility === 'full';
+  // Search bar for small screens
   const compactSearchBarVisibility =
     searchVisibility === true || searchVisibility === 'compact';
 
-  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [openCompactSearchBar, setOpenCompactSearchBar] = useState(false);
 
   return (
-    <BaseHeaderContext.Provider value={{ showSearchBar }}>
+    <BaseHeaderContext.Provider value={{ openCompactSearchBar }}>
       <div
         className={`${disableSticky ? '' : 'sticky'} min-h-17 top-0 z-50 flex w-full justify-between items-center gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-4 max-sm:pl-2 flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
       >
@@ -145,7 +152,7 @@ export const BaseHeader = ({
             <div className="absolute inset-0 bg-lighten dark:bg-darken -z-10"></div>
           </>
         )}
-        {!showSearchBar ? (
+        {!openCompactSearchBar ? (
           <>
             <div className="grow basis-0 flex gap-x-2 sm:gap-x-8">
               {menuVisibility && menu}
@@ -208,7 +215,7 @@ export const BaseHeader = ({
                 <IconButton
                   size="large"
                   className={`${searchVisibility === true ? 'md:hidden' : ''}`}
-                  onClick={() => setShowSearchBar(true)}
+                  onClick={() => setOpenCompactSearchBar(true)}
                 >
                   <SearchIcon />
                 </IconButton>
@@ -220,7 +227,10 @@ export const BaseHeader = ({
         ) : (
           <div className="w-full flex justify-center">
             <div className="w-full max-w-128 flex gap-x-2 items-center">
-              <IconButton size="large" onClick={() => setShowSearchBar(false)}>
+              <IconButton
+                size="large"
+                onClick={() => setOpenCompactSearchBar(false)}
+              >
                 <ArrowBackIcon />
               </IconButton>
               {compactSearchBarVisibility && (
