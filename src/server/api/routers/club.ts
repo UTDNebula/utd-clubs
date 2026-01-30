@@ -664,6 +664,10 @@ export const clubRouter = createTRPCRouter({
         .select()
         .from(membershipForms)
         .where(eq(membershipForms.clubId, input.id));
+      forms.sort(
+        // Infinity makes items without a `displayOrder` go to the end
+        (a, b) => (a.displayOrder ?? Infinity) - (b.displayOrder ?? Infinity),
+      );
       return forms;
     } catch (e) {
       console.error(e);
