@@ -18,9 +18,10 @@ import EventTimeAlert from './EventTimeAlert';
 interface EventCardProps {
   event: RouterOutputs['event']['byClubId'][number];
   view?: 'normal' | 'manage' | 'preview' | 'admin';
+  className?: string;
 }
 
-const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
+const EventCard = ({ event, view = 'normal', className }: EventCardProps) => {
   const [imgError, setImgError] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -29,10 +30,10 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
   return (
     <BaseCard
       variant="interactive"
-      className="flex h-96 w-64 flex-col overflow-hidden bg-white dark:bg-neutral-800"
+      className={"flex h-96 w-64 flex-col overflow-hidden " + (className ?? '')}
     >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
-        <div className="relative h-40 shrink-0 w-full bg-neutral-200 dark:bg-neutral-900">
+        <div className="relative h-40 shrink-0 w-full bg-neutral-200 dark:bg-neutral-700">
           {/* shows fallback if event image is loading, error, or no link */}
           {event.club.profileImage && (!showEventImage || !imgLoaded) && (
             <Image
