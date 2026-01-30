@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import ClubCard from '@src/components/club/ClubCard';
-import Header from '@src/components/header/BaseHeader';
+import Header from '@src/components/header/Header';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';

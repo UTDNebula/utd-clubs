@@ -1,7 +1,7 @@
 import { type Metadata } from 'next';
 import type z from 'zod';
 import EventCard from '@src/components/events/EventCard';
-import { EventHeader } from '@src/components/header/BaseHeader';
+import { EventHeader } from '@src/components/header/Header';
 import { api } from '@src/trpc/server';
 import { eventParamsSchema } from '@src/utils/eventFilter';
 import EventsNone from './EventsNone';

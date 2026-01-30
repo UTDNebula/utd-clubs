@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { RegisterModalContents } from '@src/components/global/RegisterModal';
-import NebulaLogo from '@src/icons/NebulaLogo';
+import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { auth } from '@src/server/auth';
 
 export default async function Auth(props: {
@@ -31,10 +31,19 @@ export default async function Auth(props: {
         <div className="z-10">
           <Link
             href="/"
-            className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
+            className="font-display flex gap-2 items-center select-none text-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
           >
-            <NebulaLogo className="h-6 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
-            UTD CLUBS
+            <div className="flex flex-row items-center">
+              <UTDClubsLogoStandalone className="h-10 w-auto fill-white" />
+            </div>
+            <div className="flex flex-col">
+              <span className="whitespace-nowrap text-lg md:text-xl font-bold leading-5">
+                UTD CLUBS
+              </span>
+              <span className="whitespace-nowrap text-xs md:text-sm font-medium">
+                by Nebula Labs
+              </span>
+            </div>
           </Link>
         </div>
         <RegisterModalContents />

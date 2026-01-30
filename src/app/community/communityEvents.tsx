@@ -5,6 +5,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button } from '@mui/material';
 import Link from 'next/link';
 import EventCard from '@src/components/events/EventCard';
+import EventsPagination from '@src/components/events/EventPagination';
 import { api } from '@src/trpc/server';
 
 export const RegisteredEvents = async () => {
@@ -41,18 +42,27 @@ export const RegisteredEvents = async () => {
   );
 };
 
-export const ClubEvents = async () => {
+export const ClubEvents = async ({
+  page,
+  pageSize,
+}: {
+  page: number;
+  pageSize: number;
+}) => {
+  const now = TZDateMini.tz('America/Chicago');
   const clubs = await api.club.getMemberClubs();
   const events = await api.userMetadata.getEventsFromJoinedClubs({
-    currentTime: TZDateMini.tz('America/Chicago'),
+    currentTime: now,
     sortByDate: true,
+    page,
+    pageSize,
   });
 
   if (clubs.length === 0) {
     return (
       <div className="flex flex-col items-center gap-4 mt-4">
         <p className="font-bold text-slate-500">
-          You haven&apos;t joined any clubs.
+          You aren&apos;t following any clubs.
         </p>
         <Link href="/">
           <Button
@@ -72,7 +82,7 @@ export const ClubEvents = async () => {
     return (
       <div className="flex flex-col items-center gap-4 mt-4">
         <p className="font-bold text-slate-500">
-          Your joined clubs don&apos;t have any events.
+          Your followed clubs don&apos;t have any events.
         </p>
         <Link href="/events">
           <Button
@@ -87,11 +97,28 @@ export const ClubEvents = async () => {
       </div>
     );
   }
+
+  const totalCount = await api.userMetadata.countEventsFromJoinedClubs({
+    currentTime: now,
+  });
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+
   return (
-    <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
-      {events.map((event) => (
-        <EventCard key={event.id} event={event} />
-      ))}
-    </div>
+    <>
+      <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
+        {events.map((event) => (
+          <EventCard key={event.id} event={event} />
+        ))}
+      </div>
+
+      <div className="flex justify-center py-10">
+        <EventsPagination
+          page={page}
+          totalPages={totalPages}
+          pageSize={pageSize}
+        />
+      </div>
+    </>
   );
 };

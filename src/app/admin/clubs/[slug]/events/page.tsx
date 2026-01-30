@@ -1,14 +1,31 @@
 import { notFound } from 'next/navigation';
 import AdminHeader from '@src/components/admin/AdminHeader';
 import EventCard from '@src/components/events/EventCard';
+import EventsPagination from '@src/components/events/EventPagination';
+import IncludePastSwitch from '@src/components/events/IncludePastSwitch';
 import { api } from '@src/trpc/server';
 
-type Props = { params: Promise<{ slug: string }> };
+type SearchParams = {
+  page?: string;
+  pageSize?: string;
+  includePast?: string;
+};
 
-export default async function Page(props: Props) {
-  const params = await props.params;
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<SearchParams>;
+};
 
-  const club = await api.admin.getDirectoryInfo({ slug: params.slug });
+export default async function Page({ params, searchParams }: Props) {
+  const { slug } = await params;
+  const sp = (await searchParams) ?? {};
+
+  const page = Number(sp.page) || 1;
+  const pageSize = Number(sp.pageSize) || 12;
+  const includePast = sp.includePast === 'true';
+  const now = new Date();
+
+  const club = await api.admin.getDirectoryInfo({ slug });
   if (!club) {
     notFound();
   }
@@ -16,7 +33,19 @@ export default async function Page(props: Props) {
   const events = await api.event.byClubId({
     clubId: club.id,
     sortByDate: true,
+    page,
+    pageSize,
+    includePast,
+    currentTime: now,
   });
+
+  const totalCount = await api.event.countByClubId({
+    clubId: club.id,
+    includePast,
+    currentTime: now,
+  });
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
   return (
     <>
@@ -27,11 +56,20 @@ export default async function Page(props: Props) {
           { text: club.name, href: `/admin/clubs/${club.slug}` },
           'Events',
         ]}
-      />
+      >
+        <IncludePastSwitch checked={includePast} />
+      </AdminHeader>
       <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
         {events?.map((event) => (
           <EventCard key={event.id} event={event} view="admin" />
         ))}
+      </div>
+      <div className="flex justify-center py-10">
+        <EventsPagination
+          page={page}
+          totalPages={totalPages}
+          pageSize={pageSize}
+        />
       </div>
     </>
   );

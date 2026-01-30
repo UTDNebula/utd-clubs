@@ -19,7 +19,7 @@ export type ChipStyles = Record<
 
 export const chipStyles: ChipStyles = {
   Member: {
-    label: 'Member',
+    label: 'Follower',
     colorClass: undefined,
     icon: <PersonIcon fontSize="small" />,
   },

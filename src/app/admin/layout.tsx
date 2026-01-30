@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { type ReactNode } from 'react';
-import { BaseHeader } from '@src/components/header/BaseHeader';
+import Header from '@src/components/header/Header';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 
@@ -19,7 +19,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
 
   return (
     <>
-      <BaseHeader />
+      <Header itemVisibility={{ search: false }} />
       <main className="p-4">{children}</main>
     </>
   );
