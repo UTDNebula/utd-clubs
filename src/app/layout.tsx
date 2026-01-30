@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
+import { CheckRefreshToken } from '@src/components/auth/CheckRefreshToken';
 import { RegisterModalProvider } from '@src/components/global/RegisterModalProvider';
 import { SnackbarProvider } from '@src/components/global/Snackbar';
 import { TRPCReactProvider } from '@src/trpc/react';
@@ -49,7 +50,7 @@ export const viewport = {
   themeColor: '#573DFF',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -64,7 +65,10 @@ export default function RootLayout({
             <ThemeProvider theme={theme}>
               <ClientLocalizationProvider>
                 <RegisterModalProvider>
-                  <SnackbarProvider>{children}</SnackbarProvider>
+                  <SnackbarProvider>
+                    <CheckRefreshToken />
+                    {children}
+                  </SnackbarProvider>
                 </RegisterModalProvider>
               </ClientLocalizationProvider>
             </ThemeProvider>
