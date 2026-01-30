@@ -33,7 +33,7 @@ const EventCard = ({ event, view = 'normal', className }: EventCardProps) => {
       className={'flex h-96 w-64 flex-col overflow-hidden ' + (className ?? '')}
     >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
-        <div className="relative h-40 shrink-0 w-full bg-neutral-200 dark:bg-neutral-700">
+        <div className="relative h-40 shrink-0 w-full">
           {/* shows fallback if event image is loading, error, or no link */}
           {event.club.profileImage && (!showEventImage || !imgLoaded) && (
             <Image
