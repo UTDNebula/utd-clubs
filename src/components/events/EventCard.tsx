@@ -29,7 +29,7 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
   return (
     <BaseCard
       variant="interactive"
-      className="flex h-96 w-64 flex-col overflow-hidden"
+      className="flex h-96 w-64 flex-col overflow-hidden bg-white dark:bg-neutral-800"
     >
       <Link href={`/events/${event.id}`} className="grow flex flex-col">
         <div className="relative h-40 shrink-0 w-full bg-neutral-200 dark:bg-neutral-900">

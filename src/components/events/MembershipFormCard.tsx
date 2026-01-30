@@ -44,7 +44,7 @@ const MembershipFormCard = ({ form }: EventCardProps) => {
   return (
     <BaseCard
       variant="interactive"
-      className="flex h-72 w-64 flex-col overflow-hidden"
+      className="flex h-72 w-60 flex-col overflow-hidden bg-white dark:bg-neutral-800"
     >
       <Link
         href={form.url}
