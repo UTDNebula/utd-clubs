@@ -8,6 +8,7 @@ import {
   ilike,
   inArray,
   lte,
+  not,
   or,
   sql,
 } from 'drizzle-orm';
@@ -552,6 +553,22 @@ export const clubRouter = createTRPCRouter({
   eventSync: protectedProcedure
     .input(eventSyncSchema)
     .mutation(async ({ ctx, input }) => {
+      const calendarAlreadyUsed = await ctx.db
+        .select()
+        .from(club)
+        .where(
+          and(
+            eq(club.calendarId, input.calendarId ?? ''),
+            not(eq(club.id, input.clubId)),
+          ),
+        );
+      if (calendarAlreadyUsed && calendarAlreadyUsed.length > 0) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Calendar already selected by a different club',
+        });
+      }
+
       await ctx.db
         .update(club)
         .set({

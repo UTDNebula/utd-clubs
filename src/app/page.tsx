@@ -1,15 +1,12 @@
 import { and, eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import Image from 'next/image';
-import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import { AllTags } from '@src/components/AllTags';
 import { GoogleReauthHandler } from '@src/components/auth/GoogleReauthHandler';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
-import ClubMatchButton from '@src/components/header/ClubMatchButton';
-import { ProfileDropDown } from '@src/components/header/ProfileDropDown';
-import Sidebar from '@src/components/nav/Sidebar';
+import Header from '@src/components/header/Header';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';
@@ -71,25 +68,14 @@ const Home = async () => {
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">
-          <div className="pointer-events-none *:pointer-events-auto lg:fixed lg:top-0 lg:z-20 flex w-full items-center max-sm:justify-between py-1 md:py-2 px-4 gap-x-2 md:gap-x-4 lg:gap-x-8">
-            <Sidebar homepage hamburgerColor="light" />
-            <Link
-              href="/"
-              className="lext-lg md:text-xl font-display font-medium md:font-bold flex gap-2 items-center text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
-            >
-              <NebulaLogo className="h-6 w-auto fill-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]" />
-              <span className="whitespace-nowrap">UTD CLUBS</span>
-            </Link>
-            <div className="ml-auto flex items-center justify-center gap-2">
-              <div className="sm:hidden">
-                <ClubMatchButton shadow iconOnly />
-              </div>
-              <div className="max-sm:hidden">
-                <ClubMatchButton shadow />
-              </div>
-              <ProfileDropDown shadow />
-            </div>
-          </div>
+          <Header
+            transparent
+            shadow
+            disableSticky
+            className="lg:fixed"
+            itemVisibility={{ search: false }}
+            color="light"
+          />
           <section className="h-screen">
             <div className="flex h-full w-full flex-col items-center justify-center overflow-visible">
               <h2 className="mb-3 flex items-center gap-1 text-sm font-semibold tracking-wider text-white text-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]">

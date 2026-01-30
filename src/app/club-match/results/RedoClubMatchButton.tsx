@@ -12,7 +12,7 @@ const RedoClubMatchButton = () => {
     <Button
       variant="contained"
       onClick={() => setLoading(true)}
-      component={Link}
+      LinkComponent={Link}
       href="/club-match"
       loading={loading}
       loadingPosition="start"

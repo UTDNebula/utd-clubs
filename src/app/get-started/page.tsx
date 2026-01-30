@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import OnboardingForm from '@src/components/getting-started/OnboardingForm';
-import { BaseHeader } from '@src/components/header/BaseHeader';
+import Header from '@src/components/header/Header';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
@@ -30,10 +30,10 @@ export default async function Page() {
         <div className="absolute inset-0 dark:bg-slightly-darken" />
       </div>
       <div className="relative z-20">
-        <BaseHeader
+        <Header
           transparent
           color="light"
-          itemVisibility={{ clubMatch: false }}
+          itemVisibility={{ search: false, children: false }}
         />
         <OnboardingForm userMetadata={userMetadata} withLayout />
       </div>

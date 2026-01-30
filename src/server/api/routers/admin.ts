@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { and, desc, eq, inArray, lte } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, lte, ne } from 'drizzle-orm';
 import { z } from 'zod';
 import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
@@ -40,6 +40,13 @@ export const adminRouter = createTRPCRouter({
       },
     });
     return orgs;
+  }),
+  notApprovedCount: adminProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db
+      .select({ value: count() })
+      .from(club)
+      .where(ne(club.approved, 'approved'));
+    return result[0]?.value ?? null;
   }),
   deleteClub: adminProcedure
     .input(deleteSchema)
