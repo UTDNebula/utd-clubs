@@ -1,10 +1,9 @@
 import AddIcon from '@mui/icons-material/Add';
-import Button from '@mui/material/Button';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import EventCard from '@src/components/events/EventCard';
 import EventsPagination from '@src/components/events/EventPagination';
 import IncludePastSwitch from '@src/components/events/IncludePastSwitch';
+import { LinkButton } from '@src/components/LinkButton';
 import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 
@@ -59,8 +58,7 @@ export default async function Page({
         hrefBack={`/manage/${slug}/`}
       >
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Button
-            LinkComponent={Link}
+          <LinkButton
             href={`/manage/${slug}/events/create`}
             variant="contained"
             className="normal-case"
@@ -68,7 +66,7 @@ export default async function Page({
             size="large"
           >
             Create Event
-          </Button>
+          </LinkButton>
           <IncludePastSwitch checked={includePast} />
         </div>
       </ManageHeader>
