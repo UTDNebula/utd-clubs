@@ -15,9 +15,6 @@ export default function ClubUpcomingEventsCard({
   upcomingEvents,
   id,
 }: ClubUpcomingEventsCardProps) {
-  const now = new Date();
-  const oneYearAgo = new Date();
-  oneYearAgo.setFullYear(now.getFullYear() - 1);
 
   return (
     <Panel className="text-sm" id={id} smallPadding heading={heading}>
