@@ -23,9 +23,12 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
   return (
     <BaseCard
       variant="interactive"
-      className="flex h-96 w-64 flex-col overflow-hidden"
+      className="flex h-104 w-64 flex-col overflow-hidden"
     >
-      <Link href={`/events/${event.id}`} className="grow flex flex-col">
+      <Link
+        href={`/events/${event.id}`}
+        className="flex flex-1 min-h-0 flex-col"
+      >
         <div className="relative h-40 shrink-0 w-full">
           <div className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-900" />
           {src && (
@@ -40,20 +43,22 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
             <EventTimeAlert event={event} />
           </div>
         </div>
-        <div className="flex h-full flex-col p-5 space-y-2.5">
-          <h3 className="text-xl font-medium">{event.name}</h3>
-          <div className="text-base font-medium">
-            {view !== 'manage' && view !== 'admin' && event.club.name}
-            <div className="text-royal dark:text-cornflower-300">
-              <ClientEventTime
-                startTime={event.startTime}
-                endTime={event.endTime}
-              />
+        <div className="flex flex-col p-5 space-y-2.5">
+          <h3 className="line-clamp-2 text-xl font-medium">{event.name}</h3>
+          {view !== 'manage' && view !== 'admin' && (
+            <div className="line-clamp-2 text-base font-medium">
+              {event.club.name}
             </div>
+          )}
+          <div className="text-royal dark:text-cornflower-300">
+            <ClientEventTime
+              startTime={event.startTime}
+              endTime={event.endTime}
+            />
           </div>
         </div>
       </Link>
-      <div className="m-4 mt-0 flex flex-wrap gap-2">
+      <div className="m-4 mt-auto flex shrink-0 flex-wrap gap-2">
         {view === 'normal' && (
           <EventRegisterButton
             clubId={event.club.id}
@@ -96,38 +101,39 @@ export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
   return (
     <BaseCard
       variant="interactive"
-      className="flex h-96 w-64 flex-col overflow-hidden"
+      className="flex h-104 w-64 flex-col overflow-hidden"
     >
-      <div className="grow flex flex-col">
+      <div className="flex flex-1 min-h-0 flex-col">
         <div className="relative h-40 shrink-0 w-full">
           <Skeleton
             variant="rectangular"
             className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-800"
           />
         </div>
-        <div className="flex h-full flex-col p-5 space-y-2.5">
+        <div className="flex flex-col p-5 space-y-2.5">
           <Skeleton variant="text" className="text-xl font-medium" />
           <Skeleton variant="text" className="text-base font-medium" />
+          <Skeleton variant="text" className="text-base" />
         </div>
-        <div className="m-4 mt-0 flex flex-row gap-2">
-          {!manageView && <EventRegisterButtonSkeleton />}
-          {manageView && (
-            <>
-              <Skeleton
-                variant="rounded"
-                className="rounded-full"
-                width={70}
-                height={30.75}
-              />
-              <Skeleton
-                variant="rounded"
-                className="rounded-full"
-                width={70}
-                height={30.75}
-              />
-            </>
-          )}
-        </div>
+      </div>
+      <div className="m-4 mt-auto flex shrink-0 flex-row gap-2">
+        {!manageView && <EventRegisterButtonSkeleton />}
+        {manageView && (
+          <>
+            <Skeleton
+              variant="rounded"
+              className="rounded-full"
+              width={70}
+              height={30.75}
+            />
+            <Skeleton
+              variant="rounded"
+              className="rounded-full"
+              width={70}
+              height={30.75}
+            />
+          </>
+        )}
       </div>
     </BaseCard>
   );
