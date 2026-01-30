@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -44,8 +45,26 @@ interface EventDetails {
 
 const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const api = useTRPC();
-  const createMutation = useMutation(api.event.create.mutationOptions());
-  const updateMutation = useMutation(api.event.update.mutationOptions());
+  const createMutation = useMutation(
+    api.event.create.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedCustom('Created event!'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
+  const updateMutation = useMutation(
+    api.event.update.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('event'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
   const uploadImage = useUploadToUploadURL();
   const router = useRouter();
 

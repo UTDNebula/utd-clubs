@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { authClient } from '@src/utils/auth-client';
-import { useRegisterModal } from '../account/RegisterModalProvider';
+import { useRegisterModal } from '../global/RegisterModalProvider';
 
 type Props = {
   shadow?: boolean;
@@ -64,8 +64,8 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
         <Popover
           open={open}
           anchorEl={anchorEl}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          transformOrigin={{ horizontal: 'left', vertical: -8 }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ horizontal: 'right', vertical: -8 }}
           disableScrollLock
           onClose={() => setAnchorEl(null)}
         >

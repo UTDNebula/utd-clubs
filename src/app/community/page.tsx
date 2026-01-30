@@ -2,9 +2,11 @@ import { type Metadata } from 'next';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import React from 'react';
-import Header from '@src/components/header/BaseHeader';
+import Header from '@src/components/header/Header';
 import { auth } from '@src/server/auth';
 import { ClubEvents, RegisteredEvents } from './communityEvents';
+
+type SearchParams = { page?: string; pageSize?: string };
 
 export const metadata: Metadata = {
   title: 'My Community',
@@ -17,7 +19,14 @@ export const metadata: Metadata = {
   },
 };
 
-const Community = async () => {
+const Community = async ({
+  searchParams,
+}: {
+  searchParams?: Promise<SearchParams>;
+}) => {
+  const sp = (await searchParams) ?? {};
+  const page = Number(sp.page) || 1;
+  const pageSize = Number(sp.pageSize) || 12;
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
@@ -49,7 +58,7 @@ const Community = async () => {
         <h2 className="font-display text-xl font-bold mt-4 px-4">
           From Your Followed Clubs
         </h2>
-        <ClubEvents />
+        <ClubEvents page={page} pageSize={pageSize} />
       </main>
     </>
   );
