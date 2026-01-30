@@ -8,7 +8,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
+import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 
@@ -57,7 +58,24 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
         // Return context for rollback
         return { previousState, queryKey };
       },
-      onError: (_err, _vars, context) => {
+      onSuccess: (context) => {
+        const joined = context?.memberType === undefined;
+
+        setSnackbar({
+          message: joined ? 'Joined club!' : 'Left club!',
+          type: joined ? 'success' : 'info',
+          autoHideDuration: true,
+          fitContent: true,
+          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+        });
+      },
+      onError: (error, _vars, context) => {
+        setSnackbar(
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
+        );
         if (context?.previousState) {
           queryClient.setQueryData(context.queryKey, context.previousState);
         }
