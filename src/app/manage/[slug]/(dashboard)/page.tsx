@@ -4,6 +4,7 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { LinkButton } from '@src/components/LinkButton';
 import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 import ClubManageForm from './ClubManageForm';
@@ -20,8 +21,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
     <>
       <ManageHeader club={club} hrefBack="/manage">
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Button
-            LinkComponent={Link}
+          <LinkButton
             href={`/manage/${slug}/followers`}
             variant="contained"
             className="normal-case whitespace-nowrap"
@@ -29,9 +29,8 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
             size="large"
           >
             Followers
-          </Button>
-          <Button
-            LinkComponent={Link}
+          </LinkButton>
+          <LinkButton
             href={`/manage/${slug}/events`}
             variant="contained"
             className="normal-case whitespace-nowrap"
@@ -39,10 +38,9 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
             size="large"
           >
             Events
-          </Button>
+          </LinkButton>
           {club.approved === 'approved' && (
-            <Button
-              LinkComponent={Link}
+            <LinkButton
               href={`/directory/${slug}`}
               variant="contained"
               className="normal-case whitespace-nowrap"
@@ -50,7 +48,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
               size="large"
             >
               Listing
-            </Button>
+            </LinkButton>
           )}
         </div>
       </ManageHeader>

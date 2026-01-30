@@ -10,6 +10,7 @@ import ChangeClubStatus from '@src/components/admin/ChangeClubStatus';
 import ClubBody from '@src/components/club/listing/ClubBody';
 import ClubEventHeader from '@src/components/club/listing/ClubEventHeader';
 import ClubTitle from '@src/components/club/listing/ClubTitle';
+import { LinkButton } from '@src/components/LinkButton';
 import { api } from '@src/trpc/server';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -34,8 +35,7 @@ export default async function Page(props: Props) {
         ]}
       >
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Button
-            LinkComponent={Link}
+          <LinkButton
             href={`/admin/clubs/${club.slug}/events`}
             variant="contained"
             className="normal-case whitespace-nowrap"
@@ -43,10 +43,9 @@ export default async function Page(props: Props) {
             size="large"
           >
             Events
-          </Button>
+          </LinkButton>
           {club.approved === 'approved' && (
-            <Button
-              LinkComponent={Link}
+            <LinkButton
               href={`/directory/${club.slug}`}
               variant="contained"
               className="normal-case whitespace-nowrap"
@@ -54,7 +53,7 @@ export default async function Page(props: Props) {
               size="large"
             >
               Listing
-            </Button>
+            </LinkButton>
           )}
         </div>
       </AdminHeader>
