@@ -51,11 +51,11 @@ const ClubManageForm = async ({
       />
       <Slug club={club} role={role} />
       <Officers club={club} listedOfficers={listedOfficers} />
+      <Contacts club={club} />
       <MembershipForms
         club={club}
         listedMembershipForms={listedMembershipForms}
       />
-      <Contacts club={club} />
       <Collaborators
         club={club}
         officers={officers}
