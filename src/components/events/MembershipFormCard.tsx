@@ -8,12 +8,12 @@ import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 import { EventRegisterButtonSkeleton } from './EventRegisterButton';
 
-interface EventCardProps {
+interface MembershipFormCardProps {
   form: RouterOutputs['club']['clubForms'][number];
   view?: 'normal' | 'manage' | 'preview' | 'admin';
 }
 
-const MembershipFormCard = ({ form }: EventCardProps) => {
+const MembershipFormCard = ({ form }: MembershipFormCardProps) => {
   const [ogImage, setOgImage] = useState<string | null>(null);
   const [imgError, setImgError] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -55,14 +55,9 @@ const MembershipFormCard = ({ form }: EventCardProps) => {
         rel="noopener"
       >
         <div className="relative h-40 shrink-0 w-full bg-neutral-200 dark:bg-neutral-900">
-          {/* shows fallback if form image is loading or error */}
+          {/* TODO: shows fallback if form image is loading or error */}
           {(!showEventImage || !imgLoaded) && (
-            <Image
-              fill
-              src={'' /** TODO: add a defailt link image */}
-              alt="Club Form"
-              className="object-cover object-center"
-            />
+            <div className="absolute inset-0 flex items-center justify-center bg-neutral-300 dark:bg-neutral-700" />
           )}
           {/* render event image on top*/}
           {showEventImage && (
@@ -87,7 +82,3 @@ const MembershipFormCard = ({ form }: EventCardProps) => {
 };
 
 export default MembershipFormCard;
-
-interface MembershipFormCard {
-  manageView?: boolean;
-}
