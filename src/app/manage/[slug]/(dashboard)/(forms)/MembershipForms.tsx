@@ -185,7 +185,7 @@ const MembershipForms = ({
       }}
     >
       <Panel
-        heading="Membership Forms"
+        heading="Forms"
         description={
           <>
             <p>
@@ -233,7 +233,7 @@ const MembershipForms = ({
                       });
                     }}
                   >
-                    Add Membership Form
+                    Add Form
                   </Button>
                 </div>
               )}

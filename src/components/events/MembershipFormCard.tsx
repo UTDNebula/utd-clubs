@@ -1,12 +1,10 @@
 'use client';
 
-import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
-import { EventRegisterButtonSkeleton } from './EventRegisterButton';
 
 interface MembershipFormCardProps {
   form: RouterOutputs['club']['clubForms'][number];

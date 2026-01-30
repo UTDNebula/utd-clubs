@@ -50,9 +50,9 @@ const ClubBody = async ({
         {forms && (
           <ClubMembershipFormsCard
             id="membership-forms"
-            heading="Membership Forms"
+            heading="Forms"
             membershipForms={forms}
-            emptyText="No Membership Forms"
+            emptyText="No Forms"
           />
         )}
         <ClubUpcomingEventsCard
