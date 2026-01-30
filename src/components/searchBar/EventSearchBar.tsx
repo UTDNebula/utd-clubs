@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
+import { useBaseHeaderContext } from '../header/BaseHeader';
 
 export const EventSearchBar = () => {
   const [input, setInput] = useState('');
@@ -17,6 +18,8 @@ export const EventSearchBar = () => {
       { enabled: !!input },
     ),
   );
+
+  const { openCompactSearchBar } = useBaseHeaderContext();
 
   return (
     <Autocomplete
@@ -35,6 +38,8 @@ export const EventSearchBar = () => {
           {...params}
           size="small"
           className="w-full"
+          // Focus small screen search bar whenever user presses search icon button
+          autoFocus={openCompactSearchBar}
           slotProps={{
             input: {
               ...params.InputProps,

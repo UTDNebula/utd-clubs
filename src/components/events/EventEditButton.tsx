@@ -21,22 +21,20 @@ export default function EventEditButton({
   fromGoogle: boolean;
 }) {
   return (
-    <Link
+    <Button
+      LinkComponent={Link}
       href={
         fromGoogle
           ? getGcalEventLink(eventId, calendarId, userEmail)
           : `/manage/${clubSlug}/events/edit/${eventId}`
       }
       {...(fromGoogle && { target: '_blank', rel: 'noopener noreferrer' })}
+      variant="contained"
+      size={isHeader ? 'large' : 'small'}
+      className={`normal-case ${isHeader ? 'bg-white hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800' : 'bg-white hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700'} text-haiti dark:text-white`}
+      startIcon={<EditIcon />}
     >
-      <Button
-        variant="contained"
-        size={isHeader ? 'large' : 'small'}
-        className={`normal-case ${isHeader ? 'bg-white hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800' : 'bg-white hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700'} text-haiti dark:text-white`}
-        startIcon={<EditIcon />}
-      >
-        {fromGoogle && isHeader ? 'Edit in Google Calendar' : 'Edit'}
-      </Button>
-    </Link>
+      {fromGoogle && isHeader ? 'Edit in Google Calendar' : 'Edit'}
+    </Button>
   );
 }

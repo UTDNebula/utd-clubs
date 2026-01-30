@@ -5,7 +5,7 @@ import ClubBody from '@src/components/club/listing/ClubBody';
 import ClubEventHeader from '@src/components/club/listing/ClubEventHeader';
 import { ClubNotClaimed } from '@src/components/club/listing/ClubNotClaimed';
 import ClubTitle from '@src/components/club/listing/ClubTitle';
-import Header from '@src/components/header/BaseHeader';
+import Header from '@src/components/header/Header';
 import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
 

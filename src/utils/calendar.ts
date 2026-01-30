@@ -142,6 +142,7 @@ export async function syncCalendar(
                 set: buildConflictUpdateColumns(eventTable, [
                   'name',
                   'description',
+                  'clubId',
                   'status',
                   'image',
                   'startTime',

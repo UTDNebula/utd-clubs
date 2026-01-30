@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
 import { SelectClub } from '@src/server/db/models';
@@ -34,7 +35,16 @@ const Details = ({ club }: DetailsProps) => {
   const clubQuery = useQuery(
     api.club.details.queryOptions({ id: club.id }, { initialData: club }),
   );
-  const editData = useMutation(api.club.edit.data.mutationOptions({}));
+  const editData = useMutation(
+    api.club.edit.data.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club details'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
   const uploadImage = useUploadToUploadURL();
   const queryClient = useQueryClient();
 
@@ -197,7 +207,7 @@ const Details = ({ club }: DetailsProps) => {
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow [&>.MuiInputBase-root]:bg-white"
+                    className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                     size="small"
                     error={!field.state.meta.isValid}
                     helperText={
@@ -207,7 +217,7 @@ const Details = ({ club }: DetailsProps) => {
                             .join('. ') + '.'
                         : undefined
                     }
-                    label="Alias"
+                    label="Alias or Acronym"
                   />
                 )}
               </form.Field>

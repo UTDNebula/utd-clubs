@@ -32,7 +32,7 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
   const [openLeaveModal, setOpenLeaveModal] = useState(false);
 
   return (
-    <Panel heading="Joined Clubs">
+    <Panel heading="Followed Clubs">
       {joinedClubs.map((joinedClub) => (
         <ClubListItem
           joinedClub={joinedClub}
@@ -47,10 +47,10 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
         open={openLeaveModal}
         onClose={() => setOpenLeaveModal(false)}
         loading={joinLeaveMutation.isPending}
-        title={`Leave ${leaveClub?.club.name}?`}
+        title={`Unfollow ${leaveClub?.club.name}?`}
         contentText={
           <>
-            You joined this club{' '}
+            You followed this club{' '}
             {leaveClub &&
               formatDistanceStrict(leaveClub?.joinedAt, new Date(), {
                 addSuffix: true,
@@ -60,7 +60,7 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
             This action cannot be undone.
           </>
         }
-        confirmText="Leave"
+        confirmText="Unfollow"
         onConfirm={async () => {
           void joinLeaveMutation.mutateAsync(
             {
@@ -126,7 +126,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
                 variant="caption"
                 className="text-neutral-600 dark:text-neutral-400"
               >
-                <span>{`Joined on ${joinedClub?.joinedAt.toLocaleString(
+                <span>{`Following since ${joinedClub?.joinedAt.toLocaleString(
                   'en-us',
                   {
                     month: 'short',
@@ -164,8 +164,8 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
             }
           />
         )}
-        <Tooltip title="Leave club">
-          <IconButton aria-label="leave" onClick={onLeave}>
+        <Tooltip title="Unfollow club">
+          <IconButton aria-label="unfollow" onClick={onLeave}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
