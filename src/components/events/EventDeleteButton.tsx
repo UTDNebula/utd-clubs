@@ -55,7 +55,7 @@ export default function EventDeleteButton({
         onClose={() => setOpen(false)}
         contentText={
           <>
-            This will permenantly delete <b>{event.name}</b>.
+            This will permanently delete <b>{event.name}</b>.
           </>
         }
         onConfirm={() => {
