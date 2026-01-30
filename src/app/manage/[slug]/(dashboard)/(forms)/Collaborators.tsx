@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
 import Panel from '@src/components/common/Panel';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import CollaboratorListItem from '@src/components/manage/CollaboratorListItem';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 import type {
@@ -52,7 +53,14 @@ const Collaborators = ({
     (role === 'Admin'
       ? api.admin.updateOfficers
       : api.club.edit.officers
-    ).mutationOptions({}),
+    ).mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club collaborators'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
   );
 
   const [defaultValues, setDefaultValues] = useState({
