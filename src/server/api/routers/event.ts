@@ -114,8 +114,12 @@ export const eventRouter = createTRPCRouter({
 
       try {
         const whereCondition = includePast
-          ? eq(events.clubId, clubId)
-          : and(eq(events.clubId, clubId), gte(events.endTime, now));
+          ? and(eq(events.clubId, clubId), eq(events.status, 'approved'))
+          : and(
+              eq(events.clubId, clubId),
+              gte(events.endTime, now),
+              eq(events.status, 'approved'),
+            );
         const result = await ctx.db
           .select({ value: count() })
           .from(events)
