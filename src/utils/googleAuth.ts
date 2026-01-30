@@ -1,11 +1,15 @@
 import { differenceInMinutes } from 'date-fns';
 import { auth } from '@src/server/auth';
 
-export async function getGoogleAccessToken(userId: string) {
+export async function getGoogleAccessToken(
+  userId: string,
+  useRefreshToken: boolean = false,
+) {
   const googleAccount = await auth.api.getAccessToken({
     body: { providerId: 'google', userId: userId },
   });
   if (
+    useRefreshToken ||
     differenceInMinutes(googleAccount.accessTokenExpiresAt!, Date.now()) <= 10
   ) {
     const accessToken = (

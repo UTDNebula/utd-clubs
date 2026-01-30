@@ -197,7 +197,7 @@ export const adminRouter = createTRPCRouter({
       await ctx.db
         .delete(userMetadataToEvents)
         .where(eq(userMetadataToEvents.eventId, input.id));
-      await ctx.db.delete(events).where(eq(events.id, input.id));
+      await ctx.db.delete(events).where(eq(events.id, input.id)); // only place where event is fully deleted from DB
 
       return { success: true };
     }),
