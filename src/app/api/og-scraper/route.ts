@@ -13,6 +13,7 @@ export async function GET(request: Request) {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36',
       },
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) throw new Error('Failed to fetch site');
