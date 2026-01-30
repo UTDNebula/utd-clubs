@@ -16,6 +16,7 @@ import { google } from 'googleapis';
 import { z } from 'zod';
 import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { club, usedTags } from '@src/server/db/schema/club';
+import { membershipForms } from '@src/server/db/schema/membershipForms';
 import { officers as officersTable } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
 import { syncCalendar, watchCalendar } from '@src/utils/calendar';
@@ -655,6 +656,22 @@ export const clubRouter = createTRPCRouter({
     } catch (e) {
       console.error(e);
       throw e;
+    }
+  }),
+  clubForms: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
+    try {
+      const forms = await ctx.db
+        .select()
+        .from(membershipForms)
+        .where(eq(membershipForms.clubId, input.id));
+      forms.sort(
+        // Infinity makes items without a `displayOrder` go to the end
+        (a, b) => (a.displayOrder ?? Infinity) - (b.displayOrder ?? Infinity),
+      );
+      return forms;
+    } catch (e) {
+      console.error(e);
+      return [];
     }
   }),
 });

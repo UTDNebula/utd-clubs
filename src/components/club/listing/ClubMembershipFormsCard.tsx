@@ -1,18 +1,18 @@
 import Panel from '@src/components/common/Panel';
-import EventCard from '@src/components/events/EventCard';
+import MembershipFormCard from '@src/components/MembershipFormCard';
 import { RouterOutputs } from '@src/trpc/shared';
 
 type ClubUpcomingEventsCardProps = {
   emptyText: string;
   heading: string;
-  upcomingEvents: NonNullable<RouterOutputs['event']['byClubId']>;
+  membershipForms: NonNullable<RouterOutputs['club']['clubForms']>;
   id?: string;
 };
 
-export default function ClubUpcomingEventsCard({
+export default function ClubMembershipFormsCard({
   emptyText,
   heading,
-  upcomingEvents,
+  membershipForms,
   id,
 }: ClubUpcomingEventsCardProps) {
   return (
@@ -22,13 +22,10 @@ export default function ClubUpcomingEventsCard({
           flex-nowrap justify-start overflow-x-auto pb-4 px-4
           md:flex-wrap md:justify-evenly md:overflow-visible md:pb-0 md:px-0"
       >
-        {upcomingEvents.length > 0 ? (
-          upcomingEvents.map((event) => (
-            <div key={event.id} className="shrink-0">
-              <EventCard
-                event={event}
-                className="bg-white dark:bg-neutral-800"
-              />
+        {membershipForms.length > 0 ? (
+          membershipForms.map((form) => (
+            <div key={form.id} className="shrink-0">
+              <MembershipFormCard form={form} />
             </div>
           ))
         ) : (

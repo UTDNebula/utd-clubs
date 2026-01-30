@@ -7,6 +7,7 @@ import Collaborators from './(forms)/Collaborators';
 import Contacts from './(forms)/Contacts';
 import DeleteClub from './(forms)/DeleteClub';
 import Details from './(forms)/Details';
+import MembershipForms from './(forms)/MembershipForms';
 import Officers from './(forms)/Officers';
 import Slug from './(forms)/Slug';
 import NotApproved from './NotApproved';
@@ -19,6 +20,7 @@ const ClubManageForm = async ({
   const clubId = club.id;
 
   const listedOfficers = await api.club.getListedOfficers({ id: clubId });
+  const listedMembershipForms = await api.club.clubForms({ id: clubId });
   const role = (await api.club.memberType({ id: clubId })) as
     | 'President'
     | 'Officer';
@@ -50,6 +52,10 @@ const ClubManageForm = async ({
       <Slug club={club} role={role} />
       <Officers club={club} listedOfficers={listedOfficers} />
       <Contacts club={club} />
+      <MembershipForms
+        club={club}
+        listedMembershipForms={listedMembershipForms}
+      />
       <Collaborators
         club={club}
         officers={officers}

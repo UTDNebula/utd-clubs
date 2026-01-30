@@ -7,6 +7,7 @@ import * as calendarWebhooks from './schema/calendarWebhooks';
 import * as club from './schema/club';
 import * as contacts from './schema/contacts';
 import * as events from './schema/events';
+import * as membershipForms from './schema/membershipForms';
 import * as officers from './schema/officers';
 import * as users from './schema/users';
 
@@ -19,6 +20,7 @@ const schema = {
   ...admin,
   ...officers,
   ...auth,
+  ...membershipForms,
 };
 if (typeof process.env.DATABASE_URL === 'undefined') {
   throw new Error('DATABASE_URL is undefined.');
