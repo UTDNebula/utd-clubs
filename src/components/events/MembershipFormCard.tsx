@@ -22,22 +22,24 @@ const MembershipFormCard = ({ form }: EventCardProps) => {
   useEffect(() => {
     const fetchOgImage = async () => {
       try {
-        const res = await fetch(`/api/og-scraper?url=${encodeURIComponent(form.url)}`);
+        const res = await fetch(
+          `/api/og-scraper?url=${encodeURIComponent(form.url)}`,
+        );
         const data = await res.json();
-        
+
         if (data.ogImage) {
           setOgImage(data.ogImage);
         } else {
           setImgError(true);
         }
       } catch (error) {
-        console.error("Failed to fetch OG image", error);
+        console.error('Failed to fetch OG image', error);
         setImgError(true);
       }
     };
 
     fetchOgImage();
-  }, []);
+  }, [form.url]);
 
   const showEventImage = !!ogImage && !imgError;
 
@@ -90,7 +92,9 @@ interface MembershipFormCard {
   manageView?: boolean;
 }
 
-export const MembershipFormCardSkeleton = ({ manageView }: MembershipFormCard) => {
+export const MembershipFormCardSkeleton = ({
+  manageView,
+}: MembershipFormCard) => {
   return (
     <BaseCard
       variant="interactive"

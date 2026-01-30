@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   try {
     const response = await fetch(targetUrl, {
       headers: {
-        'User-Agent': 'bot-crawler', 
+        'User-Agent': 'bot-crawler',
       },
     });
 
@@ -20,17 +20,24 @@ export async function GET(request: Request) {
     const html = await response.text();
 
     // Find: <meta property="og:image" content="...">
-    let imageMatch = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i);
+    let imageMatch = html.match(
+      /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+    );
 
     // Looks for name="twitter:image" as a fallback
     if (!imageMatch) {
-      imageMatch = html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
+      imageMatch = html.match(
+        /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
+      );
     }
 
     const ogImage = imageMatch ? imageMatch[1] : null;
 
     return NextResponse.json({ ogImage });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to scrape' }, { status: 500 });
+    return NextResponse.json(
+      { error: `Failed to scrape: ${error}` },
+      { status: 500 },
+    );
   }
 }
