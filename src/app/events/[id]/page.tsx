@@ -10,9 +10,9 @@ import EventEditButton from '@src/components/events/EventEditButton';
 import EventRegisterButton from '@src/components/events/EventRegisterButton';
 import { EventHeader } from '@src/components/header/BaseHeader';
 import MarkdownText from '@src/components/MarkdownText';
-import { convertMarkdownToPlaintext } from '@src/modules/markdown';
 import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
+import { convertMarkdownToPlaintext } from '@src/utils/markdown';
 import CountdownTimer from './CountdownTimer';
 import TimeComponent from './TimeComponent';
 

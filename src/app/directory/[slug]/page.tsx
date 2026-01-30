@@ -6,9 +6,9 @@ import ClubHeader from '@src/components/club/listing/ClubHeader';
 import { ClubNotClaimed } from '@src/components/club/listing/ClubNotClaimed';
 import ClubTitle from '@src/components/club/listing/ClubTitle';
 import Header from '@src/components/header/BaseHeader';
-import { convertMarkdownToPlaintext } from '@src/modules/markdown';
 import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
+import { convertMarkdownToPlaintext } from '@src/utils/markdown';
 
 const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
   const params = await props.params;
