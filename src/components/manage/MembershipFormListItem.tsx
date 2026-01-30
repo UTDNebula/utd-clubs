@@ -5,7 +5,7 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, TextField, Tooltip } from '@mui/material';
 import z from 'zod';
 import { withForm } from '@src/utils/form';
-import { editListedMembershipFormSchema, type editListedOfficerSchema } from '@src/utils/formSchemas';
+import { editListedMembershipFormSchema } from '@src/utils/formSchemas';
 
 type FormData = z.infer<typeof editListedMembershipFormSchema>;
 

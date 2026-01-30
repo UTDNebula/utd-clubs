@@ -5,12 +5,12 @@ import { db } from '@src/server/db';
 import { selectContact } from '@src/server/db/models';
 import { club } from '@src/server/db/schema/club';
 import { contacts } from '@src/server/db/schema/contacts';
+import { membershipForms } from '@src/server/db/schema/membershipForms';
 import { officers } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
 import { editClubDetailsSchema, editSlugSchema } from '@src/utils/formSchemas';
 import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
-import { membershipForms } from '@src/server/db/schema/membershipForms';
 
 async function isUserOfficer(userId: string, clubId: string) {
   const officer = await db.query.userMetadataToClubs.findFirst({
@@ -459,8 +459,8 @@ export const clubEditRouter = createTRPCRouter({
           })
           .where(
             and(
-              eq(membershipForms.id, modded.id), 
-              eq(membershipForms.clubId, input.clubId)
+              eq(membershipForms.id, modded.id),
+              eq(membershipForms.clubId, input.clubId),
             ),
           );
         modifyPromises.push(prom);
@@ -473,14 +473,14 @@ export const clubEditRouter = createTRPCRouter({
         .from(membershipForms)
         .where(eq(membershipForms.clubId, input.clubId))
         .orderBy(asc(membershipForms.displayOrder));
-        
+
       let nextFreeDisplayOrder =
         original.findLast((item) => item.displayOrder !== null)?.displayOrder ??
         -1;
 
       if (input.created.length) {
         await ctx.db.insert(membershipForms).values(
-          input.created.map((form, index) => ({
+          input.created.map((form) => ({
             clubId: input.clubId,
             name: form.name,
             url: form.url,
@@ -498,9 +498,9 @@ export const clubEditRouter = createTRPCRouter({
             .set({ displayOrder: index })
             .where(
               and(
-                eq(membershipForms.clubId, input.clubId), 
-                eq(membershipForms.id, id)
-              )
+                eq(membershipForms.clubId, input.clubId),
+                eq(membershipForms.id, id),
+              ),
             );
           orderPromises.push(promise);
         });
@@ -517,9 +517,10 @@ export const clubEditRouter = createTRPCRouter({
 
       const newForms = await ctx.db.query.membershipForms.findMany({
         where: eq(membershipForms.clubId, input.clubId),
-        orderBy: (membershipForms, { asc }) => asc(membershipForms.displayOrder),
+        orderBy: (membershipForms, { asc }) =>
+          asc(membershipForms.displayOrder),
       });
-      
+
       return newForms;
     }),
   slug: protectedProcedure

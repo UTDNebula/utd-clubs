@@ -1,26 +1,19 @@
 'use client';
 
-import GoogleIcon from '@mui/icons-material/Google';
-import { Alert, Skeleton, Tooltip } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
-import ClientEventTime from './ClientEventTime';
-import EventDeleteButton from './EventDeleteButton';
-import EventRegisterButton, {
-  EventRegisterButtonPreview,
-  EventRegisterButtonSkeleton,
-} from './EventRegisterButton';
-import EventTimeAlert from './EventTimeAlert';
+import { EventRegisterButtonSkeleton } from './EventRegisterButton';
 
 interface EventCardProps {
   form: RouterOutputs['club']['clubForms'][number];
   view?: 'normal' | 'manage' | 'preview' | 'admin';
 }
 
-const MembershipFormCard = ({ form, view = 'normal' }: EventCardProps) => {
+const MembershipFormCard = ({ form }: EventCardProps) => {
   const [imgError, setImgError] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -31,7 +24,12 @@ const MembershipFormCard = ({ form, view = 'normal' }: EventCardProps) => {
       variant="interactive"
       className="flex h-72 w-64 flex-col overflow-hidden"
     >
-      <Link href={form.url} className="grow flex flex-col" target="_blank" rel="noopener">
+      <Link
+        href={form.url}
+        className="grow flex flex-col"
+        target="_blank"
+        rel="noopener"
+      >
         <div className="relative h-40 shrink-0 w-full bg-neutral-200 dark:bg-neutral-900">
           {/* shows fallback if form image is loading or error */}
           {(!showEventImage || !imgLoaded) && (

@@ -7,10 +7,10 @@ import Collaborators from './(forms)/Collaborators';
 import Contacts from './(forms)/Contacts';
 import DeleteClub from './(forms)/DeleteClub';
 import Details from './(forms)/Details';
+import MembershipForms from './(forms)/MembershipForms';
 import Officers from './(forms)/Officers';
 import Slug from './(forms)/Slug';
 import NotApproved from './NotApproved';
-import MembershipForms from './(forms)/MembershipForms';
 
 const ClubManageForm = async ({
   club,
@@ -51,7 +51,10 @@ const ClubManageForm = async ({
       />
       <Slug club={club} role={role} />
       <Officers club={club} listedOfficers={listedOfficers} />
-      <MembershipForms club={club} listedMembershipForms={listedMembershipForms} />
+      <MembershipForms
+        club={club}
+        listedMembershipForms={listedMembershipForms}
+      />
       <Contacts club={club} />
       <Collaborators
         club={club}

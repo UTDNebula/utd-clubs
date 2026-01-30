@@ -4,9 +4,9 @@ import { user } from './schema/auth';
 import { club } from './schema/club';
 import { contacts } from './schema/contacts';
 import { events } from './schema/events';
+import { membershipForms } from './schema/membershipForms';
 import { officers } from './schema/officers';
 import { userMetadata, userMetadataToClubs } from './schema/users';
-import { membershipForms } from './schema/membershipForms';
 
 // Schema definition for club table
 export const insertClub = createInsertSchema(club);

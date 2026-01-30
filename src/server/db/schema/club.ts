@@ -13,9 +13,9 @@ import {
 import { user } from './auth';
 import { contacts } from './contacts';
 import { events } from './events';
+import { membershipForms } from './membershipForms';
 import { officers } from './officers';
 import { userMetadataToClubs } from './users';
-import { membershipForms } from './membershipForms';
 
 export const approvedEnum = pgEnum('approved_enum', [
   'approved',

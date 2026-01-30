@@ -7,9 +7,9 @@ import * as calendarWebhooks from './schema/calendarWebhooks';
 import * as club from './schema/club';
 import * as contacts from './schema/contacts';
 import * as events from './schema/events';
+import * as membershipForms from './schema/membershipForms';
 import * as officers from './schema/officers';
 import * as users from './schema/users';
-import * as membershipForms from './schema/membershipForms';
 
 const schema = {
   ...club,

@@ -25,12 +25,11 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@src/components/common/Panel';
-import OfficerListItem from '@src/components/manage/OfficerListItem';
-import type { SelectClub, SelectMembershipForm, SelectOfficer } from '@src/server/db/models';
+import MembershipFormListItem from '@src/components/manage/MembershipFormListItem';
+import type { SelectClub, SelectMembershipForm } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
-import { editListedMembershipFormSchema, editListedOfficerSchema } from '@src/utils/formSchemas';
-import MembershipFormListItem from '@src/components/manage/MembershipFormListItem';
+import { editListedMembershipFormSchema } from '@src/utils/formSchemas';
 
 type FormData = z.infer<typeof editListedMembershipFormSchema>;
 
@@ -44,12 +43,17 @@ function typedDefaultValues(
   }));
 }
 
-type MembershipFormWithId = FormData['membershipForms'][number] & { id: string };
+type MembershipFormWithId = FormData['membershipForms'][number] & {
+  id: string;
+};
 
 function hasId(
   membershipForm: FormData['membershipForms'][number],
 ): membershipForm is MembershipFormWithId {
-  return typeof membershipForm.id === 'string' && !membershipForm.id.startsWith('new');
+  return (
+    typeof membershipForm.id === 'string' &&
+    !membershipForm.id.startsWith('new')
+  );
 }
 
 type MembershipFormProps = {
@@ -57,7 +61,10 @@ type MembershipFormProps = {
   listedMembershipForms: SelectMembershipForm[];
 };
 
-const MembershipForms = ({ club, listedMembershipForms }: MembershipFormProps) => {
+const MembershipForms = ({
+  club,
+  listedMembershipForms,
+}: MembershipFormProps) => {
   const api = useTRPC();
   const editForms = useMutation(
     api.club.edit.membershipForms.mutationOptions({}),
@@ -73,13 +80,17 @@ const MembershipForms = ({ club, listedMembershipForms }: MembershipFormProps) =
       // Separate created vs modified
       const created: FormData['membershipForms'] = [];
       const modified: MembershipFormWithId[] = [];
-      const order: NonNullable<FormData['membershipForms'][number]['id']>[] = [];
+      const order: NonNullable<FormData['membershipForms'][number]['id']>[] =
+        [];
 
       let hasReorder = false;
 
       value.membershipForms.forEach((form, index) => {
         // Extra check for if user reorders, makes a change, then undoes reorder
-        if (isReordered && form.id !== defaultValues.membershipForms[index]?.id) {
+        if (
+          isReordered &&
+          form.id !== defaultValues.membershipForms[index]?.id
+        ) {
           hasReorder = true;
         }
 
@@ -146,12 +157,8 @@ const MembershipForms = ({ club, listedMembershipForms }: MembershipFormProps) =
     // Reorder only if moved to a new location
     if (active.id !== over?.id) {
       form.setFieldValue('membershipForms', (forms) => {
-        const oldIndex = forms.findIndex(
-          (form) => form.id === active.id,
-        );
-        const newIndex = forms.findIndex(
-          (form) => form.id === over?.id,
-        );
+        const oldIndex = forms.findIndex((form) => form.id === active.id);
+        const newIndex = forms.findIndex((form) => form.id === over?.id);
 
         setIsReordered(true);
         return arrayMove(forms, oldIndex, newIndex);
@@ -239,10 +246,14 @@ const MembershipForms = ({ club, listedMembershipForms }: MembershipFormProps) =
                 key={activeReorderId}
                 overlayData={form
                   .getFieldValue('membershipForms')
-                  .find((membershipForm) => membershipForm.id === activeReorderId)}
+                  .find(
+                    (membershipForm) => membershipForm.id === activeReorderId,
+                  )}
                 index={form
                   .getFieldValue('membershipForms')
-                  .findIndex((membershipForm) => membershipForm.id === activeReorderId)}
+                  .findIndex(
+                    (membershipForm) => membershipForm.id === activeReorderId,
+                  )}
                 form={form}
                 removeItem={removeItem}
               />

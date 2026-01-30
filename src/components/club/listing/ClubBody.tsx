@@ -4,9 +4,9 @@ import { type RouterOutputs } from '@src/trpc/shared';
 import ClubContactCard from './ClubContactCard';
 import ClubDescriptionCard from './ClubDescriptionCard';
 import ClubDetailsCard from './ClubDetailsCard';
+import ClubMembershipFormsCard from './ClubMembershipFormsCard';
 import ClubUpcomingEventsCard from './ClubUpcomingEventsCard';
 import OfficerList from './OfficerList';
-import ClubMembershipFormsCard from './ClubMembershipFormsCard';
 
 const ClubBody = async ({
   club,
@@ -23,7 +23,7 @@ const ClubBody = async ({
   });
   const forms = await api.club.clubForms({
     id: club.id,
-  })
+  });
 
   return (
     <section

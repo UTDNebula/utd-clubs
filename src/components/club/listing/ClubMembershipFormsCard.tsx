@@ -1,5 +1,4 @@
 import Panel from '@src/components/common/Panel';
-import EventCard from '@src/components/events/EventCard';
 import MembershipFormCard from '@src/components/events/MembershipFormCard';
 import { RouterOutputs } from '@src/trpc/shared';
 
@@ -7,7 +6,7 @@ type ClubUpcomingEventsCardProps = {
   emptyText: string;
   heading: string;
   membershipForms: NonNullable<RouterOutputs['club']['clubForms']>;
-  id?: string;  
+  id?: string;
 };
 
 export default function ClubMembershipFormsCard({
