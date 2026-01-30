@@ -2,16 +2,11 @@ import '@src/styles/globals.css';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
-import { and, eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
-import { headers } from 'next/headers';
-import { GoogleReauthHandler } from '@src/components/auth/GoogleReauthHandler';
+import { CheckRefreshToken } from '@src/components/auth/CheckRefreshToken';
 import { RegisterModalProvider } from '@src/components/global/RegisterModalProvider';
 import { SnackbarProvider } from '@src/components/global/Snackbar';
-import { auth } from '@src/server/auth';
-import { db } from '@src/server/db';
-import { account } from '@src/server/db/schema/auth';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
 import theme from '@src/utils/theme';
@@ -60,24 +55,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // check if refresh_token is present
-  let needsGoogleReauth = false;
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (session) {
-    const acct = await db.query.account.findFirst({
-      where: and(
-        eq(account.userId, session.user.id),
-        eq(account.providerId, 'google'),
-      ),
-    });
-
-    // If account exists, is google, and has NO refresh token -> Flag it
-    if (acct && !acct.refreshToken) {
-      needsGoogleReauth = true;
-    }
-  }
-
   return (
     <html lang="en">
       <body
@@ -89,7 +66,7 @@ export default async function RootLayout({
               <ClientLocalizationProvider>
                 <RegisterModalProvider>
                   <SnackbarProvider>
-                    {needsGoogleReauth && <GoogleReauthHandler />}
+                    <CheckRefreshToken />
                     {children}
                   </SnackbarProvider>
                 </RegisterModalProvider>
