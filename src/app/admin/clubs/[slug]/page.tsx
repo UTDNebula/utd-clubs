@@ -1,7 +1,5 @@
 import EventIcon from '@mui/icons-material/Event';
 import PreviewIcon from '@mui/icons-material/Preview';
-import { Button } from '@mui/material';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Collaborators from '@src/app/manage/[slug]/(dashboard)/(forms)/Collaborators';
 import DeleteClub from '@src/app/manage/[slug]/(dashboard)/(forms)/DeleteClub';

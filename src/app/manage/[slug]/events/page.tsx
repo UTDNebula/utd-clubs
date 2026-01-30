@@ -1,6 +1,4 @@
 import AddIcon from '@mui/icons-material/Add';
-import Button from '@mui/material/Button';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import EventCard from '@src/components/events/EventCard';
 import EventsPagination from '@src/components/events/EventPagination';

@@ -1,8 +1,6 @@
 import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import PreviewIcon from '@mui/icons-material/Preview';
-import Button from '@mui/material/Button';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { LinkButton } from '@src/components/LinkButton';
 import ManageHeader from '@src/components/manage/ManageHeader';
