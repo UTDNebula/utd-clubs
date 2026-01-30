@@ -2,10 +2,16 @@ import '@src/styles/globals.css';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { and, eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
+import { headers } from 'next/headers';
+import { GoogleReauthHandler } from '@src/components/auth/GoogleReauthHandler';
 import { RegisterModalProvider } from '@src/components/global/RegisterModalProvider';
 import { SnackbarProvider } from '@src/components/global/Snackbar';
+import { auth } from '@src/server/auth';
+import { db } from '@src/server/db';
+import { account } from '@src/server/db/schema/auth';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
 import theme from '@src/utils/theme';
@@ -49,11 +55,29 @@ export const viewport = {
   themeColor: '#573DFF',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // check if refresh_token is present
+  let needsGoogleReauth = false;
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (session) {
+    const acct = await db.query.account.findFirst({
+      where: and(
+        eq(account.userId, session.user.id),
+        eq(account.providerId, 'google'),
+      ),
+    });
+
+    // If account exists, is google, and has NO refresh token -> Flag it
+    if (acct && !acct.refreshToken) {
+      needsGoogleReauth = true;
+    }
+  }
+
   return (
     <html lang="en">
       <body
@@ -64,7 +88,10 @@ export default function RootLayout({
             <ThemeProvider theme={theme}>
               <ClientLocalizationProvider>
                 <RegisterModalProvider>
-                  <SnackbarProvider>{children}</SnackbarProvider>
+                  <SnackbarProvider>
+                    {needsGoogleReauth && <GoogleReauthHandler />}
+                    {children}
+                  </SnackbarProvider>
                 </RegisterModalProvider>
               </ClientLocalizationProvider>
             </ThemeProvider>

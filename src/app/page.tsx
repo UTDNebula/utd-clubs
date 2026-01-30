@@ -1,19 +1,13 @@
-import { and, eq } from 'drizzle-orm';
-import { headers } from 'next/headers';
 import Image from 'next/image';
 import gradientBG from 'public/images/landingGradient.png';
 import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import { AllTags } from '@src/components/AllTags';
-import { GoogleReauthHandler } from '@src/components/auth/GoogleReauthHandler';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
 import Header from '@src/components/header/Header';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import StarDoodle from '@src/icons/StarDoodle';
-import { auth } from '@src/server/auth';
-import { db } from '@src/server/db';
-import { account } from '@src/server/db/schema/auth';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
@@ -21,28 +15,9 @@ const Home = async () => {
   const tags = await api.club.topTags();
   const allTags = await api.club.distinctTags();
 
-  // check if refresh_token is present
-  let needsGoogleReauth = false;
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (session) {
-    const acct = await db.query.account.findFirst({
-      where: and(
-        eq(account.userId, session.user.id),
-        eq(account.providerId, 'google'),
-      ),
-    });
-
-    // If account exists, is google, and has NO refresh token -> Flag it
-    if (acct && !acct.refreshToken) {
-      needsGoogleReauth = true;
-    }
-  }
-
   return (
     <SearchStoreProvider>
       <main className="relative">
-        {needsGoogleReauth && <GoogleReauthHandler />}
         <div className="absolute inset-0 z-0">
           <div className="relative h-[120vh]">
             <section className="absolute inset-0 z-0 h-[120vh]">
