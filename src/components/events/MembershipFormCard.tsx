@@ -3,7 +3,7 @@
 import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 import { EventRegisterButtonSkeleton } from './EventRegisterButton';
@@ -14,10 +14,32 @@ interface EventCardProps {
 }
 
 const MembershipFormCard = ({ form }: EventCardProps) => {
+  const [ogImage, setOgImage] = useState<string | null>(null);
   const [imgError, setImgError] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
 
-  const showEventImage = !!form.image && !imgError;
+  // Fetch the OpenGraph image when the component mounts
+  useEffect(() => {
+    const fetchOgImage = async () => {
+      try {
+        const res = await fetch(`/api/og-scraper?url=${encodeURIComponent(form.url)}`);
+        const data = await res.json();
+        
+        if (data.ogImage) {
+          setOgImage(data.ogImage);
+        } else {
+          setImgError(true);
+        }
+      } catch (error) {
+        console.error("Failed to fetch OG image", error);
+        setImgError(true);
+      }
+    };
+
+    fetchOgImage();
+  }, []);
+
+  const showEventImage = !!ogImage && !imgError;
 
   return (
     <BaseCard
@@ -44,7 +66,7 @@ const MembershipFormCard = ({ form }: EventCardProps) => {
           {showEventImage && (
             <Image
               fill
-              src={form.image!}
+              src={ogImage}
               alt="Event Image"
               className={`object-cover object-center transition-opacity duration-300 ${
                 imgLoaded ? 'opacity-100' : 'opacity-0'
@@ -64,11 +86,11 @@ const MembershipFormCard = ({ form }: EventCardProps) => {
 
 export default MembershipFormCard;
 
-interface EventCardSkeletonProps {
+interface MembershipFormCard {
   manageView?: boolean;
 }
 
-export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
+export const MembershipFormCardSkeleton = ({ manageView }: MembershipFormCard) => {
   return (
     <BaseCard
       variant="interactive"
