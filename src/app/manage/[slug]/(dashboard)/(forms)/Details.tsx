@@ -194,7 +194,7 @@ const Details = ({ club }: DetailsProps) => {
               <form.Field name="alias">
                 {(field) => (
                   <TextField
-                    value={field.state.value ?? ''}
+                    value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                     className="grow [&>.MuiInputBase-root]:bg-white"
