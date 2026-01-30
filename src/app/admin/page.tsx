@@ -9,16 +9,16 @@ export default function Page() {
   return (
     <AdminHeader path={['Admin']}>
       <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-        <Link href="/admin/clubs">
-          <Button
-            variant="contained"
-            className="normal-case whitespace-nowrap"
-            startIcon={<GroupsIcon />}
-            size="large"
-          >
-            Clubs
-          </Button>
-        </Link>
+        <Button
+          LinkComponent={Link}
+          href="/admin/clubs"
+          variant="contained"
+          className="normal-case whitespace-nowrap"
+          startIcon={<GroupsIcon />}
+          size="large"
+        >
+          Clubs
+        </Button>
         <Tooltip title="Coming soon">
           <span>
             <Button
@@ -32,16 +32,16 @@ export default function Page() {
             </Button>
           </span>
         </Tooltip>
-        <Link href="/admin/tags">
-          <Button
-            variant="contained"
-            className="normal-case"
-            startIcon={<TagIcon />}
-            size="large"
-          >
-            Tags
-          </Button>
-        </Link>
+        <Button
+          LinkComponent={Link}
+          href="/admin/tags"
+          variant="contained"
+          className="normal-case"
+          startIcon={<TagIcon />}
+          size="large"
+        >
+          Tags
+        </Button>
       </div>
     </AdminHeader>
   );

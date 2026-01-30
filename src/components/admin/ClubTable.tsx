@@ -45,14 +45,15 @@ export default function ClubTable({
       {
         id: 'view',
         cell: ({ row }) => (
-          <Link
+          <Button
+            LinkComponent={Link}
             href={`/admin/clubs/${row.original.slug}`}
-            className="inline-block"
+            variant="contained"
+            className="normal-case"
+            size="small"
           >
-            <Button variant="contained" className="normal-case" size="small">
-              View
-            </Button>
-          </Link>
+            View
+          </Button>
         ),
         size: 84,
       },

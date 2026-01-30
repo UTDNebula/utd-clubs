@@ -59,16 +59,16 @@ export default async function Page({
         hrefBack={`/manage/${slug}/`}
       >
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Link href={`/manage/${slug}/events/create`}>
-            <Button
-              variant="contained"
-              className="normal-case"
-              startIcon={<AddIcon />}
-              size="large"
-            >
-              Create Event
-            </Button>
-          </Link>
+          <Button
+            LinkComponent={Link}
+            href={`/manage/${slug}/events/create`}
+            variant="contained"
+            className="normal-case"
+            startIcon={<AddIcon />}
+            size="large"
+          >
+            Create Event
+          </Button>
           <IncludePastSwitch checked={includePast} />
         </div>
       </ManageHeader>
