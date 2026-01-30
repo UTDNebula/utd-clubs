@@ -485,9 +485,9 @@ export const clubEditRouter = createTRPCRouter({
             clubId: input.clubId,
             name: form.name,
             url: form.url,
-            displayOrder: (form.id !== undefined
-                ? input.order?.indexOf(form.id)
-                : null) ?? ++nextFreeDisplayOrder,
+            displayOrder:
+              (form.id !== undefined ? input.order?.indexOf(form.id) : null) ??
+              ++nextFreeDisplayOrder,
           })),
         );
       }
