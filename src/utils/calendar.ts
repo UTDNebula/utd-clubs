@@ -266,7 +266,7 @@ export async function getAuthForClub(clubId: string): Promise<OAuth2Client> {
   const auth = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback/google`, // BetterAuth handles this
+    `${process.env.VERCEL_URL}/api/auth/callback/google`, // BetterAuth handles this
     // TODO: need to set perms in GCP i think
   );
 
@@ -315,7 +315,7 @@ export async function watchCalendar(clubId: string, refresh: boolean = false) {
       requestBody: {
         id: channelId,
         type: 'web_hook',
-        address: `${process.env.GOOGLE_WEBHOOK_URL || process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/calendar`,
+        address: `${process.env.VERCEL_URL}/api/webhooks/calendar`,
         token: token,
       },
     });
