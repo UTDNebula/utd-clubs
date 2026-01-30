@@ -228,9 +228,9 @@ export default async function Image({ params }: { params: { slug: string } }) {
                   style={{
                     backgroundColor: '#d3caff',
                     color: '#573dff',
-                    padding: '8px 16px',
-                    borderRadius: '20px',
-                    fontSize: '23px',
+                    padding: '12px 20px',
+                    borderRadius: '50px',
+                    fontSize: '20px',
                     fontFamily: 'Inter',
                     fontWeight: 600,
                     display: 'flex',
