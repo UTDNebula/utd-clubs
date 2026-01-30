@@ -16,29 +16,29 @@ import EventRegisterButton, {
 import EventTimeAlert from './EventTimeAlert';
 
 interface EventCardProps {
-  event: RouterOutputs['event']['byClubId'][number];
+  form: RouterOutputs['club']['clubForms'][number];
   view?: 'normal' | 'manage' | 'preview' | 'admin';
 }
 
-const MembershipFormCard = ({ event, view = 'normal' }: EventCardProps) => {
+const MembershipFormCard = ({ form, view = 'normal' }: EventCardProps) => {
   const [imgError, setImgError] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
 
-  const showEventImage = !!event.image && !imgError;
+  const showEventImage = !!form.image && !imgError;
 
   return (
     <BaseCard
       variant="interactive"
       className="flex h-72 w-64 flex-col overflow-hidden"
     >
-      <Link href={`https://coda.io/form/AIM-S26-Mentee-Application_dw1wTJ2KU3J?utm_source=ig&utm_medium=social&utm_content=link_in_bio`} className="grow flex flex-col" target="_blank" rel="noopener">
+      <Link href={form.url} className="grow flex flex-col" target="_blank" rel="noopener">
         <div className="relative h-40 shrink-0 w-full bg-neutral-200 dark:bg-neutral-900">
-          {/* shows fallback if event image is loading, error, or no link */}
-          {event.club.profileImage && (!showEventImage || !imgLoaded) && (
+          {/* shows fallback if form image is loading or error */}
+          {(!showEventImage || !imgLoaded) && (
             <Image
               fill
-              src={event.club.profileImage}
-              alt="Club Profile"
+              src={'' /** TODO: add a defailt link image */}
+              alt="Club Form"
               className="object-cover object-center"
             />
           )}
@@ -46,7 +46,7 @@ const MembershipFormCard = ({ event, view = 'normal' }: EventCardProps) => {
           {showEventImage && (
             <Image
               fill
-              src={event.image!}
+              src={form.image!}
               alt="Event Image"
               className={`object-cover object-center transition-opacity duration-300 ${
                 imgLoaded ? 'opacity-100' : 'opacity-0'
@@ -57,7 +57,7 @@ const MembershipFormCard = ({ event, view = 'normal' }: EventCardProps) => {
           )}
         </div>
         <div className="flex h-full flex-col p-5 space-y-2.5">
-          <h3 className="text-lg font-medium">{event.name}</h3>
+          <h3 className="text-lg font-medium">{form.name}</h3>
         </div>
       </Link>
     </BaseCard>

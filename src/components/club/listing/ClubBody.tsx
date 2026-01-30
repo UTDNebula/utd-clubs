@@ -21,6 +21,9 @@ const ClubBody = async ({
     clubId: club.id,
     currentTime: now,
   });
+  const forms = await api.club.clubForms({
+    id: club.id,
+  })
 
   return (
     <section
@@ -47,7 +50,7 @@ const ClubBody = async ({
         <ClubMembershipFormsCard
           id="membership-forms"
           heading="Membership Forms"
-          upcomingEvents={events}
+          membershipForms={forms}
           emptyText={
             club.updatedAt == null || club.updatedAt < oneYearAgo
               ? 'No info about upcoming events'

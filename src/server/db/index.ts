@@ -9,6 +9,7 @@ import * as contacts from './schema/contacts';
 import * as events from './schema/events';
 import * as officers from './schema/officers';
 import * as users from './schema/users';
+import * as membershipForms from './schema/membershipForms';
 
 const schema = {
   ...club,
@@ -19,6 +20,7 @@ const schema = {
   ...admin,
   ...officers,
   ...auth,
+  ...membershipForms,
 };
 if (typeof process.env.DATABASE_URL === 'undefined') {
   throw new Error('DATABASE_URL is undefined.');

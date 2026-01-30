@@ -28,6 +28,7 @@ import {
   publicProcedure,
 } from '../trpc';
 import { clubEditRouter } from './clubEdit';
+import { membershipForms } from '@src/server/db/schema/membershipForms';
 
 const byNameSchema = z.object({
   name: z.string().default(''),
@@ -655,6 +656,15 @@ export const clubRouter = createTRPCRouter({
     } catch (e) {
       console.error(e);
       throw e;
+    }
+  }),
+  clubForms: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
+    try {
+      const forms = (await ctx.db.select().from(membershipForms).where(eq(membershipForms.clubId, input.id)));
+      return forms;
+    } catch (e) {
+      console.error(e);
+      return [];
     }
   }),
 });

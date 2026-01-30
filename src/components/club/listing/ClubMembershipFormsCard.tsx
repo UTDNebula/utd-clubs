@@ -6,14 +6,14 @@ import { RouterOutputs } from '@src/trpc/shared';
 type ClubUpcomingEventsCardProps = {
   emptyText: string;
   heading: string;
-  upcomingEvents: NonNullable<RouterOutputs['event']['byClubId']>;
+  membershipForms: NonNullable<RouterOutputs['club']['clubForms']>;
   id?: string;  
 };
 
 export default function ClubMembershipFormsCard({
   emptyText,
   heading,
-  upcomingEvents,
+  membershipForms,
   id,
 }: ClubUpcomingEventsCardProps) {
   const now = new Date();
@@ -27,10 +27,10 @@ export default function ClubMembershipFormsCard({
           flex-nowrap justify-start overflow-x-auto pb-4 px-4
           md:flex-wrap md:justify-evenly md:overflow-visible md:pb-0 md:px-0"
       >
-        {upcomingEvents.length > 0 ? (
-          upcomingEvents.map((event) => (
-            <div key={event.id} className="shrink-0">
-              <MembershipFormCard event={event} />
+        {membershipForms.length > 0 ? (
+          membershipForms.map((form) => (
+            <div key={form.id} className="shrink-0">
+              <MembershipFormCard form={form} />
             </div>
           ))
         ) : (
