@@ -6,20 +6,28 @@ import {
   moreCats,
   type personalCats,
 } from '@src/constants/categories';
-import NebulaLogo from '@src/icons/NebulaLogo';
+import { UTDClubsLogoCombination } from '@src/icons/UTDClubsLogo';
 import SidebarItems from './SidebarItems';
 
 type NavMenuProps = {
   userCapabilites: Array<(typeof personalCats)[number]>;
+  notApprovedCount: number | null;
 };
 
-const NavMenu = ({ userCapabilites }: NavMenuProps) => {
+const NavMenu = ({ userCapabilites, notApprovedCount }: NavMenuProps) => {
   return (
     <>
       {/* Logo Section */}
       <div className="flex w-full justify-center pt-14 pb-14">
-        <Link className="flex items-center gap-2" href="/">
-          <NebulaLogo className="h-12 w-auto fill-haiti dark:fill-white" />
+        <Link className="flex items-center gap-2 select-none" href="/">
+          <UTDClubsLogoCombination
+            duotone
+            className="h-16 w-auto"
+            slotClassNames={{
+              nebulaLogo: 'fill-haiti dark:fill-white',
+              projectLogo: 'fill-royal dark:fill-cornflower-300',
+            }}
+          />
           <h1 className="font-display text-2xl font-bold">UTD CLUBS</h1>
         </Link>
       </div>
@@ -31,9 +39,14 @@ const NavMenu = ({ userCapabilites }: NavMenuProps) => {
             <SidebarItems key={cat} cat={cat} />
           ))}
 
-          {userCapabilites.map((cat) => (
-            <SidebarItems key={cat} cat={cat} />
-          ))}
+          {userCapabilites.map((cat) => {
+            if (cat === 'Admin') {
+              return (
+                <SidebarItems key={cat} cat={cat} badge={notApprovedCount} />
+              );
+            }
+            return <SidebarItems key={cat} cat={cat} />;
+          })}
 
           {moreCats.map((cat) => (
             <SidebarItems key={cat} cat={cat} />

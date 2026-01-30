@@ -5,10 +5,8 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import Chip from '@mui/material/Chip';
 import { GridColDef } from '@mui/x-data-grid';
-import { TRPCClientErrorLike } from '@trpc/client';
 import Image, { ImageProps } from 'next/image';
 import { ReactNode, useState } from 'react';
-import { AppRouter } from '@src/server/api/root';
 import {
   SelectUserMetadataToClubsWithUserMetadata,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
@@ -78,13 +76,6 @@ export type MemberListAbilities = {
   refresh?: boolean;
   downloadCSV?: boolean;
   viewAccountEmail?: boolean;
-};
-
-export type ToastState = {
-  open: boolean;
-  type?: 'success' | 'error';
-  string?: string;
-  error?: TRPCClientErrorLike<AppRouter>;
 };
 
 const AvatarImage = ({
@@ -213,7 +204,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
     {
       field: 'joinedAt',
       type: 'dateTime',
-      headerName: 'Joined',
+      headerName: 'Followed',
       renderHeader: (params) => (
         <ColumnHeaderWithIcon icon={<ScheduleIcon />}>
           {params.colDef.headerName}
@@ -246,7 +237,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
           case 'Officer':
             return 'Collaborator';
           default:
-            return value;
+            return 'Follower';
         }
       },
       headerName: 'Role',

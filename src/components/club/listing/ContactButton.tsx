@@ -1,5 +1,5 @@
-import { Button, Tooltip } from '@mui/material';
-import Link from 'next/link';
+import { Tooltip } from '@mui/material';
+import { LinkButton } from '@src/components/LinkButton';
 import { logo } from '@src/icons/ContactIcons';
 import type { SelectContact } from '@src/server/db/models';
 import { contactNames } from '@src/server/db/schema/contacts';
@@ -69,23 +69,20 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
       key={contact.platform + contact.url}
       title={contactNames[contact.platform]}
     >
-      <Link
+      <LinkButton
         href={
           contact.platform === 'email' ? `mailto:${contact.url}` : contact.url
         }
         target="_blank"
+        variant="contained"
+        className="normal-case bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 shadow-sm dark:shadow-md w-full text-haiti dark:text-white font-normal justify-start pl-3 pr-1"
+        startIcon={logo[contact.platform]}
+        size="large"
       >
-        <Button
-          variant="contained"
-          className="normal-case bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 shadow-sm dark:shadow-md w-full text-haiti dark:text-white font-normal justify-start pl-3 pr-1"
-          startIcon={logo[contact.platform]}
-          size="large"
-        >
-          <span className="overflow-hidden text-sm text-ellipsis whitespace-nowrap">
-            {contactDisplay(contact)}
-          </span>
-        </Button>
-      </Link>
+        <span className="overflow-hidden text-sm text-ellipsis whitespace-nowrap">
+          {contactDisplay(contact)}
+        </span>
+      </LinkButton>
     </Tooltip>
   );
 };
