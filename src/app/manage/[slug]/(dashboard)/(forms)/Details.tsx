@@ -321,9 +321,20 @@ const Details = ({ club }: DetailsProps) => {
           if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             // highlight the component
-            element.classList.add('ring-2', 'ring-royal', 'transition-all');
+            element.classList.add(
+              'ring-2',
+              'ring-royal',
+              'dark:ring-cornflower-300',
+              'rounded-lg',
+              'transition-all',
+            );
             setTimeout(() => {
-              element.classList.remove('ring-2', 'ring-royal');
+              element.classList.remove(
+                'ring-2',
+                'ring-royal',
+                'dark:ring-cornflower-300',
+                'rounded-lg',
+              );
             }, 2000);
           }
         }}
