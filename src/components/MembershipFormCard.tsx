@@ -39,7 +39,7 @@ const MembershipFormCard = ({ form }: MembershipFormCardProps) => {
     fetchOgImage();
   }, [form.url]);
 
-  const showEventImage = !!ogImage && !imgError;
+  const showFormImage = !!ogImage && !imgError;
 
   return (
     <BaseCard
@@ -52,17 +52,13 @@ const MembershipFormCard = ({ form }: MembershipFormCardProps) => {
         target="_blank"
         rel="noopener"
       >
-        <div className="relative h-40 shrink-0 w-full">
-          {/* TODO: shows fallback if form image is loading or error */}
-          {(!showEventImage || !imgLoaded) && (
-            <div className="absolute inset-0 flex items-center justify-center bg-neutral-300 dark:bg-neutral-700" />
-          )}
-          {/* render event image on top*/}
-          {showEventImage && (
+        <div className="relative h-40 shrink-0 w-full bg-neutral-300 dark:bg-neutral-700">
+          {/* render form image on top*/}
+          {showFormImage && (
             <Image
               fill
               src={ogImage}
-              alt="Event Image"
+              alt="Form Image"
               className={`object-cover object-center transition-opacity duration-300 ${
                 imgLoaded ? 'opacity-100' : 'opacity-0'
               }`}

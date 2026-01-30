@@ -1,5 +1,5 @@
 import Panel from '@src/components/common/Panel';
-import MembershipFormCard from '@src/components/events/MembershipFormCard';
+import MembershipFormCard from '@src/components/MembershipFormCard';
 import { RouterOutputs } from '@src/trpc/shared';
 
 type ClubUpcomingEventsCardProps = {
