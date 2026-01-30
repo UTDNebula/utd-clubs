@@ -206,7 +206,7 @@ const Details = ({ club }: DetailsProps) => {
                           .join('. ') + '.'
                       : undefined
                   }
-                  label="Alias"
+                  label="Alias or Acronym"
                 />
               )}
             </form.Field>
