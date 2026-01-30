@@ -92,6 +92,7 @@ const editFormSchema = z.object({
     .array(),
   created: z
     .object({
+      id: z.string().optional(),
       name: z.string(),
       url: z.url(),
     })
@@ -484,7 +485,9 @@ export const clubEditRouter = createTRPCRouter({
             clubId: input.clubId,
             name: form.name,
             url: form.url,
-            displayOrder: ++nextFreeDisplayOrder,
+            displayOrder: (form.id !== undefined
+                ? input.order?.indexOf(form.id)
+                : null) ?? ++nextFreeDisplayOrder,
           })),
         );
       }
