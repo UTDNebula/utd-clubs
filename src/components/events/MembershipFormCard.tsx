@@ -52,7 +52,7 @@ const MembershipFormCard = ({ form }: MembershipFormCardProps) => {
         target="_blank"
         rel="noopener"
       >
-        <div className="relative h-40 shrink-0 w-full bg-neutral-200 dark:bg-neutral-900">
+        <div className="relative h-40 shrink-0 w-full">
           {/* TODO: shows fallback if form image is loading or error */}
           {(!showEventImage || !imgLoaded) && (
             <div className="absolute inset-0 flex items-center justify-center bg-neutral-300 dark:bg-neutral-700" />
