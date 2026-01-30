@@ -133,7 +133,9 @@ export const userMetadataRouter = createTRPCRouter({
         },
       });
 
-      let events = rows.map((item) => item.event);
+      let events = rows
+        .map((item) => item.event)
+        .filter((ev) => ev.status === 'approved');
 
       if (currentTime) {
         events = events.filter((ev) => ev.endTime >= currentTime);
@@ -181,6 +183,7 @@ export const userMetadataRouter = createTRPCRouter({
           and(
             inArray(e.clubId, clubIds),
             currentTime ? gte(e.endTime, now) : undefined,
+            eq(e.status, 'approved'),
           ),
         orderBy: sortByDate ? (e) => [e.startTime] : undefined,
         with: { club: true },
@@ -213,7 +216,11 @@ export const userMetadataRouter = createTRPCRouter({
       const now = input.currentTime ?? new Date();
 
       const whereClause = input.currentTime
-        ? and(inArray(events.clubId, clubIds), gte(events.endTime, now))
+        ? and(
+            inArray(events.clubId, clubIds),
+            gte(events.endTime, now),
+            eq(events.status, 'approved'),
+          )
         : inArray(events.clubId, clubIds);
 
       const result = await ctx.db
