@@ -42,7 +42,7 @@ const Details = ({ club }: DetailsProps) => {
   const defaultValues: ClubDetails = {
     id: clubDetails?.id ?? '',
     name: clubDetails?.name ?? '',
-    alias: clubDetails?.alias ?? null,
+    alias: clubDetails?.alias ?? '',
     description: clubDetails?.description ?? '',
     foundingDate: clubDetails?.foundingDate ?? null,
     tags: clubDetails?.tags ?? [],
@@ -194,7 +194,7 @@ const Details = ({ club }: DetailsProps) => {
               <form.Field name="alias">
                 {(field) => (
                   <TextField
-                    value={field.state.value}
+                    value={field.state.value ?? ''}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                     className="grow [&>.MuiInputBase-root]:bg-white"
