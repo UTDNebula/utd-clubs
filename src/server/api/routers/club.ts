@@ -414,9 +414,10 @@ export const clubRouter = createTRPCRouter({
             and(
               eq(events.clubId, bySlug.id),
               lte(events.startTime, new Date()),
-            ), // find the end time of events that have started before now
+            ), // find the time range of events that have started before now
           orderBy: (events) => [desc(events.endTime)],
           columns: {
+            startTime: true,
             endTime: true,
           },
         });
@@ -425,7 +426,11 @@ export const clubRouter = createTRPCRouter({
         return {
           ...clubData,
           numMembers: userMetadataToClubs.length,
-          lastEventDate: lastEvent?.endTime ?? null,
+          lastEventDate: lastEvent
+            ? lastEvent.endTime <= new Date() // want the latest time of activity for the club
+              ? lastEvent.endTime // use the end time if the event has finished
+              : new Date() // else, the event is ongoing (past the start time) so use the current time
+            : null,
         };
       } catch (e) {
         console.error(e);
