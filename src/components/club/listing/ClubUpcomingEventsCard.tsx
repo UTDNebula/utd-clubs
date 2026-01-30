@@ -15,7 +15,6 @@ export default function ClubUpcomingEventsCard({
   upcomingEvents,
   id,
 }: ClubUpcomingEventsCardProps) {
-
   return (
     <Panel className="text-sm" id={id} smallPadding heading={heading}>
       <div
@@ -26,7 +25,10 @@ export default function ClubUpcomingEventsCard({
         {upcomingEvents.length > 0 ? (
           upcomingEvents.map((event) => (
             <div key={event.id} className="shrink-0">
-              <EventCard event={event} className="bg-white dark:bg-neutral-800"/>
+              <EventCard
+                event={event}
+                className="bg-white dark:bg-neutral-800"
+              />
             </div>
           ))
         ) : (
