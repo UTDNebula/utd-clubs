@@ -1,5 +1,4 @@
 import { Divider, Tooltip } from '@mui/material';
-import { differenceInMinutes } from 'date-fns';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import Panel from '@src/components/common/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
@@ -59,11 +58,9 @@ export default function ClubDetailsCard({
           })}
         >
           <span className="ml-auto text-slate-800 dark:text-slate-200">
-            {differenceInMinutes(new Date(), lastEventDate) < 5
-              ? 'Ongoing'
-              : formatDistanceStrict(lastEventDate, new Date(), {
-                  addSuffix: true,
-                })}
+            {formatDistanceStrict(lastEventDate, new Date(), {
+              addSuffix: true,
+            })}
           </span>
         </Tooltip>
       </div>,
