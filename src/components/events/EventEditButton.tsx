@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { getGcalEventLink } from '@src/modules/googleCalendar';
 
 const EDIT_ACTION_CLASS =
-  'bg-white text-haiti hover:bg-neutral-200 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700';
+  'bg-white text-haiti hover:bg-neutral-200 dark:bg-neutral-700 dark:text-white dark:hover:bg-neutral-600';
 
 export default function EventEditButton({
   isHeader,
