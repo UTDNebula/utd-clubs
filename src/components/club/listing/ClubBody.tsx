@@ -47,16 +47,14 @@ const ClubBody = async ({
         className="flex flex-col gap-4 order-1 md:order-2"
       >
         <ClubDescriptionCard id="description" club={club} />
-        <ClubMembershipFormsCard
-          id="membership-forms"
-          heading="Membership Forms"
-          membershipForms={forms}
-          emptyText={
-            club.updatedAt == null || club.updatedAt < oneYearAgo
-              ? 'No info about upcoming events'
-              : 'There are no upcoming events'
-          }
-        />
+        {forms && (
+          <ClubMembershipFormsCard
+            id="membership-forms"
+            heading="Membership Forms"
+            membershipForms={forms}
+            emptyText="No Membership Forms"
+          />
+        )}
         <ClubUpcomingEventsCard
           id="upcoming-events"
           heading="Upcoming Events"
