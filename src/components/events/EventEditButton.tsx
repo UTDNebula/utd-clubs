@@ -1,8 +1,11 @@
 'use client';
 
 import EditIcon from '@mui/icons-material/Edit';
-import { Button } from '@mui/material';
+import { Button, IconButton, Tooltip } from '@mui/material';
 import Link from 'next/link';
+
+const EDIT_ACTION_CLASS =
+  'bg-white text-haiti hover:bg-neutral-200 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700';
 
 export default function EventEditButton({
   isHeader,
@@ -15,14 +18,26 @@ export default function EventEditButton({
 }) {
   return (
     <Link href={`/manage/${clubSlug}/events/edit/${eventId}`}>
-      <Button
-        variant="contained"
-        size={isHeader ? 'large' : 'small'}
-        className={`normal-case ${isHeader ? 'bg-white hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800' : 'bg-white hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700'} text-haiti dark:text-white`}
-        startIcon={<EditIcon />}
-      >
-        Edit
-      </Button>
+      {isHeader ? (
+        <Button
+          variant="contained"
+          size="large"
+          className={`normal-case ${EDIT_ACTION_CLASS}`}
+          startIcon={<EditIcon />}
+        >
+          Edit
+        </Button>
+      ) : (
+        <Tooltip title="Edit Event">
+          <IconButton
+            size="small"
+            aria-label="Edit Event"
+            className={`${EDIT_ACTION_CLASS}`}
+          >
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+      )}
     </Link>
   );
 }
