@@ -88,18 +88,18 @@ const Details = ({ club }: DetailsProps) => {
         }
       }
 
-      const aliasIsDirty = !formApi.getFieldMeta('alias')?.isDefaultValue;
-      // If alias changed and we haven't confirmed yet, show popup
-      if (aliasIsDirty) {
-        setAliasChangedPopupOpen(true);
-      }
-
       const updated = await editData.mutateAsync({
         ...formValues,
         bannerImage: bannerImageUrl,
         profileImage: profileImageUrl,
       });
       if (updated) {
+        const aliasIsDirty = !formApi.getFieldMeta('alias')?.isDefaultValue;
+        // If alias changed and we haven't confirmed yet, show popup
+        if (aliasIsDirty) {
+          setAliasChangedPopupOpen(true);
+        }
+
         queryClient.invalidateQueries(
           api.club.details.queryOptions({ id: club.id }),
         );
