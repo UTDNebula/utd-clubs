@@ -413,6 +413,7 @@ export const clubRouter = createTRPCRouter({
           where: (events) =>
             and(
               eq(events.clubId, bySlug.id),
+              eq(events.status, 'approved'),
               lte(events.startTime, new Date()),
             ), // find the time range of events that have started before now
           orderBy: (events) => [desc(events.endTime)],
