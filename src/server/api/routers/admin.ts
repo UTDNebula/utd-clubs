@@ -175,11 +175,7 @@ export const adminRouter = createTRPCRouter({
         return {
           ...clubData,
           numMembers: userMetadataToClubs.length,
-          lastEventDate: lastEvent
-            ? lastEvent.endTime <= new Date() // want the latest time of activity for the club
-              ? lastEvent.endTime // use the end time if the event has finished
-              : new Date() // else, the event is ongoing (past the start time) so use the current time
-            : null,
+          lastEventDate: lastEvent ? lastEvent.endTime : null,
         };
       } catch (e) {
         console.error(e);
