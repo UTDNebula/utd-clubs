@@ -126,7 +126,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             flexDirection: 'column',
             width: '95%',
             alignItems: hasImage ? 'flex-start' : 'center',
-            paddingRight: hasImage ? '40px' : '0px', 
+            paddingRight: hasImage ? '40px' : '0px',
             paddingLeft: hasImage ? '0px' : '25px',
           }}
         >
@@ -238,7 +238,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               Check out on UTD CLUBS
             </div>
           </div>
-          
+
           {clubData.tags && (
             <div
               style={{
@@ -246,6 +246,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 flexWrap: 'wrap',
                 gap: '10px',
                 justifyContent: hasImage ? 'flex-start' : 'center',
+                width: hasImage ? '650px' : '900px', // explicit width helps Satori calculate wrapping
               }}
             >
               {clubData.tags.map((tag, index) => (
@@ -261,6 +262,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                     fontWeight: 600,
                     display: 'flex',
                     alignItems: 'center',
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {tag}
