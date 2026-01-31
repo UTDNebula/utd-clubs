@@ -187,7 +187,7 @@ const baseEventFormSchema = z.object({
 export const createEventFormSchema = baseEventFormSchema.refine(
   (data) => data.endTime > data.startTime,
   {
-    message: 'End time must be after start time.',
+    message: 'End time must be after start time',
     path: ['endTime'],
   },
 );
@@ -199,7 +199,7 @@ const baseEventSchema = baseEventFormSchema.omit({
 export const createEventSchema = baseEventSchema.refine(
   (data) => data.endTime > data.startTime,
   {
-    message: 'End time must be after start time.',
+    message: 'End time must be after start time',
     path: ['endTime'],
   },
 );
@@ -218,7 +218,7 @@ export const editEventSchema = baseEventSchema
     id: z.string(),
   })
   .refine((data) => data.endTime > data.startTime, {
-    message: 'End time must be after start time.',
+    message: 'End time must be after start time',
     path: ['endTime'],
   });
 
