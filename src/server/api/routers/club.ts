@@ -487,13 +487,27 @@ export const clubRouter = createTRPCRouter({
   tagSearch: publicProcedure
     .input(searchTagSchema)
     .query(async ({ input, ctx }) => {
-      const tags = await ctx.db
-        .select({ tag: usedTags.tag })
-        .from(usedTags)
-        .where(sql`${usedTags.tag} @@@ ${input.search}`)
-        .orderBy(sql`paradedb.score(${usedTags.id})`)
-        .limit(5);
-      return { tags: tags, clubs: [] };
+      if (!input.search.trim()) {
+        return { tags: [], clubs: [] };
+      }
+
+      try {
+        const tags = await ctx.db
+          .select({ tag: usedTags.tag })
+          .from(usedTags)
+          .where(sql`${usedTags.tag} @@@ ${input.search}`)
+          .orderBy(sql`paradedb.score(${usedTags.id})`)
+          .limit(5);
+        return { tags: tags, clubs: [] };
+      } catch (error) {
+        const tags = await ctx.db
+          .select({ tag: usedTags.tag })
+          .from(usedTags)
+          .where(ilike(usedTags.tag, `%${input.search}%`))
+          .orderBy(asc(usedTags.tag))
+          .limit(5);
+        return { tags: tags, clubs: [] };
+      }
     }),
   search: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
     try {

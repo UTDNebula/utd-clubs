@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Box, IconButton, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import type z from 'zod';
 import { contactNames } from '@src/server/db/schema/contacts';
 import { withForm } from '@src/utils/form';
@@ -101,32 +101,34 @@ const ContactListItem = withForm({
             style={{ gridArea: 'url' }}
             className="max-sm:mx-2 max-sm:mb-2 sm:my-2"
           >
-            <form.Field name={`contacts[${index}].url`}>
-              {(subField) => (
-                <TextField
-                  onChange={(e) => subField.handleChange(e.target.value)}
-                  onBlur={subField.handleBlur}
-                  value={overlayData?.url ?? subField.state.value}
-                  label={
-                    subField.state.value === 'email' ? 'Email Address' : 'URL'
-                  }
-                  className="w-full [&>.MuiInputBase-root]:bg-white  dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                  size="small"
-                  error={!subField.state.meta.isValid}
-                  helperText={
-                    !subField.state.meta.isValid
-                      ? (
-                          subField.state.meta.errors as unknown as {
-                            message: string;
-                          }[]
-                        )
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      : undefined
-                  }
-                />
-              )}
-            </form.Field>
+            <form.AppField name={`contacts[${index}].url`}>
+              {(subField) => {
+                const label =
+                  subField.state.value === 'email' ? 'Email Address' : 'URL';
+                const overlayValue = overlayData?.url;
+                return (
+                  <subField.TextField
+                    label={label}
+                    className="w-full"
+                    error={!subField.state.meta.isValid}
+                    helperText={
+                      !subField.state.meta.isValid
+                        ? (
+                            subField.state.meta.errors as unknown as {
+                              message: string;
+                            }[]
+                          )
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
+                    {...(overlayValue !== undefined
+                      ? { value: overlayValue }
+                      : {})}
+                  />
+                );
+              }}
+            </form.AppField>
           </div>
           <div
             style={{ gridArea: 'buttons' }}

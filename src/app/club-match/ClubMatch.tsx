@@ -9,7 +9,6 @@ import {
   Radio,
   RadioGroup,
   Select,
-  TextField,
 } from '@mui/material';
 import type { AnyFieldApi } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
@@ -38,104 +37,18 @@ interface SharedInputProps {
   field: AnyFieldApi;
 }
 
-const TextInput = ({ id, label, disabled, field }: SharedInputProps) => {
-  const required = isFieldRequired(id);
-  const shouldShowError =
-    field.state.meta.isTouched && !field.state.meta.isValid;
-  return (
-    <div className="flex flex-col gap-1">
-      {label && (
-        <label htmlFor={id} className="whitespace-pre-line">
-          {label}
-          {required && (
-            <span className="text-red-600 dark:text-red-400"> *</span>
-          )}
-        </label>
-      )}
-      <TextField
-        id={id}
-        variant="outlined"
-        size="small"
-        disabled={disabled}
-        required={required}
-        value={field.state.value ?? ''}
-        onChange={(e) => field.handleChange(e.target.value)}
-        error={shouldShowError}
-        helperText={
-          shouldShowError
-            ? field.state.meta.errors.map((err) => err?.message).join('. ') +
-              '.'
-            : undefined
-        }
-      />
-    </div>
-  );
-};
-
-const SelectInput = ({
-  id,
-  label,
-  options,
-  field,
-}: {
-  options: string[];
-} & SharedInputProps) => {
-  const required = isFieldRequired(id);
-  const shouldShowError =
-    field.state.meta.isTouched && !field.state.meta.isValid;
-  return (
-    <FormControl className="flex flex-col gap-1">
-      <label htmlFor={id} className="whitespace-pre-line">
-        {label}
-        {required && <span className="text-red-600 dark:text-red-400"> *</span>}
-      </label>
-      <Select
-        id={id}
-        required={required}
-        size="small"
-        value={field.state.value ?? ''}
-        onChange={(event) => field.handleChange(event.target.value)}
-        error={shouldShowError}
-      >
-        <MenuItem disabled value="">
-          <em>--Select--</em>
-        </MenuItem>
-        {options.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-      </Select>
-      {shouldShowError && (
-        <FormHelperText error>
-          {field.state.meta.errors.map((err) => err?.message).join('. ') + '.'}
-        </FormHelperText>
-      )}
-    </FormControl>
-  );
-};
-
 const RadioInput = ({
   id,
   label,
   options,
-  other,
   field,
-  otherField,
 }: {
   type?: 'radio';
   options: string[];
-  other?: {
-    id: keyof ClubMatchFormSchema;
-    disabled: boolean;
-  };
-  otherField?: SharedInputProps['field'];
 } & SharedInputProps) => {
   const required = isFieldRequired(id);
   const shouldShowError =
     field.state.meta.isTouched && !field.state.meta.isValid;
-  const otherFieldShouldShowError =
-    otherField?.state.meta.isTouched && !otherField?.state.meta.isValid;
   return (
     <FormControl className="flex flex-col gap-1">
       <label htmlFor={id} className="whitespace-pre-line">
@@ -162,25 +75,6 @@ const RadioInput = ({
             <label htmlFor={`${id}-${option}`} className="ml-1">
               {option}
             </label>
-            {other && option === 'Other' && otherField && (
-              <TextField
-                id={other.id}
-                variant="outlined"
-                size="small"
-                disabled={other.disabled}
-                value={otherField.state.value ?? ''}
-                onChange={(e) => otherField.handleChange(e.target.value)}
-                error={otherFieldShouldShowError}
-                helperText={
-                  otherFieldShouldShowError
-                    ? otherField.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
-                className="ml-2 [&>.Mui-disabled.MuiInputBase-root]:bg-neutral-200 dark:[&>.Mui-disabled.MuiInputBase-root]:bg-neutral-800"
-              />
-            )}
           </div>
         ))}
       </RadioGroup>
@@ -305,52 +199,45 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
         <Panel>
           <div className="m-2 flex flex-col gap-8">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3 items-start">
-              <form.Field name="major">
+              <form.AppField name="major">
                 {(field) => (
-                  <div className="flex-1">
-                    <TextInput
-                      id="major"
-                      label="What is your current or intended major?"
-                      disabled={false}
-                      field={field}
-                    />
-                  </div>
+                  <field.TextField
+                    label="What is your current or intended major?"
+                    className="w-full"
+                    required={isFieldRequired('major')}
+                  />
                 )}
-              </form.Field>
-              <form.Field name="year">
+              </form.AppField>
+              <form.AppField name="year">
                 {(field) => (
-                  <div className="flex-1">
-                    <SelectInput
-                      id="year"
-                      label={'\nWhat year are you?'}
-                      options={[
-                        'A prospective student (not yet attending UTD)',
-                        'A first-year student (non-transfer)',
-                        'A first-year student (transfer)',
-                        'A current student (2nd year+, non-transfer)',
-                        'A current student (2nd year+, transfer)',
-                      ]}
-                      field={field}
-                    />
-                  </div>
+                  <field.Select
+                    label="What year are you?"
+                    className="w-full"
+                    required={isFieldRequired('year')}
+                    options={[
+                      'A prospective student (not yet attending UTD)',
+                      'A first-year student (non-transfer)',
+                      'A first-year student (transfer)',
+                      'A current student (2nd year+, non-transfer)',
+                      'A current student (2nd year+, transfer)',
+                    ]}
+                  />
                 )}
-              </form.Field>
-              <form.Field name="proximity">
+              </form.AppField>
+              <form.AppField name="proximity">
                 {(field) => (
-                  <div className="flex-1">
-                    <SelectInput
-                      id="proximity"
-                      label="How close do you live to campus?"
-                      options={[
-                        'Live on campus in the residence halls',
-                        'Live near campus in an apartment or houses',
-                        'Live at home and commute',
-                      ]}
-                      field={field}
-                    />
-                  </div>
+                  <field.Select
+                    label="How close do you live to campus?"
+                    className="w-full"
+                    required={isFieldRequired('proximity')}
+                    options={[
+                      'Live on campus in the residence halls',
+                      'Live near campus in an apartment or houses',
+                      'Live at home and commute',
+                    ]}
+                  />
                 )}
-              </form.Field>
+              </form.AppField>
             </div>
 
             <form.Field name="categories">
@@ -388,16 +275,15 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
                   categories?.includes('Religious');
 
                 return showSpecificCultures ? (
-                  <form.Field name="specificCultures">
+                  <form.AppField name="specificCultures">
                     {(field) => (
-                      <TextInput
-                        id="specificCultures"
+                      <field.TextField
                         label="Please list the specific cultures or religions you are interested in."
-                        disabled={false}
-                        field={field}
+                        className="w-full"
+                        required={isFieldRequired('specificCultures')}
                       />
                     )}
-                  </form.Field>
+                  </form.AppField>
                 ) : null;
               }}
             </form.Subscribe>
@@ -426,38 +312,35 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               )}
             </form.Field>
 
-            <form.Field name="hobbyDetails">
+            <form.AppField name="hobbyDetails">
               {(field) => (
-                <TextInput
-                  id="hobbyDetails"
+                <field.TextField
                   label="Please be specific about your selected hobbies."
-                  disabled={false}
-                  field={field}
+                  className="w-full"
+                  required={isFieldRequired('hobbyDetails')}
                 />
               )}
-            </form.Field>
+            </form.AppField>
 
-            <form.Field name="otherAcademicInterests">
+            <form.AppField name="otherAcademicInterests">
               {(field) => (
-                <TextInput
-                  id="otherAcademicInterests"
+                <field.TextField
                   label="Beyond your major, are there other academic topics or tracks you're interested in?"
-                  disabled={false}
-                  field={field}
+                  className="w-full"
+                  required={isFieldRequired('otherAcademicInterests')}
                 />
               )}
-            </form.Field>
+            </form.AppField>
 
-            <form.Field name="newExperiences">
+            <form.AppField name="newExperiences">
               {(field) => (
-                <TextInput
-                  id="newExperiences"
+                <field.TextField
                   label="What new experiences, hobbies, or activities would you be interested in?"
-                  disabled={false}
-                  field={field}
+                  className="w-full"
+                  required={isFieldRequired('newExperiences')}
                 />
               )}
-            </form.Field>
+            </form.AppField>
 
             <form.Field name="involvementGoals">
               {(field) => (
@@ -507,31 +390,35 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               {/* Conditionally render on gender value */}
               <form.Subscribe selector={(state) => state.values.gender}>
                 {(gender) => (
-                  <form.Field name="gender">
-                    {(genderField) => (
-                      <form.Field name="genderOther">
-                        {(genderOtherField) => (
-                          <RadioInput
-                            id="gender"
-                            label="Gender Identity"
-                            options={[
-                              'Female',
-                              'Male',
-                              'Non-binary',
-                              'Prefer not to say',
-                              'Other',
-                            ]}
-                            field={genderField}
-                            other={{
-                              id: 'genderOther',
-                              disabled: gender !== 'Other',
-                            }}
-                            otherField={genderOtherField}
+                  <>
+                    <form.Field name="gender">
+                      {(genderField) => (
+                        <RadioInput
+                          id="gender"
+                          label="Gender Identity"
+                          options={[
+                            'Female',
+                            'Male',
+                            'Non-binary',
+                            'Prefer not to say',
+                            'Other',
+                          ]}
+                          field={genderField}
+                        />
+                      )}
+                    </form.Field>
+                    {gender === 'Other' && (
+                      <form.AppField name="genderOther">
+                        {(field) => (
+                          <field.TextField
+                            label="Please specify"
+                            className="w-full"
+                            required={isFieldRequired('genderOther')}
                           />
                         )}
-                      </form.Field>
+                      </form.AppField>
                     )}
-                  </form.Field>
+                  </>
                 )}
               </form.Subscribe>
 

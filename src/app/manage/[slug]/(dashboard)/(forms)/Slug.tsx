@@ -2,7 +2,7 @@
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
-import { TextField, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { useStore } from '@tanstack/react-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
@@ -58,10 +58,9 @@ const Slug = ({ club, role }: DetailsProps) => {
   });
   const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
-  // Check if taken
-  const [input, setInput] = useState(club.slug);
   // Set to true when there is a zod error to prevent fetching
   const [simpleError, setSimpleError] = useState(false);
+  const input = useStore(form.store, (state) => state.values.slug);
   const debouncedSearch = useDebounce(input, 300);
   const { data: slugExists, isFetching } = useQuery(
     api.club.slugExists.queryOptions(
@@ -206,7 +205,7 @@ const Slug = ({ club, role }: DetailsProps) => {
           }
         >
           <div className="m-2 mt-0 flex flex-col gap-4">
-            <form.Field
+            <form.AppField
               name="slug"
               validators={{
                 onChange: ({ value }) => {
@@ -229,16 +228,9 @@ const Slug = ({ club, role }: DetailsProps) => {
                       : undefined
                   }
                 >
-                  <TextField
-                    onChange={(e) => {
-                      field.handleChange(e.target.value);
-                      setInput(e.target.value);
-                    }}
-                    onBlur={field.handleBlur}
-                    value={field.state.value}
+                  <field.TextField
                     label="URL"
-                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
+                    className="w-full"
                     disabled={role !== 'President'}
                     error={
                       !field.state.meta.isValid &&
@@ -248,16 +240,15 @@ const Slug = ({ club, role }: DetailsProps) => {
                   />
                 </Tooltip>
               )}
-            </form.Field>
+            </form.AppField>
           </div>
           <div className="flex flex-wrap justify-end items-center gap-2">
             <form.AppForm>
-              <form.ResetButton
-                onClick={() => {
-                  form.reset();
-                  setInput(form.getFieldValue('slug'));
-                }}
-              />
+            <form.ResetButton
+              onClick={() => {
+                form.reset();
+              }}
+            />
             </form.AppForm>
             <form.AppForm>
               <form.SubmitButton />

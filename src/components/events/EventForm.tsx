@@ -1,7 +1,6 @@
 'use client';
 
 import { TZDateMini } from '@date-fns/tz';
-import { TextField } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
@@ -214,59 +213,27 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                 />
               )}
             </form.Field>
-            <form.Field name="name">
+            <form.AppField name="name">
               {(field) => (
-                <TextField
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                  size="small"
-                  error={!field.state.meta.isValid}
-                  helperText={
-                    !field.state.meta.isValid
-                      ? field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      : undefined
-                  }
-                  label="Name"
-                />
+                <field.TextField label="Name" className="w-full" required />
               )}
-            </form.Field>
-            <form.Field name="location">
+            </form.AppField>
+            <form.AppField name="location">
               {(field) => (
-                <TextField
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                  size="small"
-                  error={!field.state.meta.isValid}
-                  helperText={
-                    !field.state.meta.isValid
-                      ? field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      : undefined
-                  }
+                <field.TextField
                   label="Location"
+                  className="w-full"
+                  required
                 />
               )}
-            </form.Field>
-            <form.Field name="description">
+            </form.AppField>
+            <form.AppField name="description">
               {(field) => (
-                <TextField
-                  onChange={(e) => {
-                    field.handleChange(e.target.value);
-                  }}
-                  onBlur={field.handleBlur}
-                  value={field.state.value}
+                <field.TextField
                   label="Description"
-                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                  className="w-full"
                   multiline
                   minRows={4}
-                  error={!field.state.meta.isValid}
                   helperText={
                     !field.state.meta.isValid ? (
                       field.state.meta.errors
@@ -289,7 +256,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   }
                 />
               )}
-            </form.Field>
+            </form.AppField>
             <div className="flex flex-wrap gap-4">
               <form.Field name="startTime">
                 {(field) => (
