@@ -207,7 +207,7 @@ export const createEventSchema = baseEventSchema.refine(
 export const editEventFormSchema = baseEventFormSchema.refine(
   (data) => data.endTime > data.startTime,
   {
-    message: 'End time must be after start time.',
+    message: 'End time must be after start time',
     path: ['endTime'],
   },
 );
