@@ -83,8 +83,7 @@ export const ClubEvents = async ({
         <p className="font-bold text-slate-500">
           Your followed clubs don&apos;t have any events.
         </p>
-        <Button
-          LinkComponent={Link}
+        <LinkButton
           href="/events"
           variant="contained"
           className="normal-case"
@@ -92,7 +91,7 @@ export const ClubEvents = async ({
           endIcon={<ArrowForwardIcon />}
         >
           Check Out Events
-        </Button>
+        </LinkButton>
       </div>
     );
   }
