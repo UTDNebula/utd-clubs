@@ -1,6 +1,6 @@
 DROP TYPE IF EXISTS "public"."student_classification" CASCADE;--> statement-breakpoint
 CREATE TYPE "public"."student_classification" AS ENUM('Student', 'Graduate Student', 'Alum', 'Prospective Student');--> statement-breakpoint
-ALTER TYPE "public"."approved_enum" ADD VALUE 'deleted';--> statement-breakpoint
+ALTER TYPE "public"."approved_enum" ADD VALUE IF NOT EXISTS 'deleted';--> statement-breakpoint
 DROP MATERIALIZED VIEW "public"."used_tags";--> statement-breakpoint
 DROP INDEX "club_search_idx";--> statement-breakpoint
 ALTER TABLE "club" ADD COLUMN IF NOT EXISTS "alias" text;--> statement-breakpoint
