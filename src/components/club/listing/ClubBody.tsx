@@ -47,7 +47,7 @@ const ClubBody = async ({
         className="flex flex-col gap-4 order-1 md:order-2"
       >
         <ClubDescriptionCard id="description" club={club} />
-        {forms && (
+        {forms.length && (
           <ClubMembershipFormsCard
             id="membership-forms"
             heading="Forms"
