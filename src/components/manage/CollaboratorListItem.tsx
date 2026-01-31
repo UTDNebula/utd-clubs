@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import type z from 'zod';
 import { withForm } from '@src/utils/form';
 import { editOfficerSchema } from '@src/utils/formSchemas';
-import MemberRoleChip from './MemberRoleChip';
+import MemberRoleChip, { MemberTypes } from './MemberRoleChip';
 
 type FormData = z.infer<typeof editOfficerSchema>;
 
@@ -92,9 +92,10 @@ const CollaboratorListItem = withForm({
                         className="[&>.MuiSelect-select]:pr-8 [&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2"
                       />
                     }
-                    renderValue={(selected) => (
-                      <MemberRoleChip key={selected} memberType={selected} />
-                    )}
+                    renderValue={(selected) => {
+                      const value = selected as MemberTypes;
+                      return <MemberRoleChip key={value} memberType={value} />;
+                    }}
                   >
                     <MenuItem key="admin" value="President">
                       Admin
