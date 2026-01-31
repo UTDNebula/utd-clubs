@@ -175,9 +175,7 @@ const Details = ({ club }: DetailsProps) => {
               )}
             </form.AppField>
             <form.AppField name="alias">
-              {(field) => (
-                <field.TextField label="Alias" className="grow" />
-              )}
+              {(field) => <field.TextField label="Alias" className="grow" />}
             </form.AppField>
             <form.Field name="foundingDate">
               {(field) => (
