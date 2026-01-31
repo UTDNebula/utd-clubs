@@ -88,9 +88,11 @@ export const editClubFormSchema = z.object({
     .max(100, 'Character limit reached'),
   alias: z
     .string()
-    .min(2, 'Alias must be at least 2 characters')
     .max(100, 'Character limit reached')
-    .nullable(),
+    .nullable()
+    .refine((val) => val === null || val.length === 0 || val.length >= 2, {
+      message: 'Alias must be at least 2 characters',
+    }),
   description: z
     .string()
     .min(1, 'Description is required')
@@ -109,9 +111,11 @@ export const editClubDetailsSchema = z.object({
     .max(100, 'Character limit reached'),
   alias: z
     .string()
-    .min(2, 'Alias must be at least 2 characters')
     .max(100, 'Character limit reached')
-    .nullable(),
+    .nullable()
+    .refine((val) => val === null || val.length === 0 || val.length >= 2, {
+      message: 'Alias must be at least 2 characters',
+    }),
   description: z
     .string()
     .min(1, 'Description is required')
