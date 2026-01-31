@@ -109,7 +109,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     onSubmit: async ({ value, formApi }) => {
       if (mode === 'edit' && event) {
         // Image
-        let imageUrl = null;
+        let imageUrl = event.image;
         const iImageIsDirty = !formApi.getFieldMeta('image')?.isDefaultValue;
         if (iImageIsDirty) {
           if (value.image === null) {
