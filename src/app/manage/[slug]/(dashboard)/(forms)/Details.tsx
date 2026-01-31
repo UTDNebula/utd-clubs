@@ -2,10 +2,8 @@
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
-import Confirmation from '@src/components/Confirmation';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
@@ -51,15 +49,13 @@ const Details = ({ club }: DetailsProps) => {
   const defaultValues: ClubDetails = {
     id: clubDetails?.id ?? '',
     name: clubDetails?.name ?? '',
-    alias: clubDetails?.alias ?? '',
+    alias: clubDetails?.alias ?? null,
     description: clubDetails?.description ?? '',
     foundingDate: clubDetails?.foundingDate ?? null,
     tags: clubDetails?.tags ?? [],
     profileImage: null,
     bannerImage: null,
   };
-
-  const [aliasChangedPopupOpen, setAliasChangedPopupOpen] = useState(false);
 
   const form = useAppForm({
     defaultValues,
@@ -103,12 +99,6 @@ const Details = ({ club }: DetailsProps) => {
         profileImage: profileImageUrl,
       });
       if (updated) {
-        const aliasIsDirty = !formApi.getFieldMeta('alias')?.isDefaultValue;
-        // If alias changed and we haven't confirmed yet, show popup
-        if (aliasIsDirty) {
-          setAliasChangedPopupOpen(true);
-        }
-
         queryClient.invalidateQueries(
           api.club.details.queryOptions({ id: club.id }),
         );
@@ -123,142 +113,109 @@ const Details = ({ club }: DetailsProps) => {
   if (!clubQuery.isSuccess) return <PanelSkeleton />;
 
   return (
-    <>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          form.handleSubmit();
-        }}
-      >
-        <Panel heading="Details">
-          <div className="m-2 flex flex-col gap-4">
-            <div className="flex flex-wrap gap-4">
-              <form.Field name="profileImage">
-                {(field) => (
-                  <FormImage
-                    label="Profile Image"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    fallbackUrl={clubDetails!.profileImage ?? undefined}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0] ?? null;
-                      field.handleChange(file);
-                    }}
-                    helperText={
-                      !field.state.meta.isValid
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+    >
+      <Panel heading="Details">
+        <div className="m-2 flex flex-col gap-4">
+          <div className="flex flex-wrap gap-4">
+            <form.Field name="profileImage">
+              {(field) => (
+                <FormImage
+                  label="Profile Image"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  fallbackUrl={clubDetails!.profileImage ?? undefined}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    field.handleChange(file);
+                  }}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
+                  className="grow w-48"
+                />
+              )}
+            </form.Field>
+            <form.Field name="bannerImage">
+              {(field) => (
+                <FormImage
+                  label="Banner Image"
+                  onBlur={field.handleBlur}
+                  value={field.state.value}
+                  fallbackUrl={clubDetails!.bannerImage ?? undefined}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    field.handleChange(file);
+                  }}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
+                  className="grow w-48"
+                />
+              )}
+            </form.Field>
+          </div>
+          <div className="flex flex-wrap gap-4">
+            <form.AppField name="name">
+              {(field) => {
+                const TextField = field.TextField;
+                return <TextField label="Name" className="grow-100" required />;
+              }}
+            </form.AppField>
+            <form.AppField name="alias">
+              {(field) => {
+                const TextField = field.TextField;
+                return <TextField label="Alias" className="grow" />;
+              }}
+            </form.AppField>
+            <form.Field name="foundingDate">
+              {(field) => (
+                <DatePicker
+                  onChange={(value) => field.handleChange(value)}
+                  value={field.state.value}
+                  label="Date Founded"
+                  className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
+                  slotProps={{
+                    actionBar: {
+                      actions: ['accept'],
+                    },
+                    textField: {
+                      size: 'small',
+                      error: !field.state.meta.isValid,
+                      helperText: !field.state.meta.isValid
                         ? field.state.meta.errors
                             .map((err) => err?.message)
                             .join('. ') + '.'
-                        : undefined
-                    }
-                    className="grow w-48"
-                  />
-                )}
-              </form.Field>
-              <form.Field name="bannerImage">
-                {(field) => (
-                  <FormImage
-                    label="Banner Image"
-                    onBlur={field.handleBlur}
-                    value={field.state.value}
-                    fallbackUrl={clubDetails!.bannerImage ?? undefined}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0] ?? null;
-                      field.handleChange(file);
-                    }}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    className="grow w-48"
-                  />
-                )}
-              </form.Field>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <form.Field name="name">
-                {(field) => (
+                        : undefined,
+                    },
+                  }}
+                />
+              )}
+            </form.Field>
+          </div>
+          <div className="flex flex-col gap-2">
+            <form.AppField name="description">
+              {(field) => {
+                const TextField = field.TextField;
+                return (
                   <TextField
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow-100 [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    label="Name"
-                  />
-                )}
-              </form.Field>
-              <form.Field name="alias">
-                {(field) => (
-                  <TextField
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    label="Alias or Acronym"
-                  />
-                )}
-              </form.Field>
-              <form.Field name="foundingDate">
-                {(field) => (
-                  <DatePicker
-                    onChange={(value) => field.handleChange(value)}
-                    value={field.state.value}
-                    label="Date Founded"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
-                    slotProps={{
-                      actionBar: {
-                        actions: ['accept'],
-                      },
-                      textField: {
-                        size: 'small',
-                        error: !field.state.meta.isValid,
-                        helperText: !field.state.meta.isValid
-                          ? field.state.meta.errors
-                              .map((err) => err?.message)
-                              .join('. ') + '.'
-                          : undefined,
-                      },
-                    }}
-                  />
-                )}
-              </form.Field>
-            </div>
-            <div className="flex flex-col gap-2">
-              <form.Field name="description">
-                {(field) => (
-                  <TextField
-                    onChange={(e) => {
-                      field.handleChange(e.target.value);
-                    }}
-                    onBlur={field.handleBlur}
-                    value={field.state.value}
                     label="Description"
-                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                    className="w-full"
                     multiline
                     minRows={4}
-                    error={!field.state.meta.isValid}
                     helperText={
                       !field.state.meta.isValid ? (
                         field.state.meta.errors
@@ -280,75 +237,40 @@ const Details = ({ club }: DetailsProps) => {
                       )
                     }
                   />
-                )}
-              </form.Field>
-            </div>
-            <form.Field name="tags">
-              {(field) => (
-                <ClubTagEdit
-                  value={field.state.value}
-                  onChange={(value) => {
-                    field.handleChange(value);
-                  }}
-                  onBlur={field.handleBlur}
-                  error={!field.state.meta.isValid}
-                  helperText={
-                    !field.state.meta.isValid
-                      ? field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      : undefined
-                  }
-                />
-              )}
-            </form.Field>
+                );
+              }}
+            </form.AppField>
           </div>
-          <div className="flex flex-wrap justify-end items-center gap-2">
-            <form.AppForm>
-              <form.ResetButton />
-            </form.AppForm>
-            <form.AppForm>
-              <form.SubmitButton />
-            </form.AppForm>
-          </div>
-        </Panel>
-      </form>
-      <Confirmation
-        open={aliasChangedPopupOpen}
-        onClose={() => setAliasChangedPopupOpen(false)}
-        title={'Alias Changed'}
-        contentText={
-          <>Would you also like to also change your Listing URL to match?</>
-        }
-        confirmText="Change Listing URL"
-        confirmColor="primary"
-        onConfirm={async () => {
-          setAliasChangedPopupOpen(false);
-          // scroll to the Slug component
-          const element = document.getElementById('form-slug');
-
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // highlight the component
-            element.classList.add(
-              'ring-2',
-              'ring-royal',
-              'dark:ring-cornflower-300',
-              'rounded-lg',
-              'transition-all',
-            );
-            setTimeout(() => {
-              element.classList.remove(
-                'ring-2',
-                'ring-royal',
-                'dark:ring-cornflower-300',
-                'rounded-lg',
-              );
-            }, 2000);
-          }
-        }}
-      />
-    </>
+          <form.Field name="tags">
+            {(field) => (
+              <ClubTagEdit
+                value={field.state.value}
+                onChange={(value) => {
+                  field.handleChange(value);
+                }}
+                onBlur={field.handleBlur}
+                error={!field.state.meta.isValid}
+                helperText={
+                  !field.state.meta.isValid
+                    ? field.state.meta.errors
+                        .map((err) => err?.message)
+                        .join('. ') + '.'
+                    : undefined
+                }
+              />
+            )}
+          </form.Field>
+        </div>
+        <div className="flex flex-wrap justify-end items-center gap-2">
+          <form.AppForm>
+            <form.ResetButton />
+          </form.AppForm>
+          <form.AppForm>
+            <form.SubmitButton />
+          </form.AppForm>
+        </div>
+      </Panel>
+    </form>
   );
 };
 
