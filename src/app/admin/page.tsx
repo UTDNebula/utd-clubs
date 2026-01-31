@@ -2,15 +2,14 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import PersonIcon from '@mui/icons-material/Person';
 import TagIcon from '@mui/icons-material/Tag';
 import { Button, Tooltip } from '@mui/material';
-import Link from 'next/link';
 import AdminHeader from '@src/components/admin/AdminHeader';
+import { LinkButton } from '@src/components/LinkButton';
 
 export default function Page() {
   return (
     <AdminHeader path={['Admin']}>
       <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-        <Button
-          LinkComponent={Link}
+        <LinkButton
           href="/admin/clubs"
           variant="contained"
           className="normal-case whitespace-nowrap"
@@ -18,7 +17,7 @@ export default function Page() {
           size="large"
         >
           Clubs
-        </Button>
+        </LinkButton>
         <Tooltip title="Coming soon">
           <span>
             <Button
@@ -32,8 +31,7 @@ export default function Page() {
             </Button>
           </span>
         </Tooltip>
-        <Button
-          LinkComponent={Link}
+        <LinkButton
           href="/admin/tags"
           variant="contained"
           className="normal-case"
@@ -41,7 +39,7 @@ export default function Page() {
           size="large"
         >
           Tags
-        </Button>
+        </LinkButton>
       </div>
     </AdminHeader>
   );

@@ -1,11 +1,15 @@
-import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
+import { notFound, redirect } from 'next/navigation';
 import EventForm from '@src/components/events/EventForm';
 import ManageHeader from '@src/components/manage/ManageHeader';
+import { getGcalEventLink } from '@src/modules/googleCalendar';
+import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 
 const EditEventPage = async (props: {
   params: Promise<{ slug: string; eventId: string }>;
 }) => {
+  const session = await auth.api.getSession({ headers: await headers() });
   const { slug, eventId } = await props.params;
   const club = await api.club.bySlug({ slug });
   if (!club) {
@@ -15,6 +19,12 @@ const EditEventPage = async (props: {
   const event = await api.event.byId({ id: eventId });
   if (!event) {
     return notFound();
+  }
+
+  if (event?.google) {
+    redirect(
+      getGcalEventLink(event.id, event.club.calendarId, session?.user.email),
+    );
   }
 
   return (

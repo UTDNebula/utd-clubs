@@ -108,7 +108,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     onSubmit: async ({ value, formApi }) => {
       if (mode === 'edit' && event) {
         // Image
-        let imageUrl = null;
+        let imageUrl = event.image;
         const iImageIsDirty = !formApi.getFieldMeta('image')?.isDefaultValue;
         if (iImageIsDirty) {
           if (value.image === null) {
@@ -322,12 +322,14 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             ...formValues,
             image: previewUrl,
             club,
+            status: 'approved',
             updatedAt: new Date(),
             createdAt: new Date(),
             recurrence: '',
             recurenceId: '',
             google: false,
             etag: '',
+            calendarId: null,
           }}
           view="preview"
         />

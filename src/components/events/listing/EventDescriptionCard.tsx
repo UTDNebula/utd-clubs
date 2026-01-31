@@ -18,21 +18,30 @@ export default function EventDescriptionCard({
   id,
 }: EventDescriptionCardProps) {
   const [open, setOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  const showImageTrigger = !!event.image && !imgError;
 
   return (
     <>
       <Panel className="!p-10 text-slate-700" id={id}>
-        {event.image && (
+        {showImageTrigger && (
           <button
             onClick={() => setOpen(true)}
-            className="w-fit max-h-64 mx-auto mb-6 cursor-zoom-in"
+            className={`w-fit max-h-64 mx-auto mb-6 cursor-zoom-in ${
+              imgLoaded ? 'block' : 'hidden' // hide button until loaded
+            }`}
           >
             <Image
-              src={event.image}
+              src={event.image!}
               alt="Event poster"
               height={256}
               width={512}
               className="rounded-lg max-h-64 w-fit object-contain object-center"
+              onError={() => setImgError(true)}
+              onLoad={() => setImgLoaded(true)}
+              priority // ensure fetch even when hidden
             />
           </button>
         )}
@@ -45,7 +54,7 @@ export default function EventDescriptionCard({
           maxLines={10}
         />
       </Panel>
-      {event.image && (
+      {showImageTrigger && (
         <Dialog
           open={open}
           onClose={() => setOpen(false)}
@@ -66,11 +75,12 @@ export default function EventDescriptionCard({
           </IconButton>
           <div className="relative w-full h-full flex items-center justify-center">
             <Image
-              src={event.image}
+              src={event.image!}
               alt="Event poster fullscreen"
               fill
               unoptimized
               className="object-contain"
+              onError={() => setImgError(true)}
             />
           </div>
         </Dialog>

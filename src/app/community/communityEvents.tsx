@@ -2,10 +2,9 @@
 
 import { TZDateMini } from '@date-fns/tz';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Button } from '@mui/material';
-import Link from 'next/link';
 import EventCard from '@src/components/events/EventCard';
 import EventsPagination from '@src/components/events/EventPagination';
+import { LinkButton } from '@src/components/LinkButton';
 import { api } from '@src/trpc/server';
 
 export const RegisteredEvents = async () => {
@@ -20,8 +19,7 @@ export const RegisteredEvents = async () => {
         <p className="font-bold text-slate-500">
           You haven&apos;t registered for any events.
         </p>
-        <Button
-          LinkComponent={Link}
+        <LinkButton
           href="/events"
           variant="contained"
           className="normal-case"
@@ -29,7 +27,7 @@ export const RegisteredEvents = async () => {
           endIcon={<ArrowForwardIcon />}
         >
           Check Out Events
-        </Button>
+        </LinkButton>
       </div>
     );
   }
@@ -64,8 +62,7 @@ export const ClubEvents = async ({
         <p className="font-bold text-slate-500">
           You aren&apos;t following any clubs.
         </p>
-        <Button
-          LinkComponent={Link}
+        <LinkButton
           href="/"
           variant="contained"
           className="normal-case"
@@ -73,7 +70,7 @@ export const ClubEvents = async ({
           endIcon={<ArrowForwardIcon />}
         >
           Check Out Clubs
-        </Button>
+        </LinkButton>
       </div>
     );
   }
@@ -84,8 +81,7 @@ export const ClubEvents = async ({
         <p className="font-bold text-slate-500">
           Your followed clubs don&apos;t have any events.
         </p>
-        <Button
-          LinkComponent={Link}
+        <LinkButton
           href="/events"
           variant="contained"
           className="normal-case"
@@ -93,7 +89,7 @@ export const ClubEvents = async ({
           endIcon={<ArrowForwardIcon />}
         >
           Check Out Events
-        </Button>
+        </LinkButton>
       </div>
     );
   }

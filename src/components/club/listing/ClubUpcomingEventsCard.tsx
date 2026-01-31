@@ -15,10 +15,6 @@ export default function ClubUpcomingEventsCard({
   upcomingEvents,
   id,
 }: ClubUpcomingEventsCardProps) {
-  const now = new Date();
-  const oneYearAgo = new Date();
-  oneYearAgo.setFullYear(now.getFullYear() - 1);
-
   return (
     <Panel className="text-sm" id={id} smallPadding heading={heading}>
       <div
@@ -29,7 +25,10 @@ export default function ClubUpcomingEventsCard({
         {upcomingEvents.length > 0 ? (
           upcomingEvents.map((event) => (
             <div key={event.id} className="shrink-0">
-              <EventCard event={event} />
+              <EventCard
+                event={event}
+                className="bg-white dark:bg-neutral-800"
+              />
             </div>
           ))
         ) : (

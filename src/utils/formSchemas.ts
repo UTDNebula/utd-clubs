@@ -88,9 +88,11 @@ export const editClubFormSchema = z.object({
     .max(100, 'Character limit reached'),
   alias: z
     .string()
-    .min(2, 'Alias must be at least 2 characters')
     .max(100, 'Character limit reached')
-    .nullable(),
+    .nullable()
+    .refine((val) => val === null || val.length === 0 || val.length >= 2, {
+      message: 'Alias must be at least 2 characters',
+    }),
   description: z
     .string()
     .min(1, 'Description is required')
@@ -109,9 +111,11 @@ export const editClubDetailsSchema = z.object({
     .max(100, 'Character limit reached'),
   alias: z
     .string()
-    .min(2, 'Alias must be at least 2 characters')
     .max(100, 'Character limit reached')
-    .nullable(),
+    .nullable()
+    .refine((val) => val === null || val.length === 0 || val.length >= 2, {
+      message: 'Alias must be at least 2 characters',
+    }),
   description: z
     .string()
     .min(1, 'Description is required')
@@ -148,6 +152,24 @@ export const editListedOfficerSchema = z.object({
         .string()
         .min(1, 'Position is required')
         .max(100, 'Character limit reached'),
+    })
+    .array(),
+});
+
+export const editListedMembershipFormSchema = z.object({
+  membershipForms: z
+    .object({
+      id: z.string().optional(),
+      name: z
+        .string()
+        .min(1, 'Name is required')
+        .max(100, 'Character limit reached'),
+      url: z
+        .url({
+          message:
+            'Please enter a valid URL (must start with http:// or https://)',
+        })
+        .min(1, 'URL is required'),
     })
     .array(),
 });
@@ -207,7 +229,7 @@ export const createEventSchema = baseEventSchema.refine(
 export const editEventFormSchema = baseEventFormSchema.refine(
   (data) => data.endTime > data.startTime,
   {
-    message: 'End time must be after start time.',
+    message: 'End time must be after start time',
     path: ['endTime'],
   },
 );

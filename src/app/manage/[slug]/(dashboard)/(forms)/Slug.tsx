@@ -171,7 +171,7 @@ const Slug = ({ club, role }: DetailsProps) => {
   };
 
   return (
-    <>
+    <div id="form-slug" className="scroll-mt-24">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -265,7 +265,7 @@ const Slug = ({ club, role }: DetailsProps) => {
         onConfirm={form.handleSubmit}
         loading={isSubmitting}
       />
-    </>
+    </div>
   );
 };
 

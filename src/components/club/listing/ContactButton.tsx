@@ -1,5 +1,5 @@
-import { Button, Tooltip } from '@mui/material';
-import Link from 'next/link';
+import { Tooltip } from '@mui/material';
+import { LinkButton } from '@src/components/LinkButton';
 import { logo } from '@src/icons/ContactIcons';
 import type { SelectContact } from '@src/server/db/models';
 import { contactNames } from '@src/server/db/schema/contacts';
@@ -69,8 +69,7 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
       key={contact.platform + contact.url}
       title={contactNames[contact.platform]}
     >
-      <Button
-        LinkComponent={Link}
+      <LinkButton
         href={
           contact.platform === 'email' ? `mailto:${contact.url}` : contact.url
         }
@@ -83,7 +82,7 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
         <span className="overflow-hidden text-sm text-ellipsis whitespace-nowrap">
           {contactDisplay(contact)}
         </span>
-      </Button>
+      </LinkButton>
     </Tooltip>
   );
 };
