@@ -220,11 +220,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             </form.AppField>
             <form.AppField name="location">
               {(field) => (
-                <field.TextField
-                  label="Location"
-                  className="w-full"
-                  required
-                />
+                <field.TextField label="Location" className="w-full" required />
               )}
             </form.AppField>
             <form.AppField name="description">

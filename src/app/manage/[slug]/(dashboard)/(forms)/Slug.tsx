@@ -244,11 +244,11 @@ const Slug = ({ club, role }: DetailsProps) => {
           </div>
           <div className="flex flex-wrap justify-end items-center gap-2">
             <form.AppForm>
-            <form.ResetButton
-              onClick={() => {
-                form.reset();
-              }}
-            />
+              <form.ResetButton
+                onClick={() => {
+                  form.reset();
+                }}
+              />
             </form.AppForm>
             <form.AppForm>
               <form.SubmitButton />

@@ -3,8 +3,7 @@
 import dynamic from 'next/dynamic';
 
 const HomePageSearchBar = dynamic(
-  () =>
-    import('./HomePageSearch').then((mod) => mod.HomePageSearchBar),
+  () => import('./HomePageSearch').then((mod) => mod.HomePageSearchBar),
   { ssr: false },
 );
 
