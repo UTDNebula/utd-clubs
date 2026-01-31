@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { type ReactNode } from 'react';
-import { BaseHeader } from '@src/components/header/BaseHeader';
+import Header from '@src/components/header/Header';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
@@ -32,7 +32,7 @@ const Layout = async ({
 
   return (
     <>
-      <BaseHeader />
+      <Header itemVisibility={{ search: false }} />
       <main className="p-4">{children}</main>
     </>
   );

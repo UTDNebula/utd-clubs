@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Panel from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -23,7 +24,16 @@ type DetailsProps = {
 
 const Slug = ({ club, role }: DetailsProps) => {
   const api = useTRPC();
-  const editSlug = useMutation(api.club.edit.slug.mutationOptions({}));
+  const editSlug = useMutation(
+    api.club.edit.slug.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club listing URL'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
   const router = useRouter();
 
   const [defaultValues, setDefaultValues] = useState({
@@ -162,7 +172,7 @@ const Slug = ({ club, role }: DetailsProps) => {
   };
 
   return (
-    <>
+    <div id="form-slug" className="scroll-mt-24">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -264,7 +274,7 @@ const Slug = ({ club, role }: DetailsProps) => {
         onConfirm={form.handleSubmit}
         loading={isSubmitting}
       />
-    </>
+    </div>
   );
 };
 

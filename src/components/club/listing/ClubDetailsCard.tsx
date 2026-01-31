@@ -1,4 +1,5 @@
 import { Divider, Tooltip } from '@mui/material';
+import { subMinutes } from 'date-fns';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import Panel from '@src/components/common/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
@@ -19,7 +20,7 @@ export default function ClubDetailsCard({
     items.push(
       <div key="members" className="flex flex-row flex-wrap gap-1 py-1">
         <span className="font-medium text-slate-600 dark:text-slate-400">
-          Members
+          Followers
         </span>
         <span className="ml-auto text-slate-800 dark:text-slate-200">{`${club.numMembers} ${club.numMembers !== 1 ? 'people' : 'person'}`}</span>
       </div>,
@@ -34,12 +35,7 @@ export default function ClubDetailsCard({
         <span className="ml-auto text-slate-800 dark:text-slate-200">
           {club.foundingDate.toLocaleDateString('en-US', {
             month: 'short',
-            day: 'numeric',
             year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true,
           })}
         </span>
       </div>,
@@ -63,9 +59,11 @@ export default function ClubDetailsCard({
           })}
         >
           <span className="ml-auto text-slate-800 dark:text-slate-200">
-            {formatDistanceStrict(lastEventDate, new Date(), {
-              addSuffix: true,
-            })}
+            {lastEventDate > subMinutes(new Date(), 5)
+              ? 'Ongoing'
+              : formatDistanceStrict(lastEventDate, new Date(), {
+                  addSuffix: true,
+                })}
           </span>
         </Tooltip>
       </div>,

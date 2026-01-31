@@ -13,6 +13,7 @@ import {
 import { user } from './auth';
 import { contacts } from './contacts';
 import { events } from './events';
+import { membershipForms } from './membershipForms';
 import { officers } from './officers';
 import { userMetadataToClubs } from './users';
 
@@ -31,6 +32,7 @@ export const club = pgTable(
       .primaryKey(),
     slug: text('slug').notNull(),
     name: text('name').notNull(),
+    alias: text('alias'),
     foundingDate: timestamp('founding_date'),
     updatedAt: timestamp('updated_at'),
     description: text('description').notNull(),
@@ -57,7 +59,7 @@ export const club = pgTable(
   },
   (t) => [
     index('club_search_idx')
-      .using('bm25', t.id, t.name, t.description, t.tags, t.approved)
+      .using('bm25', t.id, t.name, t.alias, t.description, t.tags, t.approved)
       .with({
         key_field: 'id',
         text_fields: `'${JSON.stringify({
@@ -75,14 +77,22 @@ export const clubRelations = relations(club, ({ many }) => ({
   contacts: many(contacts),
   events: many(events),
   officers: many(officers),
+  membershipForms: many(membershipForms),
   userMetadataToClubs: many(userMetadataToClubs),
 }));
 
-// TODO add schema for search index
 export const usedTags = pgMaterializedView('used_tags', {
   tag: text('tag').notNull(),
   count: integer('count').notNull(),
   id: integer('id').notNull(),
-}).as(
-  sql`select UNNEST(${club.tags}) as tag, COUNT(${club.tags}) as count, from club order by count desc`,
-);
+}).as(sql`
+  SELECT 
+    tag, 
+    COUNT(*) as count, 
+    ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC)::integer as id 
+  FROM (
+    SELECT UNNEST(${club.tags}) as tag FROM ${club}
+  ) sub 
+  GROUP BY tag 
+  ORDER BY count DESC
+`);

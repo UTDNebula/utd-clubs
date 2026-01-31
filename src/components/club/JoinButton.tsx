@@ -7,8 +7,9 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
+import { useRef } from 'react';
+import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 
@@ -26,17 +27,60 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
     api.club.memberState.queryOptions({ id: clubId }),
   );
 
-  const [optimisticMemberType, setOptimisticMemberType] = useState<
-    string | null
-  >(null);
-
-  useEffect(() => {
-    setOptimisticMemberType(memberState?.memberType ?? null);
-  }, [memberState?.memberType]);
-
   const joinLeave = useMutation(
     api.club.joinLeave.mutationOptions({
-      onSuccess: () => {
+      onMutate: async ({ clubId }) => {
+        const queryKey = [
+          ['club', 'memberState'],
+          { input: { id: clubId }, type: 'query' },
+        ];
+
+        // Cancel outgoing refetches
+        await queryClient.cancelQueries({
+          queryKey,
+        });
+
+        // Remember previous value
+        const previousState =
+          queryClient.getQueryData<typeof memberState>(queryKey);
+
+        // Optimistically update the cache
+        queryClient.setQueryData(queryKey, (old: typeof memberState) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            memberType: old.memberType ? null : 'Member',
+            joinedAt: old.memberType ? null : new Date(),
+          };
+        });
+
+        // Return context for rollback
+        return { previousState, queryKey };
+      },
+      onSuccess: (context) => {
+        const joined = context?.memberType === undefined;
+
+        setSnackbar({
+          message: joined ? 'Joined club!' : 'Left club!',
+          type: joined ? 'success' : 'info',
+          autoHideDuration: true,
+          fitContent: true,
+          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+        });
+      },
+      onError: (error, _vars, context) => {
+        setSnackbar(
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
+        );
+        if (context?.previousState) {
+          queryClient.setQueryData(context.queryKey, context.previousState);
+        }
+      },
+      onSettled: (_data, _error, { clubId }) => {
         queryClient.invalidateQueries({
           queryKey: [
             ['club', 'memberState'],
@@ -44,34 +88,31 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
           ],
         });
       },
-      onError: () => {
-        setOptimisticMemberType(memberState?.memberType ?? null);
-      },
     }),
   );
 
   const router = useRouter();
 
-  let useAuthPage = false;
+  const useAuthPage = useRef(false);
 
   const { setShowRegisterModal } = useRegisterModal(() => {
-    useAuthPage = true;
+    useAuthPage.current = true;
   });
 
-  const displayMemberType = optimisticMemberType;
+  const memberType = memberState?.memberType ?? null;
 
-  if (displayMemberType === 'Officer' || displayMemberType === 'President') {
+  if (memberType === 'Officer' || memberType === 'President') {
     return (
-      <Link href={`/manage/${clubSlug ?? clubId}`}>
-        <Button
-          variant="contained"
-          size={isHeader ? 'large' : 'small'}
-          className="normal-case"
-          startIcon={<TuneIcon />}
-        >
-          Manage
-        </Button>
-      </Link>
+      <Button
+        LinkComponent={Link}
+        href={`/manage/${clubSlug ?? clubId}`}
+        variant="contained"
+        size={isHeader ? 'large' : 'small'}
+        className="normal-case"
+        startIcon={<TuneIcon />}
+      >
+        Manage
+      </Button>
     );
   }
 
@@ -80,12 +121,12 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       title={
         <div className="text-center">
           <span className="font-bold">
-            {displayMemberType ? 'Leave club' : 'Join club'}
+            {memberType ? 'Unfollow' : 'Follow'}
           </span>
-          {displayMemberType && memberState?.joinedAt && (
+          {memberType && memberState?.joinedAt && (
             <>
               <br />
-              Joined on{' '}
+              Following since{' '}
               {memberState?.joinedAt.toLocaleString('en-us', {
                 month: 'short',
                 day: 'numeric',
@@ -103,7 +144,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       <Button
         variant="contained"
         size={isHeader ? 'large' : 'small'}
-        startIcon={displayMemberType ? <CheckIcon /> : <AddIcon />}
+        startIcon={memberType ? <CheckIcon /> : <AddIcon />}
         onClick={async (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -112,7 +153,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
           if (!session) {
             // This will use auth page when this JoinButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
-            if (useAuthPage) {
+            if (useAuthPage.current) {
               router.push(
                 `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
               );
@@ -122,14 +163,12 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
             return;
           }
 
-          const newMemberType = displayMemberType ? null : 'Member';
-          setOptimisticMemberType(newMemberType);
-          void joinLeave.mutateAsync({ clubId: clubId });
+          void joinLeave.mutate({ clubId });
         }}
         className="normal-case"
         loading={isPending || joinLeave.isPending}
       >
-        {displayMemberType ? 'Joined' : 'Join'}
+        {memberType ? 'Following' : 'Follow'}
       </Button>
     </Tooltip>
   );
@@ -149,7 +188,7 @@ export const JoinButtonSkeleton = ({ isHeader }: JoinButtonSkeletonProps) => {
         size={isHeader ? 'large' : 'small'}
         className="normal-case"
       >
-        Join
+        Follow
       </Button>
     </Skeleton>
   );

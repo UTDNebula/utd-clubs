@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
 
@@ -30,20 +30,15 @@ export const UserSearchBar = ({
   className,
 }: UserSearchBarProps) => {
   const [input, setInput] = useState('');
-  const [loading, setLoading] = React.useState(false);
 
   const debouncedSearch = useDebounce(input, 300);
   const api = useTRPC();
-  const { data } = useQuery(
+  const { data, isLoading } = useQuery(
     api.userMetadata.searchByNameOrEmail.queryOptions(
       { search: debouncedSearch },
       { enabled: !!debouncedSearch },
     ),
   );
-
-  useEffect(() => {
-    setLoading(false);
-  }, [data]);
 
   return (
     <Autocomplete
@@ -63,9 +58,6 @@ export const UserSearchBar = ({
           {...params}
           size="small"
           className={'w-full' + ' ' + className}
-          onChange={() => {
-            setLoading(true);
-          }}
           slotProps={{
             input: {
               ...params.InputProps,
@@ -75,7 +67,7 @@ export const UserSearchBar = ({
                 params.InputProps.className,
               endAdornment: (
                 <>
-                  {loading ? (
+                  {isLoading ? (
                     <CircularProgress color="inherit" size={20} />
                   ) : null}
                   {params.InputProps.endAdornment}

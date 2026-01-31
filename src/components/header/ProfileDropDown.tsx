@@ -15,9 +15,9 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { authClient } from '@src/utils/auth-client';
-import { useRegisterModal } from '../account/RegisterModalProvider';
+import { useRegisterModal } from '../global/RegisterModalProvider';
 
 type Props = {
   shadow?: boolean;
@@ -25,8 +25,8 @@ type Props = {
 
 export const ProfileDropDown = ({ shadow = false }: Props) => {
   const { data: session } = authClient.useSession();
-  const avatarRef = useRef(null);
-  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const open = Boolean(anchorEl);
 
   const { setShowRegisterModal } = useRegisterModal();
 
@@ -36,7 +36,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
   useEffect(() => {
     if (open) {
       const handleScroll = () => {
-        setOpen(false);
+        setAnchorEl(null);
       };
       window.addEventListener('scroll', handleScroll);
       return () => {
@@ -48,12 +48,11 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
   return (
     <>
       <Avatar
-        ref={avatarRef}
         alt={session?.user.name ?? undefined}
         src={session?.user.image ?? undefined}
-        onClick={() => {
+        onClick={(e) => {
           if (session !== null) {
-            setOpen(!open);
+            setAnchorEl(open ? null : e.currentTarget);
           } else {
             setShowRegisterModal(true);
           }
@@ -64,11 +63,11 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
       {session && (
         <Popover
           open={open}
-          anchorEl={avatarRef.current}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          transformOrigin={{ horizontal: 'left', vertical: -8 }}
+          anchorEl={anchorEl}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ horizontal: 'right', vertical: -8 }}
           disableScrollLock
-          onClose={() => setOpen(false)}
+          onClose={() => setAnchorEl(null)}
         >
           <Card>
             <MenuList>
@@ -113,7 +112,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
                       },
                     },
                   });
-                  setOpen(false);
+                  setAnchorEl(null);
                 }}
               >
                 <ListItemIcon>

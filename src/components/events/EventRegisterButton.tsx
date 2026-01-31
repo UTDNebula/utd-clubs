@@ -5,8 +5,9 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
+import { useRef } from 'react';
+import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 import EventEditButton from './EventEditButton';
@@ -16,12 +17,16 @@ type EventRegisterButtonProps = {
   clubId: string;
   clubSlug: string;
   eventId: string;
+  calendarId?: string | null;
+  fromGoogle: boolean;
 };
 const EventRegisterButton = ({
   isHeader,
   clubId,
   clubSlug,
   eventId,
+  calendarId,
+  fromGoogle,
 }: EventRegisterButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
@@ -30,62 +35,88 @@ const EventRegisterButton = ({
     api.event.registerState.queryOptions({ id: eventId }),
   );
 
-  const [optimisticJoined, setOptimisticJoined] = useState<boolean>(false);
-
-  useEffect(() => {
-    setOptimisticJoined(registerState?.registered ?? false);
-  }, [registerState?.registered]);
-
-  const join = useMutation({
-    ...api.event.joinEvent.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [
+  const toggleRegistration = useMutation(
+    api.event.toggleRegistration.mutationOptions({
+      onMutate: async ({ id }) => {
+        const queryKey = [
           ['event', 'registerState'],
-          { input: { id: eventId }, type: 'query' },
-        ],
-      });
-    },
-    onError: () => {
-      setOptimisticJoined(registerState?.registered ?? false);
-    },
-  });
+          { input: { id }, type: 'query' },
+        ];
 
-  const leave = useMutation({
-    ...api.event.leaveEvent.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          ['event', 'joinedEvent'],
-          { input: { id: eventId }, type: 'query' },
-        ],
-      });
-    },
-    onError: () => {
-      setOptimisticJoined(registerState?.registered ?? false);
-    },
-  });
+        // Cancel outgoing refetches
+        await queryClient.cancelQueries({ queryKey });
+
+        // Remember previous value
+        const previousState =
+          queryClient.getQueryData<typeof registerState>(queryKey);
+
+        // Optimistically update the cache
+        queryClient.setQueryData(queryKey, (old: typeof registerState) => {
+          if (!old) return old;
+
+          const isRegistered = old.registered;
+
+          return {
+            ...old,
+            registered: !isRegistered,
+            registeredAt: isRegistered ? null : new Date(),
+          };
+        });
+        return { previousState, queryKey };
+      },
+      onSuccess: (context) => {
+        const joined = context?.registeredAt === undefined;
+
+        setSnackbar({
+          message: joined ? 'Registered to event!' : 'Unregistered from event!',
+          type: joined ? 'success' : 'info',
+          autoHideDuration: true,
+          fitContent: true,
+          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+        });
+      },
+      onError: (error, _vars, context) => {
+        setSnackbar(
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
+        );
+        if (context?.previousState) {
+          queryClient.setQueryData(context.queryKey, context.previousState);
+        }
+      },
+      onSettled: (_data, _error, { id }) => {
+        queryClient.invalidateQueries({
+          queryKey: [
+            ['event', 'registerState'],
+            { input: { id }, type: 'query' },
+          ],
+        });
+      },
+    }),
+  );
 
   const router = useRouter();
 
-  let useAuthPage = false;
+  const useAuthPage = useRef(false);
   // Although this feature is named similarly, it is unrelated to the event registration button.
   // Rather, it relates to the sign in/sign up authentication modal.
   const { setShowRegisterModal } = useRegisterModal(() => {
-    useAuthPage = true;
+    useAuthPage.current = true;
   });
 
-  const displayJoined = optimisticJoined;
+  const registered = registerState?.registered ?? false;
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (isPending || join.isPending || leave.isPending) return;
+    if (isPending || toggleRegistration.isPending) return;
 
     if (!session) {
       // This will use auth page when this EventRegisterButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
-      if (useAuthPage) {
+      if (useAuthPage.current) {
         router.push(
           `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
         );
@@ -95,13 +126,7 @@ const EventRegisterButton = ({
       return;
     }
 
-    if (!displayJoined) {
-      setOptimisticJoined(true);
-      void join.mutateAsync({ id: eventId });
-    } else {
-      setOptimisticJoined(false);
-      void leave.mutateAsync({ id: eventId });
-    }
+    toggleRegistration.mutate({ id: eventId });
   };
 
   const { data: memberType } = useQuery(
@@ -115,15 +140,18 @@ const EventRegisterButton = ({
           isHeader={isHeader}
           clubSlug={clubSlug}
           eventId={eventId}
+          calendarId={calendarId ?? null}
+          userEmail={session?.user.email as string}
+          fromGoogle={fromGoogle}
         />
       )}
       <Tooltip
         title={
           <div className="text-center">
             <span className="font-bold">
-              {displayJoined ? 'Unregister from event' : 'Register for event'}
+              {registered ? 'Unregister from event' : 'Register for event'}
             </span>
-            {displayJoined && registerState?.registeredAt && (
+            {registered && registerState?.registeredAt && (
               <>
                 <br />
                 Registered on{' '}
@@ -143,13 +171,13 @@ const EventRegisterButton = ({
       >
         <Button
           onClick={onClick}
-          loading={isPending || join.isPending || leave.isPending}
+          loading={isPending || toggleRegistration.isPending}
           variant="contained"
           className="normal-case"
           size={isHeader ? 'large' : 'small'}
-          startIcon={displayJoined ? <CheckIcon /> : <AddIcon />}
+          startIcon={registered ? <CheckIcon /> : <AddIcon />}
         >
-          {displayJoined ? 'Registered' : 'Register'}
+          {registered ? 'Registered' : 'Register'}
         </Button>
       </Tooltip>
       {!isHeader &&
@@ -158,6 +186,9 @@ const EventRegisterButton = ({
             isHeader={isHeader}
             clubSlug={clubSlug}
             eventId={eventId}
+            calendarId={calendarId ?? null}
+            userEmail={session?.user.email as string}
+            fromGoogle={fromGoogle}
           />
         )}
     </>
