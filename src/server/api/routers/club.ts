@@ -499,7 +499,7 @@ export const clubRouter = createTRPCRouter({
           .orderBy(sql`paradedb.score(${usedTags.id})`)
           .limit(5);
         return { tags: tags, clubs: [] };
-      } catch (error) {
+      } catch {
         const tags = await ctx.db
           .select({ tag: usedTags.tag })
           .from(usedTags)
