@@ -2,10 +2,8 @@
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
-import Confirmation from '@src/components/Confirmation';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
@@ -51,15 +49,13 @@ const Details = ({ club }: DetailsProps) => {
   const defaultValues: ClubDetails = {
     id: clubDetails?.id ?? '',
     name: clubDetails?.name ?? '',
-    alias: clubDetails?.alias ?? '',
+    alias: clubDetails?.alias ?? null,
     description: clubDetails?.description ?? '',
     foundingDate: clubDetails?.foundingDate ?? null,
     tags: clubDetails?.tags ?? [],
     profileImage: null,
     bannerImage: null,
   };
-
-  const [aliasChangedPopupOpen, setAliasChangedPopupOpen] = useState(false);
 
   const form = useAppForm({
     defaultValues,
@@ -103,12 +99,6 @@ const Details = ({ club }: DetailsProps) => {
         profileImage: profileImageUrl,
       });
       if (updated) {
-        const aliasIsDirty = !formApi.getFieldMeta('alias')?.isDefaultValue;
-        // If alias changed and we haven't confirmed yet, show popup
-        if (aliasIsDirty) {
-          setAliasChangedPopupOpen(true);
-        }
-
         queryClient.invalidateQueries(
           api.club.details.queryOptions({ id: club.id }),
         );
@@ -180,12 +170,16 @@ const Details = ({ club }: DetailsProps) => {
           </div>
           <div className="flex flex-wrap gap-4">
             <form.AppField name="name">
-              {(field) => (
-                <field.TextField label="Name" className="grow-100" required />
-              )}
+              {(field) => {
+                const TextField = field.TextField;
+                return <TextField label="Name" className="grow-100" required />;
+              }}
             </form.AppField>
             <form.AppField name="alias">
-              {(field) => <field.TextField label="Alias" className="grow" />}
+              {(field) => {
+                const TextField = field.TextField;
+                return <TextField label="Alias" className="grow" />;
+              }}
             </form.AppField>
             <form.Field name="foundingDate">
               {(field) => (
@@ -214,34 +208,37 @@ const Details = ({ club }: DetailsProps) => {
           </div>
           <div className="flex flex-col gap-2">
             <form.AppField name="description">
-              {(field) => (
-                <field.TextField
-                  label="Description"
-                  className="w-full"
-                  multiline
-                  minRows={4}
-                  helperText={
-                    !field.state.meta.isValid ? (
-                      field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    ) : (
-                      <span>
-                        We support{' '}
-                        <a
-                          href="https://www.markdownguide.org/basic-syntax/"
-                          rel="noreferrer"
-                          target="_blank"
-                          className="text-royal dark:text-cornflower-300 underline"
-                        >
-                          Markdown
-                        </a>
-                        !
-                      </span>
-                    )
-                  }
-                />
-              )}
+              {(field) => {
+                const TextField = field.TextField;
+                return (
+                  <TextField
+                    label="Description"
+                    className="w-full"
+                    multiline
+                    minRows={4}
+                    helperText={
+                      !field.state.meta.isValid ? (
+                        field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      ) : (
+                        <span>
+                          We support{' '}
+                          <a
+                            href="https://www.markdownguide.org/basic-syntax/"
+                            rel="noreferrer"
+                            target="_blank"
+                            className="text-royal dark:text-cornflower-300 underline"
+                          >
+                            Markdown
+                          </a>
+                          !
+                        </span>
+                      )
+                    }
+                  />
+                );
+              }}
             </form.AppField>
           </div>
           <form.Field name="tags">
