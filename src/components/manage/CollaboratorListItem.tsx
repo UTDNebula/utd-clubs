@@ -1,9 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type z from 'zod';
@@ -61,7 +59,7 @@ const CollaboratorListItem = withForm({
           </Typography>
         </div>
         <div className="flex items-center gap-2 grow justify-end">
-          <form.Field name={`officers[${index}].position`}>
+          <form.AppField name={`officers[${index}].position`}>
             {(subField) => (
               <Tooltip
                 title={
@@ -84,37 +82,31 @@ const CollaboratorListItem = withForm({
                     />
                   </div>
                 ) : (
-                  <FormControl className="w-fit">
-                    <Select
-                      id="collaborator-role-select"
-                      value={subField.state.value}
-                      aria-label="Role"
-                      size="small"
-                      onChange={(e) => subField.handleChange(e.target.value)}
-                      input={
-                        <OutlinedInput
-                          id="collaborator-role-select"
-                          readOnly={self || !canTogglePresident}
-                          className="[&>.MuiSelect-select]:pr-8 [&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2"
-                        />
-                      }
-                      className="bg-white dark:bg-neutral-900 rounded-full"
-                      renderValue={(selected) => (
-                        <MemberRoleChip key={selected} memberType={selected} />
-                      )}
-                    >
-                      <MenuItem key="admin" value="President">
-                        Admin
-                      </MenuItem>
-                      <MenuItem key="collaborator" value="Officer">
-                        Collaborator
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
+                  <subField.Select
+                    label="Role"
+                    className="w-fit"
+                    input={
+                      <OutlinedInput
+                        id="collaborator-role-select"
+                        readOnly={self || !canTogglePresident}
+                        className="[&>.MuiSelect-select]:pr-8 [&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2"
+                      />
+                    }
+                    renderValue={(selected) => (
+                      <MemberRoleChip key={selected} memberType={selected} />
+                    )}
+                  >
+                    <MenuItem key="admin" value="President">
+                      Admin
+                    </MenuItem>
+                    <MenuItem key="collaborator" value="Officer">
+                      Collaborator
+                    </MenuItem>
+                  </subField.Select>
                 )}
               </Tooltip>
             )}
-          </form.Field>
+          </form.AppField>
           <Tooltip
             title={
               canRemove ? (
