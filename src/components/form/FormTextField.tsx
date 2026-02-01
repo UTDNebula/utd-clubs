@@ -13,7 +13,7 @@ export function StyledTextField(props: StyledTextFieldProps) {
   );
 }
 
-type FormTextFieldFieldPropsBase = { label: string };
+type FormTextFieldFieldPropsBase = { label?: string };
 
 type FormTextFieldFieldProps = Omit<
   TextFieldProps,
