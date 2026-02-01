@@ -199,15 +199,16 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
         <Panel>
           <div className="m-2 flex flex-col gap-8">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3 items-start">
-              <form.AppField name="major">
-                {(field) => (
-                  <field.TextField
-                    label="What is your current or intended major?"
-                    className="w-full"
-                    required={isFieldRequired('major')}
-                  />
-                )}
-              </form.AppField>
+              <form.Question question="What is your current or intended major?">
+                <form.AppField name="major">
+                  {(field) => (
+                    <field.TextField
+                      className="w-full"
+                      required={isFieldRequired('major')}
+                    />
+                  )}
+                </form.AppField>
+              </form.Question>
               <form.AppField name="year">
                 {(field) => (
                   <field.Select
