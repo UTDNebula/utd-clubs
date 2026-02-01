@@ -61,24 +61,18 @@ const CreateClubForm = () => {
                 multiline
                 minRows={4}
                 helperText={
-                  !field.state.meta.isValid ? (
-                    field.state.meta.errors
-                      .map((err) => err?.message)
-                      .join('. ') + '.'
-                  ) : (
-                    <span>
-                      We support{' '}
-                      <a
-                        href="https://www.markdownguide.org/basic-syntax/"
-                        rel="noreferrer"
-                        target="_blank"
-                        className="text-royal dark:text-cornflower-300 underline"
-                      >
-                        Markdown
-                      </a>
-                      !
-                    </span>
-                  )
+                  <span>
+                    We support{' '}
+                    <a
+                      href="https://www.markdownguide.org/basic-syntax/"
+                      rel="noreferrer"
+                      target="_blank"
+                      className="text-royal dark:text-cornflower-300 underline"
+                    >
+                      Markdown
+                    </a>
+                    !
+                  </span>
                 }
               />
             )}
