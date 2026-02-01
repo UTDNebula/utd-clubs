@@ -433,7 +433,8 @@ const eventSchema = z.object({
   organizer: z
     .object({
       email: z.string(),
-      displayName: z.string(),
+      displayName: z.string().optional(),
+      self: z.boolean().optional(),
     })
     .optional(),
   attachments: z
