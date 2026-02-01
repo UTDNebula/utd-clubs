@@ -50,7 +50,7 @@ const CreateClubForm = () => {
         <div className="m-2 mt-0 flex flex-col gap-4">
           <form.AppField name="name">
             {(field) => (
-              <field.TextField label="Name" className="grow" required />
+              <field.TextField label="Name" className="w-full" required />
             )}
           </form.AppField>
           <form.AppField name="description">
