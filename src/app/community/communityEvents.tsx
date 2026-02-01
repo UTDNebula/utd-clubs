@@ -2,10 +2,9 @@
 
 import { TZDateMini } from '@date-fns/tz';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Button } from '@mui/material';
-import Link from 'next/link';
 import EventCard from '@src/components/events/EventCard';
 import EventsPagination from '@src/components/events/EventPagination';
+import { LinkButton } from '@src/components/LinkButton';
 import { api } from '@src/trpc/server';
 
 export const RegisteredEvents = async () => {
@@ -20,16 +19,15 @@ export const RegisteredEvents = async () => {
         <p className="font-bold text-slate-500">
           You haven&apos;t registered for any events.
         </p>
-        <Link href="/events">
-          <Button
-            variant="contained"
-            className="normal-case"
-            size="large"
-            endIcon={<ArrowForwardIcon />}
-          >
-            Check Out Events
-          </Button>
-        </Link>
+        <LinkButton
+          href="/events"
+          variant="contained"
+          className="normal-case"
+          size="large"
+          endIcon={<ArrowForwardIcon />}
+        >
+          Check Out Events
+        </LinkButton>
       </div>
     );
   }
@@ -64,16 +62,15 @@ export const ClubEvents = async ({
         <p className="font-bold text-slate-500">
           You aren&apos;t following any clubs.
         </p>
-        <Link href="/">
-          <Button
-            variant="contained"
-            className="normal-case"
-            size="large"
-            endIcon={<ArrowForwardIcon />}
-          >
-            Check Out Clubs
-          </Button>
-        </Link>
+        <LinkButton
+          href="/"
+          variant="contained"
+          className="normal-case"
+          size="large"
+          endIcon={<ArrowForwardIcon />}
+        >
+          Check Out Clubs
+        </LinkButton>
       </div>
     );
   }
@@ -84,16 +81,15 @@ export const ClubEvents = async ({
         <p className="font-bold text-slate-500">
           Your followed clubs don&apos;t have any events.
         </p>
-        <Link href="/events">
-          <Button
-            variant="contained"
-            className="normal-case"
-            size="large"
-            endIcon={<ArrowForwardIcon />}
-          >
-            Check Out Events
-          </Button>
-        </Link>
+        <LinkButton
+          href="/events"
+          variant="contained"
+          className="normal-case"
+          size="large"
+          endIcon={<ArrowForwardIcon />}
+        >
+          Check Out Events
+        </LinkButton>
       </div>
     );
   }

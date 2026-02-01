@@ -1,8 +1,10 @@
 'use client';
 
-import { Alert, Skeleton } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
+import { Alert, Skeleton, Tooltip } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 import ClientEventTime from './ClientEventTime';
@@ -16,10 +18,15 @@ import EventTimeAlert from './EventTimeAlert';
 interface EventCardProps {
   event: RouterOutputs['event']['byClubId'][number];
   view?: 'normal' | 'manage' | 'preview' | 'admin';
+  className?: string;
 }
 
-const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
-  const src = event.image ?? event.club.profileImage;
+const EventCard = ({ event, view = 'normal', className }: EventCardProps) => {
+  const [imgError, setImgError] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  const showEventImage = !!event.image && !imgError;
+
   return (
     <BaseCard
       variant="interactive"
@@ -30,18 +37,39 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
         className="flex flex-1 min-h-0 flex-col"
       >
         <div className="relative h-40 shrink-0 w-full">
-          <div className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-900" />
-          {src && (
+          {/* shows fallback if event image is loading, error, or no link */}
+          {event.club.profileImage && (!showEventImage || !imgLoaded) && (
             <Image
               fill
-              src={src}
-              alt="event image"
+              src={event.club.profileImage}
+              alt="Club Profile"
               className="object-cover object-center"
             />
           )}
-          <div className="absolute inset-0 p-2">
+          {/* render event image on top*/}
+          {showEventImage && (
+            <Image
+              fill
+              src={event.image!}
+              alt="Event Image"
+              className={`object-cover object-center transition-opacity duration-300 ${
+                imgLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              onError={() => setImgError(true)}
+              onLoad={() => setImgLoaded(true)}
+            />
+          )}
+
+          <div className="absolute inset-0 p-2 pointer-events-none">
             <EventTimeAlert event={event} />
           </div>
+          {event.google && (
+            <div className="absolute right-0 p-2">
+              <Tooltip title="Synced from Google Calendar.">
+                <GoogleIcon />
+              </Tooltip>
+            </div>
+          )}
         </div>
         <div className="flex flex-col p-5 space-y-2.5">
           <h3 className="line-clamp-2 text-xl font-medium">{event.name}</h3>
@@ -64,17 +92,29 @@ const EventCard = ({ event, view = 'normal' }: EventCardProps) => {
             clubId={event.club.id}
             clubSlug={event.club.slug}
             eventId={event.id}
+            calendarId={event.club.calendarId}
+            fromGoogle={event.google}
           />
         )}
         {view === 'manage' &&
           (event.google ? (
-            <Alert severity="info">Synced from Google Calendar.</Alert>
+            <>
+              <EventRegisterButton
+                clubId={event.club.id}
+                clubSlug={event.club.slug}
+                eventId={event.id}
+                calendarId={event.club.calendarId}
+                fromGoogle={event.google}
+              />
+            </>
           ) : (
             <>
               <EventRegisterButton
                 clubId={event.club.id}
                 clubSlug={event.club.slug}
                 eventId={event.id}
+                calendarId={event.club.calendarId}
+                fromGoogle={event.google}
               />
               <EventDeleteButton event={event} />
             </>

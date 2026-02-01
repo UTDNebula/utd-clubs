@@ -3,41 +3,38 @@
 import EditIcon from '@mui/icons-material/Edit';
 import { Button, IconButton, Tooltip } from '@mui/material';
 import Link from 'next/link';
-
-const EDIT_ACTION_CLASS =
-  'bg-white text-haiti hover:bg-neutral-200 dark:bg-neutral-700 dark:text-white dark:hover:bg-neutral-600';
+import { getGcalEventLink } from '@src/modules/googleCalendar';
 
 export default function EventEditButton({
   isHeader,
   clubSlug,
   eventId,
+  calendarId,
+  userEmail,
+  fromGoogle,
 }: {
   isHeader?: boolean;
   clubSlug: string;
   eventId: string;
+  calendarId: string | null;
+  userEmail: string;
+  fromGoogle: boolean;
 }) {
   return (
-    <Link href={`/manage/${clubSlug}/events/edit/${eventId}`}>
-      {isHeader ? (
-        <Button
-          variant="contained"
-          size="large"
-          className={`normal-case ${EDIT_ACTION_CLASS}`}
-          startIcon={<EditIcon />}
-        >
-          Edit
-        </Button>
-      ) : (
-        <Tooltip title="Edit Event">
-          <IconButton
-            size="small"
-            aria-label="Edit Event"
-            className={`${EDIT_ACTION_CLASS}`}
-          >
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Link>
+    <Button
+      LinkComponent={Link}
+      href={
+        fromGoogle
+          ? getGcalEventLink(eventId, calendarId, userEmail)
+          : `/manage/${clubSlug}/events/edit/${eventId}`
+      }
+      {...(fromGoogle && { target: '_blank', rel: 'noopener noreferrer' })}
+      variant="contained"
+      size={isHeader ? 'large' : 'small'}
+      className={`normal-case ${isHeader ? 'bg-white hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800' : 'bg-white hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700'} text-haiti dark:text-white`}
+      startIcon={<EditIcon />}
+    >
+      {fromGoogle && isHeader ? 'Edit in Google Calendar' : 'Edit'}
+    </Button>
   );
 }

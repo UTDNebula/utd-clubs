@@ -4,6 +4,7 @@ import { user } from './schema/auth';
 import { club } from './schema/club';
 import { contacts } from './schema/contacts';
 import { events } from './schema/events';
+import { membershipForms } from './schema/membershipForms';
 import { officers } from './schema/officers';
 import { userMetadata, userMetadataToClubs } from './schema/users';
 
@@ -41,6 +42,13 @@ export const selectOfficer = createSelectSchema(officers);
 
 export type InsertOfficer = z.infer<typeof insertOfficer>;
 export type SelectOfficer = z.infer<typeof selectOfficer>;
+
+// Schema definition for membershipForms table
+export const insertMembershipForm = createInsertSchema(membershipForms);
+export const selectMembershipForm = createSelectSchema(membershipForms);
+
+export type InsertMembershipForm = z.infer<typeof insertMembershipForm>;
+export type SelectMembershipForm = z.infer<typeof selectMembershipForm>;
 
 // Schema definition for userMetadata table
 export const insertUserMetadata = createInsertSchema(userMetadata);

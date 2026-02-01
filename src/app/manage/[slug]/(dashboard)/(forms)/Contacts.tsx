@@ -24,6 +24,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@src/components/common/Panel';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import ContactListItem from '@src/components/manage/ContactListItem';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { contactNames, startContacts } from '@src/server/db/schema/contacts';
@@ -55,7 +56,16 @@ type ContactsProps = {
 
 const Contacts = ({ club }: ContactsProps) => {
   const api = useTRPC();
-  const editContacts = useMutation(api.club.edit.contacts.mutationOptions({}));
+  const editContacts = useMutation(
+    api.club.edit.contacts.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club contacts'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
 
   const [defaultValues, setDefaultValues] = useState({
     contacts: typedDefaultValues(club.contacts),

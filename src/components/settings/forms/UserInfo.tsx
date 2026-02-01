@@ -7,6 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import Panel from '@src/components/common/Panel';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { majors, minors } from '@src/constants/utdDegrees';
 import { SelectUserMetadataWithClubs } from '@src/server/db/models';
 import { studentClassificationEnum } from '@src/server/db/schema/users';
@@ -25,7 +26,14 @@ export default function UserInfo({ user }: UserInfoProps) {
   const api = useTRPC();
 
   const editAccountMutation = useMutation(
-    api.userMetadata.updateById.mutationOptions({}),
+    api.userMetadata.updateById.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('user info'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
   );
 
   const [defaultValues, setDefaultValues] = useState<AccountSettingsSchema>({

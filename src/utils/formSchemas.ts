@@ -88,9 +88,11 @@ export const editClubFormSchema = z.object({
     .max(100, 'Character limit reached'),
   alias: z
     .string()
-    .min(2, 'Alias must be at least 2 characters')
     .max(100, 'Character limit reached')
-    .nullable(),
+    .nullable()
+    .refine((val) => val === null || val.length === 0 || val.length >= 2, {
+      message: 'Alias must be at least 2 characters',
+    }),
   description: z
     .string()
     .min(1, 'Description is required')
@@ -109,9 +111,11 @@ export const editClubDetailsSchema = z.object({
     .max(100, 'Character limit reached'),
   alias: z
     .string()
-    .min(2, 'Alias must be at least 2 characters')
     .max(100, 'Character limit reached')
-    .nullable(),
+    .nullable()
+    .refine((val) => val === null || val.length === 0 || val.length >= 2, {
+      message: 'Alias must be at least 2 characters',
+    }),
   description: z
     .string()
     .min(1, 'Description is required')
@@ -152,6 +156,24 @@ export const editListedOfficerSchema = z.object({
     .array(),
 });
 
+export const editListedMembershipFormSchema = z.object({
+  membershipForms: z
+    .object({
+      id: z.string().optional(),
+      name: z
+        .string()
+        .min(1, 'Name is required')
+        .max(100, 'Character limit reached'),
+      url: z
+        .url({
+          message:
+            'Please enter a valid URL (must start with http:// or https://)',
+        })
+        .min(1, 'URL is required'),
+    })
+    .array(),
+});
+
 export const editSlugSchema = z.object({
   id: z.string(),
   slug: z
@@ -168,7 +190,7 @@ export const editSlugSchema = z.object({
     ),
 });
 
-export const createEventFormSchema = z.object({
+const baseEventFormSchema = z.object({
   clubId: z.string(),
   name: z
     .string()
@@ -184,30 +206,43 @@ export const createEventFormSchema = z.object({
   image: fileSchema,
 });
 
-export const createEventSchema = createEventFormSchema.omit({
+export const createEventFormSchema = baseEventFormSchema.refine(
+  (data) => data.endTime > data.startTime,
+  {
+    message: 'End time must be after start time',
+    path: ['endTime'],
+  },
+);
+
+const baseEventSchema = baseEventFormSchema.omit({
   image: true,
 });
 
-export const editEventFormSchema = z.object({
-  clubId: z.string(),
-  name: z
-    .string()
-    .min(3, 'Name must be at least 3 characters')
-    .max(100, 'Character limit reached'),
-  location: z
-    .string()
-    .min(1, 'Location is required')
-    .max(100, 'Character limit reached'),
-  description: z.string().max(1000, 'Character limit reached'),
-  startTime: z.date('Invalid date'),
-  endTime: z.date('Invalid date'),
-  image: fileSchema,
-});
+export const createEventSchema = baseEventSchema.refine(
+  (data) => data.endTime > data.startTime,
+  {
+    message: 'End time must be after start time',
+    path: ['endTime'],
+  },
+);
 
-export const editEventSchema = editEventFormSchema.extend({
-  image: z.url().nullable(),
-  id: z.string(),
-});
+export const editEventFormSchema = baseEventFormSchema.refine(
+  (data) => data.endTime > data.startTime,
+  {
+    message: 'End time must be after start time',
+    path: ['endTime'],
+  },
+);
+
+export const editEventSchema = baseEventSchema
+  .extend({
+    image: z.url().nullable(),
+    id: z.string(),
+  })
+  .refine((data) => data.endTime > data.startTime, {
+    message: 'End time must be after start time',
+    path: ['endTime'],
+  });
 
 const characterLimitError = 'Character limit reached';
 

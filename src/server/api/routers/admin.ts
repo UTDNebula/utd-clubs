@@ -162,8 +162,9 @@ export const adminRouter = createTRPCRouter({
           where: (events) =>
             and(
               eq(events.clubId, bySlug.id),
+              eq(events.status, 'approved'),
               lte(events.startTime, new Date()),
-            ), // find the end time of events that have started before now
+            ), // find the time range of events that have started before now
           orderBy: (events) => [desc(events.endTime)],
           columns: {
             endTime: true,
@@ -174,7 +175,7 @@ export const adminRouter = createTRPCRouter({
         return {
           ...clubData,
           numMembers: userMetadataToClubs.length,
-          lastEventDate: lastEvent?.endTime ?? null,
+          lastEventDate: lastEvent ? lastEvent.endTime : null,
         };
       } catch (e) {
         console.error(e);
@@ -197,7 +198,7 @@ export const adminRouter = createTRPCRouter({
       await ctx.db
         .delete(userMetadataToEvents)
         .where(eq(userMetadataToEvents.eventId, input.id));
-      await ctx.db.delete(events).where(eq(events.id, input.id));
+      await ctx.db.delete(events).where(eq(events.id, input.id)); // only place where event is fully deleted from DB
 
       return { success: true };
     }),

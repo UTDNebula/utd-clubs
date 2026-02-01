@@ -5,6 +5,7 @@ import { db } from '@src/server/db';
 import { selectContact } from '@src/server/db/models';
 import { club } from '@src/server/db/schema/club';
 import { contacts } from '@src/server/db/schema/contacts';
+import { membershipForms } from '@src/server/db/schema/membershipForms';
 import { officers } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
 import { editClubDetailsSchema, editSlugSchema } from '@src/utils/formSchemas';
@@ -74,6 +75,26 @@ const editOfficerSchema = z.object({
       id: z.string().optional(),
       name: z.string(),
       position: z.string(),
+    })
+    .array(),
+  order: z.string().array().optional(),
+});
+
+const editFormSchema = z.object({
+  clubId: z.string(),
+  deleted: z.string().array(),
+  modified: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+      url: z.url(),
+    })
+    .array(),
+  created: z
+    .object({
+      id: z.string().optional(),
+      name: z.string(),
+      url: z.url(),
     })
     .array(),
   order: z.string().array().optional(),
@@ -403,6 +424,107 @@ export const clubEditRouter = createTRPCRouter({
         orderBy: (officers, { asc }) => asc(officers.displayOrder),
       });
       return newListedOfficers;
+    }),
+
+  membershipForms: protectedProcedure
+    .input(editFormSchema)
+    .mutation(async ({ input, ctx }) => {
+      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
+      if (!isOfficer) {
+        throw new TRPCError({
+          message: 'Must be an officer to modify this club',
+          code: 'UNAUTHORIZED',
+        });
+      }
+
+      // deletions
+      if (input.deleted.length) {
+        await ctx.db
+          .delete(membershipForms)
+          .where(
+            and(
+              eq(membershipForms.clubId, input.clubId),
+              inArray(membershipForms.id, input.deleted),
+            ),
+          );
+      }
+
+      // modifications
+      const modifyPromises: Promise<unknown>[] = [];
+      for (const modded of input.modified) {
+        const prom = ctx.db
+          .update(membershipForms)
+          .set({
+            name: modded.name,
+            url: modded.url,
+          })
+          .where(
+            and(
+              eq(membershipForms.id, modded.id),
+              eq(membershipForms.clubId, input.clubId),
+            ),
+          );
+        modifyPromises.push(prom);
+      }
+      await Promise.allSettled(modifyPromises);
+
+      // add at the end
+      const original = await ctx.db
+        .select()
+        .from(membershipForms)
+        .where(eq(membershipForms.clubId, input.clubId))
+        .orderBy(asc(membershipForms.displayOrder));
+
+      let nextFreeDisplayOrder =
+        original.findLast((item) => item.displayOrder !== null)?.displayOrder ??
+        -1;
+
+      if (input.created.length) {
+        await ctx.db.insert(membershipForms).values(
+          input.created.map((form) => ({
+            clubId: input.clubId,
+            name: form.name,
+            url: form.url,
+            displayOrder:
+              (form.id !== undefined ? input.order?.indexOf(form.id) : null) ??
+              ++nextFreeDisplayOrder,
+          })),
+        );
+      }
+
+      // ordering
+      if (input.order?.length) {
+        const orderPromises: Promise<unknown>[] = [];
+        input.order.forEach((id, index) => {
+          const promise = ctx.db
+            .update(membershipForms)
+            .set({ displayOrder: index })
+            .where(
+              and(
+                eq(membershipForms.clubId, input.clubId),
+                eq(membershipForms.id, id),
+              ),
+            );
+          orderPromises.push(promise);
+        });
+        await Promise.allSettled(orderPromises);
+      }
+
+      // updatedAt timestamp should change to now
+      await ctx.db
+        .update(club)
+        .set({
+          updatedAt: new Date(),
+        })
+        .where(eq(club.id, input.clubId));
+
+      const newForms = await ctx.db.query.membershipForms.findMany({
+        where: eq(membershipForms.clubId, input.clubId),
+        orderBy: (membershipForms, { asc }) =>
+          asc(membershipForms.displayOrder),
+      });
+
+      return newForms;
     }),
   slug: protectedProcedure
     .input(editSlugSchema)

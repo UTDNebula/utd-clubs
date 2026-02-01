@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -44,8 +45,26 @@ interface EventDetails {
 
 const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const api = useTRPC();
-  const createMutation = useMutation(api.event.create.mutationOptions());
-  const updateMutation = useMutation(api.event.update.mutationOptions());
+  const createMutation = useMutation(
+    api.event.create.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedCustom('Created event!'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
+  const updateMutation = useMutation(
+    api.event.update.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('event'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
   const uploadImage = useUploadToUploadURL();
   const router = useRouter();
 
@@ -90,7 +109,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     onSubmit: async ({ value, formApi }) => {
       if (mode === 'edit' && event) {
         // Image
-        let imageUrl = null;
+        let imageUrl = event.image;
         const iImageIsDirty = !formApi.getFieldMeta('image')?.isDefaultValue;
         if (iImageIsDirty) {
           if (value.image === null) {
@@ -340,12 +359,14 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             ...formValues,
             image: previewUrl,
             club,
+            status: 'approved',
             updatedAt: new Date(),
             createdAt: new Date(),
             recurrence: '',
             recurenceId: '',
             google: false,
             etag: '',
+            calendarId: null,
           }}
           view="preview"
         />

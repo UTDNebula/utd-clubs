@@ -6,7 +6,8 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { useRegisterModal } from '@src/components/account/RegisterModalProvider';
+import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 import EventEditButton from './EventEditButton';
@@ -16,12 +17,16 @@ type EventRegisterButtonProps = {
   clubId: string;
   clubSlug: string;
   eventId: string;
+  calendarId?: string | null;
+  fromGoogle: boolean;
 };
 const EventRegisterButton = ({
   isHeader,
   clubId,
   clubSlug,
   eventId,
+  calendarId,
+  fromGoogle,
 }: EventRegisterButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
@@ -59,7 +64,24 @@ const EventRegisterButton = ({
         });
         return { previousState, queryKey };
       },
-      onError: (_err, _vars, context) => {
+      onSuccess: (context) => {
+        const joined = context?.registeredAt === undefined;
+
+        setSnackbar({
+          message: joined ? 'Registered to event!' : 'Unregistered from event!',
+          type: joined ? 'success' : 'info',
+          autoHideDuration: true,
+          fitContent: true,
+          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+        });
+      },
+      onError: (error, _vars, context) => {
+        setSnackbar(
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
+        );
         if (context?.previousState) {
           queryClient.setQueryData(context.queryKey, context.previousState);
         }
@@ -118,6 +140,9 @@ const EventRegisterButton = ({
           isHeader={isHeader}
           clubSlug={clubSlug}
           eventId={eventId}
+          calendarId={calendarId ?? null}
+          userEmail={session?.user.email as string}
+          fromGoogle={fromGoogle}
         />
       )}
       <Tooltip
@@ -161,6 +186,9 @@ const EventRegisterButton = ({
             isHeader={isHeader}
             clubSlug={clubSlug}
             eventId={eventId}
+            calendarId={calendarId ?? null}
+            userEmail={session?.user.email as string}
+            fromGoogle={fromGoogle}
           />
         )}
     </>

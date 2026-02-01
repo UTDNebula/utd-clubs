@@ -1,3 +1,4 @@
+import { TRPCError } from '@trpc/server';
 import {
   and,
   arrayOverlaps,
@@ -7,6 +8,7 @@ import {
   ilike,
   inArray,
   lte,
+  not,
   or,
   sql,
 } from 'drizzle-orm';
@@ -14,9 +16,10 @@ import { google } from 'googleapis';
 import { z } from 'zod';
 import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { club, usedTags } from '@src/server/db/schema/club';
+import { membershipForms } from '@src/server/db/schema/membershipForms';
 import { officers as officersTable } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { syncCalendar } from '@src/utils/calendar';
+import { syncCalendar, watchCalendar } from '@src/utils/calendar';
 import { createClubSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
 import {
@@ -411,10 +414,12 @@ export const clubRouter = createTRPCRouter({
           where: (events) =>
             and(
               eq(events.clubId, bySlug.id),
+              eq(events.status, 'approved'),
               lte(events.startTime, new Date()),
-            ), // find the end time of events that have started before now
+            ), // find the time range of events that have started before now
           orderBy: (events) => [desc(events.endTime)],
           columns: {
+            startTime: true,
             endTime: true,
           },
         });
@@ -423,7 +428,9 @@ export const clubRouter = createTRPCRouter({
         return {
           ...clubData,
           numMembers: userMetadataToClubs.length,
-          lastEventDate: lastEvent?.endTime ?? null,
+          lastEventDate: lastEvent
+            ? lastEvent.endTime // this event already started (at least)
+            : null,
         };
       } catch (e) {
         console.error(e);
@@ -551,19 +558,85 @@ export const clubRouter = createTRPCRouter({
   eventSync: protectedProcedure
     .input(eventSyncSchema)
     .mutation(async ({ ctx, input }) => {
+      const calendarAlreadyUsed = await ctx.db
+        .select()
+        .from(club)
+        .where(
+          and(
+            eq(club.calendarId, input.calendarId ?? ''),
+            not(eq(club.id, input.clubId)),
+          ),
+        );
+      if (calendarAlreadyUsed && calendarAlreadyUsed.length > 0) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Calendar already selected by a different club',
+        });
+      }
+
       await ctx.db
         .update(club)
         .set({
           calendarId: input.calendarId,
           calendarGoogleAccountId: ctx.session.user.id,
           calendarName: input.calendarName,
+          calendarSyncToken: null,
         })
         .where(eq(club.id, input.clubId));
       const oauth2Client = new google.auth.OAuth2();
       oauth2Client.setCredentials({
         access_token: await getGoogleAccessToken(ctx.session.user.id),
       });
-      return await syncCalendar(input.clubId, false, oauth2Client);
+      try {
+        const sync = await syncCalendar(input.clubId, false, oauth2Client); // one-time sync
+        try {
+          await watchCalendar(input.clubId); // create the webhook to sync updates in the future
+          return sync;
+        } catch (error) {
+          // if webhook wasn't established, it's okay because events have synced
+          if (
+            error &&
+            typeof error === 'object' &&
+            'message' in error &&
+            error.message ===
+              'Push notifications are not supported by this resource.'
+          ) {
+            return { status: 'ONE_TIME_SYNC', data: sync };
+          }
+          throw error; // if it's not a webhook subscription issue
+        }
+      } catch (error) {
+        console.error(
+          'Sync failed, reverting DB changes:',
+          (error as { message: string }).message,
+        );
+        await ctx.db
+          .update(club)
+          .set({
+            calendarId: null,
+            calendarGoogleAccountId: null,
+            calendarName: null,
+            calendarSyncToken: null,
+          })
+          .where(eq(club.id, input.clubId));
+
+        if (
+          error &&
+          typeof error === 'object' &&
+          'status' in error &&
+          error.status === 404
+        ) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: `Could not find calendar: ${(error as { message?: string }).message || 'Unknown error'}`,
+          });
+        } else {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: `Could not connect calendar: ${(error as { message?: string }).message || 'Unknown error'}`,
+          });
+        }
+      }
     }),
 
   details: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
@@ -587,6 +660,22 @@ export const clubRouter = createTRPCRouter({
     } catch (e) {
       console.error(e);
       throw e;
+    }
+  }),
+  clubForms: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
+    try {
+      const forms = await ctx.db
+        .select()
+        .from(membershipForms)
+        .where(eq(membershipForms.clubId, input.id));
+      forms.sort(
+        // Infinity makes items without a `displayOrder` go to the end
+        (a, b) => (a.displayOrder ?? Infinity) - (b.displayOrder ?? Infinity),
+      );
+      return forms;
+    } catch (e) {
+      console.error(e);
+      return [];
     }
   }),
 });
