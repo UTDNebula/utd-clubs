@@ -89,7 +89,7 @@ const CollaboratorListItem = withForm({
                       <OutlinedInput
                         id="collaborator-role-select"
                         readOnly={self || !canTogglePresident}
-                        className="[&>.MuiSelect-select]:pr-8 [&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2"
+                        className="rounded-full [&>.MuiSelect-select]:pr-8 [&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2"
                       />
                     }
                     renderValue={(selected) => {
