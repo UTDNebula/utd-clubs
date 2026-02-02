@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
-import NebulaLogo from '@src/icons/NebulaLogo';
+import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { db } from '@src/server/db';
 
 export const runtime = 'edge';
@@ -217,7 +217,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
               height: 40,
             }}
           >
-            <NebulaLogo
+            <UTDClubsLogoStandalone
+              fill="white"
               style={{
                 width: '100%',
                 height: '100%',
