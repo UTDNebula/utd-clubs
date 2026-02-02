@@ -11,6 +11,7 @@ export function UTDClubsLogoStandalone(props: ProjectLogoStandaloneProps) {
       width="384"
       height="384"
       viewBox="0 0 384 384"
+      // Direct fill assignment needed for opengraph images
       fill={props.fill ?? '#573dff'}
       className={props.className}
       style={props.style}
