@@ -157,20 +157,20 @@ export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
         </div>
       </div>
       <div className="m-4 mt-auto flex shrink-0 flex-row gap-2">
-        {!manageView && <EventRegisterButtonSkeleton />}
+        <EventRegisterButtonSkeleton />
         {manageView && (
           <>
             <Skeleton
               variant="rounded"
               className="rounded-full"
-              width={70}
-              height={30.75}
+              width={67}
+              height={34}
             />
             <Skeleton
               variant="rounded"
               className="rounded-full"
-              width={70}
-              height={30.75}
+              width={34}
+              height={34}
             />
           </>
         )}
