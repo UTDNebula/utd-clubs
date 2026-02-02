@@ -12,7 +12,6 @@ export default async function sitemap({
 }: {
   id: string;
 }): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://clubs.utdnebula.com';
   // generate each type of sitemap separately
   switch (id) {
     case 'clubs': {
@@ -32,7 +31,7 @@ export default async function sitemap({
 
       return [
         ...allClubs.map((club) => ({
-          url: baseUrl + '/directory/' + club.slug,
+          url: 'https://clubs.utdnebula.com/directory/' + club.slug,
           lastModified: club.updatedAt ?? new Date(),
           changeFrequency: 'monthly' as const,
           priority: 0.9,
@@ -51,13 +50,13 @@ export default async function sitemap({
 
       return [
         ...events.map((event) => ({
-          url: baseUrl + '/events/' + event.id,
+          url: 'https://clubs.utdnebula.com/events/' + event.id,
           lastModified: event.updatedAt,
           changeFrequency: 'monthly' as const,
           priority: 0.9,
         })),
         {
-          url: baseUrl + '/events',
+          url: 'https://clubs.utdnebula.com/events',
           lastModified: midnightToday,
           changeFrequency: 'daily',
           priority: 1,
@@ -68,21 +67,21 @@ export default async function sitemap({
     default: {
       return [
         {
-          url: baseUrl + '',
+          url: 'https://clubs.utdnebula.com',
           lastModified: new Date(),
           changeFrequency: 'monthly',
           priority: 1,
         },
         {
-          url: baseUrl + '/community',
+          url: 'https://clubs.utdnebula.com/community',
           priority: 0.7,
         },
         {
-          url: baseUrl + '/club-match',
+          url: 'https://clubs.utdnebula.com/club-match',
           priority: 1,
         },
         {
-          url: baseUrl + '/directory/create',
+          url: 'https://clubs.utdnebula.com/directory/create',
           lastModified: new Date(),
           changeFrequency: 'yearly' as const,
           priority: 0.6,
