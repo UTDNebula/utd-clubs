@@ -226,7 +226,7 @@ function generateEvent(
     description: event.description,
     image: imageUrl,
     recurrence: JSON.stringify(event.recurrence),
-    recurenceId: event.recurenceEventId,
+    recurenceId: event.recurringEventId,
     startTime: event.start.date
       ? new TZDateMini(event.start.date, 'America/Chicago')
       : event.start.dateTime
@@ -415,7 +415,7 @@ const eventSchema = z.object({
   summary: z.string(),
   description: z.string().optional(),
   recurrence: z.string().array().optional(),
-  recurenceEventId: z.string().optional(),
+  recurringEventId: z.string().optional(),
   etag: z.string(),
   location: z.string().optional(),
   start: z.object({
@@ -433,7 +433,8 @@ const eventSchema = z.object({
   organizer: z
     .object({
       email: z.string(),
-      displayName: z.string(),
+      displayName: z.string().optional(),
+      self: z.boolean().optional(),
     })
     .optional(),
   attachments: z
