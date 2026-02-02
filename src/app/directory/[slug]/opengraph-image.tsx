@@ -99,7 +99,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
               width: 350,
               height: 350,
               borderRadius: '20px',
-              border: '0px solid white',
               boxShadow: '0 0 16px rgba(0,0,0,0.4)',
               overflow: 'hidden',
             }}
@@ -193,7 +192,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                   textShadow: '0 0 4px rgba(0,0,0,0.4)',
                 }}
               >
-                {clubData.userMetadataToClubs.length} members
+                {clubData.userMetadataToClubs.length} followers
               </div>
               {/* Divider */}
               <div
@@ -232,7 +231,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               textShadow: '0 0 4px rgba(0,0,0,0.4)',
             }}
           >
-            Check out on UTD CLUBS
+            UTD CLUBS
           </div>
         </div>
 
