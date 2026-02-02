@@ -142,7 +142,7 @@ export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
         <div className="relative h-40 shrink-0 w-full">
           <Skeleton
             variant="rectangular"
-            className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-800"
+            className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-800"
           />
         </div>
         <div className="flex h-full flex-col p-5 space-y-2.5">

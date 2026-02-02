@@ -24,7 +24,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
         className="grow flex flex-col"
       >
         <div className="relative aspect-square overflow-hidden rounded-t-lg">
-          <div className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-900" />
+          <div className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-800" />
           {club.profileImage && (
             <Image
               src={club.profileImage}
@@ -64,7 +64,7 @@ export const ClubCardSkeleton = () => {
         <div className="relative aspect-square overflow-hidden rounded-t-lg">
           <Skeleton
             variant="rectangular"
-            className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-neutral-800"
+            className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-800"
           />
         </div>
         <div className="flex flex-col space-y-2 p-6">
