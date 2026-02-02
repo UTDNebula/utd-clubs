@@ -100,7 +100,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               height: 350,
               borderRadius: '20px',
               border: '0px solid white',
-              boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+              boxShadow: '0 0 16px rgba(0,0,0,0.4)',
               overflow: 'hidden',
             }}
           >
@@ -134,7 +134,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             fontWeight: 'bold',
             margin: '0 0 20px 0',
             lineHeight: 1.1,
-            textShadow: '0 2px 10px rgba(0,0,0,0.2)',
+            textShadow: '0 0 16px rgba(0,0,0,0.4)',
             maxWidth: hasImage ? '55%' : '90%',
             textAlign: hasImage ? 'left' : 'center',
             overflowWrap: 'break-word',
@@ -190,7 +190,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               <div
                 style={{
                   display: 'flex',
-                  textShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                  textShadow: '0 0 4px rgba(0,0,0,0.4)',
                 }}
               >
                 {clubData.userMetadataToClubs.length} members
@@ -229,7 +229,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           <div
             style={{
               display: 'flex',
-              textShadow: '0 2px 10px rgba(0,0,0,0.2)',
+              textShadow: '0 0 4px rgba(0,0,0,0.4)',
             }}
           >
             Check out on UTD CLUBS
