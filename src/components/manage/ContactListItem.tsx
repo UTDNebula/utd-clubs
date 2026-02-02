@@ -104,8 +104,7 @@ const ContactListItem = withForm({
           >
             <form.AppField name={`contacts[${index}].url`}>
               {(subField) => {
-                const label =
-                  platform === 'email' ? 'Email Address' : 'URL';
+                const label = platform === 'email' ? 'Email Address' : 'URL';
                 const overlayValue = overlayData?.url;
                 return (
                   <subField.TextField
