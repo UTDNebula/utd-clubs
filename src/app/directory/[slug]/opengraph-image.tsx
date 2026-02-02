@@ -49,21 +49,23 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
   if (!clubData) {
     return new ImageResponse(
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'white',
-        }}
-      >
-        {background}
-        <h1>Club Not Found</h1>
-      </div>,
+      (
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+          }}
+        >
+          {background}
+          <h1>Club Not Found</h1>
+        </div>
+      ),
       { ...size },
     );
   }
@@ -71,204 +73,206 @@ export default async function Image({ params }: { params: { slug: string } }) {
   const hasImage = !!clubData.profileImage;
 
   return new ImageResponse(
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: hasImage ? 'space-between' : 'center',
-        color: 'white',
-      }}
-    >
-      {background}
-
-      {/* Left Side (renders if there's an image) */}
-      {hasImage && (
-        <div
-          style={{ display: 'flex', width: '45%', justifyContent: 'center' }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              position: 'relative',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 350,
-              height: 350,
-              borderRadius: '20px',
-              border: '0px solid white',
-              boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
-              overflow: 'hidden',
-            }}
-          >
-            <img
-              src={clubData.profileImage!}
-              alt={clubData.name + ' logo'}
-              style={{
-                width: '100%',
-                objectFit: 'contain',
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Right Side (Content) */}
+    (
       <div
         style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
           display: 'flex',
-          flexDirection: 'column',
-          width: '95%',
-          alignItems: hasImage ? 'flex-start' : 'center',
-          paddingRight: hasImage ? '40px' : '0px',
-          paddingLeft: hasImage ? '0px' : '25px',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: hasImage ? 'space-between' : 'center',
+          color: 'white',
         }}
       >
-        <h1
-          style={{
-            fontFamily: 'Bai Jamjuree',
-            fontSize: '60px',
-            fontWeight: 'bold',
-            margin: '0 0 20px 0',
-            lineHeight: 1.1,
-            textShadow: '0 2px 10px rgba(0,0,0,0.2)',
-            maxWidth: hasImage ? '55%' : '90%',
-            textAlign: hasImage ? 'left' : 'center',
-            overflowWrap: 'break-word',
-          }}
-        >
-          {clubData.name}
-        </h1>
+        {background}
 
-        {/* Details Container */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: hasImage ? 'flex-start' : 'center',
-            alignItems: 'center',
-            width: '100%',
-            fontFamily: 'Inter',
-            fontSize: '25px',
-            margin: '0 0 20px 0',
-            gap: '12px',
-          }}
-        >
-          {/* Number of members */}
-          {clubData.userMetadataToClubs.length > 1 && (
+        {/* Left Side (renders if there's an image) */}
+        {hasImage && (
+          <div
+            style={{ display: 'flex', width: '45%', justifyContent: 'center' }}
+          >
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'row',
-                gap: '12px',
+                position: 'relative',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 350,
+                height: 350,
+                borderRadius: '20px',
+                border: '0px solid white',
+                boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+                overflow: 'hidden',
               }}
             >
-              <div
+              <img
+                src={clubData.profileImage!}
+                alt={clubData.name + ' logo'}
                 style={{
-                  display: 'flex',
-                  position: 'relative',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 35,
-                  height: 35,
-                }}
-              >
-                <img
-                  // @ts-expect-error ArrayBuffers are allowed
-                  src={people_alt_icon_buffer}
-                  alt="people icon"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  textShadow: '0 2px 10px rgba(0,0,0,0.2)',
-                }}
-              >
-                {clubData.userMetadataToClubs.length} members
-              </div>
-              {/* Divider */}
-              <div
-                style={{
-                  width: '2px',
-                  height: '25px',
-                  backgroundColor: '#d4d4d4',
-                  margin: '0 10px 0 9px',
-                  alignSelf: 'center',
+                  width: '100%',
+                  objectFit: 'contain',
                 }}
               />
             </div>
-          )}
-
-          {/* Nebula Logo */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 40,
-              height: 40,
-            }}
-          >
-            <NebulaLogo
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              textShadow: '0 2px 10px rgba(0,0,0,0.2)',
-            }}
-          >
-            Check out on UTD CLUBS
-          </div>
-        </div>
-
-        {clubData.tags && (
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '10px',
-              justifyContent: hasImage ? 'flex-start' : 'center',
-              width: hasImage ? '650px' : '900px', // explicit width helps Satori calculate wrapping
-            }}
-          >
-            {clubData.tags.map((tag, index) => (
-              <div
-                key={index}
-                style={{
-                  backgroundColor: '#d3caff',
-                  color: '#573dff',
-                  padding: '12px 20px',
-                  borderRadius: '50px',
-                  fontSize: '20px',
-                  fontFamily: 'Inter',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {tag}
-              </div>
-            ))}
           </div>
         )}
+
+        {/* Right Side (Content) */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '95%',
+            alignItems: hasImage ? 'flex-start' : 'center',
+            paddingRight: hasImage ? '40px' : '0px',
+            paddingLeft: hasImage ? '0px' : '25px',
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: 'Bai Jamjuree',
+              fontSize: '60px',
+              fontWeight: 'bold',
+              margin: '0 0 20px 0',
+              lineHeight: 1.1,
+              textShadow: '0 2px 10px rgba(0,0,0,0.2)',
+              maxWidth: hasImage ? '55%' : '90%',
+              textAlign: hasImage ? 'left' : 'center',
+              overflowWrap: 'break-word',
+            }}
+          >
+            {clubData.name}
+          </h1>
+
+          {/* Details Container */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: hasImage ? 'flex-start' : 'center',
+              alignItems: 'center',
+              width: '100%',
+              fontFamily: 'Inter',
+              fontSize: '25px',
+              margin: '0 0 20px 0',
+              gap: '12px',
+            }}
+          >
+            {/* Number of members */}
+            {clubData.userMetadataToClubs.length > 1 && (
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '12px',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    position: 'relative',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 35,
+                    height: 35,
+                  }}
+                >
+                  <img
+                    // @ts-expect-error ArrayBuffers are allowed
+                    src={people_alt_icon_buffer}
+                    alt="people icon"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    textShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  {clubData.userMetadataToClubs.length} members
+                </div>
+                {/* Divider */}
+                <div
+                  style={{
+                    width: '2px',
+                    height: '25px',
+                    backgroundColor: '#d4d4d4',
+                    margin: '0 10px 0 9px',
+                    alignSelf: 'center',
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Nebula Logo */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 40,
+                height: 40,
+              }}
+            >
+              <NebulaLogo
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                textShadow: '0 2px 10px rgba(0,0,0,0.2)',
+              }}
+            >
+              Check out on UTD CLUBS
+            </div>
+          </div>
+
+          {clubData.tags && (
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '10px',
+                justifyContent: hasImage ? 'flex-start' : 'center',
+                width: hasImage ? '650px' : '900px', // explicit width helps Satori calculate wrapping
+              }}
+            >
+              {clubData.tags.map((tag, index) => (
+                <div
+                  key={index}
+                  style={{
+                    backgroundColor: '#d3caff',
+                    color: '#573dff',
+                    padding: '12px 20px',
+                    borderRadius: '50px',
+                    fontSize: '20px',
+                    fontFamily: 'Inter',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {tag}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>,
+    ),
     {
       ...size,
       fonts: [
