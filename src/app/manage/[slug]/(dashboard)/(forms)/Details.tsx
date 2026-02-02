@@ -226,6 +226,7 @@ const Details = ({ club }: DetailsProps) => {
                     <TextField
                       label="Description"
                       className="w-full"
+                      required
                       multiline
                       minRows={4}
                       helperText={
