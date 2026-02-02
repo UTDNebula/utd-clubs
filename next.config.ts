@@ -33,25 +33,6 @@ const config: NextConfig = {
       },
     ],
   },
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'dev.clubs.utdnebula.com',
-          },
-        ],
-        headers: [
-          {
-            key: 'X-Robots-Tag',
-            value: 'noindex',
-          },
-        ],
-      },
-    ];
-  },
 };
 
 export default withSentryConfig(config, {
