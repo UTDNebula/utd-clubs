@@ -33,6 +33,7 @@ import { useAppForm } from '@src/utils/form';
 import { editClubContactSchema } from '@src/utils/formSchemas';
 
 type FormData = z.infer<typeof editClubContactSchema>;
+type ContactPlatform = keyof typeof contactNames;
 
 function typedDefaultValues(contacts: SelectContact[]): FormData['contacts'] {
   return contacts.map((contact) => ({
@@ -253,8 +254,9 @@ const Contacts = ({ club }: ContactsProps) => {
                     (contact) => contact.platform === activeReorderPlatform,
                   )}
                 platform={
-                  typeof activeReorderPlatform === 'string'
-                    ? activeReorderPlatform
+                  typeof activeReorderPlatform === 'string' &&
+                  activeReorderPlatform in contactNames
+                    ? (activeReorderPlatform as ContactPlatform)
                     : undefined
                 }
                 index={form
