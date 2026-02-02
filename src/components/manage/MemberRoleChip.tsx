@@ -19,18 +19,18 @@ export type ChipStyles = Record<
 
 export const chipStyles: ChipStyles = {
   Member: {
-    label: 'Member',
+    label: 'Follower',
     colorClass: undefined,
     icon: <PersonIcon fontSize="small" />,
   },
   Officer: {
     label: 'Collaborator',
-    colorClass: 'bg-royal/30',
+    colorClass: 'bg-royal/30 dark:bg-cornflower-300/30',
     icon: <HandymanIcon fontSize="small" />,
   },
   President: {
     label: 'Admin',
-    colorClass: 'bg-rose-200',
+    colorClass: 'bg-rose-200 dark:bg-rose-600/40',
     icon: <GavelIcon fontSize="small" />,
   },
 };
@@ -54,7 +54,7 @@ export default function MemberRoleChip({
   return (
     <Chip
       icon={
-        <div className="ml-2 flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
+        <div className="ml-2 flex justify-center items-center text-slate-600 dark:text-slate-300 h-4 *:w-4 *:h-4">
           {isValidElement<SvgIconOwnProps>(icon)
             ? cloneElement(icon, { fontSize: 'small' })
             : icon}

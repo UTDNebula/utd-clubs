@@ -1,5 +1,5 @@
-import { Button, Tooltip } from '@mui/material';
-import Link from 'next/link';
+import { Tooltip } from '@mui/material';
+import { LinkButton } from '@src/components/LinkButton';
 import { logo } from '@src/icons/ContactIcons';
 import type { SelectContact } from '@src/server/db/models';
 import { contactNames } from '@src/server/db/schema/contacts';
@@ -13,7 +13,11 @@ function contactDisplay(contact: SelectContact) {
       );
     case 'instagram':
       return contact.url.indexOf('instagram.com/') >= 0
-        ? '@' + contact.url.split('instagram.com/')[1]!.replace(/\/+$/, '')
+        ? '@' +
+            contact.url
+              .split('instagram.com/')[1]!
+              .replace(/\/+$/, '')
+              .split(/[/?#]/)[0]
         : contactNames[contact.platform];
     case 'website':
       return contact.url
@@ -25,20 +29,27 @@ function contactDisplay(contact: SelectContact) {
       return contact.url;
     case 'twitter':
       return contact.url.indexOf('.com/') > 0
-        ? '@' + contact.url.split('.com/')[1]!.replace(/\/+$/, '')
+        ? '@' +
+            contact.url.split('.com/')[1]!.replace(/\/+$/, '').split(/[/?#]/)[0]
         : contactNames[contact.platform];
     case 'facebook':
       return contact.url.indexOf('.com/') > 0
-        ? '@' + contact.url.split('.com/')[1]!.replace(/\/+$/, '')
+        ? '@' +
+            contact.url.split('.com/')[1]!.replace(/\/+$/, '').split(/[/?#]/)[0]
         : contactNames[contact.platform];
     case 'youtube':
       return contact.url.indexOf('youtube.com/@') >= 0
-        ? contact.url.split('youtube.com/')[1]!.replace(/\/+$/, '')
+        ? contact.url
+            .split('youtube.com/')[1]!
+            .replace(/\/+$/, '')
+            .split(/[/?#]/)[0]
         : contactNames[contact.platform];
     case 'twitch':
       return (
-        contact.url.split('twitch.tv/')[1]?.replace(/\/+$/, '') ??
-        contactNames[contact.platform]
+        contact.url
+          .split('twitch.tv/')[1]
+          ?.replace(/\/+$/, '')
+          .split(/[/?#]/)[0] ?? contactNames[contact.platform]
       );
     case 'linkedIn':
       return contactNames[contact.platform];
@@ -58,23 +69,20 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
       key={contact.platform + contact.url}
       title={contactNames[contact.platform]}
     >
-      <Link
+      <LinkButton
         href={
           contact.platform === 'email' ? `mailto:${contact.url}` : contact.url
         }
         target="_blank"
+        variant="contained"
+        className="normal-case bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 shadow-sm dark:shadow-md w-full text-haiti dark:text-white font-normal justify-start pl-3 pr-1"
+        startIcon={logo[contact.platform]}
+        size="large"
       >
-        <Button
-          variant="contained"
-          className="normal-case bg-white hover:bg-slate-100 shadow-sm w-full text-black font-normal justify-start"
-          startIcon={logo[contact.platform]}
-          size="large"
-        >
-          <span className="overflow-hidden text-ellipsis whitespace-nowrap">
-            {contactDisplay(contact)}
-          </span>
-        </Button>
-      </Link>
+        <span className="overflow-hidden text-sm text-ellipsis whitespace-nowrap">
+          {contactDisplay(contact)}
+        </span>
+      </LinkButton>
     </Tooltip>
   );
 };

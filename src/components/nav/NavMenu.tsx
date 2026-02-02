@@ -1,30 +1,32 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import nebulaPic from 'public/nebula-logo.png';
 import {
   mainCats,
   moreCats,
   type personalCats,
 } from '@src/constants/categories';
+import { UTDClubsLogoCombination } from '@src/icons/UTDClubsLogo';
 import SidebarItems from './SidebarItems';
 
 type NavMenuProps = {
   userCapabilites: Array<(typeof personalCats)[number]>;
+  notApprovedCount: number | null;
 };
 
-const NavMenu = ({ userCapabilites }: NavMenuProps) => {
+const NavMenu = ({ userCapabilites, notApprovedCount }: NavMenuProps) => {
   return (
     <>
       {/* Logo Section */}
       <div className="flex w-full justify-center pt-14 pb-14">
-        <Link className="flex items-center gap-2" href="/">
-          <Image
-            src={nebulaPic}
-            alt="Nebula Labs logo"
-            width={60}
-            height={60}
+        <Link className="flex items-center gap-2 select-none" href="/">
+          <UTDClubsLogoCombination
+            duotone
+            className="h-16 w-auto"
+            slotClassNames={{
+              nebulaLogo: 'fill-haiti dark:fill-white',
+              projectLogo: 'fill-royal dark:fill-cornflower-300',
+            }}
           />
           <h1 className="font-display text-2xl font-bold">UTD CLUBS</h1>
         </Link>
@@ -37,9 +39,14 @@ const NavMenu = ({ userCapabilites }: NavMenuProps) => {
             <SidebarItems key={cat} cat={cat} />
           ))}
 
-          {userCapabilites.map((cat) => (
-            <SidebarItems key={cat} cat={cat} />
-          ))}
+          {userCapabilites.map((cat) => {
+            if (cat === 'Admin') {
+              return (
+                <SidebarItems key={cat} cat={cat} badge={notApprovedCount} />
+              );
+            }
+            return <SidebarItems key={cat} cat={cat} />;
+          })}
 
           {moreCats.map((cat) => (
             <SidebarItems key={cat} cat={cat} />
@@ -48,7 +55,7 @@ const NavMenu = ({ userCapabilites }: NavMenuProps) => {
       </div>
 
       {/* Privacy Policy */}
-      <div className="w-full mt-auto px-6 py-2 flex flex-wrap gap-2 justify-evenly text-base font-medium capitalize md:text-sm text-slate-500">
+      <div className="w-full mt-auto px-6 py-2 flex flex-wrap gap-2 justify-evenly text-base font-medium capitalize md:text-sm text-slate-600 dark:text-slate-400">
         <Link
           className="underline decoration-transparent hover:decoration-inherit transition"
           href="https://www.utdnebula.com/legal/privacy-policy.txt"

@@ -9,12 +9,16 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
 import { useAppForm } from '@src/utils/form';
-import { eventFormSchema } from '@src/utils/formSchemas';
+import {
+  createEventFormSchema,
+  editEventFormSchema,
+} from '@src/utils/formSchemas';
 import EventCard, { EventCardSkeleton } from './EventCard';
 
 type EventFormProps =
@@ -41,8 +45,26 @@ interface EventDetails {
 
 const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const api = useTRPC();
-  const createMutation = useMutation(api.event.create.mutationOptions());
-  const updateMutation = useMutation(api.event.update.mutationOptions());
+  const createMutation = useMutation(
+    api.event.create.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedCustom('Created event!'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
+  const updateMutation = useMutation(
+    api.event.update.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('event'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
   const uploadImage = useUploadToUploadURL();
   const router = useRouter();
 
@@ -87,7 +109,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     onSubmit: async ({ value, formApi }) => {
       if (mode === 'edit' && event) {
         // Image
-        let imageUrl = null;
+        let imageUrl = event.image;
         const iImageIsDirty = !formApi.getFieldMeta('image')?.isDefaultValue;
         if (iImageIsDirty) {
           if (value.image === null) {
@@ -150,7 +172,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
       );
     },
     validators: {
-      onChange: eventFormSchema,
+      onChange: mode === 'create' ? createEventFormSchema : editEventFormSchema,
     },
   });
 
@@ -198,7 +220,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
@@ -218,7 +240,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   size="small"
                   error={!field.state.meta.isValid}
                   helperText={
@@ -241,7 +263,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   onBlur={field.handleBlur}
                   value={field.state.value}
                   label="Description"
-                  className="[&>.MuiInputBase-root]:bg-white"
+                  className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
                   multiline
                   minRows={4}
                   error={!field.state.meta.isValid}
@@ -257,7 +279,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                           href="https://www.markdownguide.org/basic-syntax/"
                           rel="noreferrer"
                           target="_blank"
-                          className="text-royal underline"
+                          className="text-royal dark:text-cornflower-300 underline"
                         >
                           Markdown
                         </a>
@@ -275,7 +297,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                     onChange={(value) => value && field.handleChange(value)}
                     value={field.state.value}
                     label="Start"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white"
+                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
                     slotProps={{
                       actionBar: {
                         actions: ['accept'],
@@ -299,7 +321,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                     onChange={(value) => value && field.handleChange(value)}
                     value={field.state.value}
                     label="End"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white"
+                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
                     slotProps={{
                       actionBar: {
                         actions: ['accept'],
@@ -321,10 +343,10 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
           </div>
           <div className="flex flex-wrap justify-end items-center gap-2">
             <form.AppForm>
-              <form.FormResetButton />
+              <form.ResetButton />
             </form.AppForm>
             <form.AppForm>
-              <form.FormSubmitButton />
+              <form.SubmitButton />
             </form.AppForm>
           </div>
         </Panel>
@@ -337,12 +359,14 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             ...formValues,
             image: previewUrl,
             club,
+            status: 'approved',
             updatedAt: new Date(),
             createdAt: new Date(),
             recurrence: '',
             recurenceId: '',
             google: false,
             etag: '',
+            calendarId: null,
           }}
           view="preview"
         />

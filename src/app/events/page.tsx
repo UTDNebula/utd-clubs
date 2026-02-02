@@ -1,7 +1,7 @@
 import { type Metadata } from 'next';
 import type z from 'zod';
 import EventCard from '@src/components/events/EventCard';
-import { EventHeader } from '@src/components/header/BaseHeader';
+import { EventHeader } from '@src/components/header/Header';
 import { api } from '@src/trpc/server';
 import { eventParamsSchema } from '@src/utils/eventFilter';
 import EventsNone from './EventsNone';
@@ -32,7 +32,7 @@ const Events = async (props: {
       <EventHeader />
       <main className="w-full p-4">
         <EventsTitle date={parsed.date} />
-        <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
+        <div className="flex flex-wrap w-full justify-evenly items-center pt-6 gap-4">
           {events.length > 0 ? (
             events.map((event) => <EventCard key={event.id} event={event} />)
           ) : (

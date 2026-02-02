@@ -1,4 +1,5 @@
-import { Tooltip } from '@mui/material';
+import { Divider, Tooltip } from '@mui/material';
+import { subMinutes } from 'date-fns';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import Panel from '@src/components/common/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
@@ -13,67 +14,100 @@ export default function ClubDetailsCard({
   lastEventDate,
   id,
 }: ClubDetailsCardProps) {
+  const items = [];
+
+  if (club.numMembers !== 0) {
+    items.push(
+      <div key="members" className="flex flex-row flex-wrap gap-1 py-1">
+        <span className="font-medium text-slate-600 dark:text-slate-400">
+          Followers
+        </span>
+        <span className="ml-auto text-slate-800 dark:text-slate-200">{`${club.numMembers} ${club.numMembers !== 1 ? 'people' : 'person'}`}</span>
+      </div>,
+    );
+  }
+  if (club.foundingDate) {
+    items.push(
+      <div key="foundingDate" className="flex flex-row flex-wrap gap-1 py-1">
+        <span className="font-medium text-slate-600 dark:text-slate-400">
+          Founded
+        </span>
+        <span className="ml-auto text-slate-800 dark:text-slate-200">
+          {club.foundingDate.toLocaleDateString('en-US', {
+            month: 'short',
+            year: 'numeric',
+          })}
+        </span>
+      </div>,
+    );
+  }
+  if (lastEventDate) {
+    items.push(
+      <div key="lastEventDate" className="flex flex-row flex-wrap gap-1 py-1">
+        <span className="font-medium text-slate-600 dark:text-slate-400">
+          Last Event
+        </span>
+        <Tooltip
+          title={lastEventDate.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+          })}
+        >
+          <span className="ml-auto text-slate-800 dark:text-slate-200">
+            {lastEventDate > subMinutes(new Date(), 5)
+              ? 'Ongoing'
+              : formatDistanceStrict(lastEventDate, new Date(), {
+                  addSuffix: true,
+                })}
+          </span>
+        </Tooltip>
+      </div>,
+    );
+  }
+  if (club.updatedAt) {
+    items.push(
+      <div key="updatedAt" className="flex flex-row flex-wrap gap-1 py-1">
+        <span className="font-medium text-slate-600 dark:text-slate-400">
+          Updated
+        </span>
+        <Tooltip
+          title={club.updatedAt.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+          })}
+        >
+          <span className="ml-auto text-slate-800 dark:text-slate-200">
+            {formatDistanceStrict(club.updatedAt, new Date(), {
+              addSuffix: true,
+            })}
+          </span>
+        </Tooltip>
+      </div>,
+    );
+  }
+
   return (
-    <Panel className="text-sm" id={id} smallPadding heading="Details">
-      {club.numMembers ||
-      club.foundingDate ||
-      lastEventDate ||
-      club.updatedAt ? (
-        <>
-          {club.numMembers && (
-            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
-              <span className="font-medium text-slate-500">Members</span>
-              <span className="ml-auto text-slate-500">{`${club.numMembers} ${club.numMembers !== 1 ? 'people' : 'person'}`}</span>
-            </div>
-          )}
-          {club.foundingDate && (
-            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
-              <span className="font-medium text-slate-500">Founded</span>
-              <span className="ml-auto text-slate-500">
-                {club.foundingDate.toLocaleDateString('en-US', {
-                  month: 'short',
-                  year: 'numeric',
-                })}
-              </span>
-            </div>
-          )}
-          {lastEventDate && (
-            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
-              <span className="font-medium text-slate-500">Last Event</span>
-              <Tooltip
-                title={lastEventDate.toLocaleDateString('en-US', {
-                  month: 'short',
-                  year: 'numeric',
-                })}
-              >
-                <span className="ml-auto text-slate-500">
-                  {formatDistanceStrict(lastEventDate, new Date(), {
-                    addSuffix: true,
-                  })}
-                </span>
-              </Tooltip>
-            </div>
-          )}
-          {club.updatedAt && (
-            <div className="flex flex-row flex-wrap gap-1 py-1 border-b border-slate-100 last:border-0">
-              <span className="font-medium text-slate-500">Updated</span>
-              <Tooltip
-                title={club.updatedAt.toLocaleDateString('en-US', {
-                  month: 'short',
-                  year: 'numeric',
-                })}
-              >
-                <span className="ml-auto text-slate-500">
-                  {formatDistanceStrict(club.updatedAt, new Date(), {
-                    addSuffix: true,
-                  })}
-                </span>
-              </Tooltip>
-            </div>
-          )}
-        </>
+    <Panel className="text-sm !gap-1" id={id} smallPadding heading="Details">
+      {items.length ? (
+        items.flatMap((item, index) => {
+          const row = [item];
+          if (index < items.length - 1) {
+            row.push(<Divider key={index} />);
+          }
+          return row;
+        })
       ) : (
-        <span className="text-slate-500">No details</span>
+        <span className="text-slate-600 dark:text-slate-400">No details</span>
       )}
     </Panel>
   );

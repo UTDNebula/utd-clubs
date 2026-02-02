@@ -11,8 +11,9 @@ type BaseCardProps = {
 const baseClasses = 'rounded-lg';
 
 const variantClasses: Record<CardVariant, string> = {
-  flat: 'shadow-sm',
-  interactive: 'shadow-lg transition-all hover:shadow-xl',
+  flat: 'shadow-sm dark:shadow-md',
+  interactive:
+    'shadow-lg dark:shadow-lg transition-all hover:shadow-xl dark:hover:shadow-2xl',
 };
 
 export const BaseCard = ({
@@ -27,7 +28,7 @@ export const BaseCard = ({
     <div
       {...(id ? { id } : {})}
       style={style}
-      className={`${baseClasses} ${hasBgClass ? '' : 'bg-white'} ${variantClasses[variant]} ${className}`}
+      className={`${baseClasses} ${hasBgClass ? '' : 'bg-white dark:bg-neutral-900'} ${variantClasses[variant]} ${className}`}
     >
       {children}
     </div>

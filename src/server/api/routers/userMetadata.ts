@@ -1,18 +1,24 @@
-import { and, eq, or, sql } from 'drizzle-orm';
+import { and, count, eq, gte, inArray, or, sql } from 'drizzle-orm';
+import { headers } from 'next/headers';
 import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
 import { auth } from '@src/server/auth';
-import { insertUserMetadata } from '@src/server/db/models';
+import {
+  insertUserMetadata,
+  SelectUserMetadataToClubs,
+  SelectUserMetadataWithClubs,
+} from '@src/server/db/models';
 import { admin } from '@src/server/db/schema/admin';
 import { user as users } from '@src/server/db/schema/auth';
+import { events } from '@src/server/db/schema/events';
 import { userMetadata, userMetadataToClubs } from '@src/server/db/schema/users';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
-const byIdSchema = z.object({ id: z.string().uuid() });
+const byIdSchema = z.object({ id: z.string() });
 
 const updateByIdSchema = z.object({
-  updateUser: insertUserMetadata.omit({ id: true }),
-  clubs: z.string().array(),
+  updateUser: insertUserMetadata.partial().omit({ id: true }),
+  clubs: z.string().array().optional(),
 });
 const nameOrEmailSchema = z.object({
   search: z.string().default(''),
@@ -23,47 +29,88 @@ const eventsSortSchema = z.object({
   sortByDate: z.boolean().default(false),
 });
 
-export const userMetadataRouter = createTRPCRouter({
-  byId: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    const { id } = input;
-    const userMetadata = await ctx.db.query.userMetadata.findFirst({
-      where: (userMetadata) => eq(userMetadata.id, id),
-      with: { clubs: true },
-    });
+const joinedClubEventsSchema = z.object({
+  currentTime: z.optional(z.date()),
+  sortByDate: z.boolean().default(false),
+  page: z.number().int().positive().optional(),
+  pageSize: z.number().int().positive().optional(),
+});
 
-    return userMetadata;
-  }),
+export const userMetadataRouter = createTRPCRouter({
+  byId: protectedProcedure
+    .input(byIdSchema)
+    .query(
+      async ({
+        input,
+        ctx,
+      }): Promise<SelectUserMetadataWithClubs | undefined> => {
+        const { id } = input;
+        const userMetadata = await ctx.db.query.userMetadata.findFirst({
+          where: (userMetadata) => eq(userMetadata.id, id),
+          with: { clubs: true },
+        });
+
+        return userMetadata;
+      },
+    ),
   updateById: protectedProcedure
     .input(updateByIdSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { updateUser, clubs } = input;
-      const { user } = ctx.session;
+    .mutation(
+      async ({
+        input,
+        ctx,
+      }): Promise<SelectUserMetadataWithClubs | undefined> => {
+        const { updateUser, clubs } = input;
+        const { user } = ctx.session;
 
-      await ctx.db
-        .update(userMetadata)
-        .set(updateUser)
-        .where(eq(userMetadata.id, user.id));
+        const updatedUser = (
+          await ctx.db
+            .update(userMetadata)
+            .set(updateUser)
+            .where(eq(userMetadata.id, user.id))
+            .returning()
+        )[0];
 
-      if (clubs.length === 0) {
-        await ctx.db
-          .delete(userMetadataToClubs)
-          .where(and(eq(userMetadataToClubs.userId, user.id)));
-        return;
-      }
+        let updatedClubs: SelectUserMetadataToClubs[] = [];
 
-      await ctx.db.delete(userMetadataToClubs).where(
-        and(
-          eq(userMetadataToClubs.userId, user.id),
-          // Invert the condition to delete all clubs that are not in the array
-          sql`${userMetadataToClubs.clubId} NOT IN (${clubs})`,
-        ),
-      );
-      if (user.name != updateUser.firstName + ' ' + updateUser.lastName) {
-        await auth.api.updateUser({
-          body: { name: updateUser.firstName + ' ' + updateUser.lastName },
-        });
-      }
-    }),
+        if (clubs !== undefined) {
+          if (clubs.length === 0) {
+            await ctx.db
+              .delete(userMetadataToClubs)
+              .where(and(eq(userMetadataToClubs.userId, user.id)));
+          } else {
+            updatedClubs = await ctx.db
+              .delete(userMetadataToClubs)
+              .where(
+                and(
+                  eq(userMetadataToClubs.userId, user.id),
+                  // Invert the condition to delete all clubs that are not in the array
+                  sql`${userMetadataToClubs.clubId} NOT IN (${clubs})`,
+                ),
+              )
+              .returning();
+          }
+        }
+
+        // Update `name` field in BetterAuth user information to match user metadata
+        const name = `${updateUser.firstName} ${updateUser.lastName}`;
+        if (user.name != name) {
+          try {
+            await auth.api.updateUser({
+              body: { name },
+              headers: await headers(),
+            });
+          } catch (e) {
+            console.error(
+              `Unable to update name field for${updateUser.firstName ? ` ${name}'s` : ''} user information`,
+              e,
+            );
+          }
+        }
+
+        return { ...updatedUser!, clubs: updatedClubs };
+      },
+    ),
   deleteById: protectedProcedure.mutation(async ({ ctx }) => {
     const { user } = ctx.session;
     await ctx.db.delete(users).where(eq(users.id, user.id));
@@ -86,7 +133,9 @@ export const userMetadataRouter = createTRPCRouter({
         },
       });
 
-      let events = rows.map((item) => item.event);
+      let events = rows
+        .map((item) => item.event)
+        .filter((ev) => ev.status === 'approved');
 
       if (currentTime) {
         events = events.filter((ev) => ev.endTime >= currentTime);
@@ -102,36 +151,85 @@ export const userMetadataRouter = createTRPCRouter({
       return events;
     }),
   getEventsFromJoinedClubs: protectedProcedure
-    .input(eventsSortSchema)
+    .input(joinedClubEventsSchema)
     .query(async ({ input, ctx }) => {
       const { currentTime, sortByDate } = input;
 
-      const rows = await ctx.db.query.userMetadataToClubs.findMany({
-        where: (t) => eq(t.userId, ctx.session.user.id),
-        with: {
-          club: {
-            with: {
-              events: {
-                with: { club: true },
-              },
-            },
-          },
-        },
+      const page = Math.max(1, input.page ?? 1);
+      const pageSize = Math.max(1, Math.min(50, input.pageSize ?? 12));
+      const offset = (page - 1) * pageSize;
+
+      const clubRows = await ctx.db
+        .select({ clubId: userMetadataToClubs.clubId })
+        .from(userMetadataToClubs)
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, ctx.session.user.id),
+            inArray(userMetadataToClubs.memberType, [
+              'Member',
+              'Officer',
+              'President',
+            ]),
+          ),
+        );
+
+      const clubIds = clubRows.map((row) => row.clubId);
+      if (clubIds.length === 0) return [];
+
+      const now = currentTime ?? new Date();
+
+      const rows = await ctx.db.query.events.findMany({
+        where: (e) =>
+          and(
+            inArray(e.clubId, clubIds),
+            currentTime ? gte(e.endTime, now) : undefined,
+            eq(e.status, 'approved'),
+          ),
+        orderBy: sortByDate ? (e) => [e.startTime] : undefined,
+        with: { club: true },
+        limit: pageSize,
+        offset,
       });
 
-      let events = rows.flatMap((row) => row.club.events);
-
-      if (currentTime) {
-        events = events.filter((ev) => ev.endTime >= currentTime);
-      }
-
-      if (sortByDate) {
-        events = events.sort(
-          (a, b) => a.startTime.getTime() - b.startTime.getTime(),
+      return rows;
+    }),
+  countEventsFromJoinedClubs: protectedProcedure
+    .input(joinedClubEventsSchema)
+    .query(async ({ input, ctx }) => {
+      const clubRows = await ctx.db
+        .select({ clubId: userMetadataToClubs.clubId })
+        .from(userMetadataToClubs)
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, ctx.session.user.id),
+            inArray(userMetadataToClubs.memberType, [
+              'Member',
+              'Officer',
+              'President',
+            ]),
+          ),
         );
-      }
 
-      return events;
+      const clubIds = clubRows.map((row) => row.clubId);
+      if (clubIds.length === 0) return 0;
+
+      const now = input.currentTime ?? new Date();
+
+      const whereClause = input.currentTime
+        ? and(
+            inArray(events.clubId, clubIds),
+            gte(events.endTime, now),
+            eq(events.status, 'approved'),
+          )
+        : inArray(events.clubId, clubIds);
+
+      const result = await ctx.db
+        .select({ value: count() })
+        .from(events)
+        .where(whereClause);
+      const value = result[0]?.value ?? 0;
+
+      return value;
     }),
   searchByNameOrEmail: publicProcedure
     .input(nameOrEmailSchema)
@@ -151,6 +249,7 @@ export const userMetadataRouter = createTRPCRouter({
           sql`
             CONCAT(${userMetadata.firstName}, ' ', ${userMetadata.lastName}) ILIKE ${q}
             OR ${users.email} ILIKE ${q}
+            OR ${userMetadata.contactEmail} ILIKE ${q}
           `,
         );
 
@@ -172,13 +271,13 @@ export const userMetadataRouter = createTRPCRouter({
       })
     ) {
       capabilites.push('Manage Clubs');
+    } else {
+      capabilites.push('Create Club');
     }
     if (
-      (
-        await ctx.db.query.admin.findMany({
-          where: eq(admin.userId, session.user.id),
-        })
-      ).length === 1
+      await ctx.db.query.admin.findFirst({
+        where: eq(admin.userId, session.user.id),
+      })
     )
       capabilites.push('Admin');
     return capabilites;

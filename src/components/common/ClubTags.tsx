@@ -132,7 +132,7 @@ export const ClubTags = (props: ClubTagsProps) => {
           <TagChip
             tag={`+${overflowTags.length} ${overflowTags.length === 1 ? 'tag' : 'tags'}`}
             onClick={handleMenuOpen}
-            className="!font-bold !hover:bg-slate-300 !cursor-pointer"
+            className="!font-bold !hover:bg-slate-300 !dark:hover:bg-slate-700 !cursor-pointer"
           />
           {anchorEl && (
             <Menu

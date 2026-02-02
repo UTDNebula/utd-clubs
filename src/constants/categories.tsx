@@ -1,4 +1,5 @@
 import type { SvgIconComponent } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 import EventIcon from '@mui/icons-material/Event';
 import GavelIcon from '@mui/icons-material/Gavel';
 import HelpIcon from '@mui/icons-material/Help';
@@ -8,7 +9,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 
 export const mainCats = ['Home', 'My Community', 'Events'] as const;
 export const moreCats = ['About'] as const;
-export const personalCats = ['Manage Clubs', 'Admin'] as const;
+export const personalCats = ['Manage Clubs', 'Create Club', 'Admin'] as const;
 
 export type allCats =
   | (typeof mainCats)[number]
@@ -22,6 +23,7 @@ export const IconMap: {
   Events: EventIcon,
   About: HelpIcon,
   'Manage Clubs': TuneIcon,
+  'Create Club': AddIcon,
   Admin: GavelIcon,
 };
 
@@ -33,5 +35,6 @@ export const routeMap: {
   Events: '/events',
   About: 'https://www.utdnebula.com/projects/clubs',
   'Manage Clubs': '/manage',
+  'Create Club': '/directory/create',
   Admin: '/admin',
 };

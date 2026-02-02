@@ -4,7 +4,9 @@ import { add, startOfDay } from 'date-fns';
 import {
   and,
   between,
+  count,
   eq,
+  gt,
   gte,
   ilike,
   inArray,
@@ -22,16 +24,25 @@ import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
+import { stopWatching } from '@src/utils/calendar';
 import { dateSchema, order } from '@src/utils/eventFilter';
-import { createEventSchema, updateEventSchema } from '@src/utils/formSchemas';
+import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
-import { callStorageAPI } from '@src/utils/storage';
+// import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byClubIdSchema = z.object({
   clubId: z.string().default(''),
   currentTime: z.optional(z.date()),
   sortByDate: z.boolean().default(false),
+  page: z.number().int().positive().optional(),
+  pageSize: z.number().int().positive().optional(),
+  includePast: z.boolean().optional().default(false),
+});
+const countByClubIdSchema = z.object({
+  clubId: z.string(),
+  includePast: z.boolean().optional().default(false),
+  currentTime: z.optional(z.date()),
 });
 const clubUpcomingEventsSchema = z.object({
   clubId: z.string(),
@@ -66,21 +77,56 @@ export const eventRouter = createTRPCRouter({
   byClubId: publicProcedure
     .input(byClubIdSchema)
     .query(async ({ input, ctx }) => {
-      const { clubId, currentTime, sortByDate } = input;
+      const { clubId, currentTime, sortByDate, includePast } = input;
+      const page = Math.max(1, input.page ?? 1);
+      const pageSize = Math.max(1, Math.min(50, input.pageSize ?? 12));
+      const offset = (page - 1) * pageSize;
+      const now = currentTime ?? new Date();
 
       try {
         const events = await ctx.db.query.events.findMany({
-          where: (event) =>
-            currentTime
-              ? and(eq(event.clubId, clubId), gte(event.endTime, currentTime))
-              : eq(event.clubId, clubId),
-          orderBy: sortByDate ? (event) => [event.startTime] : undefined,
-          with: {
-            club: true,
+          where: (event) => {
+            const base = and(
+              eq(event.clubId, clubId),
+              eq(event.status, 'approved'),
+            );
+            if (includePast) return base;
+            return and(base, gte(event.endTime, now));
           },
+          orderBy: sortByDate ? (event) => [event.startTime] : undefined,
+          with: { club: true },
+          limit: pageSize,
+          offset: offset,
         });
 
         return events;
+      } catch (e) {
+        console.error(e);
+
+        throw e;
+      }
+    }),
+  countByClubId: publicProcedure
+    .input(countByClubIdSchema)
+    .query(async ({ input, ctx }) => {
+      const { clubId, includePast } = input;
+      const now = input.currentTime ?? new Date();
+
+      try {
+        const whereCondition = includePast
+          ? and(eq(events.clubId, clubId), eq(events.status, 'approved'))
+          : and(
+              eq(events.clubId, clubId),
+              gte(events.endTime, now),
+              eq(events.status, 'approved'),
+            );
+        const result = await ctx.db
+          .select({ value: count() })
+          .from(events)
+          .where(whereCondition);
+        const value = result[0]?.value ?? 0;
+
+        return value;
       } catch (e) {
         console.error(e);
 
@@ -100,12 +146,13 @@ export const eventRouter = createTRPCRouter({
           where: (event) =>
             and(
               eq(event.clubId, clubId),
+              eq(event.status, 'approved'),
               gte(event.endTime, now),
               lte(event.startTime, threeMonthsLater),
             ),
           orderBy: (event, { asc }) => [asc(event.startTime)],
           with: { club: true },
-          limit: 20,
+          limit: 18,
         });
 
         return upcomingEvents;
@@ -123,6 +170,7 @@ export const eventRouter = createTRPCRouter({
         const events = await ctx.db.query.events.findMany({
           where: (event) => {
             return and(
+              eq(event.status, 'approved'),
               gte(event.startTime, startTime),
               lte(event.endTime, endTime),
             );
@@ -163,11 +211,14 @@ export const eventRouter = createTRPCRouter({
       const endUTC = new Date(endCT.getTime());
       const events = await ctx.db.query.events.findMany({
         where: (event) => {
-          return or(
-            between(event.startTime, startUTC, endUTC),
-            between(event.endTime, startUTC, endUTC),
-            and(lte(event.startTime, startUTC), gte(event.endTime, startUTC)),
-            and(lte(event.startTime, endUTC), gte(event.endTime, endUTC)),
+          return and(
+            eq(event.status, 'approved'),
+            or(
+              between(event.startTime, startUTC, endUTC),
+              between(event.endTime, startUTC, endUTC),
+              and(lte(event.startTime, startUTC), gte(event.endTime, startUTC)),
+              and(lte(event.startTime, endUTC), gte(event.endTime, endUTC)),
+            ),
           );
         },
         with: {
@@ -192,14 +243,17 @@ export const eventRouter = createTRPCRouter({
         where: (event) => {
           const whereElements: Array<SQL<unknown> | undefined> = [];
           whereElements.push(
-            or(
-              between(event.startTime, startTime, endTime),
-              between(event.endTime, startTime, endTime),
-              and(
-                lte(event.startTime, startTime),
-                gte(event.endTime, startTime),
+            and(
+              eq(event.status, 'approved'),
+              or(
+                between(event.startTime, startTime, endTime),
+                between(event.endTime, startTime, endTime),
+                and(
+                  lte(event.startTime, startTime),
+                  gte(event.endTime, startTime),
+                ),
+                and(lte(event.startTime, endTime), gte(event.endTime, endTime)),
               ),
-              and(lte(event.startTime, endTime), gte(event.endTime, endTime)),
             ),
           );
 
@@ -235,7 +289,7 @@ export const eventRouter = createTRPCRouter({
 
     try {
       const byId = await ctx.db.query.events.findFirst({
-        where: (event) => eq(event.id, id),
+        where: (event) => and(eq(event.id, id), eq(event.status, 'approved')),
         with: { club: true },
       });
 
@@ -246,6 +300,41 @@ export const eventRouter = createTRPCRouter({
       throw e;
     }
   }),
+  getListingInfo: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input: { id }, ctx }) => {
+      try {
+        // Fetch event by id
+        const byId = await ctx.db.query.events.findFirst({
+          where: (event) => and(eq(event.id, id), eq(event.status, 'approved')),
+          with: {
+            club: {
+              with: {
+                contacts: {
+                  orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+                },
+              },
+            },
+            userMetadataToEvents: {
+              columns: {
+                userId: true, // Only fetch the ID to keep the payload small
+              },
+            },
+          },
+        });
+
+        if (!byId) return null;
+
+        const { userMetadataToEvents, ...eventData } = byId; // eventData doesn't have userMetadataToEvents field
+        return {
+          ...eventData,
+          numParticipants: userMetadataToEvents.length,
+        };
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    }),
   joinedEvent: publicProcedure
     .input(joinLeaveSchema)
     .query(async ({ input, ctx }) => {
@@ -281,29 +370,33 @@ export const eventRouter = createTRPCRouter({
         registeredAt: result?.registeredAt ?? null,
       };
     }),
-  joinEvent: protectedProcedure
+  toggleRegistration: protectedProcedure
     .input(joinLeaveSchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ ctx, input }) => {
       const eventId = input.id;
       const userId = ctx.session.user.id;
-      await ctx.db
-        .insert(userMetadataToEvents)
-        .values({ userId: userId, eventId: eventId })
-        .onConflictDoNothing();
-    }),
-  leaveEvent: protectedProcedure
-    .input(joinLeaveSchema)
-    .mutation(async ({ input, ctx }) => {
-      const eventId = input.id;
-      const userId = ctx.session.user.id;
-      await ctx.db
-        .delete(userMetadataToEvents)
-        .where(
+      const dataExists = await ctx.db.query.userMetadataToEvents.findFirst({
+        where: (userMetadataToEvents) =>
           and(
             eq(userMetadataToEvents.userId, userId),
             eq(userMetadataToEvents.eventId, eventId),
           ),
-        );
+      });
+      if (dataExists) {
+        await ctx.db
+          .delete(userMetadataToEvents)
+          .where(
+            and(
+              eq(userMetadataToEvents.userId, userId),
+              eq(userMetadataToEvents.eventId, eventId),
+            ),
+          );
+      } else {
+        await ctx.db
+          .insert(userMetadataToEvents)
+          .values({ userId, eventId, registeredAt: new Date() });
+      }
+      return dataExists;
     }),
   create: protectedProcedure
     .input(createEventSchema)
@@ -335,7 +428,7 @@ export const eventRouter = createTRPCRouter({
       return newEvent.id;
     }),
   update: protectedProcedure
-    .input(updateEventSchema)
+    .input(editEventSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, clubId, ...data } = input;
       const userId = ctx.session.user.id;
@@ -361,6 +454,7 @@ export const eventRouter = createTRPCRouter({
           startTime: data.startTime,
           endTime: data.endTime,
           image: data.image,
+          updatedAt: new Date(),
         })
         .where(eq(events.id, id))
         .returning({ id: events.id });
@@ -396,12 +490,15 @@ export const eventRouter = createTRPCRouter({
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
-      await callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`);
+      // await callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`);
 
+      // await ctx.db
+      //   .delete(userMetadataToEvents)
+      //   .where(eq(userMetadataToEvents.eventId, input.id));
       await ctx.db
-        .delete(userMetadataToEvents)
-        .where(eq(userMetadataToEvents.eventId, input.id));
-      await ctx.db.delete(events).where(eq(events.id, input.id));
+        .update(events)
+        .set({ status: 'deleted' })
+        .where(eq(events.id, input.id));
 
       return { success: true };
     }),
@@ -409,7 +506,8 @@ export const eventRouter = createTRPCRouter({
     const { name, sortByDate } = input;
     try {
       const events = await ctx.db.query.events.findMany({
-        where: (event) => ilike(event.name, `%${name}%`),
+        where: (event) =>
+          and(eq(event.status, 'approved'), ilike(event.name, `%${name}%`)),
         orderBy: sortByDate
           ? (event, { desc }) => [desc(event.startTime)]
           : undefined,
@@ -429,7 +527,7 @@ export const eventRouter = createTRPCRouter({
     }
   }),
   getUserCalendars: protectedProcedure.query(async ({ ctx }) => {
-    const accessToken = await getGoogleAccessToken(ctx.session.user.id);
+    const accessToken = await getGoogleAccessToken(ctx.session.user.id, true);
     const googleOauthClient = new OAuth2Client();
     googleOauthClient.setCredentials({ access_token: accessToken });
     try {
@@ -454,9 +552,21 @@ export const eventRouter = createTRPCRouter({
     }
   }),
   disableSync: protectedProcedure
-    .input(z.object({ clubId: z.string() }))
+    .input(
+      z.object({
+        clubId: z.string(),
+        keepPastEvents: z.boolean().default(true).optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
+
+      const clubRecord = await ctx.db.query.club.findFirst({
+        where: eq(club.id, input.clubId),
+        columns: { calendarId: true },
+      });
+
+      if (!clubRecord) throw new TRPCError({ code: 'NOT_FOUND' });
 
       const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
         where: and(
@@ -468,12 +578,35 @@ export const eventRouter = createTRPCRouter({
       if (!isOfficer) {
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
-      await ctx.db.update(club).set({
-        calendarSyncToken: null,
-        calendarId: null,
-        calendarName: null,
-        calendarGoogleAccountId: null,
-      });
+
+      // close webhook
+      await stopWatching(input.clubId);
+
+      // delete all synced events
+      await ctx.db
+        .update(events)
+        .set({ status: 'deleted' })
+        .where(
+          and(
+            eq(events.clubId, input.clubId),
+            eq(events.google, true),
+            clubRecord.calendarId
+              ? eq(events.calendarId, clubRecord.calendarId)
+              : undefined,
+            input.keepPastEvents ? gt(events.startTime, new Date()) : undefined, // IF indicated, delete only events that have not yet started
+          ),
+        );
+
+      // remove google calendar info from the club
+      await ctx.db
+        .update(club)
+        .set({
+          calendarSyncToken: null,
+          calendarId: null,
+          calendarName: null,
+          calendarGoogleAccountId: null,
+        })
+        .where(eq(club.id, input.clubId));
 
       return { success: true };
     }),

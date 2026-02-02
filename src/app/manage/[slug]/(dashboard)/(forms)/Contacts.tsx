@@ -24,6 +24,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@src/components/common/Panel';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import ContactListItem from '@src/components/manage/ContactListItem';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { contactNames, startContacts } from '@src/server/db/schema/contacts';
@@ -55,7 +56,16 @@ type ContactsProps = {
 
 const Contacts = ({ club }: ContactsProps) => {
   const api = useTRPC();
-  const editContacts = useMutation(api.club.edit.contacts.mutationOptions({}));
+  const editContacts = useMutation(
+    api.club.edit.contacts.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club contacts'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
 
   const [defaultValues, setDefaultValues] = useState({
     contacts: typedDefaultValues(club.contacts),
@@ -203,10 +213,10 @@ const Contacts = ({ club }: ContactsProps) => {
                     />
                   ))}
                   {available.length > 0 && (
-                    <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-royal/4 max-sm:bg-royal/4 transition-colors rounded-lg">
+                    <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800 max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 transition-colors rounded-lg">
                       <Typography
                         variant="button"
-                        className="flex shrink-0 items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 sm:pl-4 max-sm:pt-4 max-h-full text-base text-slate-600 normal-case"
+                        className="flex shrink-0 items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 sm:pl-4 max-sm:pt-4 max-h-full text-base text-slate-600 dark:text-slate-400 normal-case"
                       >
                         Add Contact...
                       </Typography>
@@ -255,7 +265,7 @@ const Contacts = ({ club }: ContactsProps) => {
         </DndContext>
         <div className="flex flex-wrap justify-end items-center gap-2">
           <form.AppForm>
-            <form.FormResetButton
+            <form.ResetButton
               onClick={() => {
                 setDeletedIds([]);
                 setIsReordered(false);
@@ -264,7 +274,7 @@ const Contacts = ({ club }: ContactsProps) => {
             />
           </form.AppForm>
           <form.AppForm>
-            <form.FormSubmitButton />
+            <form.SubmitButton />
           </form.AppForm>
         </div>
       </Panel>

@@ -1,15 +1,14 @@
 import EventIcon from '@mui/icons-material/Event';
 import PreviewIcon from '@mui/icons-material/Preview';
-import { Button } from '@mui/material';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Collaborators from '@src/app/manage/[slug]/(dashboard)/(forms)/Collaborators';
 import DeleteClub from '@src/app/manage/[slug]/(dashboard)/(forms)/DeleteClub';
 import AdminHeader from '@src/components/admin/AdminHeader';
 import ChangeClubStatus from '@src/components/admin/ChangeClubStatus';
 import ClubBody from '@src/components/club/listing/ClubBody';
-import ClubHeader from '@src/components/club/listing/ClubHeader';
+import ClubEventHeader from '@src/components/club/listing/ClubEventHeader';
 import ClubTitle from '@src/components/club/listing/ClubTitle';
+import { LinkButton } from '@src/components/LinkButton';
 import { api } from '@src/trpc/server';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -34,27 +33,25 @@ export default async function Page(props: Props) {
         ]}
       >
         <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
-          <Link href={`/admin/clubs/${club.slug}/events`}>
-            <Button
+          <LinkButton
+            href={`/admin/clubs/${club.slug}/events`}
+            variant="contained"
+            className="normal-case whitespace-nowrap"
+            startIcon={<EventIcon />}
+            size="large"
+          >
+            Events
+          </LinkButton>
+          {club.approved === 'approved' && (
+            <LinkButton
+              href={`/directory/${club.slug}`}
               variant="contained"
               className="normal-case whitespace-nowrap"
-              startIcon={<EventIcon />}
+              startIcon={<PreviewIcon />}
               size="large"
             >
-              Events
-            </Button>
-          </Link>
-          {club.approved === 'approved' && (
-            <Link href={`/directory/${club.slug}`}>
-              <Button
-                variant="contained"
-                className="normal-case whitespace-nowrap"
-                startIcon={<PreviewIcon />}
-                size="large"
-              >
-                Listing
-              </Button>
-            </Link>
+              Listing
+            </LinkButton>
           )}
         </div>
       </AdminHeader>
@@ -64,8 +61,8 @@ export default async function Page(props: Props) {
           <Collaborators club={club} officers={officers} role="Admin" />
           <DeleteClub view="admin" club={club} />
           {club.approved !== 'approved' && (
-            <div className="mb-5 flex flex-col space-y-4 p-4">
-              <ClubHeader club={club} />
+            <div className="mb-5 flex flex-col gap-y-6 p-4 max-w-6xl mx-auto">
+              <ClubEventHeader club={club} />
               <ClubTitle club={club} />
               <ClubBody club={club} />
             </div>

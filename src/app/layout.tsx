@@ -4,7 +4,9 @@ import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
-import { RegisterModalProvider } from '@src/components/account/RegisterModalProvider';
+import { CheckRefreshToken } from '@src/components/auth/CheckRefreshToken';
+import { RegisterModalProvider } from '@src/components/global/RegisterModalProvider';
+import { SnackbarProvider } from '@src/components/global/Snackbar';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
 import theme from '@src/utils/theme';
@@ -55,19 +57,26 @@ export const viewport = {
   themeColor: '#573DFF',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-main ${baiJamjuree.variable}`}>
+      <body
+        className={`bg-light dark:bg-dark ${inter.variable} font-main ${baiJamjuree.variable} text-haiti dark:text-white`}
+      >
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <TRPCReactProvider>
             <ThemeProvider theme={theme}>
               <ClientLocalizationProvider>
-                <RegisterModalProvider>{children}</RegisterModalProvider>
+                <RegisterModalProvider>
+                  <SnackbarProvider>
+                    <CheckRefreshToken />
+                    {children}
+                  </SnackbarProvider>
+                </RegisterModalProvider>
               </ClientLocalizationProvider>
             </ThemeProvider>
           </TRPCReactProvider>

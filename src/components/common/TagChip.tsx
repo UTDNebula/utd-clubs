@@ -20,7 +20,7 @@ interface TagChipProps extends itemProps {
 export const TagChip = (props: TagChipProps) => {
   return (
     <Chip
-      className={`font-semibold bg-cornflower-100 text-cornflower-600 hover:bg-cornflower-200 ${props.className ?? ''}`}
+      className={`font-semibold bg-cornflower-100 text-cornflower-600 hover:bg-cornflower-200 dark:bg-cornflower-900 dark:text-cornflower-400 dark:hover:bg-cornflower-800 ${props.className ?? ''}`}
       {...(props.id ? { id: props.id } : {})}
       disabled={props.disabled}
       icon={props.icon}

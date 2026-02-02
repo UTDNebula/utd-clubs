@@ -31,7 +31,7 @@ import {
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import { SelectClub } from '@src/server/db/models';
 import { MemberListContext } from './MemberListContext';
 
@@ -92,8 +92,9 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
   const selfSelected =
     selfRowId !== undefined ? rowSelectionModel.ids.has(selfRowId) : false;
 
-  const [exportMenuOpen, setExportMenuOpen] = useState(false);
-  const exportMenuTriggerRef = useRef<HTMLButtonElement>(null);
+  const [exportMenuAnchorEl, setExportMenuAnchorEl] =
+    useState<HTMLElement | null>(null);
+  const exportMenuOpen = Boolean(exportMenuAnchorEl);
 
   return (
     <Toolbar
@@ -135,14 +136,11 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
             </div>
           </div>
         ) : (
-          <Typography
-            variant="h2"
-            className="text-base font-semibold text-haiti"
-          >
+          <Typography variant="h2" className="text-base font-semibold">
             <span className="hidden sm:inline">
-              {'Club Members for ' + club.name}
+              {'Club Followers for ' + club.name}
             </span>
-            <span className="inline sm:hidden">Club Members</span>
+            <span className="inline sm:hidden">Club Followers</span>
           </Typography>
         )}
       </div>
@@ -165,12 +163,11 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
       {memberListAbilities.downloadCSV && (
         <Tooltip title="Export" className="max-sm:hidden">
           <ToolbarButton
-            ref={exportMenuTriggerRef}
             id="export-menu-trigger"
             aria-controls="export-menu"
             aria-haspopup="true"
             aria-expanded={exportMenuOpen ? 'true' : undefined}
-            onClick={() => setExportMenuOpen(true)}
+            onClick={(e) => setExportMenuAnchorEl(e.currentTarget)}
           >
             <FileDownloadOutlinedIcon fontSize="small" />
           </ToolbarButton>
@@ -211,9 +208,9 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
 
       <Menu
         id="export-menu"
-        anchorEl={exportMenuTriggerRef.current}
+        anchorEl={exportMenuAnchorEl}
         open={exportMenuOpen}
-        onClose={() => setExportMenuOpen(false)}
+        onClose={() => setExportMenuAnchorEl(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{
@@ -225,7 +222,7 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
         {memberListAbilities.downloadCSV && (
           <ExportCsv
             render={<MenuItem />}
-            onClick={() => setExportMenuOpen(false)}
+            onClick={() => setExportMenuAnchorEl(null)}
           >
             Download as CSV
           </ExportCsv>

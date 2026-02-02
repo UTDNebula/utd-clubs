@@ -45,14 +45,15 @@ export default function ClubTable({
       {
         id: 'view',
         cell: ({ row }) => (
-          <Link
+          <Button
+            LinkComponent={Link}
             href={`/admin/clubs/${row.original.slug}`}
-            className="inline-block"
+            variant="contained"
+            className="normal-case"
+            size="small"
           >
-            <Button variant="contained" className="normal-case" size="small">
-              View
-            </Button>
-          </Link>
+            View
+          </Button>
         ),
         size: 84,
       },
@@ -120,6 +121,7 @@ export default function ClubTable({
     [],
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: clubs,
     columns,
@@ -146,10 +148,10 @@ export default function ClubTable({
     <div ref={parentRef} className="w-full max-w-6xl">
       <TableContainer component={Paper}>
         <Table
-          className="w-full text-left text-sm text-gray-500"
+          className="w-full text-left text-sm text-slate-600 dark:text-slate-400"
           sx={{ tableLayout: 'fixed' }}
         >
-          <TableHead className="bg-slate-100 text-xs text-slate-700 uppercase">
+          <TableHead className="bg-neutral-100 dark:bg-neutral-900 text-xs text-slate-800 dark:text-slate-200 uppercase">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

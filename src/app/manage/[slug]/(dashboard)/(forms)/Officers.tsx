@@ -25,6 +25,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@src/components/common/Panel';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import OfficerListItem from '@src/components/manage/OfficerListItem';
 import type { SelectClub, SelectOfficer } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -59,7 +60,14 @@ type OfficersProps = {
 const Officers = ({ club, listedOfficers }: OfficersProps) => {
   const api = useTRPC();
   const editOfficers = useMutation(
-    api.club.edit.listedOfficers.mutationOptions({}),
+    api.club.edit.listedOfficers.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club listed officer'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
   );
 
   const [defaultValues, setDefaultValues] = useState({
@@ -120,7 +128,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
   const removeItem = (index: number) => {
     const current = form.getFieldValue('officers')[index];
     const id = current?.id;
-    if (current && id) {
+    if (current && id && !id.startsWith('new')) {
       setDeletedIds((prev) => [...prev, id]);
     }
   };
@@ -176,13 +184,17 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
         form.handleSubmit();
       }}
     >
-      <Panel heading="Listed Officers">
-        <div className="ml-2 mb-4 text-slate-600 text-sm">
-          <p>
-            People&apos;s names on this list will appear on your public
-            organization listing.
-          </p>
-        </div>
+      <Panel
+        heading="Listed Officers"
+        description={
+          <>
+            <p>
+              People&apos;s names on this list will appear on your public
+              organization listing.
+            </p>
+          </>
+        }
+      >
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -247,7 +259,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
         </DndContext>
         <div className="flex flex-wrap justify-end items-center gap-2">
           <form.AppForm>
-            <form.FormResetButton
+            <form.ResetButton
               onClick={() => {
                 setDeletedIds([]);
                 setIsReordered(false);
@@ -256,7 +268,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
             />
           </form.AppForm>
           <form.AppForm>
-            <form.FormSubmitButton />
+            <form.SubmitButton />
           </form.AppForm>
         </div>
       </Panel>

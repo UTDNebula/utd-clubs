@@ -5,10 +5,8 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import Chip from '@mui/material/Chip';
 import { GridColDef } from '@mui/x-data-grid';
-import { TRPCClientErrorLike } from '@trpc/client';
 import Image, { ImageProps } from 'next/image';
 import { ReactNode, useState } from 'react';
-import { AppRouter } from '@src/server/api/root';
 import {
   SelectUserMetadataToClubsWithUserMetadata,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
@@ -65,7 +63,7 @@ export const ColumnHeaderWithIcon = ({
   children,
 }: ColumnHeaderWithIconProps) => (
   <span className="flex gap-1 items-center">
-    <div className="flex justify-center items-center text-gray-600 h-4 *:w-4 *:h-4">
+    <div className="flex justify-center items-center text-slate-600 dark:text-slate-400 h-4 *:w-4 *:h-4">
       {icon}
     </div>
     {/* Matches font weight of header text to default font weight of MUI Data Grid headers */}
@@ -80,13 +78,6 @@ export type MemberListAbilities = {
   viewAccountEmail?: boolean;
 };
 
-export type ToastState = {
-  open: boolean;
-  type?: 'success' | 'error';
-  string?: string;
-  error?: TRPCClientErrorLike<AppRouter>;
-};
-
 const AvatarImage = ({
   src,
   initial,
@@ -98,7 +89,7 @@ const AvatarImage = ({
   if (imageError) {
     // Fallback to first initial if no image
     return (
-      <div className="flex h-10 w-10 items-center justify-center bg-slate-200 text-slate-500 text-sm font-bold rounded-full">
+      <div className="flex h-10 w-10 items-center justify-center bg-neutral-200 dark:bg-neutral-800 text-slate-500 text-sm font-bold rounded-full">
         {initial}
       </div>
     );
@@ -162,7 +153,12 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
     {
       field: 'year',
       valueGetter: (_value, row) => {
-        return row.userMetadata?.year;
+        return `Class of '${row.userMetadata?.graduationDate?.toLocaleString(
+          'en-us',
+          {
+            year: '2-digit',
+          },
+        )}`;
       },
       headerName: 'Year',
       renderHeader: (params) => (
@@ -208,7 +204,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
     {
       field: 'joinedAt',
       type: 'dateTime',
-      headerName: 'Joined',
+      headerName: 'Followed',
       renderHeader: (params) => (
         <ColumnHeaderWithIcon icon={<ScheduleIcon />}>
           {params.colDef.headerName}
@@ -241,7 +237,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
           case 'Officer':
             return 'Collaborator';
           default:
-            return value;
+            return 'Follower';
         }
       },
       headerName: 'Role',

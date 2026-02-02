@@ -13,7 +13,6 @@ Sentry.init({
     Sentry.replayIntegration(),
     Sentry.feedbackIntegration({
       showBranding: false,
-      colorScheme: 'light',
     }),
   ],
 

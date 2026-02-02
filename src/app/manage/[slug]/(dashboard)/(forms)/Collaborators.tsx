@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
 import Panel from '@src/components/common/Panel';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import CollaboratorListItem from '@src/components/manage/CollaboratorListItem';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 import type {
@@ -52,7 +53,14 @@ const Collaborators = ({
     (role === 'Admin'
       ? api.admin.updateOfficers
       : api.club.edit.officers
-    ).mutationOptions({}),
+    ).mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club collaborators'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
   );
 
   const [defaultValues, setDefaultValues] = useState({
@@ -119,18 +127,22 @@ const Collaborators = ({
         form.handleSubmit();
       }}
     >
-      <Panel heading="Collaborators">
-        <div className="ml-2 mb-4 text-slate-600 text-sm">
-          <p>
-            Users in this list can edit {role === 'Admin' ? 'a' : 'your'}{' '}
-            organization&apos;s information and events.
-          </p>
-          <p>Admins in this list can manage other collaborators.</p>
-          <p>
-            To add someone as a collaborator, they must have a UTD Clubs
-            account.
-          </p>
-        </div>
+      <Panel
+        heading="Collaborators"
+        description={
+          <>
+            <p>
+              Users in this list can edit {role === 'Admin' ? 'a' : 'your'}{' '}
+              organization&apos;s information and events.
+            </p>
+            <p>Admins in this list can manage other collaborators.</p>
+            <p>
+              To add someone as a collaborator, they must have a UTD Clubs
+              account.
+            </p>
+          </>
+        }
+      >
         <form.Field name="officers">
           {(field) => (
             <div className="flex flex-col gap-2">
@@ -165,7 +177,7 @@ const Collaborators = ({
         </form.Field>
         <div className="flex flex-wrap justify-end items-center gap-2">
           <form.AppForm>
-            <form.FormResetButton
+            <form.ResetButton
               onClick={() => {
                 setDeletedIds([]);
                 form.reset();
@@ -173,7 +185,7 @@ const Collaborators = ({
             />
           </form.AppForm>
           <form.AppForm>
-            <form.FormSubmitButton />
+            <form.SubmitButton />
           </form.AppForm>
         </div>
       </Panel>

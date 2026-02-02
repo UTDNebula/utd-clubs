@@ -20,6 +20,7 @@ export const HomePageSearchBar = () => {
   const {
     search: initialSearch,
     setSearch: updateSearch,
+    shouldScrollDown,
     tags,
     setTags,
     setShouldFocus,
@@ -39,16 +40,16 @@ export const HomePageSearchBar = () => {
     updateSearch(debouncedSearch);
   }, [debouncedSearch, updateSearch]);
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const [headerGradientOpacity, setHeaderGradientOpacity] = useState(1);
   const originalOffset = useRef<number>(0);
 
   useEffect(() => {
     const handleResize = () => {
-      if (containerRef.current) {
+      if (measureRef.current) {
         originalOffset.current =
-          containerRef.current.getBoundingClientRect().top + window.scrollY;
+          measureRef.current.getBoundingClientRect().top + window.scrollY;
       }
     };
     handleResize();
@@ -74,6 +75,12 @@ export const HomePageSearchBar = () => {
       behavior: 'smooth',
     });
   }
+
+  // If the url already has search or tag params, scroll straight to the results
+  useEffect(() => {
+    if (shouldScrollDown) scroll();
+  }, [shouldScrollDown]);
+
   function handleInteraction(shouldScroll: boolean = true) {
     // When we interact again after pressing enter, don't tab to the results once they load
     setShouldFocus(false);
@@ -82,6 +89,16 @@ export const HomePageSearchBar = () => {
     }
   }
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // autofocus keyboard on the search bar
+  useEffect(() => {
+    const input = inputRef.current;
+    input?.focus();
+    if (input) {
+      input.setSelectionRange(input.value.length, input.value.length); // set cursor to the end
+    }
+  }, []);
+
   function onSubmit() {
     setOpen(false);
     // Blur the input while results load
@@ -102,7 +119,7 @@ export const HomePageSearchBar = () => {
         ></div>
       )}
       <div
-        ref={containerRef}
+        ref={isSticky ? null : measureRef}
         className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-2 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
           isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
         }`}
@@ -148,8 +165,10 @@ export const HomePageSearchBar = () => {
                       </InputAdornment>
                     </div>
                   ),
+                  className:
+                    'bg-white dark:bg-neutral-800 ' +
+                    params.InputProps.className,
                   sx: {
-                    background: 'white',
                     borderRadius: theme.shape.borderRadius,
                   },
                 },
@@ -187,6 +206,7 @@ export const HomePageSearchBar = () => {
       {isSticky && (
         <Autocomplete
           className="pt-2 opacity-0"
+          ref={measureRef}
           options={[]}
           renderInput={(params) => <TextField {...params}></TextField>}
         ></Autocomplete>
