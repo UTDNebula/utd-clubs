@@ -30,7 +30,7 @@ const EventCard = ({ event, view = 'normal', className }: EventCardProps) => {
   return (
     <BaseCard
       variant="interactive"
-      className="flex h-104 w-64 flex-col overflow-hidden"
+      className={`flex h-104 w-64 flex-col overflow-hidden ${className ?? ''}`}
     >
       <Link
         href={`/events/${event.id}`}
