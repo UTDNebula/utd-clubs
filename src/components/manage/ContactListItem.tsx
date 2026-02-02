@@ -110,18 +110,6 @@ const ContactListItem = withForm({
                   <subField.TextField
                     label={label}
                     className="w-full"
-                    error={!subField.state.meta.isValid}
-                    helperText={
-                      !subField.state.meta.isValid
-                        ? (
-                            subField.state.meta.errors as unknown as {
-                              message: string;
-                            }[]
-                          )
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
                     {...(overlayValue !== undefined
                       ? { value: overlayValue }
                       : {})}
