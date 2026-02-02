@@ -24,7 +24,7 @@ type FormSelectProps = Omit<
   SelectProps,
   'value' | 'onChange' | 'children' | 'options' | 'label'
 > & {
-  label: string;
+  label?: string;
   options?: SelectOption[];
   children?: ReactNode;
 };
@@ -47,7 +47,7 @@ export default function FormSelect({
 
   return (
     <FormControl className={`w-64 ${className}`}>
-      <InputLabel>{label}</InputLabel>
+      {label ? <InputLabel>{label}</InputLabel> : null}
       <GenericSelect
         value={field.state.value}
         onBlur={field.handleBlur}

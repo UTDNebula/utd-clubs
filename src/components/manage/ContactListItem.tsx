@@ -15,6 +15,7 @@ type ContactListItemProps = {
   removeItem: (index: number) => void;
   onReorder?: () => void;
   overlayData?: FormData['contacts'][number];
+  platform?: FormData['contacts'][number]['platform'];
 };
 
 const ContactListItem = withForm({
@@ -31,7 +32,7 @@ const ContactListItem = withForm({
     onReorder: () => {},
     dragOverlay: false,
   } as ContactListItemProps,
-  render: function Render({ form, index, removeItem, overlayData }) {
+  render: function Render({ form, index, removeItem, overlayData, platform }) {
     const {
       attributes,
       listeners,
@@ -104,7 +105,7 @@ const ContactListItem = withForm({
             <form.AppField name={`contacts[${index}].url`}>
               {(subField) => {
                 const label =
-                  subField.state.value === 'email' ? 'Email Address' : 'URL';
+                  platform === 'email' ? 'Email Address' : 'URL';
                 const overlayValue = overlayData?.url;
                 return (
                   <subField.TextField

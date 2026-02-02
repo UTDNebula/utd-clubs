@@ -83,7 +83,6 @@ const CollaboratorListItem = withForm({
                   </div>
                 ) : (
                   <subField.Select
-                    label="Role"
                     className="w-fit"
                     input={
                       <OutlinedInput

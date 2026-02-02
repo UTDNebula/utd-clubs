@@ -207,6 +207,7 @@ const Contacts = ({ club }: ContactsProps) => {
                     <ContactListItem
                       key={value.platform}
                       index={index}
+                      platform={value.platform}
                       form={form}
                       removeItem={removeItem}
                       onReorder={() => setIsReordered(true)}
@@ -251,6 +252,11 @@ const Contacts = ({ club }: ContactsProps) => {
                   .find(
                     (contact) => contact.platform === activeReorderPlatform,
                   )}
+                platform={form
+                  .getFieldValue('contacts')
+                  .find(
+                    (contact) => contact.platform === activeReorderPlatform,
+                  )?.platform}
                 index={form
                   .getFieldValue('contacts')
                   .findIndex(
