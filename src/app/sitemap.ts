@@ -47,12 +47,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'yearly' as const,
       priority: 0.6,
     },
-    ...events.map((event) => ({
-      url: 'https://clubs.utdnebula.com/events/' + event.id,
-      lastModified: event.updatedAt,
-      changeFrequency: 'monthly' as const,
-      priority: 0.9,
-    })),
+    ...events
+      .filter((event) => event.status === 'approved')
+      .map((event) => ({
+        url: 'https://clubs.utdnebula.com/events/' + event.id,
+        lastModified: event.updatedAt,
+        changeFrequency: 'monthly' as const,
+        priority: 0.9,
+      })),
     {
       url: 'https://clubs.utdnebula.com/events',
       lastModified: new Date(),
