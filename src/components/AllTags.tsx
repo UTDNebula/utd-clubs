@@ -56,7 +56,7 @@ export const AllTags = ({
         variant="contained"
         disableElevation
         size="small"
-        className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] bg-cornflower-100 text-cornflower-600 hover:bg-cornflower-200"
+        className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] bg-cornflower-100 text-cornflower-600 hover:bg-cornflower-200 dark:bg-cornflower-900 dark:text-cornflower-400 dark:hover:bg-cornflower-800"
         onClick={handleOpen}
       >
         {label}
