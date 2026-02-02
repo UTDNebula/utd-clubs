@@ -9,7 +9,6 @@ export const CheckRefreshToken = async () => {
   // check if refresh_token is present
   let needsGoogleReauth = false;
   const session = await auth.api.getSession({ headers: await headers() });
-
   if (session) {
     const acct = await db.query.account.findFirst({
       where: and(
@@ -18,8 +17,12 @@ export const CheckRefreshToken = async () => {
       ),
     });
 
-    // If account exists, is google, and has NO refresh token -> Flag it
-    if (acct && !acct.refreshToken) {
+    // If account exists, is not super new, is google, and has NO refresh token -> Flag it
+    if (
+      acct &&
+      new Date().getTime() - acct.createdAt.getTime() > 60000 && // if the account is older than 1 min
+      !acct.refreshToken
+    ) {
       needsGoogleReauth = true;
     }
   }
