@@ -27,6 +27,32 @@ export const auth = betterAuth({
     },
   },
   databaseHooks: {
+    account: {
+      delete: {
+        before: async (accountInfo) => {
+          // revoke google permissions for the account if they exist
+          if (accountInfo.accessToken || accountInfo.refreshToken) {
+            try {
+              await fetch('https://oauth2.googleapis.com/revoke', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `token=${accountInfo.refreshToken || accountInfo.accessToken}`, // refresh_token is more reliable if present
+              });
+              console.log(
+                `Revoked Google perms for user: ${accountInfo.userId}`,
+              );
+            } catch (error) {
+              console.error(
+                `Failed to revoke Google perms for user: ${accountInfo.userId}`,
+                error,
+              );
+            }
+          }
+        },
+      },
+    },
     user: {
       create: {
         after: async (user) => {
@@ -44,6 +70,7 @@ export const auth = betterAuth({
       },
       delete: {
         before: async (user) => {
+          // delete user metadata
           const res = await db
             .delete(userMetadata)
             .where(eq(userMetadata.id, user.id));
