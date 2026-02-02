@@ -51,10 +51,14 @@ const RadioInput = ({
     field.state.meta.isTouched && !field.state.meta.isValid;
   return (
     <FormControl className="flex flex-col gap-1">
-      <label htmlFor={id} className="whitespace-pre-line">
-        {label}
-        {required && <span className="text-red-600 dark:text-red-400"> *</span>}
-      </label>
+      {label ? (
+        <label htmlFor={id} className="whitespace-pre-line">
+          {label}
+          {required && (
+            <span className="text-red-600 dark:text-red-400"> *</span>
+          )}
+        </label>
+      ) : null}
       <RadioGroup
         value={field.state.value ?? ''}
         onChange={(e) => field.handleChange(e.target.value)}
@@ -101,10 +105,14 @@ const SelectMultipleInput = ({
   const value: string[] = field.state.value ?? [];
   return (
     <FormControl className="flex flex-col gap-1">
-      <label htmlFor={id} className="whitespace-pre-line">
-        {label}
-        {required && <span className="text-red-600 dark:text-red-400"> *</span>}
-      </label>
+      {label ? (
+        <label htmlFor={id} className="whitespace-pre-line">
+          {label}
+          {required && (
+            <span className="text-red-600 dark:text-red-400"> *</span>
+          )}
+        </label>
+      ) : null}
       <Select
         labelId={`${id}-label`}
         id={id}
@@ -209,64 +217,67 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
                   )}
                 </form.AppField>
               </form.Question>
-              <form.AppField name="year">
-                {(field) => (
-                  <field.Select
-                    label="What year are you?"
-                    className="w-full"
-                    required={isFieldRequired('year')}
-                    options={[
-                      'A prospective student (not yet attending UTD)',
-                      'A first-year student (non-transfer)',
-                      'A first-year student (transfer)',
-                      'A current student (2nd year+, non-transfer)',
-                      'A current student (2nd year+, transfer)',
-                    ]}
-                  />
-                )}
-              </form.AppField>
-              <form.AppField name="proximity">
-                {(field) => (
-                  <field.Select
-                    label="How close do you live to campus?"
-                    className="w-full"
-                    required={isFieldRequired('proximity')}
-                    options={[
-                      'Live on campus in the residence halls',
-                      'Live near campus in an apartment or houses',
-                      'Live at home and commute',
-                    ]}
-                  />
-                )}
-              </form.AppField>
+              <form.Question question="What year are you?">
+                <form.AppField name="year">
+                  {(field) => (
+                    <field.Select
+                      className="w-full"
+                      required={isFieldRequired('year')}
+                      options={[
+                        'A prospective student (not yet attending UTD)',
+                        'A first-year student (non-transfer)',
+                        'A first-year student (transfer)',
+                        'A current student (2nd year+, non-transfer)',
+                        'A current student (2nd year+, transfer)',
+                      ]}
+                    />
+                  )}
+                </form.AppField>
+              </form.Question>
+              <form.Question question="How close do you live to campus?">
+                <form.AppField name="proximity">
+                  {(field) => (
+                    <field.Select
+                      className="w-full"
+                      required={isFieldRequired('proximity')}
+                      options={[
+                        'Live on campus in the residence halls',
+                        'Live near campus in an apartment or houses',
+                        'Live at home and commute',
+                      ]}
+                    />
+                  )}
+                </form.AppField>
+              </form.Question>
             </div>
 
-            <form.Field name="categories">
-              {(field) => (
-                <SelectMultipleInput
-                  id="categories"
-                  label="What types of organizations are you interested in?"
-                  options={[
-                    'Academic',
-                    'Art and Music',
-                    'Club Sports',
-                    'Cultural',
-                    'Educational/Departmental',
-                    'Fraternity & Sorority Life',
-                    'Honor Society',
-                    'Political',
-                    'Recreation',
-                    'Religious',
-                    'Service',
-                    'Social',
-                    'Special Interest',
-                    'Student Government',
-                    'Student Media',
-                  ]}
-                  field={field}
-                />
-              )}
-            </form.Field>
+            <form.Question question="What types of organizations are you interested in?">
+              <form.Field name="categories">
+                {(field) => (
+                  <SelectMultipleInput
+                    id="categories"
+                    options={[
+                      'Academic',
+                      'Art and Music',
+                      'Club Sports',
+                      'Cultural',
+                      'Educational/Departmental',
+                      'Fraternity & Sorority Life',
+                      'Honor Society',
+                      'Political',
+                      'Recreation',
+                      'Religious',
+                      'Service',
+                      'Social',
+                      'Special Interest',
+                      'Student Government',
+                      'Student Media',
+                    ]}
+                    field={field}
+                  />
+                )}
+              </form.Field>
+            </form.Question>
 
             {/* subscribe to the categories field so it only re-renders if categories changes */}
             <form.Subscribe selector={(state) => state.values.categories}>
@@ -276,168 +287,178 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
                   categories?.includes('Religious');
 
                 return showSpecificCultures ? (
-                  <form.AppField name="specificCultures">
-                    {(field) => (
-                      <field.TextField
-                        label="Please list the specific cultures or religions you are interested in."
-                        className="w-full"
-                        required={isFieldRequired('specificCultures')}
-                      />
-                    )}
-                  </form.AppField>
+                  <form.Question question="Please list the specific cultures or religions you are interested in.">
+                    <form.AppField name="specificCultures">
+                      {(field) => (
+                        <field.TextField
+                          className="w-full"
+                          required={isFieldRequired('specificCultures')}
+                        />
+                      )}
+                    </form.AppField>
+                  </form.Question>
                 ) : null;
               }}
             </form.Subscribe>
 
-            <form.Field name="hobbies">
-              {(field) => (
-                <SelectMultipleInput
-                  id="hobbies"
-                  label="What are your hobbies or areas of interest?"
-                  options={[
-                    'Gaming/Esports',
-                    'Outdoor Activities/Sports',
-                    'Reading/Writing',
-                    'Cooking/Food',
-                    'Technology/Maker',
-                    'Film/TV/Pop Culture',
-                    'Board Games/Tabletop RPGs',
-                    'Volunteering',
-                    'Fitness/Wellness',
-                    'Performing Arts',
-                    'Visual Arts',
-                    'Other',
-                  ]}
-                  field={field}
-                />
-              )}
-            </form.Field>
+            <form.Question question="What are your hobbies or areas of interest?">
+              <form.Field name="hobbies">
+                {(field) => (
+                  <SelectMultipleInput
+                    id="hobbies"
+                    options={[
+                      'Gaming/Esports',
+                      'Outdoor Activities/Sports',
+                      'Reading/Writing',
+                      'Cooking/Food',
+                      'Technology/Maker',
+                      'Film/TV/Pop Culture',
+                      'Board Games/Tabletop RPGs',
+                      'Volunteering',
+                      'Fitness/Wellness',
+                      'Performing Arts',
+                      'Visual Arts',
+                      'Other',
+                    ]}
+                    field={field}
+                  />
+                )}
+              </form.Field>
+            </form.Question>
 
-            <form.AppField name="hobbyDetails">
-              {(field) => (
-                <field.TextField
-                  label="Please be specific about your selected hobbies."
-                  className="w-full"
-                  required={isFieldRequired('hobbyDetails')}
-                />
-              )}
-            </form.AppField>
+            <form.Question question="Please be specific about your selected hobbies.">
+              <form.AppField name="hobbyDetails">
+                {(field) => (
+                  <field.TextField
+                    className="w-full"
+                    required={isFieldRequired('hobbyDetails')}
+                  />
+                )}
+              </form.AppField>
+            </form.Question>
 
-            <form.AppField name="otherAcademicInterests">
-              {(field) => (
-                <field.TextField
-                  label="Beyond your major, are there other academic topics or tracks you're interested in?"
-                  className="w-full"
-                  required={isFieldRequired('otherAcademicInterests')}
-                />
-              )}
-            </form.AppField>
+            <form.Question question="Beyond your major, are there other academic topics or tracks you're interested in?">
+              <form.AppField name="otherAcademicInterests">
+                {(field) => (
+                  <field.TextField
+                    className="w-full"
+                    required={isFieldRequired('otherAcademicInterests')}
+                  />
+                )}
+              </form.AppField>
+            </form.Question>
 
-            <form.AppField name="newExperiences">
-              {(field) => (
-                <field.TextField
-                  label="What new experiences, hobbies, or activities would you be interested in?"
-                  className="w-full"
-                  required={isFieldRequired('newExperiences')}
-                />
-              )}
-            </form.AppField>
+            <form.Question question="What new experiences, hobbies, or activities would you be interested in?">
+              <form.AppField name="newExperiences">
+                {(field) => (
+                  <field.TextField
+                    className="w-full"
+                    required={isFieldRequired('newExperiences')}
+                  />
+                )}
+              </form.AppField>
+            </form.Question>
 
-            <form.Field name="involvementGoals">
-              {(field) => (
-                <SelectMultipleInput
-                  id="involvementGoals"
-                  label="Goals for Getting Involved"
-                  options={[
-                    'Make Friends/Build Community',
-                    'Develop Leadership Skills',
-                    'Gain Experience for Resume/Career',
-                    'Explore a Specific Interest/Hobby',
-                    'Networking (Peers/Professionals)',
-                    'Make an Impact/Serve Others',
-                    'Learn New Skills',
-                    'Find Mentorship',
-                    'Simply Have Fun/De-stress',
-                  ]}
-                  field={field}
-                />
-              )}
-            </form.Field>
+            <form.Question question="Goals for Getting Involved">
+              <form.Field name="involvementGoals">
+                {(field) => (
+                  <SelectMultipleInput
+                    id="involvementGoals"
+                    options={[
+                      'Make Friends/Build Community',
+                      'Develop Leadership Skills',
+                      'Gain Experience for Resume/Career',
+                      'Explore a Specific Interest/Hobby',
+                      'Networking (Peers/Professionals)',
+                      'Make an Impact/Serve Others',
+                      'Learn New Skills',
+                      'Find Mentorship',
+                      'Simply Have Fun/De-stress',
+                    ]}
+                    field={field}
+                  />
+                )}
+              </form.Field>
+            </form.Question>
 
-            <form.Field name="skills">
-              {(field) => (
-                <SelectMultipleInput
-                  id="skills"
-                  label="Skills & Activities Interest"
-                  options={[
-                    'Advocacy/Campaigning',
-                    'Building/Making Things',
-                    'Event Planning',
-                    'Graphic Design/Visual Arts',
-                    'Fundraising',
-                    'Performing (Music, Acting, Dance)',
-                    'Public Speaking/Presenting',
-                    'Social Media Management',
-                    'Tutoring/Mentoring',
-                    'Website/App Development',
-                    'Writing/Editing',
-                  ]}
-                  field={field}
-                />
-              )}
-            </form.Field>
+            <form.Question question="Skills & Activities Interest">
+              <form.Field name="skills">
+                {(field) => (
+                  <SelectMultipleInput
+                    id="skills"
+                    options={[
+                      'Advocacy/Campaigning',
+                      'Building/Making Things',
+                      'Event Planning',
+                      'Graphic Design/Visual Arts',
+                      'Fundraising',
+                      'Performing (Music, Acting, Dance)',
+                      'Public Speaking/Presenting',
+                      'Social Media Management',
+                      'Tutoring/Mentoring',
+                      'Website/App Development',
+                      'Writing/Editing',
+                    ]}
+                    field={field}
+                  />
+                )}
+              </form.Field>
+            </form.Question>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Conditionally render on gender value */}
               <form.Subscribe selector={(state) => state.values.gender}>
                 {(gender) => (
                   <>
-                    <form.Field name="gender">
-                      {(genderField) => (
-                        <RadioInput
-                          id="gender"
-                          label="Gender Identity"
-                          options={[
-                            'Female',
-                            'Male',
-                            'Non-binary',
-                            'Prefer not to say',
-                            'Other',
-                          ]}
-                          field={genderField}
-                        />
-                      )}
-                    </form.Field>
-                    {gender === 'Other' && (
-                      <form.AppField name="genderOther">
-                        {(field) => (
-                          <field.TextField
-                            label="Please specify"
-                            className="w-full"
-                            required={isFieldRequired('genderOther')}
+                    <form.Question question="Gender Identity">
+                      <form.Field name="gender">
+                        {(genderField) => (
+                          <RadioInput
+                            id="gender"
+                            options={[
+                              'Female',
+                              'Male',
+                              'Non-binary',
+                              'Prefer not to say',
+                              'Other',
+                            ]}
+                            field={genderField}
                           />
                         )}
-                      </form.AppField>
+                      </form.Field>
+                    </form.Question>
+                    {gender === 'Other' && (
+                      <form.Question question="Please specify">
+                        <form.AppField name="genderOther">
+                          {(field) => (
+                            <field.TextField
+                              className="w-full"
+                              required={isFieldRequired('genderOther')}
+                            />
+                          )}
+                        </form.AppField>
+                      </form.Question>
                     )}
                   </>
                 )}
               </form.Subscribe>
 
-              <form.Field name="timeCommitment">
-                {(field) => (
-                  <RadioInput
-                    id="timeCommitment"
-                    label="Preferred Time Commitment"
-                    options={[
-                      'Low (e.g., < 2-3 hours/week, meetings optional)',
-                      'Medium (e.g., 3-5 hours/week, regular meetings/events)',
-                      'High (e.g., 5+ hours/week, significant responsibilities/practices)',
-                      "Don't care",
-                    ]}
-                    field={field}
-                  />
-                )}
-              </form.Field>
+              <form.Question question="Preferred Time Commitment">
+                <form.Field name="timeCommitment">
+                  {(field) => (
+                    <RadioInput
+                      id="timeCommitment"
+                      options={[
+                        'Low (e.g., < 2-3 hours/week, meetings optional)',
+                        'Medium (e.g., 3-5 hours/week, regular meetings/events)',
+                        'High (e.g., 5+ hours/week, significant responsibilities/practices)',
+                        "Don't care",
+                      ]}
+                      field={field}
+                    />
+                  )}
+                </form.Field>
+              </form.Question>
             </div>
           </div>
 
