@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     default: 'UTD CLUBS',
   },
   description:
-    'A student organization portal to connect interested students at UTD with organizations like ACM, FLA, and Nebula Labs on campus.',
+    'A student organization portal to connect interested students at UTD with organizations like ACM, CLDS, and Nebula Labs on campus.',
   keywords: [
     'UT Dallas',
     'clubs',
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'UTD Clubs',
     description:
-      'A student organization portal to connect interested students at UTD with organizations like ACM, FLA, and Nebula Labs on campus.',
+      'A student organization portal to connect interested students at UTD with organizations like ACM, CLDS, and Nebula Labs on campus.',
     type: 'website',
   },
   twitter: {
