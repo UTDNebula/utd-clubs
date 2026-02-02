@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
