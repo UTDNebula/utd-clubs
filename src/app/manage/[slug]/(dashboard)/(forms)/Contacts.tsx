@@ -252,13 +252,7 @@ const Contacts = ({ club }: ContactsProps) => {
                   .find(
                     (contact) => contact.platform === activeReorderPlatform,
                   )}
-                platform={
-                  form
-                    .getFieldValue('contacts')
-                    .find(
-                      (contact) => contact.platform === activeReorderPlatform,
-                    )?.platform
-                }
+                platform={activeReorderPlatform}
                 index={form
                   .getFieldValue('contacts')
                   .findIndex(
