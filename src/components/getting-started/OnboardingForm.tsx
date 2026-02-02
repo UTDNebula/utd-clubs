@@ -25,16 +25,20 @@ import OnboardingFormStep from './OnboardingFormStep';
 
 // "Source of truth" array that contains the actual steps of the form
 const stepsBody = [
-  { id: 1, label: 'Name' },
-  { id: 2, label: 'College Info' },
-  { id: 3, label: 'Contact Email' },
-] as const satisfies readonly WizardStepObject[];
+  { id: 1, label: 'Name', fields: ['firstName', 'lastName'] },
+  {
+    id: 2,
+    label: 'College Info',
+    fields: ['major', 'minor', 'studentClassification', 'graduationDate'],
+  },
+  { id: 3, label: 'Contact Email', fields: ['contactEmail'] },
+] as const satisfies readonly WizardStepObject<AccountOnboardingSchema>[];
 
 // Extracts a union of all the ids used in rawSteps
 export type stepIds = (typeof stepsBody)[number]['id'];
 
 // Creates the generic array of WizardStepObjects
-export const steps: readonly WizardStepObject[] = [
+export const steps: readonly WizardStepObject<AccountOnboardingSchema>[] = [
   { variant: 'start', label: 'Get Started', hidden: true },
   ...stepsBody,
   { variant: 'finish', label: 'Finish', hidden: true },
@@ -164,10 +168,34 @@ export default function OnboardingForm({
     }
   }, []);
 
+  const validateFields = () => {
+    const step = steps[activeStep.current];
+    if (typeof step === 'undefined') {
+      return true;
+    }
+    const fields = step?.fields;
+    if (typeof fields === 'undefined') {
+      return true;
+    }
+    fields.forEach((step) => form.validateField(step, 'change'));
+  };
+
+  const currentFieldsValid = () => {
+    const step = steps[activeStep.current];
+    if (typeof step === 'undefined') {
+      return true;
+    }
+    const fields = step?.fields;
+    if (typeof fields === 'undefined') {
+      return true;
+    }
+    return fields.every((step) => form.state.fieldMeta[step]?.isValid ?? true);
+  };
+
   const handleNext = (event: MouseEvent<HTMLButtonElement>) => {
     // Validates mounted fields and prevents user from navigating if there exist errors
-    form.validate('change');
-    if (!form.state.isFieldsValid) return;
+    validateFields();
+    if (!currentFieldsValid()) return;
 
     if (activeStep.current < steps.length - (hasFinish ? 2 : 1)) {
       // Prevents submit button from activating prematurely when navigating
@@ -185,8 +213,8 @@ export default function OnboardingForm({
 
   const handleBack = () => {
     // Validates mounted fields and prevents user from navigating if there exist errors
-    form.validate('change');
-    if (!form.state.isFieldsValid) return;
+    validateFields();
+    if (!currentFieldsValid()) return;
 
     if (activeStep.current > 0) {
       setActiveStep((prev) => ({
@@ -205,7 +233,7 @@ export default function OnboardingForm({
       disabled={
         activeStep.current === 0 ||
         activeStep.current === steps.length - 1 ||
-        !form.state.isFieldsValid
+        !currentFieldsValid()
       }
     >
       Back
@@ -221,10 +249,10 @@ export default function OnboardingForm({
       }
       variant="contained"
       className="normal-case"
-      disabled={!form.state.isFieldsValid}
+      disabled={!currentFieldsValid()}
       loading={form.state.isSubmitting}
       loadingPosition="start"
-      color={!form.state.isFieldsValid ? 'inherit' : 'primary'}
+      color={!currentFieldsValid() ? 'inherit' : 'primary'}
       onClick={handleNext}
     >
       {activeStep.current < steps.length - (hasFinish ? 2 : 1)
@@ -264,8 +292,8 @@ export default function OnboardingForm({
                       color="inherit"
                       onClick={() => {
                         // Validates mounted fields and prevents user from navigating if there exist errors
-                        form.validate('change');
-                        if (!form.state.isFieldsValid) return;
+                        validateFields();
+                        if (!currentFieldsValid()) return;
 
                         setActiveStep((prev) => ({
                           current: index,
@@ -275,14 +303,13 @@ export default function OnboardingForm({
                       disabled={
                         index - 1 > activeStep.current ||
                         activeStep.current === steps.length - 1 ||
-                        !form.state.isFieldsValid
+                        !currentFieldsValid()
                       }
                     >
                       <StepLabel
                         className="cursor-pointer"
                         error={
-                          !form.state.isFieldsValid &&
-                          index === activeStep.current
+                          !currentFieldsValid() && index === activeStep.current
                         }
                       >
                         {step.label}
