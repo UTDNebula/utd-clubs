@@ -12,14 +12,14 @@ import ClubMatch from './ClubMatch';
 export const metadata: Metadata = {
   title: 'Club Match',
   description:
-    'Find the perfect club for you! We recommend orgs tailored to your preferences.',
+    'Find the perfect club for you! UTD Clubs recommends orgs tailored to your preferences.',
   alternates: {
     canonical: 'https://clubs.utdnebula.com/club-match',
   },
   openGraph: {
     url: 'https://clubs.utdnebula.com/club-match',
     description:
-      'Find the perfect club for you! We recommend orgs tailored to your preferences.',
+      'Find the perfect club for you! UTD Clubs recommends orgs tailored to your preferences.',
   },
 };
 
