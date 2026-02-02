@@ -102,18 +102,6 @@ const OfficerListItem = withForm({
               <subField.TextField
                 label="Name"
                 className="w-full"
-                error={!subField.state.meta.isValid}
-                helperText={
-                  !subField.state.meta.isValid
-                    ? (
-                        subField.state.meta.errors as unknown as {
-                          message: string;
-                        }[]
-                      )
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
                 {...(overlayData?.name !== undefined
                   ? { value: overlayData.name }
                   : {})}
@@ -130,18 +118,6 @@ const OfficerListItem = withForm({
               <subField.TextField
                 label="Position"
                 className="w-full"
-                error={!subField.state.meta.isValid}
-                helperText={
-                  !subField.state.meta.isValid
-                    ? (
-                        subField.state.meta.errors as unknown as {
-                          message: string;
-                        }[]
-                      )
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
                 {...(overlayData?.position !== undefined
                   ? { value: overlayData.position }
                   : {})}
