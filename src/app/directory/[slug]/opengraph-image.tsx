@@ -140,6 +140,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
             textAlign: hasImage ? 'left' : 'center',
             wordBreak: 'break-word',
             overflowWrap: 'anywhere',
+            overflow: 'hidden',
+            maxHeight: '270px',
           }}
         >
           {clubData.name}
@@ -248,6 +250,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
               gap: '10px',
               justifyContent: hasImage ? 'flex-start' : 'center',
               width: hasImage ? '650px' : '900px', // explicit width helps Satori calculate wrapping
+              maxHeight: '114px',
+              overflow: 'hidden',
             }}
           >
             {clubData.tags.map((tag, index) => (
