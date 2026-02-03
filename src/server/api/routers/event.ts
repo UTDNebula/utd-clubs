@@ -49,8 +49,8 @@ const clubUpcomingEventsSchema = z.object({
   currentTime: z.date().optional(),
 });
 const byDateRangeSchema = z.object({
-  startTime: z.date(),
-  endTime: z.date(),
+  startTime: z.date().optional(),
+  endTime: z.date().optional(),
 });
 export const findByFilterSchema = z.object({
   date: z.date(),
@@ -171,8 +171,10 @@ export const eventRouter = createTRPCRouter({
           where: (event) => {
             return and(
               eq(event.status, 'approved'),
-              gte(event.startTime, startTime),
-              lte(event.endTime, endTime),
+              or(
+                startTime ? gte(event.startTime, startTime) : undefined,
+                endTime ? lte(event.endTime, endTime) : undefined,
+              ),
             );
           },
           with: {
