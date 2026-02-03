@@ -3,7 +3,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 import {
   Autocomplete,
-  Chip,
   CircularProgress,
   InputAdornment,
   TextField,
@@ -15,6 +14,7 @@ import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import theme from '@src/utils/theme';
 import useDebounce from '@src/utils/useDebounce';
+import { TagChip } from '../common/TagChip';
 
 export const HomePageSearchBar = () => {
   const {
@@ -189,9 +189,7 @@ export const HomePageSearchBar = () => {
           renderValue={(value, getItemProps) => {
             return value.map((option: string, index: number) => {
               const { key, ...itemProps } = getItemProps({ index });
-              return (
-                <Chip key={key} label={option} color="primary" {...itemProps} />
-              );
+              return <TagChip key={key} tag={option} {...itemProps} />;
             });
           }}
           renderOption={(props, option) => {
