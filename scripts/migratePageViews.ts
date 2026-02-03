@@ -2,11 +2,14 @@
 Get page views for directory pages from Google Analytics and push them to Neon.
 To allow sorting on homepage by popularity.
 Requires GOOGLE_ANALYTICS_PROPERTY_ID, GOOGLE_ANALYTICS_SERVICE_ACCOUNT, and DATABASE_URL environment variables.
+Google Analytics API Documentation: https://ga-dev-tools.google/ga4/query-explorer/
 */
 import { BetaAnalyticsDataClient, protos } from '@google-analytics/data';
-import { eq } from 'drizzle-orm';
+import { eq, getTableName } from 'drizzle-orm';
+import { type PgTableWithColumns } from 'drizzle-orm/pg-core';
 import { db } from '../src/server/db';
 import { club } from '../src/server/db/schema/club';
+import { events } from '../src/server/db/schema/events';
 
 if (
   typeof process.env.GOOGLE_ANALYTICS_PROPERTY_ID === 'undefined' ||
@@ -23,7 +26,7 @@ const analyticsDataClient = new BetaAnalyticsDataClient({
   },
 });
 
-async function getPageViews() {
+async function getPathPageViews(path: string) {
   console.log('Fetching page views from Google Analytics...');
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -36,7 +39,7 @@ async function getPageViews() {
     dimensionFilter: {
       filter: {
         fieldName: 'pagePath',
-        stringFilter: { matchType: 'BEGINS_WITH', value: '/directory/' },
+        stringFilter: { matchType: 'BEGINS_WITH', value: `/${path}/` },
       },
     },
     metricAggregations: [
@@ -59,22 +62,29 @@ async function getPageViews() {
       ) {
         throw new Error('Row in response undefined.');
       }
-      if (!row.dimensionValues[0].value?.startsWith('/directory/')) {
+      if (!row.dimensionValues[0].value?.startsWith(`/${path}/`)) {
         throw new Error('Response does not match filter.');
       }
       return [
-        row.dimensionValues[0].value.replace('/directory/', ''),
+        row.dimensionValues[0].value.replace(`/${path}/`, ''),
         parseInt(row.metricValues[0].value),
       ];
     }),
   );
 }
 
-async function pushToDatabase(pageViews: { [key: string]: number }) {
-  console.log('Updating page views in database...');
+async function pushToDatabaseTable(
+  table: PgTableWithColumns<any>,
+  matchOn: 'slug' | 'id',
+  pageViews: { [key: string]: number },
+) {
+  console.log(`Updating page views in ${getTableName(table)} table...`);
 
   const updatePromises = Object.entries(pageViews).map(([slug, count]) => {
-    return db.update(club).set({ pageViews: count }).where(eq(club.slug, slug));
+    return db
+      .update(table)
+      .set({ pageViews: count })
+      .where(eq(table[matchOn], slug));
   });
 
   try {
@@ -90,8 +100,12 @@ async function pushToDatabase(pageViews: { [key: string]: number }) {
 
 async function migratePageViews() {
   try {
-    const pageViews = await getPageViews();
-    await pushToDatabase(pageViews);
+    const clubPageViews = await getPathPageViews('directory');
+    await pushToDatabaseTable(club, 'slug', clubPageViews);
+
+    const eventPageViews = await getPathPageViews('events');
+    await pushToDatabaseTable(events, 'id', eventPageViews);
+
     console.log('Page view migration completed successfully.');
   } catch (error) {
     console.error('Page view migration failed:', error);
