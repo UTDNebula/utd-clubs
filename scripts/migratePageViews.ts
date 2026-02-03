@@ -5,7 +5,7 @@ Requires GOOGLE_ANALYTICS_PROPERTY_ID, GOOGLE_ANALYTICS_SERVICE_ACCOUNT, and DAT
 Google Analytics API Documentation: https://ga-dev-tools.google/ga4/query-explorer/
 */
 import { BetaAnalyticsDataClient, protos } from '@google-analytics/data';
-import { eq, getTableName } from 'drizzle-orm';
+import { eq, getTableName, notInArray } from 'drizzle-orm';
 import { type PgTableWithColumns } from 'drizzle-orm/pg-core';
 import { db } from '../src/server/db';
 import { club } from '../src/server/db/schema/club';
@@ -86,6 +86,13 @@ async function pushToDatabaseTable(
       .set({ pageViews: count })
       .where(eq(table[matchOn], slug));
   });
+
+  updatePromises.push(
+    db
+      .update(table)
+      .set({ pageViews: 0 })
+      .where(notInArray(table[matchOn], Object.keys(pageViews))),
+  );
 
   try {
     await Promise.all(updatePromises);
