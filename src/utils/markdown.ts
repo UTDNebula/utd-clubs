@@ -1,10 +1,12 @@
-export function convertMarkdownToPlaintext(md: string) {
-  return md
-    .replace(/^#+.*$/gm, '') // replace headers
-    .replace(/([^.!?])\s*\n+/g, '$1. ') // add periods to end of paragraphs and flatten
-    .replace(/\n+/g, ' ') // flatten paragraphs
-    .replace(/[*`_]/g, '') // remove text styling
-    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1') // use link display text
-    .replace(/\s\s+/g, ' ') // clean up extra spaces
-    .trim();
+import { remark } from 'remark';
+import strip from 'strip-markdown';
+
+export function convertMarkdownToPlaintext(md: string): string {
+  const processor = remark().use(strip);
+
+  const tree = processor.parse(md);
+  const transformedTree = processor.runSync(tree);
+  const result = processor.stringify(transformedTree);
+
+  return result;
 }
