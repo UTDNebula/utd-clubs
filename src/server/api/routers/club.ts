@@ -573,7 +573,15 @@ export const clubRouter = createTRPCRouter({
           message: 'Calendar already selected by a different club',
         });
       }
-
+      const selectedClub = await ctx.db.query.club.findFirst({
+        where: eq(club.id, input.clubId),
+      });
+      if (!selectedClub?.calendarGoogleAccountId) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'no connected google account',
+        });
+      }
       await ctx.db
         .update(club)
         .set({
@@ -585,7 +593,9 @@ export const clubRouter = createTRPCRouter({
         .where(eq(club.id, input.clubId));
       const oauth2Client = new google.auth.OAuth2();
       oauth2Client.setCredentials({
-        access_token: await getGoogleAccessToken(ctx.session.user.id),
+        access_token: await getGoogleAccessToken(
+          selectedClub.calendarGoogleAccountId,
+        ),
       });
       try {
         const sync = await syncCalendar(input.clubId, false, oauth2Client); // one-time sync
