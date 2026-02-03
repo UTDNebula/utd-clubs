@@ -74,6 +74,7 @@ async function getPathPageViews(path: string) {
 }
 
 async function pushToDatabaseTable(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   table: PgTableWithColumns<any>,
   matchOn: 'slug' | 'id',
   pageViews: { [key: string]: number },
