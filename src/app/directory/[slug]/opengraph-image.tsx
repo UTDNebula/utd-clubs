@@ -138,7 +138,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
             textShadow: '0 0 16px rgba(0,0,0,0.4)',
             maxWidth: hasImage ? '55%' : '90%',
             textAlign: hasImage ? 'left' : 'center',
-            overflowWrap: 'break-word',
+            wordBreak: 'break-word',
+            overflowWrap: 'anywhere',
           }}
         >
           {clubData.name}
