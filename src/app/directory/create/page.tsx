@@ -8,11 +8,15 @@ import CreateClubForm from './CreateClubForm';
 
 export const metadata: Metadata = {
   title: 'Create New Organization',
+  description:
+    'Join the 400+ orgs already on UTD Clubs to boost your recruitment and promote events to over 10K students!',
   alternates: {
     canonical: 'https://clubs.utdnebula.com/directory/create',
   },
   openGraph: {
     url: 'https://clubs.utdnebula.com/directory/create',
+    description:
+      'Join the 400+ orgs already on UTD Clubs to boost your recruitment and promote events to over 10K students!',
   },
 };
 
