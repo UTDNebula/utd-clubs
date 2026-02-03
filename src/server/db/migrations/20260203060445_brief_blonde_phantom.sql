@@ -1,0 +1,1 @@
+ALTER TABLE "events" ADD COLUMN "page_views" integer DEFAULT 0 NOT NULL;
