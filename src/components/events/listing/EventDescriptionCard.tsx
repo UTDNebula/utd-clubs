@@ -34,7 +34,7 @@ export default function EventDescriptionCard({
             }`}
           >
             <Image
-              src={event.image!}
+              src={`${event.image!}?v=${event.updatedAt.getTime()}`}
               alt="Event poster"
               height={256}
               width={512}
