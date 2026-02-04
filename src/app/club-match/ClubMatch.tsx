@@ -104,7 +104,7 @@ const SelectMultipleInput = ({
     field.state.meta.isTouched && !field.state.meta.isValid;
   const value: string[] = field.state.value ?? [];
   return (
-    <FormControl className="flex flex-col gap-1">
+    <FormControl className="flex flex-col gap-1 w-full">
       {label ? (
         <label htmlFor={id} className="whitespace-pre-line">
           {label}
