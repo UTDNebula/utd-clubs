@@ -328,6 +328,7 @@ export const clubRouter = createTRPCRouter({
         .values({
           name: input.name,
           description: input.description,
+          tags: input.tags,
           updatedAt: new Date(),
           slug,
         })
