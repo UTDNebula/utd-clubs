@@ -206,7 +206,7 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
       <form className="mx-auto w-full max-w-3xl">
         <Panel>
           <div className="m-2 flex flex-col gap-8">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 items-start">
+            <div className="flex flex-col gap-4">
               <form.Question
                 question="What is your current or intended major?"
                 density="compact"
