@@ -206,55 +206,65 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
       <form className="mx-auto w-full max-w-3xl">
         <Panel>
           <div className="m-2 flex flex-col gap-8">
-            <div className="flex flex-col gap-4">
-              <form.Question
-                question="What is your current or intended major?"
-                density="compact"
-              >
-                <form.AppField name="major">
-                  {(field) => (
-                    <field.TextField
-                      className="w-full"
-                      required={isFieldRequired('major')}
-                    />
-                  )}
-                </form.AppField>
-              </form.Question>
-              <form.Question question="What year are you?">
-                <form.AppField name="year">
-                  {(field) => (
-                    <field.Select
-                      className="w-full"
-                      required={isFieldRequired('year')}
-                      options={[
-                        'A prospective student (not yet attending UTD)',
-                        'A first-year student (non-transfer)',
-                        'A first-year student (transfer)',
-                        'A current student (2nd year+, non-transfer)',
-                        'A current student (2nd year+, transfer)',
-                      ]}
-                    />
-                  )}
-                </form.AppField>
-              </form.Question>
-              <form.Question question="How close do you live to campus?">
-                <form.AppField name="proximity">
-                  {(field) => (
-                    <field.Select
-                      className="w-full"
-                      required={isFieldRequired('proximity')}
-                      options={[
-                        'Live on campus in the residence halls',
-                        'Live near campus in an apartment or houses',
-                        'Live at home and commute',
-                      ]}
-                    />
-                  )}
-                </form.AppField>
-              </form.Question>
-            </div>
+            <h2 className="text-xl font-bold">College Info</h2>
 
-            <form.Question question="What types of organizations are you interested in?">
+            <form.Question
+              question="What is your current or intended major?"
+              density="compact"
+            >
+              <form.AppField name="major">
+                {(field) => (
+                  <field.TextField
+                    className="w-full"
+                    required={isFieldRequired('major')}
+                  />
+                )}
+              </form.AppField>
+            </form.Question>
+
+            <form.Question question="What year are you?" density="compact">
+              <form.AppField name="year">
+                {(field) => (
+                  <field.Select
+                    className="w-full"
+                    required={isFieldRequired('year')}
+                    options={[
+                      'A prospective student (not yet attending UTD)',
+                      'A first-year student (non-transfer)',
+                      'A first-year student (transfer)',
+                      'A current student (2nd year+, non-transfer)',
+                      'A current student (2nd year+, transfer)',
+                    ]}
+                  />
+                )}
+              </form.AppField>
+            </form.Question>
+
+            <form.Question
+              question="How close do you live to campus?"
+              density="compact"
+            >
+              <form.AppField name="proximity">
+                {(field) => (
+                  <field.Select
+                    className="w-full"
+                    required={isFieldRequired('proximity')}
+                    options={[
+                      'Live on campus in the residence halls',
+                      'Live near campus in an apartment or houses',
+                      'Live at home and commute',
+                    ]}
+                  />
+                )}
+              </form.AppField>
+            </form.Question>
+
+            <h2 className="text-xl font-bold">Interests</h2>
+
+            <form.Question
+              question="What types of organizations are you interested in?"
+              density="compact"
+            >
               <form.Field name="categories">
                 {(field) => (
                   <SelectMultipleInput
@@ -290,7 +300,10 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
                   categories?.includes('Religious');
 
                 return showSpecificCultures ? (
-                  <form.Question question="Please list the specific cultures or religions you are interested in.">
+                  <form.Question
+                    question="Please list the specific cultures or religions you are interested in."
+                    density="compact"
+                  >
                     <form.AppField name="specificCultures">
                       {(field) => (
                         <field.TextField
@@ -304,7 +317,10 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               }}
             </form.Subscribe>
 
-            <form.Question question="What are your hobbies or areas of interest?">
+            <form.Question
+              question="What are your hobbies or areas of interest?"
+              density="compact"
+            >
               <form.Field name="hobbies">
                 {(field) => (
                   <SelectMultipleInput
@@ -329,7 +345,10 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               </form.Field>
             </form.Question>
 
-            <form.Question question="Please be specific about your selected hobbies.">
+            <form.Question
+              question="Please be specific about your selected hobbies."
+              density="compact"
+            >
               <form.AppField name="hobbyDetails">
                 {(field) => (
                   <field.TextField
@@ -340,7 +359,10 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               </form.AppField>
             </form.Question>
 
-            <form.Question question="Beyond your major, are there other academic topics or tracks you're interested in?">
+            <form.Question
+              question="Beyond your major, are there other academic topics or tracks you're interested in?"
+              density="compact"
+            >
               <form.AppField name="otherAcademicInterests">
                 {(field) => (
                   <field.TextField
@@ -351,7 +373,10 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               </form.AppField>
             </form.Question>
 
-            <form.Question question="What new experiences, hobbies, or activities would you be interested in?">
+            <form.Question
+              question="What new experiences, hobbies, or activities would you be interested in?"
+              density="compact"
+            >
               <form.AppField name="newExperiences">
                 {(field) => (
                   <field.TextField
@@ -362,7 +387,12 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               </form.AppField>
             </form.Question>
 
-            <form.Question question="Goals for Getting Involved">
+            <h2 className="text-xl font-bold">Involvement</h2>
+
+            <form.Question
+              question="Goals for Getting Involved"
+              density="compact"
+            >
               <form.Field name="involvementGoals">
                 {(field) => (
                   <SelectMultipleInput
@@ -384,7 +414,10 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               </form.Field>
             </form.Question>
 
-            <form.Question question="Skills & Activities Interest">
+            <form.Question
+              question="Skills & Activities Interest"
+              density="compact"
+            >
               <form.Field name="skills">
                 {(field) => (
                   <SelectMultipleInput
@@ -413,7 +446,7 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               <form.Subscribe selector={(state) => state.values.gender}>
                 {(gender) => (
                   <>
-                    <form.Question question="Gender Identity">
+                    <form.Question question="Gender Identity" density="compact">
                       <form.Field name="gender">
                         {(genderField) => (
                           <RadioInput
@@ -431,7 +464,10 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
                       </form.Field>
                     </form.Question>
                     {gender === 'Other' && (
-                      <form.Question question="Please specify">
+                      <form.Question
+                        question="Please specify"
+                        density="compact"
+                      >
                         <form.AppField name="genderOther">
                           {(field) => (
                             <field.TextField
@@ -446,7 +482,10 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
                 )}
               </form.Subscribe>
 
-              <form.Question question="Preferred Time Commitment">
+              <form.Question
+                question="Preferred Time Commitment"
+                density="compact"
+              >
                 <form.Field name="timeCommitment">
                   {(field) => (
                     <RadioInput
