@@ -1,6 +1,5 @@
 'use client';
 
-import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -47,12 +46,13 @@ const Details = ({ club }: DetailsProps) => {
   );
   const uploadImage = useUploadToUploadURL();
   const queryClient = useQueryClient();
+  const [aliasChangedPopupOpen, setAliasChangedPopupOpen] = useState(false);
 
   const clubDetails = clubQuery.data;
   const defaultValues: ClubDetails = {
     id: clubDetails?.id ?? '',
     name: clubDetails?.name ?? '',
-    alias: clubDetails?.alias ?? '',
+    alias: clubDetails?.alias ?? null,
     description: clubDetails?.description ?? '',
     foundingDate: clubDetails?.foundingDate ?? null,
     tags: clubDetails?.tags ?? [],
@@ -60,11 +60,12 @@ const Details = ({ club }: DetailsProps) => {
     bannerImage: null,
   };
 
-  const [aliasChangedPopupOpen, setAliasChangedPopupOpen] = useState(false);
-
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
+      const previousAlias = clubDetails?.alias ?? null;
+      const shouldPromptAliasChange = value.alias !== previousAlias;
+
       // Profile image
 
       const { profileImage, bannerImage, ...formValues } = value;
@@ -104,16 +105,13 @@ const Details = ({ club }: DetailsProps) => {
         profileImage: profileImageUrl,
       });
       if (updated) {
-        const aliasIsDirty = !formApi.getFieldMeta('alias')?.isDefaultValue;
-        // If alias changed and we haven't confirmed yet, show popup
-        if (aliasIsDirty) {
-          setAliasChangedPopupOpen(true);
-        }
-
         queryClient.invalidateQueries(
           api.club.details.queryOptions({ id: club.id }),
         );
         formApi.reset();
+        if (shouldPromptAliasChange) {
+          setAliasChangedPopupOpen(true);
+        }
       }
     },
     validators: {
@@ -181,46 +179,20 @@ const Details = ({ club }: DetailsProps) => {
               </form.Field>
             </div>
             <div className="flex flex-wrap gap-4">
-              <form.Field name="name">
-                {(field) => (
-                  <TextField
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow-100 [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    label="Name"
-                  />
-                )}
-              </form.Field>
-              <form.Field name="alias">
-                {(field) => (
-                  <TextField
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    label="Alias or Acronym"
-                  />
-                )}
-              </form.Field>
+              <form.AppField name="name">
+                {(field) => {
+                  const TextField = field.TextField;
+                  return (
+                    <TextField label="Name" className="grow-100" required />
+                  );
+                }}
+              </form.AppField>
+              <form.AppField name="alias">
+                {(field) => {
+                  const TextField = field.TextField;
+                  return <TextField label="Alias" className="grow" />;
+                }}
+              </form.AppField>
               <form.Field name="foundingDate">
                 {(field) => (
                   <DatePicker
@@ -247,25 +219,17 @@ const Details = ({ club }: DetailsProps) => {
               </form.Field>
             </div>
             <div className="flex flex-col gap-2">
-              <form.Field name="description">
-                {(field) => (
-                  <TextField
-                    onChange={(e) => {
-                      field.handleChange(e.target.value);
-                    }}
-                    onBlur={field.handleBlur}
-                    value={field.state.value}
-                    label="Description"
-                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    multiline
-                    minRows={4}
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid ? (
-                        field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      ) : (
+              <form.AppField name="description">
+                {(field) => {
+                  const TextField = field.TextField;
+                  return (
+                    <TextField
+                      label="Description"
+                      className="w-full"
+                      required
+                      multiline
+                      minRows={4}
+                      helperText={
                         <span>
                           We support{' '}
                           <a
@@ -278,11 +242,11 @@ const Details = ({ club }: DetailsProps) => {
                           </a>
                           !
                         </span>
-                      )
-                    }
-                  />
-                )}
-              </form.Field>
+                      }
+                    />
+                  );
+                }}
+              </form.AppField>
             </div>
             <form.Field name="tags">
               {(field) => (
@@ -317,26 +281,20 @@ const Details = ({ club }: DetailsProps) => {
       <Confirmation
         open={aliasChangedPopupOpen}
         onClose={() => setAliasChangedPopupOpen(false)}
-        title={'Alias Changed'}
-        contentText={
-          <>Would you also like to also change your Listing URL to match?</>
-        }
+        title="Alias Changed"
+        contentText={<>Would you like to update your Listing URL to match?</>}
         confirmText="Change Listing URL"
         confirmColor="primary"
         onConfirm={async () => {
           setAliasChangedPopupOpen(false);
-          // scroll to the Slug component
           const element = document.getElementById('form-slug');
-
           if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // highlight the component
             element.classList.add(
               'ring-2',
               'ring-royal',
               'dark:ring-cornflower-300',
               'rounded-lg',
-              'transition-all',
             );
             setTimeout(() => {
               element.classList.remove(
@@ -345,7 +303,7 @@ const Details = ({ club }: DetailsProps) => {
                 'dark:ring-cornflower-300',
                 'rounded-lg',
               );
-            }, 2000);
+            }, 2500);
           }
         }}
       />

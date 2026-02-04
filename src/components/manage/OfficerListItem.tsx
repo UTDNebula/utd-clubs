@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Box, IconButton, TextField, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import z from 'zod';
 import { withForm } from '@src/utils/form';
 import { type editListedOfficerSchema } from '@src/utils/formSchemas';
@@ -97,59 +97,33 @@ const OfficerListItem = withForm({
           <DragIndicatorIcon />
         </div>
         <div style={{ gridArea: 'name' }} className="max-sm:mt-3 sm:my-2">
-          <form.Field name={`officers[${index}].name`}>
+          <form.AppField name={`officers[${index}].name`}>
             {(subField) => (
-              <TextField
-                onChange={(e) => subField.handleChange(e.target.value)}
-                onBlur={subField.handleBlur}
-                value={overlayData?.name ?? subField.state.value}
+              <subField.TextField
                 label="Name"
-                className="w-full [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                size="small"
-                error={!subField.state.meta.isValid}
-                helperText={
-                  !subField.state.meta.isValid
-                    ? (
-                        subField.state.meta.errors as unknown as {
-                          message: string;
-                        }[]
-                      )
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                className="w-full"
+                {...(overlayData?.name !== undefined
+                  ? { value: overlayData.name }
+                  : {})}
               />
             )}
-          </form.Field>
+          </form.AppField>
         </div>
         <div
           style={{ gridArea: 'position' }}
           className="max-sm:mt-3 max-sm:mb-3 sm:my-2"
         >
-          <form.Field name={`officers[${index}].position`}>
+          <form.AppField name={`officers[${index}].position`}>
             {(subField) => (
-              <TextField
-                onChange={(e) => subField.handleChange(e.target.value)}
-                onBlur={subField.handleBlur}
-                value={overlayData?.position ?? subField.state.value}
+              <subField.TextField
                 label="Position"
-                className="w-full [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                size="small"
-                error={!subField.state.meta.isValid}
-                helperText={
-                  !subField.state.meta.isValid
-                    ? (
-                        subField.state.meta.errors as unknown as {
-                          message: string;
-                        }[]
-                      )
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                className="w-full"
+                {...(overlayData?.position !== undefined
+                  ? { value: overlayData.position }
+                  : {})}
               />
             )}
-          </form.Field>
+          </form.AppField>
         </div>
         <div
           style={{ gridArea: 'buttons' }}
