@@ -576,7 +576,15 @@ export const clubRouter = createTRPCRouter({
       const selectedClub = await ctx.db.query.club.findFirst({
         where: eq(club.id, input.clubId),
       });
-      if (!selectedClub?.calendarGoogleAccountId) {
+      if (!selectedClub) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'no club found',
+        });
+      }
+
+      // this should only happen on resyncs
+      if (selectedClub.calendarId && !selectedClub.calendarGoogleAccountId) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'no connected google account',
@@ -594,7 +602,7 @@ export const clubRouter = createTRPCRouter({
       const oauth2Client = new google.auth.OAuth2();
       oauth2Client.setCredentials({
         access_token: await getGoogleAccessToken(
-          selectedClub.calendarGoogleAccountId,
+          selectedClub.calendarGoogleAccountId ?? ctx.session.user.id,
         ),
       });
       try {
