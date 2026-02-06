@@ -53,6 +53,7 @@ export default function OfficerList({
   return (
     <Panel
       className="text-sm"
+      slotClassNames={{ collapse: 'relative' }}
       id={id}
       smallPadding
       heading="Officers"

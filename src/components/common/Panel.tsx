@@ -64,6 +64,12 @@ interface PanelPropsBase {
 
 interface PanelProps extends PanelPropsBase {
   className?: string;
+  slotClassNames?: {
+    heading?: string;
+    collapse?: string;
+    collapseButton?: string;
+    description?: string;
+  };
   style?: React.CSSProperties;
   id?: string;
   children?: ReactNode;
@@ -81,9 +87,14 @@ const Panel = ({
   onCollapseClick,
   onHeadingClick,
   className,
+  slotClassNames,
   style,
   id,
 }: PanelProps) => {
+  const hasHeading = Boolean(
+    startAdornment || heading || endAdornment || enableCollapsing,
+  );
+
   const collapseOptions: CollapseOptions = {
     showIcon: true,
     iconPosition: 'right',
@@ -106,6 +117,7 @@ const Panel = ({
         }
         onCollapseClick?.();
       }}
+      className={slotClassNames?.collapseButton}
     >
       <ChevronRight
         className={`transition-transform ${collapsed || collapse ? 'rotate-0' : 'rotate-90'}`}
@@ -120,9 +132,9 @@ const Panel = ({
       {...(id ? { id } : {})}
       style={style}
     >
-      {(startAdornment || heading || endAdornment || enableCollapsing) && (
+      {hasHeading && (
         <div
-          className={`flex justify-between ${collapseOptions.toggleOnHeadingClick || onHeadingClick ? 'cursor-pointer' : ''}`}
+          className={`flex justify-between ${collapseOptions.toggleOnHeadingClick || onHeadingClick ? 'cursor-pointer' : ''} ${slotClassNames?.heading}`}
           onClick={() => {
             if (
               collapseOptions.toggleOnHeadingClick &&
@@ -162,13 +174,12 @@ const Panel = ({
         collapsedSize={
           enableCollapsing ? collapseOptions.collapsedSize : undefined
         }
-        className="relative"
+        className={slotClassNames?.collapse}
       >
-        {/* The `pt-2` class must be a child of `<Collapse />` so that the padding also collapses*/}
-        <div className="pt-2 flex flex-col gap-2">
+        <div className={`flex flex-col gap-2 ${hasHeading ? 'pt-2' : ''}`}>
           {description && (
             <div
-              className={`mb-4 text-slate-600 dark:text-slate-400 text-sm ${smallPadding ? '' : 'ml-2'}`}
+              className={`mb-4 text-slate-600 dark:text-slate-400 text-sm ${smallPadding ? '' : 'ml-2'} ${slotClassNames?.description}`}
             >
               {description}
             </div>
