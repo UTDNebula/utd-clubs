@@ -26,6 +26,11 @@ type CollapseOptions = {
    * @default false
    */
   toggleOnHeadingClick?: boolean;
+  /**
+   * Minimum height of panel when collapsed
+   * @default 0
+   */
+  collapsedSize?: number;
 };
 
 interface PanelPropsBase {
@@ -83,6 +88,7 @@ const Panel = ({
     iconPosition: 'right',
     defaultState: 'open',
     toggleOnHeadingClick: false,
+    collapsedSize: 0,
     ...(typeof enableCollapsing !== 'boolean' ? enableCollapsing : undefined),
   };
 
@@ -92,10 +98,14 @@ const Panel = ({
 
   const CollapseButton = (
     <IconButton
-      onClick={() => {
-        setCollapsed((prev) => !prev);
+      onClick={(e) => {
+        e.stopPropagation();
+        if (collapse === undefined) {
+          setCollapsed((prev) => !prev);
+        }
         onCollapseClick?.();
       }}
+      // size='small'
     >
       <ChevronRight
         className={`transition-transform ${collapsed || collapse ? 'rotate-0' : 'rotate-90'}`}
@@ -114,7 +124,10 @@ const Panel = ({
         <div
           className={`flex justify-between ${collapseOptions.toggleOnHeadingClick || onHeadingClick ? 'cursor-pointer' : ''}`}
           onClick={() => {
-            if (collapseOptions.toggleOnHeadingClick) {
+            if (
+              collapseOptions.toggleOnHeadingClick &&
+              collapse === undefined
+            ) {
               setCollapsed((prev) => !prev);
             }
             onHeadingClick?.();
@@ -126,7 +139,7 @@ const Panel = ({
               collapseOptions.iconPosition === 'left' &&
               CollapseButton}
             <div
-              className={`flex items-center gap-2 ml-2 ${smallPadding ? '' : 'ml-2'}`}
+              className={`flex items-center gap-2 min-h-10 ${smallPadding ? '' : 'ml-2'}`}
             >
               {startAdornment}
               {heading && (
@@ -143,9 +156,15 @@ const Panel = ({
             CollapseButton}
         </div>
       )}
-      <Collapse in={!(collapsed || collapse)}>
+      <Collapse
+        in={!(collapsed || collapse)}
+        collapsedSize={
+          enableCollapsing ? collapseOptions.collapsedSize : undefined
+        }
+        className="relative"
+      >
         {/* The `pt-2` class must be a child of `<Collapse />` so that the padding also collapses*/}
-        <div className="pt-2">
+        <div className="pt-2 flex flex-col gap-2">
           {description && (
             <div
               className={`mb-4 text-slate-600 dark:text-slate-400 text-sm ${smallPadding ? '' : 'ml-2'}`}
