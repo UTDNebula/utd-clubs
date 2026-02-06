@@ -27,7 +27,7 @@ type CollapseOptions = {
    */
   toggleOnHeadingClick?: boolean;
   /**
-   * Minimum height of panel when collapsed
+   * Minimum height of panel when collapsed, in pixels
    * @default 0
    */
   collapsedSize?: number;
@@ -41,7 +41,7 @@ interface PanelPropsBase {
   smallPadding?: boolean;
   /**
    * Control whether the panel is collapsed
-   * NOTE: This makes this a controlled component
+   * NOTE: This prop makes the panel a controlled component
    */
   collapse?: boolean;
   /**
@@ -51,12 +51,13 @@ interface PanelPropsBase {
    */
   enableCollapsing?: boolean | CollapseOptions;
   /**
-   * Callback function called whenever collapse button is pressed
+   * Callback function called whenever the collapse button is pressed or if the heading is pressed,
+   * so long as the `toggleOnHeadingClick` option for the `enableCollapsing` prop is true
    */
   onCollapseClick?: () => void;
   /**
-   * Callback function called whenever headiing is clicked
-   * NOTE: If prop is provided, the heading gwill turn the cursor to a pointer
+   * Callback function called whenever heading is clicked
+   * NOTE: If this prop is provided, the heading will turn the cursor to a pointer
    */
   onHeadingClick?: () => void;
 }
@@ -105,7 +106,6 @@ const Panel = ({
         }
         onCollapseClick?.();
       }}
-      // size='small'
     >
       <ChevronRight
         className={`transition-transform ${collapsed || collapse ? 'rotate-0' : 'rotate-90'}`}
@@ -116,7 +116,7 @@ const Panel = ({
   return (
     <BaseCard
       className={`flex flex-col ${smallPadding ? 'p-5' : 'sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4'} min-w-0 max-w-6xl
-        ${className ?? ''}`}
+        target:outline-2 outline-royal dark:outline-cornflower-300 ${className ?? ''}`}
       {...(id ? { id } : {})}
       style={style}
     >
@@ -131,6 +131,7 @@ const Panel = ({
               setCollapsed((prev) => !prev);
             }
             onHeadingClick?.();
+            onCollapseClick?.();
           }}
         >
           <div className="flex">

@@ -66,7 +66,6 @@ export default function OfficerList({
       }
       collapse={needsTruncation && !isExpanded}
       onCollapseClick={() => setIsExpanded((prev) => !prev)}
-      onHeadingClick={() => setIsExpanded((prev) => !prev)}
     >
       <div className="flex-1 min-h-0 overflow-hidden">
         <div ref={contentRef} className="flex flex-col gap-4">
