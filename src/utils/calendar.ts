@@ -267,8 +267,7 @@ export async function getAuthForClub(clubId: string): Promise<OAuth2Client> {
   const auth = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback/google`, // BetterAuth handles this
-    // TODO: need to set perms in GCP i think
+    `${process.env.GOOGLE_WEBHOOK_URL || process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback/google`, // BetterAuth handles this
   );
 
   auth.setCredentials({ access_token: accessToken });
