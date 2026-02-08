@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/cron/renew-gcal-watches/route.ts",
+      "path": "/api/cron/renew-gcal-watches",
       "schedule": "0 10 * * *"
     }
   ]
