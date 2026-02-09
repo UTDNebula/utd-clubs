@@ -221,6 +221,7 @@ export const eventRouter = createTRPCRouter({
             ),
           );
         },
+        orderBy: (event, { asc }) => [asc(event.startTime)],
         with: {
           club: true,
         },
