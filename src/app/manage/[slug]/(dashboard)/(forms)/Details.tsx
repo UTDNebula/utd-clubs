@@ -180,12 +180,9 @@ const Details = ({ club }: DetailsProps) => {
             </div>
             <div className="flex flex-wrap gap-4">
               <form.AppField name="name">
-                {(field) => {
-                  const TextField = field.TextField;
-                  return (
-                    <TextField label="Name" className="grow-100" required />
-                  );
-                }}
+                {(field) => (
+                  <field.TextField label="Name" className="grow-100" required />
+                )}
               </form.AppField>
               <form.AppField name="alias">
                 {(field) => {
