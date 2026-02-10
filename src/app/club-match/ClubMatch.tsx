@@ -458,6 +458,22 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
                     />
                   )}
                 </form.Field>
+                {/* Gender "Other" specification field - appears below radio buttons */}
+                <form.Subscribe selector={(state) => state.values.gender}>
+                  {(gender) =>
+                    gender === 'Other' ? (
+                      <form.AppField name="genderOther">
+                        {(field) => (
+                          <field.TextField
+                            placeholder="Please specify"
+                            className="w-full mt-2"
+                            required={isFieldRequired('genderOther')}
+                          />
+                        )}
+                      </form.AppField>
+                    ) : null
+                  }
+                </form.Subscribe>
               </form.Question>
 
               <form.Question
@@ -480,24 +496,6 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
                 </form.Field>
               </form.Question>
             </div>
-
-            {/* Gender "Other" specification field - appears below the grid */}
-            <form.Subscribe selector={(state) => state.values.gender}>
-              {(gender) =>
-                gender === 'Other' ? (
-                  <form.Question question="Please specify" density="compact">
-                    <form.AppField name="genderOther">
-                      {(field) => (
-                        <field.TextField
-                          className="w-full"
-                          required={isFieldRequired('genderOther')}
-                        />
-                      )}
-                    </form.AppField>
-                  </form.Question>
-                ) : null
-              }
-            </form.Subscribe>
           </div>
 
           <div className="flex flex-wrap justify-end items-center gap-2">
