@@ -442,45 +442,23 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
             </form.Question>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {/* Conditionally render on gender value */}
-              <form.Subscribe selector={(state) => state.values.gender}>
-                {(gender) => (
-                  <>
-                    <form.Question question="Gender Identity" density="compact">
-                      <form.Field name="gender">
-                        {(genderField) => (
-                          <RadioInput
-                            id="gender"
-                            options={[
-                              'Female',
-                              'Male',
-                              'Non-binary',
-                              'Prefer not to say',
-                              'Other',
-                            ]}
-                            field={genderField}
-                          />
-                        )}
-                      </form.Field>
-                    </form.Question>
-                    {gender === 'Other' && (
-                      <form.Question
-                        question="Please specify"
-                        density="compact"
-                      >
-                        <form.AppField name="genderOther">
-                          {(field) => (
-                            <field.TextField
-                              className="w-full"
-                              required={isFieldRequired('genderOther')}
-                            />
-                          )}
-                        </form.AppField>
-                      </form.Question>
-                    )}
-                  </>
-                )}
-              </form.Subscribe>
+              <form.Question question="Gender Identity" density="compact">
+                <form.Field name="gender">
+                  {(genderField) => (
+                    <RadioInput
+                      id="gender"
+                      options={[
+                        'Female',
+                        'Male',
+                        'Non-binary',
+                        'Prefer not to say',
+                        'Other',
+                      ]}
+                      field={genderField}
+                    />
+                  )}
+                </form.Field>
+              </form.Question>
 
               <form.Question
                 question="Preferred Time Commitment"
@@ -502,6 +480,27 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
                 </form.Field>
               </form.Question>
             </div>
+
+            {/* Gender "Other" specification field - appears below the grid */}
+            <form.Subscribe selector={(state) => state.values.gender}>
+              {(gender) =>
+                gender === 'Other' ? (
+                  <form.Question
+                    question="Please specify"
+                    density="compact"
+                  >
+                    <form.AppField name="genderOther">
+                      {(field) => (
+                        <field.TextField
+                          className="w-full"
+                          required={isFieldRequired('genderOther')}
+                        />
+                      )}
+                    </form.AppField>
+                  </form.Question>
+                ) : null
+              }
+            </form.Subscribe>
           </div>
 
           <div className="flex flex-wrap justify-end items-center gap-2">
