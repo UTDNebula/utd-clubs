@@ -498,6 +498,8 @@ export const clubRouter = createTRPCRouter({
         return { tags: [], clubs: [] };
       }
 
+      // Try ParadeDB full-text search first (@@@ operator for fuzzy/similarity matching)
+      // Falls back to basic case-insensitive LIKE search if ParadeDB is unavailable (e.g., in dev)
       try {
         const tags = await ctx.db
           .select({ tag: usedTags.tag })
