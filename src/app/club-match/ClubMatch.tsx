@@ -485,10 +485,7 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
             <form.Subscribe selector={(state) => state.values.gender}>
               {(gender) =>
                 gender === 'Other' ? (
-                  <form.Question
-                    question="Please specify"
-                    density="compact"
-                  >
+                  <form.Question question="Please specify" density="compact">
                     <form.AppField name="genderOther">
                       {(field) => (
                         <field.TextField
