@@ -50,7 +50,7 @@ const EventCard = ({ event, view = 'normal', className }: EventCardProps) => {
           {showEventImage && (
             <Image
               fill
-              src={event.image!}
+              src={`${event.image!}?v=${event.updatedAt.getTime()}`}
               alt="Event Image"
               className={`object-cover object-center transition-opacity duration-300 ${
                 imgLoaded ? 'opacity-100' : 'opacity-0'
