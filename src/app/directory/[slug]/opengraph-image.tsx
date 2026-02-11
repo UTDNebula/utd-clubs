@@ -105,9 +105,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           >
             {}
             <img
-              src={
-                `${clubData.profileImage}?v=${clubData.updatedAt?.getTime()}`!
-              }
+              src={`${clubData.profileImage!}?v=${clubData.updatedAt?.getTime()}`}
               alt={clubData.name + ' logo'}
               style={{
                 width: '100%',
