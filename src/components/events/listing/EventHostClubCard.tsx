@@ -21,7 +21,7 @@ export default function EventHostClubCard({
         >
           {club.profileImage && (
             <Image
-              src={club.profileImage}
+              src={`${club.profileImage}?v=${club.updatedAt?.getTime()}`}
               alt={club.name + ' logo'}
               width={32}
               height={32}

@@ -114,168 +114,240 @@ const Details = ({ club }: DetailsProps) => {
   if (!clubQuery.isSuccess) return <PanelSkeleton />;
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        form.handleSubmit();
-      }}
-    >
-      <Panel heading="Details">
-        <div className="m-2 flex flex-col gap-4">
-          <div className="flex flex-wrap gap-4">
-            <form.Field name="profileImage">
-              {(field) => (
-                <FormImage
-                  label="Profile Image"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  fallbackUrl={
-                    clubDetails!.profileImage
-                      ? addVersionToImage(
-                          clubDetails!.profileImage,
-                          clubDetails!.updatedAt?.getTime(),
-                        )
-                      : undefined
-                  }
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    field.handleChange(file);
-                  }}
-                  helperText={
-                    !field.state.meta.isValid
-                      ? field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      : undefined
-                  }
-                  className="grow w-48"
-                />
-              )}
-            </form.Field>
-            <form.Field name="bannerImage">
-              {(field) => (
-                <FormImage
-                  label="Banner Image"
-                  onBlur={field.handleBlur}
-                  value={field.state.value}
-                  fallbackUrl={
-                    clubDetails!.bannerImage
-                      ? addVersionToImage(
-                          clubDetails!.bannerImage,
-                          clubDetails!.updatedAt?.getTime(),
-                        )
-                      : undefined
-                  }
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    field.handleChange(file);
-                  }}
-                  helperText={
-                    !field.state.meta.isValid
-                      ? field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      : undefined
-                  }
-                  className="grow w-48"
-                />
-              )}
-            </form.Field>
-          </div>
-          <div className="flex flex-wrap gap-4">
-            <form.AppField name="name">
-              {(field) => (
-                <field.TextField label="Name" className="grow-100" required />
-              )}
-            </form.AppField>
-            <form.AppField name="alias">
-              {(field) => (
-                <field.TextField label="Alias or Acronym" className="grow" />
-              )}
-            </form.AppField>
-            <form.Field name="foundingDate">
-              {(field) => (
-                <DatePicker
-                  onChange={(value) => field.handleChange(value)}
-                  value={field.state.value}
-                  label="Date Founded"
-                  className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
-                  slotProps={{
-                    actionBar: {
-                      actions: ['accept'],
-                    },
-                    textField: {
-                      size: 'small',
-                      error: !field.state.meta.isValid,
-                      helperText: !field.state.meta.isValid
+    <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
+      >
+        <Panel heading="Details">
+          <div className="m-2 flex flex-col gap-4">
+            <div className="flex flex-wrap gap-4">
+              <form.Field name="profileImage">
+                {(field) => (
+                  <FormImage
+                    label="Profile Image"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    fallbackUrl={
+                      clubDetails!.profileImage
+                        ? `${clubDetails!.profileImage}?v=${clubDetails!.updatedAt?.getTime()}`
+                        : undefined
+                    }
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      field.handleChange(file);
+                    }}
+                    helperText={
+                      !field.state.meta.isValid
                         ? field.state.meta.errors
                             .map((err) => err?.message)
                             .join('. ') + '.'
-                        : undefined,
-                    },
+                        : undefined
+                    }
+                    className="grow w-48"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="bannerImage">
+                {(field) => (
+                  <FormImage
+                    label="Banner Image"
+                    onBlur={field.handleBlur}
+                    value={field.state.value}
+                    fallbackUrl={
+                      clubDetails!.bannerImage
+                        ? `${clubDetails!.bannerImage}?v=${clubDetails!.updatedAt?.getTime()}`
+                        : undefined
+                    }
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      field.handleChange(file);
+                    }}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
+                    className="grow w-48"
+                  />
+                )}
+              </form.Field>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <form.Field name="name">
+                {(field) => (
+                  <TextField
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className="grow-100 [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                    size="small"
+                    error={!field.state.meta.isValid}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
+                    label="Name"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="alias">
+                {(field) => (
+                  <TextField
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                    size="small"
+                    error={!field.state.meta.isValid}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
+                    label="Alias or Acronym"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="foundingDate">
+                {(field) => (
+                  <DatePicker
+                    onChange={(value) => field.handleChange(value)}
+                    value={field.state.value}
+                    label="Date Founded"
+                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
+                    slotProps={{
+                      actionBar: {
+                        actions: ['accept'],
+                      },
+                      textField: {
+                        size: 'small',
+                        error: !field.state.meta.isValid,
+                        helperText: !field.state.meta.isValid
+                          ? field.state.meta.errors
+                              .map((err) => err?.message)
+                              .join('. ') + '.'
+                          : undefined,
+                      },
+                    }}
+                  />
+                )}
+              </form.Field>
+            </div>
+            <div className="flex flex-col gap-2">
+              <form.Field name="description">
+                {(field) => (
+                  <TextField
+                    onChange={(e) => {
+                      field.handleChange(e.target.value);
+                    }}
+                    onBlur={field.handleBlur}
+                    value={field.state.value}
+                    label="Description"
+                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                    multiline
+                    minRows={4}
+                    error={!field.state.meta.isValid}
+                    helperText={
+                      !field.state.meta.isValid ? (
+                        field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      ) : (
+                        <span>
+                          We support{' '}
+                          <a
+                            href="https://www.markdownguide.org/basic-syntax/"
+                            rel="noreferrer"
+                            target="_blank"
+                            className="text-royal dark:text-cornflower-300 underline"
+                          >
+                            Markdown
+                          </a>
+                          !
+                        </span>
+                      )
+                    }
+                  />
+                )}
+              </form.Field>
+            </div>
+            <form.Field name="tags">
+              {(field) => (
+                <ClubTagEdit
+                  value={field.state.value}
+                  onChange={(value) => {
+                    field.handleChange(value);
                   }}
+                  onBlur={field.handleBlur}
+                  error={!field.state.meta.isValid}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
                 />
               )}
             </form.Field>
           </div>
-          <div className="flex flex-col gap-2">
-            <form.AppField name="description">
-              {(field) => (
-                <field.TextField
-                  label="Description"
-                  className="w-full"
-                  required
-                  multiline
-                  minRows={4}
-                  helperText={
-                    <span>
-                      We support{' '}
-                      <a
-                        href="https://www.markdownguide.org/basic-syntax/"
-                        rel="noreferrer"
-                        target="_blank"
-                        className="text-royal dark:text-cornflower-300 underline"
-                      >
-                        Markdown
-                      </a>
-                      !
-                    </span>
-                  }
-                />
-              )}
-            </form.AppField>
+          <div className="flex flex-wrap justify-end items-center gap-2">
+            <form.AppForm>
+              <form.ResetButton />
+            </form.AppForm>
+            <form.AppForm>
+              <form.SubmitButton />
+            </form.AppForm>
           </div>
-          <form.Field name="tags">
-            {(field) => (
-              <ClubTagEdit
-                value={field.state.value}
-                onChange={(value) => {
-                  field.handleChange(value);
-                }}
-                onBlur={field.handleBlur}
-                error={!field.state.meta.isValid}
-                helperText={
-                  !field.state.meta.isValid
-                    ? field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
-              />
-            )}
-          </form.Field>
-        </div>
-        <div className="flex flex-wrap justify-end items-center gap-2">
-          <form.AppForm>
-            <form.ResetButton />
-          </form.AppForm>
-          <form.AppForm>
-            <form.SubmitButton />
-          </form.AppForm>
-        </div>
-      </Panel>
-    </form>
+        </Panel>
+      </form>
+      <Confirmation
+        open={aliasChangedPopupOpen}
+        onClose={() => setAliasChangedPopupOpen(false)}
+        title={'Alias Changed'}
+        contentText={
+          <>Would you also like to also change your Listing URL to match?</>
+        }
+        confirmText="Change Listing URL"
+        confirmColor="primary"
+        onConfirm={async () => {
+          setAliasChangedPopupOpen(false);
+          // scroll to the Slug component
+          const element = document.getElementById('form-slug');
+
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // highlight the component
+            element.classList.add(
+              'ring-2',
+              'ring-royal',
+              'dark:ring-cornflower-300',
+              'rounded-lg',
+              'transition-all',
+            );
+            setTimeout(() => {
+              element.classList.remove(
+                'ring-2',
+                'ring-royal',
+                'dark:ring-cornflower-300',
+                'rounded-lg',
+              );
+            }, 2000);
+          }
+        }}
+      />
+    </>
   );
 };
 

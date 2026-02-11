@@ -18,7 +18,7 @@ const ClubTitle = async ({
       >
         {club.profileImage && (
           <Image
-            src={club.profileImage}
+            src={`${club.profileImage}?v=${club.updatedAt?.getTime()}`}
             alt={club.name + ' logo'}
             width={128}
             height={128}
