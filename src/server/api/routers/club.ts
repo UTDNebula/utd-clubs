@@ -653,6 +653,7 @@ export const clubRouter = createTRPCRouter({
           tags: true,
           profileImage: true,
           bannerImage: true,
+          updatedAt: true,
         },
       });
 

@@ -41,7 +41,7 @@ const EventCard = ({ event, view = 'normal', className }: EventCardProps) => {
           {event.club.profileImage && (!showEventImage || !imgLoaded) && (
             <Image
               fill
-              src={event.club.profileImage}
+              src={`${event.club.profileImage}?v=${event.club.updatedAt?.getTime()}`}
               alt="Club Profile"
               className="object-cover object-center"
             />
