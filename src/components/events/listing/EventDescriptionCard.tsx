@@ -75,7 +75,7 @@ export default function EventDescriptionCard({
           </IconButton>
           <div className="relative w-full h-full flex items-center justify-center">
             <Image
-              src={event.image!}
+              src={`${event.image!}?v=${event.updatedAt.getTime()}`}
               alt="Event poster fullscreen"
               fill
               unoptimized

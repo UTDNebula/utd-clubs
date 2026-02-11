@@ -198,7 +198,11 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                 <FormImage
                   label="Event Image"
                   value={field.state.value}
-                  fallbackUrl={event?.image ?? undefined}
+                  fallbackUrl={
+                    event?.image
+                      ? `${event.image}?v=${event.updatedAt.getTime()}`
+                      : undefined
+                  }
                   onBlur={field.handleBlur}
                   onChange={(e) => {
                     const file = e.target.files?.[0] ?? null;
