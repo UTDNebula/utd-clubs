@@ -185,10 +185,9 @@ const Details = ({ club }: DetailsProps) => {
                 )}
               </form.AppField>
               <form.AppField name="alias">
-                {(field) => {
-                  const TextField = field.TextField;
-                  return <TextField label="Alias" className="grow" />;
-                }}
+                {(field) => (
+                  <field.TextField label="Alias" className="grow" />
+                )}
               </form.AppField>
               <form.Field name="foundingDate">
                 {(field) => (
@@ -217,32 +216,29 @@ const Details = ({ club }: DetailsProps) => {
             </div>
             <div className="flex flex-col gap-2">
               <form.AppField name="description">
-                {(field) => {
-                  const TextField = field.TextField;
-                  return (
-                    <TextField
-                      label="Description"
-                      className="w-full"
-                      required
-                      multiline
-                      minRows={4}
-                      helperText={
-                        <span>
-                          We support{' '}
-                          <a
-                            href="https://www.markdownguide.org/basic-syntax/"
-                            rel="noreferrer"
-                            target="_blank"
-                            className="text-royal dark:text-cornflower-300 underline"
-                          >
-                            Markdown
-                          </a>
-                          !
-                        </span>
-                      }
-                    />
-                  );
-                }}
+                {(field) => (
+                  <field.TextField
+                    label="Description"
+                    className="w-full"
+                    required
+                    multiline
+                    minRows={4}
+                    helperText={
+                      <span>
+                        We support{' '}
+                        <a
+                          href="https://www.markdownguide.org/basic-syntax/"
+                          rel="noreferrer"
+                          target="_blank"
+                          className="text-royal dark:text-cornflower-300 underline"
+                        >
+                          Markdown
+                        </a>
+                        !
+                      </span>
+                    }
+                  />
+                )}
               </form.AppField>
             </div>
             <form.Field name="tags">
