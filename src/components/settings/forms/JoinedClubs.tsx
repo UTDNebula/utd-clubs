@@ -33,21 +33,22 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
 
   return (
     <Panel heading="Followed Clubs">
-      {joinedClubs.length === 0 ? (
-        <span className="p-2 text-slate-600 dark:text-slate-400 text-sm">
-          Not following any clubs.
-        </span>
-      ) : (
+      {joinedClubs.length > 0 ? (
         joinedClubs.map((joinedClub) => (
-          <ClubListItem
-            joinedClub={joinedClub}
-            key={joinedClub.club.id}
-            onLeave={() => {
-              setLeaveClub(joinedClub);
-              setOpenLeaveModal(true);
-            }}
-          />
+          <div key={joinedClub.club.id} className="shrink-0">
+            <ClubListItem
+              joinedClub={joinedClub}
+              onLeave={() => {
+                setLeaveClub(joinedClub);
+                setOpenLeaveModal(true);
+              }}
+            />
+          </div>
         ))
+      ) : (
+        <div className="w-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl text-md font-medium text-slate-600 dark:text-slate-400">
+          Not following any clubs.
+        </div>
       )}
       <Confirmation
         open={openLeaveModal}
