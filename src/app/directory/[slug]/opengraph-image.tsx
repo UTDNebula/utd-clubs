@@ -106,9 +106,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={
-                `${clubData.profileImage}?v=${clubData.updatedAt?.getTime()}`!
-              }
+              src={`${clubData.profileImage!}?v=${clubData.updatedAt?.getTime()}`}
               alt={clubData.name + ' logo'}
               style={{
                 width: '100%',
