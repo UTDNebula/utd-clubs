@@ -4,7 +4,7 @@ import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import { AllTags } from '@src/components/AllTags';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
 import Header from '@src/components/header/Header';
-import HomePageSearchClient from '@src/components/searchBar/HomePageSearchClient';
+import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import StarDoodle from '@src/icons/StarDoodle';
@@ -70,7 +70,7 @@ const Home = async () => {
               <h1 className="font-display mb-4 max-w-3xl px-5 text-center text-2xl font-semibold text-white text-shadow-[0_0_16px_rgb(0_0_0_/_0.4)] md:px-0 md:text-6xl">
                 Discover the Best Clubs and Organizations at UTD
               </h1>
-              <HomePageSearchClient />
+              <HomePageSearchBar />
               <div className="pointer-events-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
                 {tags.map((tag) => (
                   <TagPill
