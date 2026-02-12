@@ -28,7 +28,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
           <div className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-900" />
           {club.profileImage && (
             <Image
-              src={club.profileImage}
+              src={`${club.profileImage}?v=${club.updatedAt?.getTime()}`}
               fill
               alt={club.name + ' logo'}
               priority={priority}

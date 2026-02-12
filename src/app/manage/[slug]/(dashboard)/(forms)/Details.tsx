@@ -141,7 +141,11 @@ const Details = ({ club }: DetailsProps) => {
                     label="Profile Image"
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    fallbackUrl={clubDetails!.profileImage ?? undefined}
+                    fallbackUrl={
+                      clubDetails!.profileImage
+                        ? `${clubDetails!.profileImage}?v=${clubDetails!.updatedAt?.getTime()}`
+                        : undefined
+                    }
                     onChange={(e) => {
                       const file = e.target.files?.[0] ?? null;
                       field.handleChange(file);
@@ -163,7 +167,11 @@ const Details = ({ club }: DetailsProps) => {
                     label="Banner Image"
                     onBlur={field.handleBlur}
                     value={field.state.value}
-                    fallbackUrl={clubDetails!.bannerImage ?? undefined}
+                    fallbackUrl={
+                      clubDetails!.bannerImage
+                        ? `${clubDetails!.bannerImage}?v=${clubDetails!.updatedAt?.getTime()}`
+                        : undefined
+                    }
                     onChange={(e) => {
                       const file = e.target.files?.[0] ?? null;
                       field.handleChange(file);
