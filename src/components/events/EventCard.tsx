@@ -41,7 +41,7 @@ const EventCard = ({ event, view = 'normal', className }: EventCardProps) => {
           {event.club.profileImage && (!showEventImage || !imgLoaded) && (
             <Image
               fill
-              src={event.club.profileImage}
+              src={`${event.club.profileImage}?v=${event.club.updatedAt?.getTime()}`}
               alt="Club Profile"
               className="object-cover object-center"
             />
@@ -50,7 +50,7 @@ const EventCard = ({ event, view = 'normal', className }: EventCardProps) => {
           {showEventImage && (
             <Image
               fill
-              src={event.image!}
+              src={`${event.image!}?v=${event.updatedAt.getTime()}`}
               alt="Event Image"
               className={`object-cover object-center transition-opacity duration-300 ${
                 imgLoaded ? 'opacity-100' : 'opacity-0'

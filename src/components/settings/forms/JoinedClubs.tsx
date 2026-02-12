@@ -111,7 +111,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
           <div className="min-w-10 min-h-10">
             {club.profileImage && (
               <Image
-                src={club.profileImage}
+                src={`${club.profileImage}?v=${club.updatedAt?.getTime()}`}
                 alt={club.name + ' logo'}
                 width={40}
                 height={40}
