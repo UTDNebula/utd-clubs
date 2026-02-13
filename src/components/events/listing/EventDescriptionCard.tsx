@@ -7,6 +7,7 @@ import { useState } from 'react';
 import Panel from '@src/components/common/Panel';
 import ExpandableMarkdownText from '@src/components/ExpandableMarkdownText';
 import { RouterOutputs } from '@src/trpc/shared';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 
 type EventDescriptionCardProps = {
   event: NonNullable<RouterOutputs['event']['getListingInfo']>;
@@ -34,7 +35,7 @@ export default function EventDescriptionCard({
             }`}
           >
             <Image
-              src={`${event.image!}?v=${event.updatedAt.getTime()}`}
+              src={addVersionToImage(event.image!, event.updatedAt.getTime())}
               alt="Event poster"
               height={256}
               width={512}
@@ -75,7 +76,7 @@ export default function EventDescriptionCard({
           </IconButton>
           <div className="relative w-full h-full flex items-center justify-center">
             <Image
-              src={`${event.image!}?v=${event.updatedAt.getTime()}`}
+              src={addVersionToImage(event.image!, event.updatedAt.getTime())}
               alt="Event poster fullscreen"
               fill
               unoptimized
