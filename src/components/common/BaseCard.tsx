@@ -1,4 +1,4 @@
-type CardVariant = 'flat' | 'interactive';
+type CardVariant = 'flat' | 'interactive' | 'transparent';
 
 type BaseCardProps = {
   children: React.ReactNode;
@@ -14,6 +14,7 @@ const variantClasses: Record<CardVariant, string> = {
   flat: 'shadow-sm dark:shadow-md',
   interactive:
     'shadow-lg dark:shadow-lg transition-all hover:shadow-xl dark:hover:shadow-2xl',
+  transparent: '',
 };
 
 export const BaseCard = ({
@@ -28,7 +29,7 @@ export const BaseCard = ({
     <div
       {...(id ? { id } : {})}
       style={style}
-      className={`${baseClasses} ${hasBgClass ? '' : 'bg-white dark:bg-neutral-900'} ${variantClasses[variant]} ${className}`}
+      className={`${baseClasses} ${hasBgClass || variant === 'transparent' ? '' : 'bg-white dark:bg-neutral-900'} ${variantClasses[variant]} ${className}`}
     >
       {children}
     </div>

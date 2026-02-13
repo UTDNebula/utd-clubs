@@ -60,6 +60,11 @@ interface PanelPropsBase {
    * NOTE: If this prop is provided, the heading will turn the cursor to a pointer
    */
   onHeadingClick?: () => void;
+  /**
+   * Whether the panel background should be transparent.
+   * @default false
+   */
+  transparent?: boolean | 'falseOnHover';
 }
 
 interface PanelProps extends PanelPropsBase {
@@ -86,6 +91,7 @@ const Panel = ({
   enableCollapsing = false,
   onCollapseClick,
   onHeadingClick,
+  transparent = false,
   className,
   slotClassNames,
   style,
@@ -128,9 +134,10 @@ const Panel = ({
   return (
     <BaseCard
       className={`flex flex-col ${smallPadding ? 'p-5' : 'sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4'} min-w-0 max-w-6xl
-        target:outline-2 outline-royal dark:outline-cornflower-300 ${className ?? ''}`}
+        target:outline-2 outline-royal dark:outline-cornflower-300 ${transparent === 'falseOnHover' ? 'transition-colors hover:bg-neutral-200 hover:dark:bg-neutral-950' : ''} ${className ?? ''}`}
       {...(id ? { id } : {})}
       style={style}
+      variant={transparent ? 'transparent' : 'flat'}
     >
       {hasHeading && (
         <div
