@@ -185,46 +185,16 @@ const Details = ({ club }: DetailsProps) => {
               </form.Field>
             </div>
             <div className="flex flex-wrap gap-4">
-              <form.Field name="name">
+              <form.AppField name="name">
                 {(field) => (
-                  <TextField
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow-100 [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    label="Name"
-                  />
+                  <field.TextField label="Name" className="grow-100" required />
                 )}
-              </form.Field>
-              <form.Field name="alias">
+              </form.AppField>
+              <form.AppField name="alias">
                 {(field) => (
-                  <TextField
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    label="Alias or Acronym"
-                  />
+                  <field.TextField label="Alias or Acronym" className="grow" />
                 )}
-              </form.Field>
+              </form.AppField>
               <form.Field name="foundingDate">
                 {(field) => (
                   <DatePicker
@@ -251,42 +221,31 @@ const Details = ({ club }: DetailsProps) => {
               </form.Field>
             </div>
             <div className="flex flex-col gap-2">
-              <form.Field name="description">
+              <form.AppField name="description">
                 {(field) => (
-                  <TextField
-                    onChange={(e) => {
-                      field.handleChange(e.target.value);
-                    }}
-                    onBlur={field.handleBlur}
-                    value={field.state.value}
+                  <field.TextField
                     label="Description"
-                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                    className="w-full"
+                    required
                     multiline
                     minRows={4}
-                    error={!field.state.meta.isValid}
                     helperText={
-                      !field.state.meta.isValid ? (
-                        field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      ) : (
-                        <span>
-                          We support{' '}
-                          <a
-                            href="https://www.markdownguide.org/basic-syntax/"
-                            rel="noreferrer"
-                            target="_blank"
-                            className="text-royal dark:text-cornflower-300 underline"
-                          >
-                            Markdown
-                          </a>
-                          !
-                        </span>
-                      )
+                      <span>
+                        We support{' '}
+                        <a
+                          href="https://www.markdownguide.org/basic-syntax/"
+                          rel="noreferrer"
+                          target="_blank"
+                          className="text-royal dark:text-cornflower-300 underline"
+                        >
+                          Markdown
+                        </a>
+                        !
+                      </span>
                     }
                   />
                 )}
-              </form.Field>
+              </form.AppField>
             </div>
             <form.Field name="tags">
               {(field) => (
@@ -318,41 +277,6 @@ const Details = ({ club }: DetailsProps) => {
           </div>
         </Panel>
       </form>
-      <Confirmation
-        open={aliasChangedPopupOpen}
-        onClose={() => setAliasChangedPopupOpen(false)}
-        title={'Alias Changed'}
-        contentText={
-          <>Would you also like to also change your Listing URL to match?</>
-        }
-        confirmText="Change Listing URL"
-        confirmColor="primary"
-        onConfirm={async () => {
-          setAliasChangedPopupOpen(false);
-          // scroll to the Slug component
-          const element = document.getElementById('form-slug');
-
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // highlight the component
-            element.classList.add(
-              'ring-2',
-              'ring-royal',
-              'dark:ring-cornflower-300',
-              'rounded-lg',
-              'transition-all',
-            );
-            setTimeout(() => {
-              element.classList.remove(
-                'ring-2',
-                'ring-royal',
-                'dark:ring-cornflower-300',
-                'rounded-lg',
-              );
-            }, 2000);
-          }
-        }}
-      />
     </>
   );
 };
