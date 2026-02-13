@@ -185,46 +185,16 @@ const Details = ({ club }: DetailsProps) => {
               </form.Field>
             </div>
             <div className="flex flex-wrap gap-4">
-              <form.Field name="name">
+              <form.AppField name="name">
                 {(field) => (
-                  <TextField
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow-100 [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    label="Name"
-                  />
+                  <field.TextField label="Name" className="grow-100" required />
                 )}
-              </form.Field>
-              <form.Field name="alias">
+              </form.AppField>
+              <form.AppField name="alias">
                 {(field) => (
-                  <TextField
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    label="Alias or Acronym"
-                  />
+                  <field.TextField label="Alias or Acronym" className="grow" />
                 )}
-              </form.Field>
+              </form.AppField>
               <form.Field name="foundingDate">
                 {(field) => (
                   <DatePicker
@@ -251,48 +221,41 @@ const Details = ({ club }: DetailsProps) => {
               </form.Field>
             </div>
             <div className="flex flex-col gap-2">
-              <form.Field name="description">
+              <form.AppField name="description">
                 {(field) => (
-                  <TextField
-                    onChange={(e) => {
-                      field.handleChange(e.target.value);
-                    }}
-                    onBlur={field.handleBlur}
-                    value={field.state.value}
+                  <field.TextField
                     label="Description"
-                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                    className="w-full"
+                    required
                     multiline
                     minRows={4}
-                    error={!field.state.meta.isValid}
                     helperText={
-                      !field.state.meta.isValid ? (
-                        field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      : undefined
-                  }
-                  className="grow w-48"
-                />
-              )}
-            </form.Field>
-            <form.Field name="bannerImage">
+                      <span>
+                        We support{' '}
+                        <a
+                          href="https://www.markdownguide.org/basic-syntax/"
+                          rel="noreferrer"
+                          target="_blank"
+                          className="text-royal dark:text-cornflower-300 underline"
+                        >
+                          Markdown
+                        </a>
+                        !
+                      </span>
+                    }
+                  />
+                )}
+              </form.AppField>
+            </div>
+            <form.Field name="tags">
               {(field) => (
-                <FormImage
-                  label="Banner Image"
-                  onBlur={field.handleBlur}
+                <ClubTagEdit
                   value={field.state.value}
-                  fallbackUrl={
-                    clubDetails!.bannerImage
-                      ? addVersionToImage(
-                          clubDetails!.bannerImage,
-                          clubDetails!.updatedAt?.getTime(),
-                        )
-                      : undefined
-                  }
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    field.handleChange(file);
+                  onChange={(value) => {
+                    field.handleChange(value);
                   }}
+                  onBlur={field.handleBlur}
+                  error={!field.state.meta.isValid}
                   helperText={
                     !field.state.meta.isValid
                       ? field.state.meta.errors
@@ -300,104 +263,21 @@ const Details = ({ club }: DetailsProps) => {
                           .join('. ') + '.'
                       : undefined
                   }
-                  className="grow w-48"
                 />
               )}
             </form.Field>
           </div>
-          <div className="flex flex-wrap gap-4">
-            <form.AppField name="name">
-              {(field) => (
-                <field.TextField label="Name" className="grow-100" required />
-              )}
-            </form.AppField>
-            <form.AppField name="alias">
-              {(field) => (
-                <field.TextField label="Alias or Acronym" className="grow" />
-              )}
-            </form.AppField>
-            <form.Field name="foundingDate">
-              {(field) => (
-                <DatePicker
-                  onChange={(value) => field.handleChange(value)}
-                  value={field.state.value}
-                  label="Date Founded"
-                  className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
-                  slotProps={{
-                    actionBar: {
-                      actions: ['accept'],
-                    },
-                    textField: {
-                      size: 'small',
-                      error: !field.state.meta.isValid,
-                      helperText: !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined,
-                    },
-                  }}
-                />
-              )}
-            </form.Field>
+          <div className="flex flex-wrap justify-end items-center gap-2">
+            <form.AppForm>
+              <form.ResetButton />
+            </form.AppForm>
+            <form.AppForm>
+              <form.SubmitButton />
+            </form.AppForm>
           </div>
-          <div className="flex flex-col gap-2">
-            <form.AppField name="description">
-              {(field) => (
-                <field.TextField
-                  label="Description"
-                  className="w-full"
-                  required
-                  multiline
-                  minRows={4}
-                  helperText={
-                    <span>
-                      We support{' '}
-                      <a
-                        href="https://www.markdownguide.org/basic-syntax/"
-                        rel="noreferrer"
-                        target="_blank"
-                        className="text-royal dark:text-cornflower-300 underline"
-                      >
-                        Markdown
-                      </a>
-                      !
-                    </span>
-                  }
-                />
-              )}
-            </form.AppField>
-          </div>
-          <form.Field name="tags">
-            {(field) => (
-              <ClubTagEdit
-                value={field.state.value}
-                onChange={(value) => {
-                  field.handleChange(value);
-                }}
-                onBlur={field.handleBlur}
-                error={!field.state.meta.isValid}
-                helperText={
-                  !field.state.meta.isValid
-                    ? field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
-              />
-            )}
-          </form.Field>
-        </div>
-        <div className="flex flex-wrap justify-end items-center gap-2">
-          <form.AppForm>
-            <form.ResetButton />
-          </form.AppForm>
-          <form.AppForm>
-            <form.SubmitButton />
-          </form.AppForm>
-        </div>
-      </Panel>
-    </form>
+        </Panel>
+      </form>
+    </>
   );
 };
 
