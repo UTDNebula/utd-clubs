@@ -11,6 +11,7 @@ import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubFormSchema } from '@src/utils/formSchemas';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 
 type DetailsProps = {
   club: SelectClub;
@@ -129,7 +130,14 @@ const Details = ({ club }: DetailsProps) => {
                   label="Profile Image"
                   value={field.state.value}
                   onBlur={field.handleBlur}
-                  fallbackUrl={clubDetails!.profileImage ?? undefined}
+                  fallbackUrl={
+                    clubDetails!.profileImage
+                      ? addVersionToImage(
+                          clubDetails!.profileImage,
+                          clubDetails!.updatedAt?.getTime(),
+                        )
+                      : undefined
+                  }
                   onChange={(e) => {
                     const file = e.target.files?.[0] ?? null;
                     field.handleChange(file);
@@ -151,7 +159,14 @@ const Details = ({ club }: DetailsProps) => {
                   label="Banner Image"
                   onBlur={field.handleBlur}
                   value={field.state.value}
-                  fallbackUrl={clubDetails!.bannerImage ?? undefined}
+                  fallbackUrl={
+                    clubDetails!.bannerImage
+                      ? addVersionToImage(
+                          clubDetails!.bannerImage,
+                          clubDetails!.updatedAt?.getTime(),
+                        )
+                      : undefined
+                  }
                   onChange={(e) => {
                     const file = e.target.files?.[0] ?? null;
                     field.handleChange(file);
@@ -175,7 +190,9 @@ const Details = ({ club }: DetailsProps) => {
               )}
             </form.AppField>
             <form.AppField name="alias">
-              {(field) => <field.TextField label="Alias" className="grow" />}
+              {(field) => (
+                <field.TextField label="Alias or Acronym" className="grow" />
+              )}
             </form.AppField>
             <form.Field name="foundingDate">
               {(field) => (
