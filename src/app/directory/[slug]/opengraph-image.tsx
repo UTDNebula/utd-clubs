@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { db } from '@src/server/db';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 
 export const runtime = 'edge';
 export const alt = 'Club Details';
@@ -106,7 +107,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`${clubData.profileImage!}?v=${clubData.updatedAt?.getTime()}`}
+              src={addVersionToImage(
+                clubData.profileImage!,
+                clubData.updatedAt?.getTime(),
+              )}
               alt={clubData.name + ' logo'}
               style={{
                 width: '100%',
