@@ -52,7 +52,7 @@ const Details = ({ club }: DetailsProps) => {
   const defaultValues: ClubDetails = {
     id: clubDetails?.id ?? '',
     name: clubDetails?.name ?? '',
-    alias: clubDetails?.alias ?? null,
+    alias: clubDetails?.alias ?? '',
     description: clubDetails?.description ?? '',
     foundingDate: clubDetails?.foundingDate ?? null,
     tags: clubDetails?.tags ?? [],
@@ -63,7 +63,7 @@ const Details = ({ club }: DetailsProps) => {
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
-      const previousAlias = clubDetails?.alias ?? null;
+      const previousAlias = clubDetails?.alias ?? '';
       const shouldPromptAliasChange = value.alias !== previousAlias;
 
       // Profile image
