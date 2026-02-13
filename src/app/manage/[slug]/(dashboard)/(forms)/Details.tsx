@@ -2,8 +2,10 @@
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
+import Confirmation from '@src/components/Confirmation';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
@@ -58,6 +60,8 @@ const Details = ({ club }: DetailsProps) => {
     bannerImage: null,
   };
 
+  const [aliasChangedPopupOpen, setAliasChangedPopupOpen] = useState(false);
+
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
@@ -100,6 +104,12 @@ const Details = ({ club }: DetailsProps) => {
         profileImage: profileImageUrl,
       });
       if (updated) {
+        const aliasIsDirty = !formApi.getFieldMeta('alias')?.isDefaultValue;
+        // If alias changed and we haven't confirmed yet, show popup
+        if (aliasIsDirty) {
+          setAliasChangedPopupOpen(true);
+        }
+
         queryClient.invalidateQueries(
           api.club.details.queryOptions({ id: club.id }),
         );
@@ -277,6 +287,41 @@ const Details = ({ club }: DetailsProps) => {
           </div>
         </Panel>
       </form>
+      <Confirmation
+        open={aliasChangedPopupOpen}
+        onClose={() => setAliasChangedPopupOpen(false)}
+        title={'Alias Changed'}
+        contentText={
+          <>Would you also like to also change your Listing URL to match?</>
+        }
+        confirmText="Change Listing URL"
+        confirmColor="primary"
+        onConfirm={async () => {
+          setAliasChangedPopupOpen(false);
+          // scroll to the Slug component
+          const element = document.getElementById('form-slug');
+
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // highlight the component
+            element.classList.add(
+              'ring-2',
+              'ring-royal',
+              'dark:ring-cornflower-300',
+              'rounded-lg',
+              'transition-all',
+            );
+            setTimeout(() => {
+              element.classList.remove(
+                'ring-2',
+                'ring-royal',
+                'dark:ring-cornflower-300',
+                'rounded-lg',
+              );
+            }, 2000);
+          }
+        }}
+      />
     </>
   );
 };
