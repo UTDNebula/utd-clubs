@@ -2,10 +2,8 @@
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
-import Confirmation from '@src/components/Confirmation';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
@@ -46,7 +44,6 @@ const Details = ({ club }: DetailsProps) => {
   );
   const uploadImage = useUploadToUploadURL();
   const queryClient = useQueryClient();
-  const [aliasChangedPopupOpen, setAliasChangedPopupOpen] = useState(false);
 
   const clubDetails = clubQuery.data;
   const defaultValues: ClubDetails = {
@@ -63,9 +60,6 @@ const Details = ({ club }: DetailsProps) => {
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
-      const previousAlias = clubDetails?.alias ?? '';
-      const shouldPromptAliasChange = value.alias !== previousAlias;
-
       // Profile image
 
       const { profileImage, bannerImage, ...formValues } = value;
@@ -109,9 +103,6 @@ const Details = ({ club }: DetailsProps) => {
           api.club.details.queryOptions({ id: club.id }),
         );
         formApi.reset();
-        if (shouldPromptAliasChange) {
-          setAliasChangedPopupOpen(true);
-        }
       }
     },
     validators: {
@@ -122,14 +113,13 @@ const Details = ({ club }: DetailsProps) => {
   if (!clubQuery.isSuccess) return <PanelSkeleton />;
 
   return (
-    <>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          form.handleSubmit();
-        }}
-      >
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+    >
         <Panel heading="Details">
           <div className="m-2 flex flex-col gap-4">
             <div className="flex flex-wrap gap-4">
@@ -269,36 +259,6 @@ const Details = ({ club }: DetailsProps) => {
           </div>
         </Panel>
       </form>
-      <Confirmation
-        open={aliasChangedPopupOpen}
-        onClose={() => setAliasChangedPopupOpen(false)}
-        title="Alias Changed"
-        contentText={<>Would you like to update your Listing URL to match?</>}
-        confirmText="Change Listing URL"
-        confirmColor="primary"
-        onConfirm={async () => {
-          setAliasChangedPopupOpen(false);
-          const element = document.getElementById('form-slug');
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            element.classList.add(
-              'ring-2',
-              'ring-royal',
-              'dark:ring-cornflower-300',
-              'rounded-lg',
-            );
-            setTimeout(() => {
-              element.classList.remove(
-                'ring-2',
-                'ring-royal',
-                'dark:ring-cornflower-300',
-                'rounded-lg',
-              );
-            }, 2500);
-          }
-        }}
-      />
-    </>
   );
 };
 
