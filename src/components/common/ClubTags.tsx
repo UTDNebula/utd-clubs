@@ -1,17 +1,22 @@
 'use client';
 
 import { ListItemText, Menu, MenuItem } from '@mui/material';
-import Chip from '@mui/material/Chip';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { TagChip } from './TagChip';
 
 // Constants for layout calculation
 const GAP = 4;
 const CHIP_HEIGHT = 32;
 const ROW_BUFFER = 5;
 
-export const ClubTags = ({ tags }: { tags: string[] }) => {
+interface ClubTagsProps {
+  tags: string[];
+  size?: 'small' | 'medium';
+}
+
+export const ClubTags = (props: ClubTagsProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [visibleCount, setVisibleCount] = useState(tags.length);
+  const [visibleCount, setVisibleCount] = useState(props.tags.length);
 
   const [isReady, setIsReady] = useState(false); // if false, all tags are rendered invisibly for measurement
   const lastWidthRef = useRef(0);
@@ -54,14 +59,14 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
       }
 
       // If we have overflow, remove 1 more tag to make space for the overflow Chip
-      if (validCount < tags.length) {
+      if (validCount < props.tags.length) {
         if (validCount > 0) {
           const containerRight = container.getBoundingClientRect().right;
           const lastChildRight =
             children[validCount - 1]!.getBoundingClientRect().right;
           const remainingSpace = containerRight - lastChildRight;
 
-          const overflowWidth = tags.length - validCount == 1 ? 63 : 75; // estimated width of the overflow chip
+          const overflowWidth = props.tags.length - validCount == 1 ? 63 : 75; // estimated width of the overflow chip
 
           if (remainingSpace < GAP + overflowWidth) {
             setVisibleCount(Math.max(0, validCount - 1)); // make space for overflow chip
@@ -72,14 +77,14 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
           setVisibleCount(0); // no tags fit, show only overflow
         }
       } else {
-        setVisibleCount(tags.length); // all tags fit
+        setVisibleCount(props.tags.length); // all tags fit
       }
 
       setIsReady(true);
     };
 
     calculateVisibleTags();
-  }, [tags, isReady]);
+  }, [props.tags, isReady]);
 
   // observe container width changes to re-trigger measurement
   useEffect(() => {
@@ -87,8 +92,12 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
 
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        if (entry.contentRect.width !== lastWidthRef.current) {
-          // only trigger width changes
+        // Calculate the absolute difference
+        const widthDiff = Math.abs(
+          entry.contentRect.width - lastWidthRef.current,
+        );
+        // 20px threshold: Ignores scrollbars (approx 17px) and minor layout jitters.
+        if (widthDiff > 20) {
           lastWidthRef.current = entry.contentRect.width;
           setIsReady(false); //trigger re-measurement
         }
@@ -99,8 +108,11 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
     return () => observer.disconnect();
   }, []);
 
-  const visibleTags = tags.slice(0, isReady ? visibleCount : tags.length);
-  const overflowTags = tags.slice(visibleCount);
+  const visibleTags = props.tags.slice(
+    0,
+    isReady ? visibleCount : props.tags.length,
+  );
+  const overflowTags = props.tags.slice(visibleCount);
   const hasOverflow = overflowTags.length > 0 && isReady;
 
   return (
@@ -109,36 +121,35 @@ export const ClubTags = ({ tags }: { tags: string[] }) => {
       className={`flex flex-wrap gap-1 mt-2 ${!isReady ? 'invisible' : ''}`} // hide container when measuring
     >
       {/* Render all tags invisibly first to measure, then only the tags that fit visibly */}
-      {(isReady ? visibleTags : tags).map((tag) => (
+      {(isReady ? visibleTags : props.tags).map((tag) => (
         <div key={tag} className="flex">
-          <Chip
-            label={tag}
-            className="font-semibold bg-cornflower-100 dark:bg-cornflower-900 text-cornflower-600 dark:text-cornflower-400 hover:bg-cornflower-200 dark:hover:bg-cornflower-800"
-          />
+          <TagChip tag={tag} size={props.size} />
         </div>
       ))}
 
       {hasOverflow && (
         <div className="flex" data-overflow="true">
-          <Chip
-            label={`+${overflowTags.length} ${overflowTags.length === 1 ? 'tag' : 'tags'}`}
+          <TagChip
+            tag={`+${overflowTags.length} ${overflowTags.length === 1 ? 'tag' : 'tags'}`}
             onClick={handleMenuOpen}
-            className="font-bold bg-cornflower-100 dark:bg-cornflower-900 text-cornflower-600 dark:text-cornflower-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 cursor-pointer"
+            className="!font-bold !hover:bg-slate-300 !dark:hover:bg-slate-700 !cursor-pointer"
           />
-          <Menu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleMenuClose}
-            slotProps={{
-              paper: { className: 'max-h-40 mt-2 rounded-xl' },
-            }}
-          >
-            {overflowTags.map((tag) => (
-              <MenuItem key={tag} onClick={handleMenuClose}>
-                <ListItemText primary={tag} />
-              </MenuItem>
-            ))}
-          </Menu>
+          {anchorEl && (
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleMenuClose}
+              slotProps={{
+                paper: { className: 'max-h-40 mt-2 rounded-xl' },
+              }}
+            >
+              {overflowTags.map((tag) => (
+                <MenuItem key={tag} onClick={handleMenuClose}>
+                  <ListItemText primary={tag} />
+                </MenuItem>
+              ))}
+            </Menu>
+          )}
         </div>
       )}
     </div>

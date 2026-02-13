@@ -14,7 +14,7 @@ type FormData = Partial<AccountOnboardingSchema>;
 const OnboardingFormStep = withForm({
   defaultValues: {} as FormData,
   props: {
-    step: {} as WizardStepObject | undefined,
+    step: {} as WizardStepObject<AccountOnboardingSchema> | undefined,
     active: false as boolean | undefined,
   },
   render: function Render({ form, step, active }) {
@@ -107,6 +107,7 @@ const OnboardingFormStep = withForm({
                                   .map((err) => err?.message)
                                   .join('. ') + '.'
                               : undefined,
+                            required: true,
                           },
                         }}
                         timezone="UTC"

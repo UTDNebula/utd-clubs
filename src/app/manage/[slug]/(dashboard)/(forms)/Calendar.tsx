@@ -150,7 +150,6 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
                     labelId="calendar-select-label"
                     value={selectedCalendar.id}
                     label="Linked Calendar"
-                    className="bg-gray-100 dark:bg-gray-900"
                     disabled
                   >
                     {isSuccess &&

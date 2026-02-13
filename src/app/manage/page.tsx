@@ -1,4 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
+import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import ClubCard from '@src/components/club/ClubCard';
@@ -7,6 +8,18 @@ import { LinkButton } from '@src/components/LinkButton';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
+
+export const metadata: Metadata = {
+  title: 'Manage Clubs',
+  description: 'Sign in to edit your club listings.',
+  alternates: {
+    canonical: 'https://clubs.utdnebula.com/manage',
+  },
+  openGraph: {
+    url: 'https://clubs.utdnebula.com/manage',
+    description: 'Sign in to edit your club listings.',
+  },
+};
 
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });

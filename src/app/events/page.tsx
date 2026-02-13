@@ -9,11 +9,13 @@ import EventsTitle from './EventsTitle';
 
 export const metadata: Metadata = {
   title: 'Events',
+  description: 'The place to find events at UTD.',
   alternates: {
     canonical: 'https://clubs.utdnebula.com/events',
   },
   openGraph: {
     url: 'https://clubs.utdnebula.com/events',
+    description: 'The place to find events at UTD.',
   },
 };
 const Events = async (props: {

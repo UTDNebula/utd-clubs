@@ -17,6 +17,7 @@ import Confirmation from '@src/components/Confirmation';
 import MemberRoleChip from '@src/components/manage/MemberRoleChip';
 import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 
 type ClubsProps = {
   joinedClubs: SelectUserMetadataToClubsWithClub[];
@@ -111,7 +112,10 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
           <div className="min-w-10 min-h-10">
             {club.profileImage && (
               <Image
-                src={club.profileImage}
+                src={addVersionToImage(
+                  club.profileImage,
+                  club.updatedAt?.getTime(),
+                )}
                 alt={club.name + ' logo'}
                 width={40}
                 height={40}

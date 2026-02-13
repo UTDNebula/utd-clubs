@@ -4,6 +4,7 @@ import type {
   SelectContact as Contacts,
   SelectClub,
 } from '@src/server/db/models';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 
 type Club = SelectClub & {
   contacts?: Contacts[];
@@ -17,7 +18,7 @@ const ClubEventHeader = async ({ club }: { club: Club }) => {
   return (
     <BaseCard className="relative w-full aspect-[4.5/1] overflow-hidden">
       <Image
-        src={club.bannerImage}
+        src={addVersionToImage(club.bannerImage, club.updatedAt?.getTime())}
         alt="Club banner"
         fill
         className="object-cover object-center"

@@ -1,10 +1,12 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { authClient } from '@src/utils/auth-client';
 
 export const GoogleReauthHandler = () => {
   const shouldRedirect = useRef(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (shouldRedirect.current) return;
@@ -13,7 +15,7 @@ export const GoogleReauthHandler = () => {
     const triggerReauth = async () => {
       const res = await authClient.signIn.social({
         provider: 'google',
-        callbackURL: '/',
+        callbackURL: pathname,
         disableRedirect: true, // so we can catch and modify the url
       });
 
@@ -30,7 +32,7 @@ export const GoogleReauthHandler = () => {
     };
 
     triggerReauth();
-  }, []);
+  }, [pathname]);
 
   // render nothing otherwise
   return null;

@@ -18,6 +18,7 @@ import {
   createEventFormSchema,
   editEventFormSchema,
 } from '@src/utils/formSchemas';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 import EventCard, { EventCardSkeleton } from './EventCard';
 
 type EventFormProps =
@@ -197,7 +198,14 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                 <FormImage
                   label="Event Image"
                   value={field.state.value}
-                  fallbackUrl={event?.image ?? undefined}
+                  fallbackUrl={
+                    event?.image
+                      ? addVersionToImage(
+                          event.image,
+                          event.updatedAt.getTime(),
+                        )
+                      : undefined
+                  }
                   onBlur={field.handleBlur}
                   onChange={(e) => {
                     const file = e.target.files?.[0] ?? null;

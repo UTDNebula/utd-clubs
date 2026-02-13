@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Panel from '@src/components/common/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 
 type EventHostClubCardProps = {
   club: NonNullable<RouterOutputs['event']['getListingInfo']>['club'];
@@ -21,7 +22,10 @@ export default function EventHostClubCard({
         >
           {club.profileImage && (
             <Image
-              src={club.profileImage}
+              src={addVersionToImage(
+                club.profileImage,
+                club.updatedAt?.getTime(),
+              )}
               alt={club.name + ' logo'}
               width={32}
               height={32}

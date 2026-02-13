@@ -114,37 +114,159 @@ const Details = ({ club }: DetailsProps) => {
   if (!clubQuery.isSuccess) return <PanelSkeleton />;
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        form.handleSubmit();
-      }}
-    >
-      <Panel heading="Details">
-        <div className="m-2 flex flex-col gap-4">
-          <div className="flex flex-wrap gap-4">
-            <form.Field name="profileImage">
-              {(field) => (
-                <FormImage
-                  label="Profile Image"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  fallbackUrl={
-                    clubDetails!.profileImage
-                      ? addVersionToImage(
-                          clubDetails!.profileImage,
-                          clubDetails!.updatedAt?.getTime(),
-                        )
-                      : undefined
-                  }
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    field.handleChange(file);
-                  }}
-                  helperText={
-                    !field.state.meta.isValid
-                      ? field.state.meta.errors
+    <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
+      >
+        <Panel heading="Details">
+          <div className="m-2 flex flex-col gap-4">
+            <div className="flex flex-wrap gap-4">
+              <form.Field name="profileImage">
+                {(field) => (
+                  <FormImage
+                    label="Profile Image"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    fallbackUrl={
+                      clubDetails!.profileImage
+                        ? addVersionToImage(
+                            clubDetails!.profileImage,
+                            clubDetails!.updatedAt?.getTime(),
+                          )
+                        : undefined
+                    }
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      field.handleChange(file);
+                    }}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
+                    className="grow w-48"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="bannerImage">
+                {(field) => (
+                  <FormImage
+                    label="Banner Image"
+                    onBlur={field.handleBlur}
+                    value={field.state.value}
+                    fallbackUrl={
+                      clubDetails!.bannerImage
+                        ? addVersionToImage(
+                            clubDetails!.bannerImage,
+                            clubDetails!.updatedAt?.getTime(),
+                          )
+                        : undefined
+                    }
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      field.handleChange(file);
+                    }}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
+                    className="grow w-48"
+                  />
+                )}
+              </form.Field>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <form.Field name="name">
+                {(field) => (
+                  <TextField
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className="grow-100 [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                    size="small"
+                    error={!field.state.meta.isValid}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
+                    label="Name"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="alias">
+                {(field) => (
+                  <TextField
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                    size="small"
+                    error={!field.state.meta.isValid}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
+                    label="Alias or Acronym"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="foundingDate">
+                {(field) => (
+                  <DatePicker
+                    onChange={(value) => field.handleChange(value)}
+                    value={field.state.value}
+                    label="Date Founded"
+                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
+                    slotProps={{
+                      actionBar: {
+                        actions: ['accept'],
+                      },
+                      textField: {
+                        size: 'small',
+                        error: !field.state.meta.isValid,
+                        helperText: !field.state.meta.isValid
+                          ? field.state.meta.errors
+                              .map((err) => err?.message)
+                              .join('. ') + '.'
+                          : undefined,
+                      },
+                    }}
+                  />
+                )}
+              </form.Field>
+            </div>
+            <div className="flex flex-col gap-2">
+              <form.Field name="description">
+                {(field) => (
+                  <TextField
+                    onChange={(e) => {
+                      field.handleChange(e.target.value);
+                    }}
+                    onBlur={field.handleBlur}
+                    value={field.state.value}
+                    label="Description"
+                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                    multiline
+                    minRows={4}
+                    error={!field.state.meta.isValid}
+                    helperText={
+                      !field.state.meta.isValid ? (
+                        field.state.meta.errors
                           .map((err) => err?.message)
                           .join('. ') + '.'
                       : undefined
