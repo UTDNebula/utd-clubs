@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { BaseCard } from '@src/components/common/BaseCard';
 import type { SelectClub as Club } from '@src/server/db/models';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 import { convertMarkdownToPlaintext } from '@src/utils/markdown';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
 
@@ -28,7 +29,10 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
           <div className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-900" />
           {club.profileImage && (
             <Image
-              src={`${club.profileImage}?v=${club.updatedAt?.getTime()}`}
+              src={addVersionToImage(
+                club.profileImage,
+                club.updatedAt?.getTime(),
+              )}
               fill
               alt={club.name + ' logo'}
               priority={priority}

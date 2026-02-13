@@ -14,6 +14,7 @@ import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubFormSchema } from '@src/utils/formSchemas';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 
 type DetailsProps = {
   club: SelectClub;
@@ -143,7 +144,10 @@ const Details = ({ club }: DetailsProps) => {
                     onBlur={field.handleBlur}
                     fallbackUrl={
                       clubDetails!.profileImage
-                        ? `${clubDetails!.profileImage}?v=${clubDetails!.updatedAt?.getTime()}`
+                        ? addVersionToImage(
+                            clubDetails!.profileImage,
+                            clubDetails!.updatedAt?.getTime(),
+                          )
                         : undefined
                     }
                     onChange={(e) => {
@@ -169,7 +173,10 @@ const Details = ({ club }: DetailsProps) => {
                     value={field.state.value}
                     fallbackUrl={
                       clubDetails!.bannerImage
-                        ? `${clubDetails!.bannerImage}?v=${clubDetails!.updatedAt?.getTime()}`
+                        ? addVersionToImage(
+                            clubDetails!.bannerImage,
+                            clubDetails!.updatedAt?.getTime(),
+                          )
                         : undefined
                     }
                     onChange={(e) => {

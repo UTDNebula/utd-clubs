@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { ClubTags } from '@src/components/common/ClubTags';
 import { type RouterOutputs } from '@src/trpc/shared';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 import JoinButton from '../JoinButton';
 
 const ClubTitle = async ({
@@ -18,7 +19,10 @@ const ClubTitle = async ({
       >
         {club.profileImage && (
           <Image
-            src={`${club.profileImage}?v=${club.updatedAt?.getTime()}`}
+            src={addVersionToImage(
+              club.profileImage,
+              club.updatedAt?.getTime(),
+            )}
             alt={club.name + ' logo'}
             width={128}
             height={128}
