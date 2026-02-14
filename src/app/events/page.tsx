@@ -1,10 +1,9 @@
 import { type Metadata } from 'next';
 import type z from 'zod';
-import EventCard from '@src/components/events/EventCard';
+import EventsBody from '@src/components/events/directory/EventsBody';
 import { EventHeader } from '@src/components/header/Header';
 import { api } from '@src/trpc/server';
 import { eventParamsSchema } from '@src/utils/eventFilter';
-import EventsNone from './EventsNone';
 import EventsTitle from './EventsTitle';
 
 export const metadata: Metadata = {
@@ -30,15 +29,9 @@ const Events = async (props: {
   return (
     <>
       <EventHeader />
-      <main className="w-full p-4">
-        <EventsTitle date={parsed.date} />
-        <div className="flex flex-wrap w-full justify-evenly items-center pt-6 gap-4">
-          {events.length > 0 ? (
-            events.map((event) => <EventCard key={event.id} event={event} />)
-          ) : (
-            <EventsNone date={parsed.date} />
-          )}
-        </div>
+      <main className="mb-5 flex flex-col gap-y-8 sm:px-4 max-w-6xl mx-auto">
+        <EventsTitle />
+        <EventsBody events={events} />
       </main>
     </>
   );
