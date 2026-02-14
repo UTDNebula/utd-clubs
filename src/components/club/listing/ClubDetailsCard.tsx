@@ -97,18 +97,20 @@ export default function ClubDetailsCard({
   }
 
   return (
-    <Panel className="text-sm !gap-1" id={id} smallPadding heading="Details">
-      {items.length ? (
-        items.flatMap((item, index) => {
-          const row = [item];
-          if (index < items.length - 1) {
-            row.push(<Divider key={index} />);
-          }
-          return row;
-        })
-      ) : (
-        <span className="text-slate-600 dark:text-slate-400">No details</span>
-      )}
+    <Panel className="text-sm" id={id} smallPadding heading="Details">
+      <div className="flex flex-col gap-1">
+        {items.length ? (
+          items.flatMap((item, index) => {
+            const row = [item];
+            if (index < items.length - 1) {
+              row.push(<Divider key={index} />);
+            }
+            return row;
+          })
+        ) : (
+          <span className="text-slate-600 dark:text-slate-400">No details</span>
+        )}
+      </div>
     </Panel>
   );
 }
