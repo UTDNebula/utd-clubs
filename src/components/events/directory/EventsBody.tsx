@@ -1,54 +1,53 @@
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Panel from '@src/components/common/Panel';
+'use client';
+
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import Chip from '@mui/material/Chip';
+import Collapse from '@mui/material/Collapse';
+import { useState } from 'react';
 import { EventSearchBar } from '@src/components/searchBar/EventSearchBar';
 import { RouterOutputs } from '@src/trpc/shared';
 import EventCard from '../EventCard';
+import EventsFilterBar from './filter/EventsFilterBar';
+import EventsFilterPanels from './filter/EventsFilterPanels';
 
 type EventsBodyProps = {
   events: RouterOutputs['event']['findByDate']['events'];
 };
 
-const EventsBody = async ({ events }: EventsBodyProps) => {
+const EventsBody = ({ events }: EventsBodyProps) => {
+  const [showSidebar, setShowSidebar] = useState(true);
+
   return (
-    <section
-      id="event-body"
-      className="w-full rounded-lg grid grid-cols-1 md:grid-cols-[20rem_1fr] gap-4 items-start"
-    >
-      <div
-        id="club-content-left"
-        className="flex flex-col gap-4 h-full order-2 md:order-1"
+    <section id="events-body" className="w-full flex items-start">
+      <Collapse
+        orientation="horizontal"
+        in={showSidebar}
+        className="max-md:hidden"
       >
-        <Panel
-          heading="Filters"
-          smallPadding
-          enableCollapsing={{ toggleOnHeadingClick: true }}
-          transparent="falseOnHover"
+        <div
+          id="events-filters"
+          className="flex flex-col gap-4 h-full w-80 mr-4"
         >
-          <ToggleButtonGroup
-            size="small"
-            className="[&>.MuiButtonBase-root]:normal-case [&>.MuiButtonBase-root]:grow"
-            exclusive
-            aria-label="Relevance"
-          >
-            <ToggleButton value="all">All</ToggleButton>
-            <ToggleButton value="following">Your Clubs</ToggleButton>
-            <ToggleButton value="discover">Discover</ToggleButton>
-          </ToggleButtonGroup>
-          <FormControlLabel
-            label="Hide registered events"
-            control={<Switch />}
-          ></FormControlLabel>
-        </Panel>
-      </div>
-      <div
-        id="club-content-right"
-        className="flex flex-col gap-4 order-1 md:order-2"
-      >
+          <EventsFilterPanels backgroundHover />
+        </div>
+      </Collapse>
+      <div id="events-content" className="flex flex-col gap-4 grow">
         <EventSearchBar />
-        <div className="flex flex-wrap w-full justify-evenly items-center pt-6 gap-4">
+        <div className="flex gap-2">
+          <Chip
+            icon={showSidebar ? <MenuOpenIcon /> : <MenuIcon />}
+            variant="outlined"
+            onClick={() => setShowSidebar((prev) => !prev)}
+            className="border-[var(--mui-palette-divider)] max-md:hidden"
+            slotProps={{
+              root: { className: 'aspect-square [&>.MuiChip-icon]:m-0' },
+              label: { className: 'p-0' },
+            }}
+          />
+          <EventsFilterBar />
+        </div>
+        <div className="flex flex-wrap w-full justify-evenly items-center gap-4">
           {events.length > 0 ? (
             events.map((event) => <EventCard key={event.id} event={event} />)
           ) : (

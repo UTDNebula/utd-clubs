@@ -67,7 +67,7 @@ interface PanelPropsBase {
   transparent?: boolean | 'falseOnHover';
 }
 
-interface PanelProps extends PanelPropsBase {
+export interface PanelProps extends PanelPropsBase {
   className?: string;
   slotClassNames?: {
     heading?: string;
@@ -141,7 +141,7 @@ const Panel = ({
     >
       {hasHeading && (
         <div
-          className={`flex justify-between ${collapseOptions.toggleOnHeadingClick || onHeadingClick ? 'cursor-pointer' : ''} ${slotClassNames?.heading}`}
+          className={`flex justify-between ${collapseOptions.toggleOnHeadingClick || onHeadingClick ? 'cursor-pointer select-none' : ''} ${slotClassNames?.heading}`}
           onClick={() => {
             if (
               collapseOptions.toggleOnHeadingClick &&
