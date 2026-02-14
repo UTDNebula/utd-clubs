@@ -1,5 +1,3 @@
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -50,7 +48,7 @@ const EventsBody = async ({ events }: EventsBodyProps) => {
         className="flex flex-col gap-4 order-1 md:order-2"
       >
         <EventSearchBar />
-        <div className="flex flex-wrap w-full justify-evenly items-center pt-6 gap-4 max-sm:px-4">
+        <div className="flex flex-wrap w-full justify-evenly items-center pt-6 gap-4">
           {events.length > 0 ? (
             events.map((event) => <EventCard key={event.id} event={event} />)
           ) : (

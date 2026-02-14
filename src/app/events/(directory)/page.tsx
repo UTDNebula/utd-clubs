@@ -1,10 +1,8 @@
 import { type Metadata } from 'next';
 import type z from 'zod';
 import EventsBody from '@src/components/events/directory/EventsBody';
-import { EventHeader } from '@src/components/header/Header';
 import { api } from '@src/trpc/server';
 import { eventParamsSchema } from '@src/utils/eventFilter';
-import EventsTitle from './EventsTitle';
 
 export const metadata: Metadata = {
   title: 'Events',
@@ -28,11 +26,7 @@ const Events = async (props: {
 
   return (
     <>
-      <EventHeader />
-      <main className="mb-5 flex flex-col gap-y-8 sm:px-4 max-w-6xl mx-auto">
-        <EventsTitle />
-        <EventsBody events={events} />
-      </main>
+      <EventsBody events={events} />
     </>
   );
 };

@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Tooltip from '@mui/material/Tooltip';
+import Link from 'next/link';
 import { SyntheticEvent, useState } from 'react';
 
 type EventsTitleProps = {
@@ -26,7 +27,7 @@ const EventsTitle = ({ selectedCount, totalCount }: EventsTitleProps) => {
 
   return (
     <div className="flex justify-between gap-4 border-b-1 border-[var(--mui-palette-divider)]">
-      <div className="mt-2 grow">
+      <div className="mt-2 grow sm:ml-4">
         <div className="flex gap-3 items-end py-4 max-sm:justify-center">
           <h1 className="font-display text-3xl font-semibold">Events</h1>
           {(selectedCount || totalCount) && (
@@ -43,18 +44,21 @@ const EventsTitle = ({ selectedCount, totalCount }: EventsTitleProps) => {
             onChange={handleChangeTab}
             className="[&_.MuiTab-root]:min-h-14"
           >
-            <Tab label="Search" icon={<SearchIcon />} iconPosition="start" />
-            <Tooltip title="Coming soon">
-              {/* This span is required to ensure the tooltip shows despite the Tab component being disabled */}
-              <span>
-                <Tab
-                  label="Calendar"
-                  icon={<CalendarMonthIcon />}
-                  iconPosition="start"
-                  disabled
-                />
-              </span>
-            </Tooltip>
+            <Tab
+              label="Search"
+              icon={<SearchIcon />}
+              iconPosition="start"
+              LinkComponent={Link}
+              href="/events"
+            />
+            <Tab
+              label="Calendar"
+              icon={<CalendarMonthIcon />}
+              iconPosition="start"
+              // disabled
+              LinkComponent={Link}
+              href="/events/calendar"
+            />
           </Tabs>
           <Tooltip title="Coming soon">
             <span>
