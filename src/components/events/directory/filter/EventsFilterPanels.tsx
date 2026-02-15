@@ -5,7 +5,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { useState } from 'react';
 import Panel, { PanelProps } from '@src/components/common/Panel';
+import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
+import FilterList from './FilterList';
 
 type EventsFilterPanelsProps = {
   backgroundHover?: boolean;
@@ -19,6 +22,8 @@ export default function EventsFilterPanels({
     enableCollapsing: { toggleOnHeadingClick: true },
     transparent: backgroundHover ? 'falseOnHover' : true,
   };
+
+  const [tags, setTags] = useState<string[]>([]);
 
   return (
     <div className="flex flex-col">
@@ -37,11 +42,35 @@ export default function EventsFilterPanels({
       </Panel>
       <Divider variant="middle" />
       <Panel heading="Tags" {...panelProps}>
-        Tag Selector
+        <ClubTagEdit
+          value={tags}
+          onChange={(newValue) => {
+            setTags(newValue);
+          }}
+          onBlur={() => {}}
+        />
       </Panel>
       <Divider variant="middle" />
-      <Panel heading="When" {...panelProps}>
-        Date Selector
+      <Panel heading="Time" {...panelProps}>
+        <FilterList
+          options={[
+            'Today',
+            'Tomorrow',
+            'This weekend',
+            'This week',
+            'This month',
+            'Custom date...',
+          ]}
+          type="radio"
+        />
+      </Panel>
+      <Divider variant="middle" />
+      <Panel heading="Location" {...panelProps}>
+        <FilterList
+          options={['On-Campus', 'Off-Campus', 'Online', 'Hybrid']}
+          type="checkbox"
+          enableExclusion
+        />
       </Panel>
     </div>
   );
