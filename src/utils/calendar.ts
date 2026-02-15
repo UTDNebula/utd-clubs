@@ -228,13 +228,13 @@ function generateEvent(
     recurrence: JSON.stringify(event.recurrence),
     recurenceId: event.recurringEventId,
     startTime: event.start.date
-      ? new TZDateMini(event.start.date, 'America/Chicago')
+      ? new TZDateMini(event.start.date + 'T00:00:00', 'America/Chicago')
       : event.start.dateTime
         ? new Date(event.start.dateTime)
         : new Date(),
     endTime: event.end.date
       ? subMinutes(
-          addDays(new TZDateMini(event.end.date, 'America/Chicago'), 1),
+          new TZDateMini(event.end.date + 'T00:00:00', 'America/Chicago'),
           1,
         )
       : event.end.dateTime
