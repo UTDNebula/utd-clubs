@@ -1,16 +1,43 @@
 import BlockIcon from '@mui/icons-material/Block';
-import { IconButton, ListItem } from '@mui/material';
+import { IconButton, ListItem, Tooltip } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Radio from '@mui/material/Radio';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 export type FilterListItem = {
   label?: string;
   value: string;
+  disableExclusion?: boolean;
+  /**
+   * Modifies the secondary action of the item
+   */
+  secondaryAction?: {
+    /**
+     * Whether this alternate secondary action is visible
+     */
+    visible?: boolean;
+    /**
+     * Action performed when clicking the secondary action button
+     * NOTE: By default, exclusion is still enabled and will run before this event handler function.
+     * To disable exclusion for this item, set {@linkcode FilterListItem.disableExclusion | disableExclusion} to true.
+     */
+    onClick?: () => void;
+    /**
+     * Changes the icon used for the secondary action
+     * NOTE: Set the `fontSize` prop to "small" for MUI icons
+     * @default <BlockIcon fontSize="small" />
+     */
+    icon?: ReactNode;
+    /**
+     * Changes the tooltip used for the secondary action
+     * @default "Exclude"
+     */
+    tooltip?: ReactNode;
+  };
 };
 
 export type FilterListProps = {
@@ -70,65 +97,64 @@ export default function FilterList({
     excludedValues ?? [],
   );
 
-  const handleToggle = (item: FilterListItem) => () => {
+  const handleToggle = (item: FilterListItem) => {
+    let newSelected = [...selected];
+    let newExcluded = [...excluded];
     switch (type) {
       case 'checkbox':
         const currentIndex = selected.indexOf(item.value);
-        const newSelected = [...selected];
-
         if (currentIndex === -1) {
           newSelected.push(item.value);
         } else {
           newSelected.splice(currentIndex, 1);
         }
-
-        setSelected(newSelected);
-        setExcluded((prev) => prev.filter((ele) => ele !== item.value));
-
+        newExcluded = excluded.filter((ele) => ele !== item.value);
         break;
       case 'radio':
         if (allowDeselecting && selected.includes(item.value)) {
-          setSelected([]);
+          newSelected = [];
         } else {
-          setSelected([item.value]);
-          setExcluded((prev) => prev.filter((ele) => ele !== item.value));
+          newSelected = [item.value];
+          newExcluded = excluded.filter((ele) => ele !== item.value);
         }
         break;
       default:
         console.error('Unknown type for FilterList');
         break;
     }
-    onChange?.(selected, excluded);
+    setSelected(newSelected);
+    setExcluded(newExcluded);
+    onChange?.(newSelected, newExcluded);
   };
 
-  const handleToggleExclude = (item: FilterListItem) => () => {
+  const handleToggleExclude = (item: FilterListItem) => {
+    let newSelected = [...selected];
+    let newExcluded = [...excluded];
     switch (type) {
       case 'checkbox':
         const currentIndex = excluded.indexOf(item.value);
-        const newExcluded = [...excluded];
-
         if (currentIndex === -1) {
           newExcluded.push(item.value);
         } else {
           newExcluded.splice(currentIndex, 1);
         }
-
-        setSelected((prev) => prev.filter((ele) => ele !== item.value));
-        setExcluded(newExcluded);
+        newSelected = selected.filter((ele) => ele !== item.value);
         break;
       case 'radio':
         if (allowDeselecting && excluded.includes(item.value)) {
-          setExcluded([]);
+          newExcluded = [];
         } else {
-          setSelected((prev) => prev.filter((ele) => ele !== item.value));
-          setExcluded([item.value]);
+          newSelected = selected.filter((ele) => ele !== item.value);
+          newExcluded = [item.value];
         }
         break;
       default:
         console.error('Unknown type for FilterList');
         break;
     }
-    onChange?.(selected, excluded);
+    setSelected(newSelected);
+    setExcluded(newExcluded);
+    onChange?.(newSelected, newExcluded);
   };
 
   const options: FilterListItem[] = optionsProp?.map((option) => {
@@ -147,28 +173,49 @@ export default function FilterList({
           disablePadding
           className="group/li"
           secondaryAction={
-            enableExclusion ? (
-              <IconButton
-                aria-label={`exclude ${option.label ?? option.value}`}
-                className="group/secondary"
-                size="small"
-                onClick={handleToggleExclude(option)}
+            (option.secondaryAction &&
+              option.secondaryAction.visible !== false) ||
+            (enableExclusion && !option.disableExclusion) ? (
+              <Tooltip
+                title={
+                  option.secondaryAction?.tooltip ??
+                  (enableExclusion ? 'Exclude' : '')
+                }
+                disableInteractive
+                placement="left"
               >
-                <BlockIcon
-                  fontSize="small"
-                  className={`transition-opacity ${(excludedValues ?? excluded).includes(option.value) ? 'text-rose-400 dark:text-rose-600' : 'text-neutral-400 dark:text-neutral-600 group-hover/secondary:text-neutral-600 dark:group-hover/secondary:text-neutral-400 invisible group-hover/li:visible'}`}
-                />
-              </IconButton>
+                <IconButton
+                  aria-label={`exclude ${option.label ?? option.value}`}
+                  className="group/secondary"
+                  size="small"
+                  onClick={() => {
+                    option.secondaryAction?.onClick?.();
+                    if (option.disableExclusion !== false) {
+                      handleToggleExclude(option);
+                    }
+                  }}
+                >
+                  {option.secondaryAction?.icon ? (
+                    selectedValues?.includes(option.value) &&
+                    option.secondaryAction?.icon
+                  ) : (
+                    <BlockIcon
+                      fontSize="small"
+                      className={`transition-opacity ${(excludedValues ?? excluded).includes(option.value) ? 'text-rose-400 dark:text-rose-600' : 'text-neutral-400 dark:text-neutral-600 group-hover/secondary:text-neutral-600 dark:group-hover/secondary:text-neutral-400 invisible group-hover/li:visible'}`}
+                    />
+                  )}
+                </IconButton>
+              </Tooltip>
             ) : undefined
           }
           slotProps={{ secondaryAction: { className: 'right-1' } }}
         >
           <ListItemButton
             role={undefined}
-            onClick={handleToggle(option)}
+            onClick={() => handleToggle(option)}
             className={`p-0 rounded-lg transition-colors ${(selectedValues ?? selected).includes(option.value) ? 'bg-royal/10 dark:bg-cornflower-300/10' : ''}`}
           >
-            {enableExclusion && (
+            {enableExclusion && !option.disableExclusion && (
               <div
                 className={`absolute inset-0 rounded-lg bg-linear-to-l from-rose-300/20 dark:from-rose-800/20 to-transparent to-75% transition-opacity opacity-0 ${(excludedValues ?? excluded).includes(option.value) ? 'opacity-100' : ''}`}
               />
