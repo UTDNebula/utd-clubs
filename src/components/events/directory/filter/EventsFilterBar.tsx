@@ -30,21 +30,35 @@ export default function EventsFilterBar() {
       <Modal
         open={openModal}
         onClose={handleClose}
-        className="flex justify-center items-center h-screen p-4"
+        className="flex justify-center w-screen h-screen p-4"
         keepMounted // Used to keep the collapsed state of sections in the modal persistent
       >
         {/* This span is required to receive the tabIndex prop, which will let the user quickly navigate the modal using the keyboard */}
-        <span>
+        <span className="w-120 h-fit">
           <Panel
             smallPadding
-            className="h-fit max-h-screen"
+            className="h-fit max-h-screen w-fill p-0!"
             slotClassNames={{ collapse: 'relative' }}
           >
-            <div className="relative overflow-auto max-h-[calc(100vh-8rem)]">
+            <div className="relative overflow-auto max-h-[calc(100vh-6rem)] px-5 pt-5">
               <EventsFilterPanels />
             </div>
-            <div className="flex flex-wrap justify-end items-center gap-2">
-              <Button variant="contained" onClick={handleClose}>
+            <div className="flex flex-wrap justify-between items-center gap-2 px-5 pb-5">
+              <Button
+                onClick={() => {
+                  // TODO: Insert function to clear all filters
+                  handleClose();
+                }}
+                color="warning"
+                className="normal-case"
+              >
+                Clear all
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleClose}
+                className="normal-case"
+              >
                 OK
               </Button>
             </div>
