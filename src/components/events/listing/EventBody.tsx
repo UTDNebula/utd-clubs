@@ -52,7 +52,7 @@ const EventBody = async ({
       </div>
       <div
         id="club-content-right"
-        className="flex flex-col gap-4 order-1 md:order-2"
+        className="flex flex-col gap-4 order-1 md:order-2 min-w-0"
       >
         <EventDescriptionCard id="description" event={event} />
         <div className="hidden md:block">{clubUpcomingEventsCard}</div>
