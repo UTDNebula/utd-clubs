@@ -10,6 +10,7 @@ import {
   gte,
   ilike,
   inArray,
+  isNull,
   lte,
   or,
   sql,
@@ -594,7 +595,10 @@ export const eventRouter = createTRPCRouter({
             eq(events.clubId, input.clubId),
             eq(events.google, true),
             clubRecord.calendarId
-              ? eq(events.calendarId, clubRecord.calendarId)
+              ? or(
+                  eq(events.calendarId, club.calendarId),
+                  isNull(events.calendarId),
+                )
               : undefined,
             input.keepPastEvents ? gt(events.startTime, new Date()) : undefined, // IF indicated, delete only events that have not yet started
           ),

@@ -9,7 +9,9 @@ import {
   getTableName,
   gt,
   inArray,
+  isNull,
   not,
+  or,
   SQL,
   sql,
   type InferInsertModel,
@@ -103,7 +105,10 @@ export async function syncCalendar(
             and(
               eq(eventTable.clubId, clubId),
               eq(eventTable.google, true),
-              eq(eventTable.calendarId, club.calendarId),
+              or(
+                eq(eventTable.calendarId, club.calendarId),
+                isNull(eventTable.calendarId),
+              ),
             ),
           );
       }
