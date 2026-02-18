@@ -4,8 +4,10 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import IconButton from '@mui/material/IconButton';
 import Modal, { ModalProps } from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
+import Link from 'next/link';
 import React from 'react';
 import ProviderButton from '@src/app/auth/ProviderButtons';
+import { authClient } from '@src/utils/auth-client';
 
 type RegisterModalProps = Omit<ModalProps, 'children'> & {
   open: boolean;
@@ -45,6 +47,25 @@ export const RegisterModalContents = ({
           <ProviderButton key={provider} provider={provider} />
         ))}
       </div>
+      <Typography
+        variant="body1"
+        className="font-display text-slate-600 dark:text-slate-400 grow-1 self-center text-center px-4 mt-1 mb-2"
+      >
+        Are you UTD Faculty/Staff?{' '}
+        <Link
+          href="#"
+          className="font-bold"
+          onClick={() => {
+            void authClient.signIn.social({
+              provider: 'microsoft',
+              callbackURL: window.location.href,
+              newUserCallbackURL: '/get-started',
+            });
+          }}
+        >
+          Sign In Here
+        </Link>
+      </Typography>
     </div>
   );
 };

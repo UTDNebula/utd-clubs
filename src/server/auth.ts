@@ -25,6 +25,10 @@ export const auth = betterAuth({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     },
+    microsoft: {
+      clientId: env.MICROSOFT_CLIENT_ID,
+      clientSecret: env.MICROSOFT_CLIENT_SECRET,
+    },
   },
   databaseHooks: {
     account: {
@@ -56,7 +60,7 @@ export const auth = betterAuth({
     user: {
       create: {
         after: async (user) => {
-          const firstName = user.name?.split(' ')[0] ?? '';
+          const firstName = user.name?.split(' ')[0] ?? ''; // TODO, UTD emails are formatted as "LastName, FirstName", so we should account for a comma and flip the order
           const lastName = user.name?.split(' ')[1] ?? '';
 
           const insert: InsertUserMetadata = {
