@@ -95,7 +95,7 @@ const Panel = (props: PanelProps) => {
     onCollapseClick,
     onHeadingClick,
     transparent = false,
-  className,
+    className,
     slotClassNames,
     style,
     id,
