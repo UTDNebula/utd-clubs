@@ -59,11 +59,13 @@ function hasId(
 type MembershipFormProps = {
   club: SelectClub;
   listedMembershipForms: SelectMembershipForm[];
+  id?: string;
 };
 
 const MembershipForms = ({
   club,
   listedMembershipForms,
+  id,
 }: MembershipFormProps) => {
   const api = useTRPC();
   const editForms = useMutation(
@@ -193,6 +195,7 @@ const MembershipForms = ({
             </p>
           </>
         }
+        id={id}
       >
         <DndContext
           sensors={sensors}

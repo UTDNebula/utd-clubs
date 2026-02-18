@@ -1,3 +1,5 @@
+import { Ref } from 'react';
+
 type CardVariant = 'flat' | 'interactive' | 'transparent';
 
 type BaseCardProps = {
@@ -6,6 +8,7 @@ type BaseCardProps = {
   className?: string;
   style?: React.CSSProperties;
   id?: string;
+  ref?: Ref<HTMLDivElement>;
 };
 
 const baseClasses = 'rounded-lg';
@@ -23,11 +26,13 @@ export const BaseCard = ({
   className = '',
   style,
   id,
+  ref,
 }: BaseCardProps) => {
   const hasBgClass = className.includes('bg-');
   return (
     <div
       {...(id ? { id } : {})}
+      {...(ref ? { ref } : {})}
       style={style}
       className={`${baseClasses} ${hasBgClass || variant === 'transparent' ? '' : 'bg-white dark:bg-neutral-900'} ${variantClasses[variant]} ${className}`}
     >

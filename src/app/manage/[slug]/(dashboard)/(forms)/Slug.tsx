@@ -17,12 +17,13 @@ import { useAppForm } from '@src/utils/form';
 import { editSlugSchema } from '@src/utils/formSchemas';
 import useDebounce from '@src/utils/useDebounce';
 
-type DetailsProps = {
+type SlugProps = {
   club: SelectClub;
   role: 'Officer' | 'President';
+  id?: string;
 };
 
-const Slug = ({ club, role }: DetailsProps) => {
+const Slug = ({ club, role, id }: SlugProps) => {
   const api = useTRPC();
   const editSlug = useMutation(
     api.club.edit.slug.mutationOptions({
@@ -172,7 +173,7 @@ const Slug = ({ club, role }: DetailsProps) => {
   };
 
   return (
-    <div id="form-slug" className="scroll-mt-24">
+    <div className="scroll-mt-24">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -204,6 +205,7 @@ const Slug = ({ club, role }: DetailsProps) => {
               </p>
             </>
           }
+          id={id}
         >
           <div className="m-2 mt-0 flex flex-col gap-4">
             <form.Field

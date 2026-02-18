@@ -17,6 +17,7 @@ import { editClubFormSchema } from '@src/utils/formSchemas';
 
 type DetailsProps = {
   club: SelectClub;
+  id?: string;
 };
 
 interface ClubDetails {
@@ -30,7 +31,7 @@ interface ClubDetails {
   bannerImage: File | null;
 }
 
-const Details = ({ club }: DetailsProps) => {
+const Details = ({ club, id }: DetailsProps) => {
   const api = useTRPC();
   const clubQuery = useQuery(
     api.club.details.queryOptions({ id: club.id }, { initialData: club }),
@@ -132,7 +133,7 @@ const Details = ({ club }: DetailsProps) => {
           form.handleSubmit();
         }}
       >
-        <Panel heading="Details">
+        <Panel heading="Details" id={id}>
           <div className="m-2 flex flex-col gap-4">
             <div className="flex flex-wrap gap-4">
               <form.Field name="profileImage">

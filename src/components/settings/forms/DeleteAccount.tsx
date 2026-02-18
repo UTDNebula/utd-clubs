@@ -1,10 +1,15 @@
 import Panel from '@src/components/common/Panel';
 import DeleteButton from '@src/components/settings/DeleteButton';
 
-export default function DeleteAccount() {
+type DeleteAccountProps = {
+  id?: string;
+};
+
+export default function DeleteAccount({ id }: DeleteAccountProps) {
   return (
     <Panel
       heading="Delete Account"
+      id={id}
       className="bg-red-100 dark:bg-red-950 border border-red-500 dark:border-red-700"
       description={
         <div className="text-slate-800 dark:text-slate-200">

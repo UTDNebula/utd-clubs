@@ -55,9 +55,10 @@ function hasId(
 type OfficersProps = {
   club: SelectClub;
   listedOfficers: SelectOfficer[];
+  id?: string;
 };
 
-const Officers = ({ club, listedOfficers }: OfficersProps) => {
+const Officers = ({ club, listedOfficers, id }: OfficersProps) => {
   const api = useTRPC();
   const editOfficers = useMutation(
     api.club.edit.listedOfficers.mutationOptions({
@@ -194,6 +195,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
             </p>
           </>
         }
+        id={id}
       >
         <DndContext
           sensors={sensors}

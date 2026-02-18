@@ -52,9 +52,10 @@ function hasId(
 
 type ContactsProps = {
   club: SelectClub & { contacts: SelectContact[] };
+  id?: string;
 };
 
-const Contacts = ({ club }: ContactsProps) => {
+const Contacts = ({ club, id }: ContactsProps) => {
   const api = useTRPC();
   const editContacts = useMutation(
     api.club.edit.contacts.mutationOptions({
@@ -189,7 +190,7 @@ const Contacts = ({ club }: ContactsProps) => {
         form.handleSubmit();
       }}
     >
-      <Panel heading="Contact Information">
+      <Panel heading="Contact Information" id={id}>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}

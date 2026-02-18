@@ -23,9 +23,10 @@ type CalendarProps = {
   club: SelectClub;
   hasScopes: boolean;
   userEmail: string;
+  id?: string;
 };
 
-const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
+const Calendar = ({ club, hasScopes, userEmail, id }: CalendarProps) => {
   const isSyncing = !!club.calendarId && !!club.calendarName;
   const trpc = useTRPC();
   const { data, isSuccess, isLoading } = useQuery(
@@ -87,6 +88,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   return (
     <Panel
       heading="Google Calendar Sync"
+      sidebarHeading="Calendar"
       description={
         <>
           <p>
@@ -99,6 +101,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
           </p>
         </>
       }
+      id={id}
     >
       <div className="m-2 flex flex-col gap-4">
         {!hasScopes ||

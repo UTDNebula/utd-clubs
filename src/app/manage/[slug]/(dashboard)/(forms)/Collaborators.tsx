@@ -40,6 +40,7 @@ type CollaboratorsProps = {
   officers: SelectUserMetadataToClubsWithUserMetadataWithUser[];
   role: 'Officer' | 'President' | 'Admin';
   userId?: string;
+  id?: string;
 };
 
 const Collaborators = ({
@@ -47,6 +48,7 @@ const Collaborators = ({
   officers,
   role,
   userId,
+  id,
 }: CollaboratorsProps) => {
   const api = useTRPC();
   const editOfficers = useMutation(
@@ -142,6 +144,7 @@ const Collaborators = ({
             </p>
           </>
         }
+        id={id}
       >
         <form.Field name="officers">
           {(field) => (

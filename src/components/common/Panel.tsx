@@ -2,8 +2,9 @@
 
 import { ChevronRight } from '@mui/icons-material';
 import { Collapse, IconButton, Skeleton, Typography } from '@mui/material';
-import React, { useState, type ReactNode } from 'react';
+import React, { useEffect, useRef, useState, type ReactNode } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
+import { usePanelGroup } from './PanelGroup';
 
 type CollapseOptions = {
   /**
@@ -39,6 +40,7 @@ interface PanelPropsBase {
   startAdornment?: React.JSX.Element;
   endAdornment?: React.JSX.Element;
   smallPadding?: boolean;
+  sidebarHeading?: ReactNode;
   /**
    * Control whether the panel is collapsed
    * NOTE: This prop makes the panel a controlled component
@@ -67,7 +69,7 @@ interface PanelPropsBase {
   transparent?: boolean | 'falseOnHover';
 }
 
-interface PanelProps extends PanelPropsBase {
+export interface PanelProps extends PanelPropsBase {
   className?: string;
   slotClassNames?: {
     heading?: string;
@@ -80,23 +82,48 @@ interface PanelProps extends PanelPropsBase {
   children?: ReactNode;
 }
 
-const Panel = ({
-  children,
-  heading,
-  description,
-  startAdornment,
-  endAdornment,
-  smallPadding = false,
-  collapse,
-  enableCollapsing = false,
-  onCollapseClick,
-  onHeadingClick,
-  transparent = false,
+const Panel = (props: PanelProps) => {
+  const {
+    children,
+    heading,
+    description,
+    startAdornment,
+    endAdornment,
+    smallPadding = false,
+    collapse,
+    enableCollapsing = false,
+    onCollapseClick,
+    onHeadingClick,
+    transparent = false,
   className,
-  slotClassNames,
-  style,
-  id,
-}: PanelProps) => {
+    slotClassNames,
+    style,
+    id,
+  } = props;
+
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const { registerPanel, unregisterPanel } = usePanelGroup();
+
+  // Register panel on mount, then unregister panel on unmount
+  useEffect(() => {
+    if (props.id) {
+      registerPanel({
+        props: { ...props, id: props.id },
+        // TODO: figure this out
+        ref: panelRef.current === null ? undefined : panelRef,
+      });
+    }
+
+    return () => {
+      if (props.id) {
+        unregisterPanel(props.id);
+      }
+    };
+    // Having dependencies causes cascading re-renders
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const hasHeading = Boolean(
     startAdornment || heading || endAdornment || enableCollapsing,
   );
@@ -133,10 +160,12 @@ const Panel = ({
 
   return (
     <BaseCard
-      className={`flex flex-col ${smallPadding ? 'p-5' : 'sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4'} min-w-0 max-w-6xl
+      // Set `scroll-mt-20` to height of BaseHeader plus additional padding
+      className={`flex flex-col ${smallPadding ? 'p-5' : 'sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4'} min-w-0 max-w-6xl scroll-mt-20
         target:outline-2 outline-royal dark:outline-cornflower-300 ${transparent === 'falseOnHover' ? 'transition-colors hover:bg-neutral-200 hover:dark:bg-neutral-950' : ''} ${className ?? ''}`}
       {...(id ? { id } : {})}
       style={style}
+      ref={panelRef}
       variant={transparent ? 'transparent' : 'flat'}
     >
       {hasHeading && (

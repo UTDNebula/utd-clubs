@@ -20,9 +20,10 @@ import {
 
 type UserInfoProps = {
   user: SelectUserMetadataWithClubs;
+  id?: string;
 };
 
-export default function UserInfo({ user }: UserInfoProps) {
+export default function UserInfo({ user, id }: UserInfoProps) {
   const api = useTRPC();
 
   const editAccountMutation = useMutation(
@@ -89,7 +90,7 @@ export default function UserInfo({ user }: UserInfoProps) {
         form.handleSubmit();
       }}
     >
-      <Panel heading="Personal Information">
+      <Panel heading="Personal Information" id={id}>
         <div className="m-2 flex flex-col gap-6 max-w-2xl">
           <form.FieldSet name="name" title="Name" icon={<PersonIconOutlined />}>
             <div className="flex flex-wrap gap-6">

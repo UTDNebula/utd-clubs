@@ -20,9 +20,10 @@ import { useTRPC } from '@src/trpc/react';
 
 type ClubsProps = {
   joinedClubs: SelectUserMetadataToClubsWithClub[];
+  id?: string;
 };
 
-export default function JoinedClubs({ joinedClubs }: ClubsProps) {
+export default function JoinedClubs({ joinedClubs, id }: ClubsProps) {
   const api = useTRPC();
 
   const joinLeaveMutation = useMutation(api.club.joinLeave.mutationOptions({}));
@@ -32,7 +33,7 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
   const [openLeaveModal, setOpenLeaveModal] = useState(false);
 
   return (
-    <Panel heading="Followed Clubs">
+    <Panel heading="Followed Clubs" id={id}>
       {joinedClubs.map((joinedClub) => (
         <ClubListItem
           joinedClub={joinedClub}

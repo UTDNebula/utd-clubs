@@ -11,9 +11,13 @@ import Confirmation from '@src/components/Confirmation';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 
-type Props = { view: 'manage' | 'admin'; club: SelectClub };
+type DeleteClubProps = {
+  view: 'manage' | 'admin';
+  club: SelectClub;
+  id?: string;
+};
 
-export default function DeleteClub({ view, club }: Props) {
+export default function DeleteClub({ view, club, id }: DeleteClubProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const api = useTRPC();
@@ -94,6 +98,7 @@ export default function DeleteClub({ view, club }: Props) {
             )}
           </div>
         }
+        id={id}
       >
         <div className="m-2 mt-0">
           <Button
