@@ -60,8 +60,15 @@ export const auth = betterAuth({
     user: {
       create: {
         after: async (user) => {
-          const firstName = user.name?.split(' ')[0] ?? ''; // TODO, UTD emails are formatted as "LastName, FirstName", so we should account for a comma and flip the order
-          const lastName = user.name?.split(' ')[1] ?? '';
+          let firstName = '';
+          let lastName = '';
+          if (user.name?.includes(', ')) {
+            firstName = user.name?.split(', ')[1] ?? '';
+            lastName = user.name?.split(', ')[0] ?? '';
+          } else {
+            firstName = user.name?.split(' ')[0] ?? '';
+            lastName = user.name?.split(' ')[1] ?? '';
+          }
 
           const insert: InsertUserMetadata = {
             firstName,
