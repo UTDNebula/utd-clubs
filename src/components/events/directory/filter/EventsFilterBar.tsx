@@ -20,7 +20,7 @@ export default function EventsFilterBar() {
       <div className="flex gap-2">
         <Chip
           label="Filters"
-          icon={<TuneIcon />}
+          icon={<TuneIcon fontSize="small" />}
           variant="outlined"
           onClick={() => setOpenModal(true)}
           className="border-[var(--mui-palette-divider)]"
@@ -40,7 +40,7 @@ export default function EventsFilterBar() {
             className="h-fit max-h-screen w-fill p-0!"
             slotClassNames={{ collapse: 'relative' }}
           >
-            <div className="relative overflow-auto max-h-[calc(100vh-6rem)] px-5 pt-5">
+            <div className="relative overflow-auto max-h-[calc(100dvh-6rem)] px-5 pt-5">
               <EventsFilterPanels />
             </div>
             <div className="flex flex-wrap justify-between items-center gap-2 px-5 pb-5">
