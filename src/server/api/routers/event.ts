@@ -186,8 +186,9 @@ export const eventRouter = createTRPCRouter({
           (e) => e.club.approved === 'approved',
         );
 
-        const parsed = approvedEvents.map((e) => selectEvent.parse(e));
-        return parsed;
+        // const parsed = approvedEvents.map((e) => selectEvent.parse(e));
+        // return parsed;
+        return approvedEvents;
       } catch (e) {
         console.error(e);
 

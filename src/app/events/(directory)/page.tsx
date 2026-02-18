@@ -20,9 +20,12 @@ const Events = async (props: {
 }) => {
   const searchParams = await props.searchParams;
   const parsed = eventParamsSchema.parse(searchParams);
-  const { events } = await api.event.findByDate({
-    date: parsed.date,
+  const events = await api.event.byDateRange({
+    endTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
   });
+  // const { events } = await api.event.findByDate({
+  //   date: parsed.date,
+  // });
 
   return (
     <>
