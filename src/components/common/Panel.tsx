@@ -111,7 +111,7 @@ const Panel = (props: PanelProps) => {
       registerPanel({
         props: { ...props, id: props.id },
         // TODO: figure this out
-        ref: panelRef.current === null ? undefined : panelRef,
+        // ref: panelRef.current === null ? undefined : panelRef,
       });
     }
 
