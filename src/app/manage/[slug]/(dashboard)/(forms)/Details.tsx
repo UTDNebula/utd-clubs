@@ -213,6 +213,8 @@ const Details = ({ club }: DetailsProps) => {
                   <field.TextField label="Alias or Acronym" className="grow" />
                 )}
               </form.AppField>
+            </div>
+            <div className="flex flex-wrap gap-4">
               <form.Field name="foundingDate">
                 {(field) => (
                   <DatePicker

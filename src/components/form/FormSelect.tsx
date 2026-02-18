@@ -46,7 +46,7 @@ export default function FormSelect({
   });
 
   return (
-    <FormControl className={`w-64 ${className}`}>
+    <FormControl className={`w-64 ${className}`} size="small">
       {label ? <InputLabel>{label}</InputLabel> : null}
       <GenericSelect
         value={field.state.value}
