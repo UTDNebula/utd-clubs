@@ -27,7 +27,7 @@ export const auth = betterAuth({
     },
     microsoft: {
       clientId: env.MICROSOFT_CLIENT_ID,
-      clientSecret: env.MICROSOFT_CLIENT_SECRET, // Expires 2028-02-11
+      clientSecret: env.MICROSOFT_CLIENT_SECRET, // Prod and dev secrets expire 2028-02-11
     },
   },
   databaseHooks: {
