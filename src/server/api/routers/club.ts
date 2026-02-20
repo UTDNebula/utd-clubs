@@ -495,13 +495,29 @@ export const clubRouter = createTRPCRouter({
   tagSearch: publicProcedure
     .input(searchTagSchema)
     .query(async ({ input, ctx }) => {
-      const tags = await ctx.db
-        .select({ tag: usedTags.tag })
-        .from(usedTags)
-        .where(sql`${usedTags.tag} @@@ ${input.search}`)
-        .orderBy(sql`paradedb.score(${usedTags.id})`)
-        .limit(5);
-      return { tags: tags, clubs: [] };
+      if (!input.search.trim()) {
+        return { tags: [], clubs: [] };
+      }
+
+      // Try ParadeDB full-text search first (@@@ operator for fuzzy/similarity matching)
+      // Falls back to basic case-insensitive LIKE search if ParadeDB is unavailable (e.g., in dev)
+      try {
+        const tags = await ctx.db
+          .select({ tag: usedTags.tag })
+          .from(usedTags)
+          .where(sql`${usedTags.tag} @@@ ${input.search}`)
+          .orderBy(sql`paradedb.score(${usedTags.id})`)
+          .limit(5);
+        return { tags: tags, clubs: [] };
+      } catch {
+        const tags = await ctx.db
+          .select({ tag: usedTags.tag })
+          .from(usedTags)
+          .where(ilike(usedTags.tag, `%${input.search}%`))
+          .orderBy(asc(usedTags.tag))
+          .limit(5);
+        return { tags: tags, clubs: [] };
+      }
     }),
   search: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
     try {
@@ -574,7 +590,23 @@ export const clubRouter = createTRPCRouter({
           message: 'Calendar already selected by a different club',
         });
       }
+      const selectedClub = await ctx.db.query.club.findFirst({
+        where: eq(club.id, input.clubId),
+      });
+      if (!selectedClub) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'no club found',
+        });
+      }
 
+      // this should only happen on resyncs
+      if (selectedClub.calendarId && !selectedClub.calendarGoogleAccountId) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'no connected google account',
+        });
+      }
       await ctx.db
         .update(club)
         .set({
@@ -586,7 +618,9 @@ export const clubRouter = createTRPCRouter({
         .where(eq(club.id, input.clubId));
       const oauth2Client = new google.auth.OAuth2();
       oauth2Client.setCredentials({
-        access_token: await getGoogleAccessToken(ctx.session.user.id),
+        access_token: await getGoogleAccessToken(
+          selectedClub.calendarGoogleAccountId ?? ctx.session.user.id,
+        ),
       });
       try {
         const sync = await syncCalendar(input.clubId, false, oauth2Client); // one-time sync
