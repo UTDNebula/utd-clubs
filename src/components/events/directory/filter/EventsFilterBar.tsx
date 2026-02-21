@@ -7,6 +7,7 @@ import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import Panel from '@src/components/common/Panel';
 import EventsFilterPanels from './EventsFilterPanels';
+import FilterChip from './FilterChip';
 
 export default function EventsFilterBar() {
   const [openModal, setOpenModal] = useState(false);
@@ -25,7 +26,20 @@ export default function EventsFilterBar() {
           onClick={() => setOpenModal(true)}
           className="border-[var(--mui-palette-divider)]"
         />
-        <Chip label="Tags" onDelete={() => {}} />
+        <FilterChip label="Tag" />
+        <FilterChip
+          label="Popover"
+          popoverComponent={<div className="mx-8 my-6">test</div>}
+        />
+        <FilterChip label="Info" disableDelete />
+        <FilterChip
+          label="idk"
+          popoverComponent={<div className="mx-8 my-6">test</div>}
+          disableDelete
+        />
+        {/* {[''].map((ele, index) => (
+          <FilterChip label="test" key={index} />
+        ))} */}
       </div>
       <Modal
         open={openModal}
