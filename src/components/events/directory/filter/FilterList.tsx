@@ -22,6 +22,7 @@ export type FilterListItem = {
     visible?: boolean;
     /**
      * Action performed when clicking the secondary action button
+     *
      * NOTE: By default, exclusion is still enabled and will run before this event handler function.
      * To disable exclusion for this item, set {@linkcode FilterListItem.disableExclusion | disableExclusion} to true.
      */
@@ -189,10 +190,10 @@ export default function FilterList({
                   className="group/secondary"
                   size="small"
                   onClick={() => {
-                    option.secondaryAction?.onClick?.();
-                    if (option.disableExclusion !== false) {
+                    if (option.disableExclusion !== true) {
                       handleToggleExclude(option);
                     }
+                    option.secondaryAction?.onClick?.();
                   }}
                 >
                   {option.secondaryAction?.icon ? (
