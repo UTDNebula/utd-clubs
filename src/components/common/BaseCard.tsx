@@ -28,7 +28,7 @@ export const BaseCard = ({
     <div
       {...(id ? { id } : {})}
       style={style}
-      className={`${baseClasses} ${hasBgClass ? '' : 'bg-white dark:bg-neutral-900'} ${variantClasses[variant]} ${className}`}
+      className={`${baseClasses} ${hasBgClass ? '' : 'bg-white dark:bg-neutral-800'} ${variantClasses[variant]} ${className}`}
     >
       {children}
     </div>
