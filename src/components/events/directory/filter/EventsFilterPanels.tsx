@@ -7,9 +7,11 @@ import Switch from '@mui/material/Switch';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import Panel, { PanelProps } from '@src/components/common/Panel';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
+import { eventFiltersSchema } from '@src/utils/eventFilter';
 import FilterList from './FilterList';
 
 type EventsFilterPanelsProps = {
@@ -19,11 +21,38 @@ type EventsFilterPanelsProps = {
 export default function EventsFilterPanels({
   backgroundHover = false,
 }: EventsFilterPanelsProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const navigateWithParams = (params: URLSearchParams) => {
+    // Use one of the following
+
+    // // Next.JS's router
+    // router.replace(`${pathname}?${params.toString().replace(/=(?=&|$)/g, '')}`);
+
+    // Client-side replacing URL
+    window.history.replaceState(
+      null,
+      '',
+      `${pathname}?${params.toString().replace(/=(?=&|$)/g, '')}`,
+    );
+  };
+
+  const filters = eventFiltersSchema.parse(Object.fromEntries(searchParams));
+
   const panelProps: PanelProps = {
     smallPadding: true,
     enableCollapsing: { toggleOnHeadingClick: true },
     transparent: backgroundHover ? 'falseOnHover' : true,
   };
+
+  // const [clubs, setClubs] =
+  //   useState<z.infer<typeof eventClubsFilterEnum>>('all');
+  const clubs = filters.clubs;
+  const hideRegistered = filters.hideRegistered;
+  const past = filters.past;
+
   const [tags, setTags] = useState<string[]>([]);
 
   const [date, setDate] = useState<string | null>(null);
@@ -36,16 +65,58 @@ export default function EventsFilterPanels({
     <div className="flex flex-col">
       <Panel heading="Filters" {...panelProps}>
         <ToggleButtonGroup
+          value={clubs}
+          exclusive
+          onChange={(_e, newValue) => {
+            if (newValue !== null) {
+              // setClubs(newValue);
+              const params = new URLSearchParams(searchParams);
+              params.set('clubs', newValue);
+              navigateWithParams(params);
+            }
+          }}
           size="small"
           className="[&>.MuiButtonBase-root]:normal-case [&>.MuiButtonBase-root]:grow"
-          exclusive
           aria-label="Relevance"
         >
           <ToggleButton value="all">All</ToggleButton>
           <ToggleButton value="following">Your Clubs</ToggleButton>
-          <ToggleButton value="discover">Discover</ToggleButton>
+          <ToggleButton value="new">Discover</ToggleButton>
         </ToggleButtonGroup>
-        <FormControlLabel label="Hide registered events" control={<Switch />} />
+        <FormControlLabel
+          label="Hide registered events"
+          control={
+            <Switch
+              checked={hideRegistered}
+              onChange={(_e, newValue) => {
+                const params = new URLSearchParams(searchParams);
+                if (newValue) {
+                  params.set('hideRegistered', '');
+                } else {
+                  params.delete('hideRegistered');
+                }
+                navigateWithParams(params);
+              }}
+            />
+          }
+        />
+        <FormControlLabel
+          label="Past events"
+          control={
+            <Switch
+              checked={past}
+              onChange={(_e, newValue) => {
+                const params = new URLSearchParams(searchParams);
+                if (newValue) {
+                  params.set('past', '');
+                } else {
+                  params.delete('past');
+                }
+                navigateWithParams(params);
+              }}
+            />
+          }
+        />
       </Panel>
       <Divider variant="middle" />
       <Panel heading="Tags" {...panelProps}>

@@ -2,7 +2,7 @@ import { type Metadata } from 'next';
 import type z from 'zod';
 import EventsBody from '@src/components/events/directory/EventsBody';
 import { api } from '@src/trpc/server';
-import { eventParamsSchema } from '@src/utils/eventFilter';
+import { eventFiltersSchema, eventParamsSchema } from '@src/utils/eventFilter';
 
 export const metadata: Metadata = {
   title: 'Events',
@@ -19,17 +19,23 @@ const Events = async (props: {
   searchParams: Promise<z.input<typeof eventParamsSchema>>;
 }) => {
   const searchParams = await props.searchParams;
-  const parsed = eventParamsSchema.parse(searchParams);
-  const events = await api.event.byDateRange({
-    endTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
-  });
+
+  // console.log('searchParams', searchParams);
+
+  const parsed = eventFiltersSchema.parse(searchParams);
+  // const events = await api.event.byDateRange({
+  //   endTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
+  // });
   // const { events } = await api.event.findByDate({
   //   date: parsed.date,
   // });
 
+  console.log('parsed', parsed);
+
   return (
     <>
-      <EventsBody events={events} />
+      <EventsBody events={[]} />
+      {/* <EventsBody events={events} /> */}
     </>
   );
 };
