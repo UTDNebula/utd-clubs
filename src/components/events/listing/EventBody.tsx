@@ -46,7 +46,7 @@ const EventBody = async ({
           endTime={event.endTime}
         />
         <EventHostClubCard id="host" club={event.club} />
-        <EventDetailsCard id="details" event={event} />
+        <EventDetailsCard id="details" event={event}  slug={event.club.slug}/>
         <ClubContactCard id="contact" club={event.club} />
         <div className="block md:hidden">{clubUpcomingEventsCard}</div>
       </div>

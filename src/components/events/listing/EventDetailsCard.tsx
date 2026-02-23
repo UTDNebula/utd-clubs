@@ -2,20 +2,28 @@ import { Divider, Tooltip } from '@mui/material';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import Panel from '@src/components/common/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
+import Link from 'next/link';
+import {LinkButton} from "@src/components/LinkButton";
+import EventIcon from "@mui/icons-material/Event";
+
 
 type EventDetailsCardProps = {
   event: NonNullable<RouterOutputs['event']['getListingInfo']>;
+  slug: string;
   id?: string;
 };
-export default function EventDetailsCard({ event, id }: EventDetailsCardProps) {
+export default function EventDetailsCard({ event, slug, id }: EventDetailsCardProps) {
   const items = [];
 
   if (event.numParticipants !== 0) {
     items.push(
       <div key="participants" className="flex flex-row flex-wrap gap-1 py-1">
-        <span className="font-medium text-slate-600 dark:text-slate-400">
-          Participants
-        </span>
+          <Link
+              href={`/manage/${slug}/events/${event.id}/participants`}
+              className="font-medium text-slate-600 dark:text-slate-400"
+          >
+              Participants
+          </Link>
         <span className="ml-auto text-slate-800 dark:text-slate-200">{`${event.numParticipants} ${event.numParticipants !== 1 ? 'people' : 'person'}`}</span>
       </div>,
     );
@@ -47,8 +55,7 @@ export default function EventDetailsCard({ event, id }: EventDetailsCardProps) {
     );
   }
 
-  return (
-    <Panel className="text-sm" id={id} smallPadding heading="Details">
+  return (<Panel className="text-sm" id={id} smallPadding heading="Details">
       {items.length ? (
         items.flatMap((item, index) => {
           const row = [item];
