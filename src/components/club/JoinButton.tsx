@@ -62,7 +62,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
         const joined = context?.memberType === undefined;
 
         setSnackbar({
-          message: joined ? 'followed club!' : 'Left club!',
+          message: joined ? 'Followed club!' : 'Left club!',
           type: joined ? 'success' : 'info',
           autoHideDuration: true,
           fitContent: true,
