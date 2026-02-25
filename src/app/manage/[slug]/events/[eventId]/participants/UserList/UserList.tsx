@@ -24,7 +24,7 @@ import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';
-import { UserListContext, MemberListContextType } from './UserListContext';
+import { MemberListContextType, UserListContext } from './UserListContext';
 import useUserListDeletionState from './useUserListDeletionState';
 import {
   actionColumn,

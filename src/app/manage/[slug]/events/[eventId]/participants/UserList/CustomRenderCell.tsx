@@ -10,7 +10,9 @@ import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import { useContext } from 'react';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
 import { authClient } from '@src/utils/auth-client';
-import MemberRoleChip, { MemberTypes } from '../../../../../../../components/manage/MemberRoleChip';
+import MemberRoleChip, {
+  MemberTypes,
+} from '../../../../../../../components/manage/MemberRoleChip';
 import { UserListContext } from './UserListContext';
 
 export function SmallTextCell(params: GridRenderCellParams) {
