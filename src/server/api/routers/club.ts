@@ -125,7 +125,7 @@ export const clubRouter = createTRPCRouter({
       const result = await ctx.db
         .select()
         .from(club)
-        .orderBy(club.pageViews)
+        .orderBy(club.name)
         .where(eq(club.approved, 'approved'));
 
       return result;
