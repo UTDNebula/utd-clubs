@@ -28,12 +28,15 @@ export function useUploadToUploadURL() {
         throw new Error('File must be less than 5MB');
       }
 
-      const uploadUrlResponse = await queryClient.fetchQuery(
-        api.storage.createUpload.queryOptions({
-          objectId: fileName,
-          mime: file.type,
-        }),
-      );
+      const [uploadUrlResponse, arrayBuffer] = await Promise.all([
+        queryClient.fetchQuery(
+          api.storage.createUpload.queryOptions({
+            objectId: fileName,
+            mime: file.type,
+          }),
+        ),
+        file.arrayBuffer(),
+      ]);
 
       if (uploadUrlResponse.message !== 'success') {
         throw new Error('Failed to get upload URL.');
@@ -41,7 +44,6 @@ export function useUploadToUploadURL() {
 
       const uploadUrl = uploadUrlResponse.data;
 
-      const arrayBuffer = await file.arrayBuffer();
       const blob = new Blob([arrayBuffer], { type: file.type });
 
       const uploadResponse = await fetch(uploadUrl, {

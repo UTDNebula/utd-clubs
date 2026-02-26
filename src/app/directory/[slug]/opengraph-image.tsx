@@ -10,27 +10,32 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 export default async function Image({ params }: { params: { slug: string } }) {
-  const slug = (await params).slug;
+  const { slug } = await params;
 
-  const clubData = await db.query.club.findFirst({
-    where: (club) => eq(club.slug, slug),
-    with: {
-      userMetadataToClubs: {
-        columns: { userId: true },
+  const [
+    clubData,
+    gradientBuffer,
+    people_alt_icon_buffer,
+    baiJamjureeBuffer,
+    interBuffer,
+  ] = await Promise.all([
+    db.query.club.findFirst({
+      where: (club) => eq(club.slug, slug),
+      with: {
+        userMetadataToClubs: {
+          columns: { userId: true },
+        },
       },
-    },
-  });
-
-  const gradientBuffer = await fetch(
-    new URL('../../../../public/images/landingGradient.png', import.meta.url),
-  ).then((res) => res.arrayBuffer());
-
-  const people_alt_icon_buffer = await fetch(
-    new URL('../../../../public/icons/people_alt.png', import.meta.url),
-  ).then((res) => res.arrayBuffer());
-
-  const baiJamjureeBuffer = await loadGoogleFont('Bai Jamjuree', 700);
-  const interBuffer = await loadGoogleFont('Inter', 600);
+    }),
+    fetch(
+      new URL('../../../../public/images/landingGradient.png', import.meta.url),
+    ).then((res) => res.arrayBuffer()),
+    fetch(
+      new URL('../../../../public/icons/people_alt.png', import.meta.url),
+    ).then((res) => res.arrayBuffer()),
+    loadGoogleFont('Bai Jamjuree', 700),
+    loadGoogleFont('Inter', 600),
+  ]);
 
   const background = (
     // eslint-disable-next-line @next/next/no-img-element

@@ -9,8 +9,8 @@ import { api } from '@src/trpc/server';
 const EditEventPage = async (props: {
   params: Promise<{ slug: string; eventId: string }>;
 }) => {
-  const session = await auth.api.getSession({ headers: await headers() });
   const { slug, eventId } = await props.params;
+
   const club = await api.club.bySlug({ slug });
   if (!club) {
     notFound();
@@ -21,6 +21,7 @@ const EditEventPage = async (props: {
     return notFound();
   }
 
+  const session = await auth.api.getSession({ headers: await headers() });
   if (event?.google) {
     redirect(
       getGcalEventLink(event.id, event.club.calendarId, session?.user.email),

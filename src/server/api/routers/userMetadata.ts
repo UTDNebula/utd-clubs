@@ -259,8 +259,9 @@ export const userMetadataRouter = createTRPCRouter({
     const session = ctx.session;
     const capabilites: (typeof personalCats)[number][] = [];
     if (!session) return capabilites;
-    if (
-      await ctx.db.query.userMetadataToClubs.findFirst({
+
+    const [isOfficer, isAdmin] = await Promise.all([
+      ctx.db.query.userMetadataToClubs.findFirst({
         where: and(
           eq(userMetadataToClubs.userId, session.user.id),
           or(
@@ -268,18 +269,17 @@ export const userMetadataRouter = createTRPCRouter({
             eq(userMetadataToClubs.memberType, 'President'),
           ),
         ),
-      })
-    ) {
+      }),
+      ctx.db.query.admin.findFirst({
+        where: eq(admin.userId, session.user.id),
+      }),
+    ]);
+    if (isOfficer) {
       capabilites.push('Manage Clubs');
     } else {
       capabilites.push('Create Club');
     }
-    if (
-      await ctx.db.query.admin.findFirst({
-        where: eq(admin.userId, session.user.id),
-      })
-    )
-      capabilites.push('Admin');
+    if (isAdmin) capabilites.push('Admin');
     return capabilites;
   }),
 });

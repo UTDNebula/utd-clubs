@@ -18,19 +18,29 @@ import {
 } from 'drizzle-orm';
 import { OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
+import { db } from '@src/server/db';
 import { selectEvent } from '@src/server/db/models';
 import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
-import {
-  userMetadataToClubs,
-  userMetadataToEvents,
-} from '@src/server/db/schema/users';
+import { userMetadataToEvents } from '@src/server/db/schema/users';
 import { stopWatching } from '@src/utils/calendar';
 import { dateSchema, order } from '@src/utils/eventFilter';
 import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
 // import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+
+async function isUserOfficer(userId: string, clubId: string) {
+  const officer = await db.query.userMetadataToClubs.findFirst({
+    where: (userMetadataToClubs) =>
+      and(
+        eq(userMetadataToClubs.userId, userId),
+        eq(userMetadataToClubs.clubId, clubId),
+      ),
+  });
+  if (!officer || !officer.memberType) return false;
+  return officer.memberType !== 'Member';
+}
 
 const byClubIdSchema = z.object({
   clubId: z.string().default(''),
@@ -405,18 +415,12 @@ export const eventRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createEventSchema)
     .mutation(async ({ input, ctx }) => {
-      const { clubId } = input;
-      const userId = ctx.session.user.id;
-
-      const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
-        where: and(
-          eq(userMetadataToClubs.userId, userId),
-          eq(userMetadataToClubs.clubId, clubId),
-          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
-        ),
-      });
+      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
       if (!isOfficer) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
+        throw new TRPCError({
+          message: 'You must be an officer to modify this club',
+          code: 'UNAUTHORIZED',
+        });
       }
 
       const res = await ctx.db
@@ -434,19 +438,14 @@ export const eventRouter = createTRPCRouter({
   update: protectedProcedure
     .input(editEventSchema)
     .mutation(async ({ input, ctx }) => {
-      const { id, clubId, ...data } = input;
-      const userId = ctx.session.user.id;
+      const { id, ...data } = input;
 
-      const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
-        where: and(
-          eq(userMetadataToClubs.userId, userId),
-          eq(userMetadataToClubs.clubId, clubId),
-          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
-        ),
-      });
-
+      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
       if (!isOfficer) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
+        throw new TRPCError({
+          message: 'You must be an officer to modify this club',
+          code: 'UNAUTHORIZED',
+        });
       }
 
       const res = await ctx.db
@@ -473,8 +472,6 @@ export const eventRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id;
-
       const event = await ctx.db.query.events.findFirst({
         where: (e) => eq(e.id, input.id),
       });
@@ -483,22 +480,14 @@ export const eventRouter = createTRPCRouter({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Event not found' });
       }
 
-      const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
-        where: and(
-          eq(userMetadataToClubs.userId, userId),
-          eq(userMetadataToClubs.clubId, event.clubId),
-          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
-        ),
-      });
+      const isOfficer = await isUserOfficer(ctx.session.user.id, event.clubId);
       if (!isOfficer) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
+        throw new TRPCError({
+          message: 'You must be an officer to modify this club',
+          code: 'UNAUTHORIZED',
+        });
       }
 
-      // await callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`);
-
-      // await ctx.db
-      //   .delete(userMetadataToEvents)
-      //   .where(eq(userMetadataToEvents.eventId, input.id));
       await ctx.db
         .update(events)
         .set({ status: 'deleted' })
@@ -563,8 +552,6 @@ export const eventRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id;
-
       const clubRecord = await ctx.db.query.club.findFirst({
         where: eq(club.id, input.clubId),
         columns: { calendarId: true },
@@ -572,15 +559,12 @@ export const eventRouter = createTRPCRouter({
 
       if (!clubRecord) throw new TRPCError({ code: 'NOT_FOUND' });
 
-      const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
-        where: and(
-          eq(userMetadataToClubs.userId, userId),
-          eq(userMetadataToClubs.clubId, input.clubId),
-          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
-        ),
-      });
+      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
       if (!isOfficer) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
+        throw new TRPCError({
+          message: 'You must be an officer to modify this club',
+          code: 'UNAUTHORIZED',
+        });
       }
 
       // close webhook

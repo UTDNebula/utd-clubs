@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import {
   and,
-  arrayOverlaps,
   asc,
   desc,
   eq,
@@ -50,13 +49,6 @@ const joinLeaveSchema = z.object({
 const tagReplaceSchema = z.object({
   oldTag: z.string(),
   newTag: z.string(),
-});
-const allSchema = z.object({
-  tags: z.string().array().nullish(),
-  name: z.string().nullish(),
-  cursor: z.number().min(0).default(0),
-  limit: z.number().min(1).max(50).default(10),
-  initialCursor: z.number().min(0).default(0),
 });
 
 const searchSchema = z.object({
@@ -128,37 +120,18 @@ export const clubRouter = createTRPCRouter({
       throw e;
     }
   }),
-  all: publicProcedure.input(allSchema).query(async ({ ctx, input }) => {
+  all: publicProcedure.query(async ({ ctx }) => {
     try {
-      const query = ctx.db
+      const result = await ctx.db
         .select()
         .from(club)
-        .limit(input.limit)
-        .orderBy(club.name)
-        .offset(input.cursor)
-        .where(
-          and(
-            eq(club.approved, 'approved'),
-            input.tags && input.tags.length != 0
-              ? arrayOverlaps(club.tags, input.tags)
-              : undefined,
-            input.name ? ilike(club.name, `%${input.name}%`) : undefined,
-          ),
-        );
+        .orderBy(club.pageViews)
+        .where(eq(club.approved, 'approved'));
 
-      const res = await query.execute();
-      const newOffset = input.cursor + res.length;
-
-      return {
-        clubs: res,
-        cursor: newOffset,
-      };
+      return result;
     } catch (e) {
       console.error(e);
-      return {
-        clubs: [],
-        cursor: 0,
-      };
+      throw e;
     }
   }),
   distinctTags: publicProcedure.query(async ({ ctx }) => {
