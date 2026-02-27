@@ -333,6 +333,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             status: 'approved',
             updatedAt: new Date(),
             createdAt: new Date(),
+            pageViews: 0,
             recurrence: '',
             recurenceId: '',
             google: false,
