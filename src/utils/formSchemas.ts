@@ -101,6 +101,7 @@ export const editClubFormSchema = z.object({
   profileImage: fileSchema,
   bannerImage: fileSchema,
   foundingDate: z.date().nullable(),
+  clubSize: z.string(),
 });
 
 export const editClubDetailsSchema = z.object({
@@ -124,6 +125,7 @@ export const editClubDetailsSchema = z.object({
   profileImage: z.url().optional(),
   bannerImage: z.url().optional(),
   foundingDate: z.date().nullable(),
+  clubSize: z.enum(['1-10', '10-50', '50-200', '200+']).nullable(),
 });
 
 export const editOfficerSchema = z.object({

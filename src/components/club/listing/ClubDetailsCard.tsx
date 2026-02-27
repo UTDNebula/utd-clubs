@@ -26,6 +26,18 @@ export default function ClubDetailsCard({
       </div>,
     );
   }
+  if (club.clubSize) {
+    items.push(
+      <div key="clubSize" className="flex flex-row flex-wrap gap-1 py-1">
+        <span className="font-medium text-slate-600 dark:text-slate-400">
+          Members
+        </span>
+        <span className="ml-auto text-slate-800 dark:text-slate-200">
+          {club.clubSize}
+        </span>
+      </div>,
+    );
+  }
   if (club.foundingDate) {
     items.push(
       <div key="foundingDate" className="flex flex-row flex-wrap gap-1 py-1">
