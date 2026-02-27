@@ -48,13 +48,15 @@ export const ClubEvents = async ({
   pageSize: number;
 }) => {
   const now = TZDateMini.tz('America/Chicago');
-  const clubs = await api.club.getMemberClubs();
-  const events = await api.userMetadata.getEventsFromJoinedClubs({
-    currentTime: now,
-    sortByDate: true,
-    page,
-    pageSize,
-  });
+  const [clubs, events] = await Promise.all([
+    api.club.getMemberClubs(),
+    api.userMetadata.getEventsFromJoinedClubs({
+      currentTime: now,
+      sortByDate: true,
+      page,
+      pageSize,
+    }),
+  ]);
 
   if (clubs.length === 0) {
     return (

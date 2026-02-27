@@ -51,9 +51,11 @@ export const adminRouter = createTRPCRouter({
   deleteClub: adminProcedure
     .input(deleteSchema)
     .mutation(async ({ ctx, input }) => {
-      await callStorageAPI('DELETE', `${input.id}-profile`);
-      await callStorageAPI('DELETE', `${input.id}-banner`);
-      await ctx.db.delete(club).where(eq(club.id, input.id));
+      await Promise.all([
+        callStorageAPI('DELETE', `${input.id}-profile`),
+        callStorageAPI('DELETE', `${input.id}-banner`),
+        ctx.db.delete(club).where(eq(club.id, input.id)),
+      ]);
     }),
   updateOfficers: adminProcedure
     .input(editCollaboratorSchema)
@@ -193,12 +195,13 @@ export const adminRouter = createTRPCRouter({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Event not found' });
       }
 
-      await callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`);
-
-      await ctx.db
-        .delete(userMetadataToEvents)
-        .where(eq(userMetadataToEvents.eventId, input.id));
-      await ctx.db.delete(events).where(eq(events.id, input.id)); // only place where event is fully deleted from DB
+      await Promise.all([
+        callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`),
+        ctx.db
+          .delete(userMetadataToEvents)
+          .where(eq(userMetadataToEvents.eventId, input.id)),
+        ctx.db.delete(events).where(eq(events.id, input.id)), // only place where event is fully deleted from DB
+      ]);
 
       return { success: true };
     }),
