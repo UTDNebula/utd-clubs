@@ -70,7 +70,7 @@ const byNameSchema = z.object({
   name: z.string().default(''),
   sortByDate: z.boolean().default(false),
 });
-const joinLeaveSchema = z.object({
+export const joinLeaveSchema = z.object({
   id: z.string(),
 });
 

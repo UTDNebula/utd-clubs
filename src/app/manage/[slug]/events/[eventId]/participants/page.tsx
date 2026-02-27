@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import MemberList from 'src/components/manage/MemberList';
 import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
+import UserList from './UserList';
 
 export default async function Page({
   params,
@@ -25,7 +25,7 @@ export default async function Page({
         hrefBack={`/manage/${slug}/`}
       />
       <div className="flex w-full flex-col items-center">
-        <MemberList members={members} club={club} />
+        <UserList members={members} club={club} />
       </div>
     </main>
   );
