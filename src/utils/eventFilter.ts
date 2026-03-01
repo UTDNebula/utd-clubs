@@ -73,16 +73,21 @@ export const eventParamsSchema = z.object({
   tags: z.array(z.string()).optional(),
   location: z.preprocess(
     preprocessParamArray,
-    eventLocationFilterEnum.array().optional().default([]).catch([]),
+    eventLocationFilterEnum.array().default([]).catch([]),
+  ),
+  'location!': z.preprocess(
+    preprocessParamArray,
+    eventLocationFilterEnum.array().default([]).catch([]),
   ),
 });
 
 export type EventParamsSchema = z.infer<typeof eventParamsSchema>;
 
 export const eventFiltersSchema = eventParamsSchema.transform(
-  ({ q, s, ...rest }) => ({
+  ({ q, s, 'location!': locationExclude, ...rest }) => ({
     query: q,
     sort: s,
+    locationExclude,
     ...rest,
   }),
 );

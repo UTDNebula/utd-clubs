@@ -4,6 +4,7 @@ import Divider from '@mui/material/Divider';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { eventFiltersSchema } from '@src/utils/eventFilter';
+import { useStable } from '@src/utils/useStable';
 import DatePanel from './panels/Date';
 import FiltersPanel from './panels/Filters';
 import LocationPanel from './panels/Location';
@@ -22,13 +23,13 @@ export default function EventsFilterPanels({
 
   const filters = eventFiltersSchema.parse(Object.fromEntries(searchParams));
 
-  console.log('params', searchParams.get('location'));
-  console.log('parsed', filters.location);
-
   const filterPanelBaseProps: FilterPanelBaseProps = {
     backgroundHover,
     pathname,
   };
+
+  const location = useStable(filters.location);
+  const locationExclude = useStable(filters.locationExclude);
 
   return (
     <div className="flex flex-col">
@@ -52,9 +53,10 @@ export default function EventsFilterPanels({
           {...filterPanelBaseProps}
           filters={useMemo(
             () => ({
-              location: filters.location,
+              location,
+              locationExclude,
             }),
-            [filters.location],
+            [location, locationExclude],
           )}
         />,
       ].flatMap((item, index) => {
