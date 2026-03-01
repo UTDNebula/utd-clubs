@@ -3,7 +3,7 @@
 import Divider from '@mui/material/Divider';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
-import { eventFiltersSchema } from '@src/utils/eventFilter';
+import { EventFiltersSchema, eventFiltersSchema } from '@src/utils/eventFilter';
 import { useStable } from '@src/utils/useStable';
 import DatePanel from './panels/Date';
 import FiltersPanel from './panels/Filters';
@@ -28,8 +28,29 @@ export default function EventsFilterPanels({
     pathname,
   };
 
-  const location = useStable(filters.location);
-  const locationExclude = useStable(filters.locationExclude);
+  const locationStable = useStable(filters.location);
+  const locationExcludeStable = useStable(filters.locationExclude);
+
+  /**
+   * Utility function to memoize the filters array, but only allow re-calculations when specific fields change
+   * @param fields An array containing specific fields of {@linkcode filters} that should trigger re-renders
+   * @returns Selectively memoized filter object, typed to include only fields specified in {@linkcode fields}
+   *
+   * NOTE: Returned fields are not stabilized. If you need to stabilize a field, don't use this hook and see alternative below:
+   * @example <caption>Alternative: Do this instead to stabilize fields</caption>
+   * const fieldStable = useStable(filters.field);
+   * const filtersProp = useMemo(() => ({ field: fieldStable }), [fieldStable]);
+   */
+  const useFilterFieldsMemo = <F extends (keyof EventFiltersSchema)[]>(
+    fields: F,
+  ): Pick<EventFiltersSchema, F[number]> => {
+    return useMemo(
+      () => filters,
+      // The point of this hook is to selectively memoize the filters object, so we need to calculate deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      fields.map((field) => filters[field]),
+    );
+  };
 
   return (
     <div className="flex flex-col">
@@ -37,14 +58,7 @@ export default function EventsFilterPanels({
         <FiltersPanel
           key="filters"
           {...filterPanelBaseProps}
-          filters={useMemo(
-            () => ({
-              clubs: filters.clubs,
-              past: filters.past,
-              hideRegistered: filters.hideRegistered,
-            }),
-            [filters.clubs, filters.hideRegistered, filters.past],
-          )}
+          filters={useFilterFieldsMemo(['clubs', 'hideRegistered', 'past'])}
         />,
         <TagsPanel key="tags" {...filterPanelBaseProps} />,
         <DatePanel key="date" {...filterPanelBaseProps} />,
@@ -53,10 +67,10 @@ export default function EventsFilterPanels({
           {...filterPanelBaseProps}
           filters={useMemo(
             () => ({
-              location,
-              locationExclude,
+              location: locationStable,
+              locationExclude: locationExcludeStable,
             }),
-            [location, locationExclude],
+            [locationStable, locationExcludeStable],
           )}
         />,
       ].flatMap((item, index) => {
