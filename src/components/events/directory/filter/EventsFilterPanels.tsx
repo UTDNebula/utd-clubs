@@ -60,7 +60,11 @@ export default function EventsFilterPanels({
           {...filterPanelBaseProps}
           filters={useFilterFieldsMemo(['clubs', 'hideRegistered', 'past'])}
         />,
-        <TagsPanel key="tags" {...filterPanelBaseProps} />,
+        <TagsPanel
+          key="tags"
+          {...filterPanelBaseProps}
+          filters={useFilterFieldsMemo(['tags'])}
+        />,
         <DatePanel key="date" {...filterPanelBaseProps} />,
         <LocationPanel
           key="location"

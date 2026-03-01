@@ -70,7 +70,10 @@ export const eventParamsSchema = z.object({
     z.boolean().default(false),
   ),
   past: z.preprocess(preprocessParamBoolean, z.boolean().default(false)),
-  tags: z.array(z.string()).optional(),
+  tags: z.preprocess(
+    preprocessParamArray,
+    z.array(z.string()).default([]).catch([]),
+  ),
   location: z.preprocess(
     preprocessParamArray,
     eventLocationFilterEnum.array().default([]).catch([]),
