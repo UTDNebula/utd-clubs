@@ -20,7 +20,7 @@ const Events = async (props: {
 }) => {
   const searchParams = await props.searchParams;
 
-  // console.log('searchParams', searchParams);
+  console.log('searchParams', searchParams);
 
   const parsed = eventFiltersSchema.parse(searchParams);
   // const events = await api.event.byDateRange({

@@ -8,9 +8,9 @@ import ListItemText from '@mui/material/ListItemText';
 import Radio from '@mui/material/Radio';
 import { ReactNode, useState } from 'react';
 
-export type FilterListItem = {
+export type FilterListItem<Value = string> = {
   label?: string;
-  value: string;
+  value: NonNullable<Value>;
   disableExclusion?: boolean;
   /**
    * Modifies the secondary action of the item

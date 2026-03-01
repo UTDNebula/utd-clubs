@@ -18,6 +18,18 @@ const preprocessParamBoolean = (input: searchParamValue) => {
   return input === undefined ? undefined : !(input === 'false');
 };
 
+/**
+ * @param input Either a string of items delimited with commas, or an array of strings delimited with commas
+ * @returns An array of all the items
+ */
+const preprocessParamArray = (input: searchParamValue) => {
+  if (typeof input === 'string') {
+    return input.split(',');
+  } else {
+    return input?.flatMap((ele) => ele.split(','));
+  }
+};
+
 export const order = z.enum([
   'soon',
   'later',
@@ -28,6 +40,13 @@ export const order = z.enum([
 export const sortEnum = z.enum(['upcoming', 'updated']);
 
 export const eventClubsFilterEnum = z.enum(['all', 'following', 'new']);
+
+export const eventLocationFilterEnum = z.enum([
+  'on-campus',
+  'off-campus',
+  'online',
+  'hybrid',
+]);
 
 export const dateSchema = z
   .string()
@@ -52,6 +71,10 @@ export const eventParamsSchema = z.object({
   ),
   past: z.preprocess(preprocessParamBoolean, z.boolean().default(false)),
   tags: z.array(z.string()).optional(),
+  location: z.preprocess(
+    preprocessParamArray,
+    eventLocationFilterEnum.array().optional().default([]).catch([]),
+  ),
 });
 
 export type EventParamsSchema = z.infer<typeof eventParamsSchema>;

@@ -45,7 +45,7 @@ export default function EventsFilterBar() {
         open={openModal}
         onClose={handleClose}
         className="flex justify-center w-screen h-screen p-4"
-        keepMounted // Used to keep the collapsed state of sections in the modal persistent
+        // keepMounted // Used to keep the collapsed state of sections in the modal persistent
       >
         {/* This span is required to receive the tabIndex prop, which will let the user quickly navigate the modal using the keyboard */}
         <span className="w-120 h-fit">
