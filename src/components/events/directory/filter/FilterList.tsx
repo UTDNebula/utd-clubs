@@ -8,7 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Radio from '@mui/material/Radio';
 import { ReactNode, useState } from 'react';
 
-export type FilterListItem<Value = string> = {
+type FilterListItemBase<Value = string> = {
   label?: string;
   value: NonNullable<Value>;
   disableExclusion?: boolean;
@@ -41,6 +41,8 @@ export type FilterListItem<Value = string> = {
   };
 };
 
+export type FilterListItem<Value = string> = FilterListItemBase<Value> | Value;
+
 export type FilterListProps = {
   /**
    * Controls the type of the selection list
@@ -56,11 +58,11 @@ export type FilterListProps = {
   /**
    * Array of list values that correspond to selected options. Used to control the component
    */
-  selectedValues?: FilterListItem['value'][];
+  selectedValues?: FilterListItemBase['value'][];
   /**
    * Array of list values that correspond to excluded options. Used to control the component
    */
-  excludedValues?: FilterListItem['value'][];
+  excludedValues?: FilterListItemBase['value'][];
   /**
    * Callback function that provides the updated selectedValues and excludedValues whenever
    * the user changes their selection. Used to raise the component's state
@@ -68,8 +70,8 @@ export type FilterListProps = {
    * @param newExcludedValues Updated array of values that correspond to excluded options
    */
   onChange?: (
-    newSelectedValues: FilterListItem['value'][],
-    newExcludedValues: FilterListItem['value'][],
+    newSelectedValues: FilterListItemBase['value'][],
+    newExcludedValues: FilterListItemBase['value'][],
   ) => void;
   /**
    * Whether to enable the exclusion buttons
@@ -91,14 +93,14 @@ export default function FilterList({
   enableExclusion = false,
   allowDeselecting = true,
 }: FilterListProps) {
-  const [selected, setSelected] = useState<FilterListItem['value'][]>(
+  const [selected, setSelected] = useState<FilterListItemBase['value'][]>(
     selectedValues ?? [],
   );
-  const [excluded, setExcluded] = useState<FilterListItem['value'][]>(
+  const [excluded, setExcluded] = useState<FilterListItemBase['value'][]>(
     excludedValues ?? [],
   );
 
-  const handleToggle = (item: FilterListItem) => {
+  const handleToggle = (item: FilterListItemBase) => {
     let newSelected = [...selected];
     let newExcluded = [...excluded];
     switch (type) {
@@ -128,7 +130,7 @@ export default function FilterList({
     onChange?.(newSelected, newExcluded);
   };
 
-  const handleToggleExclude = (item: FilterListItem) => {
+  const handleToggleExclude = (item: FilterListItemBase) => {
     let newSelected = [...selected];
     let newExcluded = [...excluded];
     switch (type) {
@@ -158,7 +160,7 @@ export default function FilterList({
     onChange?.(newSelected, newExcluded);
   };
 
-  const options: FilterListItem[] = optionsProp?.map((option) => {
+  const options: FilterListItemBase[] = optionsProp?.map((option) => {
     if (typeof option === 'string') {
       return { value: option };
     } else {

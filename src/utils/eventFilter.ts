@@ -1,5 +1,5 @@
 import { TZDateMini } from '@date-fns/tz';
-import { format, startOfDay } from 'date-fns';
+import { format, parseISO, startOfDay } from 'date-fns';
 import { z } from 'zod';
 
 type searchParamValue = string | string[] | undefined;
@@ -30,6 +30,9 @@ const preprocessParamArray = (input: searchParamValue) => {
   }
 };
 
+/**
+ * @deprecated
+ */
 export const order = z.enum([
   'soon',
   'later',
@@ -41,12 +44,23 @@ export const sortEnum = z.enum(['upcoming', 'updated']);
 
 export const eventClubsFilterEnum = z.enum(['all', 'following', 'new']);
 
-export const eventLocationFilterEnum = z.enum([
-  'on-campus',
-  'off-campus',
-  'online',
-  'hybrid',
+export const temporalDeixisFilterEnum = z.enum([
+  'today',
+  'tomorrow',
+  'this weekend',
+  'this week',
+  'this month',
 ]);
+
+/**
+ * Sentinel value to indicate a custom date
+ */
+export const temporalDeixisCustomDateSentinelValue = 'custom';
+
+export const temporalDeixisWithCustomFilterEnum = z.enum([
+  ...temporalDeixisFilterEnum.options,
+  temporalDeixisCustomDateSentinelValue,
+] as const);
 
 export const dateSchema = z
   .string()
@@ -54,13 +68,22 @@ export const dateSchema = z
   .default(format(startOfDay(TZDateMini.tz('America/Chicago')), 'yyyy-MM-dd'))
   .catch(format(startOfDay(TZDateMini.tz('America/Chicago')), 'yyyy-MM-dd'));
 
+export const eventLocationFilterEnum = z.enum([
+  'on-campus',
+  'off-campus',
+  'online',
+  'hybrid',
+]);
+
+/**
+ * @deprecated
+ */
 export const eventParamsSchemaLegacy = z.object({
   date: dateSchema,
 });
 
 export const eventParamsSchema = z.object({
   q: z.string().optional(),
-  date: dateSchema,
   s: sortEnum.default('upcoming').catch('upcoming'),
   page: z.preprocess(preprocessParamNum, z.int().min(1).default(1).catch(1)),
   size: z.preprocess(preprocessParamNum, z.int().min(1).default(20).catch(20)),
@@ -74,6 +97,9 @@ export const eventParamsSchema = z.object({
     preprocessParamArray,
     z.array(z.string()).default([]).catch([]),
   ),
+  date: temporalDeixisWithCustomFilterEnum.optional().catch(undefined),
+  dateStart: dateSchema.default(''),
+  dateEnd: dateSchema.default(''),
   location: z.preprocess(
     preprocessParamArray,
     eventLocationFilterEnum.array().default([]).catch([]),
@@ -87,9 +113,23 @@ export const eventParamsSchema = z.object({
 export type EventParamsSchema = z.infer<typeof eventParamsSchema>;
 
 export const eventFiltersSchema = eventParamsSchema.transform(
-  ({ q, s, 'location!': locationExclude, ...rest }) => ({
+  ({
+    q,
+    s,
+    date,
+    dateStart,
+    dateEnd,
+    'location!': locationExclude,
+    ...rest
+  }) => ({
     query: q,
     sort: s,
+    date:
+      dateStart !== '' || dateEnd !== ''
+        ? temporalDeixisCustomDateSentinelValue
+        : date,
+    dateStart: dateStart !== '' ? parseISO(dateStart) : null,
+    dateEnd: dateEnd !== '' ? parseISO(dateEnd) : null,
     locationExclude,
     ...rest,
   }),

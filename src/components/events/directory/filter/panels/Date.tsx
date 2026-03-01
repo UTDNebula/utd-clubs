@@ -1,58 +1,98 @@
 import ClearIcon from '@mui/icons-material/Clear';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { memo, useState } from 'react';
+import z from 'zod';
 import Panel from '@src/components/common/Panel';
-import FilterList from '../FilterList';
-import { FilterPanelBaseProps, panelProps } from '../utils';
+import {
+  EventFiltersSchema,
+  temporalDeixisCustomDateSentinelValue,
+  temporalDeixisWithCustomFilterEnum,
+} from '@src/utils/eventFilter';
+import FilterList, { FilterListItem } from '../FilterList';
+import { FilterPanelProps, navigateWithParams, panelProps } from '../utils';
 
-export default memo(function DatePanel(props: FilterPanelBaseProps) {
-  const [date, setDate] = useState<string | null>(null);
-  const [customDate, setCustomDate] = useState<Date | null>(null);
-  const [customDateEnd, setCustomDateEnd] = useState<Date | null>(null);
+export type DatePanelFields = Pick<
+  EventFiltersSchema,
+  'date' | 'dateStart' | 'dateEnd'
+>;
+
+export default memo(function DatePanel(
+  props: FilterPanelProps<DatePanelFields>,
+) {
+  const pathname = props.pathname;
+
+  const date = props.filters.date;
+
+  const [customDate, setCustomDate] = useState<Date | null>(
+    props.filters.dateStart,
+  );
+  const [customDateEnd, setCustomDateEnd] = useState<Date | null>(
+    props.filters.dateEnd,
+  );
 
   return (
     <Panel heading="Date" {...panelProps(props.backgroundHover)}>
       <FilterList
-        options={[
-          'Today',
-          'Tomorrow',
-          'This weekend',
-          'This week',
-          'This month',
-          {
-            label: 'Custom date...',
-            value: 'custom',
-            disableExclusion: true,
-            secondaryAction: {
-              visible: Boolean(customDate || customDateEnd),
-              onClick: () => {
-                setCustomDate(null);
-                setCustomDateEnd(null);
+        options={
+          [
+            { label: 'Today', value: 'today' },
+            { label: 'Tomorrow', value: 'tomorrow' },
+            { label: 'This weekend', value: 'this weekend' },
+            { label: 'This week', value: 'this week' },
+            { label: 'This month', value: 'this month' },
+            {
+              label: 'Custom date...',
+              value: temporalDeixisCustomDateSentinelValue,
+              disableExclusion: true,
+              secondaryAction: {
+                visible: Boolean(customDate || customDateEnd),
+                onClick: () => {
+                  setCustomDate(null);
+                  setCustomDateEnd(null);
+
+                  const params = new URLSearchParams(window.location.search);
+                  params.set('date', temporalDeixisCustomDateSentinelValue);
+                  params.delete('dateStart');
+                  params.delete('dateEnd');
+                  navigateWithParams(pathname, params);
+                },
+                icon: (
+                  <ClearIcon
+                    fontSize="small"
+                    className="text-neutral-600 dark:text-neutral-400"
+                  />
+                ),
+                tooltip: 'Clear',
               },
-              icon: (
-                <ClearIcon
-                  fontSize="small"
-                  className="text-neutral-600 dark:text-neutral-400"
-                />
-              ),
-              tooltip: 'Clear',
             },
-          },
-        ]}
+          ] satisfies FilterListItem<
+            z.infer<typeof temporalDeixisWithCustomFilterEnum>
+          >[]
+        }
         type="radio"
         selectedValues={date ? [date] : []}
         onChange={(newSelectedValues) => {
-          setDate(newSelectedValues[0] ?? null);
+          const newValue = newSelectedValues[0];
+
+          const params = new URLSearchParams(window.location.search);
+          if (newValue) {
+            params.set('date', newValue);
+            params.delete('dateStart');
+            params.delete('dateEnd');
+          } else {
+            params.delete('date');
+          }
+          navigateWithParams(pathname, params);
         }}
       />
-      {date?.includes('custom') && (
+      {date?.includes(temporalDeixisCustomDateSentinelValue) && (
         <div className="flex flex-col gap-4 pt-2 sm:pl-8">
           <DatePicker
             label="Date"
             value={customDate}
             onChange={(value) => {
               if (value) {
-                setCustomDateEnd(
+                const newDateEnd = new Date(
                   !customDate && customDateEnd
                     ? // Do not change end date if start isn't present and end date exists
                       customDateEnd
@@ -64,8 +104,23 @@ export default memo(function DatePanel(props: FilterPanelBaseProps) {
                             : 0),
                       ),
                 );
+                setCustomDate(value);
+                setCustomDateEnd(newDateEnd);
+
+                const params = new URLSearchParams(window.location.search);
+                if (value) {
+                  params.set('dateStart', value.toISOString().split('T')[0]!);
+                  params.set(
+                    'dateEnd',
+                    newDateEnd.toISOString().split('T')[0]!,
+                  );
+                  params.delete('date');
+                } else {
+                  params.delete('dateStart');
+                  params.delete('dateEnd');
+                }
+                navigateWithParams(pathname, params);
               }
-              setCustomDate(value);
             }}
             slotProps={{
               textField: {
@@ -80,7 +135,18 @@ export default memo(function DatePanel(props: FilterPanelBaseProps) {
           <DatePicker
             label="End date"
             value={customDateEnd}
-            onChange={(value) => setCustomDateEnd(value)}
+            onChange={(value) => {
+              setCustomDateEnd(value);
+
+              const params = new URLSearchParams(window.location.search);
+              if (value) {
+                params.set('dateEnd', value.toISOString().split('T')[0]!);
+                params.delete('date');
+              } else {
+                params.delete('dateEnd');
+              }
+              navigateWithParams(pathname, params);
+            }}
             minDate={customDate ?? undefined}
             slotProps={{
               textField: {
