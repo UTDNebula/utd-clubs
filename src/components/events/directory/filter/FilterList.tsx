@@ -202,7 +202,7 @@ export default function FilterList({
                   ) : (
                     <BlockIcon
                       fontSize="small"
-                      className={`transition-opacity ${(excludedValues ?? excluded).includes(option.value) ? 'text-rose-400 dark:text-rose-600' : 'text-neutral-400 dark:text-neutral-600 group-hover/secondary:text-neutral-600 dark:group-hover/secondary:text-neutral-400 invisible group-hover/li:visible'}`}
+                      className={`transition-opacity ${(excludedValues ?? excluded).includes(option.value) ? 'text-rose-400 dark:text-rose-600' : 'text-neutral-400 dark:text-neutral-600 group-hover/secondary:text-neutral-600 dark:group-hover/secondary:text-neutral-400 invisible group-hover/li:visible group-focus-visible/secondary:visible'}`}
                     />
                   )}
                 </IconButton>

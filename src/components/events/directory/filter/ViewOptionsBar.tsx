@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import PaginationItem from '@mui/material/PaginationItem';
 import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 export default function ViewOptionsBar() {
@@ -55,6 +56,25 @@ export default function ViewOptionsBar() {
     }
   }, []);
 
+  // Change page when pressing left or right arrow keys
+  useEffect(() => {
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if ((event.target as HTMLElement).tagName !== 'BODY') return;
+
+      if (event.key === 'ArrowRight') {
+        setPage((prev) => (prev + 1 < maxPages ? prev + 1 : prev));
+      } else if (event.key === 'ArrowLeft') {
+        setPage((prev) => (prev > 0 ? prev - 1 : prev));
+      }
+    };
+
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
   return (
     <div className="flex justify-between">
       <div className="flex gap-2 px-1 text-neutral-600 dark:text-neutral-400">
@@ -75,14 +95,26 @@ export default function ViewOptionsBar() {
       </div>
       <div>
         <div ref={paginationRef}>
-          <PaginationItem
-            className="mx-0"
-            type="previous"
-            onClick={() => {
-              setPage((prev) => (prev >= 0 ? prev - 1 : prev));
-            }}
-            disabled={page <= 0}
-          />
+          <Tooltip
+            disableInteractive
+            title={
+              <span>
+                Previous page{' '}
+                <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
+                  &larr;
+                </kbd>
+              </span>
+            }
+          >
+            <PaginationItem
+              className="mx-0"
+              type="previous"
+              onClick={() => {
+                setPage((prev) => (prev > 0 ? prev - 1 : prev));
+              }}
+              disabled={page <= 0}
+            />
+          </Tooltip>
           <PaginationItem
             role="textbox"
             className="mx-0 cursor-text outline-neutral-800 dark:outline-neutral-200 hover:outline-1"
@@ -102,14 +134,26 @@ export default function ViewOptionsBar() {
             }
             onClick={handleOpenPageInput}
           />
-          <PaginationItem
-            className="mx-0"
-            type="next"
-            onClick={() => {
-              setPage((prev) => (page + 1 < maxPages ? prev + 1 : prev));
-            }}
-            disabled={page + 1 >= maxPages}
-          />
+          <Tooltip
+            disableInteractive
+            title={
+              <span>
+                Next page{' '}
+                <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
+                  &rarr;
+                </kbd>
+              </span>
+            }
+          >
+            <PaginationItem
+              className="mx-0"
+              type="next"
+              onClick={() => {
+                setPage((prev) => (prev + 1 < maxPages ? prev + 1 : prev));
+              }}
+              disabled={page + 1 >= maxPages}
+            />
+          </Tooltip>
         </div>
         <Popover
           open={openPageInput}

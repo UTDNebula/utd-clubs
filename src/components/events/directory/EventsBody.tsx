@@ -4,7 +4,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import Chip from '@mui/material/Chip';
 import Collapse from '@mui/material/Collapse';
-import { useState } from 'react';
+import Tooltip from '@mui/material/Tooltip';
+import { useEffect, useState } from 'react';
 import { EventSearchBar } from '@src/components/searchBar/EventSearchBar';
 import { RouterOutputs } from '@src/trpc/shared';
 import EventCard from '../EventCard';
@@ -18,6 +19,23 @@ type EventsBodyProps = {
 
 const EventsBody = ({ events }: EventsBodyProps) => {
   const [showSidebar, setShowSidebar] = useState(true);
+
+  // Toggle sidebar when pressing backslash key
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.target as HTMLElement).tagName !== 'BODY') return;
+
+      if (event.key === '\\') {
+        setShowSidebar((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <section id="events-body" className="w-full flex items-start">
@@ -37,22 +55,34 @@ const EventsBody = ({ events }: EventsBodyProps) => {
         <EventSearchBar />
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
-            <Chip
-              icon={
-                showSidebar ? (
-                  <MenuOpenIcon fontSize="small" />
-                ) : (
-                  <MenuIcon fontSize="small" />
-                )
+            <Tooltip
+              disableInteractive
+              title={
+                <span>
+                  {showSidebar ? 'Collapse' : 'Expand'} sidebar{' '}
+                  <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
+                    \
+                  </kbd>
+                </span>
               }
-              variant="outlined"
-              onClick={() => setShowSidebar((prev) => !prev)}
-              className="border-[var(--mui-palette-divider)] max-md:hidden"
-              slotProps={{
-                root: { className: 'aspect-square [&>.MuiChip-icon]:m-0' },
-                label: { className: 'p-0' },
-              }}
-            />
+            >
+              <Chip
+                icon={
+                  showSidebar ? (
+                    <MenuOpenIcon fontSize="small" />
+                  ) : (
+                    <MenuIcon fontSize="small" />
+                  )
+                }
+                variant="outlined"
+                onClick={() => setShowSidebar((prev) => !prev)}
+                className="border-[var(--mui-palette-divider)] max-md:hidden"
+                slotProps={{
+                  root: { className: 'aspect-square [&>.MuiChip-icon]:m-0' },
+                  label: { className: 'p-0' },
+                }}
+              />
+            </Tooltip>
             <EventsFilterBar />
           </div>
         </div>
