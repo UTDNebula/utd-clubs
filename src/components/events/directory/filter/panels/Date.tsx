@@ -9,7 +9,7 @@ import {
   temporalDeixisWithCustomFilterEnum,
 } from '@src/utils/eventFilter';
 import FilterList, { FilterListItem } from '../FilterList';
-import { FilterPanelProps, navigateWithParams, panelProps } from '../utils';
+import { FilterPanelProps, panelProps, setParams } from '../utils';
 
 export type DatePanelFields = Pick<
   EventFiltersSchema,
@@ -19,8 +19,6 @@ export type DatePanelFields = Pick<
 export default memo(function DatePanel(
   props: FilterPanelProps<DatePanelFields>,
 ) {
-  const pathname = props.pathname;
-
   const date = props.filters.date;
 
   const [customDate, setCustomDate] = useState<Date | null>(
@@ -50,11 +48,11 @@ export default memo(function DatePanel(
                   setCustomDate(null);
                   setCustomDateEnd(null);
 
-                  const params = new URLSearchParams(window.location.search);
-                  params.set('date', temporalDeixisCustomDateSentinelValue);
-                  params.delete('dateStart');
-                  params.delete('dateEnd');
-                  navigateWithParams(pathname, params);
+                  setParams((params) => {
+                    params.set('date', temporalDeixisCustomDateSentinelValue);
+                    params.delete('dateStart');
+                    params.delete('dateEnd');
+                  });
                 },
                 icon: (
                   <ClearIcon
@@ -74,33 +72,33 @@ export default memo(function DatePanel(
         onChange={(newSelectedValues) => {
           const newValue = newSelectedValues[0];
 
-          const params = new URLSearchParams(window.location.search);
-          if (newValue) {
-            params.set('date', newValue);
-            params.delete('dateStart');
-            params.delete('dateEnd');
+          setParams((params) => {
+            if (newValue) {
+              params.set('date', newValue);
+              params.delete('dateStart');
+              params.delete('dateEnd');
 
-            // Set param's custom dateStart and dateEnd if their state has a value
-            if (newValue === temporalDeixisCustomDateSentinelValue) {
-              if (customDate) {
-                params.delete('date');
-                params.set(
-                  'dateStart',
-                  customDate.toISOString().split('T')[0]!,
-                );
+              // Set param's custom dateStart and dateEnd if their state has a value
+              if (newValue === temporalDeixisCustomDateSentinelValue) {
+                if (customDate) {
+                  params.delete('date');
+                  params.set(
+                    'dateStart',
+                    customDate.toISOString().split('T')[0]!,
+                  );
+                }
+                if (customDateEnd) {
+                  params.delete('date');
+                  params.set(
+                    'dateEnd',
+                    customDateEnd.toISOString().split('T')[0]!,
+                  );
+                }
               }
-              if (customDateEnd) {
-                params.delete('date');
-                params.set(
-                  'dateEnd',
-                  customDateEnd.toISOString().split('T')[0]!,
-                );
-              }
+            } else {
+              params.delete('date');
             }
-          } else {
-            params.delete('date');
-          }
-          navigateWithParams(pathname, params);
+          });
         }}
       />
       {date?.includes(temporalDeixisCustomDateSentinelValue) && (
@@ -125,19 +123,19 @@ export default memo(function DatePanel(
                 setCustomDate(value);
                 setCustomDateEnd(newDateEnd);
 
-                const params = new URLSearchParams(window.location.search);
-                if (value) {
-                  params.set('dateStart', value.toISOString().split('T')[0]!);
-                  params.set(
-                    'dateEnd',
-                    newDateEnd.toISOString().split('T')[0]!,
-                  );
-                  params.delete('date');
-                } else {
-                  params.delete('dateStart');
-                  params.delete('dateEnd');
-                }
-                navigateWithParams(pathname, params);
+                setParams((params) => {
+                  if (value) {
+                    params.set('dateStart', value.toISOString().split('T')[0]!);
+                    params.set(
+                      'dateEnd',
+                      newDateEnd.toISOString().split('T')[0]!,
+                    );
+                    params.delete('date');
+                  } else {
+                    params.delete('dateStart');
+                    params.delete('dateEnd');
+                  }
+                });
               }
             }}
             slotProps={{
@@ -156,14 +154,14 @@ export default memo(function DatePanel(
             onChange={(value) => {
               setCustomDateEnd(value);
 
-              const params = new URLSearchParams(window.location.search);
-              if (value) {
-                params.set('dateEnd', value.toISOString().split('T')[0]!);
-                params.delete('date');
-              } else {
-                params.delete('dateEnd');
-              }
-              navigateWithParams(pathname, params);
+              setParams((params) => {
+                if (value) {
+                  params.set('dateEnd', value.toISOString().split('T')[0]!);
+                  params.delete('date');
+                } else {
+                  params.delete('dateEnd');
+                }
+              });
             }}
             minDate={customDate ?? undefined}
             slotProps={{

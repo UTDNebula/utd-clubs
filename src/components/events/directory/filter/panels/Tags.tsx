@@ -2,15 +2,13 @@ import { memo } from 'react';
 import Panel from '@src/components/common/Panel';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
 import ClubTagFilter from '../ClubTagFilter';
-import { FilterPanelProps, navigateWithParams, panelProps } from '../utils';
+import { FilterPanelProps, panelProps, setParams } from '../utils';
 
 export type TagsPanelFields = Pick<EventFiltersSchema, 'tags'>;
 
 export default memo(function TagsPanel(
   props: FilterPanelProps<TagsPanelFields>,
 ) {
-  const pathname = props.pathname;
-
   const tags = props.filters.tags;
 
   return (
@@ -30,13 +28,13 @@ export default memo(function TagsPanel(
       <ClubTagFilter
         value={tags}
         onChange={(newValue) => {
-          const params = new URLSearchParams(window.location.search);
-          if (newValue.length) {
-            params.set('tags', newValue.join(','));
-          } else {
-            params.delete('tags');
-          }
-          navigateWithParams(pathname, params);
+          setParams((params) => {
+            if (newValue.length) {
+              params.set('tags', newValue.join(','));
+            } else {
+              params.delete('tags');
+            }
+          });
         }}
         label=""
         vertical

@@ -5,7 +5,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
 import Panel from '@src/components/common/Panel';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
-import { FilterPanelProps, navigateWithParams, panelProps } from '../utils';
+import { FilterPanelProps, panelProps, setParams } from '../utils';
 
 export type FiltersPanelFields = Pick<
   EventFiltersSchema,
@@ -15,8 +15,6 @@ export type FiltersPanelFields = Pick<
 export default memo(function FiltersPanel(
   props: FilterPanelProps<FiltersPanelFields>,
 ) {
-  const pathname = props.pathname;
-
   const clubs = props.filters.clubs;
   const hideRegistered = props.filters.hideRegistered;
   const past = props.filters.past;
@@ -28,14 +26,13 @@ export default memo(function FiltersPanel(
         exclusive
         onChange={(_e, newValue) => {
           if (newValue !== null) {
-            // setClubs(newValue);
-            const params = new URLSearchParams(window.location.search);
-            if (newValue !== 'all') {
-              params.set('clubs', newValue);
-            } else {
-              params.delete('clubs');
-            }
-            navigateWithParams(pathname, params);
+            setParams((params) => {
+              if (newValue !== 'all') {
+                params.set('clubs', newValue);
+              } else {
+                params.delete('clubs');
+              }
+            });
           }
         }}
         size="small"
@@ -52,13 +49,13 @@ export default memo(function FiltersPanel(
           <Switch
             checked={hideRegistered}
             onChange={(_e, newValue) => {
-              const params = new URLSearchParams(window.location.search);
-              if (newValue) {
-                params.set('hideRegistered', '');
-              } else {
-                params.delete('hideRegistered');
-              }
-              navigateWithParams(pathname, params);
+              setParams((params) => {
+                if (newValue) {
+                  params.set('hideRegistered', '');
+                } else {
+                  params.delete('hideRegistered');
+                }
+              });
             }}
           />
         }
@@ -69,13 +66,13 @@ export default memo(function FiltersPanel(
           <Switch
             checked={past}
             onChange={(_e, newValue) => {
-              const params = new URLSearchParams(window.location.search);
-              if (newValue) {
-                params.set('past', '');
-              } else {
-                params.delete('past');
-              }
-              navigateWithParams(pathname, params);
+              setParams((params) => {
+                if (newValue) {
+                  params.set('past', '');
+                } else {
+                  params.delete('past');
+                }
+              });
             }}
           />
         }
