@@ -79,6 +79,24 @@ export default memo(function DatePanel(
             params.set('date', newValue);
             params.delete('dateStart');
             params.delete('dateEnd');
+
+            // Set param's custom dateStart and dateEnd if their state has a value
+            if (newValue === temporalDeixisCustomDateSentinelValue) {
+              if (customDate) {
+                params.delete('date');
+                params.set(
+                  'dateStart',
+                  customDate.toISOString().split('T')[0]!,
+                );
+              }
+              if (customDateEnd) {
+                params.delete('date');
+                params.set(
+                  'dateEnd',
+                  customDateEnd.toISOString().split('T')[0]!,
+                );
+              }
+            }
           } else {
             params.delete('date');
           }
