@@ -28,6 +28,8 @@ export default function EventsFilterPanels({
     pathname,
   };
 
+  const tagsStable = useStable(filters.tags);
+
   const locationStable = useStable(filters.location);
   const locationExcludeStable = useStable(filters.locationExclude);
 
@@ -63,7 +65,12 @@ export default function EventsFilterPanels({
         <TagsPanel
           key="tags"
           {...filterPanelBaseProps}
-          filters={useFilterFieldsMemo(['tags'])}
+          filters={useMemo(
+            () => ({
+              tags: tagsStable,
+            }),
+            [tagsStable],
+          )}
         />,
         <DatePanel
           key="date"

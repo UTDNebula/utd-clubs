@@ -6,7 +6,7 @@ import { FilterPanelProps, navigateWithParams, panelProps } from '../utils';
 
 export type TagsPanelFields = Pick<EventFiltersSchema, 'tags'>;
 
-export default memo(function TagsPane(
+export default memo(function TagsPanel(
   props: FilterPanelProps<TagsPanelFields>,
 ) {
   const pathname = props.pathname;
