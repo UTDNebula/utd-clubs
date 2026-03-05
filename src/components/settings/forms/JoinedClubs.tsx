@@ -174,10 +174,29 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
             }
           />
         )}
-        <Tooltip title="Unfollow club">
-          <IconButton aria-label="unfollow" onClick={onLeave}>
-            <DeleteIcon />
-          </IconButton>
+        <Tooltip
+          title={
+            canManage
+              ? self && (
+                  <div className="text-center">
+                    You cannot Unfollow this club
+                    <br />
+                    Another admin must remove you
+                  </div>
+                )
+              : 'Unfollow club'
+          }
+        >
+          {/* This span is required to ensure the locked tooltip shows when the IconButton is disabled */}
+          <span>
+            <IconButton
+              aria-label="unfollow"
+              onClick={onLeave}
+              disabled={canManage}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </span>
         </Tooltip>
       </div>
     </div>
