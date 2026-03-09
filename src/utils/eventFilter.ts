@@ -92,6 +92,18 @@ export const temporalDeixisWithCustomFilterEnum = z.enum([
   temporalDeixisCustomDateSentinelValue,
 ] as const);
 
+export const temporalDeixisStrings: Record<
+  (typeof temporalDeixisWithCustomFilterEnum.options)[number],
+  string
+> = {
+  today: 'Today',
+  tomorrow: 'Tomorrow',
+  'this weekend': 'This weekend',
+  'this week': 'This week',
+  'this month': 'This month',
+  custom: 'Custom date',
+};
+
 /**
  * @deprecated
  */
@@ -111,6 +123,16 @@ export const eventLocationFilterEnum = z.enum([
   'online',
   'hybrid',
 ]);
+
+export const eventLocationStrings: Record<
+  (typeof eventLocationFilterEnum.options)[number],
+  string
+> = {
+  'on-campus': 'On-Campus',
+  'off-campus': 'Off-Campus',
+  online: 'Online',
+  hybrid: 'Hybrid',
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // Schemas
@@ -190,6 +212,8 @@ export type EventParamsDefault = typeof eventParamsDefaults;
  */
 export const splitArrayFields = [
   'tags',
+  'location',
+  'locationExclude',
 ] satisfies ArrayKeys<EventFiltersSchema>[];
 
 export type SplitArrayFields = (typeof splitArrayFields)[number];
@@ -197,6 +221,25 @@ export type SplitArrayFields = (typeof splitArrayFields)[number];
 ///////////////////////////////////////////////////////////////////////////////
 // Utility Functions
 ///////////////////////////////////////////////////////////////////////////////
+
+export const filterFieldToParam: Record<
+  keyof EventFiltersSchema,
+  keyof EventParamsSchema
+> = {
+  page: 'page',
+  date: 'date',
+  size: 'size',
+  clubs: 'clubs',
+  hideRegistered: 'hideRegistered',
+  past: 'past',
+  tags: 'tags',
+  sort: 's',
+  dateStart: 'dateStart',
+  dateEnd: 'dateEnd',
+  location: 'location',
+  query: 'q',
+  locationExclude: 'location!',
+};
 
 /**
  * Whether {@linkcode field} is an array field that is designated as being split

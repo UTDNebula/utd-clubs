@@ -2,11 +2,11 @@
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClearIcon from '@mui/icons-material/Clear';
-import Chip from '@mui/material/Chip';
+import Chip, { ChipProps } from '@mui/material/Chip';
 import Popover from '@mui/material/Popover';
 import { ReactNode, useState } from 'react';
 
-type FilterChipProps = {
+type FilterChipProps = ChipProps & {
   label?: ReactNode;
   /**
    * Component to be displayed as a popover when clicking on the chip.
@@ -21,9 +21,12 @@ type FilterChipProps = {
 };
 
 export default function FilterChip({
+  className,
   label,
   popoverComponent,
   disableDelete,
+  onDelete,
+  ...props
 }: FilterChipProps) {
   const [popoverAnchorEl, setPopoverAnchorEl] = useState<HTMLElement | null>(
     null,
@@ -38,7 +41,9 @@ export default function FilterChip({
     setPopoverAnchorEl(null);
   };
 
-  const handleDelete = () => {};
+  const handleDelete = (e: React.MouseEvent<HTMLDivElement>) => {
+    onDelete?.(e);
+  };
 
   return (
     <>
@@ -60,7 +65,7 @@ export default function FilterChip({
             )}
           </span>
         }
-        className="group/chip"
+        className={`group/chip ${className}`}
         onClick={
           popoverComponent
             ? handleOpenPopover
@@ -73,6 +78,7 @@ export default function FilterChip({
             className: `${popoverComponent || !disableDelete ? 'pr-0' : ''}`,
           },
         }}
+        {...props}
       />
       <Popover
         open={openPopover}
