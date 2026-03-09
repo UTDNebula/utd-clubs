@@ -5,9 +5,14 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import Chip from '@mui/material/Chip';
 import Collapse from '@mui/material/Collapse';
 import Tooltip from '@mui/material/Tooltip';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { EventSearchBar } from '@src/components/searchBar/EventSearchBar';
 import { RouterOutputs } from '@src/trpc/shared';
+import {
+  eventFiltersSchema,
+  listSelectedEventFilters,
+} from '@src/utils/eventFilter';
 import EventCard from '../EventCard';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
@@ -18,6 +23,16 @@ type EventsBodyProps = {
 };
 
 const EventsBody = ({ events }: EventsBodyProps) => {
+  const searchParams = useSearchParams();
+
+  console.log('from entries search params', Object.fromEntries(searchParams));
+
+  const filters = eventFiltersSchema.parse(Object.fromEntries(searchParams));
+
+  console.log('FILTERS', filters);
+  const selectedFilters = listSelectedEventFilters(filters);
+  console.log('selectedFilters', selectedFilters);
+
   const [showSidebar, setShowSidebar] = useState(true);
 
   // Toggle sidebar when pressing backslash key
@@ -48,7 +63,7 @@ const EventsBody = ({ events }: EventsBodyProps) => {
           id="events-filters"
           className="flex flex-col gap-4 h-full w-76 mr-4"
         >
-          <EventsFilterPanels backgroundHover />
+          <EventsFilterPanels backgroundHover filters={filters} />
         </div>
       </Collapse>
       <div id="events-content" className="flex flex-col gap-4 grow w-min">
@@ -83,7 +98,10 @@ const EventsBody = ({ events }: EventsBodyProps) => {
                 }}
               />
             </Tooltip>
-            <EventsFilterBar />
+            <EventsFilterBar
+              filters={filters}
+              selectedFilters={selectedFilters}
+            />
           </div>
         </div>
         <ViewOptionsBar />

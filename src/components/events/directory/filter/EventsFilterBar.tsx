@@ -4,12 +4,26 @@ import TuneIcon from '@mui/icons-material/Tune';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Modal from '@mui/material/Modal';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import Panel from '@src/components/common/Panel';
+import {
+  EventFiltersSchema,
+  SelectedEventFiltersList,
+  splitArrayField,
+} from '@src/utils/eventFilter';
 import EventsFilterPanels from './EventsFilterPanels';
 import FilterChip from './FilterChip';
 
-export default function EventsFilterBar() {
+type EventsFilterBarProps = {
+  filters: EventFiltersSchema;
+  selectedFilters?: SelectedEventFiltersList;
+};
+
+export default function EventsFilterBar({
+  filters,
+  selectedFilters,
+}: EventsFilterBarProps) {
   const [openModal, setOpenModal] = useState(false);
 
   const handleClose = () => {
@@ -18,7 +32,7 @@ export default function EventsFilterBar() {
 
   return (
     <>
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         <Chip
           label="Filters"
           icon={<TuneIcon fontSize="small" />}
@@ -26,26 +40,29 @@ export default function EventsFilterBar() {
           onClick={() => setOpenModal(true)}
           className="border-[var(--mui-palette-divider)]"
         />
-        <FilterChip label="Tag" />
-        <FilterChip
-          label="Popover"
-          popoverComponent={<div className="mx-8 my-6">test</div>}
-        />
-        <FilterChip label="Info" disableDelete />
-        <FilterChip
-          label="idk"
-          popoverComponent={<div className="mx-8 my-6">test</div>}
-          disableDelete
-        />
-        {/* {[''].map((ele, index) => (
-          <FilterChip label="test" key={index} />
-        ))} */}
+        <AnimatePresence>
+          {selectedFilters?.map((filter) => (
+            <motion.div
+              key={
+                splitArrayField(filter.field)
+                  ? `${filter.field}-${filter.value}`
+                  : `${filter.field}`
+              }
+              layout
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.1 }}
+            >
+              <FilterChip label={filter.field} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
       <Modal
         open={openModal}
         onClose={handleClose}
         className="flex justify-center w-screen h-screen p-4"
-        // keepMounted // Used to keep the collapsed state of sections in the modal persistent
       >
         {/* This span is required to receive the tabIndex prop, which will let the user quickly navigate the modal using the keyboard */}
         <span className="w-120 h-fit">
@@ -55,7 +72,7 @@ export default function EventsFilterBar() {
             slotClassNames={{ collapse: 'relative' }}
           >
             <div className="relative overflow-auto max-h-[calc(100dvh-6rem)] px-5 pt-5">
-              <EventsFilterPanels />
+              <EventsFilterPanels filters={filters} />
             </div>
             <div className="flex flex-wrap justify-between items-center gap-2 px-5 pb-5">
               <Button

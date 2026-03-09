@@ -1,9 +1,9 @@
 'use client';
 
 import Divider from '@mui/material/Divider';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
-import { EventFiltersSchema, eventFiltersSchema } from '@src/utils/eventFilter';
+import { EventFiltersSchema } from '@src/utils/eventFilter';
 import { useStable } from '@src/utils/useStable';
 import DatePanel from './panels/Date';
 import FiltersPanel from './panels/Filters';
@@ -13,15 +13,14 @@ import { FilterPanelBaseProps } from './utils';
 
 type EventsFilterPanelsProps = {
   backgroundHover?: boolean;
+  filters: EventFiltersSchema;
 };
 
 export default function EventsFilterPanels({
   backgroundHover = false,
+  filters,
 }: EventsFilterPanelsProps) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const filters = eventFiltersSchema.parse(Object.fromEntries(searchParams));
 
   const filterPanelBaseProps: FilterPanelBaseProps = {
     backgroundHover,
@@ -36,21 +35,34 @@ export default function EventsFilterPanels({
   /**
    * Utility function to memoize the filters array, but only allow re-calculations when specific fields change
    * @param fields An array containing specific fields of {@linkcode filters} that should trigger re-renders
+   * @param manualDeps Optional object for manually inputting dependencies, rather than using {@linkcode fields}
+   *                   Fields present here should be omitted from {@linkcode fields}
    * @returns Selectively memoized filter object, typed to include only fields specified in {@linkcode fields}
    *
-   * NOTE: Returned fields are not stabilized. If you need to stabilize a field, don't use this hook and see alternative below:
-   * @example <caption>Alternative: Do this instead to stabilize fields</caption>
+   * NOTE: Returned fields are not stabilized. If you need to stabilize a field, manually input them into {@linkcode manualDeps}:
+   * @example <caption>Using `manualDeps` to stabilize fields</caption>
    * const fieldStable = useStable(filters.field);
-   * const filtersProp = useMemo(() => ({ field: fieldStable }), [fieldStable]);
+   * useFilterFieldsMemo([], { field: fieldStable })
    */
-  const useFilterFieldsMemo = <F extends (keyof EventFiltersSchema)[]>(
+  const useFilterFieldsMemo = <
+    F extends (keyof EventFiltersSchema)[],
+    M extends keyof EventFiltersSchema,
+  >(
     fields: F,
-  ): Pick<EventFiltersSchema, F[number]> => {
+    manualDeps?: {
+      [K in M]: Record<K, EventFiltersSchema[K]>;
+    }[M],
+  ): Pick<EventFiltersSchema, F[number] | M> => {
     return useMemo(
-      () => filters,
+      () => ({ ...filters, ...manualDeps }),
       // The point of this hook is to selectively memoize the filters object, so we need to calculate deps
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      fields.map((field) => filters[field]),
+      [
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        ...fields.map((field) => filters[field]),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        ...Object.values(manualDeps ?? {}),
+      ],
     );
   };
 
@@ -65,12 +77,7 @@ export default function EventsFilterPanels({
         <TagsPanel
           key="tags"
           {...filterPanelBaseProps}
-          filters={useMemo(
-            () => ({
-              tags: tagsStable,
-            }),
-            [tagsStable],
-          )}
+          filters={useFilterFieldsMemo([], { tags: tagsStable })}
         />,
         <DatePanel
           key="date"
@@ -80,13 +87,10 @@ export default function EventsFilterPanels({
         <LocationPanel
           key="location"
           {...filterPanelBaseProps}
-          filters={useMemo(
-            () => ({
-              location: locationStable,
-              locationExclude: locationExcludeStable,
-            }),
-            [locationStable, locationExcludeStable],
-          )}
+          filters={useFilterFieldsMemo([], {
+            location: locationStable,
+            locationExclude: locationExcludeStable,
+          })}
         />,
       ].flatMap((item, index) => {
         return index > 0
