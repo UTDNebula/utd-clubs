@@ -1,7 +1,6 @@
 import { type Metadata } from 'next';
-import type z from 'zod';
 import EventsBody from '@src/components/events/directory/EventsBody';
-import { api } from '@src/trpc/server';
+// import { api } from '@src/trpc/server';
 import { eventFiltersSchema, EventParamsSchema } from '@src/utils/eventFilter';
 
 export const metadata: Metadata = {
@@ -17,18 +16,17 @@ export const metadata: Metadata = {
 };
 const Events = async (props: { searchParams: Promise<EventParamsSchema> }) => {
   const searchParams = await props.searchParams;
-
-  // console.log('searchParams', searchParams);
-
   const parsed = eventFiltersSchema.parse(searchParams);
+
+  console.log(parsed);
+
   // const events = await api.event.byDateRange({
   //   endTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
   // });
+
   // const { events } = await api.event.findByDate({
   //   date: parsed.date,
   // });
-
-  // console.log('parsed', parsed);
 
   return (
     <>

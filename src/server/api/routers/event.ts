@@ -17,7 +17,6 @@ import {
 } from 'drizzle-orm';
 import { OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
-import { selectEvent } from '@src/server/db/models';
 import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
 import {
