@@ -25,13 +25,13 @@ type EventsBodyProps = {
 const EventsBody = ({ events }: EventsBodyProps) => {
   const searchParams = useSearchParams();
 
-  console.log('from entries search params', Object.fromEntries(searchParams));
+  // console.log('from entries search params', Object.fromEntries(searchParams));
 
   const filters = eventFiltersSchema.parse(Object.fromEntries(searchParams));
 
-  console.log('FILTERS', filters);
+  // console.log('FILTERS', filters);
   const selectedFilters = listSelectedEventFilters(filters);
-  console.log('selectedFilters', selectedFilters);
+  // console.log('selectedFilters', selectedFilters);
 
   const [showSidebar, setShowSidebar] = useState(true);
 

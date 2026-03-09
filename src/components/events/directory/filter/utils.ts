@@ -1,4 +1,6 @@
 import { PanelProps } from '@src/components/common/Panel';
+import { EventParamsSchema } from '@src/utils/eventFilter';
+import { FilterSearchParams } from './FilterSearchParams';
 
 export type FilterPanelBaseProps = {
   backgroundHover: boolean;
@@ -42,10 +44,23 @@ export const navigateWithParams = (
  * @param pathname Optional pathname to override the default, which uses `window.location.pathname`
  */
 export const setParams = (
-  setParamsFn: (params: URLSearchParams) => void,
+  setParamsFn: (params: FilterSearchParams<EventParamsSchema>) => void,
   pathname: string = window.location.pathname,
 ) => {
-  const params = new URLSearchParams(window.location.search);
+  const params = new FilterSearchParams<EventParamsSchema>(
+    window.location.search,
+    {
+      onAppend(name, value) {
+        console.log(`APPEND ${name} WITH '${value}'`);
+      },
+      onDelete(name, value) {
+        console.log(`DELETE ${name}${value ? ` IF '${value}'` : ''}`);
+      },
+      onSet(name, value) {
+        console.log(`SET ${name} TO '${value}'`);
+      },
+    },
+  );
   setParamsFn(params);
   navigateWithParams(pathname, params);
 };

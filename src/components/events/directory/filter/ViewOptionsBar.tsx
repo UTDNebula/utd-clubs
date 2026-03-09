@@ -75,6 +75,9 @@ export default function ViewOptionsBar() {
     };
   }, []);
 
+  const disablePrev = page <= 0;
+  const disableNext = page + 1 >= maxPages;
+
   return (
     <div className="flex justify-between">
       <div className="flex gap-2 px-1 text-neutral-600 dark:text-neutral-400">
@@ -98,21 +101,23 @@ export default function ViewOptionsBar() {
           <Tooltip
             disableInteractive
             title={
-              <span>
-                Previous page{' '}
-                <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
-                  &larr;
-                </kbd>
-              </span>
+              disablePrev ? undefined : (
+                <span>
+                  Previous page{' '}
+                  <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
+                    &larr;
+                  </kbd>
+                </span>
+              )
             }
           >
             <PaginationItem
               className="mx-0"
               type="previous"
               onClick={() => {
-                setPage((prev) => (prev > 0 ? prev - 1 : prev));
+                setPage((prev) => (disablePrev ? prev : prev - 1));
               }}
-              disabled={page <= 0}
+              disabled={disablePrev}
             />
           </Tooltip>
           <PaginationItem
@@ -137,21 +142,23 @@ export default function ViewOptionsBar() {
           <Tooltip
             disableInteractive
             title={
-              <span>
-                Next page{' '}
-                <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
-                  &rarr;
-                </kbd>
-              </span>
+              disableNext ? undefined : (
+                <span>
+                  Next page{' '}
+                  <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
+                    &rarr;
+                  </kbd>
+                </span>
+              )
             }
           >
             <PaginationItem
               className="mx-0"
               type="next"
               onClick={() => {
-                setPage((prev) => (prev + 1 < maxPages ? prev + 1 : prev));
+                setPage((prev) => (disableNext ? prev : prev + 1));
               }}
-              disabled={page + 1 >= maxPages}
+              disabled={disableNext}
             />
           </Tooltip>
         </div>
