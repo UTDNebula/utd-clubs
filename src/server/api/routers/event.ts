@@ -18,7 +18,6 @@ import {
 } from 'drizzle-orm';
 import { OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
-import { selectEvent } from '@src/server/db/models';
 import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
 import {
@@ -26,7 +25,7 @@ import {
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
 import { stopWatching } from '@src/utils/calendar';
-import { dateSchema, order } from '@src/utils/eventFilter';
+import { dateSchemaLegacy, order } from '@src/utils/eventFilter';
 import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
 // import { callStorageAPI } from '@src/utils/storage';
@@ -59,7 +58,7 @@ export const findByFilterSchema = z.object({
   club: z.string().array(),
 });
 export const findByDateSchema = z.object({
-  date: dateSchema,
+  date: dateSchemaLegacy,
 });
 
 const byIdSchema = z.object({
@@ -187,8 +186,9 @@ export const eventRouter = createTRPCRouter({
           (e) => e.club.approved === 'approved',
         );
 
-        const parsed = approvedEvents.map((e) => selectEvent.parse(e));
-        return parsed;
+        // const parsed = approvedEvents.map((e) => selectEvent.parse(e));
+        // return parsed;
+        return approvedEvents;
       } catch (e) {
         console.error(e);
 
