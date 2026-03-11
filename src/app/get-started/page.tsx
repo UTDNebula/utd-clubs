@@ -17,7 +17,7 @@ export default async function Page() {
   const userMetadata = await api.userMetadata.byId({ id: session.user.id });
 
   return (
-    <main className="h-screen relative">
+    <main className="min-h-screen relative pb-24">
       <div className="fixed inset-0 h-full w-full overflow-hidden bg-royal">
         <Image
           src={'/banner.png'}
