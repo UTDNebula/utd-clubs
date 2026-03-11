@@ -4,11 +4,16 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import PaginationItem from '@mui/material/PaginationItem';
 import Popover from '@mui/material/Popover';
+import { useTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 export default function ViewOptionsBar() {
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   const [page, setPage] = useState(0);
   const maxPages = 10;
 
@@ -165,14 +170,18 @@ export default function ViewOptionsBar() {
         <Popover
           open={openPageInput}
           anchorEl={anchorEl}
+          anchorReference={smallScreen ? 'none' : undefined}
           onClose={handleClosePageInput}
           disableRestoreFocus
           anchorOrigin={{ horizontal: 'center', vertical: 'center' }}
           transformOrigin={{ horizontal: 'center', vertical: 'center' }}
           slotProps={{
-            paper: { elevation: 0, className: 'bg-transparent' },
+            paper: smallScreen
+              ? {}
+              : { elevation: 0, className: 'bg-transparent' },
             backdrop: { className: 'bg-black/50' },
           }}
+          className={smallScreen ? 'flex justify-center w-screen p-4' : ''}
         >
           <form
             onSubmit={(e) => {
@@ -180,39 +189,63 @@ export default function ViewOptionsBar() {
               handleClosePageInput();
             }}
           >
-            <TextField
-              value={pageInputValue}
-              onChange={handleChangePageInput}
-              error={pageInputError}
-              autoFocus
-              onFocus={(e) => {
-                // Select current contents when focused
-                e.target.select();
-              }}
-              // Close whenenver input field is no longer focused (i.e. pressing "Done" on mobile devices)
-              onBlur={handleClosePageInput}
-              size="small"
-              style={{
-                width: `${paginationWidth}px`,
-              }}
-              slotProps={{
-                root: {
-                  className: 'bg-white dark:bg-neutral-900 rounded-full',
-                },
-                input: {
-                  className: 'rounded-full',
-                  endAdornment: (
-                    <span className="text-neutral-600 dark:text-neutral-400">
-                      /{maxPages}
-                    </span>
-                  ),
-                },
-                htmlInput: {
-                  className: 'text-center rounded-full p-0 h-8',
-                  inputMode: 'numeric',
-                },
-              }}
-            />
+            <div
+              className={
+                smallScreen ? 'flex flex-col gap-4 items-center mx-6 my-4' : ''
+              }
+            >
+              {smallScreen && (
+                <span className="text-neutral-700 dark:text-neutral-300">
+                  Go to page:
+                </span>
+              )}
+              <TextField
+                value={pageInputValue}
+                onChange={handleChangePageInput}
+                error={pageInputError}
+                autoFocus
+                onFocus={(e) => {
+                  // Select current contents when focused
+                  e.target.select();
+                }}
+                // Close whenenver input field is no longer focused (i.e. pressing "Done" on mobile devices)
+                onBlur={handleClosePageInput}
+                size="small"
+                style={{
+                  width: smallScreen ? '160px' : `${paginationWidth}px`,
+                }}
+                slotProps={{
+                  root: {
+                    className: 'bg-white dark:bg-neutral-900 rounded-full',
+                  },
+                  input: {
+                    className: 'rounded-full',
+                    endAdornment: (
+                      <span className="text-neutral-600 dark:text-neutral-400">
+                        /{maxPages}
+                      </span>
+                    ),
+                  },
+                  htmlInput: {
+                    className: 'text-center rounded-full p-0 h-8',
+                    inputMode: 'numeric',
+                  },
+                }}
+              />
+              {smallScreen && (
+                <div className="flex justify-end w-full">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    className="normal-case"
+                    loadingPosition="start"
+                    color="primary"
+                  >
+                    OK
+                  </Button>
+                </div>
+              )}
+            </div>
           </form>
         </Popover>
       </div>
