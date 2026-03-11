@@ -21,8 +21,11 @@ type EventsTitleProps = {
 const EventsTitle = ({ selectedCount, totalCount }: EventsTitleProps) => {
   const pathname = window.location.pathname;
   const tabPaths = ['/events', '/events/calendar'];
+  const tabIndex = tabPaths.indexOf(pathname);
 
-  const [selectedTab, setSelectedTab] = useState(tabPaths.indexOf(pathname));
+  const [selectedTab, setSelectedTab] = useState(
+    tabIndex !== -1 ? tabIndex : 0,
+  );
 
   const handleChangeTab = (e: SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
