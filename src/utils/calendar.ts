@@ -300,10 +300,12 @@ export async function watchCalendar(clubId: string, refresh: boolean = false) {
   else console.log(`refreshing clubId ${clubId}`);
 
   // get auth & club data
-  const auth = await getAuthForClub(clubId);
-  const clubData = await db.query.club.findFirst({
-    where: eq(clubTable.id, clubId),
-  });
+  const [auth, clubData] = await Promise.all([
+    getAuthForClub(clubId),
+    db.query.club.findFirst({
+      where: eq(clubTable.id, clubId),
+    }),
+  ]);
 
   if (!clubData || !clubData.calendarId || !clubData.calendarGoogleAccountId)
     throw new Error(`clubId ${clubId} has no Calendar to sync`);

@@ -9,8 +9,10 @@ import { auth } from '@src/server/auth';
 export default async function Auth(props: {
   searchParams: Promise<{ [key: string]: string }>;
 }) {
-  const searchParams = await props.searchParams;
-  const session = await auth.api.getSession({ headers: await headers() });
+  const [searchParams, session] = await Promise.all([
+    props.searchParams,
+    auth.api.getSession({ headers: await headers() }),
+  ]);
   if (session) {
     return redirect(searchParams['callbackUrl'] ?? '/');
   }

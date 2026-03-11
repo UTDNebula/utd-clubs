@@ -12,8 +12,10 @@ import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
 
 const Home = async () => {
-  const tags = await api.club.topTags();
-  const allTags = await api.club.distinctTags();
+  const [tags, allTags] = await Promise.all([
+    api.club.topTags(),
+    api.club.distinctTags(),
+  ]);
 
   return (
     <SearchStoreProvider>

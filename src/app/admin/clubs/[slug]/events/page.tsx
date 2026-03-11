@@ -17,12 +17,11 @@ type Props = {
 };
 
 export default async function Page({ params, searchParams }: Props) {
-  const { slug } = await params;
-  const sp = (await searchParams) ?? {};
+  const [{ slug }, sp] = await Promise.all([params, searchParams]);
 
-  const page = Number(sp.page) || 1;
-  const pageSize = Number(sp.pageSize) || 12;
-  const includePast = sp.includePast === 'true';
+  const page = Number(sp?.page) || 1;
+  const pageSize = Number(sp?.pageSize) || 12;
+  const includePast = sp?.includePast === 'true';
   const now = new Date();
 
   const club = await api.admin.getDirectoryInfo({ slug });
@@ -30,20 +29,21 @@ export default async function Page({ params, searchParams }: Props) {
     notFound();
   }
 
-  const events = await api.event.byClubId({
-    clubId: club.id,
-    sortByDate: true,
-    page,
-    pageSize,
-    includePast,
-    currentTime: now,
-  });
-
-  const totalCount = await api.event.countByClubId({
-    clubId: club.id,
-    includePast,
-    currentTime: now,
-  });
+  const [events, totalCount] = await Promise.all([
+    api.event.byClubId({
+      clubId: club.id,
+      sortByDate: true,
+      page,
+      pageSize,
+      includePast,
+      currentTime: now,
+    }),
+    api.event.countByClubId({
+      clubId: club.id,
+      includePast,
+      currentTime: now,
+    }),
+  ]);
 
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 

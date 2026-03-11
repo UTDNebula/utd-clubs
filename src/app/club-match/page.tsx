@@ -30,11 +30,12 @@ const Page = async () => {
     redirect(await signInRoute('club-match'));
   }
 
-  const data = await db.query.userAiCache.findFirst({
-    where: (userAiCache) => eq(userAiCache.id, session.user.id),
-  });
-
-  const userMetadata = await api.userMetadata.byId({ id: session.user.id });
+  const [data, userMetadata] = await Promise.all([
+    db.query.userAiCache.findFirst({
+      where: (userAiCache) => eq(userAiCache.id, session.user.id),
+    }),
+    api.userMetadata.byId({ id: session.user.id }),
+  ]);
 
   if (data?.clubMatchLimit != null && data.clubMatchLimit <= 0) {
     redirect('/club-match/results');

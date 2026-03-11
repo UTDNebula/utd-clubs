@@ -1,23 +1,14 @@
 import type { MetadataRoute } from 'next';
-import type { SelectClub as Club } from '@src/server/db/models';
 import { api } from '@src/trpc/server';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  //Fetch all clubs
-  let cursor = 0;
-  const limit = 50;
-  let allClubs: Club[] = [];
-  while (true) {
-    const { clubs, cursor: newCursor } = await api.club.all({ limit, cursor });
-    allClubs = allClubs.concat(clubs);
-    if (clubs.length < limit) break;
-    cursor = newCursor;
-  }
-
-  //Fetch all events
-  const events = await api.event.byDateRange({
-    endTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
-  });
+  // Fetch all clubs and events
+  const [clubs, events] = await Promise.all([
+    api.club.all(),
+    api.event.byDateRange({
+      endTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
+    }),
+  ]);
 
   return [
     {
@@ -34,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: 'https://clubs.utdnebula.com/club-match',
       priority: 1,
     },
-    ...allClubs.map((club) => ({
+    ...clubs.map((club) => ({
       url: 'https://clubs.utdnebula.com/directory/' + club.slug,
       lastModified: club.updatedAt ?? new Date(),
       changeFrequency: 'monthly' as const,

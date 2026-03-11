@@ -1,4 +1,3 @@
-import { eq } from 'drizzle-orm';
 import { type Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import ClubBody from '@src/components/club/listing/ClubBody';
@@ -6,16 +5,15 @@ import ClubEventHeader from '@src/components/club/listing/ClubEventHeader';
 import { ClubNotClaimed } from '@src/components/club/listing/ClubNotClaimed';
 import ClubTitle from '@src/components/club/listing/ClubTitle';
 import Header from '@src/components/header/Header';
-import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
 import { convertMarkdownToPlaintext } from '@src/utils/markdown';
 
 const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
-  const params = await props.params;
-  const club = await api.club.getDirectoryInfo({ slug: params.slug });
+  const { slug } = await props.params;
+  const club = await api.club.getDirectoryInfo({ slug: slug });
   if (!club) {
     // Backup: If using ID, redirect
-    const clubSlugById = await api.club.getSlug({ id: params.slug });
+    const clubSlugById = await api.club.getSlug({ id: slug });
     if (clubSlugById) {
       redirect(`/directory/${clubSlugById}`);
     }
@@ -46,22 +44,19 @@ export default ClubPage;
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const params = await props.params;
-  const slug = params.slug;
+  const { slug } = await props.params;
 
-  const found = await db.query.club.findFirst({
-    where: (club) => eq(club.slug, slug),
-  });
+  const club = await api.club.getDirectoryInfo({ slug: slug });
 
-  if (!found)
+  if (!club)
     return {
       title: 'Organization not found',
       description: 'Organization not found',
     };
 
   // show first paragraph if it's long enough. Otherwise show the entire description
-  let cleanDescription = `Learn more about ${found.name} on UTD Clubs!`;
-  const textDescription = found.description.replace(/^#+.*$/gm, '');
+  let cleanDescription = `Learn more about ${club.name} on UTD Clubs!`;
+  const textDescription = club.description.replace(/^#+.*$/gm, '');
 
   if (textDescription.length > 0) {
     const firstParagraph = textDescription.split('\n')[0];
@@ -75,17 +70,17 @@ export async function generateMetadata(props: {
   }
 
   return {
-    title: `${found.name}`,
+    title: `${club.name}`,
     description: cleanDescription,
     openGraph: {
-      url: `https://clubs.utdnebula.com/directory/${found.slug}`,
+      url: `https://clubs.utdnebula.com/directory/${club.slug}`,
       description: cleanDescription,
     },
     twitter: {
       card: 'summary_large_image',
     },
     alternates: {
-      canonical: `https://clubs.utdnebula.com/directory/${found.slug}`,
+      canonical: `https://clubs.utdnebula.com/directory/${club.slug}`,
     },
   };
 }
