@@ -34,7 +34,7 @@ const EditEventPage = async (props: {
         path={[
           { text: 'Events', href: `/manage/${slug}/events` },
           { text: event.name, href: `/events/${eventId}` },
-          { text: 'Edit', href: `/manage/${slug}/events/edit/${eventId}` },
+          { text: 'Edit', href: `/manage/${slug}/events/${eventId}/edit` },
         ]}
         hrefBack={`/manage/${slug}/events`}
       />
