@@ -12,7 +12,7 @@ export default async function Auth(props: {
   const searchParams = await props.searchParams;
   const session = await auth.api.getSession({ headers: await headers() });
   if (session) {
-    return redirect(searchParams['callbackUrl'] ?? '/');
+    return redirect(searchParams['callbackUrl'] ?? '/community');
   }
 
   return (
