@@ -45,7 +45,7 @@ export const EventSearchBar = () => {
               ...params.InputProps,
               type: 'search',
               className:
-                'bg-white dark:bg-neutral-900 rounded-full ' +
+                'bg-white dark:bg-neutral-800 rounded-full ' +
                 params.InputProps.className,
             },
           }}

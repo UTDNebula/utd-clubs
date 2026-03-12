@@ -44,7 +44,7 @@ export default function StatusFilter<T>({ column }: Props<T>) {
   return (
     <FormControl
       size="small"
-      className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+      className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-800"
     >
       <Select
         value={value}
