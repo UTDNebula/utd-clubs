@@ -104,7 +104,7 @@ const EventsBody = ({ events }: EventsBodyProps) => {
             />
           </div>
         </div>
-        <ViewOptionsBar />
+        <ViewOptionsBar filters={filters} />
         <div className="flex flex-wrap items-center gap-4">
           {events.length > 0 ? (
             events.map((event) => <EventCard key={event.id} event={event} />)

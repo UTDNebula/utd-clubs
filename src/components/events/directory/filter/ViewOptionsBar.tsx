@@ -1,254 +1,108 @@
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import GridViewIcon from '@mui/icons-material/GridView';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import PaginationItem from '@mui/material/PaginationItem';
-import Popover from '@mui/material/Popover';
-import { useTheme } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import Tooltip from '@mui/material/Tooltip';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import SortIcon from '@mui/icons-material/Sort';
+import { EventFiltersSchema, sortEnum } from '@src/utils/eventFilter';
+import { setParams } from './utils';
+import CompactPagination from './view/CompactPagination';
+import ViewOption, { ViewOptionItem } from './view/ViewOptionItem';
 
-export default function ViewOptionsBar() {
-  const theme = useTheme();
-  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+type EventsViewOptionsBarProps = {
+  filters: EventFiltersSchema;
+};
 
-  const [page, setPage] = useState(0);
-  const maxPages = 10;
-
-  const [paginationWidth, setPaginationWidth] = useState(0);
-  const paginationRef = useRef<HTMLDivElement>(null);
-
-  const [openPageInput, setOpenPageInput] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-  const [pageInputValue, setPageInputValue] = useState('');
-  const [pageInputError, setPageInputError] = useState(false);
-
-  const handleOpenPageInput = (e: React.MouseEvent<HTMLDivElement>) => {
-    setAnchorEl(e.currentTarget);
-    setOpenPageInput(true);
-    setPageInputValue(String(page + 1));
-    setPageInputError(false);
-  };
-
-  const handleClosePageInput = () => {
-    setOpenPageInput(false);
-    if (!pageInputError) {
-      setPage(Number(pageInputValue) - 1);
-    }
-  };
-
-  const handleChangePageInput = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const value = e.target.value;
-    setPageInputValue(value);
-
-    // Error if value is not a number or not in page range
-    setPageInputError(
-      Number.isNaN(Number(value)) ||
-        Number(value) <= 0 ||
-        Number(value) > maxPages,
-    );
-  };
-
-  // Set width of page input popover to width of inline pagination
-  useEffect(() => {
-    if (paginationRef.current) {
-      setPaginationWidth(paginationRef.current.offsetWidth);
-    }
-  }, []);
-
-  // Change page when pressing left or right arrow keys
-  useEffect(() => {
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if ((event.target as HTMLElement).tagName !== 'BODY') return;
-
-      if (event.key === 'ArrowRight') {
-        setPage((prev) => (prev + 1 < maxPages ? prev + 1 : prev));
-      } else if (event.key === 'ArrowLeft') {
-        setPage((prev) => (prev > 0 ? prev - 1 : prev));
+export default function EventsViewOptionsBar({
+  filters,
+}: EventsViewOptionsBarProps) {
+  const handleChangePage = (newValue: number) => {
+    setParams((params) => {
+      if (newValue !== 0) {
+        params.set('page', String(newValue + 1));
+      } else {
+        params.delete('page');
       }
-    };
+    });
+  };
 
-    window.addEventListener('keyup', handleKeyUp);
+  const handleChangeSort = (newValue?: (typeof sortEnum.options)[number]) => {
+    setParams((params) => {
+      if (newValue && newValue !== 'upcoming') {
+        params.set('s', newValue);
+      } else {
+        params.delete('s');
+      }
+    });
+  };
 
-    return () => {
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
+  const handleChangeSize = (newValue?: number) => {
+    setParams((params) => {
+      // Go back to first page if page size changes
+      if (newValue !== Number(params.get('size'))) {
+        params.delete('page');
+      }
+      if (newValue && newValue !== 20) {
+        params.set('size', String(newValue));
+      } else {
+        params.delete('size');
+      }
+    });
+  };
 
-  const disablePrev = page <= 0;
-  const disableNext = page + 1 >= maxPages;
+  const sortOptions: ViewOptionItem<(typeof sortEnum.options)[number]>[] = [
+    { label: 'Upcoming', value: 'upcoming' },
+    { label: 'Updated', value: 'updated' },
+  ];
+
+  // TODO: Move elsewhere
+  type ViewOptions = 'list' | 'gallery';
+
+  const viewOptions: ViewOptionItem<ViewOptions>[] = [
+    { label: 'List', value: 'list', icon: <ListAltIcon /> },
+    { label: 'Gallery', value: 'gallery', icon: <GridViewIcon /> },
+  ];
+
+  const sizeOptions: ViewOptionItem<number>[] = [
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '20', value: 20 },
+    { label: '50', value: 50 },
+    { label: '100', value: 100 },
+  ];
 
   return (
     <div className="flex justify-between">
-      <div className="flex gap-2 px-1 text-neutral-600 dark:text-neutral-400">
-        <Button
-          size="small"
-          color="inherit"
-          className="normal-case"
-          endIcon={<ArrowDropDownIcon />}
-        >
-          Relevant
-        </Button>
-        <IconButton size="small">
-          <GridViewIcon
-            fontSize="small"
-            className="fill-neutral-600 dark:fill-neutral-400"
+      <div className="flex gap-2 text-neutral-600 dark:text-neutral-400">
+        <ViewOption
+          title="Sort"
+          icon={<SortIcon />}
+          labelContents="value"
+          defaultValue="upcoming"
+          options={sortOptions}
+          value={filters.sort}
+          onChange={handleChangeSort}
+        />
+        <ViewOption
+          title="View"
+          iconOnly
+          icon={<GridViewIcon />}
+          options={viewOptions}
+          defaultValue="gallery"
+          type="cycle"
+        />
+        <div className="max-sm:hidden">
+          <ViewOption
+            title="Count"
+            options={sizeOptions}
+            defaultValue={20}
+            value={filters.size}
+            onChange={handleChangeSize}
           />
-        </IconButton>
-      </div>
-      <div>
-        <div ref={paginationRef}>
-          <Tooltip
-            disableInteractive
-            title={
-              disablePrev ? undefined : (
-                <span>
-                  Previous page{' '}
-                  <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
-                    &larr;
-                  </kbd>
-                </span>
-              )
-            }
-          >
-            <PaginationItem
-              className="mx-0"
-              type="previous"
-              onClick={() => {
-                setPage((prev) => (disablePrev ? prev : prev - 1));
-              }}
-              disabled={disablePrev}
-            />
-          </Tooltip>
-          <PaginationItem
-            role="textbox"
-            className="mx-0 cursor-text outline-neutral-800 dark:outline-neutral-200 hover:outline-1"
-            style={{
-              // Ensures consistent min width of button, dependent on number of characters of button text
-              // This ensures compactness while preventing the previous page button from shifting around
-              minWidth: `${(page + 1).toString().length + 4 + maxPages.toString().length}ch`,
-            }}
-            page={
-              <>
-                <span>{page + 1}</span>
-                <span className="text-neutral-600 dark:text-neutral-400">
-                  <span className="whitespace-pre"> of </span>
-                  <span>{maxPages}</span>
-                </span>
-              </>
-            }
-            onClick={handleOpenPageInput}
-          />
-          <Tooltip
-            disableInteractive
-            title={
-              disableNext ? undefined : (
-                <span>
-                  Next page{' '}
-                  <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
-                    &rarr;
-                  </kbd>
-                </span>
-              )
-            }
-          >
-            <PaginationItem
-              className="mx-0"
-              type="next"
-              onClick={() => {
-                setPage((prev) => (disableNext ? prev : prev + 1));
-              }}
-              disabled={disableNext}
-            />
-          </Tooltip>
         </div>
-        <Popover
-          open={openPageInput}
-          anchorEl={anchorEl}
-          anchorReference={smallScreen ? 'none' : undefined}
-          onClose={handleClosePageInput}
-          disableRestoreFocus
-          anchorOrigin={{ horizontal: 'center', vertical: 'center' }}
-          transformOrigin={{ horizontal: 'center', vertical: 'center' }}
-          slotProps={{
-            paper: smallScreen
-              ? {}
-              : { elevation: 0, className: 'bg-transparent' },
-            backdrop: { className: 'bg-black/50' },
-          }}
-          className={smallScreen ? 'flex justify-center w-screen p-4' : ''}
-        >
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleClosePageInput();
-            }}
-          >
-            <div
-              className={
-                smallScreen ? 'flex flex-col gap-4 items-center mx-6 my-4' : ''
-              }
-            >
-              {smallScreen && (
-                <span className="text-neutral-700 dark:text-neutral-300">
-                  Go to page:
-                </span>
-              )}
-              <TextField
-                value={pageInputValue}
-                onChange={handleChangePageInput}
-                error={pageInputError}
-                autoFocus
-                onFocus={(e) => {
-                  // Select current contents when focused
-                  e.target.select();
-                }}
-                // Close whenenver input field is no longer focused (i.e. pressing "Done" on mobile devices)
-                onBlur={handleClosePageInput}
-                size="small"
-                style={{
-                  width: smallScreen ? '160px' : `${paginationWidth}px`,
-                }}
-                slotProps={{
-                  root: {
-                    className: 'bg-white dark:bg-neutral-900 rounded-full',
-                  },
-                  input: {
-                    className: 'rounded-full',
-                    endAdornment: (
-                      <span className="text-neutral-600 dark:text-neutral-400">
-                        /{maxPages}
-                      </span>
-                    ),
-                  },
-                  htmlInput: {
-                    className: 'text-center rounded-full p-0 h-8',
-                    inputMode: 'numeric',
-                  },
-                }}
-              />
-              {smallScreen && (
-                <div className="flex justify-end w-full">
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    className="normal-case"
-                    loadingPosition="start"
-                    color="primary"
-                  >
-                    OK
-                  </Button>
-                </div>
-              )}
-            </div>
-          </form>
-        </Popover>
       </div>
+      <CompactPagination
+        count={100}
+        page={filters.page - 1}
+        onChange={handleChangePage}
+      />
     </div>
   );
 }

@@ -56,13 +56,12 @@ export default function EventsFilterPanels({
     return useMemo(
       () => ({ ...filters, ...manualDeps }),
       // The point of this hook is to selectively memoize the filters object, so we need to calculate deps
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      /* eslint-disable react-hooks/exhaustive-deps */
       [
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         ...fields.map((field) => filters[field]),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         ...Object.values(manualDeps ?? {}),
       ],
+      /* eslint-enable react-hooks/exhaustive-deps */
     );
   };
 

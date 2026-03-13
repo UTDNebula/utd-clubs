@@ -31,7 +31,7 @@ export const navigateWithParams = (
   window.history.replaceState(
     null,
     '',
-    `${pathname}?${params.toString().replace(/=(?=&|$)/g, '')}`,
+    `${pathname}${params.size > 0 ? '?' : ''}${params.toString().replace(/=(?=&|$)/g, '')}`,
   );
 
   // Manually indicate the page's URL has changed, which will update Next.js's hooks

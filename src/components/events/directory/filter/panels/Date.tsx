@@ -28,8 +28,29 @@ export default memo(function DatePanel(
     props.filters.dateEnd,
   );
 
+  const numDays =
+    customDate && customDateEnd
+      ? (customDateEnd.getTime() - customDate.getTime()) /
+          (1000 * 60 * 60 * 24) +
+        1
+      : 0;
+
   return (
-    <Panel heading="Date" {...panelProps(props.backgroundHover)}>
+    <Panel
+      heading={
+        <>
+          Date
+          {customDate &&
+            customDateEnd &&
+            date === temporalDeixisCustomDateSentinelValue && (
+              <span className=" ml-2 text-base font-normal text-neutral-600 dark:text-neutral-400">
+                ({numDays} {numDays === 1 ? 'day' : 'days'})
+              </span>
+            )}
+        </>
+      }
+      {...panelProps(props.backgroundHover)}
+    >
       <FilterList
         options={
           [
