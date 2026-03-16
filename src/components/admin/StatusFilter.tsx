@@ -42,9 +42,7 @@ export default function StatusFilter<T>({ column }: Props<T>) {
   }
 
   return (
-    <FormControl
-      size="small"
-    >
+    <FormControl size="small">
       <Select
         value={value}
         onChange={(e) => updateFilterValue(e.target.value)}
