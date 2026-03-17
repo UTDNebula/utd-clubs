@@ -1,10 +1,13 @@
 'use client';
 
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import TagIcon from '@mui/icons-material/Tag';
 import TuneIcon from '@mui/icons-material/Tune';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Modal from '@mui/material/Modal';
+import Tooltip from '@mui/material/Tooltip';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode, useState } from 'react';
 import Panel from '@src/components/common/Panel';
@@ -34,11 +37,15 @@ const hiddenFields: (keyof EventFiltersSchema)[] = [
 type EventsFilterBarProps = {
   filters: EventFiltersSchema;
   selectedFilters?: SelectedEventFiltersList;
+  showSidebar?: boolean;
+  onClickSidebar?: (value: boolean) => void;
 };
 
 export default function EventsFilterBar({
   filters,
   selectedFilters,
+  showSidebar,
+  onClickSidebar,
 }: EventsFilterBarProps) {
   const [openModal, setOpenModal] = useState(false);
 
@@ -65,12 +72,42 @@ export default function EventsFilterBar({
   return (
     <>
       <div className="flex gap-2 flex-wrap">
+        {showSidebar !== undefined && (
+          <Tooltip
+            disableInteractive
+            title={
+              <span>
+                {showSidebar ? 'Collapse' : 'Expand'} sidebar{' '}
+                <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
+                  \
+                </kbd>
+              </span>
+            }
+          >
+            <Chip
+              icon={
+                showSidebar ? (
+                  <MenuOpenIcon fontSize="small" />
+                ) : (
+                  <MenuIcon fontSize="small" />
+                )
+              }
+              variant="outlined"
+              onClick={() => onClickSidebar?.(!showSidebar)}
+              className="border-[var(--mui-palette-divider)] max-md:hidden"
+              slotProps={{
+                root: { className: 'aspect-square [&>.MuiChip-icon]:m-0' },
+                label: { className: 'p-0' },
+              }}
+            />
+          </Tooltip>
+        )}
         <Chip
           label="Filters"
           icon={<TuneIcon fontSize="small" />}
           variant="outlined"
           onClick={() => setOpenModal(true)}
-          className="border-[var(--mui-palette-divider)]"
+          className="border-[var(--mui-palette-divider)] md:hidden"
         />
         <AnimatePresence>
           {selectedFilters

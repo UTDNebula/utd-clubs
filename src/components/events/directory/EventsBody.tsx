@@ -1,10 +1,6 @@
 'use client';
 
-import MenuIcon from '@mui/icons-material/Menu';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import Chip from '@mui/material/Chip';
 import Collapse from '@mui/material/Collapse';
-import Tooltip from '@mui/material/Tooltip';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { EventSearchBar } from '@src/components/searchBar/EventSearchBar';
@@ -38,7 +34,8 @@ const EventsBody = ({ events }: EventsBodyProps) => {
   // Toggle sidebar when pressing backslash key
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.target as HTMLElement).tagName !== 'BODY') return;
+      // Ensures an editable input field is not selected
+      if ((event.target as HTMLElement).matches(':read-write')) return;
 
       if (event.key === '\\') {
         setShowSidebar((prev) => !prev);
@@ -68,42 +65,12 @@ const EventsBody = ({ events }: EventsBodyProps) => {
       </Collapse>
       <div id="events-content" className="flex flex-col gap-4 grow w-min">
         <EventSearchBar />
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-2">
-            <Tooltip
-              disableInteractive
-              title={
-                <span>
-                  {showSidebar ? 'Collapse' : 'Expand'} sidebar{' '}
-                  <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
-                    \
-                  </kbd>
-                </span>
-              }
-            >
-              <Chip
-                icon={
-                  showSidebar ? (
-                    <MenuOpenIcon fontSize="small" />
-                  ) : (
-                    <MenuIcon fontSize="small" />
-                  )
-                }
-                variant="outlined"
-                onClick={() => setShowSidebar((prev) => !prev)}
-                className="border-[var(--mui-palette-divider)] max-md:hidden"
-                slotProps={{
-                  root: { className: 'aspect-square [&>.MuiChip-icon]:m-0' },
-                  label: { className: 'p-0' },
-                }}
-              />
-            </Tooltip>
-            <EventsFilterBar
-              filters={filters}
-              selectedFilters={selectedFilters}
-            />
-          </div>
-        </div>
+        <EventsFilterBar
+          filters={filters}
+          selectedFilters={selectedFilters}
+          showSidebar={showSidebar}
+          onClickSidebar={setShowSidebar}
+        />
         <ViewOptionsBar filters={filters} />
         <div className="flex flex-wrap items-center gap-4">
           {events.length > 0 ? (

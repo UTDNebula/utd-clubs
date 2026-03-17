@@ -30,9 +30,11 @@ export default memo(function DatePanel(
 
   const numDays =
     customDate && customDateEnd
-      ? (customDateEnd.getTime() - customDate.getTime()) /
-          (1000 * 60 * 60 * 24) +
-        1
+      ? Math.round(
+          (customDateEnd.getTime() - customDate.getTime()) /
+            (1000 * 60 * 60 * 24) +
+            1,
+        )
       : 0;
 
   return (

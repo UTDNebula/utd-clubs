@@ -103,7 +103,8 @@ export default function CompactPagination({
   // Change page when pressing left or right arrow keys
   useEffect(() => {
     const handleKeyUp = (event: KeyboardEvent) => {
-      if ((event.target as HTMLElement).tagName !== 'BODY') return;
+      // Ensures an editable input field is not selected
+      if ((event.target as HTMLElement).matches(':read-write')) return;
 
       if (event.key === 'ArrowRight' && !disableNext) {
         setPage((prev) => prev + 1);
