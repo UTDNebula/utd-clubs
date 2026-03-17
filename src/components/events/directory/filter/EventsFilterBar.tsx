@@ -69,6 +69,26 @@ export default function EventsFilterBar({
     });
   };
 
+  const filtersArray = selectedFilters?.filter(
+    (ele) => !hiddenFields.includes(ele.field),
+  );
+
+  const filtersLength = filtersArray ? filtersArray.length : 0;
+
+  function clearAllFilters() {
+    filtersArray?.forEach((filter) => {
+      setParams((params) => {
+        params.delete(filterFieldToParam[filter.field]);
+
+        // Special case: Delete dateStart and dateEnd if custom date is removed
+        if (filter.field === 'date' && filter.value === 'custom') {
+          params.delete('dateStart');
+          params.delete('dateEnd');
+        }
+      });
+    });
+  }
+
   return (
     <>
       <div className="flex gap-2 flex-wrap">
@@ -109,69 +129,91 @@ export default function EventsFilterBar({
           onClick={() => setOpenModal(true)}
           className="border-[var(--mui-palette-divider)] md:hidden"
         />
+        {filtersArray && filtersLength <= 0 && (
+          <span className="flex items-center text-sm text-neutral-600 dark:text-neutral-400 italic select-none">
+            No filters selected
+          </span>
+        )}
         <AnimatePresence>
-          {selectedFilters
-            ?.filter((ele) => !hiddenFields.includes(ele.field))
-            .map((filter) => (
-              <motion.div
-                key={
-                  splitArrayField(filter.field)
-                    ? `${filter.field}-${filter.value}`
-                    : `${filter.field}`
-                }
-                layout
-                initial={{ opacity: 0, x: 16 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-                transition={{ duration: 0.1 }}
-              >
-                {filter.field === 'tags' ? (
-                  <TagChip
-                    icon={<TagIcon color="inherit" />}
-                    tag={filter.value}
-                    onClick={() => handleDeleteTag(filter)}
-                    onDelete={() => handleDeleteTag(filter)}
-                  />
-                ) : (
-                  <FilterChip
-                    label={getChipLabel(filter, selectedFilters)}
-                    onDelete={() => {
-                      setParams((params) => {
-                        if (splitArrayField(filter.field)) {
-                          // If field is an array but filter is a single item, handle accordingly
-                          const newValue = params
-                            .get(filterFieldToParam[filter.field])
-                            ?.split(',')
-                            .filter((ele) => ele !== filter.value)
-                            .join(',');
+          {filtersArray?.map((filter) => (
+            <motion.div
+              key={
+                splitArrayField(filter.field)
+                  ? `${filter.field}-${filter.value}`
+                  : `${filter.field}`
+              }
+              layout
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.1 }}
+            >
+              {filter.field === 'tags' ? (
+                <TagChip
+                  icon={<TagIcon color="inherit" />}
+                  tag={filter.value}
+                  onClick={() => handleDeleteTag(filter)}
+                  onDelete={() => handleDeleteTag(filter)}
+                />
+              ) : (
+                <FilterChip
+                  label={getChipLabel(filter, selectedFilters)}
+                  onDelete={() => {
+                    setParams((params) => {
+                      if (splitArrayField(filter.field)) {
+                        // If field is an array but filter is a single item, handle accordingly
+                        const newValue = params
+                          .get(filterFieldToParam[filter.field])
+                          ?.split(',')
+                          .filter((ele) => ele !== filter.value)
+                          .join(',');
 
-                          if (newValue === '') {
-                            params.delete(filterFieldToParam[filter.field]);
-                          } else if (newValue) {
-                            params.set(
-                              filterFieldToParam[filter.field],
-                              newValue,
-                            );
-                          }
-                        } else {
-                          // Otherwise, handle normally
+                        if (newValue === '') {
                           params.delete(filterFieldToParam[filter.field]);
-
-                          // Special case: Delete dateStart and dateEnd if custom date is removed
-                          if (
-                            filter.field === 'date' &&
-                            filter.value === 'custom'
-                          ) {
-                            params.delete('dateStart');
-                            params.delete('dateEnd');
-                          }
+                        } else if (newValue) {
+                          params.set(
+                            filterFieldToParam[filter.field],
+                            newValue,
+                          );
                         }
-                      });
-                    }}
-                  />
-                )}
-              </motion.div>
-            ))}
+                      } else {
+                        // Otherwise, handle normally
+                        params.delete(filterFieldToParam[filter.field]);
+
+                        // Special case: Delete dateStart and dateEnd if custom date is removed
+                        if (
+                          filter.field === 'date' &&
+                          filter.value === 'custom'
+                        ) {
+                          params.delete('dateStart');
+                          params.delete('dateEnd');
+                        }
+                      }
+                    });
+                  }}
+                />
+              )}
+            </motion.div>
+          ))}
+          {filtersArray && filtersArray.length > 1 && (
+            <motion.div
+              layout
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -16 }}
+              transition={{ duration: 0.1 }}
+              className="flex items-center max-md:hidden"
+            >
+              <Button
+                size="small"
+                color="inherit"
+                className="normal-case whitespace-nowrap min-h-8 text-neutral-600 dark:text-neutral-400"
+                onClick={clearAllFilters}
+              >
+                Clear {filtersArray.length} filters
+              </Button>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
       <Modal
@@ -191,14 +233,14 @@ export default function EventsFilterBar({
             </div>
             <div className="flex flex-wrap justify-between items-center gap-2 px-5 pb-5">
               <Button
-                onClick={() => {
-                  // TODO: Insert function to clear all filters
-                  handleClose();
-                }}
+                onClick={clearAllFilters}
                 color="warning"
-                className="normal-case"
+                className={`normal-case ${filtersLength <= 0 ? 'invisible' : ''}`}
+                disabled={filtersLength <= 0}
               >
-                Clear all
+                {filtersArray
+                  ? `Clear ${filtersArray.length} filter${filtersArray.length === 1 ? '' : 's'}`
+                  : 'Clear all'}
               </Button>
               <Button
                 variant="contained"
