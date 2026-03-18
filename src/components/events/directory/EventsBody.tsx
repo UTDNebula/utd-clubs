@@ -60,7 +60,7 @@ const EventsBody = ({ events }: EventsBodyProps) => {
       <Collapse
         orientation="horizontal"
         in={showSidebar}
-        className="max-md:hidden"
+        className="max-md:hidden mt-4"
       >
         <div
           id="events-filters"
@@ -70,10 +70,13 @@ const EventsBody = ({ events }: EventsBodyProps) => {
         </div>
       </Collapse>
       <div id="events-content" className="flex flex-col gap-4 grow w-min">
-        <EventDirectorySearchBar
-          initialValue={filters.query}
-          onChange={handleChangeQuery}
-        />
+        {/* TODO: Replace "top-17" with a style derived from the header's actual height */}
+        <div className="sticky top-17 bg-linear-to-b from-light dark:from-dark to-transparent from-75% z-50 py-4 -mb-4 max-sm:-mx-4 max-sm:px-4">
+          <EventDirectorySearchBar
+            initialValue={filters.query}
+            onChange={handleChangeQuery}
+          />
+        </div>
         <EventsFilterBar
           filters={filters}
           selectedFilters={selectedFilters}

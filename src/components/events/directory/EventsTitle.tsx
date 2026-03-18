@@ -33,8 +33,8 @@ const EventsTitle = ({ selectedCount, totalCount }: EventsTitleProps) => {
 
   return (
     <div className="flex justify-between gap-4 border-b-1 border-[var(--mui-palette-divider)]">
-      <div className="mt-2 grow sm:ml-4">
-        <div className="flex gap-3 items-end py-4 max-sm:justify-center">
+      <div className="sm:mt-2 grow sm:ml-4">
+        <div className="flex gap-3 items-end py-4 max-sm:hidden">
           <h1 className="font-display text-3xl font-semibold">Events</h1>
           {(selectedCount || totalCount) && (
             <span className="text-xl text-neutral-600 dark:text-neutral-400">
@@ -44,7 +44,7 @@ const EventsTitle = ({ selectedCount, totalCount }: EventsTitleProps) => {
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between grow max-sm:mx-4">
+        <div className="flex items-center justify-between grow max-sm:mx-4 relative">
           <Tabs
             value={selectedTab}
             onChange={handleChangeTab}
