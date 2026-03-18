@@ -33,6 +33,14 @@ const Resources = () => {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="https://engineering.utdallas.edu/engage/students/student-organization/"
+                  target="_blank"
+                >
+                  Jonsson School Student Organizations
+                </Link>
+              </li>
+              <li>
                 <Link href="https://signage.utdallas.edu/" target="_blank">
                   Digital Signage
                 </Link>
