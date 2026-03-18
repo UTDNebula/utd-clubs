@@ -3,7 +3,7 @@
 import Collapse from '@mui/material/Collapse';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { EventSearchBar } from '@src/components/searchBar/EventSearchBar';
+import EventDirectorySearchBar from '@src/components/searchBar/EventDirectorySearchBar';
 import { RouterOutputs } from '@src/trpc/shared';
 import {
   eventFiltersSchema,
@@ -12,6 +12,7 @@ import {
 import EventCard from '../EventCard';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
+import { setParams } from './filter/utils';
 import ViewOptionsBar from './filter/ViewOptionsBar';
 
 type EventsBodyProps = {
@@ -21,13 +22,8 @@ type EventsBodyProps = {
 const EventsBody = ({ events }: EventsBodyProps) => {
   const searchParams = useSearchParams();
 
-  // console.log('from entries search params', Object.fromEntries(searchParams));
-
   const filters = eventFiltersSchema.parse(Object.fromEntries(searchParams));
-
-  // console.log('FILTERS', filters);
   const selectedFilters = listSelectedEventFilters(filters);
-  // console.log('selectedFilters', selectedFilters);
 
   const [showSidebar, setShowSidebar] = useState(true);
 
@@ -49,6 +45,16 @@ const EventsBody = ({ events }: EventsBodyProps) => {
     };
   }, []);
 
+  const handleChangeQuery = (value: string) => {
+    setParams((params) => {
+      if (value) {
+        params.set('q', value);
+      } else {
+        params.delete('q');
+      }
+    });
+  };
+
   return (
     <section id="events-body" className="w-full flex items-start">
       <Collapse
@@ -64,7 +70,10 @@ const EventsBody = ({ events }: EventsBodyProps) => {
         </div>
       </Collapse>
       <div id="events-content" className="flex flex-col gap-4 grow w-min">
-        <EventSearchBar />
+        <EventDirectorySearchBar
+          initialValue={filters.query}
+          onChange={handleChangeQuery}
+        />
         <EventsFilterBar
           filters={filters}
           selectedFilters={selectedFilters}
