@@ -596,7 +596,7 @@ export const eventRouter = createTRPCRouter({
             eq(events.google, true),
             clubRecord.calendarId
               ? or(
-                  eq(events.calendarId, club.calendarId),
+                  eq(events.calendarId, clubRecord.calendarId),
                   isNull(events.calendarId),
                 )
               : undefined,
