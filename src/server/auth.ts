@@ -25,6 +25,10 @@ export const auth = betterAuth({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     },
+    microsoft: {
+      clientId: env.MICROSOFT_CLIENT_ID,
+      clientSecret: env.MICROSOFT_CLIENT_SECRET, // Prod and dev secrets expire 2028-02-11
+    },
   },
   databaseHooks: {
     account: {
@@ -56,8 +60,15 @@ export const auth = betterAuth({
     user: {
       create: {
         after: async (user) => {
-          const firstName = user.name?.split(' ')[0] ?? '';
-          const lastName = user.name?.split(' ')[1] ?? '';
+          let firstName = '';
+          let lastName = '';
+          if (user.name?.includes(', ')) {
+            firstName = user.name?.split(', ')[1] ?? '';
+            lastName = user.name?.split(', ')[0] ?? '';
+          } else {
+            firstName = user.name?.split(' ')[0] ?? '';
+            lastName = user.name?.split(' ')[1] ?? '';
+          }
 
           const insert: InsertUserMetadata = {
             firstName,

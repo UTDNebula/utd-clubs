@@ -513,6 +513,15 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               />
             </form.AppForm>
           </div>
+          <div className="mt-6 p-4 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
+            <p className="text-sm text-slate-700 dark:text-slate-300">
+              <span className="font-semibold">Disclaimer:</span> Club
+              recommendations are generated using Google&apos;s Gemini AI. While
+              we strive for accuracy, AI recommendations may not perfectly match
+              your preferences. We recommend reviewing the suggested clubs to
+              find the best fit for you.
+            </p>
+          </div>
         </Panel>
       </form>
     </main>
