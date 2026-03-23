@@ -70,8 +70,11 @@ const EventsBody = ({ events }: EventsBodyProps) => {
         </div>
       </Collapse>
       <div id="events-content" className="flex flex-col gap-4 grow w-min">
-        {/* TODO: Replace "top-17" with a style derived from the header's actual height */}
-        <div className="sticky top-17 bg-linear-to-b from-light dark:from-dark to-transparent from-75% z-50 py-4 -mb-4 max-sm:-mx-4 max-sm:px-4">
+        <div
+          className="sticky z-40 bg-linear-to-b from-light dark:from-dark to-transparent from-75% py-4 -mb-4 max-sm:-mx-4 max-sm:px-4"
+          // TODO: The top property should be BaseHeader's height. Replace this with a dynamic variable
+          style={{ top: 68 }}
+        >
           <EventDirectorySearchBar
             initialValue={filters.query}
             onChange={handleChangeQuery}

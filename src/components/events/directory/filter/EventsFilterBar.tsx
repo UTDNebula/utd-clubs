@@ -129,11 +129,13 @@ export default function EventsFilterBar({
           onClick={() => setOpenModal(true)}
           className="border-[var(--mui-palette-divider)] md:hidden"
         />
-        {filtersArray && filtersLength <= 0 && (
-          <span className="flex items-center text-sm text-neutral-600 dark:text-neutral-400 italic select-none">
-            No filters selected
-          </span>
-        )}
+        <span className="relative">
+          {filtersArray && filtersLength <= 0 && (
+            <span className="absolute h-full ml-2 flex items-center text-sm text-neutral-600 dark:text-neutral-400 italic select-none text-nowrap">
+              No filters selected
+            </span>
+          )}
+        </span>
         <AnimatePresence>
           {filtersArray?.map((filter) => (
             <motion.div

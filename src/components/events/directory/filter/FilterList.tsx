@@ -75,13 +75,14 @@ export type FilterListProps = {
   ) => void;
   /**
    * Whether to enable the exclusion buttons
+   * @default false
    */
   enableExclusion?: boolean;
   /**
    * When `type` prop is "radio", this allows users to deselect their choice
-   * @default true
+   * @default false
    */
-  allowDeselecting?: boolean;
+  disallowDeselecting?: boolean;
 };
 
 export default function FilterList({
@@ -91,7 +92,7 @@ export default function FilterList({
   excludedValues,
   onChange,
   enableExclusion = false,
-  allowDeselecting = true,
+  disallowDeselecting = false,
 }: FilterListProps) {
   const [selected, setSelected] = useState<FilterListItemBase['value'][]>(
     selectedValues ?? [],
@@ -114,7 +115,7 @@ export default function FilterList({
         newExcluded = excluded.filter((ele) => ele !== item.value);
         break;
       case 'radio':
-        if (allowDeselecting && selected.includes(item.value)) {
+        if (!disallowDeselecting && selected.includes(item.value)) {
           newSelected = [];
         } else {
           newSelected = [item.value];
@@ -144,7 +145,7 @@ export default function FilterList({
         newSelected = selected.filter((ele) => ele !== item.value);
         break;
       case 'radio':
-        if (allowDeselecting && excluded.includes(item.value)) {
+        if (!disallowDeselecting && excluded.includes(item.value)) {
           newExcluded = [];
         } else {
           newSelected = selected.filter((ele) => ele !== item.value);

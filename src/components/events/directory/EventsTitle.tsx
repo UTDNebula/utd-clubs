@@ -11,6 +11,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Tooltip from '@mui/material/Tooltip';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { SyntheticEvent, useState } from 'react';
 
 type EventsTitleProps = {
@@ -18,8 +19,11 @@ type EventsTitleProps = {
   totalCount?: number;
 };
 
-const EventsTitle = ({ selectedCount, totalCount }: EventsTitleProps) => {
-  const pathname = window.location.pathname;
+export default function EventsTitle({
+  selectedCount,
+  totalCount,
+}: EventsTitleProps) {
+  const pathname = usePathname();
   const tabPaths = ['/events', '/events/calendar'];
   const tabIndex = tabPaths.indexOf(pathname);
 
@@ -110,5 +114,4 @@ const EventsTitle = ({ selectedCount, totalCount }: EventsTitleProps) => {
       </div>
     </div>
   );
-};
-export default EventsTitle;
+}

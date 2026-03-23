@@ -1,6 +1,6 @@
 import { type Metadata } from 'next';
 import EventsBody from '@src/components/events/directory/EventsBody';
-// import { api } from '@src/trpc/server';
+import { api } from '@src/trpc/server';
 import { eventFiltersSchema, EventParamsSchema } from '@src/utils/eventFilter';
 
 export const metadata: Metadata = {
@@ -22,6 +22,9 @@ const Events = async (props: { searchParams: Promise<EventParamsSchema> }) => {
 
   // const events = await api.event.byDateRange({
   //   endTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
+  // });
+
+  // const { events } = await api.event.findByFilters({
   // });
 
   // const { events } = await api.event.findByDate({
