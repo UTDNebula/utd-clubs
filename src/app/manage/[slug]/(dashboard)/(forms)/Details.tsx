@@ -69,6 +69,8 @@ const Details = ({ club }: DetailsProps) => {
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
+            // Profile image
+
       const { profileImage, bannerImage, ...formValues } = value;
       let profileImageUrl, bannerImageUrl;
       const profileImageIsDirty =
@@ -84,7 +86,7 @@ const Details = ({ club }: DetailsProps) => {
           profileImageUrl = url;
         }
       }
-
+      // Banner image
       const bannerImageIsDirty =
         !formApi.getFieldMeta('bannerImage')?.isDefaultValue;
       if (bannerImageIsDirty) {
@@ -106,6 +108,8 @@ const Details = ({ club }: DetailsProps) => {
       });
       if (updated) {
         const aliasIsDirty = !formApi.getFieldMeta('alias')?.isDefaultValue;
+        // If alias changed and we haven't confirmed yet, show popup
+
         if (aliasIsDirty) {
           setAliasChangedPopupOpen(true);
         }
@@ -317,10 +321,15 @@ const Details = ({ club }: DetailsProps) => {
         confirmColor="primary"
         onConfirm={async () => {
           setAliasChangedPopupOpen(false);
+           // scroll to the Slug component
+
           const element = document.getElementById('form-slug');
 
           if (element) {
+
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+           // highlight the component
+
             element.classList.add(
               'ring-2',
               'ring-royal',

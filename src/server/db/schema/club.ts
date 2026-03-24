@@ -50,6 +50,8 @@ export const club = pgTable(
       .array()
       .default(sql`'{}'::text[]`)
       .notNull(),
+      // * Approved will be null by default and will be set to true when the club is approved or false when the club is rejected
+    // * This allows us to have a pending state for clubs and keep info about them in the database
     approved: approvedEnum('approved').notNull().default('pending'),
     profileImage: text('profile_image'),
     bannerImage: text('banner_image'),
