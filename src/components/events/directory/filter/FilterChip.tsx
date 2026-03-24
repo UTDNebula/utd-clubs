@@ -18,6 +18,11 @@ type FilterChipProps = ChipProps & {
    * @default false
    */
   disableDelete?: boolean;
+  /**
+   * Indicates that the filter has been modified
+   * @default false
+   */
+  dirty?: boolean;
 };
 
 export default function FilterChip({
@@ -26,6 +31,7 @@ export default function FilterChip({
   popoverComponent,
   disableDelete,
   onDelete,
+  dirty,
   ...props
 }: FilterChipProps) {
   const [popoverAnchorEl, setPopoverAnchorEl] = useState<HTMLElement | null>(
@@ -51,7 +57,14 @@ export default function FilterChip({
         variant="filled"
         label={
           <span className="flex justify-center gap-3">
-            {label}
+            <span>
+              {label}
+              {dirty && (
+                <span className="text-cornflower-600 dark:text-cornflower-400 font-bold">
+                  *
+                </span>
+              )}
+            </span>
             {popoverComponent ? (
               <ArrowDropDownIcon
                 fontSize="small"
@@ -65,7 +78,7 @@ export default function FilterChip({
             )}
           </span>
         }
-        className={`group/chip ${className}`}
+        className={`group/chip ${dirty ? 'bg-cornflower-100 hover:bg-cornflower-200 dark:bg-cornflower-900 dark:hover:bg-cornflower-800' : ''} ${className}`}
         onClick={
           popoverComponent
             ? handleOpenPopover
