@@ -80,7 +80,8 @@ const fileSchema = z
     'Max image size is 5MB',
   );
 
-export const schools = z.enum([
+export const schools = z
+  .enum([
     'Harry W. Bass Jr. School of Arts, Humanities, and Technology',
     'School of Behavioral and Brain Sciences',
     'School of Economic, Political and Policy Sciences',
@@ -88,8 +89,8 @@ export const schools = z.enum([
     'School of Interdisciplinary Studies',
     'Naveen Jindal School of Management',
     'School of Natural Sciences and Mathematics',
-  ]).array();
-
+  ])
+  .array();
 
 export const editClubFormSchema = z.object({
   id: z.string(),
