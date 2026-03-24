@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { array, z } from 'zod';
 import { studentClassificationEnum } from '@src/server/db/schema/users';
 import { contactSchema } from './contact';
 
@@ -80,6 +80,17 @@ const fileSchema = z
     'Max image size is 5MB',
   );
 
+export const schools = z.enum([
+    'Harry W. Bass Jr. School of Arts, Humanities, and Technology',
+    'School of Behavioral and Brain Sciences',
+    'School of Economic, Political and Policy Sciences',
+    'Erik Jonsson School of Engineering and Computer Science',
+    'School of Interdisciplinary Studies',
+    'Naveen Jindal School of Management',
+    'School of Natural Sciences and Mathematics',
+  ]).array();
+
+
 export const editClubFormSchema = z.object({
   id: z.string(),
   name: z
@@ -101,6 +112,7 @@ export const editClubFormSchema = z.object({
   profileImage: fileSchema,
   bannerImage: fileSchema,
   foundingDate: z.date().nullable(),
+  schools: schools,
 });
 
 export const editClubDetailsSchema = z.object({
@@ -124,6 +136,7 @@ export const editClubDetailsSchema = z.object({
   profileImage: z.url().optional(),
   bannerImage: z.url().optional(),
   foundingDate: z.date().nullable(),
+  schools: schools,
 });
 
 export const editOfficerSchema = z.object({

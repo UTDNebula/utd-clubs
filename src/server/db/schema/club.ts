@@ -24,6 +24,16 @@ export const approvedEnum = pgEnum('approved_enum', [
   'deleted',
 ]);
 
+export const schoolEnum = pgEnum('school_enum', [
+  'Harry W. Bass Jr. School of Arts, Humanities, and Technology',
+  'School of Behavioral and Brain Sciences',
+  'School of Economic, Political and Policy Sciences',
+  'Erik Jonsson School of Engineering and Computer Science',
+  'School of Interdisciplinary Studies',
+  'Naveen Jindal School of Management',
+  'School of Natural Sciences and Mathematics',
+]);
+
 export const club = pgTable(
   'club',
   {
@@ -40,8 +50,6 @@ export const club = pgTable(
       .array()
       .default(sql`'{}'::text[]`)
       .notNull(),
-    // * Approved will be null by default and will be set to true when the club is approved or false when the club is rejected
-    // * This allows us to have a pending state for clubs and keep info about them in the database
     approved: approvedEnum('approved').notNull().default('pending'),
     profileImage: text('profile_image'),
     bannerImage: text('banner_image'),
@@ -56,6 +64,11 @@ export const club = pgTable(
       () => user.id,
       { onDelete: 'set null' },
     ),
+    // Changed from single school enum to an array of school enums
+    schools: schoolEnum()
+      .array()
+      .default(sql`'{}'::school_enum[]`)
+      .notNull(),
   },
   (t) => [
     index('club_search_idx')

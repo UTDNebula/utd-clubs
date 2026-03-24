@@ -7,13 +7,15 @@ import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import { ClubSchoolEdit } from '@src/components/manage/form/ClubSchoolEdit';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
-import { editClubFormSchema } from '@src/utils/formSchemas';
+import { editClubFormSchema, schools } from '@src/utils/formSchemas';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
+import type z from 'zod';
 
 type DetailsProps = {
   club: SelectClub;
@@ -28,6 +30,7 @@ interface ClubDetails {
   tags: string[];
   profileImage: File | null;
   bannerImage: File | null;
+  schools: z.infer<typeof schools>;
 }
 
 const Details = ({ club }: DetailsProps) => {
@@ -58,6 +61,7 @@ const Details = ({ club }: DetailsProps) => {
     tags: clubDetails?.tags ?? [],
     profileImage: null,
     bannerImage: null,
+    schools: clubDetails?.schools ?? [],
   };
 
   const [aliasChangedPopupOpen, setAliasChangedPopupOpen] = useState(false);
@@ -65,8 +69,6 @@ const Details = ({ club }: DetailsProps) => {
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
-      // Profile image
-
       const { profileImage, bannerImage, ...formValues } = value;
       let profileImageUrl, bannerImageUrl;
       const profileImageIsDirty =
@@ -83,7 +85,6 @@ const Details = ({ club }: DetailsProps) => {
         }
       }
 
-      // Banner image
       const bannerImageIsDirty =
         !formApi.getFieldMeta('bannerImage')?.isDefaultValue;
       if (bannerImageIsDirty) {
@@ -105,7 +106,6 @@ const Details = ({ club }: DetailsProps) => {
       });
       if (updated) {
         const aliasIsDirty = !formApi.getFieldMeta('alias')?.isDefaultValue;
-        // If alias changed and we haven't confirmed yet, show popup
         if (aliasIsDirty) {
           setAliasChangedPopupOpen(true);
         }
@@ -230,6 +230,25 @@ const Details = ({ club }: DetailsProps) => {
                 )}
               </form.Field>
             </div>
+            <form.Field name="schools">
+              {(field) => (
+                <ClubSchoolEdit
+                  value={field.state.value}
+                  onChange={(value) => {
+                    field.handleChange(value as z.infer<typeof schools>);
+                  }}
+                  onBlur={field.handleBlur}
+                  error={!field.state.meta.isValid}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
+                />
+              )}
+            </form.Field>
             <div className="flex flex-col gap-2">
               <form.AppField name="description">
                 {(field) => (
@@ -298,12 +317,10 @@ const Details = ({ club }: DetailsProps) => {
         confirmColor="primary"
         onConfirm={async () => {
           setAliasChangedPopupOpen(false);
-          // scroll to the Slug component
           const element = document.getElementById('form-slug');
 
           if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // highlight the component
             element.classList.add(
               'ring-2',
               'ring-royal',
