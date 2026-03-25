@@ -69,7 +69,7 @@ const Details = ({ club }: DetailsProps) => {
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
-            // Profile image
+      // Profile image
 
       const { profileImage, bannerImage, ...formValues } = value;
       let profileImageUrl, bannerImageUrl;
@@ -321,14 +321,13 @@ const Details = ({ club }: DetailsProps) => {
         confirmColor="primary"
         onConfirm={async () => {
           setAliasChangedPopupOpen(false);
-           // scroll to the Slug component
+          // scroll to the Slug component
 
           const element = document.getElementById('form-slug');
 
           if (element) {
-
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-           // highlight the component
+            // highlight the component
 
             element.classList.add(
               'ring-2',
