@@ -10,12 +10,12 @@ import NavMenu from './NavMenu';
 
 const NewSidebar = ({
   userCapabilities,
-  notApprovedCount,
+  pendingClubsCount,
   homepage = false,
   hamburgerColor = 'dark',
 }: {
   userCapabilities: Array<(typeof personalCats)[number]>;
-  notApprovedCount: number | null;
+  pendingClubsCount: number | null;
   homepage?: boolean;
   hamburgerColor?: ContentComponentColor;
 }) => {
@@ -28,7 +28,7 @@ const NewSidebar = ({
         className={`z-50 ${homepage ? ' drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
         size="large"
       >
-        <Badge badgeContent={notApprovedCount} color="primary">
+        <Badge badgeContent={pendingClubsCount} color="primary">
           <MenuIcon
             fontSize="inherit"
             className={`${
@@ -56,7 +56,7 @@ const NewSidebar = ({
       >
         <NavMenu
           userCapabilites={userCapabilities}
-          notApprovedCount={notApprovedCount}
+          pendingClubsCount={pendingClubsCount}
         />
         <IconButton
           onClick={() => setOpen(false)}

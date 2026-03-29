@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { BaseCard } from '@src/components/common/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 import ClientEventTime from './ClientEventTime';
 import EventDeleteButton from './EventDeleteButton';
 import EventRegisterButton, {
@@ -41,7 +42,10 @@ const EventCard = ({ event, view = 'normal', className }: EventCardProps) => {
           {event.club.profileImage && (!showEventImage || !imgLoaded) && (
             <Image
               fill
-              src={`${event.club.profileImage}?v=${event.club.updatedAt?.getTime()}`}
+              src={addVersionToImage(
+                event.club.profileImage,
+                event.club.updatedAt?.getTime(),
+              )}
               alt="Club Profile"
               className="object-cover object-center"
             />
@@ -50,7 +54,7 @@ const EventCard = ({ event, view = 'normal', className }: EventCardProps) => {
           {showEventImage && (
             <Image
               fill
-              src={`${event.image!}?v=${event.updatedAt.getTime()}`}
+              src={addVersionToImage(event.image!, event.updatedAt.getTime())}
               alt="Event Image"
               className={`object-cover object-center transition-opacity duration-300 ${
                 imgLoaded ? 'opacity-100' : 'opacity-0'

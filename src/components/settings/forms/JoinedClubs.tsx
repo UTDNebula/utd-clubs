@@ -17,6 +17,7 @@ import Confirmation from '@src/components/Confirmation';
 import MemberRoleChip from '@src/components/manage/MemberRoleChip';
 import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
+import { addVersionToImage } from '@src/utils/imageCacheBust';
 
 type ClubsProps = {
   joinedClubs: SelectUserMetadataToClubsWithClub[];
@@ -33,16 +34,22 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
 
   return (
     <Panel heading="Followed Clubs">
-      {joinedClubs.map((joinedClub) => (
-        <ClubListItem
-          joinedClub={joinedClub}
-          key={joinedClub.club.id}
-          onLeave={() => {
-            setLeaveClub(joinedClub);
-            setOpenLeaveModal(true);
-          }}
-        />
-      ))}
+      {joinedClubs.length > 0 ? (
+        joinedClubs.map((joinedClub) => (
+          <ClubListItem
+            joinedClub={joinedClub}
+            key={joinedClub.club.id}
+            onLeave={() => {
+              setLeaveClub(joinedClub);
+              setOpenLeaveModal(true);
+            }}
+          />
+        ))
+      ) : (
+        <div className="w-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl text-md font-medium text-slate-600 dark:text-slate-400">
+          Not following any clubs.
+        </div>
+      )}
       <Confirmation
         open={openLeaveModal}
         onClose={() => setOpenLeaveModal(false)}
@@ -111,7 +118,10 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
           <div className="min-w-10 min-h-10">
             {club.profileImage && (
               <Image
-                src={`${club.profileImage}?v=${club.updatedAt?.getTime()}`}
+                src={addVersionToImage(
+                  club.profileImage,
+                  club.updatedAt?.getTime(),
+                )}
                 alt={club.name + ' logo'}
                 width={40}
                 height={40}

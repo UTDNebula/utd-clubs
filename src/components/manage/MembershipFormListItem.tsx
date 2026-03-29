@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Box, IconButton, TextField, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import z from 'zod';
 import { withForm } from '@src/utils/form';
 import { editListedMembershipFormSchema } from '@src/utils/formSchemas';
@@ -97,59 +97,33 @@ const MembershipFormListItem = withForm({
           <DragIndicatorIcon />
         </div>
         <div style={{ gridArea: 'name' }} className="max-sm:mt-3 sm:my-2">
-          <form.Field name={`membershipForms[${index}].name`}>
+          <form.AppField name={`membershipForms[${index}].name`}>
             {(subField) => (
-              <TextField
-                onChange={(e) => subField.handleChange(e.target.value)}
-                onBlur={subField.handleBlur}
-                value={overlayData?.name ?? subField.state.value}
+              <subField.TextField
                 label="Name"
-                className="w-full [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                size="small"
-                error={!subField.state.meta.isValid}
-                helperText={
-                  !subField.state.meta.isValid
-                    ? (
-                        subField.state.meta.errors as unknown as {
-                          message: string;
-                        }[]
-                      )
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                className="w-full"
+                {...(overlayData?.name !== undefined
+                  ? { value: overlayData.name }
+                  : {})}
               />
             )}
-          </form.Field>
+          </form.AppField>
         </div>
         <div
           style={{ gridArea: 'position' }}
           className="max-sm:mt-3 max-sm:mb-3 sm:my-2"
         >
-          <form.Field name={`membershipForms[${index}].url`}>
+          <form.AppField name={`membershipForms[${index}].url`}>
             {(subField) => (
-              <TextField
-                onChange={(e) => subField.handleChange(e.target.value)}
-                onBlur={subField.handleBlur}
-                value={overlayData?.url ?? subField.state.value}
+              <subField.TextField
                 label="URL"
-                className="w-full [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                size="small"
-                error={!subField.state.meta.isValid}
-                helperText={
-                  !subField.state.meta.isValid
-                    ? (
-                        subField.state.meta.errors as unknown as {
-                          message: string;
-                        }[]
-                      )
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
+                className="w-full"
+                {...(overlayData?.url !== undefined
+                  ? { value: overlayData.url }
+                  : {})}
               />
             )}
-          </form.Field>
+          </form.AppField>
         </div>
         <div
           style={{ gridArea: 'buttons' }}

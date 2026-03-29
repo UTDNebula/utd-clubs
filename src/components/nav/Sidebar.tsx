@@ -14,14 +14,14 @@ const Sidebar = async ({
 }) => {
   const userSidebarCapabilities =
     await api.userMetadata.getUserSidebarCapabilities();
-  let notApprovedCount = null;
+  let pendingClubsCount = null;
   if (userSidebarCapabilities.includes('Admin')) {
-    notApprovedCount = await api.admin.notApprovedCount();
+    pendingClubsCount = await api.admin.pendingClubsCount();
   }
   return (
     <NewSidebar
       userCapabilities={userSidebarCapabilities}
-      notApprovedCount={notApprovedCount}
+      pendingClubsCount={pendingClubsCount}
       homepage={homepage}
       hamburgerColor={hamburgerColor}
     />

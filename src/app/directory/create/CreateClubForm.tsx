@@ -1,6 +1,5 @@
 'use client';
 
-import { TextField } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
@@ -49,62 +48,35 @@ const CreateClubForm = () => {
           </p>
         </div>
         <div className="m-2 mt-0 flex flex-col gap-4">
-          <form.Field name="name">
+          <form.AppField name="name">
             {(field) => (
-              <TextField
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-                className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                size="small"
-                error={field.state.meta.isTouched && !field.state.meta.isValid}
-                helperText={
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                    ? field.state.meta.errors
-                        .map((err) => err?.message)
-                        .join('. ') + '.'
-                    : undefined
-                }
-                label="Name"
-              />
+              <field.TextField label="Name" className="w-full" required />
             )}
-          </form.Field>
-          <form.Field name="description">
+          </form.AppField>
+          <form.AppField name="description">
             {(field) => (
-              <TextField
-                onChange={(e) => {
-                  field.handleChange(e.target.value);
-                }}
-                onBlur={field.handleBlur}
-                value={field.state.value}
+              <field.TextField
                 label="Description"
-                className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                className="w-full"
                 multiline
                 minRows={4}
-                error={field.state.meta.isTouched && !field.state.meta.isValid}
                 helperText={
-                  field.state.meta.isTouched && !field.state.meta.isValid ? (
-                    field.state.meta.errors
-                      .map((err) => err?.message)
-                      .join('. ') + '.'
-                  ) : (
-                    <span>
-                      We support{' '}
-                      <a
-                        href="https://www.markdownguide.org/basic-syntax/"
-                        rel="noreferrer"
-                        target="_blank"
-                        className="text-royal dark:text-cornflower-300 underline"
-                      >
-                        Markdown
-                      </a>
-                      !
-                    </span>
-                  )
+                  <span>
+                    We support{' '}
+                    <a
+                      href="https://www.markdownguide.org/basic-syntax/"
+                      rel="noreferrer"
+                      target="_blank"
+                      className="text-royal dark:text-cornflower-300 underline"
+                    >
+                      Markdown
+                    </a>
+                    !
+                  </span>
                 }
               />
             )}
-          </form.Field>
+          </form.AppField>
           <form.Field name="tags">
             {(field) => (
               <ClubTagEdit
