@@ -1,4 +1,3 @@
-import '@src/styles/syncfusion/material.css';
 import '@src/styles/syncfusion/overrides.css';
 import type { ReactNode } from 'react';
 import SyncfusionWrapper from '@src/lib/SyncfusionWrapper';
