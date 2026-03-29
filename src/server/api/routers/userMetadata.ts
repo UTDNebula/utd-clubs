@@ -116,30 +116,30 @@ export const userMetadataRouter = createTRPCRouter({
     await ctx.db.delete(users).where(eq(users.id, user.id));
     await ctx.db.delete(userMetadata).where(eq(userMetadata.id, user.id));
   }),
-  getRegisteredEventsByRange: protectedProcedure 
-    .input(z.object({ startDate: z.string(), endDate: z.string() })) 
-    .query(async ({ input, ctx }) => { 
-      const start = new Date(input.startDate); 
-      const end = new Date(input.endDate); 
-      
-      const rows = await ctx.db.query.userMetadataToEvents.findMany({ 
-        where: (r) => eq(r.userId, ctx.session.user.id), 
-        with: { 
-          event: { 
-            with: { club: true }, 
-          }, 
-        }, 
-      }); 
-      
-      return rows 
-        .map((r) => r.event) 
-        .filter( 
-          (ev) => 
-            ev.status === 'approved' && 
-          ev.startTime < end && 
-          ev.endTime > start, 
-        ); 
-  }),
+  getRegisteredEventsByRange: protectedProcedure
+    .input(z.object({ startDate: z.string(), endDate: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const start = new Date(input.startDate);
+      const end = new Date(input.endDate);
+
+      const rows = await ctx.db.query.userMetadataToEvents.findMany({
+        where: (r) => eq(r.userId, ctx.session.user.id),
+        with: {
+          event: {
+            with: { club: true },
+          },
+        },
+      });
+
+      return rows
+        .map((r) => r.event)
+        .filter(
+          (ev) =>
+            ev.status === 'approved' &&
+            ev.startTime < end &&
+            ev.endTime > start,
+        );
+    }),
   getEvents: protectedProcedure
     .input(eventsSortSchema)
     .query(async ({ input, ctx }) => {
