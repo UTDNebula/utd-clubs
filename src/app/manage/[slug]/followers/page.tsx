@@ -21,7 +21,9 @@ export default async function Page({
     <main>
       <ManageHeader
         club={club}
-        path={[{ text: 'Followers', href: `/manage/${slug}/followers` }]}
+        path={[
+          { text: 'Members & Followers', href: `/manage/${slug}/followers` },
+        ]}
         hrefBack={`/manage/${slug}/`}
       />
       <div className="flex w-full flex-col items-center">

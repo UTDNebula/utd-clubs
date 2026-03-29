@@ -1,5 +1,7 @@
 import GavelIcon from '@mui/icons-material/Gavel';
+import GroupIcon from '@mui/icons-material/Group';
 import HandymanIcon from '@mui/icons-material/Handyman';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import PersonIcon from '@mui/icons-material/Person';
 import { SvgIconOwnProps } from '@mui/material';
 import Chip, { ChipProps } from '@mui/material/Chip';
@@ -18,10 +20,20 @@ export type ChipStyles = Record<
 >;
 
 export const chipStyles: ChipStyles = {
-  Member: {
+  Follower: {
     label: 'Follower',
     colorClass: undefined,
     icon: <PersonIcon fontSize="small" />,
+  },
+  Member: {
+    label: 'Member',
+    colorClass: 'bg-emerald-200 dark:bg-emerald-600/30',
+    icon: <GroupIcon fontSize="small" />,
+  },
+  Requested: {
+    label: 'Requested',
+    colorClass: 'bg-amber-200 dark:bg-amber-600/30',
+    icon: <HourglassEmptyIcon fontSize="small" />,
   },
   Officer: {
     label: 'Collaborator',

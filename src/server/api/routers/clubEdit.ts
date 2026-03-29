@@ -21,7 +21,9 @@ async function isUserOfficer(userId: string, clubId: string) {
       ),
   });
   if (!officer || !officer.memberType) return false;
-  return officer.memberType !== 'Member';
+  return (
+    officer.memberType === 'Officer' || officer.memberType === 'President'
+  );
 }
 
 async function isUserPresident(userId: string, clubId: string) {
@@ -268,7 +270,7 @@ export const clubEditRouter = createTRPCRouter({
             input.deleted.map((officer) => ({
               userId: officer,
               clubId: input.clubId,
-              memberType: 'Member' as const,
+              memberType: 'Follower' as const,
             })),
           )
           .onConflictDoUpdate({
@@ -313,7 +315,10 @@ export const clubEditRouter = createTRPCRouter({
           .onConflictDoUpdate({
             target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
             set: { memberType: 'Officer' as const },
-            where: eq(userMetadataToClubs.memberType, 'Member'),
+            where: inArray(userMetadataToClubs.memberType, [
+              'Member',
+              'Follower',
+            ]),
           });
       }
 

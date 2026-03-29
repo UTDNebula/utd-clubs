@@ -1,3 +1,5 @@
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -125,7 +127,9 @@ export function ContactEmailCell(params: GridRenderCellParams) {
 const RoleToMemberType: Record<string, MemberTypes> = {
   Admin: 'President',
   Collaborator: 'Officer',
-  Follower: 'Member',
+  Member: 'Member',
+  Follower: 'Follower',
+  Requested: 'Requested',
 };
 
 export function MemberTypeCell(params: GridRenderCellParams) {
@@ -138,8 +142,12 @@ export function MemberTypeCell(params: GridRenderCellParams) {
 export function ActionsCell(
   props: GridRenderCellParams<SelectUserMetadataToClubsWithUserMetadata>,
 ) {
-  const { memberListDeletionState, memberListAbilities, removeMembers } =
-    useContext(MemberListContext);
+  const {
+    memberListDeletionState,
+    memberListAbilities,
+    removeMembers,
+    onUpdateMemberStatus,
+  } = useContext(MemberListContext);
 
   const deleting = Array.isArray(removeMembers?.variables?.ids)
     ? removeMembers?.variables?.ids.includes(props.row.userId)
@@ -147,9 +155,36 @@ export function ActionsCell(
 
   const session = authClient.useSession();
   const self = props.row.userId === session.data?.user.id;
+  const isRequested = props.row.memberType === 'Requested';
 
   return (
-    <div>
+    <div className="flex items-center">
+      {isRequested && onUpdateMemberStatus && (
+        <>
+          <Tooltip title="Approve as Member" placement="top">
+            <IconButton
+              size="small"
+              color="success"
+              onClick={() =>
+                onUpdateMemberStatus(props.row.userId, 'Member')
+              }
+            >
+              <CheckIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Deny Request" placement="top">
+            <IconButton
+              size="small"
+              color="error"
+              onClick={() =>
+                onUpdateMemberStatus(props.row.userId, 'Follower')
+              }
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </>
+      )}
       {memberListAbilities.removeUsers && (
         <Tooltip
           title={

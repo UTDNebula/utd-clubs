@@ -2,6 +2,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import GroupIcon from '@mui/icons-material/Group';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from '@mui/icons-material/Search';
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
@@ -96,6 +97,26 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
     useState<HTMLElement | null>(null);
   const exportMenuOpen = Boolean(exportMenuAnchorEl);
 
+  const [showOnlyMembers, setShowOnlyMembers] = useState(false);
+
+  const handleToggleShowOnlyMembers = () => {
+    const newValue = !showOnlyMembers;
+    setShowOnlyMembers(newValue);
+    if (newValue) {
+      apiRef.current.setFilterModel({
+        items: [
+          {
+            field: 'memberType',
+            operator: 'isAnyOf',
+            value: ['Member', 'Admin', 'Collaborator', 'Requested'],
+          },
+        ],
+      });
+    } else {
+      apiRef.current.setFilterModel({ items: [] });
+    }
+  };
+
   return (
     <Toolbar
       className={`${selectedRowCount ? 'bg-[var(--DataGrid-t-color-interactive-selected)]/8' : ''}`}
@@ -138,12 +159,21 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
         ) : (
           <Typography variant="h2" className="text-base font-semibold">
             <span className="hidden sm:inline">
-              {'Club Followers for ' + club.name}
+              {'Members & Followers for ' + club.name}
             </span>
-            <span className="inline sm:hidden">Club Followers</span>
+            <span className="inline sm:hidden">Members & Followers</span>
           </Typography>
         )}
       </div>
+
+      <Tooltip title={showOnlyMembers ? 'Show All' : 'Show Only Members'}>
+        <ToolbarButton
+          onClick={handleToggleShowOnlyMembers}
+          color={showOnlyMembers ? 'primary' : 'default'}
+        >
+          <GroupIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
 
       {memberListAbilities.refresh && (
         <Tooltip title="Refresh" className="max-sm:hidden">

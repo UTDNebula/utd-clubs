@@ -24,6 +24,12 @@ export const approvedEnum = pgEnum('approved_enum', [
   'deleted',
 ]);
 
+export const membershipPolicyEnum = pgEnum('membership_policy', [
+  'open',
+  'request',
+  'closed',
+]);
+
 export const club = pgTable(
   'club',
   {
@@ -56,6 +62,9 @@ export const club = pgTable(
       () => user.id,
       { onDelete: 'set null' },
     ),
+    membershipPolicy: membershipPolicyEnum('membership_policy')
+      .notNull()
+      .default('open'),
   },
   (t) => [
     index('club_search_idx')
