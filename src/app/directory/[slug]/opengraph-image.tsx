@@ -32,7 +32,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
   const interBuffer = await loadGoogleFont('Inter', 600);
 
   const background = (
-     
     <img
       // @ts-expect-error ArrayBuffers are allowed as an img source
       src={gradientBuffer}
@@ -104,7 +103,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               overflow: 'hidden',
             }}
           >
-            { }
+            {}
             <img
               src={`${clubData.profileImage!}?v=${clubData.updatedAt?.getTime()}`}
               alt={clubData.name + ' logo'}
@@ -180,7 +179,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                   height: 35,
                 }}
               >
-                { }
+                {}
                 <img
                   // @ts-expect-error ArrayBuffers are allowed
                   src={people_alt_icon_buffer}
