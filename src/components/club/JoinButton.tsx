@@ -64,7 +64,10 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       },
       onError: (error) => {
         setSnackbar(
-          SnackbarPresets.errorCustomMessage('An error occurred', error.message),
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
         );
       },
     }),
@@ -84,7 +87,10 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       },
       onError: (error) => {
         setSnackbar(
-          SnackbarPresets.errorCustomMessage('An error occurred', error.message),
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
         );
       },
     }),
@@ -104,7 +110,10 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       },
       onError: (error) => {
         setSnackbar(
-          SnackbarPresets.errorCustomMessage('An error occurred', error.message),
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
         );
       },
     }),
@@ -124,7 +133,10 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       },
       onError: (error) => {
         setSnackbar(
-          SnackbarPresets.errorCustomMessage('An error occurred', error.message),
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
         );
       },
     }),
@@ -144,7 +156,10 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       },
       onError: (error) => {
         setSnackbar(
-          SnackbarPresets.errorCustomMessage('An error occurred', error.message),
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
         );
       },
     }),
@@ -164,7 +179,10 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       },
       onError: (error) => {
         setSnackbar(
-          SnackbarPresets.errorCustomMessage('An error occurred', error.message),
+          SnackbarPresets.errorCustomMessage(
+            'An error occurred',
+            error.message,
+          ),
         );
       },
     }),
@@ -177,7 +195,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   });
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const anchorRef = useRef<HTMLDivElement>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
 
   const memberType = memberState?.memberType ?? null;
   const policy = membershipPolicy ?? 'open';
@@ -304,7 +322,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       <ButtonGroup
         variant="contained"
         size={size}
-        ref={anchorRef}
+        ref={setAnchorEl}
         className="normal-case"
       >
         {joinLabel ? (
@@ -321,11 +339,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
             {joinLabel}
           </Button>
         ) : (
-          <Button
-            startIcon={<CheckIcon />}
-            className="normal-case"
-            disabled
-          >
+          <Button startIcon={<CheckIcon />} className="normal-case" disabled>
             Following
           </Button>
         )}
@@ -343,7 +357,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       </ButtonGroup>
       <Popper
         open={menuOpen}
-        anchorEl={anchorRef.current}
+        anchorEl={anchorEl}
         role={undefined}
         transition
         disablePortal

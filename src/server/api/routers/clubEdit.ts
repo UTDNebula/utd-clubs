@@ -21,9 +21,7 @@ async function isUserOfficer(userId: string, clubId: string) {
       ),
   });
   if (!officer || !officer.memberType) return false;
-  return (
-    officer.memberType === 'Officer' || officer.memberType === 'President'
-  );
+  return officer.memberType === 'Officer' || officer.memberType === 'President';
 }
 
 async function isUserPresident(userId: string, clubId: string) {

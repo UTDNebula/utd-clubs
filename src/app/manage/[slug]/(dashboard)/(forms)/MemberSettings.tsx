@@ -80,9 +80,7 @@ export default function MemberSettings({ club }: MemberSettingsProps) {
             className="normal-case"
             disabled={!hasChanges || updatePolicy.isPending}
             loading={updatePolicy.isPending}
-            onClick={() =>
-              updatePolicy.mutate({ clubId: club.id, policy })
-            }
+            onClick={() => updatePolicy.mutate({ clubId: club.id, policy })}
           >
             Save
           </Button>

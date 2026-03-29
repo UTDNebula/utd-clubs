@@ -165,9 +165,7 @@ export function ActionsCell(
             <IconButton
               size="small"
               color="success"
-              onClick={() =>
-                onUpdateMemberStatus(props.row.userId, 'Member')
-              }
+              onClick={() => onUpdateMemberStatus(props.row.userId, 'Member')}
             >
               <CheckIcon fontSize="small" />
             </IconButton>
@@ -176,9 +174,7 @@ export function ActionsCell(
             <IconButton
               size="small"
               color="error"
-              onClick={() =>
-                onUpdateMemberStatus(props.row.userId, 'Follower')
-              }
+              onClick={() => onUpdateMemberStatus(props.row.userId, 'Follower')}
             >
               <CloseIcon fontSize="small" />
             </IconButton>

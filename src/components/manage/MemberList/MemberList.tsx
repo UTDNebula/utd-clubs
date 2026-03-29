@@ -10,7 +10,7 @@ import {
 } from '@mui/x-data-grid';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import z from 'zod';
 import Confirmation from '@src/components/Confirmation';
 import { useSnackbar } from '@src/components/global/Snackbar';
@@ -61,11 +61,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
   >(api.club.edit.removeMembers.mutationOptions({}));
 
   const updateMemberStatus = useMutation(
-    api.club.updateMemberStatus.mutationOptions({
-      onSuccess: () => {
-        void refreshListRef.current();
-      },
-    }),
+    api.club.updateMemberStatus.mutationOptions({}),
   );
 
   // For refresh button
@@ -210,8 +206,6 @@ const MemberList = ({ members, club }: MemberListProps) => {
    * Refresh button
    */
 
-  const refreshListRef = useRef<() => Promise<void>>(async () => {});
-
   const refreshList = useCallback(async () => {
     if (getMembers.isFetching) return;
     await getMembers.refetch().then((data) => {
@@ -228,17 +222,14 @@ const MemberList = ({ members, club }: MemberListProps) => {
     });
   }, [getMembers]);
 
-  refreshListRef.current = refreshList;
-
   const handleUpdateMemberStatus = useCallback(
     (userId: string, newStatus: 'Follower' | 'Member') => {
-      updateMemberStatus.mutate({
-        clubId: club.id,
-        userId,
-        newStatus,
-      });
+      updateMemberStatus.mutate(
+        { clubId: club.id, userId, newStatus },
+        { onSuccess: () => void refreshList() },
+      );
     },
-    [updateMemberStatus, club.id],
+    [updateMemberStatus, club.id, refreshList],
   );
 
   /*
