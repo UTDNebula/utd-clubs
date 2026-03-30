@@ -1,8 +1,9 @@
 'use client';
 
 import Collapse from '@mui/material/Collapse';
+import Pagination from '@mui/material/Pagination';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import EventDirectorySearchBar from '@src/components/searchBar/EventDirectorySearchBar';
 import { RouterOutputs } from '@src/trpc/shared';
 import {
@@ -55,6 +56,16 @@ const EventsBody = ({ events }: EventsBodyProps) => {
     });
   };
 
+  const handleChangePage = (_: ChangeEvent<unknown>, newValue: number) => {
+    setParams((params) => {
+      if (newValue !== 0) {
+        params.set('page', String(newValue));
+      } else {
+        params.delete('page');
+      }
+    });
+  };
+
   return (
     <section id="events-body" className="w-full flex items-start">
       <Collapse
@@ -95,6 +106,13 @@ const EventsBody = ({ events }: EventsBodyProps) => {
               No events found
             </div>
           )}
+        </div>
+        <div className="flex justify-center">
+          <Pagination
+            count={100}
+            page={filters.page}
+            onChange={handleChangePage}
+          />
         </div>
       </div>
     </section>

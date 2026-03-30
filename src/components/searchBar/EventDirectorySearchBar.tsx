@@ -1,6 +1,9 @@
+import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 import theme from '@src/utils/theme';
 
@@ -32,7 +35,21 @@ export default function EventDirectorySearchBar({
               position="end"
               className="text-neutral-800 dark:text-neutral-200"
             >
-              <SearchIcon color="inherit" />
+              {input ? (
+                <Tooltip title="Clear search" disableInteractive>
+                  <IconButton
+                    onClick={() => {
+                      setInput('');
+                    }}
+                    size="small"
+                    className="-mr-1"
+                  >
+                    <ClearIcon color="inherit" />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <SearchIcon color="inherit" />
+              )}
             </InputAdornment>
           ),
           type: 'search',
