@@ -25,6 +25,7 @@ interface ClubDetails {
   alias: string | null;
   description: string;
   foundingDate: Date | null;
+  clubSize: string;
   tags: string[];
   profileImage: File | null;
   bannerImage: File | null;
@@ -55,6 +56,7 @@ const Details = ({ club }: DetailsProps) => {
     alias: clubDetails?.alias ?? '',
     description: clubDetails?.description ?? '',
     foundingDate: clubDetails?.foundingDate ?? null,
+    clubSize: clubDetails?.clubSize ?? '',
     tags: clubDetails?.tags ?? [],
     profileImage: null,
     bannerImage: null,
@@ -67,7 +69,7 @@ const Details = ({ club }: DetailsProps) => {
     onSubmit: async ({ value, formApi }) => {
       // Profile image
 
-      const { profileImage, bannerImage, ...formValues } = value;
+      const { profileImage, bannerImage, clubSize, ...formValues } = value;
       let profileImageUrl, bannerImageUrl;
       const profileImageIsDirty =
         !formApi.getFieldMeta('profileImage')?.isDefaultValue;
@@ -100,6 +102,12 @@ const Details = ({ club }: DetailsProps) => {
 
       const updated = await editData.mutateAsync({
         ...formValues,
+        clubSize: (clubSize || null) as
+          | '1-10'
+          | '10-50'
+          | '50-200'
+          | '200+'
+          | null,
         bannerImage: bannerImageUrl,
         profileImage: profileImageUrl,
       });
@@ -205,6 +213,8 @@ const Details = ({ club }: DetailsProps) => {
                   <field.TextField label="Alias or Acronym" className="grow" />
                 )}
               </form.AppField>
+            </div>
+            <div className="flex flex-wrap gap-4">
               <form.Field name="foundingDate">
                 {(field) => (
                   <DatePicker
@@ -229,6 +239,15 @@ const Details = ({ club }: DetailsProps) => {
                   />
                 )}
               </form.Field>
+              <form.AppField name="clubSize">
+                {(field) => (
+                  <field.Select
+                    label="Number of Members"
+                    className="grow"
+                    options={['1-10', '10-50', '50-200', '200+']}
+                  />
+                )}
+              </form.AppField>
             </div>
             <div className="flex flex-col gap-2">
               <form.AppField name="description">

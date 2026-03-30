@@ -124,6 +124,7 @@ export const clubEditRouter = createTRPCRouter({
           profileImage: input.profileImage,
           bannerImage: input.bannerImage,
           foundingDate: input.foundingDate,
+          clubSize: input.clubSize,
           updatedAt: new Date(),
         })
         .where(eq(club.id, input.id))
