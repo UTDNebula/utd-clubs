@@ -253,6 +253,9 @@ export const eventRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       const filters = input.filters;
 
+      const page = filters.page ?? 1;
+      const pageSize = filters.size ?? 20;
+
       // console.log('filters', filters);
       console.log('🔍 findByFilters called');
 
@@ -317,9 +320,6 @@ export const eventRouter = createTRPCRouter({
             }
 
             if (startTime && endTime) {
-              console.log('start', startTime.toISOString());
-              console.log('end', endTime.toISOString());
-
               conditions.push(
                 or(
                   between(event.startTime, startTime, endTime),
@@ -373,19 +373,35 @@ export const eventRouter = createTRPCRouter({
               return [desc(events.updatedAt)];
           }
         },
+        offset: (page - 1) * pageSize,
         with: {
           club: true,
         },
-        limit: 20,
+        limit: pageSize,
+        extras: {
+          'internal-total': sql<number>`CAST(COUNT(*) OVER() AS INTEGER)`.as(
+            'internal-total',
+          ),
+        },
       });
 
+      // Removes certain keys from event object, to reduce network usage
+      const cleanedEvents = events.map((event) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { ['internal-total']: total, ...rest } = event;
+        return rest;
+      });
+
+      const totalCount = events[0]?.['internal-total'] ?? 0;
+      const totalPages = Math.ceil(totalCount / pageSize);
+
       return {
-        data: events,
+        data: cleanedEvents,
         pagination: {
-          page: 0,
-          size: 20,
-          total: 0,
-          totalPages: 100,
+          page: Math.min(page, totalPages + 1),
+          size: pageSize,
+          total: totalCount,
+          totalPages: totalPages,
         },
       };
     }),

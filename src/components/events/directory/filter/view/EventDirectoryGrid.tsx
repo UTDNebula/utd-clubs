@@ -40,6 +40,7 @@ export default function EventDirectoryGrid({
     ),
   );
 
+  // On query success
   useEffect(() => {
     if (query.data && query.isSuccess) {
       onQueryFetch?.(query.data);

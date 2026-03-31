@@ -101,7 +101,10 @@ const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
           showSidebar={showSidebar}
           onClickSidebar={setShowSidebar}
         />
-        <ViewOptionsBar filters={filters} pageCount={queryData?.pagination.totalPages} />
+        <ViewOptionsBar
+          filters={filters}
+          pageCount={queryData?.pagination.totalPages}
+        />
         <EventDirectoryGrid
           filters={filters}
           initialQueryData={initialQueryData}
