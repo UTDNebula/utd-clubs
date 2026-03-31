@@ -46,13 +46,13 @@ export default function FormSelect({
   });
 
   return (
-    <FormControl className={`w-64 ${className}`}>
+    <FormControl className={`w-64 ${className}`} size="small">
       {label ? <InputLabel>{label}</InputLabel> : null}
       <GenericSelect
         value={field.state.value}
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
-        className="bg-white dark:bg-neutral-900"
+        className="bg-white dark:bg-neutral-800"
         size="small"
         error={!field.state.meta.isValid}
         label={label}

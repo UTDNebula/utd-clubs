@@ -11,6 +11,7 @@ import MembershipForms from './(forms)/MembershipForms';
 import Officers from './(forms)/Officers';
 import Slug from './(forms)/Slug';
 import NotApproved from './NotApproved';
+import Resources from './Resources';
 
 const ClubManageForm = async ({
   club,
@@ -62,6 +63,7 @@ const ClubManageForm = async ({
         role={role}
         userId={session?.user.id as string}
       />
+      <Resources />
       {role === 'President' && <DeleteClub view="manage" club={club} />}
     </div>
   );

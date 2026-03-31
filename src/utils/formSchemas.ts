@@ -1,4 +1,4 @@
-import { array, z } from 'zod';
+import { z } from 'zod';
 import { studentClassificationEnum } from '@src/server/db/schema/users';
 import { contactSchema } from './contact';
 
@@ -113,6 +113,7 @@ export const editClubFormSchema = z.object({
   profileImage: fileSchema,
   bannerImage: fileSchema,
   foundingDate: z.date().nullable(),
+  clubSize: z.string(),
   schools: schools,
 });
 
@@ -137,6 +138,7 @@ export const editClubDetailsSchema = z.object({
   profileImage: z.url().optional(),
   bannerImage: z.url().optional(),
   foundingDate: z.date().nullable(),
+  clubSize: z.enum(['1-10', '10-50', '50-200', '200+']).nullable(),
   schools: schools,
 });
 

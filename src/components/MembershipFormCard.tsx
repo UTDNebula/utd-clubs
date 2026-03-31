@@ -44,7 +44,7 @@ const MembershipFormCard = ({ form }: MembershipFormCardProps) => {
   return (
     <BaseCard
       variant="interactive"
-      className="flex h-72 w-60 flex-col overflow-hidden bg-white dark:bg-neutral-800"
+      className="flex h-72 w-60 flex-col overflow-hidden bg-white dark:bg-neutral-700"
     >
       <Link
         href={form.url}
@@ -52,7 +52,7 @@ const MembershipFormCard = ({ form }: MembershipFormCardProps) => {
         target="_blank"
         rel="noopener"
       >
-        <div className="relative h-40 shrink-0 w-full bg-neutral-300 dark:bg-neutral-700">
+        <div className="relative h-40 shrink-0 w-full bg-neutral-100 dark:bg-neutral-700">
           {/* render form image on top*/}
           {showFormImage && (
             <Image

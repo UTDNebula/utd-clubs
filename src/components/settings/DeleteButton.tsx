@@ -27,7 +27,7 @@ export default function DeleteButton() {
         onClose={() => setOpen(false)}
         contentText={
           <>
-            This will permenantly delete your account. <br />
+            This will permanently delete your account. <br />
             All your account data will be cleared and removed from the platform.
           </>
         }
