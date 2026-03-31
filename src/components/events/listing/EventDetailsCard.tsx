@@ -1,21 +1,32 @@
+import EventIcon from '@mui/icons-material/Event';
 import { Divider, Tooltip } from '@mui/material';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
+import Link from 'next/link';
 import Panel from '@src/components/common/Panel';
+import { LinkButton } from '@src/components/LinkButton';
 import { RouterOutputs } from '@src/trpc/shared';
 
 type EventDetailsCardProps = {
   event: NonNullable<RouterOutputs['event']['getListingInfo']>;
+  slug: string;
   id?: string;
 };
-export default function EventDetailsCard({ event, id }: EventDetailsCardProps) {
+export default function EventDetailsCard({
+  event,
+  slug,
+  id,
+}: EventDetailsCardProps) {
   const items = [];
 
   if (event.numParticipants !== 0) {
     items.push(
       <div key="participants" className="flex flex-row flex-wrap gap-1 py-1">
-        <span className="font-medium text-slate-600 dark:text-slate-400">
+        <Link
+          href={`/manage/${slug}/events/${event.id}/participants`}
+          className="font-medium text-slate-600 dark:text-slate-400"
+        >
           Participants
-        </span>
+        </Link>
         <span className="ml-auto text-slate-800 dark:text-slate-200">{`${event.numParticipants} ${event.numParticipants !== 1 ? 'people' : 'person'}`}</span>
       </div>,
     );
