@@ -47,17 +47,26 @@ export const setParams = (
   setParamsFn: (params: FilterSearchParams<EventParamsSchema>) => void,
   pathname: string = window.location.pathname,
 ) => {
+  function unsetPage(name: string) {
+    // IMPORTANT: This condition avoids infinite recursion
+    if (name !== 'page' && params.get('page') !== String(1))
+      params.set('page', String(1));
+  }
+
   const params = new FilterSearchParams<EventParamsSchema>(
     window.location.search,
     {
       onAppend(name, value) {
         console.log(`APPEND ${name} WITH '${value}'`);
+        unsetPage(name);
       },
       onDelete(name, value) {
         console.log(`DELETE ${name}${value ? ` IF '${value}'` : ''}`);
+        unsetPage(name);
       },
       onSet(name, value) {
         console.log(`SET ${name} TO '${value}'`);
+        unsetPage(name);
       },
     },
   );

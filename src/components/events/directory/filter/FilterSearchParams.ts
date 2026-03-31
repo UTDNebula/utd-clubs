@@ -4,9 +4,13 @@ type IndexValueAsString<T extends Record<string, unknown>> =
   T[KeyAsString<T>] extends string ? T[KeyAsString<T>] : string;
 
 interface FilterSearchParamsOptions<K, V> {
-  onAppend?: (name: K, value: V) => void;
-  onDelete?: (name: K, value?: V) => void;
-  onSet?: (name: K, value: V) => void;
+  onAppend?: (name: K, value: V, rawParams: URLSearchParams) => void;
+  onDelete?: (
+    name: K,
+    value: V | undefined,
+    rawParams: URLSearchParams,
+  ) => void;
+  onSet?: (name: K, value: V, rawParams: URLSearchParams) => void;
 }
 
 /**
@@ -21,6 +25,18 @@ export class FilterSearchParams<
     KeyAsString<T>,
     IndexValueAsString<T>
   > = {};
+
+  /**
+   * Proxy to allow callbacks to safely call the raw methods of URLSearchParams without infinite recursion
+   */
+  private get safeInstance(): URLSearchParams {
+    return new Proxy(this, {
+      get(target, prop) {
+        const value = Reflect.get(URLSearchParams.prototype, prop, target);
+        return typeof value === 'function' ? value.bind(target) : value;
+      },
+    });
+  }
 
   constructor(
     init:
@@ -40,7 +56,7 @@ export class FilterSearchParams<
     V extends T[K] extends string ? T[K] : string,
   >(name: K, value: V): void {
     super.append(name, value);
-    this.options.onAppend?.(name, value);
+    this.options.onAppend?.(name, value, this.safeInstance);
   }
 
   delete<
@@ -48,7 +64,7 @@ export class FilterSearchParams<
     V extends T[K] extends string ? T[K] : string,
   >(name: K, value?: V): void {
     super.delete(name, value);
-    this.options.onDelete?.(name, value);
+    this.options.onDelete?.(name, value, this.safeInstance);
   }
 
   get(name: KeyAsString<T>): string | null {
@@ -71,6 +87,6 @@ export class FilterSearchParams<
     value: V,
   ): void {
     super.set(name, value);
-    this.options.onSet?.(name, value);
+    this.options.onSet?.(name, value, this.safeInstance);
   }
 }
