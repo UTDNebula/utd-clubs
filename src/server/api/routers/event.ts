@@ -1,6 +1,13 @@
 import { TZDateMini } from '@date-fns/tz';
 import { TRPCError } from '@trpc/server';
-import { add, startOfDay } from 'date-fns';
+import {
+  add,
+  lastDayOfMonth,
+  lastDayOfWeek,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns';
 import {
   and,
   between,
@@ -24,7 +31,11 @@ import {
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
 import { stopWatching } from '@src/utils/calendar';
-import { dateSchemaLegacy, order } from '@src/utils/eventFilter';
+import {
+  dateSchemaLegacy,
+  eventParamsSchemaOutput,
+  temporalDeixisCustomDateSentinelValue,
+} from '@src/utils/eventFilter';
 import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
 // import { callStorageAPI } from '@src/utils/storage';
@@ -52,9 +63,10 @@ const byDateRangeSchema = z.object({
   endTime: z.date().optional(),
 });
 export const findByFilterSchema = z.object({
-  date: z.date(),
-  order: order,
-  club: z.string().array(),
+  // date: z.date(),
+  // order: order,
+  // club: z.string().array(),
+  filters: eventParamsSchemaOutput,
 });
 export const findByDateSchema = z.object({
   date: dateSchemaLegacy,
@@ -239,41 +251,173 @@ export const eventRouter = createTRPCRouter({
   findByFilters: publicProcedure
     .input(findByFilterSchema)
     .query(async ({ input, ctx }) => {
-      const startTime = startOfDay(input.date);
-      const endTime = add(startTime, { days: 1 });
+      const filters = input.filters;
+
+      // console.log('filters', filters);
+      console.log('🤔 findByFilters called');
+
+      // const parsed = eventFiltersSchema.parse(input.filters);
+      // console.log('parsed filters', parsed);
+
+      // const startTime = startOfDay(input.date);
+      // const endTime = add(startTime, { days: 1 });
+      // const events = await ctx.db.query.events.findMany({
+      //   where: (event) => {
+      //     const whereElements: Array<SQL<unknown> | undefined> = [];
+      //     whereElements.push(
+      //       and(
+      //         eq(event.status, 'approved'),
+      //         or(
+      //           between(event.startTime, startTime, endTime),
+      //           between(event.endTime, startTime, endTime),
+      //           and(
+      //             lte(event.startTime, startTime),
+      //             gte(event.endTime, startTime),
+      //           ),
+      //           and(lte(event.startTime, endTime), gte(event.endTime, endTime)),
+      //         ),
+      //       ),
+      //     );
+
+      //     if (input.club.length !== 0) {
+      //       whereElements.push(inArray(event.clubId, input.club));
+      //     }
+      //     return and(...whereElements);
+      //   },
+      //   orderBy: (events, { asc, desc }) => {
+      //     switch (input.order) {
+      //       case 'soon':
+      //         return [asc(events.startTime)];
+      //       case 'later':
+      //         return [desc(events.startTime)];
+      //       case 'shortest duration':
+      //         return [asc(sql`${events.endTime} - ${events.startTime}`)];
+      //       case 'longest duration':
+      //         return [desc(sql`${events.endTime} - ${events.startTime}`)];
+      //     }
+      //   },
+      //   with: {
+      //     club: true,
+      //   },
+      //   limit: 20,
+      // });
+
+      // const startTime = startOfDay(filters.dateStart ?? new Date());
+      // const endTime = filters.dateEnd
+      //   ? startOfDay(filters.dateEnd)
+      //   : add(startTime, { days: 365 });
+
+      // console.log('start', startTime.toISOString());
+      // console.log('end', endTime.toISOString());
+
       const events = await ctx.db.query.events.findMany({
         where: (event) => {
-          const whereElements: Array<SQL<unknown> | undefined> = [];
-          whereElements.push(
-            and(
-              eq(event.status, 'approved'),
-              or(
-                between(event.startTime, startTime, endTime),
-                between(event.endTime, startTime, endTime),
-                and(
-                  lte(event.startTime, startTime),
-                  gte(event.endTime, startTime),
-                ),
-                and(lte(event.startTime, endTime), gte(event.endTime, endTime)),
-              ),
-            ),
-          );
+          const conditions: Array<SQL<unknown> | undefined> = [];
 
-          if (input.club.length !== 0) {
-            whereElements.push(inArray(event.clubId, input.club));
+          conditions.push(eq(event.status, 'approved'));
+
+          /**
+           * True if date is "custom" but dateStart and dateEnd aren't provided.
+           * In other words, if user has clicked "custom" but hasn't finished
+           * entering both a start date and end date yet.
+           */
+          const unfinishedCustomDate =
+            filters.date === temporalDeixisCustomDateSentinelValue &&
+            (!filters.dateStart || !filters.dateEnd);
+
+          if (
+            !unfinishedCustomDate &&
+            (filters.date || (filters.dateStart && filters.dateEnd))
+          ) {
+            let startTime: Date | undefined;
+            let endTime: Date | undefined;
+
+            const today = startOfDay(new Date());
+
+            switch (filters.date) {
+              case 'today':
+                startTime = today;
+                endTime = add(today, { days: 1 });
+                break;
+              case 'tomorrow':
+                startTime = add(today, { days: 1 });
+                endTime = add(today, { days: 2 });
+                break;
+              case 'this weekend':
+                // Beginning of this Saturday
+                startTime = lastDayOfWeek(today);
+                // End of next Sunday
+                endTime = add(startOfWeek(add(today, { weeks: 1 })), {
+                  days: 1,
+                });
+                break;
+              case 'this week':
+                startTime = filters.past ? startOfWeek(today) : today;
+                endTime = add(lastDayOfWeek(today), { days: 1 });
+                break;
+              case 'this month':
+                startTime = filters.past ? startOfMonth(today) : today;
+                endTime = add(lastDayOfMonth(today), { days: 1 });
+                break;
+              case temporalDeixisCustomDateSentinelValue:
+              // Go to default case, in case dateStart and dateEnd exist but date is invalid
+              default:
+                if (filters.dateStart && filters.dateEnd) {
+                  startTime = startOfDay(filters.dateStart);
+                  endTime = add(startOfDay(filters.dateEnd), { days: 1 });
+                }
+                break;
+            }
+
+            if (startTime && endTime) {
+              console.log('start', startTime.toISOString());
+              console.log('end', endTime.toISOString());
+
+              conditions.push(
+                or(
+                  between(event.startTime, startTime, endTime),
+                  between(event.endTime, startTime, endTime),
+                  and(
+                    lte(event.startTime, startTime),
+                    gte(event.endTime, startTime),
+                  ),
+                  and(
+                    lte(event.startTime, endTime),
+                    gte(event.endTime, endTime),
+                  ),
+                ),
+              );
+            } else if (filters.date !== temporalDeixisCustomDateSentinelValue) {
+              throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: `Invalid key for filters.date: ${filters.date}`,
+              });
+            }
+          } else if (!filters.past) {
+            conditions.push(gte(event.startTime, startOfDay(new Date())));
           }
-          return and(...whereElements);
+
+          // if (input.club.length !== 0) {
+          //   whereElements.push(inArray(event.clubId, input.club));
+          // }
+
+          return and(...conditions);
         },
         orderBy: (events, { asc, desc }) => {
-          switch (input.order) {
-            case 'soon':
+          switch (input.filters.sort) {
+            case 'upcoming':
               return [asc(events.startTime)];
-            case 'later':
-              return [desc(events.startTime)];
-            case 'shortest duration':
-              return [asc(sql`${events.endTime} - ${events.startTime}`)];
-            case 'longest duration':
-              return [desc(sql`${events.endTime} - ${events.startTime}`)];
+            case 'updated':
+              return [desc(events.updatedAt)];
+
+            // case 'soon':
+            //   return [asc(events.startTime)];
+            // case 'later':
+            //   return [desc(events.startTime)];
+            // case 'shortest duration':
+            //   return [asc(sql`${events.endTime} - ${events.startTime}`)];
+            // case 'longest duration':
+            //   return [desc(sql`${events.endTime} - ${events.startTime}`)];
           }
         },
         with: {
@@ -283,7 +427,13 @@ export const eventRouter = createTRPCRouter({
       });
 
       return {
-        events: events,
+        data: events,
+        pagination: {
+          page: 0,
+          size: 20,
+          total: 0,
+          totalPages: 100,
+        },
       };
     }),
   byId: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {

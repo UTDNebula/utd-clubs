@@ -202,6 +202,24 @@ export const eventFiltersSchema = eventParamsSchema.transform(
 
 export type EventFiltersSchema = z.infer<typeof eventFiltersSchema>;
 
+export const eventParamsSchemaOutput = z.object({
+  query: z.string().optional(),
+  sort: sortEnum.default('upcoming').catch('upcoming'),
+  page: z.int().min(1).default(1).catch(1),
+  size: z.int().min(1).default(20).catch(20),
+  clubs: eventClubsFilterEnum.default('all').catch('all'),
+  hideRegistered: z.boolean().default(false),
+  past: z.boolean().default(false),
+  tags: z.array(z.string()).default([]).catch([]),
+  date: temporalDeixisWithCustomFilterEnum.optional().catch(undefined),
+  dateStart: z.date().nullish(),
+  dateEnd: z.date().nullish(),
+  location: eventLocationFilterEnum.array().default([]).catch([]),
+  locationExclude: eventLocationFilterEnum.array().default([]).catch([]),
+});
+
+export type EventParamsSchemaOutput = z.infer<typeof eventParamsSchemaOutput>;
+
 export const eventParamsDefaults = eventFiltersSchema.parse({});
 
 export type EventParamsDefault = typeof eventParamsDefaults;

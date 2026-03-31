@@ -8,10 +8,16 @@ import ViewOption, { ViewOptionItem } from './view/ViewOptionItem';
 
 type EventsViewOptionsBarProps = {
   filters: EventFiltersSchema;
+  /**
+   * The total number of pages.
+   * @default 1
+   */
+  pageCount?: number;
 };
 
 export default function EventsViewOptionsBar({
   filters,
+  pageCount,
 }: EventsViewOptionsBarProps) {
   const handleChangePage = (newValue: number) => {
     setParams((params) => {
@@ -99,7 +105,7 @@ export default function EventsViewOptionsBar({
         </div>
       </div>
       <CompactPagination
-        count={100}
+        count={pageCount}
         page={filters.page - 1}
         onChange={handleChangePage}
       />

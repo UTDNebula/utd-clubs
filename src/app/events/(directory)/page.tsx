@@ -18,23 +18,12 @@ const Events = async (props: { searchParams: Promise<EventParamsSchema> }) => {
   const searchParams = await props.searchParams;
   const parsed = eventFiltersSchema.parse(searchParams);
 
-  console.log(parsed);
-
-  // const events = await api.event.byDateRange({
-  //   endTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
-  // });
-
-  // const { events } = await api.event.findByFilters({
-  // });
-
-  // const { events } = await api.event.findByDate({
-  //   date: parsed.date,
-  // });
+  // Server-side query to avoid client-side fetching on load
+  const query = await api.event.findByFilters({ filters: parsed });
 
   return (
     <>
-      <EventsBody events={[]} />
-      {/* <EventsBody events={events} /> */}
+      <EventsBody initialQueryData={query} />
     </>
   );
 };

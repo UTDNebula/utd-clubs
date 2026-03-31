@@ -10,23 +10,27 @@ import {
   eventFiltersSchema,
   listSelectedEventFilters,
 } from '@src/utils/eventFilter';
-import EventCard from '../EventCard';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
 import { setParams } from './filter/utils';
+import EventDirectoryGrid from './filter/view/EventDirectoryGrid';
 import ViewOptionsBar from './filter/ViewOptionsBar';
 
 type EventsBodyProps = {
-  events: RouterOutputs['event']['findByDate']['events'];
+  initialQueryData?: RouterOutputs['event']['findByFilters'];
 };
 
-const EventsBody = ({ events }: EventsBodyProps) => {
+const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
   const searchParams = useSearchParams();
 
   const filters = eventFiltersSchema.parse(Object.fromEntries(searchParams));
   const selectedFilters = listSelectedEventFilters(filters);
 
   const [showSidebar, setShowSidebar] = useState(true);
+
+  const [queryData, setQueryData] = useState<
+    RouterOutputs['event']['findByFilters'] | null
+  >(null);
 
   // Toggle sidebar when pressing backslash key
   useEffect(() => {
@@ -97,23 +101,23 @@ const EventsBody = ({ events }: EventsBodyProps) => {
           showSidebar={showSidebar}
           onClickSidebar={setShowSidebar}
         />
-        <ViewOptionsBar filters={filters} />
-        <div className="flex flex-wrap items-center gap-4">
-          {events.length > 0 ? (
-            events.map((event) => <EventCard key={event.id} event={event} />)
-          ) : (
-            <div className="w-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl text-base font-medium text-slate-600 dark:text-slate-400">
-              No events found
-            </div>
-          )}
-        </div>
-        <div className="flex justify-center">
-          <Pagination
-            count={100}
-            page={filters.page}
-            onChange={handleChangePage}
-          />
-        </div>
+        <ViewOptionsBar filters={filters} pageCount={queryData?.pagination.totalPages} />
+        <EventDirectoryGrid
+          filters={filters}
+          initialQueryData={initialQueryData}
+          onQueryFetch={(data) => {
+            setQueryData(data);
+          }}
+        />
+        {queryData && queryData.pagination.totalPages > 1 && (
+          <div className="flex justify-center">
+            <Pagination
+              count={queryData.pagination.totalPages}
+              page={filters.page}
+              onChange={handleChangePage}
+            />
+          </div>
+        )}
       </div>
     </section>
   );
