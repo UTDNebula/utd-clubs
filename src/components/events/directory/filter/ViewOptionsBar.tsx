@@ -53,8 +53,12 @@ export default function EventsViewOptionsBar({
     });
   };
 
+  // If past and no custom date, sort by recency
+  const sortByRecency =
+    filters.past && !filters.date && !filters.dateStart && !filters.dateEnd;
+
   const sortOptions: ViewOptionItem<(typeof sortEnum.options)[number]>[] = [
-    { label: 'Upcoming', value: 'upcoming' },
+    { label: sortByRecency ? 'Recent' : 'Upcoming', value: 'upcoming' },
     { label: 'Updated', value: 'updated' },
   ];
 

@@ -254,61 +254,7 @@ export const eventRouter = createTRPCRouter({
       const filters = input.filters;
 
       // console.log('filters', filters);
-      console.log('🤔 findByFilters called');
-
-      // const parsed = eventFiltersSchema.parse(input.filters);
-      // console.log('parsed filters', parsed);
-
-      // const startTime = startOfDay(input.date);
-      // const endTime = add(startTime, { days: 1 });
-      // const events = await ctx.db.query.events.findMany({
-      //   where: (event) => {
-      //     const whereElements: Array<SQL<unknown> | undefined> = [];
-      //     whereElements.push(
-      //       and(
-      //         eq(event.status, 'approved'),
-      //         or(
-      //           between(event.startTime, startTime, endTime),
-      //           between(event.endTime, startTime, endTime),
-      //           and(
-      //             lte(event.startTime, startTime),
-      //             gte(event.endTime, startTime),
-      //           ),
-      //           and(lte(event.startTime, endTime), gte(event.endTime, endTime)),
-      //         ),
-      //       ),
-      //     );
-
-      //     if (input.club.length !== 0) {
-      //       whereElements.push(inArray(event.clubId, input.club));
-      //     }
-      //     return and(...whereElements);
-      //   },
-      //   orderBy: (events, { asc, desc }) => {
-      //     switch (input.order) {
-      //       case 'soon':
-      //         return [asc(events.startTime)];
-      //       case 'later':
-      //         return [desc(events.startTime)];
-      //       case 'shortest duration':
-      //         return [asc(sql`${events.endTime} - ${events.startTime}`)];
-      //       case 'longest duration':
-      //         return [desc(sql`${events.endTime} - ${events.startTime}`)];
-      //     }
-      //   },
-      //   with: {
-      //     club: true,
-      //   },
-      //   limit: 20,
-      // });
-
-      // const startTime = startOfDay(filters.dateStart ?? new Date());
-      // const endTime = filters.dateEnd
-      //   ? startOfDay(filters.dateEnd)
-      //   : add(startTime, { days: 365 });
-
-      // console.log('start', startTime.toISOString());
-      // console.log('end', endTime.toISOString());
+      console.log('🔍 findByFilters called');
 
       const events = await ctx.db.query.events.findMany({
         where: (event) => {
@@ -325,6 +271,7 @@ export const eventRouter = createTRPCRouter({
             filters.date === temporalDeixisCustomDateSentinelValue &&
             (!filters.dateStart || !filters.dateEnd);
 
+          // past, date, dateStart, dateEnd
           if (
             !unfinishedCustomDate &&
             (filters.date || (filters.dateStart && filters.dateEnd))
@@ -393,7 +340,11 @@ export const eventRouter = createTRPCRouter({
                 message: `Invalid key for filters.date: ${filters.date}`,
               });
             }
-          } else if (!filters.past) {
+          } else if (filters.past) {
+            // Only get events from the past
+            conditions.push(lte(event.startTime, startOfDay(new Date())));
+          } else {
+            // Get events happening in the present/future
             conditions.push(gte(event.startTime, startOfDay(new Date())));
           }
 
@@ -404,20 +355,22 @@ export const eventRouter = createTRPCRouter({
           return and(...conditions);
         },
         orderBy: (events, { asc, desc }) => {
-          switch (input.filters.sort) {
+          switch (filters.sort) {
             case 'upcoming':
-              return [asc(events.startTime)];
+              // If past and no custom date, sort by recency
+              const sortByRecency =
+                filters.past &&
+                !filters.date &&
+                !filters.dateStart &&
+                !filters.dateEnd;
+
+              if (sortByRecency) {
+                return [desc(events.startTime)];
+              } else {
+                return [asc(events.startTime)];
+              }
             case 'updated':
               return [desc(events.updatedAt)];
-
-            // case 'soon':
-            //   return [asc(events.startTime)];
-            // case 'later':
-            //   return [desc(events.startTime)];
-            // case 'shortest duration':
-            //   return [asc(sql`${events.endTime} - ${events.startTime}`)];
-            // case 'longest duration':
-            //   return [desc(sql`${events.endTime} - ${events.startTime}`)];
           }
         },
         with: {
