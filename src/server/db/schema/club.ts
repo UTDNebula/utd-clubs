@@ -28,6 +28,8 @@ export const membershipPolicyEnum = pgEnum('membership_policy', [
   'open',
   'request',
   'closed',
+]);
+
 export const clubSizeEnum = pgEnum('club_size', [
   '1-10',
   '10-50',
