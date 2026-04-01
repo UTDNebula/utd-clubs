@@ -176,15 +176,15 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
         )}
         <Tooltip
           title={
-            canManage
-              ? self && (
-                  <div className="text-center">
-                    You cannot Unfollow this club
-                    <br />
-                    Another admin must remove you
-                  </div>
-                )
-              : 'Unfollow club'
+            canManage ? (
+              <div className="text-center">
+                You cannot Unfollow this club
+                <br />
+                Another admin must remove you
+              </div>
+            ) : (
+              'Unfollow club'
+            )
           }
         >
           {/* This span is required to ensure the locked tooltip shows when the IconButton is disabled */}
