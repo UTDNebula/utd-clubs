@@ -28,6 +28,11 @@ export const membershipPolicyEnum = pgEnum('membership_policy', [
   'open',
   'request',
   'closed',
+export const clubSizeEnum = pgEnum('club_size', [
+  '1-10',
+  '10-50',
+  '50-200',
+  '200+',
 ]);
 
 export const club = pgTable(
@@ -58,6 +63,7 @@ export const club = pgTable(
     calendarSyncToken: text('calendar_sync_token'),
     calendarWebhookId: text('calendar_webhook_id'),
     calendarWebHookExpiration: timestamp('calendar_webhook_expiration'),
+    clubSize: clubSizeEnum('club_size'),
     calendarGoogleAccountId: text('calendarGoogleAccountId').references(
       () => user.id,
       { onDelete: 'set null' },
