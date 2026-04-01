@@ -10,8 +10,11 @@ import {
 } from 'date-fns';
 import {
   and,
+  arrayOverlaps,
+  asc,
   between,
   count,
+  desc,
   eq,
   gt,
   gte,
@@ -259,11 +262,21 @@ export const eventRouter = createTRPCRouter({
       // console.log('filters', filters);
       console.log('🔍 findByFilters called');
 
-      const events = await ctx.db.query.events.findMany({
-        where: (event) => {
+      const result = await ctx.db
+        .select({
+          events,
+          club,
+          'internal-count': sql<number>`count(*) OVER()`.mapWith(Number),
+        })
+        .from(events)
+        .leftJoin(club, eq(events.clubId, club.id))
+        .where((tables) => {
+          const events = tables.events;
+          const club = tables.club;
+
           const conditions: Array<SQL<unknown> | undefined> = [];
 
-          conditions.push(eq(event.status, 'approved'));
+          conditions.push(eq(events.status, 'approved'));
 
           /**
            * True if date is "custom" but dateStart and dateEnd aren't provided.
@@ -274,6 +287,9 @@ export const eventRouter = createTRPCRouter({
             filters.date === temporalDeixisCustomDateSentinelValue &&
             (!filters.dateStart || !filters.dateEnd);
 
+          const now = new Date();
+          const today = startOfDay(now);
+
           // past, date, dateStart, dateEnd
           if (
             !unfinishedCustomDate &&
@@ -282,11 +298,9 @@ export const eventRouter = createTRPCRouter({
             let startTime: Date | undefined;
             let endTime: Date | undefined;
 
-            const today = startOfDay(new Date());
-
             switch (filters.date) {
               case 'today':
-                startTime = today;
+                startTime = filters.past ? today : now;
                 endTime = add(today, { days: 1 });
                 break;
               case 'tomorrow':
@@ -302,11 +316,11 @@ export const eventRouter = createTRPCRouter({
                 });
                 break;
               case 'this week':
-                startTime = filters.past ? startOfWeek(today) : today;
+                startTime = filters.past ? startOfWeek(today) : now;
                 endTime = add(lastDayOfWeek(today), { days: 1 });
                 break;
               case 'this month':
-                startTime = filters.past ? startOfMonth(today) : today;
+                startTime = filters.past ? startOfMonth(today) : now;
                 endTime = add(lastDayOfMonth(today), { days: 1 });
                 break;
               case temporalDeixisCustomDateSentinelValue:
@@ -322,15 +336,15 @@ export const eventRouter = createTRPCRouter({
             if (startTime && endTime) {
               conditions.push(
                 or(
-                  between(event.startTime, startTime, endTime),
-                  between(event.endTime, startTime, endTime),
+                  between(events.startTime, startTime, endTime),
+                  between(events.endTime, startTime, endTime),
                   and(
-                    lte(event.startTime, startTime),
-                    gte(event.endTime, startTime),
+                    lte(events.startTime, startTime),
+                    gte(events.endTime, startTime),
                   ),
                   and(
-                    lte(event.startTime, endTime),
-                    gte(event.endTime, endTime),
+                    lte(events.startTime, endTime),
+                    gte(events.endTime, endTime),
                   ),
                 ),
               );
@@ -341,20 +355,26 @@ export const eventRouter = createTRPCRouter({
               });
             }
           } else if (filters.past) {
-            // Only get events from the past
-            conditions.push(lte(event.startTime, startOfDay(new Date())));
+            // Get events from the present and past
+            conditions.push(lte(events.startTime, now));
           } else {
-            // Get events happening in the present/future
-            conditions.push(gte(event.startTime, startOfDay(new Date())));
+            // Get events in the present and future
+            conditions.push(
+              or(gte(events.startTime, now), gte(events.endTime, now)),
+            );
           }
 
-          // if (input.club.length !== 0) {
-          //   whereElements.push(inArray(event.clubId, input.club));
-          // }
+          if (filters.tags && filters.tags.length > 0) {
+            conditions.push(arrayOverlaps(club.tags, filters.tags));
+          }
 
           return and(...conditions);
-        },
-        orderBy: (events, { asc, desc }) => {
+        })
+        .limit(pageSize)
+        .offset((page - 1) * pageSize)
+        .orderBy((tables) => {
+          const events = tables.events;
+
           switch (filters.sort) {
             case 'upcoming':
               // If past and no custom date, sort by recency
@@ -372,31 +392,14 @@ export const eventRouter = createTRPCRouter({
             case 'updated':
               return [desc(events.updatedAt)];
           }
-        },
-        offset: (page - 1) * pageSize,
-        with: {
-          club: true,
-        },
-        limit: pageSize,
-        extras: {
-          'internal-total': sql<number>`CAST(COUNT(*) OVER() AS INTEGER)`.as(
-            'internal-total',
-          ),
-        },
-      });
+        });
 
-      // Removes certain keys from event object, to reduce network usage
-      const cleanedEvents = events.map((event) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { ['internal-total']: total, ...rest } = event;
-        return rest;
-      });
-
-      const totalCount = events[0]?.['internal-total'] ?? 0;
+      const eventsData = result.map((r) => ({ ...r.events, club: r.club }));
+      const totalCount = result[0]?.['internal-count'] ?? 0;
       const totalPages = Math.ceil(totalCount / pageSize);
 
       return {
-        data: cleanedEvents,
+        data: eventsData,
         pagination: {
           page: Math.min(page, totalPages + 1),
           size: pageSize,
