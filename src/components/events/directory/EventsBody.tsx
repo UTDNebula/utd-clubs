@@ -3,16 +3,17 @@
 import Collapse from '@mui/material/Collapse';
 import Pagination from '@mui/material/Pagination';
 import { useSearchParams } from 'next/navigation';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import EventDirectorySearchBar from '@src/components/searchBar/EventDirectorySearchBar';
 import { RouterOutputs } from '@src/trpc/shared';
 import {
   eventFiltersSchema,
   listSelectedEventFilters,
 } from '@src/utils/eventFilter';
+import { useStable } from '@src/utils/useStable';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
-import { setParams } from './filter/utils';
+import { EventDirectoryStates, setParams } from './filter/utils';
 import EventDirectoryGrid from './filter/view/EventDirectoryGrid';
 import ViewOptionsBar from './filter/ViewOptionsBar';
 
@@ -23,14 +24,21 @@ type EventsBodyProps = {
 const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
   const searchParams = useSearchParams();
 
-  const filters = eventFiltersSchema.parse(Object.fromEntries(searchParams));
-  const selectedFilters = listSelectedEventFilters(filters);
+  // Use in place of `filters` for places where memoization isn't needed
+  const unstableFilters = eventFiltersSchema.parse(
+    Object.fromEntries(searchParams),
+  );
+
+  const filters = useStable(unstableFilters);
+  const selectedFilters = useStable(listSelectedEventFilters(filters));
 
   const [showSidebar, setShowSidebar] = useState(true);
 
-  const [queryData, setQueryData] = useState<
-    RouterOutputs['event']['findByFilters'] | null
-  >(null);
+  const [eventDirectoryState, setEventDirectoryState] =
+    useState<EventDirectoryStates>();
+
+  const fetchStatus = eventDirectoryState?.fetchStatus;
+  const pageCount = eventDirectoryState?.pageCount;
 
   // Toggle sidebar when pressing backslash key
   useEffect(() => {
@@ -81,7 +89,7 @@ const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
           id="events-filters"
           className="flex flex-col gap-4 h-full w-76 mr-4"
         >
-          <EventsFilterPanels backgroundHover filters={filters} />
+          <EventsFilterPanels backgroundHover filters={unstableFilters} />
         </div>
       </Collapse>
       <div id="events-content" className="flex flex-col gap-4 grow w-min">
@@ -91,8 +99,9 @@ const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
           style={{ top: 68 }}
         >
           <EventDirectorySearchBar
-            initialValue={filters.query}
+            initialValue={unstableFilters.query}
             onChange={handleChangeQuery}
+            loading={fetchStatus === 'fetching'}
           />
         </div>
         <EventsFilterBar
@@ -101,26 +110,23 @@ const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
           showSidebar={showSidebar}
           onClickSidebar={setShowSidebar}
         />
-        <ViewOptionsBar
-          filters={filters}
-          pageCount={queryData?.pagination.totalPages}
-        />
+        <ViewOptionsBar filters={filters} pageCount={pageCount} />
         <EventDirectoryGrid
-          filters={filters}
+          filters={unstableFilters}
           initialQueryData={initialQueryData}
-          onQueryFetch={(data) => {
-            setQueryData(data);
-          }}
+          onQueryFetch={useCallback((states: EventDirectoryStates) => {
+            setEventDirectoryState(states);
+          }, [])}
         />
-        {queryData && queryData.pagination.totalPages > 1 && (
+        {pageCount && pageCount > 1 ? (
           <div className="flex justify-center">
             <Pagination
-              count={queryData.pagination.totalPages}
-              page={filters.page}
+              count={pageCount}
+              page={unstableFilters.page}
               onChange={handleChangePage}
             />
           </div>
-        )}
+        ) : undefined}
       </div>
     </section>
   );

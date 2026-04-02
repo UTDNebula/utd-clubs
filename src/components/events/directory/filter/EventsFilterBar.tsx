@@ -9,7 +9,7 @@ import Chip from '@mui/material/Chip';
 import Modal from '@mui/material/Modal';
 import Tooltip from '@mui/material/Tooltip';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ReactNode, useState } from 'react';
+import { memo, ReactNode, useState } from 'react';
 import Panel from '@src/components/common/Panel';
 import { TagChip } from '@src/components/common/TagChip';
 import {
@@ -41,7 +41,7 @@ type EventsFilterBarProps = {
   onClickSidebar?: (value: boolean) => void;
 };
 
-export default function EventsFilterBar({
+export default memo(function EventsFilterBar({
   filters,
   selectedFilters,
   showSidebar,
@@ -257,7 +257,7 @@ export default function EventsFilterBar({
       </Modal>
     </>
   );
-}
+});
 
 function getChipLabel(
   filter: SelectedEventFiltersList[number],

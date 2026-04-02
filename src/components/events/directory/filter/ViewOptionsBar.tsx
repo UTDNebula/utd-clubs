@@ -1,6 +1,7 @@
 import GridViewIcon from '@mui/icons-material/GridView';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SortIcon from '@mui/icons-material/Sort';
+import { memo } from 'react';
 import { EventFiltersSchema, sortEnum } from '@src/utils/eventFilter';
 import { setParams } from './utils';
 import CompactPagination from './view/CompactPagination';
@@ -15,7 +16,7 @@ type EventsViewOptionsBarProps = {
   pageCount?: number;
 };
 
-export default function EventsViewOptionsBar({
+export default memo(function EventsViewOptionsBar({
   filters,
   pageCount,
 }: EventsViewOptionsBarProps) {
@@ -115,4 +116,4 @@ export default function EventsViewOptionsBar({
       />
     </div>
   );
-}
+});

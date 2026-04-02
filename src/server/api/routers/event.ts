@@ -21,6 +21,7 @@ import {
   ilike,
   inArray,
   lte,
+  notInArray,
   or,
   sql,
   type SQL,
@@ -254,6 +255,25 @@ export const eventRouter = createTRPCRouter({
   findByFilters: publicProcedure
     .input(findByFilterSchema)
     .query(async ({ input, ctx }) => {
+      const signedIn = ctx.session;
+      const userId = ctx.session?.user.id;
+
+      // const registeredEvents = userId
+      //   ? await ctx.db.query.userMetadataToEvents.findMany({
+      //       where: (userMetadataToEvents) =>
+      //         eq(userMetadataToEvents.userId, userId),
+      //     })
+      //   : undefined;
+
+      const [registeredEvents] = await Promise.all([
+        userId
+          ? ctx.db.query.userMetadataToEvents.findMany({
+              where: (userMetadataToEvents) =>
+                eq(userMetadataToEvents.userId, userId),
+            })
+          : undefined,
+      ]);
+
       const filters = input.filters;
 
       const page = filters.page ?? 1;
@@ -364,8 +384,17 @@ export const eventRouter = createTRPCRouter({
             );
           }
 
+          // tags
           if (filters.tags && filters.tags.length > 0) {
             conditions.push(arrayOverlaps(club.tags, filters.tags));
+          }
+
+          if (signedIn) {
+            if (filters.hideRegistered) {
+              const registeredEventIds =
+                registeredEvents?.map((event) => event.eventId) ?? [];
+              conditions.push(notInArray(events.id, registeredEventIds));
+            }
           }
 
           return and(...conditions);
@@ -394,7 +423,7 @@ export const eventRouter = createTRPCRouter({
           }
         });
 
-      const eventsData = result.map((r) => ({ ...r.events, club: r.club }));
+      const eventsData = result.map((r) => ({ ...r.events, club: r.club! }));
       const totalCount = result[0]?.['internal-count'] ?? 0;
       const totalPages = Math.ceil(totalCount / pageSize);
 

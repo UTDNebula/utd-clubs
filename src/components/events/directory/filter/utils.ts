@@ -1,6 +1,13 @@
+import { FetchStatus } from '@tanstack/react-query';
 import { PanelProps } from '@src/components/common/Panel';
 import { EventParamsSchema } from '@src/utils/eventFilter';
 import { FilterSearchParams } from './FilterSearchParams';
+
+export type EventDirectoryStates = {
+  pending: boolean;
+  pageCount: number;
+  fetchStatus: FetchStatus;
+};
 
 export type FilterPanelBaseProps = {
   backgroundHover: boolean;
@@ -50,7 +57,7 @@ export const setParams = (
   function unsetPage(name: string) {
     // IMPORTANT: This condition avoids infinite recursion
     if (name !== 'page' && params.get('page') !== String(1))
-      params.set('page', String(1));
+      params.delete('page');
   }
 
   const params = new FilterSearchParams<EventParamsSchema>(
