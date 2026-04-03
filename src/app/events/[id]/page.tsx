@@ -38,6 +38,17 @@ export async function generateMetadata(props: {
       description: 'Event not found',
     };
 
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  };
+  const startStr = event.startTime.toLocaleString('en-US', dateOptions);
+  const endStr = event.endTime.toLocaleString('en-US', dateOptions);
+
   let cleanDescription = `${event.name} from ${event.club.name} on UTD Clubs`;
   const textDescription = event.description.replace(/^#+.*$/gm, '');
 
@@ -53,15 +64,22 @@ export async function generateMetadata(props: {
     }
   }
 
+  const timeDescription = `${startStr} - ${endStr}${event.location ? ` | ${event.location}` : ''}`;
+
   return {
-    title: `${event.name}`,
-    description: cleanDescription,
+    title: event.name,
+    description: `${timeDescription}. ${cleanDescription}`,
     alternates: {
       canonical: `https://clubs.utdnebula.com/events/${event.id}`,
     },
     openGraph: {
+      title: event.name,
       url: `https://clubs.utdnebula.com/events/${event.id}`,
-      description: cleanDescription,
+      description: `${timeDescription}. ${cleanDescription}`,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
     },
   };
 }
