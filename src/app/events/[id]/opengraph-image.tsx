@@ -33,11 +33,7 @@ function formatEventDate(startTime: Date, endTime: Date): string {
   return `${startDate}, ${startTimeStr} - ${endDate}, ${endTimeStr}`;
 }
 
-export default async function Image({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function Image({ params }: { params: { id: string } }) {
   const id = (await params).id;
 
   const eventData = await db.query.events.findFirst({
