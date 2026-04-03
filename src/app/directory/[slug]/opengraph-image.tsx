@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { db } from '@src/server/db';
@@ -20,7 +20,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
     interBuffer,
   ] = await Promise.all([
     db.query.club.findFirst({
-      where: (club) => eq(club.slug, slug),
+      where: (club) => and(eq(club.slug, slug), eq(club.approved, 'approved')),
       with: {
         userMetadataToClubs: {
           columns: { userId: true },

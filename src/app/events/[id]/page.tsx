@@ -1,3 +1,10 @@
+import {
+  format,
+  formatDuration,
+  intervalToDuration,
+  isSameDay,
+  type FormatDistanceToken,
+} from 'date-fns';
 import { type Metadata } from 'next';
 import ClubEventHeader from '@src/components/club/listing/ClubEventHeader';
 import EventBody from '@src/components/events/listing/EventBody';
@@ -5,6 +12,15 @@ import EventTitle from '@src/components/events/listing/EventTitle';
 import { EventHeader } from '@src/components/header/Header';
 import { api } from '@src/trpc/server';
 import { convertMarkdownToPlaintext } from '@src/utils/markdown';
+
+const distanceTokenUnits: Partial<Record<FormatDistanceToken, string>> = {
+  xSeconds: 's',
+  xMinutes: 'm',
+  xHours: 'h',
+  xDays: 'd',
+  xMonths: 'mo',
+  xYears: 'y',
+};
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -38,16 +54,24 @@ export async function generateMetadata(props: {
       description: 'Event not found',
     };
 
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  };
-  const startStr = event.startTime.toLocaleString('en-US', dateOptions);
-  const endStr = event.endTime.toLocaleString('en-US', dateOptions);
+  const startStr = format(event.startTime, 'EEE, LLLL d, yyyy @ h:mm a');
+
+  let durationStr = '';
+  if (event.startTime.getTime() !== event.endTime.getTime()) {
+    const duration = formatDuration(
+      intervalToDuration({ start: event.startTime, end: event.endTime }),
+      {
+        locale: {
+          formatDistance: (token, count) =>
+            `${count}${distanceTokenUnits[token] ?? ''}`,
+        },
+      },
+    );
+    const endStr = isSameDay(event.startTime, event.endTime)
+      ? format(event.endTime, 'h:mm a')
+      : format(event.endTime, 'EEE, LLLL d, yyyy @ h:mm a');
+    durationStr = ` · ${duration} (till ${endStr})`;
+  }
 
   let cleanDescription = `${event.name} from ${event.club.name} on UTD Clubs`;
   const textDescription = event.description.replace(/^#+.*$/gm, '');
@@ -64,7 +88,7 @@ export async function generateMetadata(props: {
     }
   }
 
-  const timeDescription = `${startStr} - ${endStr}${event.location ? ` | ${event.location}` : ''}`;
+  const timeDescription = `${startStr}${durationStr}${event.location ? ` | ${event.location}` : ''}`;
 
   return {
     title: event.name,

@@ -1,3 +1,10 @@
+import {
+  format,
+  formatDuration,
+  intervalToDuration,
+  isSameDay,
+  type FormatDistanceToken,
+} from 'date-fns';
 import { and, eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
@@ -9,48 +16,62 @@ export const alt = 'Event Details';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
+const distanceTokenUnits: Partial<Record<FormatDistanceToken, string>> = {
+  xSeconds: 's',
+  xMinutes: 'm',
+  xHours: 'h',
+  xDays: 'd',
+  xMonths: 'mo',
+  xYears: 'y',
+};
+
 function formatEventDate(startTime: Date, endTime: Date): string {
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-  };
-  const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  };
+  const dateStr = format(startTime, 'EEE, LLLL d, yyyy @ h:mm a');
 
-  const startDate = startTime.toLocaleDateString('en-US', dateOptions);
-  const startTimeStr = startTime.toLocaleTimeString('en-US', timeOptions);
-  const endTimeStr = endTime.toLocaleTimeString('en-US', timeOptions);
-
-  const sameDay = startTime.toDateString() === endTime.toDateString();
-  if (sameDay) {
-    return `${startDate}, ${startTimeStr} - ${endTimeStr}`;
+  if (startTime.getTime() === endTime.getTime()) {
+    return dateStr;
   }
-  const endDate = endTime.toLocaleDateString('en-US', dateOptions);
-  return `${startDate}, ${startTimeStr} - ${endDate}, ${endTimeStr}`;
+
+  const duration = formatDuration(
+    intervalToDuration({ start: startTime, end: endTime }),
+    {
+      locale: {
+        formatDistance: (token, count) =>
+          `${count}${distanceTokenUnits[token] ?? ''}`,
+      },
+    },
+  );
+
+  const endStr = isSameDay(startTime, endTime)
+    ? format(endTime, 'h:mm a')
+    : format(endTime, 'EEE, LLLL d, yyyy @ h:mm a');
+
+  return `${dateStr} · ${duration} (till ${endStr})`;
 }
 
 export default async function Image({ params }: { params: { id: string } }) {
-  const id = (await params).id;
+  const { id } = await params;
 
-  const eventData = await db.query.events.findFirst({
-    where: (events) => and(eq(events.id, id), eq(events.status, 'approved')),
-    with: {
-      club: {
-        columns: { name: true, profileImage: true, updatedAt: true },
-      },
-    },
-  });
-
-  const gradientBuffer = await fetch(
-    new URL('../../../../public/images/landingGradient.png', import.meta.url),
-  ).then((res) => res.arrayBuffer());
-
-  const baiJamjureeBuffer = await loadGoogleFont('Bai Jamjuree', 700);
-  const interBuffer = await loadGoogleFont('Inter', 600);
+  const [eventData, gradientBuffer, baiJamjureeBuffer, interBuffer] =
+    await Promise.all([
+      db.query.events.findFirst({
+        where: (events) =>
+          and(eq(events.id, id), eq(events.status, 'approved')),
+        with: {
+          club: {
+            columns: { name: true, profileImage: true, updatedAt: true },
+          },
+        },
+      }),
+      fetch(
+        new URL(
+          '../../../../public/images/landingGradient.png',
+          import.meta.url,
+        ),
+      ).then((res) => res.arrayBuffer()),
+      loadGoogleFont('Bai Jamjuree', 700),
+      loadGoogleFont('Inter', 600),
+    ]);
 
   const background = (
     <img
@@ -194,7 +215,6 @@ export default async function Image({ params }: { params: { id: string } }) {
               fontSize: '22px',
               margin: '0 0 16px 0',
               textShadow: '0 0 4px rgba(0,0,0,0.4)',
-              opacity: 0.9,
               maxWidth: hasImage ? '55%' : '90%',
               textAlign: hasImage ? 'left' : 'center',
             }}
@@ -271,8 +291,8 @@ export default async function Image({ params }: { params: { id: string } }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 36,
-              height: 36,
+              width: 40,
+              height: 40,
             }}
           >
             <UTDClubsLogoStandalone
