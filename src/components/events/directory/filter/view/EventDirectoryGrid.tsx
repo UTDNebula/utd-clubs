@@ -63,6 +63,7 @@ export default function EventDirectoryGrid({
     if (query.data && query.isSuccess) {
       onQueryFetch?.({
         pending: query.isPending,
+        count: query.data.pagination.total,
         pageCount: query.data.pagination.totalPages,
         fetchStatus: query.fetchStatus,
       });

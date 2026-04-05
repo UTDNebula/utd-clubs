@@ -14,15 +14,20 @@ import useStable from '@src/utils/useStable';
 import { EventCardVariants } from '../EventCard';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
-import { EventDirectoryStates, setParams } from './filter/utils';
+import {
+  EventDirectoryStates,
+  setParams,
+  useEventsTitleStore,
+} from './filter/utils';
 import EventDirectoryGrid from './filter/view/EventDirectoryGrid';
 import ViewOptionsBar from './filter/ViewOptionsBar';
 
 type EventsBodyProps = {
   initialQueryData?: RouterOutputs['event']['findByFilters'];
+  total?: number;
 };
 
-const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
+const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
   const searchParams = useSearchParams();
 
   // Use in place of `filters` for places where memoization isn't needed
@@ -52,7 +57,11 @@ const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
     useState<EventDirectoryStates>();
 
   const fetchStatus = eventDirectoryState?.fetchStatus;
+  const count = eventDirectoryState?.count;
   const pageCount = eventDirectoryState?.pageCount;
+
+  useEventsTitleStore.getState().setSelectedCount(count);
+  useEventsTitleStore.getState().setTotalCount(total);
 
   // Toggle sidebar when pressing backslash key
   useEffect(() => {

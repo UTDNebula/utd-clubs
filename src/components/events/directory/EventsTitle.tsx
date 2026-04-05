@@ -1,18 +1,19 @@
 'use client';
 
+// import MoreVertIcon from '@mui/icons-material/MoreVert';
+// import RssFeedIcon from '@mui/icons-material/RssFeed';
+// import SyncIcon from '@mui/icons-material/Sync';
+// import Button from '@mui/material/Button';
+// import IconButton from '@mui/material/IconButton';
+// import Tooltip from '@mui/material/Tooltip';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import RssFeedIcon from '@mui/icons-material/RssFeed';
 import SearchIcon from '@mui/icons-material/Search';
-import SyncIcon from '@mui/icons-material/Sync';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import Tooltip from '@mui/material/Tooltip';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SyntheticEvent, useState } from 'react';
+import { useEventsTitleStore } from './filter/utils';
 
 type EventsTitleProps = {
   selectedCount?: number;
@@ -20,9 +21,17 @@ type EventsTitleProps = {
 };
 
 export default function EventsTitle({
-  selectedCount,
-  totalCount,
+  selectedCount: selectedCountProp,
+  totalCount: totalCountProp,
 }: EventsTitleProps) {
+  const selectedCountStore = useEventsTitleStore(
+    (state) => state.selectedCount,
+  );
+  const totalCountStore = useEventsTitleStore((state) => state.totalCount);
+
+  const selectedCount = selectedCountProp ?? selectedCountStore;
+  const totalCount = totalCountProp ?? totalCountStore;
+
   const pathname = usePathname();
   const tabPaths = ['/events', '/events/calendar'];
   const tabIndex = tabPaths.indexOf(pathname);
@@ -35,15 +44,21 @@ export default function EventsTitle({
     setSelectedTab(newValue);
   };
 
+  const hasCount = selectedCount !== undefined || totalCount !== undefined;
+
   return (
     <div className="flex justify-between gap-4 border-b-1 border-[var(--mui-palette-divider)]">
       <div className="sm:mt-2 grow sm:ml-4">
-        <div className="flex gap-3 items-end py-4 max-sm:hidden">
+        <div className="flex gap-3 items-end py-4 mx-4">
           <h1 className="font-display text-3xl font-semibold">Events</h1>
-          {(selectedCount || totalCount) && (
+          {hasCount && (
             <span className="text-xl text-neutral-600 dark:text-neutral-400">
               ({selectedCount}
-              {selectedCount ? (totalCount ? ' out of ' : ' selected') : ''}
+              {selectedCount !== undefined
+                ? totalCount !== undefined
+                  ? ' out of '
+                  : ' selected'
+                : ''}
               {totalCount})
             </span>
           )}
@@ -65,12 +80,11 @@ export default function EventsTitle({
               label="Calendar"
               icon={<CalendarMonthIcon />}
               iconPosition="start"
-              // disabled
               LinkComponent={Link}
               href="/events/calendar"
             />
           </Tabs>
-          <Tooltip title="Coming soon">
+          {/* <Tooltip title="Coming soon">
             <span>
               <IconButton
                 className="sm:hidden text-neutral-600 dark:text-neutral-400"
@@ -79,11 +93,11 @@ export default function EventsTitle({
                 <MoreVertIcon />
               </IconButton>
             </span>
-          </Tooltip>
+          </Tooltip> */}
         </div>
       </div>
       <div className="flex gap-4 items-center max-sm:hidden">
-        <Tooltip title="Coming soon">
+        {/* <Tooltip title="Coming soon">
           <span>
             <Button
               variant="contained"
@@ -110,7 +124,7 @@ export default function EventsTitle({
               Sync
             </Button>
           </span>
-        </Tooltip>
+        </Tooltip> */}
       </div>
     </div>
   );

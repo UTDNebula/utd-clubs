@@ -1,13 +1,35 @@
 import { FetchStatus } from '@tanstack/react-query';
+import { create } from 'zustand';
 import { PanelProps } from '@src/components/common/Panel';
 import { EventParamsSchema } from '@src/utils/eventFilter';
 import { FilterSearchParams } from './FilterSearchParams';
 
 export type EventDirectoryStates = {
   pending: boolean;
+  count: number;
   pageCount: number;
   fetchStatus: FetchStatus;
 };
+
+type EventsTitleStoreState = {
+  selectedCount: number | undefined;
+  totalCount: number | undefined;
+};
+
+type EventsTitleStoreAction = {
+  setSelectedCount: (selectedCount: number | undefined) => void;
+  setTotalCount: (totalCount: number | undefined) => void;
+};
+
+export const useEventsTitleStore = create<
+  EventsTitleStoreState & EventsTitleStoreAction
+>((set) => ({
+  selectedCount: undefined,
+  totalCount: undefined,
+  setSelectedCount: (selectedCount: number | undefined) =>
+    set({ selectedCount }),
+  setTotalCount: (totalCount: number | undefined) => set({ totalCount }),
+}));
 
 export type FilterPanelBaseProps = {
   backgroundHover: boolean;

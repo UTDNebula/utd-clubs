@@ -19,11 +19,14 @@ const Events = async (props: { searchParams: Promise<EventParamsSchema> }) => {
   const parsed = eventFiltersSchema.parse(searchParams);
 
   // Server-side query to avoid client-side fetching on load
-  const query = await api.event.findByFilters({ filters: parsed });
+  const [initialEvents, count] = await Promise.all([
+    api.event.findByFilters({ filters: parsed }),
+    api.event.count({ includePast: true }),
+  ]);
 
   return (
     <>
-      <EventsBody initialQueryData={query} />
+      <EventsBody initialQueryData={initialEvents} total={count} />
     </>
   );
 };

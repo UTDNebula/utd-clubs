@@ -53,8 +53,9 @@ const byClubIdSchema = z.object({
   pageSize: z.number().int().positive().optional(),
   includePast: z.boolean().optional().default(false),
 });
-const countByClubIdSchema = z.object({
-  clubId: z.string(),
+
+const countSchema = z.object({
+  clubId: z.string().optional(),
   includePast: z.boolean().optional().default(false),
   currentTime: z.optional(z.date()),
 });
@@ -121,24 +122,27 @@ export const eventRouter = createTRPCRouter({
         throw e;
       }
     }),
-  countByClubId: publicProcedure
-    .input(countByClubIdSchema)
+  count: publicProcedure
+    .input(countSchema)
     .query(async ({ input, ctx }) => {
       const { clubId, includePast } = input;
       const now = input.currentTime ?? new Date();
 
       try {
-        const whereCondition = includePast
-          ? and(eq(events.clubId, clubId), eq(events.status, 'approved'))
-          : and(
-              eq(events.clubId, clubId),
-              gte(events.endTime, now),
-              eq(events.status, 'approved'),
-            );
+        const conditions: Array<SQL<unknown> | undefined> = [];
+
+        conditions.push(eq(events.status, 'approved'));
+        if (!includePast) {
+          conditions.push(gte(events.endTime, now));
+        }
+        if (clubId) {
+          conditions.push(eq(events.clubId, clubId));
+        }
+
         const result = await ctx.db
           .select({ value: count() })
           .from(events)
-          .where(whereCondition);
+          .where(and(...conditions));
         const value = result[0]?.value ?? 0;
 
         return value;
