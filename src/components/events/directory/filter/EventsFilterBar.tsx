@@ -22,7 +22,7 @@ import {
 } from '@src/utils/eventFilter';
 import EventsFilterPanels from './EventsFilterPanels';
 import FilterChip from './FilterChip';
-import { hideFABs, setEventsParams } from './utils';
+import { setEventsParams } from './utils';
 
 const hiddenFields: (keyof EventFiltersSchema)[] = [
   'dateStart',
@@ -49,12 +49,10 @@ export default memo(function EventsFilterBar({
   const [openModal, setOpenModal] = useState(false);
 
   const handleOpen = () => {
-    hideFABs(true);
     setOpenModal(true);
   };
 
   const handleClose = () => {
-    hideFABs(false);
     setOpenModal(false);
   };
 
