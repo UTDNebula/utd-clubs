@@ -11,6 +11,7 @@ import {
   listSelectedEventFilters,
 } from '@src/utils/eventFilter';
 import useStable from '@src/utils/useStable';
+import { EventCardVariants } from '../EventCard';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
 import { EventDirectoryStates, setParams } from './filter/utils';
@@ -33,6 +34,19 @@ const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
   const selectedFilters = useStable(listSelectedEventFilters(filters));
 
   const [showSidebar, setShowSidebar] = useState(true);
+
+  const defaultViewLayout: EventCardVariants = (() => {
+    let storageValue: EventCardVariants | null = null;
+    if (typeof window !== 'undefined') {
+      storageValue = window.localStorage.getItem(
+        'EventDirectoryViewLayout',
+      ) as EventCardVariants | null;
+    }
+    return storageValue ?? 'card';
+  })();
+
+  const [viewLayout, setViewLayout] =
+    useState<EventCardVariants>(defaultViewLayout);
 
   const [eventDirectoryState, setEventDirectoryState] =
     useState<EventDirectoryStates>();
@@ -121,13 +135,22 @@ const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
           showSidebar={showSidebar}
           onClickSidebar={setShowSidebar}
         />
-        <ViewOptionsBar filters={filters} pageCount={pageCount} />
+        <ViewOptionsBar
+          filters={filters}
+          pageCount={pageCount}
+          defaultViewValue={defaultViewLayout}
+          onChangeView={(value) => {
+            setViewLayout(value);
+            window.localStorage.setItem('EventDirectoryViewLayout', value);
+          }}
+        />
         <EventDirectoryGrid
           filters={unstableFilters}
           initialQueryData={initialQueryData}
           onQueryFetch={useCallback((states: EventDirectoryStates) => {
             setEventDirectoryState(states);
           }, [])}
+          viewLayout={viewLayout}
         />
         {pageCount && pageCount > 1 ? (
           <div className="flex justify-center">

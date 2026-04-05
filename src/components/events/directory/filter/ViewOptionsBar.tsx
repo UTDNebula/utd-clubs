@@ -2,6 +2,7 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SortIcon from '@mui/icons-material/Sort';
 import { memo } from 'react';
+import { EventCardVariants } from '@src/components/events/EventCard';
 import { EventFiltersSchema, sortEnum } from '@src/utils/eventFilter';
 import { setParams } from './utils';
 import CompactPagination from './view/CompactPagination';
@@ -14,11 +15,17 @@ type EventsViewOptionsBarProps = {
    * @default 1
    */
   pageCount?: number;
+  viewValue?: EventCardVariants;
+  defaultViewValue?: EventCardVariants;
+  onChangeView?: (value: EventCardVariants) => void;
 };
 
 export default memo(function EventsViewOptionsBar({
   filters,
   pageCount,
+  viewValue,
+  defaultViewValue,
+  onChangeView,
 }: EventsViewOptionsBarProps) {
   const handleChangePage = (newValue: number) => {
     setParams((params) => {
@@ -38,6 +45,12 @@ export default memo(function EventsViewOptionsBar({
         params.delete('s');
       }
     });
+  };
+
+  const handleChangeView = (newValue?: EventCardVariants) => {
+    if (newValue) {
+      onChangeView?.(newValue);
+    }
   };
 
   const handleChangeSize = (newValue?: number) => {
@@ -63,12 +76,9 @@ export default memo(function EventsViewOptionsBar({
     { label: 'Updated', value: 'updated' },
   ];
 
-  // TODO: Move elsewhere
-  type ViewOptions = 'list' | 'gallery';
-
-  const viewOptions: ViewOptionItem<ViewOptions>[] = [
+  const viewOptions: ViewOptionItem<EventCardVariants>[] = [
     { label: 'List', value: 'list', icon: <ListAltIcon /> },
-    { label: 'Gallery', value: 'gallery', icon: <GridViewIcon /> },
+    { label: 'Gallery', value: 'card', icon: <GridViewIcon /> },
   ];
 
   const sizeOptions: ViewOptionItem<number>[] = [
@@ -96,8 +106,10 @@ export default memo(function EventsViewOptionsBar({
           iconOnly
           icon={<GridViewIcon />}
           options={viewOptions}
-          defaultValue="gallery"
+          defaultValue={defaultViewValue ?? 'card'}
           type="cycle"
+          value={viewValue}
+          onChange={handleChangeView}
         />
         <div className="max-sm:hidden">
           <ViewOption
