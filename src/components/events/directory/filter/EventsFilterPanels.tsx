@@ -4,7 +4,7 @@ import Divider from '@mui/material/Divider';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
-import { useStable } from '@src/utils/useStable';
+import useStable from '@src/utils/useStable';
 import DatePanel from './panels/Date';
 import FiltersPanel from './panels/Filters';
 // import LocationPanel from './panels/Location';

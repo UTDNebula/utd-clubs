@@ -10,7 +10,7 @@ import {
   eventFiltersSchema,
   listSelectedEventFilters,
 } from '@src/utils/eventFilter';
-import { useStable } from '@src/utils/useStable';
+import useStable from '@src/utils/useStable';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
 import { EventDirectoryStates, setParams } from './filter/utils';

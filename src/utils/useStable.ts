@@ -10,7 +10,7 @@ import { useEffect, useRef } from 'react';
  * an object's or array's values are deeply equivalent). Useful for memoizing
  * non-stable objects, arrays, or other non-primitive types.
  */
-export function useStable<T>(value: T) {
+export default function useStable<T>(value: T) {
   const ref = useRef(value);
   // Thanks for the tip ESLint, but we're actually trying to avoid re-renders here
   // eslint-disable-next-line react-hooks/refs

@@ -12,7 +12,7 @@ import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
 import { EventParamsSchemaOutput } from '@src/utils/eventFilter';
 import useDebounce from '@src/utils/useDebounce';
-import { useStable } from '@src/utils/useStable';
+import useStable from '@src/utils/useStable';
 import { EventDirectoryStates } from '../utils';
 
 type EventDirectoryGridProps = {
@@ -70,7 +70,7 @@ export default function EventDirectoryGrid({
 
   return (
     <div
-      className={`flex flex-wrap items-center gap-4 transition-opacity ${query.isFetching ? 'opacity-50 select-none pointer-events-none' : ''}`}
+      className={`grid grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] items-center gap-4 transition-opacity ${query.isFetching ? 'opacity-50 select-none pointer-events-none' : ''}`}
     >
       <AnimatePresence mode="popLayout">
         {events.length > 0 ? (
