@@ -258,18 +258,25 @@ export const eventRouter = createTRPCRouter({
       const signedIn = ctx.session;
       const userId = ctx.session?.user.id;
 
-      // const registeredEvents = userId
-      //   ? await ctx.db.query.userMetadataToEvents.findMany({
-      //       where: (userMetadataToEvents) =>
-      //         eq(userMetadataToEvents.userId, userId),
-      //     })
-      //   : undefined;
-
-      const [registeredEvents] = await Promise.all([
+      const [registeredEvents, joinedClubs] = await Promise.all([
+        // registeredEvents
         userId
           ? ctx.db.query.userMetadataToEvents.findMany({
               where: (userMetadataToEvents) =>
                 eq(userMetadataToEvents.userId, userId),
+            })
+          : undefined,
+        // joinedClubs
+        userId
+          ? ctx.db.query.userMetadataToClubs.findMany({
+              where: and(
+                eq(userMetadataToClubs.userId, userId),
+                inArray(userMetadataToClubs.memberType, [
+                  'Member',
+                  'Officer',
+                  'President',
+                ]),
+              ),
             })
           : undefined,
       ]);
@@ -278,9 +285,6 @@ export const eventRouter = createTRPCRouter({
 
       const page = filters.page ?? 1;
       const pageSize = filters.size ?? 20;
-
-      // console.log('filters', filters);
-      console.log('🔍 findByFilters called');
 
       const result = await ctx.db
         .select({
@@ -310,7 +314,7 @@ export const eventRouter = createTRPCRouter({
           const now = new Date();
           const today = startOfDay(now);
 
-          // past, date, dateStart, dateEnd
+          // filters.(past, date, dateStart, dateEnd)
           if (
             !unfinishedCustomDate &&
             (filters.date || (filters.dateStart && filters.dateEnd))
@@ -384,12 +388,46 @@ export const eventRouter = createTRPCRouter({
             );
           }
 
-          // tags
+          // filters.tags
           if (filters.tags && filters.tags.length > 0) {
             conditions.push(arrayOverlaps(club.tags, filters.tags));
           }
 
+          // filters.location
+          if (filters.location) {
+            // TODO: Either parse the events.location column or add another column similar to filters.location
+          }
+
+          // filters.locationExclude
+          if (filters.locationExclude) {
+            // TODO: Either parse the events.location column or add another column similar to filters.location
+          }
+
+          // filters.query
+          if (filters.query) {
+            // TODO: Implement something like the following (which doesn't currently work)
+            //
+            // conditions.push(
+            //   sql`${events.id} @@@
+            //   paradedb.boolean(
+            //     should => ARRAY[
+            //       paradedb.boost(10.0,paradedb.match(field=>'name',value=>${filters.query},distance=>2)),
+            //       paradedb.boost(1.0,paradedb.match(field=>'description',value=>${filters.query},distance=>1)),
+            //       paradedb.boost(5.0,paradedb.match(field=>'location',value=>${filters.query},distance=>1))
+            //     ])`,
+            // );
+          }
+
           if (signedIn) {
+            // filters.clubs
+            const joinedClubIds = joinedClubs?.map((club) => club.clubId) ?? [];
+            if (filters.clubs === 'following') {
+              conditions.push(inArray(events.clubId, joinedClubIds));
+            } else if (filters.clubs === 'new') {
+              conditions.push(notInArray(events.clubId, joinedClubIds));
+            }
+
+            // filters.hideRegistered
             if (filters.hideRegistered) {
               const registeredEventIds =
                 registeredEvents?.map((event) => event.eventId) ?? [];

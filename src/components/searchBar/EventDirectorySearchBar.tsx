@@ -57,6 +57,7 @@ export default function EventDirectorySearchBar({
                     <IconButton
                       onClick={() => {
                         setInput('');
+                        onChange?.('');
                       }}
                       size="small"
                       className="-mr-1"

@@ -7,7 +7,7 @@ import { EventFiltersSchema } from '@src/utils/eventFilter';
 import { useStable } from '@src/utils/useStable';
 import DatePanel from './panels/Date';
 import FiltersPanel from './panels/Filters';
-import LocationPanel from './panels/Location';
+// import LocationPanel from './panels/Location';
 import TagsPanel from './panels/Tags';
 import { FilterPanelBaseProps } from './utils';
 
@@ -28,9 +28,8 @@ export default function EventsFilterPanels({
   };
 
   const tagsStable = useStable(filters.tags);
-
-  const locationStable = useStable(filters.location);
-  const locationExcludeStable = useStable(filters.locationExclude);
+  // const locationStable = useStable(filters.location);
+  // const locationExcludeStable = useStable(filters.locationExclude);
 
   /**
    * Utility function to memoize the filters array, but only allow re-calculations when specific fields change
@@ -83,14 +82,14 @@ export default function EventsFilterPanels({
           {...filterPanelBaseProps}
           filters={useFilterFieldsMemo(['date', 'dateStart', 'dateEnd'])}
         />,
-        <LocationPanel
-          key="location"
-          {...filterPanelBaseProps}
-          filters={useFilterFieldsMemo([], {
-            location: locationStable,
-            locationExclude: locationExcludeStable,
-          })}
-        />,
+        // <LocationPanel
+        //   key="location"
+        //   {...filterPanelBaseProps}
+        //   filters={useFilterFieldsMemo([], {
+        //     location: locationStable,
+        //     locationExclude: locationExcludeStable,
+        //   })}
+        // />,
       ].flatMap((item, index) => {
         return index > 0
           ? [<Divider key={`divider-${index}`} variant="middle" />, item]
