@@ -16,7 +16,7 @@ import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
 import {
   EventDirectoryStates,
-  setParams,
+  setEventsParams,
   useEventsTitleStore,
 } from './filter/utils';
 import EventDirectoryGrid from './filter/view/EventDirectoryGrid';
@@ -82,7 +82,7 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
   }, []);
 
   const handleChangeQuery = (value: string) => {
-    setParams((params) => {
+    setEventsParams((params) => {
       if (value) {
         params.set('q', value);
       } else {
@@ -92,7 +92,7 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
   };
 
   const handleChangePage = (_: ChangeEvent<unknown>, newValue: number) => {
-    setParams((params) => {
+    setEventsParams((params) => {
       if (newValue !== 0) {
         params.set('page', String(newValue));
       } else {

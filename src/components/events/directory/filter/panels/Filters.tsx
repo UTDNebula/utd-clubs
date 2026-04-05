@@ -5,7 +5,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
 import Panel from '@src/components/common/Panel';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
-import { FilterPanelProps, panelProps, setParams } from '../utils';
+import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 export type FiltersPanelFields = Pick<
   EventFiltersSchema,
@@ -26,7 +26,7 @@ export default memo(function FiltersPanel(
         exclusive
         onChange={(_e, newValue) => {
           if (newValue !== null) {
-            setParams((params) => {
+            setEventsParams((params) => {
               if (newValue !== 'all') {
                 params.set('clubs', newValue);
               } else {
@@ -49,7 +49,7 @@ export default memo(function FiltersPanel(
           <Switch
             checked={hideRegistered}
             onChange={(_e, newValue) => {
-              setParams((params) => {
+              setEventsParams((params) => {
                 if (newValue) {
                   params.set('hideRegistered', '');
                 } else {
@@ -66,7 +66,7 @@ export default memo(function FiltersPanel(
           <Switch
             checked={past}
             onChange={(_e, newValue) => {
-              setParams((params) => {
+              setEventsParams((params) => {
                 if (newValue) {
                   params.set('past', '');
                 } else {

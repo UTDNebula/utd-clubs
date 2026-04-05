@@ -2,7 +2,7 @@ import { FetchStatus } from '@tanstack/react-query';
 import { create } from 'zustand';
 import { PanelProps } from '@src/components/common/Panel';
 import { EventParamsSchema } from '@src/utils/eventFilter';
-import { FilterSearchParams } from './FilterSearchParams';
+import { ParamSetter } from '@src/utils/searchParams';
 
 export type EventDirectoryStates = {
   pending: boolean;
@@ -90,38 +90,21 @@ export const navigateWithParams = (
   window.dispatchEvent(new PopStateEvent('popstate'));
 };
 
-/**
- * Modifies the URL search params based off {@linkcode setParamsFn} and navigates to it
- * @param setParamsFn Function to that accepts a mutable params parameter and modifies it
- * @param pathname Optional pathname to override the default, which uses `window.location.pathname`
- */
-export const setParams = (
-  setParamsFn: (params: FilterSearchParams<EventParamsSchema>) => void,
-  pathname: string = window.location.pathname,
-) => {
-  function unsetPage(name: string) {
-    // IMPORTANT: This condition avoids infinite recursion
-    if (name !== 'page' && params.get('page') !== String(1))
-      params.delete('page');
-  }
+function unsetPage(params: URLSearchParams, name: string) {
+  if (name !== 'page' && params.get('page') !== String(1))
+    params.delete('page');
+}
 
-  const params = new FilterSearchParams<EventParamsSchema>(
-    window.location.search,
-    {
-      onAppend(name, value) {
-        console.log(`APPEND ${name} WITH '${value}'`);
-        unsetPage(name);
-      },
-      onDelete(name, value) {
-        console.log(`DELETE ${name}${value ? ` IF '${value}'` : ''}`);
-        unsetPage(name);
-      },
-      onSet(name, value) {
-        console.log(`SET ${name} TO '${value}'`);
-        unsetPage(name);
-      },
-    },
-  );
-  setParamsFn(params);
-  navigateWithParams(pathname, params);
-};
+const EventParamSetter = new ParamSetter<EventParamsSchema>({
+  onAppend(name, value, rawParams) {
+    unsetPage(rawParams, name);
+  },
+  onDelete(name, value, rawParams) {
+    unsetPage(rawParams, name);
+  },
+  onSet(name, value, rawParams) {
+    unsetPage(rawParams, name);
+  },
+});
+
+export const setEventsParams = EventParamSetter.setParams;

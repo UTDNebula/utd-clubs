@@ -2,7 +2,7 @@ import { memo } from 'react';
 import Panel from '@src/components/common/Panel';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
 import ClubTagFilter from '../ClubTagFilter';
-import { FilterPanelProps, panelProps, setParams } from '../utils';
+import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 export type TagsPanelFields = Pick<EventFiltersSchema, 'tags'>;
 
@@ -28,7 +28,7 @@ export default memo(function TagsPanel(
       <ClubTagFilter
         value={tags}
         onChange={(newValue) => {
-          setParams((params) => {
+          setEventsParams((params) => {
             if (newValue.length) {
               params.set('tags', newValue.join(','));
             } else {

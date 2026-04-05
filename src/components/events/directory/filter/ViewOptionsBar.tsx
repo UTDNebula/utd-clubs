@@ -4,7 +4,7 @@ import SortIcon from '@mui/icons-material/Sort';
 import { memo } from 'react';
 import { EventCardVariants } from '@src/components/events/EventCard';
 import { EventFiltersSchema, sortEnum } from '@src/utils/eventFilter';
-import { setParams } from './utils';
+import { setEventsParams } from './utils';
 import CompactPagination from './view/CompactPagination';
 import ViewOption, { ViewOptionItem } from './view/ViewOptionItem';
 
@@ -28,7 +28,7 @@ export default memo(function EventsViewOptionsBar({
   onChangeView,
 }: EventsViewOptionsBarProps) {
   const handleChangePage = (newValue: number) => {
-    setParams((params) => {
+    setEventsParams((params) => {
       if (newValue !== 0) {
         params.set('page', String(newValue + 1));
       } else {
@@ -38,7 +38,7 @@ export default memo(function EventsViewOptionsBar({
   };
 
   const handleChangeSort = (newValue?: (typeof sortEnum.options)[number]) => {
-    setParams((params) => {
+    setEventsParams((params) => {
       if (newValue && newValue !== 'upcoming') {
         params.set('s', newValue);
       } else {
@@ -54,7 +54,7 @@ export default memo(function EventsViewOptionsBar({
   };
 
   const handleChangeSize = (newValue?: number) => {
-    setParams((params) => {
+    setEventsParams((params) => {
       // Go back to first page if page size changes
       if (newValue !== Number(params.get('size'))) {
         params.delete('page');

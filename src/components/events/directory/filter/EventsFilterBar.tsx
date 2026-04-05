@@ -22,7 +22,7 @@ import {
 } from '@src/utils/eventFilter';
 import EventsFilterPanels from './EventsFilterPanels';
 import FilterChip from './FilterChip';
-import { hideFABs, setParams } from './utils';
+import { hideFABs, setEventsParams } from './utils';
 
 const hiddenFields: (keyof EventFiltersSchema)[] = [
   'dateStart',
@@ -59,7 +59,7 @@ export default memo(function EventsFilterBar({
   };
 
   const handleDeleteTag = (filter: SelectedEventFiltersList[number]) => {
-    setParams((params) => {
+    setEventsParams((params) => {
       const newValue = params
         .get('tags')
         ?.split(',')
@@ -82,7 +82,7 @@ export default memo(function EventsFilterBar({
 
   function clearAllFilters() {
     filtersArray?.forEach((filter) => {
-      setParams((params) => {
+      setEventsParams((params) => {
         params.delete(filterFieldToParam[filter.field]);
 
         // Special case: Delete dateStart and dateEnd if custom date is removed
@@ -166,7 +166,7 @@ export default memo(function EventsFilterBar({
                 <FilterChip
                   label={getChipLabel(filter, selectedFilters)}
                   onDelete={() => {
-                    setParams((params) => {
+                    setEventsParams((params) => {
                       if (splitArrayField(filter.field)) {
                         // If field is an array but filter is a single item, handle accordingly
                         const newValue = params

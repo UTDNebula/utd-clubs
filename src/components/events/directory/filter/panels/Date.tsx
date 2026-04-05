@@ -9,7 +9,7 @@ import {
   temporalDeixisWithCustomFilterEnum,
 } from '@src/utils/eventFilter';
 import FilterList, { FilterListItem } from '../FilterList';
-import { FilterPanelProps, panelProps, setParams } from '../utils';
+import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 export type DatePanelFields = Pick<
   EventFiltersSchema,
@@ -71,7 +71,7 @@ export default memo(function DatePanel(
                   setCustomDate(null);
                   setCustomDateEnd(null);
 
-                  setParams((params) => {
+                  setEventsParams((params) => {
                     params.set('date', temporalDeixisCustomDateSentinelValue);
                     params.delete('dateStart');
                     params.delete('dateEnd');
@@ -95,7 +95,7 @@ export default memo(function DatePanel(
         onChange={(newSelectedValues) => {
           const newValue = newSelectedValues[0];
 
-          setParams((params) => {
+          setEventsParams((params) => {
             if (newValue) {
               params.set('date', newValue);
               params.delete('dateStart');
@@ -146,7 +146,7 @@ export default memo(function DatePanel(
                 setCustomDate(value);
                 setCustomDateEnd(newDateEnd);
 
-                setParams((params) => {
+                setEventsParams((params) => {
                   if (value) {
                     params.set('dateStart', value.toISOString().split('T')[0]!);
                     params.set(
@@ -177,7 +177,7 @@ export default memo(function DatePanel(
             onChange={(value) => {
               setCustomDateEnd(value);
 
-              setParams((params) => {
+              setEventsParams((params) => {
                 if (value) {
                   params.set('dateEnd', value.toISOString().split('T')[0]!);
                   params.delete('date');

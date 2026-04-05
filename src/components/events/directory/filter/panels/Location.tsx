@@ -6,7 +6,7 @@ import {
   eventLocationFilterEnum,
 } from '@src/utils/eventFilter';
 import FilterList, { FilterListItem } from '../FilterList';
-import { FilterPanelProps, panelProps, setParams } from '../utils';
+import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 export type LocationPanelFields = Pick<
   EventFiltersSchema,
@@ -35,7 +35,7 @@ export default memo(function LocationPanel(
         selectedValues={location}
         excludedValues={locationExclude}
         onChange={(newSelectedValues, newExcludedValues) => {
-          setParams((params) => {
+          setEventsParams((params) => {
             if (newSelectedValues.length) {
               params.set('location', newSelectedValues.join(','));
             } else {
