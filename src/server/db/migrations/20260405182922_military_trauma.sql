@@ -1,0 +1,1 @@
+CREATE INDEX "event_search_idx" ON "events" USING bm25 ("id","name","description","location","start_time","end_time","club_id","updated_at") WITH (key_field=id);

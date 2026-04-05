@@ -405,17 +405,15 @@ export const eventRouter = createTRPCRouter({
 
           // filters.query
           if (filters.query) {
-            // TODO: Implement something like the following (which doesn't currently work)
-            //
-            // conditions.push(
-            //   sql`${events.id} @@@
-            //   paradedb.boolean(
-            //     should => ARRAY[
-            //       paradedb.boost(10.0,paradedb.match(field=>'name',value=>${filters.query},distance=>2)),
-            //       paradedb.boost(1.0,paradedb.match(field=>'description',value=>${filters.query},distance=>1)),
-            //       paradedb.boost(5.0,paradedb.match(field=>'location',value=>${filters.query},distance=>1))
-            //     ])`,
-            // );
+            conditions.push(
+              sql`${events.id} @@@
+              paradedb.boolean(
+                should => ARRAY[
+                  paradedb.boost(10.0,paradedb.match(field=>'name',value=>${filters.query},distance=>2)),
+                  paradedb.boost(1.0,paradedb.match(field=>'description',value=>${filters.query},distance=>1)),
+                  paradedb.boost(5.0,paradedb.match(field=>'location',value=>${filters.query},distance=>1))
+                ])`,
+            );
           }
 
           if (signedIn) {
