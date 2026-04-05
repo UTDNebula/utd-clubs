@@ -50,7 +50,11 @@ export default function EventDirectoryGrid({
   const query = useQuery(
     api.event.findByFilters.queryOptions(
       { filters: debouncedFilters },
-      { initialData: initialQueryData, placeholderData: keepPreviousData },
+      {
+        initialData: initialQueryData,
+        refetchOnMount: false,
+        placeholderData: keepPreviousData,
+      },
     ),
   );
 

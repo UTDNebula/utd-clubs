@@ -284,7 +284,7 @@ export const eventRouter = createTRPCRouter({
       const filters = input.filters;
 
       const page = filters.page ?? 1;
-      const pageSize = filters.size ?? 20;
+      const pageSize = Math.min(filters.size, 100) ?? 20;
 
       const result = await ctx.db
         .select({

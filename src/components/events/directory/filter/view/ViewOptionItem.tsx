@@ -9,6 +9,7 @@ import {
   ReactNode,
   SetStateAction,
   useCallback,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -64,18 +65,20 @@ export default function ViewOption<Value>({
   value,
   onChange,
 }: ViewOptionProps<Value>) {
-  const options: ViewOptionItemBase<Value>[] | undefined = optionsProp?.flatMap(
-    (option) => {
-      if (option) {
-        if (typeof option === 'object' && 'value' in option) {
-          return option;
+  const options: ViewOptionItemBase<Value>[] | undefined = useMemo(
+    () =>
+      optionsProp?.flatMap((option) => {
+        if (option) {
+          if (typeof option === 'object' && 'value' in option) {
+            return option;
+          } else {
+            return { value: option };
+          }
         } else {
-          return { value: option };
+          return [];
         }
-      } else {
-        return [];
-      }
-    },
+      }),
+    [optionsProp],
   );
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -108,8 +111,14 @@ export default function ViewOption<Value>({
       : undefined,
   );
 
-  const selected =
-    options?.find((option) => option.value === value) ?? selectedUncontrolled;
+  const selected: ViewOptionItemBase<Value> | undefined = useMemo(
+    () =>
+      options?.find((option) => option.value === value) ??
+      (value ? { value, label: String(value) } : undefined) ??
+      selectedUncontrolled,
+    [options, selectedUncontrolled, value],
+  );
+
   const setSelected = useCallback(
     (action: SetStateAction<typeof selected>) => {
       const newValue = typeof action === 'function' ? action(selected) : action;
