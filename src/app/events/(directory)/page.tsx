@@ -1,4 +1,5 @@
 import { type Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import EventsBody from '@src/components/events/directory/EventsBody';
 import { api } from '@src/trpc/server';
 import { eventFiltersSchema, EventParamsSchema } from '@src/utils/eventFilter';
@@ -19,10 +20,22 @@ const Events = async (props: { searchParams: Promise<EventParamsSchema> }) => {
   const parsed = eventFiltersSchema.parse(searchParams);
 
   // Server-side query to avoid client-side fetching on load
-  const [initialEvents, count] = await Promise.all([
+  const results = await Promise.allSettled([
     api.event.findByFilters({ filters: parsed }),
     api.event.count({ includePast: true }),
   ]);
+
+  const initialEvents =
+    results[0].status === 'fulfilled' ? results[0].value : undefined;
+  const count = results[1].status === 'fulfilled' ? results[1].value : 0;
+
+  // If error fetching events with current filters, clear all filters and reload page
+  if (
+    results[0].status === 'rejected' &&
+    Object.keys(searchParams).length > 0
+  ) {
+    redirect('/events');
+  }
 
   return (
     <>

@@ -8,6 +8,7 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
 import EventCard, { EventCardVariants } from '@src/components/events/EventCard';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
 import { EventParamsSchemaOutput } from '@src/utils/eventFilter';
@@ -60,20 +61,26 @@ export default function EventDirectoryGrid({
 
   // On query success
   useEffect(() => {
-    if (query.data && query.isSuccess) {
+    if (query.data) {
       onQueryFetch?.({
         pending: query.isPending,
         count: query.data.pagination.total,
         pageCount: query.data.pagination.totalPages,
         fetchStatus: query.fetchStatus,
       });
+      if (query.isError) {
+        setSnackbar(
+          SnackbarPresets.errorCustomMessage('Error!', query.error.message),
+        );
+      }
     }
   }, [
     onQueryFetch,
     query.data,
+    query.error?.message,
     query.fetchStatus,
+    query.isError,
     query.isPending,
-    query.isSuccess,
   ]);
 
   const events = query.data?.data ?? initialQueryData?.data ?? [];
