@@ -6,11 +6,10 @@ import TagIcon from '@mui/icons-material/Tag';
 import TuneIcon from '@mui/icons-material/Tune';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Modal from '@mui/material/Modal';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Tooltip from '@mui/material/Tooltip';
 import { AnimatePresence, motion } from 'framer-motion';
 import { memo, ReactNode, useState } from 'react';
-import Panel from '@src/components/common/Panel';
 import { TagChip } from '@src/components/common/TagChip';
 import {
   EventFiltersSchema,
@@ -23,7 +22,7 @@ import {
 } from '@src/utils/eventFilter';
 import EventsFilterPanels from './EventsFilterPanels';
 import FilterChip from './FilterChip';
-import { setParams } from './utils';
+import { hideFABs, setParams } from './utils';
 
 const hiddenFields: (keyof EventFiltersSchema)[] = [
   'dateStart',
@@ -49,7 +48,13 @@ export default memo(function EventsFilterBar({
 }: EventsFilterBarProps) {
   const [openModal, setOpenModal] = useState(false);
 
+  const handleOpen = () => {
+    hideFABs(true);
+    setOpenModal(true);
+  };
+
   const handleClose = () => {
+    hideFABs(false);
     setOpenModal(false);
   };
 
@@ -126,7 +131,7 @@ export default memo(function EventsFilterBar({
           label="Filters"
           icon={<TuneIcon fontSize="small" />}
           variant="outlined"
-          onClick={() => setOpenModal(true)}
+          onClick={handleOpen}
           className="border-[var(--mui-palette-divider)] md:hidden"
         />
         <span className="relative">
@@ -218,43 +223,42 @@ export default memo(function EventsFilterBar({
           )}
         </AnimatePresence>
       </div>
-      <Modal
+      <SwipeableDrawer
         open={openModal}
+        onOpen={handleOpen}
         onClose={handleClose}
-        className="flex justify-center w-screen h-screen p-4"
+        anchor="bottom"
+        slotProps={{
+          paper: {
+            elevation: 0,
+            className:
+              'bg-white dark:bg-neutral-900 rounded-t-2xl max-w-120 mx-auto',
+          },
+        }}
       >
-        {/* This span is required to receive the tabIndex prop, which will let the user quickly navigate the modal using the keyboard */}
-        <span className="w-120 h-fit">
-          <Panel
-            smallPadding
-            className="h-fit max-h-screen w-fill p-0!"
-            slotClassNames={{ collapse: 'relative' }}
+        <div className="relative overflow-auto max-h-[calc(100dvh-6rem)] px-2 pt-5">
+          <EventsFilterPanels filters={filters} />
+        </div>
+        <div className="flex flex-wrap justify-between items-center gap-2 px-5 pb-5">
+          <Button
+            onClick={clearAllFilters}
+            color="warning"
+            className={`normal-case ${filtersLength <= 0 ? 'invisible' : ''}`}
+            disabled={filtersLength <= 0}
           >
-            <div className="relative overflow-auto max-h-[calc(100dvh-6rem)] px-5 pt-5">
-              <EventsFilterPanels filters={filters} />
-            </div>
-            <div className="flex flex-wrap justify-between items-center gap-2 px-5 pb-5">
-              <Button
-                onClick={clearAllFilters}
-                color="warning"
-                className={`normal-case ${filtersLength <= 0 ? 'invisible' : ''}`}
-                disabled={filtersLength <= 0}
-              >
-                {filtersArray
-                  ? `Clear ${filtersArray.length} filter${filtersArray.length === 1 ? '' : 's'}`
-                  : 'Clear all'}
-              </Button>
-              <Button
-                variant="contained"
-                onClick={handleClose}
-                className="normal-case"
-              >
-                OK
-              </Button>
-            </div>
-          </Panel>
-        </span>
-      </Modal>
+            {filtersArray
+              ? `Clear ${filtersArray.length} filter${filtersArray.length === 1 ? '' : 's'}`
+              : 'Clear all'}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleClose}
+            className="normal-case"
+          >
+            OK
+          </Button>
+        </div>
+      </SwipeableDrawer>
     </>
   );
 });

@@ -76,10 +76,21 @@ const EventsBody = ({ initialQueryData }: EventsBodyProps) => {
         params.delete('page');
       }
     });
+    const eventsBody = document.getElementById('events-body');
+    if (eventsBody) {
+      eventsBody.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
-    <section id="events-body" className="w-full flex items-start">
+    <section
+      id="events-body"
+      className="w-full flex items-start"
+      // TODO: The scrollMarginTop property should be BaseHeader's height. Replace this with a dynamic variable
+      style={{ scrollMarginTop: 68 }}
+    >
       <Collapse
         orientation="horizontal"
         in={showSidebar}
