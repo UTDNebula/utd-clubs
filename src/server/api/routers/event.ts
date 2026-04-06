@@ -16,13 +16,14 @@ import {
   count,
   desc,
   eq,
+  exists,
   gt,
   gte,
   ilike,
   inArray,
   isNull,
   lte,
-  notInArray,
+  notExists,
   or,
   sql,
   type SQL,
@@ -81,9 +82,6 @@ const byDateRangeSchema = z.object({
   endTime: z.date().optional(),
 });
 export const findByFilterSchema = z.object({
-  // date: z.date(),
-  // order: order,
-  // club: z.string().array(),
   filters: eventParamsSchemaOutput,
 });
 export const findByDateSchema = z.object({
@@ -216,8 +214,6 @@ export const eventRouter = createTRPCRouter({
           (e) => e.club.approved === 'approved',
         );
 
-        // const parsed = approvedEvents.map((e) => selectEvent.parse(e));
-        // return parsed;
         return approvedEvents;
       } catch (e) {
         console.error(e);
@@ -274,18 +270,30 @@ export const eventRouter = createTRPCRouter({
       const signedIn = ctx.session;
       const userId = ctx.session?.user.id;
 
-      const [registeredEvents, joinedClubs] = await Promise.all([
-        // registeredEvents
-        userId
-          ? ctx.db.query.userMetadataToEvents.findMany({
-              where: (userMetadataToEvents) =>
+      const filters = input.filters;
+
+      const page = filters.page ?? 1;
+      const pageSize = Math.min(filters.size, 100) ?? 20;
+
+      const registeredEventsSubquery = userId
+        ? ctx.db
+            .select()
+            .from(userMetadataToEvents)
+            .where(
+              and(
+                eq(userMetadataToEvents.eventId, events.id),
                 eq(userMetadataToEvents.userId, userId),
-            })
-          : undefined,
-        // joinedClubs
-        userId
-          ? ctx.db.query.userMetadataToClubs.findMany({
-              where: and(
+              ),
+            )
+        : undefined;
+
+      const joinedClubsSubquery = userId
+        ? ctx.db
+            .select()
+            .from(userMetadataToClubs)
+            .where(
+              and(
+                eq(userMetadataToClubs.clubId, events.clubId),
                 eq(userMetadataToClubs.userId, userId),
                 inArray(userMetadataToClubs.memberType, [
                   'Member',
@@ -293,24 +301,27 @@ export const eventRouter = createTRPCRouter({
                   'President',
                 ]),
               ),
-            })
-          : undefined,
-      ]);
-
-      const filters = input.filters;
-
-      const page = filters.page ?? 1;
-      const pageSize = Math.min(filters.size, 100) ?? 20;
+            )
+        : undefined;
 
       try {
-        const result = await ctx.db
+        let query = ctx.db
           .select({
             events,
             club,
+            isRegistered: registeredEventsSubquery
+              ? exists(registeredEventsSubquery)
+              : sql<boolean>`false`,
+            isClubMember: joinedClubsSubquery
+              ? exists(joinedClubsSubquery)
+              : sql<boolean>`false`,
             'internal-count': sql<number>`count(*) OVER()`.mapWith(Number),
           })
           .from(events)
           .leftJoin(club, eq(events.clubId, club.id))
+          .$dynamic();
+
+        query = query
           .where((tables) => {
             const events = tables.events;
             const club = tables.club;
@@ -435,21 +446,29 @@ export const eventRouter = createTRPCRouter({
               );
             }
 
-            if (signedIn) {
+            if (signedIn && userId) {
               // filters.clubs
-              const joinedClubIds =
-                joinedClubs?.map((club) => club.clubId) ?? [];
               if (filters.clubs === 'following') {
-                conditions.push(inArray(events.clubId, joinedClubIds));
+                conditions.push(
+                  joinedClubsSubquery
+                    ? exists(joinedClubsSubquery)
+                    : sql<boolean>`false`,
+                );
               } else if (filters.clubs === 'new') {
-                conditions.push(notInArray(events.clubId, joinedClubIds));
+                conditions.push(
+                  joinedClubsSubquery
+                    ? notExists(joinedClubsSubquery)
+                    : sql<boolean>`false`,
+                );
               }
 
               // filters.hideRegistered
               if (filters.hideRegistered) {
-                const registeredEventIds =
-                  registeredEvents?.map((event) => event.eventId) ?? [];
-                conditions.push(notInArray(events.id, registeredEventIds));
+                conditions.push(
+                  registeredEventsSubquery
+                    ? notExists(registeredEventsSubquery)
+                    : sql<boolean>`false`,
+                );
               }
             }
 
@@ -478,6 +497,8 @@ export const eventRouter = createTRPCRouter({
                 return [desc(events.updatedAt)];
             }
           });
+
+        const result = await query;
 
         const eventsData = result.map((r) => ({ ...r.events, club: r.club! }));
         const totalCount = result[0]?.['internal-count'] ?? 0;

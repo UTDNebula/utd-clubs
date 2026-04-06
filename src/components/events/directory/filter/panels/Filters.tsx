@@ -55,7 +55,7 @@ export default memo(function FiltersPanel(
         exclusive
         onChange={(_e, newValue) => {
           if (newValue !== null) {
-            if (!signedIn) showSignInMessage();
+            if (!signedIn && newValue !== 'all') showSignInMessage();
             setEventsParams((params) => {
               if (newValue !== 'all') {
                 params.set('clubs', newValue);
@@ -79,7 +79,7 @@ export default memo(function FiltersPanel(
           <Switch
             checked={hideRegistered}
             onChange={(_e, newValue) => {
-              if (!signedIn) showSignInMessage();
+              if (!signedIn && newValue === true) showSignInMessage();
               setEventsParams((params) => {
                 if (newValue) {
                   params.set('hideRegistered', '');

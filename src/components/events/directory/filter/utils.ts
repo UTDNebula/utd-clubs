@@ -50,24 +50,6 @@ export const panelProps = (backgroundHover: boolean): PanelProps => ({
   transparent: backgroundHover ? 'falseOnHover' : true,
 });
 
-/**
- * Set search params in the URL without using Next.js's Router
- */
-export const navigateWithParams = (
-  pathname: string,
-  params: URLSearchParams,
-) => {
-  // Manually replace page URL to avoid triggering re-renders with Next.js's hooks
-  window.history.replaceState(
-    null,
-    '',
-    `${pathname}${params.size > 0 ? '?' : ''}${params.toString().replace(/=(?=&|$)/g, '')}`,
-  );
-
-  // Manually indicate the page's URL has changed, which will update Next.js's hooks
-  window.dispatchEvent(new PopStateEvent('popstate'));
-};
-
 function unsetPage(params: URLSearchParams, name: string) {
   if (name !== 'page' && params.get('page') !== String(1))
     params.delete('page');
