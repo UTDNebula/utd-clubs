@@ -60,16 +60,6 @@ const preprocessParamArray = (input: searchParamValue) => {
 // Enums
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * @deprecated
- */
-export const order = z.enum([
-  'soon',
-  'later',
-  'shortest duration',
-  'longest duration',
-]);
-
 export const sortEnum = z.enum(['upcoming', 'updated']);
 
 export const eventClubsFilterEnum = z.enum(['all', 'following', 'new']);
@@ -137,13 +127,6 @@ export const eventLocationStrings: Record<
 ///////////////////////////////////////////////////////////////////////////////
 // Schemas
 ///////////////////////////////////////////////////////////////////////////////
-
-/**
- * @deprecated
- */
-export const eventParamsSchemaLegacy = z.object({
-  date: dateSchemaLegacy,
-});
 
 export const eventParamsSchema = z.object({
   q: z.string().optional(),
