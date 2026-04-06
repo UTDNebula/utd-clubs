@@ -663,6 +663,7 @@ export const clubRouter = createTRPCRouter({
           bannerImage: true,
           clubSize: true,
           updatedAt: true,
+          schools: true,
         },
       });
 
