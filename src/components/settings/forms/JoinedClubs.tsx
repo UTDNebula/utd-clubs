@@ -83,7 +83,17 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
                 );
 
                 joinedClubs.splice(removeIndex, 1);
+                setSnackbar(
+                  SnackbarPresets.savedCustom('Left club!'),
+                );
               },
+              onError: (e) => {
+                setSnackbar(
+                  SnackbarPresets.errorCustomMessage(
+                    'Failed to leave club!',
+                    e.message,
+                  ),
+                );
             },
           );
         }}
