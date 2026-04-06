@@ -63,6 +63,7 @@ const FormImage = ({
           type="file"
           accept="image/jpeg,image/jpg,image/png,image/svg+xml"
           onBlur={onBlur}
+          aria-label="Upload image"
           onChange={onChange}
           className="absolute inset-0 cursor-pointer text-transparent"
         />
