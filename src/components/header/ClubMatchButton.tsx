@@ -35,6 +35,7 @@ export default function ClubMatchButton({
       {...hrefConditionalProp}
       size="large"
       className={`rounded-full w-10 h-10 bg-[var(--mui-palette-primary-main)] hover:bg-[var(--mui-palette-primary-dark)] text-white dark:text-haiti ${shadow ? shadowStyle : ''}`}
+      aria-label="Club Match"
       onClick={handleClick}
     >
       {icon}
