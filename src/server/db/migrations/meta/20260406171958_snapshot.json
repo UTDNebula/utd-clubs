@@ -1,6 +1,6 @@
 {
-  "id": "c293dd76-7ef4-4ae1-ba02-d032dacd8674",
-  "prevId": "782abb4f-54bf-4ae4-a963-b35af801da53",
+  "id": "bdd0cba4-b79b-4b33-9440-368b4aaec5c2",
+  "prevId": "fe21cda0-ba4c-47aa-a4d1-73de9c71bbe1",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -571,6 +571,13 @@
         "calendar_webhook_expiration": {
           "name": "calendar_webhook_expiration",
           "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "club_size": {
+          "name": "club_size",
+          "type": "club_size",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
@@ -1248,6 +1255,16 @@
         "rejected",
         "pending",
         "deleted"
+      ]
+    },
+    "public.club_size": {
+      "name": "club_size",
+      "schema": "public",
+      "values": [
+        "1-10",
+        "10-50",
+        "50-200",
+        "200+"
       ]
     },
     "public.platform": {
