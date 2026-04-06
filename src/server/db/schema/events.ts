@@ -1,5 +1,12 @@
 import { relations, sql } from 'drizzle-orm';
-import { boolean, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core';
 import { club } from './club';
 import { userMetadataToEvents } from './users';
 
@@ -30,6 +37,7 @@ export const events = pgTable('events', {
   image: text('image'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  pageViews: integer('page_views').notNull().default(0),
   calendarId: text('calendar_id'),
 });
 
