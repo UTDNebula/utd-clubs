@@ -178,7 +178,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
           title={
             canManage ? (
               <div className="text-center">
-                You cannot Unfollow this club
+                You cannot unfollow a club you manage
                 <br />
                 Another admin must remove you
               </div>
