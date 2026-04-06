@@ -13,7 +13,7 @@ import Tabs from '@mui/material/Tabs';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SyntheticEvent, useState } from 'react';
-import { useEventsTitleStore } from './filter/utils';
+import { useEventDirectoryStore } from './filter/utils';
 
 type EventsTitleProps = {
   selectedCount?: number;
@@ -24,10 +24,10 @@ export default function EventsTitle({
   selectedCount: selectedCountProp,
   totalCount: totalCountProp,
 }: EventsTitleProps) {
-  const selectedCountStore = useEventsTitleStore(
+  const selectedCountStore = useEventDirectoryStore(
     (state) => state.selectedCount,
   );
-  const totalCountStore = useEventsTitleStore((state) => state.totalCount);
+  const totalCountStore = useEventDirectoryStore((state) => state.totalCount);
 
   const selectedCount = selectedCountProp ?? selectedCountStore;
   const totalCount = totalCountProp ?? totalCountStore;

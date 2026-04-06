@@ -121,11 +121,13 @@ export default memo(function EventsViewOptionsBar({
           />
         </div>
       </div>
-      <CompactPagination
-        count={pageCount}
-        page={filters.page - 1}
-        onChange={handleChangePage}
-      />
+      {pageCount && pageCount > 0 ? (
+        <CompactPagination
+          count={pageCount}
+          page={filters.page - 1}
+          onChange={handleChangePage}
+        />
+      ) : undefined}
     </div>
   );
 });

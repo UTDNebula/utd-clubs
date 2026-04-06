@@ -14,12 +14,11 @@ import { RouterOutputs } from '@src/trpc/shared';
 import { EventParamsSchemaOutput } from '@src/utils/eventFilter';
 import useDebounce from '@src/utils/useDebounce';
 import useStable from '@src/utils/useStable';
-import { EventDirectoryStates } from '../utils';
+import { useEventDirectoryStore } from '../utils';
 
 type EventDirectoryGridProps = {
   filters: EventParamsSchemaOutput;
   initialQueryData?: RouterOutputs['event']['findByFilters'];
-  onQueryFetch?: (states: EventDirectoryStates) => void;
   /**
    * @default "card"
    */
@@ -29,7 +28,6 @@ type EventDirectoryGridProps = {
 export default function EventDirectoryGrid({
   filters,
   initialQueryData,
-  onQueryFetch,
   viewLayout = 'card',
 }: EventDirectoryGridProps) {
   const api = useTRPC();
@@ -46,7 +44,7 @@ export default function EventDirectoryGrid({
         { placeholderData: keepPreviousData },
       ),
     );
-  }, [api.event.findByFilters, queryClient, debouncedFilters]);
+  }, [api.event.findByFilters, debouncedFilters, queryClient]);
 
   const query = useQuery(
     api.event.findByFilters.queryOptions(
@@ -61,27 +59,23 @@ export default function EventDirectoryGrid({
 
   // On query success
   useEffect(() => {
-    if (query.data) {
-      onQueryFetch?.({
-        pending: query.isPending,
-        count: query.data.pagination.total,
-        pageCount: query.data.pagination.totalPages,
-        fetchStatus: query.fetchStatus,
-      });
-      if (query.isError) {
-        setSnackbar(
-          SnackbarPresets.errorCustomMessage('Error!', query.error.message),
-        );
-      }
+    if (query.isSuccess && query.data) {
+      const eventDirectoryStore = useEventDirectoryStore.getState();
+
+      eventDirectoryStore.setSelectedCount(query.data.pagination.total);
+      eventDirectoryStore.setFetchStatus(query.fetchStatus);
+      eventDirectoryStore.setPageCount(query.data.pagination.totalPages);
     }
-  }, [
-    onQueryFetch,
-    query.data,
-    query.error?.message,
-    query.fetchStatus,
-    query.isError,
-    query.isPending,
-  ]);
+  }, [query.data, query.fetchStatus, query.isSuccess]);
+
+  // On query error
+  useEffect(() => {
+    if (query.isError) {
+      setSnackbar(
+        SnackbarPresets.errorCustomMessage('Error!', query.error.message),
+      );
+    }
+  }, [query.error?.message, query.isError]);
 
   const events = query.data?.data ?? initialQueryData?.data ?? [];
 

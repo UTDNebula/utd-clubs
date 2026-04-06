@@ -4,31 +4,32 @@ import { PanelProps } from '@src/components/common/Panel';
 import { EventParamsSchema } from '@src/utils/eventFilter';
 import { ParamSetter } from '@src/utils/searchParams';
 
-export type EventDirectoryStates = {
-  pending: boolean;
-  count: number;
-  pageCount: number;
-  fetchStatus: FetchStatus;
-};
-
-type EventsTitleStoreState = {
+type EventDirectoryStoreState = {
   selectedCount: number | undefined;
   totalCount: number | undefined;
+  fetchStatus: FetchStatus;
+  pageCount: number;
 };
 
-type EventsTitleStoreAction = {
+type EventDirectoryStoreAction = {
   setSelectedCount: (selectedCount: number | undefined) => void;
   setTotalCount: (totalCount: number | undefined) => void;
+  setFetchStatus: (fetchStatus: FetchStatus) => void;
+  setPageCount: (pageCount: number) => void;
 };
 
-export const useEventsTitleStore = create<
-  EventsTitleStoreState & EventsTitleStoreAction
+export const useEventDirectoryStore = create<
+  EventDirectoryStoreState & EventDirectoryStoreAction
 >((set) => ({
   selectedCount: undefined,
   totalCount: undefined,
+  fetchStatus: 'idle',
+  pageCount: 1,
   setSelectedCount: (selectedCount: number | undefined) =>
     set({ selectedCount }),
   setTotalCount: (totalCount: number | undefined) => set({ totalCount }),
+  setFetchStatus: (fetchStatus: FetchStatus) => set({ fetchStatus }),
+  setPageCount: (pageCount: number) => set({ pageCount }),
 }));
 
 export type FilterPanelBaseProps = {

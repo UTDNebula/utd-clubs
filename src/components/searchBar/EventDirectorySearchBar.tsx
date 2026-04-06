@@ -9,18 +9,20 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 import theme from '@src/utils/theme';
+import { useEventDirectoryStore } from '../events/directory/filter/utils';
 
 type EventDirectorySearchBarProps = {
   initialValue?: string;
   onChange?: (value: string) => void;
-  loading?: boolean;
 };
 
 export default function EventDirectorySearchBar({
   initialValue,
   onChange,
-  loading,
 }: EventDirectorySearchBarProps) {
+  const loading =
+    useEventDirectoryStore((state) => state.fetchStatus) === 'fetching';
+
   const [input, setInput] = useState(initialValue ?? '');
   const [focused, setFocused] = useState(false);
 
