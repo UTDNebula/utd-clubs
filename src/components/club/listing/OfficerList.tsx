@@ -90,7 +90,7 @@ export default function OfficerList({
           {!isExpanded && (
             <div className="h-16 bg-gradient-to-t from-white dark:from-neutral-800 to-transparent pointer-events-none" />
           )}
-          <div className="bg-white dark:bg-neutral-900 pt-2 border-t border-slate-300 dark:border-slate-700 z-10">
+          <div className="bg-white dark:bg-neutral-800 pt-2 border-t border-slate-300 dark:border-slate-700 z-10">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="w-full text-sm font-semibold text-royal dark:text-cornflower-300 hover:text-royalDark dark:hover:text-cornflower-400 underline decoration-transparent hover:decoration-inherit transition text-center"
