@@ -1,6 +1,7 @@
 import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import PreviewIcon from '@mui/icons-material/Preview';
+import Tooltip from '@mui/material/Tooltip';
 import { notFound } from 'next/navigation';
 import { LinkButton } from '@src/components/LinkButton';
 import ManageHeader from '@src/components/manage/ManageHeader';
@@ -41,11 +42,17 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
             <LinkButton
               href={`/directory/${slug}`}
               variant="contained"
-              className="normal-case whitespace-nowrap"
+              className="normal-case whitespace-pre"
               startIcon={<PreviewIcon />}
               size="large"
             >
               Listing
+              <Tooltip title="Refreshes Daily">
+                <span className="ml-1 text-xs text-slate-300 dark:text-slate-600">
+                  ({club.pageViews?.toLocaleString() ?? 0} views in the past
+                  week)
+                </span>
+              </Tooltip>
             </LinkButton>
           )}
         </div>
