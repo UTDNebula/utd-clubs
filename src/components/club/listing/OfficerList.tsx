@@ -88,7 +88,7 @@ export default function OfficerList({
         >
           {/* fade overlay only shows if content is taller than right side AND not expanded */}
           {!isExpanded && (
-            <div className="h-16 bg-gradient-to-t from-white dark:from-neutral-900 to-transparent pointer-events-none" />
+            <div className="h-16 bg-gradient-to-t from-white dark:from-neutral-800 to-transparent pointer-events-none" />
           )}
           <div className="bg-white dark:bg-neutral-900 pt-2 border-t border-slate-300 dark:border-slate-700 z-10">
             <button

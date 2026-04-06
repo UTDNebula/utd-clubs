@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { and, count, desc, eq, inArray, lte, ne } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, lte } from 'drizzle-orm';
 import { z } from 'zod';
 import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
@@ -41,19 +41,21 @@ export const adminRouter = createTRPCRouter({
     });
     return orgs;
   }),
-  notApprovedCount: adminProcedure.query(async ({ ctx }) => {
+  pendingClubsCount: adminProcedure.query(async ({ ctx }) => {
     const result = await ctx.db
       .select({ value: count() })
       .from(club)
-      .where(ne(club.approved, 'approved'));
+      .where(eq(club.approved, 'pending'));
     return result[0]?.value ?? null;
   }),
   deleteClub: adminProcedure
     .input(deleteSchema)
     .mutation(async ({ ctx, input }) => {
-      await callStorageAPI('DELETE', `${input.id}-profile`);
-      await callStorageAPI('DELETE', `${input.id}-banner`);
-      await ctx.db.delete(club).where(eq(club.id, input.id));
+      await Promise.all([
+        callStorageAPI('DELETE', `${input.id}-profile`),
+        callStorageAPI('DELETE', `${input.id}-banner`),
+        ctx.db.delete(club).where(eq(club.id, input.id)),
+      ]);
     }),
   updateOfficers: adminProcedure
     .input(editCollaboratorSchema)
@@ -193,12 +195,13 @@ export const adminRouter = createTRPCRouter({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Event not found' });
       }
 
-      await callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`);
-
-      await ctx.db
-        .delete(userMetadataToEvents)
-        .where(eq(userMetadataToEvents.eventId, input.id));
-      await ctx.db.delete(events).where(eq(events.id, input.id)); // only place where event is fully deleted from DB
+      await Promise.all([
+        callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`),
+        ctx.db
+          .delete(userMetadataToEvents)
+          .where(eq(userMetadataToEvents.eventId, input.id)),
+        ctx.db.delete(events).where(eq(events.id, input.id)), // only place where event is fully deleted from DB
+      ]);
 
       return { success: true };
     }),

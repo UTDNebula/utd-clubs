@@ -150,7 +150,7 @@ export default function UserInfo({ user }: UserInfoProps) {
                         }}
                         value={field.state.value}
                         label="Graduation Date"
-                        className="[&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900 w-64 grow"
+                        className="w-64 grow"
                         slotProps={{
                           actionBar: {
                             actions: ['accept'],

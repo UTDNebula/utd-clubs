@@ -1,6 +1,5 @@
 'use client';
 
-import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -26,6 +25,7 @@ interface ClubDetails {
   alias: string | null;
   description: string;
   foundingDate: Date | null;
+  clubSize: string;
   tags: string[];
   profileImage: File | null;
   bannerImage: File | null;
@@ -56,6 +56,7 @@ const Details = ({ club }: DetailsProps) => {
     alias: clubDetails?.alias ?? '',
     description: clubDetails?.description ?? '',
     foundingDate: clubDetails?.foundingDate ?? null,
+    clubSize: clubDetails?.clubSize ?? '',
     tags: clubDetails?.tags ?? [],
     profileImage: null,
     bannerImage: null,
@@ -68,7 +69,7 @@ const Details = ({ club }: DetailsProps) => {
     onSubmit: async ({ value, formApi }) => {
       // Profile image
 
-      const { profileImage, bannerImage, ...formValues } = value;
+      const { profileImage, bannerImage, clubSize, ...formValues } = value;
       let profileImageUrl, bannerImageUrl;
       const profileImageIsDirty =
         !formApi.getFieldMeta('profileImage')?.isDefaultValue;
@@ -101,6 +102,12 @@ const Details = ({ club }: DetailsProps) => {
 
       const updated = await editData.mutateAsync({
         ...formValues,
+        clubSize: (clubSize || null) as
+          | '1-10'
+          | '10-50'
+          | '50-200'
+          | '200+'
+          | null,
         bannerImage: bannerImageUrl,
         profileImage: profileImageUrl,
       });
@@ -196,53 +203,25 @@ const Details = ({ club }: DetailsProps) => {
               </form.Field>
             </div>
             <div className="flex flex-wrap gap-4">
-              <form.Field name="name">
+              <form.AppField name="name">
                 {(field) => (
-                  <TextField
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow-100 [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    label="Name"
-                  />
+                  <field.TextField label="Name" className="grow-100" required />
                 )}
-              </form.Field>
-              <form.Field name="alias">
+              </form.AppField>
+              <form.AppField name="alias">
                 {(field) => (
-                  <TextField
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="grow [&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
-                    size="small"
-                    error={!field.state.meta.isValid}
-                    helperText={
-                      !field.state.meta.isValid
-                        ? field.state.meta.errors
-                            .map((err) => err?.message)
-                            .join('. ') + '.'
-                        : undefined
-                    }
-                    label="Alias or Acronym"
-                  />
+                  <field.TextField label="Alias or Acronym" className="grow" />
                 )}
-              </form.Field>
+              </form.AppField>
+            </div>
+            <div className="flex flex-wrap gap-4">
               <form.Field name="foundingDate">
                 {(field) => (
                   <DatePicker
                     onChange={(value) => field.handleChange(value)}
                     value={field.state.value}
                     label="Date Founded"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
+                    className="grow"
                     slotProps={{
                       actionBar: {
                         actions: ['accept'],
@@ -260,44 +239,42 @@ const Details = ({ club }: DetailsProps) => {
                   />
                 )}
               </form.Field>
+              <form.AppField name="clubSize">
+                {(field) => (
+                  <field.Select
+                    label="Number of Members"
+                    className="grow"
+                    options={['1-10', '10-50', '50-200', '200+']}
+                  />
+                )}
+              </form.AppField>
             </div>
             <div className="flex flex-col gap-2">
-              <form.Field name="description">
+              <form.AppField name="description">
                 {(field) => (
-                  <TextField
-                    onChange={(e) => {
-                      field.handleChange(e.target.value);
-                    }}
-                    onBlur={field.handleBlur}
-                    value={field.state.value}
+                  <field.TextField
                     label="Description"
-                    className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+                    className="w-full"
+                    required
                     multiline
                     minRows={4}
-                    error={!field.state.meta.isValid}
                     helperText={
-                      !field.state.meta.isValid ? (
-                        field.state.meta.errors
-                          .map((err) => err?.message)
-                          .join('. ') + '.'
-                      ) : (
-                        <span>
-                          We support{' '}
-                          <a
-                            href="https://www.markdownguide.org/basic-syntax/"
-                            rel="noreferrer"
-                            target="_blank"
-                            className="text-royal dark:text-cornflower-300 underline"
-                          >
-                            Markdown
-                          </a>
-                          !
-                        </span>
-                      )
+                      <span>
+                        We support{' '}
+                        <a
+                          href="https://www.markdownguide.org/basic-syntax/"
+                          rel="noreferrer"
+                          target="_blank"
+                          className="text-royal dark:text-cornflower-300 underline"
+                        >
+                          Markdown
+                        </a>
+                        !
+                      </span>
                     }
                   />
                 )}
-              </form.Field>
+              </form.AppField>
             </div>
             <form.Field name="tags">
               {(field) => (

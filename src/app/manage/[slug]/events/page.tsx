@@ -20,12 +20,11 @@ export default async function Page({
   params: Promise<{ slug: string }>;
   searchParams?: Promise<SearchParams>;
 }) {
-  const { slug } = await params;
-  const sp = (await searchParams) ?? {};
+  const [{ slug }, sp] = await Promise.all([params, searchParams]);
 
-  const page = Number(sp.page) || 1;
-  const pageSize = Number(sp.pageSize) || 12;
-  const includePast = sp.includePast === 'true';
+  const page = Number(sp?.page) || 1;
+  const pageSize = Number(sp?.pageSize) || 12;
+  const includePast = sp?.includePast === 'true';
   const now = new Date();
 
   const club = await api.club.bySlug({ slug });
