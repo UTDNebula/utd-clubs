@@ -288,15 +288,22 @@ export const clubRouter = createTRPCRouter({
             eq(userMetadataToClubs.clubId, clubId),
           ),
       });
-      if (dataExists && dataExists.memberType == 'Member') {
-        await ctx.db
-          .delete(userMetadataToClubs)
-          .where(
-            and(
-              eq(userMetadataToClubs.userId, joinUserId),
-              eq(userMetadataToClubs.clubId, clubId),
-            ),
-          );
+      if (dataExists) {
+        if (dataExists.memberType !== 'President') {
+          await ctx.db
+            .delete(userMetadataToClubs)
+            .where(
+              and(
+                eq(userMetadataToClubs.userId, joinUserId),
+                eq(userMetadataToClubs.clubId, clubId),
+              ),
+            );
+        } else {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Cannot remove yourself because you are an admin',
+          });
+        }
       } else {
         await ctx.db
           .insert(userMetadataToClubs)
