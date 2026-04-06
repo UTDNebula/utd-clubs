@@ -88,7 +88,7 @@ export function ContactEmailCell(params: GridRenderCellParams) {
   return (
     <div className="flex gap-1 items-center h-full">
       <Tooltip title={contactEmailsVisible ? 'Hide' : 'Show'}>
-        <IconButton size="small" onClick={handleOnClick}>
+        <IconButton size="small" onClick={handleOnClick} aria-label="Toggle email visibility">
           <div className="flex justify-center items-center text-slate-600 dark:text-slate-400 h-4 *:w-4 *:h-4">
             {contactEmailsVisible ? (
               <VisibilityOutlinedIcon />
@@ -168,6 +168,7 @@ export function ActionsCell(
           {/* This span is required to ensure the error tooltip shows when the IconButton is disabled */}
           <span>
             <IconButton
+              aria-label="Remove member"
               onClick={() => {
                 memberListDeletionState?.deleteSourceModel.setFromRowId(
                   props.id,
