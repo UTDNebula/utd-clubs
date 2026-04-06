@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Panel from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import MemberRoleChip from '@src/components/manage/MemberRoleChip';
 import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -83,9 +84,7 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
                 );
 
                 joinedClubs.splice(removeIndex, 1);
-                setSnackbar(
-                  SnackbarPresets.savedCustom('Left club!'),
-                );
+                setSnackbar(SnackbarPresets.savedCustom('Left club!'));
               },
               onError: (e) => {
                 setSnackbar(
@@ -94,6 +93,7 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
                     e.message,
                   ),
                 );
+              },
             },
           );
         }}
