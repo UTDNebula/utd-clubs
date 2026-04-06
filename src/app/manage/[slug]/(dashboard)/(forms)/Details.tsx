@@ -4,10 +4,10 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
+import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
-import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -278,7 +278,8 @@ const Details = ({ club }: DetailsProps) => {
             </div>
             <form.Field name="tags">
               {(field) => (
-                <ClubTagEdit
+                <ClubTagAutocomplete
+                  allowAddingOptions
                   value={field.state.value}
                   onChange={(value) => {
                     field.handleChange(value);

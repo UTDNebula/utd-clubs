@@ -1,7 +1,7 @@
 import { memo } from 'react';
+import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
 import Panel from '@src/components/common/Panel';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
-import ClubTagFilter from '../ClubTagFilter';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 export type TagsPanelFields = Pick<EventFiltersSchema, 'tags'>;
@@ -25,7 +25,7 @@ export default memo(function TagsPanel(
       }
       {...panelProps(props.backgroundHover)}
     >
-      <ClubTagFilter
+      <ClubTagAutocomplete
         value={tags}
         onChange={(newValue) => {
           setEventsParams((params) => {
