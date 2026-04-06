@@ -106,6 +106,8 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
     joinedClub?.memberType === 'Officer' ||
     joinedClub?.memberType === 'President';
 
+  const isAdmin = joinedClub?.memberType === 'President';
+
   return (
     <div className="flex flex-wrap items-center gap-2 p-2 min-h-16 max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800 transition-colors rounded-lg">
       <Tooltip title="View club directory page" disableInteractive>
@@ -176,7 +178,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
         )}
         <Tooltip
           title={
-            canManage ? (
+            isAdmin ? (
               <div className="text-center">
                 You cannot unfollow a club you manage
                 <br />
@@ -192,7 +194,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
             <IconButton
               aria-label="unfollow"
               onClick={onLeave}
-              disabled={canManage}
+              disabled={isAdmin}
             >
               <DeleteIcon />
             </IconButton>
