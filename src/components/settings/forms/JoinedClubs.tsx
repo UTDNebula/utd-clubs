@@ -57,7 +57,7 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
         title={`Unfollow ${leaveClub?.club.name}?`}
         contentText={
           <>
-            You followed this club
+            You have been following this club
             {leaveClub?.joinedAt
               ? ` ${formatDistanceStrict(leaveClub.joinedAt, new Date(), { addSuffix: true })}`
               : ''}

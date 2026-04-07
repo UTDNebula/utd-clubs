@@ -1,43 +1,42 @@
 'use client';
 
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { z } from 'zod';
 import Panel from '@src/components/common/Panel';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
+import { useAppForm } from '@src/utils/form';
 
 type MemberSettingsProps = {
   club: SelectClub;
 };
 
-const policyLabels: Record<string, string> = {
-  open: 'Anyone can join',
-  request: 'Request to join',
-  closed: 'No new members',
+const memberSettingsSchema = z.object({
+  policy: z.enum(['open', 'request', 'closed']),
+});
+
+const policyOptions = [
+  { value: 'open', label: 'Anyone can join' },
+  { value: 'request', label: 'Request to join' },
+  { value: 'closed', label: 'No new members' },
+];
+
+const policyDescriptions: Record<string, string> = {
+  open: 'Any follower can become a member instantly with no approval required.',
+  request:
+    'Followers can submit a request to join. Officers must approve or deny each request before membership is granted.',
+  closed:
+    'New memberships are not accepted. Existing members are unaffected, but followers cannot join or request to join.',
 };
 
 export default function MemberSettings({ club }: MemberSettingsProps) {
   const api = useTRPC();
-  const [policy, setPolicy] = useState(club.membershipPolicy);
 
   const updatePolicy = useMutation(
     api.club.edit.updateMembershipPolicy.mutationOptions({
       onSuccess: () => {
-        setSnackbar({
-          message: 'Membership policy updated!',
-          type: 'success',
-          autoHideDuration: true,
-          fitContent: true,
-          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
-        });
+        setSnackbar(SnackbarPresets.savedName('membership policy'));
       },
       onError: (error) => {
         setSnackbar(
@@ -50,50 +49,60 @@ export default function MemberSettings({ club }: MemberSettingsProps) {
     }),
   );
 
-  const hasChanges = policy !== club.membershipPolicy;
+  const form = useAppForm({
+    defaultValues: {
+      policy: club.membershipPolicy,
+    },
+    validators: {
+      onChange: memberSettingsSchema,
+    },
+    onSubmit: async ({ value, formApi }) => {
+      await updatePolicy.mutateAsync({ clubId: club.id, policy: value.policy });
+      formApi.reset({ policy: value.policy });
+    },
+  });
 
   return (
-    <Panel heading="Member Settings">
-      <div className="flex flex-col gap-4 ml-2">
-        <FormControl className="max-w-xs">
-          <InputLabel id="membership-policy-label">
-            Membership Policy
-          </InputLabel>
-          <Select
-            labelId="membership-policy-label"
-            value={policy}
-            label="Membership Policy"
-            onChange={(e) =>
-              setPolicy(e.target.value as 'open' | 'request' | 'closed')
-            }
-          >
-            {Object.entries(policyLabels).map(([value, label]) => (
-              <MenuItem key={value} value={value}>
-                {label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <div className="flex gap-2">
-          <Button
-            variant="contained"
-            className="normal-case"
-            disabled={!hasChanges || updatePolicy.isPending}
-            loading={updatePolicy.isPending}
-            onClick={() => updatePolicy.mutate({ clubId: club.id, policy })}
-          >
-            Save
-          </Button>
-          <Button
-            variant="outlined"
-            className="normal-case"
-            disabled={!hasChanges || updatePolicy.isPending}
-            onClick={() => setPolicy(club.membershipPolicy)}
-          >
-            Discard
-          </Button>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+    >
+      <Panel
+        heading="Member Settings"
+        description={
+          <p>
+            Control how new members can join your club. This setting affects
+            what options followers see when viewing your club page.
+          </p>
+        }
+      >
+        <div className="flex flex-col gap-4 m-2 mt-0">
+          <form.AppField name="policy">
+            {(field) => (
+              <div className="flex flex-col gap-1">
+                <field.Select
+                  label="Membership Policy"
+                  options={policyOptions}
+                />
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 ml-1">
+                  {policyDescriptions[field.state.value]}
+                </p>
+              </div>
+            )}
+          </form.AppField>
         </div>
-      </div>
-    </Panel>
+        <div className="flex flex-wrap justify-end items-center gap-2">
+          <form.AppForm>
+            <form.ResetButton />
+          </form.AppForm>
+          <form.AppForm>
+            <form.SubmitButton />
+          </form.AppForm>
+        </div>
+      </Panel>
+    </form>
   );
 }
