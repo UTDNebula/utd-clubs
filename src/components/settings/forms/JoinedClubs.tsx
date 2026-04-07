@@ -156,7 +156,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
       <div className="flex items-center gap-2 grow justify-end">
         {canManage && (
           <Chip
-            className="h-fit rounded-full bg-white dark:bg-neutral-900 border-1 border-neutral-400 dark:border-neutral-600 [&>.MuiChip-label]:inline-block [&>.MuiChip-label]:p-1.5"
+            className="h-fit rounded-full bg-white dark:bg-neutral-800 border-1 border-neutral-400 dark:border-neutral-600 [&>.MuiChip-label]:inline-block [&>.MuiChip-label]:p-1.5"
             label={
               <div className="flex gap-2">
                 <MemberRoleChip memberType={joinedClub.memberType} />

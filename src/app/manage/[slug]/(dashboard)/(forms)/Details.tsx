@@ -4,15 +4,17 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
+import type z from 'zod';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import { ClubSchoolEdit } from '@src/components/manage/form/ClubSchoolEdit';
 import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import FormImage from '@src/components/manage/form/FormImage';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
-import { editClubFormSchema } from '@src/utils/formSchemas';
+import { editClubFormSchema, schools } from '@src/utils/formSchemas';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
 
 type DetailsProps = {
@@ -25,9 +27,11 @@ interface ClubDetails {
   alias: string | null;
   description: string;
   foundingDate: Date | null;
+  clubSize: string;
   tags: string[];
   profileImage: File | null;
   bannerImage: File | null;
+  schools: z.infer<typeof schools>;
 }
 
 const Details = ({ club }: DetailsProps) => {
@@ -55,9 +59,11 @@ const Details = ({ club }: DetailsProps) => {
     alias: clubDetails?.alias ?? '',
     description: clubDetails?.description ?? '',
     foundingDate: clubDetails?.foundingDate ?? null,
+    clubSize: clubDetails?.clubSize ?? '',
     tags: clubDetails?.tags ?? [],
     profileImage: null,
     bannerImage: null,
+    schools: clubDetails?.schools ?? [],
   };
 
   const [aliasChangedPopupOpen, setAliasChangedPopupOpen] = useState(false);
@@ -67,7 +73,7 @@ const Details = ({ club }: DetailsProps) => {
     onSubmit: async ({ value, formApi }) => {
       // Profile image
 
-      const { profileImage, bannerImage, ...formValues } = value;
+      const { profileImage, bannerImage, clubSize, ...formValues } = value;
       let profileImageUrl, bannerImageUrl;
       const profileImageIsDirty =
         !formApi.getFieldMeta('profileImage')?.isDefaultValue;
@@ -82,7 +88,6 @@ const Details = ({ club }: DetailsProps) => {
           profileImageUrl = url;
         }
       }
-
       // Banner image
       const bannerImageIsDirty =
         !formApi.getFieldMeta('bannerImage')?.isDefaultValue;
@@ -100,12 +105,19 @@ const Details = ({ club }: DetailsProps) => {
 
       const updated = await editData.mutateAsync({
         ...formValues,
+        clubSize: (clubSize || null) as
+          | '1-10'
+          | '10-50'
+          | '50-200'
+          | '200+'
+          | null,
         bannerImage: bannerImageUrl,
         profileImage: profileImageUrl,
       });
       if (updated) {
         const aliasIsDirty = !formApi.getFieldMeta('alias')?.isDefaultValue;
         // If alias changed and we haven't confirmed yet, show popup
+
         if (aliasIsDirty) {
           setAliasChangedPopupOpen(true);
         }
@@ -205,13 +217,15 @@ const Details = ({ club }: DetailsProps) => {
                   <field.TextField label="Alias or Acronym" className="grow" />
                 )}
               </form.AppField>
+            </div>
+            <div className="flex flex-wrap gap-4">
               <form.Field name="foundingDate">
                 {(field) => (
                   <DatePicker
                     onChange={(value) => field.handleChange(value)}
                     value={field.state.value}
                     label="Date Founded"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
+                    className="grow"
                     slotProps={{
                       actionBar: {
                         actions: ['accept'],
@@ -229,7 +243,35 @@ const Details = ({ club }: DetailsProps) => {
                   />
                 )}
               </form.Field>
+              <form.AppField name="clubSize">
+                {(field) => (
+                  <field.Select
+                    label="Number of Members"
+                    className="grow"
+                    options={['1-10', '10-50', '50-200', '200+']}
+                  />
+                )}
+              </form.AppField>
             </div>
+            <form.Field name="schools">
+              {(field) => (
+                <ClubSchoolEdit
+                  value={field.state.value}
+                  onChange={(value) => {
+                    field.handleChange(value as z.infer<typeof schools>);
+                  }}
+                  onBlur={field.handleBlur}
+                  error={!field.state.meta.isValid}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
+                />
+              )}
+            </form.Field>
             <div className="flex flex-col gap-2">
               <form.AppField name="description">
                 {(field) => (
@@ -299,11 +341,13 @@ const Details = ({ club }: DetailsProps) => {
         onConfirm={async () => {
           setAliasChangedPopupOpen(false);
           // scroll to the Slug component
+
           const element = document.getElementById('form-slug');
 
           if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             // highlight the component
+
             element.classList.add(
               'ring-2',
               'ring-royal',

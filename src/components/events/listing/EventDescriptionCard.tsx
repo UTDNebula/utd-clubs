@@ -30,6 +30,7 @@ export default function EventDescriptionCard({
         {showImageTrigger && (
           <button
             onClick={() => setOpen(true)}
+            aria-label="View full size event poster"
             className={`w-fit max-h-64 mx-auto mb-6 cursor-zoom-in ${
               imgLoaded ? 'block' : 'hidden' // hide button until loaded
             }`}
@@ -70,6 +71,7 @@ export default function EventDescriptionCard({
         >
           <IconButton
             onClick={() => setOpen(false)}
+            aria-label="Close"
             className="absolute top-4 right-4 text-white z-10"
           >
             <CloseIcon />

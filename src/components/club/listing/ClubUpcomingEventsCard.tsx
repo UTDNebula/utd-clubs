@@ -27,7 +27,7 @@ export default function ClubUpcomingEventsCard({
             <div key={event.id} className="shrink-0">
               <EventCard
                 event={event}
-                className="bg-white dark:bg-neutral-800"
+                className="bg-white dark:bg-neutral-700"
               />
             </div>
           ))

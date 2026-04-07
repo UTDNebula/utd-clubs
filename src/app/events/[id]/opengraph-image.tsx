@@ -1,3 +1,10 @@
+import {
+  format,
+  formatDuration,
+  intervalToDuration,
+  isSameDay,
+  type FormatDistanceToken,
+} from 'date-fns';
 import { and, eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
@@ -5,40 +12,68 @@ import { db } from '@src/server/db';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
 
 export const runtime = 'edge';
-export const alt = 'Club Details';
+export const alt = 'Event Details';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-export default async function Image({ params }: { params: { slug: string } }) {
-  const { slug } = await params;
+const distanceTokenUnits: Partial<Record<FormatDistanceToken, string>> = {
+  xSeconds: 's',
+  xMinutes: 'm',
+  xHours: 'h',
+  xDays: 'd',
+  xMonths: 'mo',
+  xYears: 'y',
+};
 
-  const [
-    clubData,
-    gradientBuffer,
-    people_alt_icon_buffer,
-    baiJamjureeBuffer,
-    interBuffer,
-  ] = await Promise.all([
-    db.query.club.findFirst({
-      where: (club) => and(eq(club.slug, slug), eq(club.approved, 'approved')),
-      with: {
-        userMetadataToClubs: {
-          columns: { userId: true },
-        },
+function formatEventDate(startTime: Date, endTime: Date): string {
+  const dateStr = format(startTime, 'EEE, LLLL d, yyyy @ h:mm a');
+
+  if (startTime.getTime() === endTime.getTime()) {
+    return dateStr;
+  }
+
+  const duration = formatDuration(
+    intervalToDuration({ start: startTime, end: endTime }),
+    {
+      locale: {
+        formatDistance: (token, count) =>
+          `${count}${distanceTokenUnits[token] ?? ''}`,
       },
-    }),
-    fetch(
-      new URL('../../../../public/images/landingGradient.png', import.meta.url),
-    ).then((res) => res.arrayBuffer()),
-    fetch(
-      new URL('../../../../public/icons/people_alt.png', import.meta.url),
-    ).then((res) => res.arrayBuffer()),
-    loadGoogleFont('Bai Jamjuree', 700),
-    loadGoogleFont('Inter', 600),
-  ]);
+    },
+  );
+
+  const endStr = isSameDay(startTime, endTime)
+    ? format(endTime, 'h:mm a')
+    : format(endTime, 'EEE, LLLL d, yyyy @ h:mm a');
+
+  return `${dateStr} · ${duration} (till ${endStr})`;
+}
+
+export default async function Image({ params }: { params: { id: string } }) {
+  const { id } = await params;
+
+  const [eventData, gradientBuffer, baiJamjureeBuffer, interBuffer] =
+    await Promise.all([
+      db.query.events.findFirst({
+        where: (events) =>
+          and(eq(events.id, id), eq(events.status, 'approved')),
+        with: {
+          club: {
+            columns: { name: true, profileImage: true, updatedAt: true },
+          },
+        },
+      }),
+      fetch(
+        new URL(
+          '../../../../public/images/landingGradient.png',
+          import.meta.url,
+        ),
+      ).then((res) => res.arrayBuffer()),
+      loadGoogleFont('Bai Jamjuree', 700),
+      loadGoogleFont('Inter', 600),
+    ]);
 
   const background = (
-    // eslint-disable-next-line @next/next/no-img-element
     <img
       // @ts-expect-error ArrayBuffers are allowed as an img source
       src={gradientBuffer}
@@ -54,7 +89,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
     />
   );
 
-  if (!clubData) {
+  if (!eventData) {
     return new ImageResponse(
       <div
         style={{
@@ -69,13 +104,14 @@ export default async function Image({ params }: { params: { slug: string } }) {
         }}
       >
         {background}
-        <h1>Club Not Found</h1>
+        <h1>Event Not Found</h1>
       </div>,
       { ...size },
     );
   }
 
-  const hasImage = !!clubData.profileImage;
+  const hasImage = !!eventData.image;
+  const dateStr = formatEventDate(eventData.startTime, eventData.endTime);
 
   return new ImageResponse(
     <div
@@ -92,7 +128,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
     >
       {background}
 
-      {/* Left Side (renders if there's an image) */}
+      {/* Left Side (renders if there's an event image) */}
       {hasImage && (
         <div
           style={{ display: 'flex', width: '45%', justifyContent: 'center' }}
@@ -110,13 +146,12 @@ export default async function Image({ params }: { params: { slug: string } }) {
               overflow: 'hidden',
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={addVersionToImage(
-                clubData.profileImage!,
-                clubData.updatedAt?.getTime(),
+                eventData.image!,
+                eventData.updatedAt.getTime(),
               )}
-              alt={clubData.name + ' logo'}
+              alt={eventData.name + ' event image'}
               style={{
                 width: '100%',
                 objectFit: 'contain',
@@ -140,9 +175,9 @@ export default async function Image({ params }: { params: { slug: string } }) {
         <h1
           style={{
             fontFamily: 'Bai Jamjuree',
-            fontSize: '60px',
+            fontSize: '56px',
             fontWeight: 'bold',
-            margin: '0 0 20px 0',
+            margin: '0 0 16px 0',
             lineHeight: 1.1,
             textShadow: '0 0 16px rgba(0,0,0,0.4)',
             maxWidth: hasImage ? '55%' : '90%',
@@ -150,11 +185,43 @@ export default async function Image({ params }: { params: { slug: string } }) {
             wordBreak: 'break-word',
             overflowWrap: 'anywhere',
             overflow: 'hidden',
-            maxHeight: '270px',
+            maxHeight: '200px',
           }}
         >
-          {clubData.name}
+          {eventData.name}
         </h1>
+
+        {/* Date & Time */}
+        <div
+          style={{
+            display: 'flex',
+            fontFamily: 'Inter',
+            fontSize: '24px',
+            margin: '0 0 12px 0',
+            textShadow: '0 0 4px rgba(0,0,0,0.4)',
+            maxWidth: hasImage ? '55%' : '90%',
+            textAlign: hasImage ? 'left' : 'center',
+          }}
+        >
+          {dateStr}
+        </div>
+
+        {/* Location */}
+        {eventData.location && (
+          <div
+            style={{
+              display: 'flex',
+              fontFamily: 'Inter',
+              fontSize: '22px',
+              margin: '0 0 16px 0',
+              textShadow: '0 0 4px rgba(0,0,0,0.4)',
+              maxWidth: hasImage ? '55%' : '90%',
+              textAlign: hasImage ? 'left' : 'center',
+            }}
+          >
+            {eventData.location}
+          </div>
+        )}
 
         {/* Details Container */}
         <div
@@ -165,62 +232,58 @@ export default async function Image({ params }: { params: { slug: string } }) {
             alignItems: 'center',
             width: '100%',
             fontFamily: 'Inter',
-            fontSize: '25px',
-            margin: '0 0 20px 0',
+            fontSize: '22px',
+            margin: '0 0 16px 0',
             gap: '12px',
           }}
         >
-          {/* Number of members */}
-          {clubData.userMetadataToClubs.length > 1 && (
+          {/* Club name */}
+          {eventData.club.profileImage && (
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'row',
-                gap: '12px',
+                position: 'relative',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 32,
+                height: 32,
+                borderRadius: '50%',
+                overflow: 'hidden',
               }}
             >
-              <div
+              <img
+                src={addVersionToImage(
+                  eventData.club.profileImage,
+                  eventData.club.updatedAt?.getTime(),
+                )}
+                alt={eventData.club.name + ' logo'}
                 style={{
-                  display: 'flex',
-                  position: 'relative',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 35,
-                  height: 35,
-                }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  // @ts-expect-error ArrayBuffers are allowed
-                  src={people_alt_icon_buffer}
-                  alt="people icon"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  textShadow: '0 0 4px rgba(0,0,0,0.4)',
-                }}
-              >
-                {clubData.userMetadataToClubs.length} followers
-              </div>
-              {/* Divider */}
-              <div
-                style={{
-                  width: '2px',
-                  height: '25px',
-                  backgroundColor: '#d4d4d4',
-                  margin: '0 10px 0 9px',
-                  alignSelf: 'center',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
                 }}
               />
             </div>
           )}
+          <div
+            style={{
+              display: 'flex',
+              textShadow: '0 0 4px rgba(0,0,0,0.4)',
+            }}
+          >
+            {eventData.club.name}
+          </div>
+
+          {/* Divider */}
+          <div
+            style={{
+              width: '2px',
+              height: '25px',
+              backgroundColor: '#d4d4d4',
+              margin: '0 10px 0 9px',
+              alignSelf: 'center',
+            }}
+          />
 
           {/* Nebula Logo */}
           <div
@@ -250,40 +313,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
             UTD CLUBS
           </div>
         </div>
-
-        {clubData.tags && (
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '10px',
-              justifyContent: hasImage ? 'flex-start' : 'center',
-              width: hasImage ? '650px' : '900px', // explicit width helps Satori calculate wrapping
-              maxHeight: '114px',
-              overflow: 'hidden',
-            }}
-          >
-            {clubData.tags.map((tag, index) => (
-              <div
-                key={index}
-                style={{
-                  backgroundColor: '#d3caff',
-                  color: '#573dff',
-                  padding: '12px 20px',
-                  borderRadius: '50px',
-                  fontSize: '20px',
-                  fontFamily: 'Inter',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {tag}
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>,
     {

@@ -268,7 +268,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                     onChange={(value) => value && field.handleChange(value)}
                     value={field.state.value}
                     label="Start"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
+                    className="grow"
                     slotProps={{
                       actionBar: {
                         actions: ['accept'],
@@ -292,7 +292,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                     onChange={(value) => value && field.handleChange(value)}
                     value={field.state.value}
                     label="End"
-                    className="grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900"
+                    className="grow"
                     slotProps={{
                       actionBar: {
                         actions: ['accept'],
@@ -333,6 +333,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             status: 'approved',
             updatedAt: new Date(),
             createdAt: new Date(),
+            pageViews: 0,
             recurrence: '',
             recurenceId: '',
             google: false,

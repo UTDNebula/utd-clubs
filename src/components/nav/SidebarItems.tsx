@@ -26,7 +26,7 @@ const SidebarItems = ({
 
   return (
     <Link
-      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white dark:bg-neutral-900 shadow-md dark:shadow-lg' : ''} hover:bg-royal/10 dark:hover:bg-cornflower-300/10`}
+      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white dark:bg-neutral-800 shadow-md dark:shadow-lg' : ''} hover:bg-royal/10 dark:hover:bg-neutral-700`}
       href={route}
       target={route.startsWith('http') ? '_blank' : ''}
     >

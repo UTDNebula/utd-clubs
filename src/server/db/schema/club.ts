@@ -24,6 +24,23 @@ export const approvedEnum = pgEnum('approved_enum', [
   'deleted',
 ]);
 
+export const schoolEnum = pgEnum('school_enum', [
+  'Harry W. Bass Jr. School of Arts, Humanities, and Technology',
+  'School of Behavioral and Brain Sciences',
+  'School of Economic, Political and Policy Sciences',
+  'Erik Jonsson School of Engineering and Computer Science',
+  'School of Interdisciplinary Studies',
+  'Naveen Jindal School of Management',
+  'School of Natural Sciences and Mathematics',
+]);
+
+export const clubSizeEnum = pgEnum('club_size', [
+  '1-10',
+  '10-50',
+  '50-200',
+  '200+',
+]);
+
 export const club = pgTable(
   'club',
   {
@@ -52,10 +69,16 @@ export const club = pgTable(
     calendarSyncToken: text('calendar_sync_token'),
     calendarWebhookId: text('calendar_webhook_id'),
     calendarWebHookExpiration: timestamp('calendar_webhook_expiration'),
+    clubSize: clubSizeEnum('club_size'),
     calendarGoogleAccountId: text('calendarGoogleAccountId').references(
       () => user.id,
       { onDelete: 'set null' },
     ),
+    // Changed from single school enum to an array of school enums
+    schools: schoolEnum()
+      .array()
+      .default(sql`'{}'::school_enum[]`)
+      .notNull(),
   },
   (t) => [
     index('club_search_idx')

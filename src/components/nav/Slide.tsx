@@ -27,6 +27,7 @@ const NewSidebar = ({
         onClick={() => setOpen(true)}
         className={`z-50 ${homepage ? ' drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
         size="large"
+        aria-label="Open menu"
       >
         <Badge badgeContent={pendingClubsCount} color="primary">
           <MenuIcon
@@ -61,6 +62,7 @@ const NewSidebar = ({
         <IconButton
           onClick={() => setOpen(false)}
           className="absolute top-4 right-4"
+          aria-label="Close menu"
         >
           <CloseIcon />
         </IconButton>
