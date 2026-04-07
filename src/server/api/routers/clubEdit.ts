@@ -126,6 +126,7 @@ export const clubEditRouter = createTRPCRouter({
           foundingDate: input.foundingDate,
           clubSize: input.clubSize,
           updatedAt: new Date(),
+          schools: input.schools,
         })
         .where(eq(club.id, input.id))
         .returning();
@@ -563,9 +564,11 @@ export const clubEditRouter = createTRPCRouter({
       const isPresident = await isUserPresident(ctx.session.user.id, input.id);
       if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
-      await callStorageAPI('DELETE', `${input.id}-profile`);
-      await callStorageAPI('DELETE', `${input.id}-banner`);
-      await ctx.db.delete(club).where(eq(club.id, input.id));
+      await Promise.all([
+        callStorageAPI('DELETE', `${input.id}-profile`),
+        callStorageAPI('DELETE', `${input.id}-banner`),
+        ctx.db.delete(club).where(eq(club.id, input.id)),
+      ]);
     }),
   markDeleted: protectedProcedure
     .input(deleteSchema)

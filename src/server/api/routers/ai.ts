@@ -65,22 +65,26 @@ export const aiRouter = createTRPCRouter({
         }
       }
 
-      // Get clubs the user has joined
-      const joined = await ctx.db.query.userMetadata.findFirst({
-        where: eq(userMetadata.id, ctx.session.user.id),
-        with: {
-          clubs: true,
-        },
-      });
-
-      // Get all clubs
-      const clubs = (
-        await ctx.db
+      const [joined, allClubs] = await Promise.all([
+        // Get clubs the user has joined
+        ctx.db.query.userMetadata.findFirst({
+          where: eq(userMetadata.id, ctx.session.user.id),
+          with: {
+            clubs: true,
+          },
+        }),
+        // Get all clubs
+        ctx.db
           .select()
           .from(club)
           .orderBy(club.name)
-          .where(eq(club.approved, 'approved'))
-      ).filter((club) => !joined?.clubs.find((c) => c.clubId == club.id)); // filter out clubs the user is in
+          .where(eq(club.approved, 'approved')),
+      ]);
+
+      // Filter out clubs the user is in
+      const clubs = allClubs.filter(
+        (club) => !joined?.clubs.find((c) => c.clubId == club.id),
+      );
 
       // Shuffles clubs
       // To avoid any bias toward clubs earlier in the list
@@ -141,27 +145,29 @@ Maintain strict formatting:
         response.text.replaceAll('```json', '').replaceAll('```', ''),
       ) as ClubMatchResults;
 
-      //Save to profile
-      await ctx.db
-        .insert(userAiCache)
-        .values({
-          id: ctx.session.user.id,
-          clubMatch: result,
-          responses: input,
-        })
-        .onConflictDoUpdate({
-          target: userAiCache.id,
-          set: {
+      await Promise.all([
+        //Save to profile
+        ctx.db
+          .insert(userAiCache)
+          .values({
+            id: ctx.session.user.id,
             clubMatch: result,
             responses: input,
-          },
-        });
-      //Save to profile
-      await ctx.db
-        .update(userMetadata)
-        .set({
-          major: input.major,
-        })
-        .where(eq(userMetadata.id, ctx.session.user.id));
+          })
+          .onConflictDoUpdate({
+            target: userAiCache.id,
+            set: {
+              clubMatch: result,
+              responses: input,
+            },
+          }),
+        //Save to profile
+        ctx.db
+          .update(userMetadata)
+          .set({
+            major: input.major,
+          })
+          .where(eq(userMetadata.id, ctx.session.user.id)),
+      ]);
     }),
 });

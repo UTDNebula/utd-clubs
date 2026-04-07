@@ -25,9 +25,6 @@ const Community = async ({
 }: {
   searchParams?: Promise<SearchParams>;
 }) => {
-  const sp = (await searchParams) ?? {};
-  const page = Number(sp.page) || 1;
-  const pageSize = Number(sp.pageSize) || 12;
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
@@ -47,6 +44,11 @@ const Community = async ({
       </>
     );
   }
+
+  const sp = (await searchParams) ?? {};
+  const page = Number(sp.page) || 1;
+  const pageSize = Number(sp.pageSize) || 12;
+
   return (
     <>
       <Header />
