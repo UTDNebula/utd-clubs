@@ -29,7 +29,7 @@ export default function MemberSettings({ club }: MemberSettingsProps) {
   const [policy, setPolicy] = useState(club.membershipPolicy);
 
   const updatePolicy = useMutation(
-    api.club.updateMembershipPolicy.mutationOptions({
+    api.club.edit.updateMembershipPolicy.mutationOptions({
       onSuccess: () => {
         setSnackbar({
           message: 'Membership policy updated!',
@@ -74,7 +74,7 @@ export default function MemberSettings({ club }: MemberSettingsProps) {
             ))}
           </Select>
         </FormControl>
-        <div>
+        <div className="flex gap-2">
           <Button
             variant="contained"
             className="normal-case"
@@ -83,6 +83,14 @@ export default function MemberSettings({ club }: MemberSettingsProps) {
             onClick={() => updatePolicy.mutate({ clubId: club.id, policy })}
           >
             Save
+          </Button>
+          <Button
+            variant="outlined"
+            className="normal-case"
+            disabled={!hasChanges || updatePolicy.isPending}
+            onClick={() => setPolicy(club.membershipPolicy)}
+          >
+            Discard
           </Button>
         </div>
       </div>

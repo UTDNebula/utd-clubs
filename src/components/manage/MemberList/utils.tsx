@@ -26,7 +26,7 @@ import {
 export const defaultUserSort = (
   a: SelectUserMetadataToClubsWithUserMetadataWithUser,
   b: SelectUserMetadataToClubsWithUserMetadataWithUser,
-) => b.joinedAt.getTime() - a.joinedAt.getTime();
+) => (b.joinedAt?.getTime() ?? 0) - (a.joinedAt?.getTime() ?? 0);
 
 /**
  * Wrapper function for {@linkcode formatListString()} that takes in a list of users and returns the users' first names formatted as a list.

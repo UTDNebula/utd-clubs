@@ -114,6 +114,7 @@ export const adminRouter = createTRPCRouter({
             where: inArray(userMetadataToClubs.memberType, [
               'Member',
               'Follower',
+              'Requested',
             ]),
           });
       }

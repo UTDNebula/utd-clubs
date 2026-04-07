@@ -593,6 +593,24 @@ export const clubEditRouter = createTRPCRouter({
         })
         .where(eq(club.id, input.id));
     }),
+  updateMembershipPolicy: protectedProcedure
+    .input(
+      z.object({
+        clubId: z.string(),
+        policy: z.enum(['open', 'request', 'closed']),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
+      if (!isOfficer) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+      }
+      await ctx.db
+        .update(club)
+        .set({ membershipPolicy: input.policy })
+        .where(eq(club.id, input.clubId));
+      return { success: true };
+    }),
   removeMembers: protectedProcedure
     .input(removeMembersSchema)
     .mutation(async ({ input, ctx }) => {

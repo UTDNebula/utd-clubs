@@ -55,7 +55,7 @@ export const userMetadataToClubs = pgTable(
     memberType: clubRoleEnum('member_type')
       .$default(() => 'Follower')
       .notNull(),
-    joinedAt: timestamp('joined_at').defaultNow().notNull(),
+    joinedAt: timestamp('joined_at'),
   },
   (t) => [primaryKey({ columns: [t.userId, t.clubId] })],
 );

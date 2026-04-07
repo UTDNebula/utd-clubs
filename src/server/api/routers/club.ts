@@ -307,7 +307,6 @@ export const clubRouter = createTRPCRouter({
           userId: joinUserId,
           clubId,
           memberType: 'Follower',
-          joinedAt: new Date(),
         });
       }
       return dataExists;
@@ -332,7 +331,6 @@ export const clubRouter = createTRPCRouter({
         userId,
         clubId: input.clubId,
         memberType: 'Follower',
-        joinedAt: new Date(),
       });
       return { memberType: 'Follower' as const };
     }),
@@ -382,7 +380,7 @@ export const clubRouter = createTRPCRouter({
       }
       await ctx.db
         .update(userMetadataToClubs)
-        .set({ memberType: 'Member' })
+        .set({ memberType: 'Member', joinedAt: new Date() })
         .where(
           and(
             eq(userMetadataToClubs.userId, userId),
@@ -483,30 +481,6 @@ export const clubRouter = createTRPCRouter({
             ]),
           ),
         );
-      return { success: true };
-    }),
-  updateMembershipPolicy: protectedProcedure
-    .input(
-      z.object({
-        clubId: z.string(),
-        policy: z.enum(['open', 'request', 'closed']),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
-        where: and(
-          eq(userMetadataToClubs.clubId, input.clubId),
-          eq(userMetadataToClubs.userId, ctx.session.user.id),
-          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
-        ),
-      });
-      if (!isOfficer) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
-      }
-      await ctx.db
-        .update(club)
-        .set({ membershipPolicy: input.policy })
-        .where(eq(club.id, input.clubId));
       return { success: true };
     }),
   create: protectedProcedure

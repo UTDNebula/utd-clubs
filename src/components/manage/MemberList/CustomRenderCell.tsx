@@ -31,6 +31,17 @@ export function SmallTextCell(params: GridRenderCellParams) {
 export function JoinedAtCell(params: GridRenderCellParams) {
   const { expandTimestamps } = useContext(MemberListContext);
 
+  if (!params.row.joinedAt) {
+    return (
+      <Typography
+        variant="body2"
+        className="flex items-center h-full text-slate-400 dark:text-slate-600"
+      >
+        —
+      </Typography>
+    );
+  }
+
   const localeDateString = params.row.joinedAt.toLocaleString('en-us', {
     month: 'short',
     day: 'numeric',

@@ -7,6 +7,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from '@mui/icons-material/Search';
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
 import Badge from '@mui/material/Badge';
+import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -166,14 +167,16 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
         )}
       </div>
 
-      <Tooltip title={showOnlyMembers ? 'Show All' : 'Show Only Members'}>
-        <ToolbarButton
-          onClick={handleToggleShowOnlyMembers}
-          color={showOnlyMembers ? 'primary' : 'default'}
-        >
-          <GroupIcon fontSize="small" />
-        </ToolbarButton>
-      </Tooltip>
+      <Button
+        variant={showOnlyMembers ? 'contained' : 'outlined'}
+        color="primary"
+        size="small"
+        startIcon={<GroupIcon />}
+        onClick={handleToggleShowOnlyMembers}
+        className="normal-case mx-1"
+      >
+        {showOnlyMembers ? 'Show All' : 'Members Only'}
+      </Button>
 
       {memberListAbilities.refresh && (
         <Tooltip title="Refresh" className="max-sm:hidden">
