@@ -28,6 +28,8 @@ export const membershipPolicyEnum = pgEnum('membership_policy', [
   'open',
   'request',
   'closed',
+]);
+
 export const schoolEnum = pgEnum('school_enum', [
   'Harry W. Bass Jr. School of Arts, Humanities, and Technology',
   'School of Behavioral and Brain Sciences',
