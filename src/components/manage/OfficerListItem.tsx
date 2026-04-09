@@ -127,7 +127,7 @@ const OfficerListItem = withForm({
         </div>
         <div
           style={{ gridArea: 'buttons' }}
-          className="flex max-sm:h=fill sm:h-fit max-sm:ml-2 sm:my-2 mr-2"
+          className="flex max-sm:h-full sm:h-fit max-sm:ml-2 sm:my-2 mr-2"
         >
           <Tooltip title="Remove" className="h-fit self-center">
             <IconButton aria-label="remove" onClick={handleRemove}>
