@@ -27,7 +27,9 @@ export const ClubTagEdit = ({
     api.club.distinctTags.queryOptions(),
   );
   const allTags =
-    rawTags?.map((t: any) => (typeof t === 'string' ? t : t.tag)) ?? [];
+    rawTags?.map((t: { tag: string; count: number } | string) =>
+      typeof t === 'string' ? t : t.tag,
+    ) ?? [];
 
   const filter = createFilterOptions<string>({});
 
@@ -45,7 +47,9 @@ export const ClubTagEdit = ({
       options={allTags ?? []}
       renderOption={(props, option) => {
         const { key, ...otherProps } = props;
-        const original = rawTags?.find((t: any) => t.tag === option);
+        const original = rawTags?.find(
+          (t: { tag: string; count: number }) => t.tag === option,
+        );
 
         return (
           <li key={key} {...otherProps}>
