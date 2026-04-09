@@ -143,7 +143,8 @@ export const BaseHeader = ({
   const [openCompactSearchBar, setOpenCompactSearchBar] = useState(false);
 
   const headerRef = useRef<HTMLDivElement>(null);
-
+  // Dynamically stores header height into a CSS variable called `--base-header-height`.
+  // Useful for elements that need top offsets with `position: fixed` or `scroll-margin-top`.
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
