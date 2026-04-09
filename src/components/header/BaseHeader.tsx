@@ -150,7 +150,7 @@ export const BaseHeader = ({
 
     const observer = new ResizeObserver(([entry]) => {
       const height =
-        entry.borderBoxSize[0]?.blockSize ?? entry.contentRect.height;
+        entry?.borderBoxSize[0]?.blockSize ?? entry?.contentRect.height;
       document.documentElement.style.setProperty(
         '--base-header-height',
         `${height}px`,
