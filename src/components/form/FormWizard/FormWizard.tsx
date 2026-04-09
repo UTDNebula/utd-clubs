@@ -7,7 +7,7 @@ import StepButton from '@mui/material/StepButton';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/system/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useStore } from '@tanstack/react-form';
 import {
   Children,

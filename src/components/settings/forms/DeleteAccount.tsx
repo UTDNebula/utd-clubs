@@ -8,7 +8,7 @@ export default function DeleteAccount() {
       className="bg-red-100 dark:bg-red-950 border border-red-500 dark:border-red-700"
       description={
         <div className="text-slate-800 dark:text-slate-200">
-          <p>This will permenantly delete your account from UTD Clubs.</p>
+          <p>This will permanently delete your account from UTD Clubs.</p>
         </div>
       }
     >

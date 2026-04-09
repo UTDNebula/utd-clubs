@@ -11,6 +11,7 @@ import MembershipForms from './(forms)/MembershipForms';
 import Officers from './(forms)/Officers';
 import Slug from './(forms)/Slug';
 import NotApproved from './NotApproved';
+import Resources from './Resources';
 
 const ClubManageForm = async ({
   club,
@@ -18,20 +19,31 @@ const ClubManageForm = async ({
   club: SelectClub & { contacts: SelectContact[] };
 }) => {
   const clubId = club.id;
+  const awaitedHeaders = await headers();
+  const session = await auth.api.getSession({ headers: awaitedHeaders });
 
-  const listedOfficers = await api.club.getListedOfficers({ id: clubId });
-  const listedMembershipForms = await api.club.clubForms({ id: clubId });
-  const role = (await api.club.memberType({ id: clubId })) as
-    | 'President'
-    | 'Officer';
-  const officers = await api.club.getOfficers({ id: clubId });
-  const session = await auth.api.getSession({ headers: await headers() });
-  const googleAccount = (
-    await auth.api.listUserAccounts({
-      headers: await headers(),
+  const [
+    listedOfficers,
+    listedMembershipForms,
+    awaitedRole,
+    officers,
+    awaitedGoogleAccount,
+  ] = await Promise.all([
+    api.club.getListedOfficers({ id: clubId }),
+    api.club.clubForms({ id: clubId }),
+    api.club.memberType({ id: clubId }),
+    api.club.getOfficers({ id: clubId }),
+    auth.api.listUserAccounts({
+      headers: awaitedHeaders,
       query: { user: { id: session!.user.id } },
-    })
-  ).find((acc) => acc.providerId === 'google');
+    }),
+  ]);
+
+  const role = awaitedRole as 'President' | 'Officer';
+
+  const googleAccount = awaitedGoogleAccount.find(
+    (acc) => acc.providerId === 'google',
+  );
   const hasScopesForCalendarSync =
     !!googleAccount &&
     googleAccount.scopes.includes(
@@ -40,6 +52,7 @@ const ClubManageForm = async ({
     googleAccount.scopes.includes(
       'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
     );
+
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl">
       {club.approved !== 'approved' && <NotApproved status={club.approved} />}
@@ -62,6 +75,7 @@ const ClubManageForm = async ({
         role={role}
         userId={session?.user.id as string}
       />
+      <Resources />
       {role === 'President' && <DeleteClub view="manage" club={club} />}
     </div>
   );

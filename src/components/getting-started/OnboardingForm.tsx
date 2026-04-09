@@ -77,6 +77,7 @@ export default function OnboardingForm({
   });
 
   const FormElement = (
+    <form.AppForm>
     <form.Wizard
       startStep={
         <div className="flex flex-col gap-6">
@@ -233,6 +234,7 @@ export default function OnboardingForm({
         </FormStepContent>
       </form.WizardStep>
     </form.Wizard>
+    </form.AppForm>
   );
 
   return withLayout ? (
