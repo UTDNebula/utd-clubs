@@ -78,162 +78,166 @@ export default function OnboardingForm({
 
   const FormElement = (
     <form.AppForm>
-    <form.Wizard
-      startStep={
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2 ml-3.5">
-            <Typography
-              variant="h1"
-              className="font-display text-4xl font-bold"
-            >
-              Get Started
-            </Typography>
-            <Typography variant="body1">
-              Welcome to UTD Clubs! Let&apos;s get you set up.
-            </Typography>
-          </div>
-        </div>
-      }
-      finishStep={
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2 ml-3.5">
-            <Typography
-              variant="h1"
-              className="font-display text-4xl font-bold"
-            >
-              Thank you!
-            </Typography>
-            <Typography variant="body1">
-              You are now ready to use UTD Clubs. You can always change
-              everything later in your{' '}
-              <Link
-                href={'/settings'}
-                className="text-royal dark:text-cornflower-300 underline"
+      <form.Wizard
+        startStep={
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2 ml-3.5">
+              <Typography
+                variant="h1"
+                className="font-display text-4xl font-bold"
               >
-                account settings
-              </Link>
-              .
-            </Typography>
+                Get Started
+              </Typography>
+              <Typography variant="body1">
+                Welcome to UTD Clubs! Let&apos;s get you set up.
+              </Typography>
+            </div>
           </div>
-        </div>
-      }
-      onComplete={() => router.push('/')}
-    >
-      <form.WizardStep label="Name" fields={['firstName', 'lastName']}>
-        <FormStepContent title="Name">
-          <form.Question question="Please check that your name is correct. This is how you will appear to fellow students on UTD Clubs.">
-            <form.AppField name="firstName">
-              {(field) => (
-                <field.TextField label="First Name" className="grow" required />
-              )}
-            </form.AppField>
-            <form.AppField name="lastName">
-              {(field) => (
-                <field.TextField label="Last Name" className="grow" />
-              )}
-            </form.AppField>
-          </form.Question>
-        </FormStepContent>
-      </form.WizardStep>
-
-      <form.WizardStep
-        label="College Info"
-        fields={['major', 'minor', 'studentClassification', 'graduationDate']}
+        }
+        finishStep={
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2 ml-3.5">
+              <Typography
+                variant="h1"
+                className="font-display text-4xl font-bold"
+              >
+                Thank you!
+              </Typography>
+              <Typography variant="body1">
+                You are now ready to use UTD Clubs. You can always change
+                everything later in your{' '}
+                <Link
+                  href={'/settings'}
+                  className="text-royal dark:text-cornflower-300 underline"
+                >
+                  account settings
+                </Link>
+                .
+              </Typography>
+            </div>
+          </div>
+        }
+        onComplete={() => router.push('/')}
       >
-        <FormStepContent title="College Info">
-          <form.Question
-            question={
-              'Enter your college major or "Undecided". If applicable, add your college minor.'
-            }
-          >
-            <form.AppField name="major">
-              {(field) => (
-                <field.AutocompleteFreeSolo
-                  label="Major"
-                  options={majors}
-                  className="grow"
-                />
-              )}
-            </form.AppField>
-            <form.AppField name="minor">
-              {(field) => (
-                <field.AutocompleteFreeSolo
-                  label="Minor"
-                  options={minors}
-                  className="grow"
-                />
-              )}
-            </form.AppField>
-          </form.Question>
-          <form.Question question="Are you a student? When do you graduate?">
-            <form.AppField name="studentClassification">
-              {(field) => (
-                <field.Select
-                  label="Classification"
-                  options={studentClassificationEnum.enumValues}
-                  className="grow"
-                />
-              )}
-            </form.AppField>
-            <form.AppField name="graduationDate">
-              {(field) => {
-                return (
-                  <DatePicker
-                    onChange={(value) => {
-                      field.handleChange(value);
-                    }}
-                    value={field.state.value ?? null}
-                    label="Graduation Date"
-                    className="[&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900 w-64 grow"
-                    slotProps={{
-                      actionBar: {
-                        actions: ['accept'],
-                      },
-                      textField: {
-                        size: 'small',
-                        error: !field.state.meta.isValid,
-                        helperText: !field.state.meta.isValid
-                          ? (
-                              field.state.meta.errors as unknown as {
-                                message: string;
-                              }[]
-                            )
-                              .map((err) => err?.message)
-                              .join('. ') + '.'
-                          : undefined,
-                        required: true,
-                      },
-                    }}
-                    timezone="UTC"
-                    views={['year', 'month']}
-                    openTo="year"
-                  />
-                );
-              }}
-            </form.AppField>
-          </form.Question>
-        </FormStepContent>
-      </form.WizardStep>
-
-      <form.WizardStep label="Contact Email" fields={['contactEmail']}>
-        <FormStepContent title="Contact Email">
-          <form.Question question="Please enter your UTD email so club and event organizers can contact you.">
-            <form.AppField name="contactEmail">
-              {(field) => (
-                <div className="grow">
+        <form.WizardStep label="Name" fields={['firstName', 'lastName']}>
+          <FormStepContent title="Name">
+            <form.Question question="Please check that your name is correct. This is how you will appear to fellow students on UTD Clubs.">
+              <form.AppField name="firstName">
+                {(field) => (
                   <field.TextField
-                    label="UTD Email"
-                    placeholder="abc123456@utdallas.edu"
-                    className="w-full"
+                    label="First Name"
+                    className="grow"
                     required
                   />
-                </div>
-              )}
-            </form.AppField>
-          </form.Question>
-        </FormStepContent>
-      </form.WizardStep>
-    </form.Wizard>
+                )}
+              </form.AppField>
+              <form.AppField name="lastName">
+                {(field) => (
+                  <field.TextField label="Last Name" className="grow" />
+                )}
+              </form.AppField>
+            </form.Question>
+          </FormStepContent>
+        </form.WizardStep>
+
+        <form.WizardStep
+          label="College Info"
+          fields={['major', 'minor', 'studentClassification', 'graduationDate']}
+        >
+          <FormStepContent title="College Info">
+            <form.Question
+              question={
+                'Enter your college major or "Undecided". If applicable, add your college minor.'
+              }
+            >
+              <form.AppField name="major">
+                {(field) => (
+                  <field.AutocompleteFreeSolo
+                    label="Major"
+                    options={majors}
+                    className="grow"
+                  />
+                )}
+              </form.AppField>
+              <form.AppField name="minor">
+                {(field) => (
+                  <field.AutocompleteFreeSolo
+                    label="Minor"
+                    options={minors}
+                    className="grow"
+                  />
+                )}
+              </form.AppField>
+            </form.Question>
+            <form.Question question="Are you a student? When do you graduate?">
+              <form.AppField name="studentClassification">
+                {(field) => (
+                  <field.Select
+                    label="Classification"
+                    options={studentClassificationEnum.enumValues}
+                    className="grow"
+                  />
+                )}
+              </form.AppField>
+              <form.AppField name="graduationDate">
+                {(field) => {
+                  return (
+                    <DatePicker
+                      onChange={(value) => {
+                        field.handleChange(value);
+                      }}
+                      value={field.state.value ?? null}
+                      label="Graduation Date"
+                      className="[&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-900 w-64 grow"
+                      slotProps={{
+                        actionBar: {
+                          actions: ['accept'],
+                        },
+                        textField: {
+                          size: 'small',
+                          error: !field.state.meta.isValid,
+                          helperText: !field.state.meta.isValid
+                            ? (
+                                field.state.meta.errors as unknown as {
+                                  message: string;
+                                }[]
+                              )
+                                .map((err) => err?.message)
+                                .join('. ') + '.'
+                            : undefined,
+                          required: true,
+                        },
+                      }}
+                      timezone="UTC"
+                      views={['year', 'month']}
+                      openTo="year"
+                    />
+                  );
+                }}
+              </form.AppField>
+            </form.Question>
+          </FormStepContent>
+        </form.WizardStep>
+
+        <form.WizardStep label="Contact Email" fields={['contactEmail']}>
+          <FormStepContent title="Contact Email">
+            <form.Question question="Please enter your UTD email so club and event organizers can contact you.">
+              <form.AppField name="contactEmail">
+                {(field) => (
+                  <div className="grow">
+                    <field.TextField
+                      label="UTD Email"
+                      placeholder="abc123456@utdallas.edu"
+                      className="w-full"
+                      required
+                    />
+                  </div>
+                )}
+              </form.AppField>
+            </form.Question>
+          </FormStepContent>
+        </form.WizardStep>
+      </form.Wizard>
     </form.AppForm>
   );
 
