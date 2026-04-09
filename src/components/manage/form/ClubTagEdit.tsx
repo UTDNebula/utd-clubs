@@ -23,9 +23,11 @@ export const ClubTagEdit = ({
 }) => {
   const api = useTRPC();
 
-  const { data: allTags, isFetching } = useQuery(
+  const { data: rawTags, isFetching } = useQuery(
     api.club.distinctTags.queryOptions(),
   );
+  const allTags =
+    rawTags?.map((t: any) => (typeof t === 'string' ? t : t.tag)) ?? [];
 
   const filter = createFilterOptions<string>({});
 
@@ -41,6 +43,16 @@ export const ClubTagEdit = ({
       aria-label="search"
       value={value}
       options={allTags ?? []}
+      renderOption={(props, option) => {
+        const { key, ...otherProps } = props;
+        const original = rawTags?.find((t: any) => t.tag === option);
+
+        return (
+          <li key={key} {...otherProps}>
+            {option} {original ? `(${original.count})` : ''}
+          </li>
+        );
+      }}
       renderInput={(params) => (
         <TextField
           {...params}

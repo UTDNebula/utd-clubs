@@ -5,10 +5,12 @@ import { TagChip } from './common/TagChip';
 
 export const TagPill = ({
   name,
+  count,
   removeTag,
   className,
 }: {
   name: string;
+  count?: number;
   removeTag?: () => void;
   className?: string;
 }) => {
@@ -22,9 +24,11 @@ export const TagPill = ({
     });
   }
 
+  const displayName = count !== undefined ? `${name} (${count})` : name;
+
   return (
     <TagChip
-      tag={name}
+      tag={displayName}
       className={
         'rounded-full font-bold transition-colors ' + (className ?? '')
       }
