@@ -21,7 +21,12 @@ import {
 import { BaseCard } from '@src/components/common/BaseCard';
 import Panel from '@src/components/common/Panel';
 import { useFormContext } from '@src/utils/form';
-import { ActiveStep, FormWizardProps, FormWizardStepProps, StepConfig } from './types';
+import {
+  ActiveStep,
+  FormWizardProps,
+  FormWizardStepProps,
+  StepConfig,
+} from './types';
 import { useWizardContext, WizardContext } from './WizardContext';
 
 /**
@@ -242,8 +247,15 @@ export default function FormWizard({
       // Submit the form; only advance to the finish step once the API call
       // resolves successfully so the step does not jump early
       void form.handleSubmit().then(() => {
-        if (form.store.state.isSubmitSuccessful && shouldAutoAdvance && hasFinish) {
-          setActiveStep({ index: steps.length - 1, previous: activeStep.index });
+        if (
+          form.store.state.isSubmitSuccessful &&
+          shouldAutoAdvance &&
+          hasFinish
+        ) {
+          setActiveStep({
+            index: steps.length - 1,
+            previous: activeStep.index,
+          });
         }
       });
     } else if (hasFinish && activeStep.index === steps.length - 1) {
