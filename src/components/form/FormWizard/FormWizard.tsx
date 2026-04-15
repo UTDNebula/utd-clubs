@@ -8,7 +8,6 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useStore } from '@tanstack/react-form';
 import {
   Children,
   isValidElement,
@@ -22,7 +21,7 @@ import {
 import { BaseCard } from '@src/components/common/BaseCard';
 import Panel from '@src/components/common/Panel';
 import { useFormContext } from '@src/utils/form';
-import { ActiveStep, FormWizardProps, StepConfig } from './types';
+import { ActiveStep, FormWizardProps, FormWizardStepProps, StepConfig } from './types';
 import { useWizardContext, WizardContext } from './WizardContext';
 
 /**
@@ -30,16 +29,20 @@ import { useWizardContext, WizardContext } from './WizardContext';
  *
  * Usage:
  * ```tsx
- * <form.Wizard startStep={<Intro />} finishStep={<Done />} onComplete={() => router.push('/')}>
+ * <form.Wizard onComplete={() => router.push('/')}>
+ *   <form.WizardStep startStep>
+ *     <Intro />
+ *   </form.WizardStep>
  *   <form.WizardStep label="Name" fields={['firstName', 'lastName']}>
  *     ...form fields...
+ *   </form.WizardStep>
+ *   <form.WizardStep finishStep>
+ *     <Done />
  *   </form.WizardStep>
  * </form.Wizard>
  * ```
  */
 export default function FormWizard({
-  startStep,
-  finishStep,
   onComplete,
   autoAdvanceOnSubmit,
   children,
@@ -47,21 +50,10 @@ export default function FormWizard({
   const form = useFormContext();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const shouldAutoAdvance = autoAdvanceOnSubmit ?? !!finishStep;
 
-  // Build step config from children + optional start/finish
+  // Build step config from children
   const steps = useMemo<StepConfig[]>(() => {
     const result: StepConfig[] = [];
-
-    if (startStep) {
-      result.push({
-        label: 'Get Started',
-        fields: [],
-        content: startStep,
-        variant: 'start',
-        hidden: true,
-      });
-    }
 
     Children.toArray(children).forEach((child) => {
       if (
@@ -69,80 +61,48 @@ export default function FormWizard({
         typeof child.type !== 'string' &&
         '_isWizardStep' in child.type
       ) {
-        const props = child.props as {
-          label: string;
-          fields?: string[];
+        const props = child.props as FormWizardStepProps & {
           children: ReactNode;
         };
-        result.push({
-          label: props.label,
-          fields: props.fields ?? [],
-          content: props.children,
-          variant: 'body',
-          hidden: false,
-        });
+
+        if (props.startStep) {
+          result.push({
+            label: props.label ?? 'Get Started',
+            content: props.children,
+            variant: 'start',
+            hidden: true,
+          });
+        } else if (props.finishStep) {
+          result.push({
+            label: props.label ?? 'Finish',
+            content: props.children,
+            variant: 'finish',
+            hidden: true,
+          });
+        } else {
+          result.push({
+            label: props.label ?? '',
+            fields: props.fields ?? [],
+            content: props.children,
+            variant: 'body',
+            hidden: false,
+          });
+        }
       }
     });
 
-    if (finishStep) {
-      result.push({
-        label: 'Finish',
-        fields: [],
-        content: finishStep,
-        variant: 'finish',
-        hidden: true,
-      });
-    }
-
     return result;
-  }, [startStep, finishStep, children]);
+  }, [children]);
 
   const hasStart = steps[0]?.variant === 'start';
   const hasFinish = steps[steps.length - 1]?.variant === 'finish';
+  const shouldAutoAdvance = autoAdvanceOnSubmit ?? hasFinish;
 
   // Step navigation state
-  const [navStep, setActiveStep] = useState<ActiveStep>({
+  const [activeStep, setActiveStep] = useState<ActiveStep>({
     index: 0,
     previous: undefined,
   });
-
-  // Auto-advance to finish step after successful form submission.
-  // We track whether we already advanced so that navigating back from the
-  // finish step is not blocked by the permanently-true isSubmitSuccessful.
-  const isSubmitSuccessful = useStore(
-    form.store,
-    (state) => state.isSubmitSuccessful,
-  );
-  const [hasAutoAdvanced, setHasAutoAdvanced] = useState(false);
-
-  const activeStep = useMemo<ActiveStep>(() => {
-    if (
-      shouldAutoAdvance &&
-      isSubmitSuccessful &&
-      hasFinish &&
-      !hasAutoAdvanced
-    ) {
-      return { index: steps.length - 1, previous: navStep.index };
-    }
-    return navStep;
-  }, [
-    shouldAutoAdvance,
-    isSubmitSuccessful,
-    hasFinish,
-    hasAutoAdvanced,
-    steps.length,
-    navStep,
-  ]);
-
-  // Mark auto-advance as consumed after the derived step is applied
-  if (
-    shouldAutoAdvance &&
-    isSubmitSuccessful &&
-    hasFinish &&
-    !hasAutoAdvanced
-  ) {
-    setHasAutoAdvanced(true);
-  }
 
   // Loading state to prevent flash before first render measurement
   const [mounting, setMounting] = useState(true);
@@ -176,7 +136,7 @@ export default function FormWizard({
   const validateStepFields = useCallback(
     (stepIndex: number) => {
       const step = steps[stepIndex];
-      if (!step?.fields.length) return;
+      if (step?.variant !== 'body' || !step.fields.length) return;
       step.fields.forEach((field) =>
         form.validateField(field as never, 'change'),
       );
@@ -187,7 +147,7 @@ export default function FormWizard({
   const areStepFieldsValid = useCallback(
     (stepIndex: number) => {
       const step = steps[stepIndex];
-      if (!step?.fields.length) return true;
+      if (step?.variant !== 'body' || !step.fields.length) return true;
       return step.fields.every(
         (field) =>
           (
@@ -206,7 +166,6 @@ export default function FormWizard({
 
   // Navigation
   const goNext = useCallback(() => {
-    // Validate current step fields (only blocks forward navigation)
     validateStepFields(activeStep.index);
     if (!areStepFieldsValid(activeStep.index)) return;
 
@@ -216,7 +175,6 @@ export default function FormWizard({
         previous: prev.index,
       }));
     } else if (hasFinish && activeStep.index === steps.length - 1) {
-      // "Continue" on finish screen
       onComplete?.();
     }
   }, [
@@ -230,7 +188,6 @@ export default function FormWizard({
   ]);
 
   const goBack = useCallback(() => {
-    // No validation on backward navigation
     if (activeStep.index > 0) {
       setActiveStep((prev) => ({
         index: prev.index - 1,
@@ -242,16 +199,13 @@ export default function FormWizard({
   const goToStep = useCallback(
     (index: number) => {
       if (index < activeStep.index) {
-        // Backward: always allowed
         setActiveStep((prev) => ({
           index: index,
           previous: prev.index,
         }));
       } else if (index > activeStep.index) {
-        // Forward: validate first
         validateStepFields(activeStep.index);
         if (!areStepFieldsValid(activeStep.index)) return;
-        // Only allow navigating one step ahead
         if (index - 1 > activeStep.index) return;
         setActiveStep((prev) => ({
           index: index,
@@ -285,8 +239,13 @@ export default function FormWizard({
         previous: prev.index,
       }));
     } else if (activeStep.index === lastBodyIndex) {
-      // Submit the form on the last body step
-      form.handleSubmit();
+      // Submit the form; only advance to the finish step once the API call
+      // resolves successfully so the step does not jump early
+      void form.handleSubmit().then(() => {
+        if (form.store.state.isSubmitSuccessful && shouldAutoAdvance && hasFinish) {
+          setActiveStep({ index: steps.length - 1, previous: activeStep.index });
+        }
+      });
     } else if (hasFinish && activeStep.index === steps.length - 1) {
       // "Continue" button on finish screen
       onComplete?.();

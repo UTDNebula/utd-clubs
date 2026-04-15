@@ -78,8 +78,8 @@ export default function OnboardingForm({
 
   const FormElement = (
     <form.AppForm>
-      <form.Wizard
-        startStep={
+      <form.Wizard onComplete={() => router.push('/')}>
+        <form.WizardStep startStep>
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2 ml-3.5">
               <Typography
@@ -93,32 +93,8 @@ export default function OnboardingForm({
               </Typography>
             </div>
           </div>
-        }
-        finishStep={
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2 ml-3.5">
-              <Typography
-                variant="h1"
-                className="font-display text-4xl font-bold"
-              >
-                Thank you!
-              </Typography>
-              <Typography variant="body1">
-                You are now ready to use UTD Clubs. You can always change
-                everything later in your{' '}
-                <Link
-                  href={'/settings'}
-                  className="text-royal dark:text-cornflower-300 underline"
-                >
-                  account settings
-                </Link>
-                .
-              </Typography>
-            </div>
-          </div>
-        }
-        onComplete={() => router.push('/')}
-      >
+        </form.WizardStep>
+
         <form.WizardStep label="Name" fields={['firstName', 'lastName']}>
           <FormStepContent title="Name">
             <form.Question question="Please check that your name is correct. This is how you will appear to fellow students on UTD Clubs.">
@@ -236,6 +212,30 @@ export default function OnboardingForm({
               </form.AppField>
             </form.Question>
           </FormStepContent>
+        </form.WizardStep>
+
+        <form.WizardStep finishStep>
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2 ml-3.5">
+              <Typography
+                variant="h1"
+                className="font-display text-4xl font-bold"
+              >
+                Thank you!
+              </Typography>
+              <Typography variant="body1">
+                You are now ready to use UTD Clubs. You can always change
+                everything later in your{' '}
+                <Link
+                  href={'/settings'}
+                  className="text-royal dark:text-cornflower-300 underline"
+                >
+                  account settings
+                </Link>
+                .
+              </Typography>
+            </div>
+          </div>
         </form.WizardStep>
       </form.Wizard>
     </form.AppForm>

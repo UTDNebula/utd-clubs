@@ -20,37 +20,39 @@ export type WizardStepObject<Fields> = WizardStepObjectBase &
   );
 
 export type FormWizardStepProps = {
-  /** Label shown in the stepper */
-  label: string;
+  /** Label shown in the stepper (required for body steps) */
+  label?: string;
   /** Field names belonging to this step (used for validation) */
   fields?: string[];
   /** Step content */
   children: ReactNode;
+  /** Marks this step as the intro screen (hidden from stepper, placed first) */
+  startStep?: boolean;
+  /** Marks this step as the completion screen (hidden from stepper, placed last) */
+  finishStep?: boolean;
 };
 
 export type FormWizardProps = {
-  /** Content for an optional intro screen (hidden from stepper) */
-  startStep?: ReactNode;
-  /** Content for an optional completion screen (hidden from stepper) */
-  finishStep?: ReactNode;
   /** Called when the user clicks "Continue" on the finish step */
   onComplete?: () => void;
   /**
    * If true, automatically advances to the finish step after successful
-   * form submission. Defaults to true when finishStep is provided.
+   * form submission. Defaults to true when a finishStep child is present.
    */
   autoAdvanceOnSubmit?: boolean;
   /** Wizard step children */
   children: ReactNode;
 };
 
-export type StepConfig = {
+type StepConfigBase = {
   label: string;
-  fields: string[];
   content: ReactNode;
-  variant: 'start' | 'body' | 'finish';
   hidden: boolean;
 };
+
+export type StepConfig =
+  | (StepConfigBase & { variant: 'body'; fields: string[] })
+  | (StepConfigBase & { variant: 'start' | 'finish' });
 
 export type ActiveStep = {
   index: number;
