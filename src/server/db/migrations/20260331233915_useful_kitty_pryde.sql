@@ -1,2 +1,0 @@
-CREATE TYPE "public"."school_enum" AS ENUM('Harry W. Bass Jr. School of Arts, Humanities, and Technology', 'School of Behavioral and Brain Sciences', 'School of Economic, Political and Policy Sciences', 'Erik Jonsson School of Engineering and Computer Science', 'School of Interdisciplinary Studies', 'Naveen Jindal School of Management', 'School of Natural Sciences and Mathematics');--> statement-breakpoint
-ALTER TABLE "club" ADD COLUMN "schools" "school_enum"[] DEFAULT '{}'::school_enum[] NOT NULL;
