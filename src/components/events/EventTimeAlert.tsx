@@ -47,7 +47,7 @@ const EventTimeAlert = ({ event }: EventTimeAlertProps) => {
     } else {
       return <Base className="bg-green-600/70">Now</Base>;
     }
-} else {
+  } else {
     if (dayDiff < 1) {
       if (hourDiff < 1) {
         return (
