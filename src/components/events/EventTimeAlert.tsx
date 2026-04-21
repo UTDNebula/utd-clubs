@@ -38,29 +38,36 @@ const EventTimeAlert = ({ event }: EventTimeAlertProps) => {
 
   const start = event.startTime;
   const hourDiff = differenceInHours(start, now);
+  const dayDiff = differenceInDays(start, now);
+  const minDiff = differenceInMinutes(start, now);
 
   if (event.startTime.getTime() < now) {
     if (event.endTime.getTime() < now) {
-      return <Base className="bg-red-600/70">over :(</Base>;
+      return <Base className="bg-red-600/70">Over</Base>;
     } else {
-      return <Base className="bg-green-600/70">NOW</Base>;
+      return <Base className="bg-green-600/70">Now</Base>;
     }
-  } else {
-    if (differenceInDays(start, now) < 1) {
+} else {
+    if (dayDiff < 1) {
       if (hourDiff < 1) {
         return (
           <Base className="bg-red-600/70">
-            {differenceInMinutes(start, now)} minutes
+            {minDiff} {minDiff === 1 ? 'minute' : 'minutes'}
           </Base>
         );
-      } else if (hourDiff < 4) {
-        return <Base className="bg-yellow-600/70">{hourDiff} hours</Base>;
       } else {
-        return <Base className="bg-black/70">{hourDiff} hours</Base>;
+        const bgColor = hourDiff < 4 ? 'bg-yellow-600/70' : 'bg-black/70';
+        return (
+          <Base className={bgColor}>
+            {hourDiff} {hourDiff === 1 ? 'hour' : 'hours'}
+          </Base>
+        );
       }
     } else {
       return (
-        <Base className="bg-black/70">{differenceInDays(start, now)} days</Base>
+        <Base className="bg-black/70">
+          {dayDiff} {dayDiff === 1 ? 'day' : 'days'}
+        </Base>
       );
     }
   }
