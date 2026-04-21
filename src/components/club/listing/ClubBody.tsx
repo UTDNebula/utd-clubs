@@ -64,7 +64,7 @@ const ClubBody = async ({
           emptyText={
             club.updatedAt == null || club.updatedAt < oneYearAgo
               ? 'No info about upcoming events'
-              : 'There are no upcoming events'
+              : 'This club has not posted info about upcoming events'
           }
         />
       </div>
