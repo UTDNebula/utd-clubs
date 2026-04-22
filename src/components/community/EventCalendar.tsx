@@ -243,7 +243,8 @@ const EventCalendar = () => {
               }
             },
             onMouseLeave: clearHover,
-            className: 'pointer-events-auto overflow-visible bg-transparent shadow-none',
+            className:
+              'pointer-events-auto overflow-visible bg-transparent shadow-none',
           },
         }}
       >

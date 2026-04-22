@@ -11,7 +11,11 @@ import {
 import { admin } from '@src/server/db/schema/admin';
 import { user as users } from '@src/server/db/schema/auth';
 import { events } from '@src/server/db/schema/events';
-import { userMetadata, userMetadataToClubs, userMetadataToEvents } from '@src/server/db/schema/users';
+import {
+  userMetadata,
+  userMetadataToClubs,
+  userMetadataToEvents,
+} from '@src/server/db/schema/users';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byIdSchema = z.object({ id: z.string() });

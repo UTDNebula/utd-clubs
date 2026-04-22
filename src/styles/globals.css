@@ -1,7 +1,8 @@
 @layer theme, base, mui, components, utilities;
 @import 'tailwindcss';
 @import './syncfusion/material.css' layer(components);
-@import './syncfusion/material-dark.css' layer(components) screen and (prefers-color-scheme: dark);
+@import './syncfusion/material-dark.css' layer(components) screen and
+  (prefers-color-scheme: dark);
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/typography';
 
