@@ -233,7 +233,7 @@ const EventCalendar = () => {
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         disableRestoreFocus
         disableScrollLock
-        sx={{ pointerEvents: 'none' }}
+        className="pointer-events-none"
         slotProps={{
           paper: {
             onMouseEnter: () => {
@@ -243,12 +243,7 @@ const EventCalendar = () => {
               }
             },
             onMouseLeave: clearHover,
-            sx: {
-              pointerEvents: 'auto',
-              overflow: 'visible',
-              backgroundColor: 'transparent',
-              boxShadow: 'none',
-            },
+            className: 'pointer-events-auto overflow-visible bg-transparent shadow-none',
           },
         }}
       >
@@ -261,11 +256,7 @@ const EventCalendar = () => {
         maxWidth="sm"
         slotProps={{
           paper: {
-            sx: {
-              backgroundColor: 'transparent',
-              boxShadow: 'none',
-              overflow: 'visible',
-            },
+            className: 'bg-transparent shadow-none overflow-visible',
           },
         }}
       >
