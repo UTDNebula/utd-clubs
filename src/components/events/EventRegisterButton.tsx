@@ -32,15 +32,15 @@ const EventRegisterButton = ({
   const api = useTRPC();
   const queryClient = useQueryClient();
   const { data: registerState, isPending } = useQuery(
-    api.event.registerState.queryOptions({ id: eventId }),
+    api.event.registerState.queryOptions({ id: eventId, clubId }),
   );
 
   const toggleRegistration = useMutation(
     api.event.toggleRegistration.mutationOptions({
-      onMutate: async ({ id }) => {
+      onMutate: async ({ id, clubId }) => {
         const queryKey = [
           ['event', 'registerState'],
-          { input: { id }, type: 'query' },
+          { input: { id, clubId }, type: 'query' },
         ];
 
         // Cancel outgoing refetches
@@ -86,11 +86,11 @@ const EventRegisterButton = ({
           queryClient.setQueryData(context.queryKey, context.previousState);
         }
       },
-      onSettled: (_data, _error, { id }) => {
+      onSettled: (_data, _error, { id, clubId }) => {
         queryClient.invalidateQueries({
           queryKey: [
             ['event', 'registerState'],
-            { input: { id }, type: 'query' },
+            { input: { id, clubId }, type: 'query' },
           ],
         });
       },
@@ -126,7 +126,7 @@ const EventRegisterButton = ({
       return;
     }
 
-    toggleRegistration.mutate({ id: eventId });
+    toggleRegistration.mutate({ id: eventId, clubId });
   };
 
   const { data: memberType } = useQuery(

@@ -82,6 +82,7 @@ const byNameSchema = z.object({
 });
 const joinLeaveSchema = z.object({
   id: z.string(),
+  clubId: z.string(),
 });
 
 export const eventRouter = createTRPCRouter({
@@ -353,7 +354,7 @@ export const eventRouter = createTRPCRouter({
     .input(joinLeaveSchema)
     .query(async ({ input, ctx }) => {
       if (!ctx.session) return null;
-      const eventId = input.id;
+      const { id: eventId, clubId } = input;
       const userId = ctx.session.user.id;
       return Boolean(
         await ctx.db.query.userMetadataToEvents.findFirst({
@@ -361,6 +362,7 @@ export const eventRouter = createTRPCRouter({
             and(
               eq(userMetadataToEvents.userId, userId),
               eq(userMetadataToEvents.eventId, eventId),
+              eq(userMetadataToEvents.clubId, clubId),
             ),
         }),
       );
@@ -370,13 +372,14 @@ export const eventRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       if (!ctx.session) return null;
 
-      const eventId = input.id;
+      const { id: eventId, clubId } = input;
       const userId = ctx.session.user.id;
       const result = await ctx.db.query.userMetadataToEvents.findFirst({
         where: (userMetadataToEvents) =>
           and(
             eq(userMetadataToEvents.userId, userId),
             eq(userMetadataToEvents.eventId, eventId),
+            eq(userMetadataToEvents.clubId, clubId),
           ),
       });
       return {
@@ -387,13 +390,14 @@ export const eventRouter = createTRPCRouter({
   toggleRegistration: protectedProcedure
     .input(joinLeaveSchema)
     .mutation(async ({ ctx, input }) => {
-      const eventId = input.id;
+      const { id: eventId, clubId } = input;
       const userId = ctx.session.user.id;
       const dataExists = await ctx.db.query.userMetadataToEvents.findFirst({
         where: (userMetadataToEvents) =>
           and(
             eq(userMetadataToEvents.userId, userId),
             eq(userMetadataToEvents.eventId, eventId),
+            eq(userMetadataToEvents.clubId, clubId),
           ),
       });
       if (dataExists) {
@@ -403,12 +407,13 @@ export const eventRouter = createTRPCRouter({
             and(
               eq(userMetadataToEvents.userId, userId),
               eq(userMetadataToEvents.eventId, eventId),
+              eq(userMetadataToEvents.clubId, clubId),
             ),
           );
       } else {
         await ctx.db
           .insert(userMetadataToEvents)
-          .values({ userId, eventId, registeredAt: new Date() });
+          .values({ userId, eventId, clubId, registeredAt: new Date() });
       }
       return dataExists;
     }),
@@ -459,7 +464,7 @@ export const eventRouter = createTRPCRouter({
           image: data.image,
           updatedAt: new Date(),
         })
-        .where(eq(events.id, id))
+        .where(and(eq(events.id, id), eq(events.clubId, input.clubId)))
         .returning({ id: events.id });
 
       if (res.length == 0)
@@ -470,10 +475,11 @@ export const eventRouter = createTRPCRouter({
       return res[0]?.id;
     }),
   delete: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), clubId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const event = await ctx.db.query.events.findFirst({
-        where: (e) => eq(e.id, input.id),
+        where: (e) =>
+          and(eq(e.id, input.id), eq(e.clubId, input.clubId)),
       });
 
       if (!event) {
@@ -491,7 +497,9 @@ export const eventRouter = createTRPCRouter({
       await ctx.db
         .update(events)
         .set({ status: 'deleted' })
-        .where(eq(events.id, input.id));
+        .where(
+          and(eq(events.id, input.id), eq(events.clubId, input.clubId)),
+        );
 
       return { success: true };
     }),

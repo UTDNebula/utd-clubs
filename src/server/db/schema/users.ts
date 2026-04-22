@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import {
   date,
+  foreignKey,
   integer,
   jsonb,
   pgEnum,
@@ -64,12 +65,17 @@ export const userMetadataToEvents = pgTable(
     userId: text('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
-    eventId: text('event_id')
-      .notNull()
-      .references(() => events.id, { onDelete: 'no action' }),
+    eventId: text('event_id').notNull(),
+    clubId: text('club_id').notNull(),
     registeredAt: timestamp('registered_at').defaultNow().notNull(),
   },
-  (t) => [primaryKey({ columns: [t.userId, t.eventId] })],
+  (t) => [
+    primaryKey({ columns: [t.userId, t.eventId, t.clubId] }),
+    foreignKey({
+      columns: [t.eventId, t.clubId],
+      foreignColumns: [events.id, events.clubId],
+    }).onDelete('no action'),
+  ],
 );
 
 export const userMetadataRelation = relations(
@@ -101,8 +107,8 @@ export const userMetadataToEventsRelations = relations(
   userMetadataToEvents,
   ({ one }) => ({
     event: one(events, {
-      fields: [userMetadataToEvents.eventId],
-      references: [events.id],
+      fields: [userMetadataToEvents.eventId, userMetadataToEvents.clubId],
+      references: [events.id, events.clubId],
     }),
     user: one(userMetadata, {
       fields: [userMetadataToEvents.userId],
