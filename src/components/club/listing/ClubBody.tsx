@@ -17,13 +17,15 @@ const ClubBody = async ({
   const oneYearAgo = TZDateMini.tz('America/Chicago');
   oneYearAgo.setFullYear(now.getFullYear() - 1);
 
-  const events = await api.event.clubUpcoming({
-    clubId: club.id,
-    currentTime: now,
-  });
-  const forms = await api.club.clubForms({
-    id: club.id,
-  });
+  const [events, forms] = await Promise.all([
+    api.event.clubUpcoming({
+      clubId: club.id,
+      currentTime: now,
+    }),
+    api.club.clubForms({
+      id: club.id,
+    }),
+  ]);
 
   return (
     <section

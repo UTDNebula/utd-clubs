@@ -19,7 +19,7 @@ const inter = Inter({
 
 const baiJamjuree = Bai_Jamjuree({
   subsets: ['latin'],
-  weight: ['500', '700'],
+  weight: ['500', '600', '700'],
   variable: '--font-display',
 });
 

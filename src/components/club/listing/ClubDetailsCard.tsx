@@ -26,6 +26,18 @@ export default function ClubDetailsCard({
       </div>,
     );
   }
+  if (club.clubSize) {
+    items.push(
+      <div key="clubSize" className="flex flex-row flex-wrap gap-1 py-1">
+        <span className="font-medium text-slate-600 dark:text-slate-400">
+          Members
+        </span>
+        <span className="ml-auto text-slate-800 dark:text-slate-200">
+          {club.clubSize}
+        </span>
+      </div>,
+    );
+  }
   if (club.foundingDate) {
     items.push(
       <div key="foundingDate" className="flex flex-row flex-wrap gap-1 py-1">
@@ -97,18 +109,20 @@ export default function ClubDetailsCard({
   }
 
   return (
-    <Panel className="text-sm !gap-1" id={id} smallPadding heading="Details">
-      {items.length ? (
-        items.flatMap((item, index) => {
-          const row = [item];
-          if (index < items.length - 1) {
-            row.push(<Divider key={index} />);
-          }
-          return row;
-        })
-      ) : (
-        <span className="text-slate-600 dark:text-slate-400">No details</span>
-      )}
+    <Panel className="text-sm" id={id} smallPadding heading="Details">
+      <div className="flex flex-col gap-1">
+        {items.length ? (
+          items.flatMap((item, index) => {
+            const row = [item];
+            if (index < items.length - 1) {
+              row.push(<Divider key={index} />);
+            }
+            return row;
+          })
+        ) : (
+          <span className="text-slate-600 dark:text-slate-400">No details</span>
+        )}
+      </div>
     </Panel>
   );
 }

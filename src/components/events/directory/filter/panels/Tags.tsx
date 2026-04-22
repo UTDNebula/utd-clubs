@@ -1,0 +1,44 @@
+import { memo } from 'react';
+import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
+import Panel from '@src/components/common/Panel';
+import { EventFiltersSchema } from '@src/utils/eventFilter';
+import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
+
+export type TagsPanelFields = Pick<EventFiltersSchema, 'tags'>;
+
+export default memo(function TagsPanel(
+  props: FilterPanelProps<TagsPanelFields>,
+) {
+  const tags = props.filters.tags;
+
+  return (
+    <Panel
+      heading={
+        <>
+          Tags
+          {tags.length > 0 && (
+            <span className=" ml-2 text-base font-normal text-neutral-600 dark:text-neutral-400">
+              ({tags.length})
+            </span>
+          )}
+        </>
+      }
+      {...panelProps(props.backgroundHover)}
+    >
+      <ClubTagAutocomplete
+        value={tags}
+        onChange={(newValue) => {
+          setEventsParams((params) => {
+            if (newValue.length) {
+              params.set('tags', newValue.join(','));
+            } else {
+              params.delete('tags');
+            }
+          });
+        }}
+        label=""
+        vertical
+      />
+    </Panel>
+  );
+});

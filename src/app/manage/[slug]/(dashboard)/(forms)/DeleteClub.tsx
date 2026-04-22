@@ -68,7 +68,7 @@ export default function DeleteClub({ view, club }: Props) {
           <div className="text-slate-800 dark:text-slate-200">
             {view === 'admin' && (
               <p>
-                This will permenantly delete this organization from UTD Clubs.
+                This will permanently delete this organization from UTD Clubs.
               </p>
             )}
             {view === 'manage' && club.approved === 'approved' && (
@@ -86,7 +86,7 @@ export default function DeleteClub({ view, club }: Props) {
             {view === 'manage' &&
               (club.approved === 'pending' || club.approved === 'rejected') && (
                 <p>
-                  This will permenantly delete your organization from UTD Clubs.
+                  This will permanently delete your organization from UTD Clubs.
                 </p>
               )}
             {view === 'manage' && club.approved === 'deleted' && (
@@ -129,11 +129,11 @@ export default function DeleteClub({ view, club }: Props) {
         contentText={
           view === 'manage' && club.approved === 'approved' ? (
             <>
-              This will mark <b>{club.name}</b> for permenant deletion.
+              This will mark <b>{club.name}</b> for permanent deletion.
             </>
           ) : (
             <>
-              This will permenantly delete <b>{club.name}</b>.
+              This will permanently delete <b>{club.name}</b>.
             </>
           )
         }
