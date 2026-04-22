@@ -188,8 +188,7 @@ export const adminRouter = createTRPCRouter({
     .input(z.object({ id: z.string(), clubId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const event = await ctx.db.query.events.findFirst({
-        where: (e) =>
-          and(eq(e.id, input.id), eq(e.clubId, input.clubId)),
+        where: (e) => and(eq(e.id, input.id), eq(e.clubId, input.clubId)),
       });
 
       if (!event) {
@@ -208,9 +207,7 @@ export const adminRouter = createTRPCRouter({
           ),
         ctx.db
           .delete(events)
-          .where(
-            and(eq(events.id, input.id), eq(events.clubId, input.clubId)),
-          ),
+          .where(and(eq(events.id, input.id), eq(events.clubId, input.clubId))),
       ]);
 
       return { success: true };
