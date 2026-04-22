@@ -21,6 +21,7 @@ const BackButton = ({ href, ...props }: BackButtonProps) => {
               router.back();
             }
       }
+      aria-label="Go back"
       size="large"
       color="primary"
       {...props}

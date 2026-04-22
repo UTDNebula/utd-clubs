@@ -2,6 +2,7 @@ import { relations, sql } from 'drizzle-orm';
 import {
   boolean,
   index,
+  integer,
   pgEnum,
   pgTable,
   text,
@@ -39,6 +40,7 @@ export const events = pgTable(
     image: text('image'),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    pageViews: integer('page_views').notNull().default(0),
     calendarId: text('calendar_id'),
   },
   (t) => [
