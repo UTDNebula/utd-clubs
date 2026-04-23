@@ -2,6 +2,7 @@ import { createCallerFactory, createTRPCRouter } from '@src/server/api/trpc';
 import { adminRouter } from './routers/admin';
 import { aiRouter } from './routers/ai';
 import { clubRouter } from './routers/club';
+import { emailRouter } from './routers/email';
 import { eventRouter } from './routers/event';
 import { storageRouter } from './routers/storage';
 import { userMetadataRouter } from './routers/userMetadata';
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   admin: adminRouter,
   storage: storageRouter,
   ai: aiRouter,
+  email: emailRouter,
 });
 
 // export type definition of API
