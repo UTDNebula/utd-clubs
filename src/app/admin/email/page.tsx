@@ -9,10 +9,18 @@ import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 
 const emailSchema = z.object({
-  to: z.string().min(1, 'At least one email is required').refine((val) => {
-    const emails = val.split(',').map((e) => e.trim()).filter(Boolean);
-    return emails.length > 0 && emails.every((e) => z.email().safeParse(e).success);
-  }, 'Invalid email address(es)'),
+  to: z
+    .string()
+    .min(1, 'At least one email is required')
+    .refine((val) => {
+      const emails = val
+        .split(',')
+        .map((e) => e.trim())
+        .filter(Boolean);
+      return (
+        emails.length > 0 && emails.every((e) => z.email().safeParse(e).success)
+      );
+    }, 'Invalid email address(es)'),
   subject: z.string().min(1, 'Subject is required'),
   body: z.string().min(1, 'Body is required'),
 });
@@ -38,7 +46,10 @@ export default function EmailPage() {
       body: '',
     },
     onSubmit: async ({ value, formApi }) => {
-      const toArray = value.to.split(',').map((e) => e.trim()).filter(Boolean);
+      const toArray = value.to
+        .split(',')
+        .map((e) => e.trim())
+        .filter(Boolean);
       await sendEmail.mutateAsync({
         ...value,
         to: toArray,
@@ -66,13 +77,21 @@ export default function EmailPage() {
             <div className="m-2 flex flex-col gap-4">
               <form.AppField name="to">
                 {(field) => (
-                  <field.TextField label="Target Emails (comma separated)" className="w-full" required />
+                  <field.TextField
+                    label="Target Emails (comma separated)"
+                    className="w-full"
+                    required
+                  />
                 )}
               </form.AppField>
-              
+
               <form.AppField name="subject">
                 {(field) => (
-                  <field.TextField label="Subject" className="w-full" required />
+                  <field.TextField
+                    label="Subject"
+                    className="w-full"
+                    required
+                  />
                 )}
               </form.AppField>
 
@@ -88,10 +107,12 @@ export default function EmailPage() {
                 )}
               </form.AppField>
             </div>
-            
+
             <div className="flex justify-end mt-4">
               <form.AppForm>
-                <form.SubmitButton text={sendEmail.isPending ? 'Sending...' : 'Send Email'} />
+                <form.SubmitButton
+                  text={sendEmail.isPending ? 'Sending...' : 'Send Email'}
+                />
               </form.AppForm>
             </div>
           </Panel>

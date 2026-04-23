@@ -38,7 +38,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
   ]);
 
   const background = (
-    // eslint-disable-next-line @next/next/no-img-element
     <img
       // @ts-expect-error ArrayBuffers are allowed as an img source
       src={gradientBuffer}
@@ -110,7 +109,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               overflow: 'hidden',
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {}
             <img
               src={addVersionToImage(
                 clubData.profileImage!,
@@ -189,7 +188,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                   height: 35,
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+                {}
                 <img
                   // @ts-expect-error ArrayBuffers are allowed
                   src={people_alt_icon_buffer}
