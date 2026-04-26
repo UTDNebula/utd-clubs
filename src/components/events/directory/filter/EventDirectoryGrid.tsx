@@ -14,7 +14,7 @@ import { RouterOutputs } from '@src/trpc/shared';
 import { EventParamsSchemaOutput } from '@src/utils/eventFilter';
 import useDebounce from '@src/utils/useDebounce';
 import useStable from '@src/utils/useStable';
-import { useEventDirectoryStore } from '../utils';
+import { useEventDirectoryStore } from './utils';
 
 type EventDirectoryGridProps = {
   filters: EventParamsSchemaOutput;

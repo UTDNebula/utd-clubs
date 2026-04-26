@@ -12,11 +12,11 @@ import {
 } from '@src/utils/eventFilter';
 import useStable from '@src/utils/useStable';
 import { EventCardVariants } from '../EventCard';
+import EventDirectoryGrid from './filter/EventDirectoryGrid';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
+import EventsViewOptionsBar from './filter/EventsViewOptionsBar';
 import { setEventsParams, useEventDirectoryStore } from './filter/utils';
-import EventDirectoryGrid from './filter/view/EventDirectoryGrid';
-import ViewOptionsBar from './filter/ViewOptionsBar';
 
 type EventsBodyProps = {
   initialQueryData?: RouterOutputs['event']['findByFilters'];
@@ -130,7 +130,7 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
           showSidebar={showSidebar}
           onClickSidebar={setShowSidebar}
         />
-        <ViewOptionsBar
+        <EventsViewOptionsBar
           filters={filters}
           pageCount={pageCount}
           defaultViewValue={defaultViewLayout}

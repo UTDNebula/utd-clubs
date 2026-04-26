@@ -20,8 +20,8 @@ import {
   splitArrayField,
   temporalDeixisStrings,
 } from '@src/utils/eventFilter';
+import FilterChip from './base/FilterChip';
 import EventsFilterPanels from './EventsFilterPanels';
-import FilterChip from './FilterChip';
 import { setEventsParams } from './utils';
 
 const hiddenFields: (keyof EventFiltersSchema)[] = [

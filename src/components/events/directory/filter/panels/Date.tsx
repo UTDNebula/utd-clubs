@@ -8,7 +8,7 @@ import {
   temporalDeixisCustomDateSentinelValue,
   temporalDeixisWithCustomFilterEnum,
 } from '@src/utils/eventFilter';
-import FilterList, { FilterListItem } from '../FilterList';
+import FilterList, { FilterListItem } from '../base/FilterList';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 export type DatePanelFields = Pick<
