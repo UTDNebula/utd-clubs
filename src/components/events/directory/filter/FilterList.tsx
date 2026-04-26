@@ -1,16 +1,36 @@
+'use client';
+
 import BlockIcon from '@mui/icons-material/Block';
-import { IconButton, ListItem, Tooltip } from '@mui/material';
+import { Divider, IconButton, ListItem, Tooltip } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Radio from '@mui/material/Radio';
-import { ReactNode, useState } from 'react';
+import { useState, type ReactNode } from 'react';
 
 type FilterListItemBase<Value = string> = {
   label?: string;
   value: NonNullable<Value>;
+  /**
+   * Specifies what to render this item as
+   * - "item" - Renders as a regular list item
+   * - "divider" - Renders a divider
+   * @default "item"
+   */
+  type?: 'item' | 'divider';
+  /**
+   * Overrides whether this item is visually selected. Also provides additional checkbox controls.
+   */
+  checkboxOverride?: {
+    checked?: boolean;
+    indeterminate?: boolean;
+    disabled?: boolean;
+  };
+  /**
+   * Disables exclusion for this item
+   */
   disableExclusion?: boolean;
   /**
    * Modifies the secondary action of the item
@@ -83,6 +103,23 @@ export type FilterListProps = {
    * @default false
    */
   disallowDeselecting?: boolean;
+  /**
+   * Removes the backdrop fill of selected items
+   * @default false
+   */
+  disableSelectedBackdrop?: boolean;
+  /**
+   * Removes the backdrop gradient of excluded items
+   * @default false
+   */
+  disableExcludedBackdrop?: boolean;
+  /**
+   * Render the option's content. By default, uses `option.label`, then `option.value`
+   */
+  renderOptionContent?: (
+    props: object,
+    option: FilterListItemBase,
+  ) => ReactNode;
 };
 
 export default function FilterList({
@@ -93,13 +130,19 @@ export default function FilterList({
   onChange,
   enableExclusion = false,
   disallowDeselecting = false,
+  disableSelectedBackdrop = false,
+  disableExcludedBackdrop = false,
+  renderOptionContent,
 }: FilterListProps) {
-  const [selected, setSelected] = useState<FilterListItemBase['value'][]>(
-    selectedValues ?? [],
-  );
-  const [excluded, setExcluded] = useState<FilterListItemBase['value'][]>(
-    excludedValues ?? [],
-  );
+  const [selectedUncontrolled, setSelected] = useState<
+    FilterListItemBase['value'][]
+  >(selectedValues ?? []);
+  const [excludedUncontrolled, setExcluded] = useState<
+    FilterListItemBase['value'][]
+  >(excludedValues ?? []);
+
+  const selected = selectedValues ?? selectedUncontrolled;
+  const excluded = excludedValues ?? excludedUncontrolled;
 
   const handleToggle = (item: FilterListItemBase) => {
     let newSelected = [...selected];
@@ -163,96 +206,129 @@ export default function FilterList({
 
   const options: FilterListItemBase[] = optionsProp?.map((option) => {
     if (typeof option === 'string') {
-      return { value: option };
+      return { value: option, type: 'item' };
     } else {
       return option;
     }
   });
 
   return (
-    <List className="flex flex-col gap-1 p-0">
-      {options.map((option) => (
-        <ListItem
-          key={option.value}
-          disablePadding
-          className="group/li"
-          secondaryAction={
-            (option.secondaryAction &&
-              option.secondaryAction.visible !== false) ||
-            (enableExclusion && !option.disableExclusion) ? (
-              <Tooltip
-                title={
-                  option.secondaryAction?.tooltip ??
-                  (enableExclusion ? 'Exclude' : '')
-                }
-                disableInteractive
-                placement="left"
-              >
-                <IconButton
-                  aria-label={`exclude ${option.label ?? option.value}`}
-                  className="group/secondary"
-                  size="small"
-                  onClick={() => {
-                    if (option.disableExclusion !== true) {
-                      handleToggleExclude(option);
-                    }
-                    option.secondaryAction?.onClick?.();
-                  }}
+    <List
+      className="flex flex-col gap-1 p-0"
+      aria-multiselectable={type === 'checkbox'}
+    >
+      {options.map((option) =>
+        option.type === 'divider' ? (
+          <Divider component="li" key={option.value} />
+        ) : (
+          <ListItem
+            aria-selected={
+              option.checkboxOverride?.checked ??
+              selected.includes(option.value)
+            }
+            aria-label={option.label ?? option.value}
+            key={option.value}
+            disablePadding
+            className="group/li"
+            secondaryAction={
+              (option.secondaryAction &&
+                option.secondaryAction.visible !== false) ||
+              (enableExclusion && !option.disableExclusion) ? (
+                <Tooltip
+                  title={
+                    option.secondaryAction?.tooltip ??
+                    (enableExclusion ? 'Exclude' : '')
+                  }
+                  disableInteractive
+                  placement="left"
                 >
-                  {option.secondaryAction?.icon ? (
-                    selectedValues?.includes(option.value) &&
-                    option.secondaryAction?.icon
-                  ) : (
-                    <BlockIcon
-                      fontSize="small"
-                      className={`transition-opacity ${(excludedValues ?? excluded).includes(option.value) ? 'text-rose-400 dark:text-rose-600' : 'text-neutral-400 dark:text-neutral-600 group-hover/secondary:text-neutral-600 dark:group-hover/secondary:text-neutral-400 pointer-fine:invisible group-hover/li:visible group-focus-visible/secondary:visible'}`}
-                    />
-                  )}
-                </IconButton>
-              </Tooltip>
-            ) : undefined
-          }
-          slotProps={{ secondaryAction: { className: 'right-1' } }}
-        >
-          <ListItemButton
-            role={undefined}
-            onClick={() => handleToggle(option)}
-            className={`p-0 rounded-lg transition-colors ${(selectedValues ?? selected).includes(option.value) ? 'bg-royal/10 dark:bg-cornflower-300/10' : ''}`}
+                  <IconButton
+                    aria-label={`exclude ${option.label ?? option.value}`}
+                    className="group/secondary"
+                    size="small"
+                    onClick={() => {
+                      if (option.disableExclusion !== true) {
+                        handleToggleExclude(option);
+                      }
+                      option.secondaryAction?.onClick?.();
+                    }}
+                  >
+                    {option.secondaryAction?.icon ? (
+                      selectedValues?.includes(option.value) &&
+                      option.secondaryAction?.icon
+                    ) : (
+                      <BlockIcon
+                        fontSize="small"
+                        className={`transition-opacity ${excluded.includes(option.value) ? 'text-rose-400 dark:text-rose-600' : 'text-neutral-400 dark:text-neutral-600 group-hover/secondary:text-neutral-600 dark:group-hover/secondary:text-neutral-400 pointer-fine:invisible group-hover/li:visible group-focus-visible/secondary:visible'}`}
+                      />
+                    )}
+                  </IconButton>
+                </Tooltip>
+              ) : undefined
+            }
+            slotProps={{ secondaryAction: { className: 'right-1' } }}
           >
-            {enableExclusion && !option.disableExclusion && (
-              <div
-                className={`absolute inset-0 rounded-lg bg-linear-to-l from-rose-300/20 dark:from-rose-800/20 to-transparent to-75% transition-opacity opacity-0 ${(excludedValues ?? excluded).includes(option.value) ? 'opacity-100' : ''}`}
-              />
-            )}
-            <ListItemIcon className="min-w-8">
-              {type === 'checkbox' ? (
-                <Checkbox
-                  checked={(selectedValues ?? selected).includes(option.value)}
-                  disableRipple
-                  tabIndex={-1}
-                  size="small"
-                  slotProps={{ root: { className: 'p-2' } }}
-                  value={option.value}
+            <ListItemButton
+              onClick={() => handleToggle(option)}
+              className={`p-0 rounded-lg transition-colors ${!disableSelectedBackdrop && (option.checkboxOverride?.checked ?? selected.includes(option.value)) ? 'bg-royal/10 dark:bg-cornflower-300/10' : ''}`}
+            >
+              {enableExclusion &&
+                !disableExcludedBackdrop &&
+                !option.disableExclusion && (
+                  <div
+                    className={`absolute inset-0 rounded-lg bg-linear-to-l from-rose-300/20 dark:from-rose-800/20 to-transparent to-75% transition-opacity opacity-0 ${excluded.includes(option.value) ? 'opacity-100' : ''}`}
+                  />
+                )}
+              <ListItemIcon className="min-w-8">
+                {type === 'checkbox' ? (
+                  <Checkbox
+                    checked={
+                      option.checkboxOverride?.checked ??
+                      selected.includes(option.value)
+                    }
+                    indeterminate={option.checkboxOverride?.indeterminate}
+                    disabled={option.checkboxOverride?.disabled}
+                    aria-disabled={option.checkboxOverride?.disabled}
+                    disableRipple
+                    tabIndex={-1}
+                    size="small"
+                    slotProps={{ root: { className: 'p-2' } }}
+                    value={option.value}
+                  />
+                ) : type === 'radio' ? (
+                  <Radio
+                    checked={
+                      option.checkboxOverride?.checked ??
+                      selected.includes(option.value)
+                    }
+                    disabled={option.checkboxOverride?.disabled}
+                    aria-disabled={option.checkboxOverride?.disabled}
+                    disableRipple
+                    disableTouchRipple
+                    tabIndex={-1}
+                    size="small"
+                    slotProps={{ root: { className: 'p-2' } }}
+                    value={option.value}
+                  />
+                ) : undefined}
+              </ListItemIcon>
+              {renderOptionContent ? (
+                <div className="flex flex-row justify-start items-center">
+                  {renderOptionContent(
+                    { slotProps: { primary: { className: 'text-sm' } } },
+                    option,
+                  )}
+                </div>
+              ) : (
+                <ListItemText
+                  primary={option.label ?? option.value}
+                  slotProps={{ primary: { className: 'text-sm' } }}
                 />
-              ) : type === 'radio' ? (
-                <Radio
-                  checked={(selectedValues ?? selected).includes(option.value)}
-                  disableRipple
-                  disableTouchRipple
-                  tabIndex={-1}
-                  size="small"
-                  slotProps={{ root: { className: 'p-2' } }}
-                  value={option.value}
-                />
-              ) : undefined}
-            </ListItemIcon>
-            <ListItemText
-              primary={option.label ?? option.value}
-              slotProps={{ primary: { className: 'text-sm' } }}
-            />
-          </ListItemButton>
-        </ListItem>
-      ))}
+              )}
+            </ListItemButton>
+          </ListItem>
+        ),
+      )}
     </List>
   );
 }
