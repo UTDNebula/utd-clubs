@@ -1,6 +1,6 @@
 {
-  "id": "54234734-cbd9-4862-a262-648db45b7475",
-  "prevId": "fe21cda0-ba4c-47aa-a4d1-73de9c71bbe1",
+  "id": "bdf92122-29fd-47b9-8440-37dafc0fe01b",
+  "prevId": "bd2003f5-b728-4621-81ec-ea2d671ff3d5",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -586,6 +586,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "schools": {
+          "name": "schools",
+          "type": "school_enum[]",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::school_enum[]"
         }
       },
       "indexes": {
@@ -851,6 +859,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "page_views": {
+          "name": "page_views",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "calendar_id": {
           "name": "calendar_id",
@@ -1318,6 +1333,19 @@
         "10-50",
         "50-200",
         "200+"
+      ]
+    },
+    "public.school_enum": {
+      "name": "school_enum",
+      "schema": "public",
+      "values": [
+        "Harry W. Bass Jr. School of Arts, Humanities, and Technology",
+        "School of Behavioral and Brain Sciences",
+        "School of Economic, Political and Policy Sciences",
+        "Erik Jonsson School of Engineering and Computer Science",
+        "School of Interdisciplinary Studies",
+        "Naveen Jindal School of Management",
+        "School of Natural Sciences and Mathematics"
       ]
     },
     "public.platform": {
