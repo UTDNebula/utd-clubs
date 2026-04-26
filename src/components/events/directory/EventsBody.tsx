@@ -24,7 +24,9 @@ type EventsBodyProps = {
 };
 
 const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
-  useEventDirectoryStore.getState().setTotalCount(total);
+  useEffect(() => {
+    useEventDirectoryStore.getState().setTotalCount(total);
+  }, [total]);
 
   const searchParams = useSearchParams();
 
