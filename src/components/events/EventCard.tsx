@@ -181,9 +181,12 @@ const EventCard = ({
       return (
         <BaseCard
           variant="interactive"
-          className={`relative flex ${responsive ? 'min-h-104 min-w-64' : 'h-104 w-64'} flex-col overflow-hidden ${className ?? ''}`}
+          className={`relative flex ${responsive ? 'min-h-104 min-w-64' : 'h-104 w-64'} flex-col overflow-hidden bg-white dark:bg-neutral-800 has-[.EventCardLink:focus]:bg-neutral-200 dark:has-[.EventCardLink:focus]:bg-neutral-700 ${className ?? ''}`}
         >
-          <Link href={`/events/${event.id}`} className="absolute inset-0" />
+          <Link
+            href={`/events/${event.id}`}
+            className="EventCardLink absolute inset-0 focus:outline-royal outline-4"
+          />
           <div className="flex flex-1 min-h-0 flex-col">
             <div className="relative min-h-40 shrink-0 w-full">
               {EventImage}

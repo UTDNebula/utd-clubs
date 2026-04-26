@@ -105,6 +105,7 @@ export default function EventDirectoryGrid({
                 opacity: { duration: 0.3 },
               }}
               className="w-full"
+              tabIndex={-1}
             >
               <EventCard event={event} variant={viewLayout} responsive />
             </motion.div>
