@@ -36,7 +36,7 @@ const Community = async ({
             <Image src="/nebula-logo.png" alt="" width={300} height={300} />
           </div>
           <div className="h-full">
-            <h1 className="font-display text-black-500 pt-5 pb-1 text-center text-3xl font-bold">
+            <h1 className="font-display text-slate-800 dark:text-slate-200 pt-5 pb-1 text-center text-3xl font-bold">
               Please Sign in to Use the Community Page.
             </h1>
           </div>
