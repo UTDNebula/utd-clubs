@@ -48,9 +48,8 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
             >
               Listing
               <Tooltip title="Refreshes Daily">
-                <span className="ml-1 text-xs text-slate-300 dark:text-slate-600">
-                  ({club.pageViews?.toLocaleString() ?? 0} views in the past
-                  week)
+                <span className="ml-1 text-xs text-slate-300 dark:text-slate-700">
+                  ({club.pageViews?.toLocaleString() ?? 0} views in past week)
                 </span>
               </Tooltip>
             </LinkButton>
