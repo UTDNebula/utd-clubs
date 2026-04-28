@@ -22,7 +22,9 @@ const EventsNone = ({ date }: EventsNoneProps) => {
 
   return (
     <div className="flex flex-col items-center gap-4 mt-4">
-      <p className="font-bold text-slate-500 dark:text-slate-400">No events for {date}.</p>
+      <p className="font-bold text-slate-500 dark:text-slate-400">
+        No events for {date}.
+      </p>
       <Button
         variant="contained"
         className="normal-case"
