@@ -1,6 +1,6 @@
 {
-  "id": "9d56ec93-b8cb-4d3d-87c0-5a47bcd46726",
-  "prevId": "bd2003f5-b728-4621-81ec-ea2d671ff3d5",
+  "id": "00d347e4-f6af-4a6c-854e-ae1343a4b932",
+  "prevId": "9d56ec93-b8cb-4d3d-87c0-5a47bcd46726",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -587,6 +587,14 @@
           "primaryKey": false,
           "notNull": false
         },
+        "membership_policy": {
+          "name": "membership_policy",
+          "type": "membership_policy",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'open'"
+        },
         "schools": {
           "name": "schools",
           "type": "school_enum[]",
@@ -1139,8 +1147,7 @@
           "name": "joined_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false
         }
       },
       "indexes": {},
