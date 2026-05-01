@@ -594,14 +594,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'{}'::school_enum[]"
-        },
-        "membership_policy": {
-          "name": "membership_policy",
-          "type": "membership_policy",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'open'::membership_policy"
         }
       },
       "indexes": {
@@ -1147,7 +1139,8 @@
           "name": "joined_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -1327,9 +1320,7 @@
       "values": [
         "President",
         "Officer",
-        "Member",
-        "Follower",
-        "Requested"
+        "Member"
       ]
     },
     "public.student_classification": {
@@ -1342,15 +1333,6 @@
         "Prospective Student",
         "Faculty",
         "Staff"
-      ]
-    },
-    "public.membership_policy": {
-      "name": "membership_policy",
-      "schema": "public",
-      "values": [
-        "open",
-        "request",
-        "closed"
       ]
     }
   },

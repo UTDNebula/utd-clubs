@@ -39,7 +39,7 @@ async function isUserOfficer(userId: string, clubId: string) {
       ),
   });
   if (!officer || !officer.memberType) return false;
-  return officer.memberType !== 'Member';
+  return officer.memberType === 'Officer' || officer.memberType === 'President';
 }
 
 const byClubIdSchema = z.object({
