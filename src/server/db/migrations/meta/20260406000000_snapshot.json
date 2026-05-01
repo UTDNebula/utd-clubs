@@ -1,6 +1,6 @@
 {
-  "id": "9d56ec93-b8cb-4d3d-87c0-5a47bcd46726",
-  "prevId": "bd2003f5-b728-4621-81ec-ea2d671ff3d5",
+  "id": "6792a2ec-396d-4dec-b87f-6a1d45043274",
+  "prevId": "a63c2557-4015-4ea9-8e53-33a96eeeec2c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -593,15 +593,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'open'"
-        },
-        "schools": {
-          "name": "schools",
-          "type": "school_enum[]",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'{}'::school_enum[]"
+          "default": "'open'::membership_policy"
         }
       },
       "indexes": {
@@ -867,13 +859,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "page_views": {
-          "name": "page_views",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
         },
         "calendar_id": {
           "name": "calendar_id",
@@ -1282,28 +1267,6 @@
         "200+"
       ]
     },
-    "public.membership_policy": {
-      "name": "membership_policy",
-      "schema": "public",
-      "values": [
-        "open",
-        "request",
-        "closed"
-      ]
-    },
-    "public.school_enum": {
-      "name": "school_enum",
-      "schema": "public",
-      "values": [
-        "Harry W. Bass Jr. School of Arts, Humanities, and Technology",
-        "School of Behavioral and Brain Sciences",
-        "School of Economic, Political and Policy Sciences",
-        "Erik Jonsson School of Engineering and Computer Science",
-        "School of Interdisciplinary Studies",
-        "Naveen Jindal School of Management",
-        "School of Natural Sciences and Mathematics"
-      ]
-    },
     "public.platform": {
       "name": "platform",
       "schema": "public",
@@ -1351,6 +1314,15 @@
         "Prospective Student",
         "Faculty",
         "Staff"
+      ]
+    },
+    "public.membership_policy": {
+      "name": "membership_policy",
+      "schema": "public",
+      "values": [
+        "open",
+        "request",
+        "closed"
       ]
     }
   },
