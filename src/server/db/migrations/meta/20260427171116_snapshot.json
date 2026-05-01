@@ -587,6 +587,14 @@
           "primaryKey": false,
           "notNull": false
         },
+        "membership_policy": {
+          "name": "membership_policy",
+          "type": "membership_policy",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'open'"
+        },
         "schools": {
           "name": "schools",
           "type": "school_enum[]",
@@ -1139,8 +1147,7 @@
           "name": "joined_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false
         }
       },
       "indexes": {},
