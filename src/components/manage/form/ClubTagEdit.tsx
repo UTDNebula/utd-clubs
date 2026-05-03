@@ -4,6 +4,7 @@ import TagIcon from '@mui/icons-material/Tag';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 import { useQuery } from '@tanstack/react-query';
 import { TagChip } from '@src/components/common/TagChip';
 import { useTRPC } from '@src/trpc/react';
@@ -53,7 +54,12 @@ export const ClubTagEdit = ({
 
         return (
           <li key={key} {...otherProps}>
-            {option} {original ? `(${original.count})` : ''}
+            <span>{option}</span>
+            {original && (
+              <span className="ml-2 text-sm text-slate-600 dark:text-slate-400">
+                ({original.count})
+              </span>
+            )}
           </li>
         );
       }}
@@ -83,13 +89,27 @@ export const ClubTagEdit = ({
       renderValue={(value, getItemProps) => {
         return value.map((option: string, index: number) => {
           const { key, ...itemProps } = getItemProps({ index });
+          const original = rawTags?.find(
+            (t: { tag: string; count: number }) => t.tag === option,
+          );
+
           return (
-            <TagChip
+            <Tooltip
               key={key}
-              icon={<TagIcon color="inherit" />}
-              tag={option}
-              {...itemProps}
-            />
+              title={
+                original
+                  ? `${original.count} ${original.count === 1 ? 'club' : 'clubs'}`
+                  : ''
+              }
+            >
+              <span>
+                <TagChip
+                  icon={<TagIcon color="inherit" />}
+                  tag={option}
+                  {...itemProps}
+                />
+              </span>
+            </Tooltip>
           );
         });
       }}

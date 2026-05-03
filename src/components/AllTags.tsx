@@ -71,7 +71,16 @@ export const AllTags = ({
       >
         {options.map((option) => (
           <MenuItem key={option.tag} onClick={() => handleChange(option.tag)}>
-            <ListItemText primary={`${option.tag} (${option.count})`} />
+            <ListItemText
+              primary={
+                <>
+                  <span>{option.tag}</span>
+                  <span className="ml-2 text-sm text-slate-600 dark:text-slate-400">
+                    ({option.count})
+                  </span>
+                </>
+              }
+            />
           </MenuItem>
         ))}
       </Menu>
