@@ -459,13 +459,14 @@ export const eventRouter = createTRPCRouter({
           image: data.image,
           updatedAt: new Date(),
         })
-        .where(eq(events.id, id))
+        .where(and(eq(events.id, id), eq(events.google, false)))
         .returning({ id: events.id });
 
-      if (res.length == 0)
+      if (res.length === 0)
         throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to update event',
+          code: 'FORBIDDEN',
+          message:
+            'Cannot edit a Google Calendar event directly, or event not found.',
         });
       return res[0]?.id;
     }),
