@@ -4,7 +4,9 @@ import TagIcon from '@mui/icons-material/Tag';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { TagChip } from '@src/components/common/TagChip';
 import { useTRPC } from '@src/trpc/react';
 
@@ -37,12 +39,20 @@ export default function ClubTagAutocomplete({
 }: ClubTagAutocompleteProps) {
   const api = useTRPC();
 
-  const { data: allTags, isFetching } = useQuery(
+  const { data: rawTags, isFetching } = useQuery(
     api.club.distinctTags.queryOptions(),
   );
 
   const filter = createFilterOptions<string>({});
-  const stringOptions = allTags?.map((tag) => tag.tag) ?? [];
+  const allTags =
+    rawTags?.map((t: { tag: string; count: number } | string) =>
+      typeof t === 'string' ? t : t.tag,
+    ) ?? [];
+
+  const tagStringToObject = useMemo(() => {
+    if (!rawTags) return {};
+    return Object.fromEntries(rawTags.map((t) => [t.tag, t]));
+  }, [rawTags]);
 
   return (
     <Autocomplete
@@ -57,7 +67,26 @@ export default function ClubTagAutocomplete({
       }
       aria-label={allowAddingOptions ? 'Tag search' : 'Tag search and adding'}
       value={value}
-      options={stringOptions}
+      options={allTags ?? []}
+      renderOption={(props, option) => {
+        const { key, className, ...otherProps } = props;
+        const original = tagStringToObject[option];
+
+        return (
+          <li
+            key={key}
+            className={`flex flex-row justify-between ${className}`}
+            {...otherProps}
+          >
+            <span>{option}</span>
+            {original && (
+              <span className="ml-2 text-sm text-slate-600 dark:text-slate-400">
+                {original.count}
+              </span>
+            )}
+          </li>
+        );
+      }}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -98,13 +127,25 @@ export default function ClubTagAutocomplete({
       renderValue={(value, getItemProps) => {
         return value.map((option: string, index: number) => {
           const { key, ...itemProps } = getItemProps({ index });
+          const original = tagStringToObject[option];
+
           return (
-            <TagChip
+            <Tooltip
               key={key}
-              icon={<TagIcon color="inherit" />}
-              tag={option}
-              {...itemProps}
-            />
+              title={
+                original
+                  ? `In ${original.count} ${original.count === 1 ? 'club' : 'clubs'}`
+                  : ''
+              }
+            >
+              <span>
+                <TagChip
+                  icon={<TagIcon color="inherit" />}
+                  tag={option}
+                  {...itemProps}
+                />
+              </span>
+            </Tooltip>
           );
         });
       }}
