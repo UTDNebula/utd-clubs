@@ -1,17 +1,29 @@
 import { TZDateMini } from '@date-fns/tz';
 import { TRPCError } from '@trpc/server';
-import { add, startOfDay } from 'date-fns';
+import {
+  add,
+  lastDayOfMonth,
+  lastDayOfWeek,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns';
 import {
   and,
+  arrayOverlaps,
+  asc,
   between,
   count,
+  desc,
   eq,
+  exists,
   gt,
   gte,
   ilike,
   inArray,
   isNull,
   lte,
+  notExists,
   or,
   sql,
   type SQL,
@@ -19,15 +31,20 @@ import {
 import { OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
 import { db } from '@src/server/db';
-import { selectEvent } from '@src/server/db/models';
 import { club } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
-import { userMetadataToEvents } from '@src/server/db/schema/users';
+import {
+  userMetadataToClubs,
+  userMetadataToEvents,
+} from '@src/server/db/schema/users';
 import { stopWatching } from '@src/utils/calendar';
-import { dateSchema, order } from '@src/utils/eventFilter';
+import {
+  dateSchemaLegacy,
+  eventParamsSchemaOutput,
+  temporalDeixisCustomDateSentinelValue,
+} from '@src/utils/eventFilter';
 import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
-// import { callStorageAPI } from '@src/utils/storage';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 async function isUserOfficer(userId: string, clubId: string) {
@@ -50,8 +67,9 @@ const byClubIdSchema = z.object({
   pageSize: z.number().int().positive().optional(),
   includePast: z.boolean().optional().default(false),
 });
-const countByClubIdSchema = z.object({
-  clubId: z.string(),
+
+const countSchema = z.object({
+  clubId: z.string().optional(),
   includePast: z.boolean().optional().default(false),
   currentTime: z.optional(z.date()),
 });
@@ -64,12 +82,10 @@ const byDateRangeSchema = z.object({
   endTime: z.date().optional(),
 });
 export const findByFilterSchema = z.object({
-  date: z.date(),
-  order: order,
-  club: z.string().array(),
+  filters: eventParamsSchemaOutput,
 });
 export const findByDateSchema = z.object({
-  date: dateSchema,
+  date: dateSchemaLegacy,
 });
 
 const byIdSchema = z.object({
@@ -117,33 +133,34 @@ export const eventRouter = createTRPCRouter({
         throw e;
       }
     }),
-  countByClubId: publicProcedure
-    .input(countByClubIdSchema)
-    .query(async ({ input, ctx }) => {
-      const { clubId, includePast } = input;
-      const now = input.currentTime ?? new Date();
+  count: publicProcedure.input(countSchema).query(async ({ input, ctx }) => {
+    const { clubId, includePast } = input;
+    const now = input.currentTime ?? new Date();
 
-      try {
-        const whereCondition = includePast
-          ? and(eq(events.clubId, clubId), eq(events.status, 'approved'))
-          : and(
-              eq(events.clubId, clubId),
-              gte(events.endTime, now),
-              eq(events.status, 'approved'),
-            );
-        const result = await ctx.db
-          .select({ value: count() })
-          .from(events)
-          .where(whereCondition);
-        const value = result[0]?.value ?? 0;
+    try {
+      const conditions: Array<SQL<unknown> | undefined> = [];
 
-        return value;
-      } catch (e) {
-        console.error(e);
-
-        throw e;
+      conditions.push(eq(events.status, 'approved'));
+      if (!includePast) {
+        conditions.push(gte(events.endTime, now));
       }
-    }),
+      if (clubId) {
+        conditions.push(eq(events.clubId, clubId));
+      }
+
+      const result = await ctx.db
+        .select({ value: count() })
+        .from(events)
+        .where(and(...conditions));
+      const value = result[0]?.value ?? 0;
+
+      return value;
+    } catch (e) {
+      console.error(e);
+
+      throw e;
+    }
+  }),
   clubUpcoming: publicProcedure
     .input(clubUpcomingEventsSchema)
     .query(async ({ input, ctx }) => {
@@ -197,8 +214,7 @@ export const eventRouter = createTRPCRouter({
           (e) => e.club.approved === 'approved',
         );
 
-        const parsed = approvedEvents.map((e) => selectEvent.parse(e));
-        return parsed;
+        return approvedEvents;
       } catch (e) {
         console.error(e);
 
@@ -251,52 +267,256 @@ export const eventRouter = createTRPCRouter({
   findByFilters: publicProcedure
     .input(findByFilterSchema)
     .query(async ({ input, ctx }) => {
-      const startTime = startOfDay(input.date);
-      const endTime = add(startTime, { days: 1 });
-      const events = await ctx.db.query.events.findMany({
-        where: (event) => {
-          const whereElements: Array<SQL<unknown> | undefined> = [];
-          whereElements.push(
-            and(
-              eq(event.status, 'approved'),
-              or(
-                between(event.startTime, startTime, endTime),
-                between(event.endTime, startTime, endTime),
-                and(
-                  lte(event.startTime, startTime),
-                  gte(event.endTime, startTime),
-                ),
-                and(lte(event.startTime, endTime), gte(event.endTime, endTime)),
+      const signedIn = ctx.session;
+      const userId = ctx.session?.user.id;
+
+      const filters = input.filters;
+
+      const page = filters.page ?? 1;
+      const pageSize = Math.min(filters.size, 100) ?? 20;
+
+      const registeredEventsSubquery = userId
+        ? ctx.db
+            .select()
+            .from(userMetadataToEvents)
+            .where(
+              and(
+                eq(userMetadataToEvents.eventId, events.id),
+                eq(userMetadataToEvents.userId, userId),
               ),
-            ),
-          );
+            )
+        : undefined;
 
-          if (input.club.length !== 0) {
-            whereElements.push(inArray(event.clubId, input.club));
-          }
-          return and(...whereElements);
-        },
-        orderBy: (events, { asc, desc }) => {
-          switch (input.order) {
-            case 'soon':
-              return [asc(events.startTime)];
-            case 'later':
-              return [desc(events.startTime)];
-            case 'shortest duration':
-              return [asc(sql`${events.endTime} - ${events.startTime}`)];
-            case 'longest duration':
-              return [desc(sql`${events.endTime} - ${events.startTime}`)];
-          }
-        },
-        with: {
-          club: true,
-        },
-        limit: 20,
-      });
+      const joinedClubsSubquery = userId
+        ? ctx.db
+            .select()
+            .from(userMetadataToClubs)
+            .where(
+              and(
+                eq(userMetadataToClubs.clubId, events.clubId),
+                eq(userMetadataToClubs.userId, userId),
+                inArray(userMetadataToClubs.memberType, [
+                  'Member',
+                  'Officer',
+                  'President',
+                ]),
+              ),
+            )
+        : undefined;
 
-      return {
-        events: events,
-      };
+      try {
+        let query = ctx.db
+          .select({
+            events,
+            club,
+            isRegistered: registeredEventsSubquery
+              ? exists(registeredEventsSubquery)
+              : sql<boolean>`false`,
+            isClubMember: joinedClubsSubquery
+              ? exists(joinedClubsSubquery)
+              : sql<boolean>`false`,
+            'internal-count': sql<number>`count(*) OVER()`.mapWith(Number),
+          })
+          .from(events)
+          .leftJoin(club, eq(events.clubId, club.id))
+          .$dynamic();
+
+        query = query
+          .where((tables) => {
+            const events = tables.events;
+            const club = tables.club;
+
+            const conditions: Array<SQL<unknown> | undefined> = [];
+
+            conditions.push(eq(events.status, 'approved'));
+
+            /**
+             * True if date is "custom" but dateStart and dateEnd aren't provided.
+             * In other words, if user has clicked "custom" but hasn't finished
+             * entering both a start date and end date yet.
+             */
+            const unfinishedCustomDate =
+              filters.date === temporalDeixisCustomDateSentinelValue &&
+              (!filters.dateStart || !filters.dateEnd);
+
+            const now = new Date();
+            const today = startOfDay(now);
+
+            // filters.(past, date, dateStart, dateEnd)
+            if (
+              !unfinishedCustomDate &&
+              (filters.date || (filters.dateStart && filters.dateEnd))
+            ) {
+              let startTime: Date | undefined;
+              let endTime: Date | undefined;
+
+              switch (filters.date) {
+                case 'today':
+                  startTime = filters.past ? today : now;
+                  endTime = add(today, { days: 1 });
+                  break;
+                case 'tomorrow':
+                  startTime = add(today, { days: 1 });
+                  endTime = add(today, { days: 2 });
+                  break;
+                case 'this weekend':
+                  // Beginning of this Saturday
+                  startTime = lastDayOfWeek(today);
+                  // End of next Sunday
+                  endTime = add(startOfWeek(add(today, { weeks: 1 })), {
+                    days: 1,
+                  });
+                  break;
+                case 'this week':
+                  startTime = filters.past ? startOfWeek(today) : now;
+                  endTime = add(lastDayOfWeek(today), { days: 1 });
+                  break;
+                case 'this month':
+                  startTime = filters.past ? startOfMonth(today) : now;
+                  endTime = add(lastDayOfMonth(today), { days: 1 });
+                  break;
+                case temporalDeixisCustomDateSentinelValue:
+                // Go to default case, in case dateStart and dateEnd exist but date is invalid
+                default:
+                  if (filters.dateStart && filters.dateEnd) {
+                    startTime = startOfDay(filters.dateStart);
+                    endTime = add(startOfDay(filters.dateEnd), { days: 1 });
+                  }
+                  break;
+              }
+
+              if (startTime && endTime) {
+                conditions.push(
+                  or(
+                    between(events.startTime, startTime, endTime),
+                    between(events.endTime, startTime, endTime),
+                    and(
+                      lte(events.startTime, startTime),
+                      gte(events.endTime, startTime),
+                    ),
+                    and(
+                      lte(events.startTime, endTime),
+                      gte(events.endTime, endTime),
+                    ),
+                  ),
+                );
+              } else if (
+                filters.date !== temporalDeixisCustomDateSentinelValue
+              ) {
+                throw new TRPCError({
+                  code: 'BAD_REQUEST',
+                  message: `Invalid key for filters.date: ${filters.date}`,
+                });
+              }
+            } else if (filters.past) {
+              // Get events from the present and past
+              conditions.push(lte(events.startTime, now));
+            } else {
+              // Get events in the present and future
+              conditions.push(
+                or(gte(events.startTime, now), gte(events.endTime, now)),
+              );
+            }
+
+            // filters.tags
+            if (filters.tags && filters.tags.length > 0) {
+              conditions.push(arrayOverlaps(club.tags, filters.tags));
+            }
+
+            // filters.location
+            if (filters.location) {
+              // TODO: Either parse the events.location column or add another column similar to filters.location
+            }
+
+            // filters.locationExclude
+            if (filters.locationExclude) {
+              // TODO: Either parse the events.location column or add another column similar to filters.location
+            }
+
+            // filters.query
+            if (filters.query) {
+              conditions.push(
+                sql`${events.id} @@@
+              paradedb.boolean(
+                should => ARRAY[
+                  paradedb.boost(10.0,paradedb.match(field=>'name',value=>${filters.query},distance=>2)),
+                  paradedb.boost(1.0,paradedb.match(field=>'description',value=>${filters.query},distance=>1)),
+                  paradedb.boost(5.0,paradedb.match(field=>'location',value=>${filters.query},distance=>1))
+                ])`,
+              );
+            }
+
+            if (signedIn && userId) {
+              // filters.clubs
+              if (filters.clubs === 'following') {
+                conditions.push(
+                  joinedClubsSubquery
+                    ? exists(joinedClubsSubquery)
+                    : sql<boolean>`false`,
+                );
+              } else if (filters.clubs === 'new') {
+                conditions.push(
+                  joinedClubsSubquery
+                    ? notExists(joinedClubsSubquery)
+                    : sql<boolean>`false`,
+                );
+              }
+
+              // filters.hideRegistered
+              if (filters.hideRegistered) {
+                conditions.push(
+                  registeredEventsSubquery
+                    ? notExists(registeredEventsSubquery)
+                    : sql<boolean>`false`,
+                );
+              }
+            }
+
+            return and(...conditions);
+          })
+          .limit(pageSize)
+          .offset((page - 1) * pageSize)
+          .orderBy((tables) => {
+            const events = tables.events;
+
+            switch (filters.sort) {
+              case 'upcoming':
+                // If past and no custom date, sort by recency
+                const sortByRecency =
+                  filters.past &&
+                  !filters.date &&
+                  !filters.dateStart &&
+                  !filters.dateEnd;
+
+                if (sortByRecency) {
+                  return [desc(events.startTime)];
+                } else {
+                  return [asc(events.startTime)];
+                }
+              case 'updated':
+                return [desc(events.updatedAt)];
+            }
+          });
+
+        const result = await query;
+
+        const eventsData = result.map((r) => ({ ...r.events, club: r.club! }));
+        const totalCount = result[0]?.['internal-count'] ?? 0;
+        const totalPages = Math.ceil(totalCount / pageSize);
+
+        return {
+          data: eventsData,
+          pagination: {
+            page: Math.min(page, totalPages + 1),
+            size: pageSize,
+            total: totalCount,
+            totalPages: totalPages,
+          },
+        };
+      } catch (e) {
+        console.error(e);
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      }
     }),
   byId: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     const { id } = input;

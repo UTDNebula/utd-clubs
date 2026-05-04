@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Panel from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import MemberRoleChip from '@src/components/manage/MemberRoleChip';
 import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -83,6 +84,15 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
                 );
 
                 joinedClubs.splice(removeIndex, 1);
+                setSnackbar(SnackbarPresets.savedCustom('Left club!'));
+              },
+              onError: (e) => {
+                setSnackbar(
+                  SnackbarPresets.errorCustomMessage(
+                    'Failed to leave club!',
+                    e.message,
+                  ),
+                );
               },
             },
           );
@@ -105,6 +115,8 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
   const canManage =
     joinedClub?.memberType === 'Officer' ||
     joinedClub?.memberType === 'President';
+
+  const isAdmin = joinedClub?.memberType === 'President';
 
   return (
     <div className="flex flex-wrap items-center gap-2 p-2 min-h-16 max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800 transition-colors rounded-lg">
@@ -174,10 +186,29 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
             }
           />
         )}
-        <Tooltip title="Unfollow club">
-          <IconButton aria-label="unfollow" onClick={onLeave}>
-            <DeleteIcon />
-          </IconButton>
+        <Tooltip
+          title={
+            isAdmin ? (
+              <div className="text-center">
+                You cannot unfollow a club you manage
+                <br />
+                Another admin must remove you
+              </div>
+            ) : (
+              'Unfollow club'
+            )
+          }
+        >
+          {/* This span is required to ensure the locked tooltip shows when the IconButton is disabled */}
+          <span>
+            <IconButton
+              aria-label="unfollow"
+              onClick={onLeave}
+              disabled={isAdmin}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </span>
         </Tooltip>
       </div>
     </div>

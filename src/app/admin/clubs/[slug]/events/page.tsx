@@ -38,7 +38,7 @@ export default async function Page({ params, searchParams }: Props) {
       includePast,
       currentTime: now,
     }),
-    api.event.countByClubId({
+    api.event.count({
       clubId: club.id,
       includePast,
       currentTime: now,
