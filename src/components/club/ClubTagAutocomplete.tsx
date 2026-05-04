@@ -111,27 +111,27 @@ export default function ClubTagAutocomplete({
       filterOptions={
         allowAddingOptions
           ? (options, params) => {
-            const filtered = filter(options, params);
+              const filtered = filter(options, params);
 
-            const ignoredWords = ['and', 'or', 'of', 'in', 'the'];
+              const ignoredWords = ['and', 'or', 'of', 'in', 'the'];
 
-            // Trim user specified tag, then capitalize first letter of every word except ignoredWords
-            const input = params.inputValue
-              .trim()
-              .replace(/\b\w+/g, (word, index) => {
-                if (index > 0 && ignoredWords.includes(word.toLowerCase())) {
-                  return word;
-                }
-                return word.charAt(0).toUpperCase() + word.slice(1);
-              });
+              // Trim user specified tag, then capitalize first letter of every word except ignoredWords
+              const input = params.inputValue
+                .trim()
+                .replace(/\b\w+/g, (word, index) => {
+                  if (index > 0 && ignoredWords.includes(word.toLowerCase())) {
+                    return word;
+                  }
+                  return word.charAt(0).toUpperCase() + word.slice(1);
+                });
 
-            // Wait for fetching, don't allow blank tags, don't allow already existing tags
-            if (!isFetching && input != '' && !options.includes(input)) {
-              filtered.push(`Add "${input}" tag`);
+              // Wait for fetching, don't allow blank tags, don't allow already existing tags
+              if (!isFetching && input != '' && !options.includes(input)) {
+                filtered.push(`Add "${input}" tag`);
+              }
+
+              return filtered;
             }
-
-            return filtered;
-          }
           : undefined
       }
       onChange={(_e, value) => {
