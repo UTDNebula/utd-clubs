@@ -143,6 +143,7 @@ export default function ViewOption<Value>({
             size="small"
             className="aspect-square text-neutral-600 dark:text-neutral-400 *:text-[18px]"
             onClick={handleClick}
+            onMouseDown={type === 'select' ? handleClick : undefined}
             aria-controls={openMenu ? `${title}-menu` : undefined}
             aria-haspopup="true"
             aria-expanded={openMenu ? 'true' : undefined}
@@ -159,6 +160,7 @@ export default function ViewOption<Value>({
           startIcon={selected?.icon ?? icon}
           endIcon={dropdownIcon ? <ArrowDropDownIcon /> : undefined}
           onClick={handleClick}
+          onMouseDown={type === 'select' ? handleClick : undefined}
           aria-controls={openMenu ? `${title}-menu` : undefined}
           aria-haspopup="true"
           aria-expanded={openMenu ? 'true' : undefined}
