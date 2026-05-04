@@ -87,7 +87,7 @@ export default function EventDirectoryGrid({
         </div>
       )}
       <div
-        className={`${viewLayout === 'card' ? `grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))]` : viewLayout === 'list' ? 'grid auto-rows-fr max-sm:-mx-4' : ''} items-center max-sm:gap-2 gap-4 transition-opacity ${query.isFetching ? 'opacity-50 select-none pointer-events-none' : ''}`}
+        className={`${viewLayout === 'card' ? `grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))]` : viewLayout === 'list' ? 'flex flex-col max-sm:-mx-4' : ''} items-center max-sm:gap-2 gap-4 transition-opacity ${query.isFetching ? 'opacity-50 select-none pointer-events-none' : ''}`}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           {events.map((event) => (
