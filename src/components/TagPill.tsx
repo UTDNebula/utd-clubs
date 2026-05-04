@@ -1,14 +1,17 @@
 'use client';
 
+import { Tooltip } from '@mui/material';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import { TagChip } from './common/TagChip';
 
 export const TagPill = ({
   name,
+  count,
   removeTag,
   className,
 }: {
   name: string;
+  count?: number;
   removeTag?: () => void;
   className?: string;
 }) => {
@@ -23,17 +26,25 @@ export const TagPill = ({
   }
 
   return (
-    <TagChip
-      tag={name}
-      className={
-        'rounded-full font-bold transition-colors ' + (className ?? '')
+    <Tooltip
+      title={
+        count !== undefined ? `${count} ${count === 1 ? 'club' : 'clubs'}` : ''
       }
-      onClick={() => {
-        addTag(name);
-        scroll();
-        setShouldFocus(true);
-      }}
-      onDelete={removeTag}
-    />
+    >
+      <span>
+        <TagChip
+          tag={name}
+          className={
+            'rounded-full font-bold transition-colors ' + (className ?? '')
+          }
+          onClick={() => {
+            addTag(name);
+            scroll();
+            setShouldFocus(true);
+          }}
+          onDelete={removeTag}
+        />
+      </span>
+    </Tooltip>
   );
 };
