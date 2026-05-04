@@ -808,6 +808,26 @@ export const eventRouter = createTRPCRouter({
           ),
         );
 
+      // Mark kept past events as non-google so they become editable
+      if (input.keepPastEvents) {
+        await ctx.db
+          .update(events)
+          .set({ google: false })
+          .where(
+            and(
+              eq(events.clubId, input.clubId),
+              eq(events.google, true),
+              lte(events.startTime, new Date()),
+              clubRecord.calendarId
+                ? or(
+                    eq(events.calendarId, clubRecord.calendarId),
+                    isNull(events.calendarId),
+                  )
+                : undefined,
+            ),
+          );
+      }
+
       // remove google calendar info from the club
       await ctx.db
         .update(club)

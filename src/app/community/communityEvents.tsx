@@ -16,7 +16,7 @@ export const RegisteredEvents = async () => {
   if (events.length == 0) {
     return (
       <div className="flex flex-col items-center gap-4 mt-4">
-        <p className="font-bold text-slate-500">
+        <p className="font-bold text-slate-500 dark:text-slate-400">
           You haven&apos;t registered for any events.
         </p>
         <LinkButton
@@ -61,7 +61,7 @@ export const ClubEvents = async ({
   if (clubs.length === 0) {
     return (
       <div className="flex flex-col items-center gap-4 mt-4">
-        <p className="font-bold text-slate-500">
+        <p className="font-bold text-slate-500 dark:text-slate-400">
           You aren&apos;t following any clubs.
         </p>
         <LinkButton
@@ -80,7 +80,7 @@ export const ClubEvents = async ({
   if (events.length === 0) {
     return (
       <div className="flex flex-col items-center gap-4 mt-4">
-        <p className="font-bold text-slate-500">
+        <p className="font-bold text-slate-500 dark:text-slate-400">
           Your followed clubs don&apos;t have any events.
         </p>
         <LinkButton
