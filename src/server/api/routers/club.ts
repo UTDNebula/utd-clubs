@@ -136,8 +136,10 @@ export const clubRouter = createTRPCRouter({
   }),
   distinctTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = (await ctx.db.select().from(usedTags)).map((obj) => obj.tag);
-      return tags;
+      return await ctx.db
+        .select()
+        .from(usedTags)
+        .orderBy(desc(usedTags.count), asc(usedTags.tag));
     } catch (e) {
       console.error(e);
       return [];
@@ -145,10 +147,11 @@ export const clubRouter = createTRPCRouter({
   }),
   topTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = (await ctx.db.select().from(usedTags).limit(5)).map(
-        (obj) => obj.tag,
-      );
-      return tags;
+      return await ctx.db
+        .select()
+        .from(usedTags)
+        .orderBy(desc(usedTags.count), asc(usedTags.tag))
+        .limit(5);
     } catch (e) {
       console.error(e);
       return [];
@@ -261,15 +264,22 @@ export const clubRouter = createTRPCRouter({
             eq(userMetadataToClubs.clubId, clubId),
           ),
       });
-      if (dataExists && dataExists.memberType == 'Member') {
-        await ctx.db
-          .delete(userMetadataToClubs)
-          .where(
-            and(
-              eq(userMetadataToClubs.userId, joinUserId),
-              eq(userMetadataToClubs.clubId, clubId),
-            ),
-          );
+      if (dataExists) {
+        if (dataExists.memberType !== 'President') {
+          await ctx.db
+            .delete(userMetadataToClubs)
+            .where(
+              and(
+                eq(userMetadataToClubs.userId, joinUserId),
+                eq(userMetadataToClubs.clubId, clubId),
+              ),
+            );
+        } else {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Cannot remove yourself because you are an admin',
+          });
+        }
       } else {
         await ctx.db
           .insert(userMetadataToClubs)
