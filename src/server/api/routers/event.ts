@@ -459,14 +459,33 @@ export const eventRouter = createTRPCRouter({
           image: data.image,
           updatedAt: new Date(),
         })
-        .where(eq(events.id, id))
+        .where(and(eq(events.id, id), eq(events.google, false)))
         .returning({ id: events.id });
 
-      if (res.length == 0)
+      if (res.length === 0) {
+        const existing = await ctx.db.query.events.findFirst({
+          where: (e) => eq(e.id, id),
+        });
+
+        if (!existing) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Event not found.',
+          });
+        }
+
+        if (existing.google) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Cannot edit a Google Calendar event directly.',
+          });
+        }
+
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to update event',
+          message: 'Failed to update event.',
         });
+      }
       return res[0]?.id;
     }),
   delete: protectedProcedure
