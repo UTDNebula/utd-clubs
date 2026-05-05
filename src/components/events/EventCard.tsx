@@ -136,7 +136,7 @@ const EventCard = ({
         >
           <Link
             href={`/events/${event.id}`}
-            className="EventCardLink absolute inset-0"
+            className="EventCardLink absolute inset-0 z-10"
           />
           <div className="flex flex-row max-sm:pl-4 max-sm:gap-3 gap-5">
             <div className="shrink basis-64 min-w-24 flex items-center">
@@ -194,7 +194,7 @@ const EventCard = ({
         >
           <Link
             href={`/events/${event.id}`}
-            className="EventCardLink absolute inset-0"
+            className="EventCardLink absolute inset-0 z-10"
           />
           <div className="flex flex-1 min-h-0 flex-col">
             <div className="relative min-h-40 shrink-0 w-full">
