@@ -75,6 +75,11 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  #sentry-feedback {
+    /* Underneath MUI's FABs. See https://mui.com/material-ui/customization/z-index/ */
+    --z-index: 1040;
+  }
 }
 
 @utility bg-lighten {

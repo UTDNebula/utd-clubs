@@ -225,6 +225,13 @@
       "when": 1775511351494,
       "tag": "20260406213551_conscious_silver_sable",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1777179901754,
+      "tag": "20260426050501_military_trauma",
+      "breakpoints": true
     }
   ]
 }

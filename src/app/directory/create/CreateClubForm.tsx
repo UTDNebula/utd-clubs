@@ -3,8 +3,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
 import Panel from '@src/components/common/Panel';
-import { ClubTagEdit } from '@src/components/manage/form/ClubTagEdit';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { createClubSchema } from '@src/utils/formSchemas';
@@ -79,7 +79,8 @@ const CreateClubForm = () => {
           </form.AppField>
           <form.Field name="tags">
             {(field) => (
-              <ClubTagEdit
+              <ClubTagAutocomplete
+                allowAddingOptions
                 value={field.state.value}
                 onChange={(value) => {
                   field.handleChange(value);
