@@ -1,4 +1,4 @@
-import { and, count, eq, gte, inArray, or, sql } from 'drizzle-orm';
+import { and, count, eq, gt, gte, inArray, lt, or, sql } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { z } from 'zod';
 import { type personalCats } from '@src/constants/categories';
@@ -11,7 +11,11 @@ import {
 import { admin } from '@src/server/db/schema/admin';
 import { user as users } from '@src/server/db/schema/auth';
 import { events } from '@src/server/db/schema/events';
-import { userMetadata, userMetadataToClubs } from '@src/server/db/schema/users';
+import {
+  userMetadata,
+  userMetadataToClubs,
+  userMetadataToEvents,
+} from '@src/server/db/schema/users';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byIdSchema = z.object({ id: z.string() });
@@ -116,6 +120,28 @@ export const userMetadataRouter = createTRPCRouter({
     await ctx.db.delete(users).where(eq(users.id, user.id));
     await ctx.db.delete(userMetadata).where(eq(userMetadata.id, user.id));
   }),
+  getRegisteredEventsByRange: protectedProcedure
+    .input(z.object({ startDate: z.string(), endDate: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const start = new Date(input.startDate);
+      const end = new Date(input.endDate);
+
+      const userEventIds = ctx.db
+        .select({ id: userMetadataToEvents.eventId })
+        .from(userMetadataToEvents)
+        .where(eq(userMetadataToEvents.userId, ctx.session.user.id));
+
+      return ctx.db.query.events.findMany({
+        where: (e) =>
+          and(
+            inArray(e.id, userEventIds),
+            eq(e.status, 'approved'),
+            lt(e.startTime, end),
+            gt(e.endTime, start),
+          ),
+        with: { club: true },
+      });
+    }),
   getEvents: protectedProcedure
     .input(eventsSortSchema)
     .query(async ({ input, ctx }) => {

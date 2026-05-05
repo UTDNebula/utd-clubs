@@ -9,6 +9,7 @@ import { RegisterModalProvider } from '@src/components/global/RegisterModalProvi
 import { SnackbarProvider } from '@src/components/global/Snackbar';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
+import SyncfusionWrapper from '@src/utils/SyncfusionWrapper';
 import theme from '@src/utils/theme';
 
 const inter = Inter({
@@ -68,18 +69,20 @@ export default async function RootLayout({
         className={`bg-light dark:bg-dark ${inter.variable} font-main ${baiJamjuree.variable} text-haiti dark:text-white`}
       >
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <TRPCReactProvider>
-            <ThemeProvider theme={theme}>
-              <ClientLocalizationProvider>
-                <RegisterModalProvider>
-                  <SnackbarProvider>
-                    <CheckRefreshToken />
-                    {children}
-                  </SnackbarProvider>
-                </RegisterModalProvider>
-              </ClientLocalizationProvider>
-            </ThemeProvider>
-          </TRPCReactProvider>
+          <SyncfusionWrapper>
+            <TRPCReactProvider>
+              <ThemeProvider theme={theme}>
+                <ClientLocalizationProvider>
+                  <RegisterModalProvider>
+                    <SnackbarProvider>
+                      <CheckRefreshToken />
+                      {children}
+                    </SnackbarProvider>
+                  </RegisterModalProvider>
+                </ClientLocalizationProvider>
+              </ThemeProvider>
+            </TRPCReactProvider>
+          </SyncfusionWrapper>
           {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
             <GoogleAnalytics gaId="G-FYTBHVKNG6" />
           )}

@@ -232,6 +232,20 @@
       "when": 1777179901754,
       "tag": "20260426050501_military_trauma",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1775495998002,
+      "tag": "20260406171958_tidy_pyro",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1775511351494,
+      "tag": "20260406213551_conscious_silver_sable",
+      "breakpoints": true
     }
   ]
 }
