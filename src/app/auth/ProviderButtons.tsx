@@ -23,8 +23,8 @@ const ProviderButton = ({
     onClick={() => {
       void authClient.signIn.social({
         provider: provider,
-        callbackURL: callbackUrl ?? window.location.href,
-        newUserCallbackURL: '/get-started',
+        callbackURL: callbackUrl ?? '/community',
+        newUserCallbackURL: '/community',
       });
     }}
     className="bg-white hover:bg-neutral-100 dark:bg-neutral-700 dark:hover:bg-neutral-600 normal-case whitespace-nowrap min-w-max"
