@@ -4,6 +4,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
 } from 'drizzle-orm/pg-core';
@@ -17,29 +18,33 @@ export const statusEnum = pgEnum('status_enum', [
   'deleted',
 ]);
 
-export const events = pgTable('events', {
-  id: text('id')
-    .default(sql`nanoid(20)`)
-    .primaryKey(),
-  clubId: text('club_id')
-    .notNull()
-    .references(() => club.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
-  description: text('description').default('').notNull(),
-  status: statusEnum('approved').notNull().default('approved'),
-  startTime: timestamp('start_time').notNull(),
-  endTime: timestamp('end_time').notNull(),
-  recurrence: text('recurrence'),
-  recurenceId: text('recurence_id'),
-  google: boolean().default(false).notNull(),
-  etag: text(),
-  location: text('location').default('').notNull(),
-  image: text('image'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-  pageViews: integer('page_views').notNull().default(0),
-  calendarId: text('calendar_id'),
-});
+export const events = pgTable(
+  'events',
+  {
+    id: text('id')
+      .default(sql`nanoid(20)`)
+      .notNull(),
+    clubId: text('club_id')
+      .notNull()
+      .references(() => club.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    description: text('description').default('').notNull(),
+    status: statusEnum('approved').notNull().default('approved'),
+    startTime: timestamp('start_time').notNull(),
+    endTime: timestamp('end_time').notNull(),
+    recurrence: text('recurrence'),
+    recurenceId: text('recurence_id'),
+    google: boolean().default(false).notNull(),
+    etag: text(),
+    location: text('location').default('').notNull(),
+    image: text('image'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    pageViews: integer('page_views').notNull().default(0),
+    calendarId: text('calendar_id'),
+  },
+  (t) => [primaryKey({ columns: [t.id, t.clubId] })],
+);
 
 export const eventsRelation = relations(events, ({ one, many }) => ({
   club: one(club, { fields: [events.clubId], references: [club.id] }),

@@ -185,10 +185,10 @@ export const adminRouter = createTRPCRouter({
       }
     }),
   deleteEvent: adminProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), clubId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const event = await ctx.db.query.events.findFirst({
-        where: (e) => eq(e.id, input.id),
+        where: (e) => and(eq(e.id, input.id), eq(e.clubId, input.clubId)),
       });
 
       if (!event) {
@@ -199,8 +199,15 @@ export const adminRouter = createTRPCRouter({
         callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`),
         ctx.db
           .delete(userMetadataToEvents)
-          .where(eq(userMetadataToEvents.eventId, input.id)),
-        ctx.db.delete(events).where(eq(events.id, input.id)), // only place where event is fully deleted from DB
+          .where(
+            and(
+              eq(userMetadataToEvents.eventId, input.id),
+              eq(userMetadataToEvents.clubId, input.clubId),
+            ),
+          ),
+        ctx.db
+          .delete(events)
+          .where(and(eq(events.id, input.id), eq(events.clubId, input.clubId))),
       ]);
 
       return { success: true };

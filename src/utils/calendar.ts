@@ -135,7 +135,12 @@ export async function syncCalendar(
           await tx
             .update(eventTable)
             .set({ status: 'deleted' })
-            .where(inArray(eventTable.id, deletedIds));
+            .where(
+              and(
+                inArray(eventTable.id, deletedIds),
+                eq(eventTable.clubId, clubId),
+              ),
+            );
         }
         try {
           if (newOrUpdated.length > 0) {
@@ -143,7 +148,7 @@ export async function syncCalendar(
               .insert(eventTable)
               .values(newOrUpdated.map((e) => generateEvent(clubId, e)))
               .onConflictDoUpdate({
-                target: eventTable.id,
+                target: [eventTable.id, eventTable.clubId],
                 set: buildConflictUpdateColumns(eventTable, [
                   'name',
                   'description',
