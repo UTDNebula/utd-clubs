@@ -70,8 +70,15 @@ const byClubIdSchema = z.object({
 
 const countSchema = z.object({
   clubId: z.string().optional(),
-  includePast: z.boolean().optional().default(false),
-  currentTime: z.optional(z.date()),
+  /**
+   * Whether to include past events.
+   */
+  includePast: z.boolean().default(false),
+  /**
+   * Whether to include events farther than a year out.
+   */
+  includeAll: z.boolean().default(false),
+  currentTime: z.date().optional(),
 });
 const clubUpcomingEventsSchema = z.object({
   clubId: z.string(),
@@ -134,7 +141,7 @@ export const eventRouter = createTRPCRouter({
       }
     }),
   count: publicProcedure.input(countSchema).query(async ({ input, ctx }) => {
-    const { clubId, includePast } = input;
+    const { clubId, includePast, includeAll } = input;
     const now = input.currentTime ?? new Date();
 
     try {
@@ -143,6 +150,9 @@ export const eventRouter = createTRPCRouter({
       conditions.push(eq(events.status, 'approved'));
       if (!includePast) {
         conditions.push(gte(events.endTime, now));
+      }
+      if (!includeAll) {
+        conditions.push(lte(events.startTime, add(now, { years: 1 })));
       }
       if (clubId) {
         conditions.push(eq(events.clubId, clubId));
@@ -387,17 +397,9 @@ export const eventRouter = createTRPCRouter({
 
               if (startTime && endTime) {
                 conditions.push(
-                  or(
-                    between(events.startTime, startTime, endTime),
-                    between(events.endTime, startTime, endTime),
-                    and(
-                      lte(events.startTime, startTime),
-                      gte(events.endTime, startTime),
-                    ),
-                    and(
-                      lte(events.startTime, endTime),
-                      gte(events.endTime, endTime),
-                    ),
+                  and(
+                    lte(events.startTime, endTime),
+                    gte(events.endTime, startTime),
                   ),
                 );
               } else if (
@@ -414,7 +416,10 @@ export const eventRouter = createTRPCRouter({
             } else {
               // Get events in the present and future
               conditions.push(
-                or(gte(events.startTime, now), gte(events.endTime, now)),
+                and(
+                  or(gte(events.startTime, now), gte(events.endTime, now)),
+                  lte(events.startTime, add(now, { years: 1 })),
+                ),
               );
             }
 

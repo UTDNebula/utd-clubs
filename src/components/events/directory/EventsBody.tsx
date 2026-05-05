@@ -115,7 +115,7 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
       </Collapse>
       <div id="events-content" className="flex flex-col gap-4 grow w-min">
         <div
-          className="sticky z-40 bg-linear-to-b from-light dark:from-dark to-transparent from-75% py-4 -mb-4 max-sm:-mx-4 max-sm:px-4"
+          className="sticky z-40 bg-linear-to-b from-light dark:from-dark to-transparent from-75% py-4 -mb-4 -mx-4 px-4"
           // TODO: The top property should be BaseHeader's height. Replace this with a dynamic variable
           style={{ top: 68 }}
         >
