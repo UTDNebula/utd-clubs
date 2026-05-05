@@ -7,7 +7,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import EventDirectorySearchBar from '@src/components/searchBar/EventDirectorySearchBar';
 import { RouterOutputs } from '@src/trpc/shared';
 import {
-  eventFiltersSchema,
+  eventParamsToFilters,
   listSelectedEventFilters,
 } from '@src/utils/eventFilter';
 import useStable from '@src/utils/useStable';
@@ -30,7 +30,7 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
 
   const searchParams = useSearchParams();
 
-  const filters = eventFiltersSchema.parse(Object.fromEntries(searchParams));
+  const filters = eventParamsToFilters.parse(Object.fromEntries(searchParams));
   const selectedFilters = useStable(listSelectedEventFilters(filters));
 
   const [showSidebar, setShowSidebar] = useState(true);

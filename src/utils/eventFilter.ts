@@ -1,5 +1,4 @@
-import { TZDateMini } from '@date-fns/tz';
-import { format, parseISO, startOfDay } from 'date-fns';
+import { parseISO } from 'date-fns';
 import { z } from 'zod';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -8,10 +7,16 @@ import { z } from 'zod';
 
 type searchParamValue = string | string[] | undefined;
 
+/**
+ * Maps EventFiltersSchema to the result of Object.entries()
+ */
 type EventFiltersSchemaEntries = {
   [K in keyof EventFiltersSchema]: [K, EventFiltersSchema[K]];
 }[keyof EventFiltersSchema][];
 
+/**
+ * Matches only keys in an object that are an array type
+ */
 type ArrayKeys<T> = {
   [K in keyof T]: T[K] extends unknown[] ? K : never;
 }[keyof T];
@@ -94,15 +99,6 @@ export const temporalDeixisStrings: Record<
   custom: 'Custom date',
 };
 
-/**
- * @deprecated
- */
-export const dateSchemaLegacy = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
-  .default(format(startOfDay(TZDateMini.tz('America/Chicago')), 'yyyy-MM-dd'))
-  .catch(format(startOfDay(TZDateMini.tz('America/Chicago')), 'yyyy-MM-dd'));
-
 export const dateSchema = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format');
@@ -158,34 +154,7 @@ export const eventParamsSchema = z.object({
 
 export type EventParamsSchema = z.infer<typeof eventParamsSchema>;
 
-export const eventFiltersSchema = eventParamsSchema.transform(
-  ({
-    q,
-    s,
-    date,
-    dateStart,
-    dateEnd,
-    'location!': locationExclude,
-    ...rest
-  }) => {
-    return {
-      query: q,
-      sort: s,
-      date:
-        (dateStart && dateStart !== '') || (dateEnd && dateEnd !== '')
-          ? temporalDeixisCustomDateSentinelValue
-          : date,
-      dateStart: dateStart && dateStart !== '' ? parseISO(dateStart) : null,
-      dateEnd: dateEnd && dateEnd !== '' ? parseISO(dateEnd) : null,
-      locationExclude,
-      ...rest,
-    };
-  },
-);
-
-export type EventFiltersSchema = z.infer<typeof eventFiltersSchema>;
-
-export const eventParamsSchemaOutput = z.object({
+export const eventFiltersSchema = z.object({
   query: z.string().optional(),
   sort: sortEnum.default('upcoming').catch('upcoming'),
   page: z.int().min(1).default(1).catch(1),
@@ -201,7 +170,34 @@ export const eventParamsSchemaOutput = z.object({
   locationExclude: eventLocationFilterEnum.array().default([]).catch([]),
 });
 
-export type EventParamsSchemaOutput = z.infer<typeof eventParamsSchemaOutput>;
+export type EventFiltersSchema = z.infer<typeof eventFiltersSchema>;
+
+export const eventParamsToFilters = eventParamsSchema
+  .transform(
+    ({
+      q,
+      s,
+      date,
+      dateStart,
+      dateEnd,
+      'location!': locationExclude,
+      ...rest
+    }): z.input<typeof eventFiltersSchema> => {
+      return {
+        query: q,
+        sort: s,
+        date:
+          (dateStart && dateStart !== '') || (dateEnd && dateEnd !== '')
+            ? temporalDeixisCustomDateSentinelValue
+            : date,
+        dateStart: dateStart && dateStart !== '' ? parseISO(dateStart) : null,
+        dateEnd: dateEnd && dateEnd !== '' ? parseISO(dateEnd) : null,
+        locationExclude,
+        ...rest,
+      };
+    },
+  )
+  .pipe(eventFiltersSchema);
 
 export const eventParamsDefaults = eventFiltersSchema.parse({});
 
@@ -250,7 +246,9 @@ export function splitArrayField(field: keyof EventFiltersSchema): boolean {
 }
 
 export function listSelectedEventFilters(filters: EventFiltersSchema) {
-  const entries = Object.entries(filters) as EventFiltersSchemaEntries;
+  const entries = (Object.entries(filters) as EventFiltersSchemaEntries).filter(
+    (e) => e !== undefined,
+  );
 
   const selectedItems = entries.flatMap(([field, value]) => {
     // If field's value is an array and the field is allowed to be split according to
@@ -268,13 +266,15 @@ export function listSelectedEventFilters(filters: EventFiltersSchema) {
     return [];
   }) as {
     // If field is an array and allowed to be split according to SplitArrayFields...
-    [F in keyof EventFiltersSchema]: F extends SplitArrayFields
+    [F in keyof EventFiltersSchema]-?: F extends SplitArrayFields
       ? // then if field's value is an array...
-        EventFiltersSchema[F] extends Array<infer U>
-        ? // then return field and value object where value is the array's type
-          FieldAndValue<F, U>
-        : // then return field and value object
-          FieldAndValue<F, EventFiltersSchema[F]>
+        EventFiltersSchema[F] extends infer V
+        ? V extends Array<infer U>
+          ? // then return field and value object where value is the array's type
+            FieldAndValue<F, U>
+          : // then return field and value object
+            FieldAndValue<F, EventFiltersSchema[F]>
+        : never
       : // then return field and value object
         FieldAndValue<F, EventFiltersSchema[F]>;
   }[keyof EventFiltersSchema][];

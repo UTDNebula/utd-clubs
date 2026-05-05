@@ -39,8 +39,8 @@ import {
 } from '@src/server/db/schema/users';
 import { stopWatching } from '@src/utils/calendar';
 import {
-  dateSchemaLegacy,
-  eventParamsSchemaOutput,
+  dateSchema,
+  eventFiltersSchema,
   temporalDeixisCustomDateSentinelValue,
 } from '@src/utils/eventFilter';
 import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
@@ -82,10 +82,10 @@ const byDateRangeSchema = z.object({
   endTime: z.date().optional(),
 });
 export const findByFilterSchema = z.object({
-  filters: eventParamsSchemaOutput,
+  filters: eventFiltersSchema,
 });
 export const findByDateSchema = z.object({
-  date: dateSchemaLegacy,
+  date: dateSchema,
 });
 
 const byIdSchema = z.object({

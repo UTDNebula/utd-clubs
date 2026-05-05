@@ -21,10 +21,10 @@ export default memo(function DatePanel(
 ) {
   const date = props.filters.date;
 
-  const [customDate, setCustomDate] = useState<Date | null>(
+  const [customDate, setCustomDate] = useState<Date | null | undefined>(
     props.filters.dateStart,
   );
-  const [customDateEnd, setCustomDateEnd] = useState<Date | null>(
+  const [customDateEnd, setCustomDateEnd] = useState<Date | null | undefined>(
     props.filters.dateEnd,
   );
 

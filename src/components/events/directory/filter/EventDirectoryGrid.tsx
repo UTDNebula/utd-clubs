@@ -11,13 +11,13 @@ import EventCard, { EventCardVariants } from '@src/components/events/EventCard';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
-import { EventParamsSchemaOutput } from '@src/utils/eventFilter';
+import { EventFiltersSchema } from '@src/utils/eventFilter';
 import useDebounce from '@src/utils/useDebounce';
 import useStable from '@src/utils/useStable';
 import { useEventDirectoryStore } from './utils';
 
 type EventDirectoryGridProps = {
-  filters: EventParamsSchemaOutput;
+  filters: EventFiltersSchema;
   initialQueryData?: RouterOutputs['event']['findByFilters'];
   /**
    * @default "card"
