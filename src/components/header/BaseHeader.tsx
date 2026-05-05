@@ -6,7 +6,14 @@ import { IconButton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import gradientBG from 'public/images/landingGradient.png';
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { ProfileDropDown } from './ProfileDropDown';
 
@@ -135,9 +142,33 @@ export const BaseHeader = ({
 
   const [openCompactSearchBar, setOpenCompactSearchBar] = useState(false);
 
+  const headerRef = useRef<HTMLDivElement>(null);
+  // Dynamically stores header height into a CSS variable called `--base-header-height`.
+  // Useful for elements that need top offsets with `position: fixed` or `scroll-margin-top`.
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      const height =
+        entry?.borderBoxSize[0]?.blockSize ?? entry?.contentRect.height;
+      document.documentElement.style.setProperty(
+        '--base-header-height',
+        `${height}px`,
+      );
+    });
+
+    observer.observe(header);
+
+    return () => {
+      observer.unobserve(header);
+    };
+  }, []);
+
   return (
     <BaseHeaderContext.Provider value={{ openCompactSearchBar }}>
       <div
+        ref={headerRef}
         className={`${disableSticky ? '' : 'sticky'} min-h-17 top-0 z-50 flex w-full justify-between items-center gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-4 ${menu ? 'max-sm:pl-2' : ''} flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
       >
         {!transparent && (
