@@ -165,6 +165,7 @@ export const clubRouter = createTRPCRouter({
         where: and(
           eq(userMetadataToClubs.userId, ctx.session.user.id),
           inArray(userMetadataToClubs.memberType, [
+            'Follower',
             'Member',
             'Officer',
             'President',
@@ -180,6 +181,7 @@ export const clubRouter = createTRPCRouter({
       where: and(
         eq(userMetadataToClubs.userId, ctx.session.user.id),
         inArray(userMetadataToClubs.memberType, [
+          'Follower',
           'Member',
           'Officer',
           'President',
@@ -221,11 +223,6 @@ export const clubRouter = createTRPCRouter({
             where: and(
               eq(userMetadataToClubs.clubId, input.id),
               eq(userMetadataToClubs.userId, ctx.session.user.id),
-              inArray(userMetadataToClubs.memberType, [
-                'Member',
-                'Officer',
-                'President',
-              ]),
             ),
           })
         )?.memberType ?? null
@@ -240,17 +237,21 @@ export const clubRouter = createTRPCRouter({
         where: and(
           eq(userMetadataToClubs.clubId, input.id),
           eq(userMetadataToClubs.userId, ctx.session.user.id),
-          inArray(userMetadataToClubs.memberType, [
-            'Member',
-            'Officer',
-            'President',
-          ]),
         ),
       });
       return {
         memberType: result?.memberType ?? null,
         joinedAt: result?.joinedAt ?? null,
       };
+    }),
+  membershipPolicy: publicProcedure
+    .input(byIdSchema)
+    .query(async ({ input, ctx }) => {
+      const clubData = await ctx.db.query.club.findFirst({
+        where: eq(club.id, input.id),
+        columns: { membershipPolicy: true },
+      });
+      return clubData?.membershipPolicy ?? 'open';
     }),
   joinLeave: protectedProcedure
     .input(joinLeaveSchema)
@@ -264,28 +265,213 @@ export const clubRouter = createTRPCRouter({
             eq(userMetadataToClubs.clubId, clubId),
           ),
       });
-      if (dataExists) {
-        if (dataExists.memberType !== 'President') {
-          await ctx.db
-            .delete(userMetadataToClubs)
-            .where(
-              and(
-                eq(userMetadataToClubs.userId, joinUserId),
-                eq(userMetadataToClubs.clubId, clubId),
-              ),
-            );
-        } else {
-          throw new TRPCError({
-            code: 'FORBIDDEN',
-            message: 'Cannot remove yourself because you are an admin',
-          });
-        }
-      } else {
+      if (
+        dataExists &&
+        (dataExists.memberType === 'Member' ||
+          dataExists.memberType === 'Follower')
+      ) {
         await ctx.db
-          .insert(userMetadataToClubs)
-          .values({ userId: joinUserId, clubId, joinedAt: new Date() });
+          .delete(userMetadataToClubs)
+          .where(
+            and(
+              eq(userMetadataToClubs.userId, joinUserId),
+              eq(userMetadataToClubs.clubId, clubId),
+            ),
+          );
+      } else if (!dataExists) {
+        await ctx.db.insert(userMetadataToClubs).values({
+          userId: joinUserId,
+          clubId,
+          memberType: 'Follower',
+        });
+      } else if (dataExists.memberType !== 'President') {
+        await ctx.db
+          .delete(userMetadataToClubs)
+          .where(
+            and(
+              eq(userMetadataToClubs.userId, joinUserId),
+              eq(userMetadataToClubs.clubId, clubId),
+            ),
+          );
+      } else {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Cannot remove yourself because you are an admin',
+        });
       }
       return dataExists;
+    }),
+  follow: protectedProcedure
+    .input(joinLeaveSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const existing = await ctx.db.query.userMetadataToClubs.findFirst({
+        where: and(
+          eq(userMetadataToClubs.userId, userId),
+          eq(userMetadataToClubs.clubId, input.clubId),
+        ),
+      });
+      if (existing) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'Already connected to this club',
+        });
+      }
+      await ctx.db.insert(userMetadataToClubs).values({
+        userId,
+        clubId: input.clubId,
+        memberType: 'Follower',
+      });
+      return { memberType: 'Follower' as const };
+    }),
+  unfollow: protectedProcedure
+    .input(joinLeaveSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const existing = await ctx.db.query.userMetadataToClubs.findFirst({
+        where: and(
+          eq(userMetadataToClubs.userId, userId),
+          eq(userMetadataToClubs.clubId, input.clubId),
+        ),
+      });
+      if (
+        !existing ||
+        existing.memberType === 'Officer' ||
+        existing.memberType === 'President'
+      ) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Cannot unfollow as an officer or admin',
+        });
+      }
+      await ctx.db
+        .delete(userMetadataToClubs)
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, userId),
+            eq(userMetadataToClubs.clubId, input.clubId),
+          ),
+        );
+      return { memberType: null };
+    }),
+  join: protectedProcedure
+    .input(joinLeaveSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const clubData = await ctx.db.query.club.findFirst({
+        where: eq(club.id, input.clubId),
+        columns: { membershipPolicy: true },
+      });
+      if (!clubData || clubData.membershipPolicy !== 'open') {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'This club does not allow direct joining',
+        });
+      }
+      await ctx.db
+        .update(userMetadataToClubs)
+        .set({ memberType: 'Member', joinedAt: new Date() })
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, userId),
+            eq(userMetadataToClubs.clubId, input.clubId),
+            eq(userMetadataToClubs.memberType, 'Follower'),
+          ),
+        );
+      return { memberType: 'Member' as const };
+    }),
+  leave: protectedProcedure
+    .input(joinLeaveSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      await ctx.db
+        .update(userMetadataToClubs)
+        .set({ memberType: 'Follower' })
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, userId),
+            eq(userMetadataToClubs.clubId, input.clubId),
+            eq(userMetadataToClubs.memberType, 'Member'),
+          ),
+        );
+      return { memberType: 'Follower' as const };
+    }),
+  requestJoin: protectedProcedure
+    .input(joinLeaveSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const clubData = await ctx.db.query.club.findFirst({
+        where: eq(club.id, input.clubId),
+        columns: { membershipPolicy: true },
+      });
+      if (!clubData || clubData.membershipPolicy !== 'request') {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'This club does not accept join requests',
+        });
+      }
+      await ctx.db
+        .update(userMetadataToClubs)
+        .set({ memberType: 'Requested' })
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, userId),
+            eq(userMetadataToClubs.clubId, input.clubId),
+            eq(userMetadataToClubs.memberType, 'Follower'),
+          ),
+        );
+      return { memberType: 'Requested' as const };
+    }),
+  cancelRequest: protectedProcedure
+    .input(joinLeaveSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      await ctx.db
+        .update(userMetadataToClubs)
+        .set({ memberType: 'Follower' })
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, userId),
+            eq(userMetadataToClubs.clubId, input.clubId),
+            eq(userMetadataToClubs.memberType, 'Requested'),
+          ),
+        );
+      return { memberType: 'Follower' as const };
+    }),
+  updateMemberStatus: protectedProcedure
+    .input(
+      z.object({
+        clubId: z.string(),
+        userId: z.string(),
+        newStatus: z.enum(['Follower', 'Member']),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const isOfficer = await ctx.db.query.userMetadataToClubs.findFirst({
+        where: and(
+          eq(userMetadataToClubs.clubId, input.clubId),
+          eq(userMetadataToClubs.userId, ctx.session.user.id),
+          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+        ),
+      });
+      if (!isOfficer) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+      }
+      await ctx.db
+        .update(userMetadataToClubs)
+        .set({ memberType: input.newStatus })
+        .where(
+          and(
+            eq(userMetadataToClubs.userId, input.userId),
+            eq(userMetadataToClubs.clubId, input.clubId),
+            inArray(userMetadataToClubs.memberType, [
+              'Follower',
+              'Member',
+              'Requested',
+            ]),
+          ),
+        );
+      return { success: true };
     }),
   create: protectedProcedure
     .input(createClubSchema)

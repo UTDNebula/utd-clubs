@@ -58,11 +58,10 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
         title={`Unfollow ${leaveClub?.club.name}?`}
         contentText={
           <>
-            You followed this club{' '}
-            {leaveClub &&
-              formatDistanceStrict(leaveClub?.joinedAt, new Date(), {
-                addSuffix: true,
-              })}
+            You have been following this club
+            {leaveClub?.joinedAt
+              ? ` ${formatDistanceStrict(leaveClub.joinedAt, new Date(), { addSuffix: true })}`
+              : ''}
             .
             <br />
             This action cannot be undone.
@@ -143,12 +142,12 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
           </div>
           <div className="flex flex-col grow pl-2 justify-center">
             <Typography variant="body1">{club.name}</Typography>
-            {joinedClub && (
+            {joinedClub?.joinedAt && (
               <Typography
                 variant="caption"
                 className="text-neutral-600 dark:text-neutral-400"
               >
-                <span>{`Following since ${joinedClub?.joinedAt.toLocaleString(
+                <span>{`Member since ${joinedClub.joinedAt.toLocaleString(
                   'en-us',
                   {
                     month: 'short',

@@ -27,7 +27,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
             startIcon={<PeopleIcon />}
             size="large"
           >
-            Followers
+            Members & Followers
           </LinkButton>
           <LinkButton
             href={`/manage/${slug}/events`}

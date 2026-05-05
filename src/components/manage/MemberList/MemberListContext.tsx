@@ -33,6 +33,11 @@ export interface MemberListContextType {
   refreshList: () => void;
   rowSelectionModel: GridRowSelectionModel;
   selfRowId: GridRowId | undefined;
+  clubId?: string;
+  onUpdateMemberStatus?: (
+    userId: string,
+    newStatus: 'Follower' | 'Member',
+  ) => void;
 }
 
 export const MemberListContext = createContext<MemberListContextType>({
@@ -53,4 +58,6 @@ export const MemberListContext = createContext<MemberListContextType>({
     ids: new Set<GridRowId>(),
   },
   selfRowId: undefined,
+  clubId: undefined,
+  onUpdateMemberStatus: undefined,
 });

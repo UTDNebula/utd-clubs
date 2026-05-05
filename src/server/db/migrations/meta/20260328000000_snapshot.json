@@ -1,6 +1,6 @@
 {
-  "id": "bdd0cba4-b79b-4b33-9440-368b4aaec5c2",
-  "prevId": "6792a2ec-396d-4dec-b87f-6a1d45043274",
+  "id": "a63c2557-4015-4ea9-8e53-33a96eeeec2c",
+  "prevId": "fe21cda0-ba4c-47aa-a4d1-73de9c71bbe1",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -860,13 +860,6 @@
           "notNull": true,
           "default": "now()"
         },
-        "page_views": {
-          "name": "page_views",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
         "calendar_id": {
           "name": "calendar_id",
           "type": "text",
@@ -1139,7 +1132,8 @@
           "name": "joined_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
