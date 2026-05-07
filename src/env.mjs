@@ -31,6 +31,7 @@ const server = z.object({
   NEBULA_API_STORAGE_BUCKET: z.string().min(1),
   NEBULA_API_KEY: z.string().min(1),
   NEBULA_API_STORAGE_KEY: z.string().min(1),
+  NEBULA_API_EMAIL_KEY: z.string().optional(),
   GEMINI_SERVICE_ACCOUNT: z.string().optional(),
 });
 
@@ -66,6 +67,7 @@ const processEnv = {
   NEBULA_API_STORAGE_BUCKET: process.env.NEBULA_API_KEY,
   NEBULA_API_KEY: process.env.NEBULA_API_KEY,
   NEBULA_API_STORAGE_KEY: process.env.NEBULA_API_KEY,
+  NEBULA_API_EMAIL_KEY: process.env.NEBULA_API_EMAIL_KEY,
   GEMINI_SERVICE_ACCOUNT: process.env.GEMINI_SERVICE_ACCOUNT,
 };
 
