@@ -53,16 +53,21 @@ export const adminRouter = createTRPCRouter({
       .where(eq(club.approved, 'pending'));
     return result[0]?.value ?? null;
   }),
-  changeTags: adminProcedure
+  refreshTags: adminProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.refreshMaterializedView(usedTags);
+  }),
+  changeTag: adminProcedure
     .input(tagReplaceSchema)
     .mutation(async ({ input, ctx }) => {
       const clubsToChange = await ctx.db.query.club.findMany({
         where: sql`${input.oldTag} = ANY(tags)`,
       });
+      const deleteTag = input.newTag === '';
       clubsToChange.map((club) => {
-        club.tags = club.tags.map((tag) =>
-          tag == input.oldTag ? input.newTag : tag,
-        );
+        club.tags = club.tags.flatMap((tag) => {
+          if (deleteTag) return [];
+          return [tag == input.oldTag ? input.newTag : tag];
+        });
         return club;
       });
       const clubPromise: Promise<unknown>[] = [];
