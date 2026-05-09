@@ -11,7 +11,7 @@ export default function TagSwapper() {
   const [oldTag, setOldTag] = useState('');
   const [newTag, setNewTag] = useState('');
   const api = useTRPC();
-  const changeTags = useMutation(api.club.changeTags.mutationOptions());
+  const changeTags = useMutation(api.admin.changeTags.mutationOptions({}));
 
   return (
     <Panel heading="Rename Tag" className="w-2xl">
