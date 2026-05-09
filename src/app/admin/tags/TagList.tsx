@@ -30,7 +30,7 @@ import { RouterOutputs } from '@src/trpc/shared';
 
 type TagListProps = {
   tags?: RouterOutputs['club']['distinctTags'];
-  topTags: RouterOutputs['club']['topTags'];
+  topTags?: RouterOutputs['club']['topTags'];
 };
 
 export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
@@ -219,7 +219,8 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
     <Panel heading="Club Tags">
       <div className="flex flex-row gap-2 flex-wrap justify-between items-start w-fill mx-2 mb-4">
         <div className="text-slate-600 dark:text-slate-400 text-sm">
-          {tags.length} unique tags from all approved clubs.
+          {tags.length} unique {tags.length === 1 ? 'tag' : 'tags'} from all
+          approved clubs.
           <br />
           This list is public via filters.
         </div>
@@ -247,7 +248,7 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
         label="Search for tag"
         helperText={
           searchTag !== ''
-            ? `${filteredTags.length} result${filteredTags.length === 1 ? '' : 's'}`
+            ? `${filteredTags.length} ${filteredTags.length === 1 ? 'result' : 'results'}`
             : ''
         }
         slotProps={{
@@ -303,8 +304,10 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
             <div>
               <ListItemText primary={tag.tag} />
               <span className="flex flex-row gap-2 w-fit">
-                <ListItemText secondary={`${tag.count} clubs`} />
-                {topTags.some((topTag) => topTag.tag === tag.tag) && (
+                <ListItemText
+                  secondary={`${tag.count} ${tag.count === 1 ? 'club' : 'clubs'}`}
+                />
+                {topTags?.some((topTag) => topTag.tag === tag.tag) && (
                   <Tooltip
                     title={
                       <>
