@@ -2,6 +2,7 @@
 
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import AuthIcons from '@src/icons/AuthIcons';
 import { authClient } from '@src/utils/auth-client';
 
@@ -21,11 +22,23 @@ const ProviderButton = ({
     variant="contained"
     size="large"
     onClick={() => {
-      void authClient.signIn.social({
-        provider: provider,
-        callbackURL: callbackUrl ?? window.location.href,
-        newUserCallbackURL: '/get-started',
-      });
+      void authClient.signIn.social(
+        {
+          provider: provider,
+          callbackURL: callbackUrl ?? window.location.href,
+          newUserCallbackURL: '/get-started',
+        },
+        {
+          onError: (ctx) => {
+            setSnackbar(
+              SnackbarPresets.errorCustomMessage(
+                'An error occurred',
+                ctx.error.message,
+              ),
+            );
+          },
+        },
+      );
     }}
     className="bg-white hover:bg-neutral-100 dark:bg-neutral-700 dark:hover:bg-neutral-600 normal-case whitespace-nowrap min-w-max"
     startIcon={AuthIcons[provider]}

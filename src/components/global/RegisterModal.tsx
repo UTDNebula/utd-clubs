@@ -8,6 +8,7 @@ import Link from 'next/link';
 import React from 'react';
 import ProviderButton from '@src/app/auth/ProviderButtons';
 import { authClient } from '@src/utils/auth-client';
+import { setSnackbar, SnackbarPresets } from './Snackbar';
 
 type RegisterModalProps = Omit<ModalProps, 'children'> & {
   open: boolean;
@@ -23,6 +24,26 @@ export const RegisterModalContents = ({
   onClose,
   closeButton,
 }: Pick<RegisterModalProps, 'className' | 'onClose' | 'closeButton'>) => {
+  const handleSignIn = () => {
+    void authClient.signIn.social(
+      {
+        provider: 'microsoft',
+        callbackURL: window.location.href,
+        newUserCallbackURL: '/get-started',
+      },
+      {
+        onError: (ctx) => {
+          setSnackbar(
+            SnackbarPresets.errorCustomMessage(
+              'An error occurred',
+              ctx.error.message,
+            ),
+          );
+        },
+      },
+    );
+  };
+
   return (
     <div
       className={`flex flex-col items-center z-20 w-fit rounded-lg bg-white dark:bg-neutral-800 p-4 shadow-lg dark:shadow-xl ${className}`}
@@ -56,11 +77,7 @@ export const RegisterModalContents = ({
           href="#"
           className="font-bold"
           onClick={() => {
-            void authClient.signIn.social({
-              provider: 'microsoft',
-              callbackURL: window.location.href,
-              newUserCallbackURL: '/get-started',
-            });
+            handleSignIn();
           }}
         >
           Sign In Here

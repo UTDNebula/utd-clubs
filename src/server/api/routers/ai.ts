@@ -11,7 +11,7 @@ import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 const GEMINI_SERVICE_ACCOUNT =
   process.env.GEMINI_SERVICE_ACCOUNT !== undefined
-    ? (JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT as string) as {
+    ? (JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT ?? '') as {
         client_email: string;
         private_key: string;
       })
