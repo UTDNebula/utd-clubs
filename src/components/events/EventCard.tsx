@@ -132,11 +132,11 @@ const EventCard = ({
       return (
         <BaseCard
           variant={smallScreen ? 'transparent' : 'interactive'}
-          className={`relative flex flex-col w-full min-h-15 overflow-hidden max-sm:rounded-none! sm:bg-white sm:dark:bg-neutral-800 sm:has-[.EventCardLink:focus]:bg-neutral-200 sm:dark:has-[.EventCardLink:focus]:bg-neutral-700 max-sm:has-[.EventCardLink:focus]:bg-gray-500/20 ${className ?? ''}`}
+          className={`relative flex flex-col w-full min-h-15 overflow-hidden max-sm:rounded-none! sm:bg-white sm:dark:bg-neutral-800 sm:has-[.EventCardLink:focus]:bg-neutral-200 sm:dark:has-[.EventCardLink:focus]:bg-neutral-700 max-sm:has-[.EventCardLink:focus]:bg-neutral-500/20 ${className ?? ''}`}
         >
           <Link
             href={`/events/${event.id}`}
-            className="EventCardLink absolute inset-0"
+            className="EventCardLink absolute inset-0 z-10"
           />
           <div className="flex flex-row max-sm:pl-4 max-sm:gap-3 gap-5">
             <div className="shrink basis-64 min-w-24 flex items-center">
@@ -194,7 +194,7 @@ const EventCard = ({
         >
           <Link
             href={`/events/${event.id}`}
-            className="EventCardLink absolute inset-0"
+            className="EventCardLink absolute inset-0 z-10"
           />
           <div className="flex flex-1 min-h-0 flex-col">
             <div className="relative min-h-40 shrink-0 w-full">
