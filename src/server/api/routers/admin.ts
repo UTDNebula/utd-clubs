@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
-import { and, count, desc, eq, inArray, lte } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, lte, sql } from 'drizzle-orm';
 import { z } from 'zod';
-import { club } from '@src/server/db/schema/club';
+import { club, usedTags } from '@src/server/db/schema/club';
 import { events } from '@src/server/db/schema/events';
 import {
   userMetadataToClubs,
@@ -10,6 +10,11 @@ import {
 import { callStorageAPI } from '@src/utils/storage';
 import { adminProcedure, createTRPCRouter } from '../trpc';
 import { editCollaboratorSchema } from './clubEdit';
+
+const tagReplaceSchema = z.object({
+  oldTag: z.string(),
+  newTag: z.string(),
+});
 
 const bySlugSchema = z.object({
   slug: z.string().default(''),
@@ -48,6 +53,36 @@ export const adminRouter = createTRPCRouter({
       .where(eq(club.approved, 'pending'));
     return result[0]?.value ?? null;
   }),
+  refreshTags: adminProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.refreshMaterializedView(usedTags);
+  }),
+  changeTag: adminProcedure
+    .input(tagReplaceSchema)
+    .mutation(async ({ input, ctx }) => {
+      const clubsToChange = await ctx.db.query.club.findMany({
+        where: sql`${input.oldTag} = ANY(tags)`,
+      });
+      const deleteTag = input.newTag === '';
+      clubsToChange.map((club) => {
+        club.tags = club.tags.flatMap((tag) => {
+          if (deleteTag) return [];
+          return [tag == input.oldTag ? input.newTag : tag];
+        });
+        return club;
+      });
+      const clubPromise: Promise<unknown>[] = [];
+      for (const clu of clubsToChange) {
+        clubPromise.push(
+          ctx.db
+            .update(club)
+            .set({ tags: clu.tags })
+            .where(eq(club.id, clu.id)),
+        );
+      }
+      await Promise.all(clubPromise);
+      await ctx.db.refreshMaterializedView(usedTags);
+      return { affected: clubsToChange.length };
+    }),
   deleteClub: adminProcedure
     .input(deleteSchema)
     .mutation(async ({ ctx, input }) => {
