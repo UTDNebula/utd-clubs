@@ -9,11 +9,13 @@
     "format:check": "prettier --check .",
     "lint": "eslint --fix .",
     "lint:check": "eslint .",
+    "type:check": "tsc --noEmit",
     "test": "NODE_OPTIONS=--experimental-vm-modules dotenv jest --detectOpenHandles --forceExit",
     "drizzle:generate": "dotenv drizzle-kit generate",
     "auth-schema:generate": "dotenv -- npx @better-auth/cli@latest generate --output src/server/db/schema/auth.ts --config src/server/auth.ts",
     "drizzle:migrate": "dotenv drizzle-kit migrate",
     "drizzle:check": "dotenv drizzle-kit check",
+    "drizzle:studio": "dotenv drizzle-kit studio",
     "migratePageViews": "dotenv -- ts-node -O \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/migratePageViews.ts"
   },
   "dependencies": {
