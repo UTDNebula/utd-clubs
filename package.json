@@ -102,7 +102,7 @@
     "tailwindcss-animate": "^1.0.7",
     "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "overrides": {
     "drizzle-zod": {
