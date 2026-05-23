@@ -1,0 +1,90 @@
+'use client';
+
+import CheckIcon from '@mui/icons-material/Check';
+import GppMaybeIcon from '@mui/icons-material/GppMaybe';
+import { Button, Collapse } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import Panel from '@src/components/common/Panel';
+import Confirmation from '@src/components/Confirmation';
+import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import { useTRPC } from '@src/trpc/react';
+
+const LeadershipChange = ({ clubId }: { clubId: string }) => {
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [showPanel, setShowPanel] = useState(true);
+
+  const api = useTRPC();
+  const setUpdatedAt = useMutation(
+    api.club.edit.setUpdatedAt.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.saved);
+        setOpenConfirmation(false);
+        setShowPanel(false);
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.errorMessage(error.message));
+      },
+    }),
+  );
+
+  return (
+    <>
+      <Collapse in={showPanel}>
+        <Panel
+          className="bg-red-100 dark:bg-red-950 border border-red-500 dark:border-red-700"
+          startAdornment={<GppMaybeIcon />}
+          heading="Update your collaborators for next semester."
+        >
+          <div className="flex flex-col gap-4 px-2">
+            <p>
+              If your organization has had a change in leadership, have your
+              successors sign in to UTD Clubs, then add them as admins or
+              collaborators{' '}
+              <a
+                href="#collaborators"
+                className="text-royal dark:text-cornflower-300 underline"
+              >
+                near the bottom of the page
+              </a>
+              .
+            </p>
+            <div className="flex flex-col items-center gap-2">
+              <Button
+                variant="contained"
+                className="normal-case"
+                startIcon={<CheckIcon />}
+                size="large"
+                onClick={() => setOpenConfirmation(true)}
+              >
+                I have added my organizations new leadership to manage this
+                listing
+              </Button>
+              <Button
+                variant="contained"
+                className="normal-case"
+                startIcon={<CheckIcon />}
+                size="large"
+                onClick={() => setOpenConfirmation(true)}
+              >
+                My organization has no leadership changes
+              </Button>
+            </div>
+          </div>
+        </Panel>
+      </Collapse>
+      <Confirmation
+        open={openConfirmation}
+        onClose={() => setOpenConfirmation(false)}
+        title="Confirm Collaborators Are up to Date"
+        contentText="Confirm that every member of your organization that needs access to UTD Clubs for the next semester has been given access. We will not email you or any other collaborators reminders for next semester after this."
+        confirmText="Confirm"
+        confirmColor="primary"
+        onConfirm={() => setUpdatedAt.mutate({ id: clubId })}
+        loading={setUpdatedAt.isPending}
+      />
+    </>
+  );
+};
+
+export default LeadershipChange;
