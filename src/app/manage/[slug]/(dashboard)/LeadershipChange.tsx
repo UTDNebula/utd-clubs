@@ -77,7 +77,18 @@ const LeadershipChange = ({ clubId }: { clubId: string }) => {
         open={openConfirmation}
         onClose={() => setOpenConfirmation(false)}
         title="Confirm Collaborators Are up to Date"
-        contentText="Confirm that every member of your organization that needs access to UTD Clubs for the next semester has been given access. We will not email you or any other collaborators reminders for next semester after this."
+        contentText={
+          <div className="flex flex-col gap-2">
+            <p>
+              Confirm you've added everybody in your organization who needs
+              access to UTD Clubs next semester.
+            </p>
+            <p>
+              You will not be emailed or reminded to do this again until the end
+              of next semester.
+            </p>
+          </div>
+        }
         confirmText="Confirm"
         confirmColor="primary"
         onConfirm={() => setUpdatedAt.mutate({ id: clubId })}
