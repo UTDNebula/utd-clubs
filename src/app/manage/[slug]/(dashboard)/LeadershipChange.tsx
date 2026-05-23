@@ -80,7 +80,7 @@ const LeadershipChange = ({ clubId }: { clubId: string }) => {
         contentText={
           <div className="flex flex-col gap-2">
             <p>
-              Confirm you've added everybody in your organization who needs
+              Confirm you&apos;ve added everybody in your organization who needs
               access to UTD Clubs next semester.
             </p>
             <p>
