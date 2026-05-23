@@ -11,10 +11,6 @@ import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { db } from '@src/server/db';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
 
-{
-  /* eslint-disable @next/next/no-img-element */
-}
-
 export const runtime = 'edge';
 export const alt = 'Event Details';
 export const size = { width: 1200, height: 630 };
