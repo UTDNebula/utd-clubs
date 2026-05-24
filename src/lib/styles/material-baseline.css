@@ -109,186 +109,243 @@
 
   /* Light system color tokens */
 
+  /* primary colors */
   --color-md-sys-color-primary-light: var(--color-md-ref-palette-primary40);
+  --color-md-sys-color-on-primary-light: var(--color-md-ref-palette-primary100);
   --color-md-sys-color-primary-container-light: var(
     --color-md-ref-palette-primary90
   );
-  --color-md-sys-color-on-primary-light: var(--color-md-ref-palette-primary100);
   --color-md-sys-color-on-primary-container-light: var(
     --color-md-ref-palette-primary10
   );
-  --color-md-sys-color-inverse-primary-light: var(
-    --color-md-ref-palette-primary80
-  );
+
+  /* secondary colors */
   --color-md-sys-color-secondary-light: var(--color-md-ref-palette-secondary40);
-  --color-md-sys-color-secondary-container-light: var(
-    --color-md-ref-palette-secondary90
-  );
   --color-md-sys-color-on-secondary-light: var(
     --color-md-ref-palette-secondary100
+  );
+  --color-md-sys-color-secondary-container-light: var(
+    --color-md-ref-palette-secondary90
   );
   --color-md-sys-color-on-secondary-container-light: var(
     --color-md-ref-palette-secondary10
   );
+
+  /* tertiary colors */
+  --color-md-sys-color-tertiary-light: var(--color-md-ref-palette-tertiary40);
+  --color-md-sys-color-on-tertiary-light: var(
+    --color-md-ref-palette-tertiary100
+  );
+  --color-md-sys-color-tertiary-container-light: var(
+    --color-md-ref-palette-tertiary90
+  );
+  --color-md-sys-color-on-tertiary-container-light: var(
+    --color-md-ref-palette-tertiary10
+  );
+
+  /* error colors */
+  --color-md-sys-color-error-light: var(--color-md-ref-palette-error40);
+  --color-md-sys-color-on-error-light: var(--color-md-ref-palette-error100);
+  --color-md-sys-color-error-container-light: var(
+    --color-md-ref-palette-error90
+  );
+  --color-md-sys-color-on-error-container-light: var(
+    --color-md-ref-palette-error10
+  );
+
+  /* surface colors */
   --color-md-sys-color-surface-light: var(--color-md-ref-palette-neutral99);
+  --color-md-sys-color-on-surface-light: var(--color-md-ref-palette-neutral10);
   --color-md-sys-color-surface-variant-light: var(
     --color-md-ref-palette-neutral-variant90
   );
-  --color-md-sys-color-on-surface-light: var(--color-md-ref-palette-neutral10);
   --color-md-sys-color-on-surface-variant-light: var(
     --color-md-ref-palette-neutral-variant30
   );
+
+  /* inverse colors */
   --color-md-sys-color-inverse-surface-light: var(
     --color-md-ref-palette-neutral20
   );
   --color-md-sys-color-inverse-on-surface-light: var(
     --color-md-ref-palette-neutral95
   );
-  --color-md-sys-color-background-light: var(--color-md-ref-palette-neutral99);
-  --color-md-sys-color-on-background-light: var(
-    --color-md-ref-palette-neutral10
+  --color-md-sys-color-inverse-primary-light: var(
+    --color-md-ref-palette-primary80
   );
+
+  /* outline, scrim, shadow colors */
   --color-md-sys-color-outline-light: var(
     --color-md-ref-palette-neutral-variant50
   );
-  --color-md-sys-color-error-light: var(--color-md-ref-palette-error40);
+  --color-md-sys-color-scrim-light: var(--color-md-ref-palette-neutral0);
   --color-md-sys-color-shadow-light: var(--color-md-ref-palette-neutral0);
-  --color-md-sys-color-tertiary-light: var(--color-md-ref-palette-tertiary40);
-  --color-md-sys-color-tertiary-container-light: var(
-    --color-md-ref-palette-tertiary90
-  );
-  --color-md-sys-color-on-tertiary-light: var(
-    --color-md-ref-palette-tertiary100
-  );
-  --color-md-sys-color-on-tertiary-container-light: var(
-    --color-md-ref-palette-tertiary10
-  );
-  --color-md-sys-color-error-container-light: var(
-    --color-md-ref-palette-error90
-  );
-  --color-md-sys-color-on-error-light: var(--color-md-ref-palette-error100);
-  --color-md-sys-color-on-error-container-light: var(
-    --color-md-ref-palette-error10
-  );
-  --color-md-sys-color-surface-tint-light: var(--color-md-sys-color-primary);
 
   /* Dark system color tokens */
 
+  /* primary colors */
   --color-md-sys-color-primary-dark: var(--color-md-ref-palette-primary80);
+  --color-md-sys-color-on-primary-dark: var(--color-md-ref-palette-primary20);
   --color-md-sys-color-primary-container-dark: var(
     --color-md-ref-palette-primary30
   );
-  --color-md-sys-color-on-primary-dark: var(--color-md-ref-palette-primary20);
   --color-md-sys-color-on-primary-container-dark: var(
     --color-md-ref-palette-primary90
   );
-  --color-md-sys-color-inverse-primary-dark: var(
-    --color-md-ref-palette-primary40
-  );
+
+  /* secondary colors */
   --color-md-sys-color-secondary-dark: var(--color-md-ref-palette-secondary80);
-  --color-md-sys-color-secondary-container-dark: var(
-    --color-md-ref-palette-secondary30
-  );
   --color-md-sys-color-on-secondary-dark: var(
     --color-md-ref-palette-secondary20
+  );
+  --color-md-sys-color-secondary-container-dark: var(
+    --color-md-ref-palette-secondary30
   );
   --color-md-sys-color-on-secondary-container-dark: var(
     --color-md-ref-palette-secondary90
   );
+
+  /* tertiary colors */
+  --color-md-sys-color-tertiary-dark: var(--color-md-ref-palette-tertiary80);
+  --color-md-sys-color-on-tertiary-dark: var(--color-md-ref-palette-tertiary20);
+  --color-md-sys-color-tertiary-container-dark: var(
+    --color-md-ref-palette-tertiary30
+  );
+  --color-md-sys-color-on-tertiary-container-dark: var(
+    --color-md-ref-palette-tertiary90
+  );
+
+  /* error colors */
+  --color-md-sys-color-error-dark: var(--color-md-ref-palette-error80);
+  --color-md-sys-color-on-error-dark: var(--color-md-ref-palette-error20);
+  --color-md-sys-color-error-container-dark: var(
+    --color-md-ref-palette-error30
+  );
+  --color-md-sys-color-on-error-container-dark: var(
+    --color-md-ref-palette-error80
+  );
+
+  /* surface colors */
   --color-md-sys-color-surface-dark: var(--color-md-ref-palette-neutral10);
+  --color-md-sys-color-on-surface-dark: var(--color-md-ref-palette-neutral90);
   --color-md-sys-color-surface-variant-dark: var(
     --color-md-ref-palette-neutral-variant30
   );
-  --color-md-sys-color-on-surface-dark: var(--color-md-ref-palette-neutral90);
   --color-md-sys-color-on-surface-variant-dark: var(
     --color-md-ref-palette-neutral-variant80
   );
+
+  /* inverse colors */
   --color-md-sys-color-inverse-surface-dark: var(
     --color-md-ref-palette-neutral90
   );
   --color-md-sys-color-inverse-on-surface-dark: var(
     --color-md-ref-palette-neutral20
   );
-  --color-md-sys-color-background-dark: var(--color-md-ref-palette-neutral10);
-  --color-md-sys-color-on-background-dark: var(
-    --color-md-ref-palette-neutral90
+  --color-md-sys-color-inverse-primary-dark: var(
+    --color-md-ref-palette-primary40
   );
+
+  /* outline, scrim, shadow colors */
   --color-md-sys-color-outline-dark: var(
     --color-md-ref-palette-neutral-variant60
   );
-  --color-md-sys-color-error-dark: var(--color-md-ref-palette-error80);
+  --color-md-sys-color-scrim-dark: var(--color-md-ref-palette-neutral0);
   --color-md-sys-color-shadow-dark: var(--color-md-ref-palette-neutral0);
-  --color-md-sys-color-tertiary-dark: var(--color-md-ref-palette-tertiary80);
-  --color-md-sys-color-tertiary-container-dark: var(
-    --color-md-ref-palette-tertiary30
-  );
-  --color-md-sys-color-on-tertiary-dark: var(--color-md-ref-palette-tertiary20);
-  --color-md-sys-color-on-tertiary-container-dark: var(
-    --color-md-ref-palette-tertiary90
-  );
-  --color-md-sys-color-error-container-dark: var(
-    --color-md-ref-palette-error30
-  );
-  --color-md-sys-color-on-error-dark: var(--color-md-ref-palette-error20);
-  --color-md-sys-color-on-error-container-dark: var(
-    --color-md-ref-palette-error80
-  );
-  --color-md-sys-color-surface-tint-dark: var(--color-md-sys-color-primary);
 
   /* Dynamic system color tokens */
 
+  /* primary colors */
   --color-primary: light-dark(
     var(--color-md-sys-color-primary-light),
     var(--color-md-sys-color-primary-dark)
-  );
-  --color-primary-container: light-dark(
-    var(--color-md-sys-color-primary-container-light),
-    var(--color-md-sys-color-primary-container-dark)
   );
   --color-on-primary: light-dark(
     var(--color-md-sys-color-on-primary-light),
     var(--color-md-sys-color-on-primary-dark)
   );
+  --color-primary-container: light-dark(
+    var(--color-md-sys-color-primary-container-light),
+    var(--color-md-sys-color-primary-container-dark)
+  );
   --color-on-primary-container: light-dark(
     var(--color-md-sys-color-on-primary-container-light),
     var(--color-md-sys-color-on-primary-container-dark)
   );
-  --color-inverse-primary: light-dark(
-    var(--color-md-sys-color-inverse-primary-light),
-    var(--color-md-sys-color-inverse-primary-dark)
-  );
+
+  /* secondary colors */
   --color-secondary: light-dark(
     var(--color-md-sys-color-secondary-light),
     var(--color-md-sys-color-secondary-dark)
-  );
-  --color-secondary-container: light-dark(
-    var(--color-md-sys-color-secondary-container-light),
-    var(--color-md-sys-color-secondary-container-dark)
   );
   --color-on-secondary: light-dark(
     var(--color-md-sys-color-on-secondary-light),
     var(--color-md-sys-color-on-secondary-dark)
   );
+  --color-secondary-container: light-dark(
+    var(--color-md-sys-color-secondary-container-light),
+    var(--color-md-sys-color-secondary-container-dark)
+  );
   --color-on-secondary-container: light-dark(
     var(--color-md-sys-color-on-secondary-container-light),
     var(--color-md-sys-color-on-secondary-container-dark)
   );
+
+  /* tertiary colors */
+  --color-tertiary: light-dark(
+    var(--color-md-sys-color-tertiary-light),
+    var(--color-md-sys-color-tertiary-dark)
+  );
+  --color-on-tertiary: light-dark(
+    var(--color-md-sys-color-on-tertiary-light),
+    var(--color-md-sys-color-on-tertiary-dark)
+  );
+  --color-tertiary-container: light-dark(
+    var(--color-md-sys-color-tertiary-container-light),
+    var(--color-md-sys-color-tertiary-container-dark)
+  );
+  --color-on-tertiary-container: light-dark(
+    var(--color-md-sys-color-on-tertiary-container-light),
+    var(--color-md-sys-color-on-tertiary-container-dark)
+  );
+
+  /* error colors */
+  --color-error: light-dark(
+    var(--color-md-sys-color-error-light),
+    var(--color-md-sys-color-error-dark)
+  );
+  --color-on-error: light-dark(
+    var(--color-md-sys-color-on-error-light),
+    var(--color-md-sys-color-on-error-dark)
+  );
+  --color-error-container: light-dark(
+    var(--color-md-sys-color-error-container-light),
+    var(--color-md-sys-color-error-container-dark)
+  );
+  --color-on-error-container: light-dark(
+    var(--color-md-sys-color-on-error-container-light),
+    var(--color-md-sys-color-on-error-container-dark)
+  );
+
+  /* surface colors */
   --color-surface: light-dark(
     var(--color-md-sys-color-surface-light),
     var(--color-md-sys-color-surface-dark)
-  );
-  --color-surface-variant: light-dark(
-    var(--color-md-sys-color-surface-variant-light),
-    var(--color-md-sys-color-surface-variant-dark)
   );
   --color-on-surface: light-dark(
     var(--color-md-sys-color-on-surface-light),
     var(--color-md-sys-color-on-surface-dark)
   );
+  --color-surface-variant: light-dark(
+    var(--color-md-sys-color-surface-variant-light),
+    var(--color-md-sys-color-surface-variant-dark)
+  );
   --color-on-surface-variant: light-dark(
     var(--color-md-sys-color-on-surface-variant-light),
     var(--color-md-sys-color-on-surface-variant-dark)
   );
+
+  /* inverse colors */
   --color-inverse-surface: light-dark(
     var(--color-md-sys-color-inverse-surface-light),
     var(--color-md-sys-color-inverse-surface-dark)
@@ -297,56 +354,22 @@
     var(--color-md-sys-color-inverse-on-surface-light),
     var(--color-md-sys-color-inverse-on-surface-dark)
   );
-  --color-background: light-dark(
-    var(--color-md-sys-color-background-light),
-    var(--color-md-sys-color-background-dark)
+  --color-inverse-primary: light-dark(
+    var(--color-md-sys-color-inverse-primary-light),
+    var(--color-md-sys-color-inverse-primary-dark)
   );
-  --color-on-background: light-dark(
-    var(--color-md-sys-color-on-background-light),
-    var(--color-md-sys-color-on-background-dark)
-  );
+
+  /* outline, scrim, shadow colors */
   --color-outline: light-dark(
     var(--color-md-sys-color-outline-light),
     var(--color-md-sys-color-outline-dark)
   );
-  --color-error: light-dark(
-    var(--color-md-sys-color-error-light),
-    var(--color-md-sys-color-error-dark)
+  --color-scrim: light-dark(
+    var(--color-md-sys-color-scrim-light),
+    var(--color-md-sys-color-scrim-dark)
   );
   --color-shadow: light-dark(
     var(--color-md-sys-color-shadow-light),
     var(--color-md-sys-color-shadow-dark)
-  );
-  --color-tertiary: light-dark(
-    var(--color-md-sys-color-tertiary-light),
-    var(--color-md-sys-color-tertiary-dark)
-  );
-  --color-tertiary-container: light-dark(
-    var(--color-md-sys-color-tertiary-container-light),
-    var(--color-md-sys-color-tertiary-container-dark)
-  );
-  --color-on-tertiary: light-dark(
-    var(--color-md-sys-color-on-tertiary-light),
-    var(--color-md-sys-color-on-tertiary-dark)
-  );
-  --color-on-tertiary-container: light-dark(
-    var(--color-md-sys-color-on-tertiary-container-light),
-    var(--color-md-sys-color-on-tertiary-container-dark)
-  );
-  --color-error-container: light-dark(
-    var(--color-md-sys-color-error-container-light),
-    var(--color-md-sys-color-error-container-dark)
-  );
-  --color-on-error: light-dark(
-    var(--color-md-sys-color-on-error-light),
-    var(--color-md-sys-color-on-error-dark)
-  );
-  --color-on-error-container: light-dark(
-    var(--color-md-sys-color-on-error-container-light),
-    var(--color-md-sys-color-on-error-container-dark)
-  );
-  --color-surface-tint: light-dark(
-    var(--color-md-sys-color-surface-tint-light),
-    var(--color-md-sys-color-surface-tint-dark)
   );
 }
