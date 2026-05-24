@@ -3,7 +3,9 @@
 }
 
 @theme {
-  /* Reference Tokens */
+  /*
+   * Reference Tokens
+   */
 
   --color-md-ref-palette-primary100: #ffffff;
   --color-md-ref-palette-primary99: #fffbfe;
@@ -105,9 +107,9 @@
   --color-md-ref-palette-neutral-variant10: #1d1a22;
   --color-md-ref-palette-neutral-variant0: #000000;
 
-  /* System Tokens */
-
-  /* Light system color tokens */
+  /*
+   * System tokens: Light colors
+   */
 
   /* primary colors */
   --color-md-sys-color-primary-light: var(--color-md-ref-palette-primary40);
@@ -163,6 +165,29 @@
     --color-md-ref-palette-neutral-variant30
   );
 
+  /* surface container */
+  --color-md-sys-color-surface-container-highest-light: var(
+    --color-md-ref-palette-neutral90
+  );
+  --color-md-sys-color-surface-container-high-light: var(
+    --color-md-ref-palette-neutral92
+  );
+  --color-md-sys-color-surface-container-light: var(
+    --color-md-ref-palette-neutral94
+  );
+  --color-md-sys-color-surface-container-low-light: var(
+    --color-md-ref-palette-neutral96
+  );
+  --color-md-sys-color-surface-container-lowest-light: var(
+    --color-md-ref-palette-neutral100
+  );
+
+  /* surface bright/dim */
+  --color-md-sys-color-surface-bright-light: var(
+    --color-md-ref-palette-neutral98
+  );
+  --color-md-sys-color-surface-dim-light: var(--color-md-ref-palette-neutral87);
+
   /* inverse colors */
   --color-md-sys-color-inverse-surface-light: var(
     --color-md-ref-palette-neutral20
@@ -178,10 +203,15 @@
   --color-md-sys-color-outline-light: var(
     --color-md-ref-palette-neutral-variant50
   );
+  --color-md-sys-color-outline-variant-light: var(
+    --color-md-ref-palette-neutral-variant80
+  );
   --color-md-sys-color-scrim-light: var(--color-md-ref-palette-neutral0);
   --color-md-sys-color-shadow-light: var(--color-md-ref-palette-neutral0);
 
-  /* Dark system color tokens */
+  /*
+   * System tokens: Dark colors
+   */
 
   /* primary colors */
   --color-md-sys-color-primary-dark: var(--color-md-ref-palette-primary80);
@@ -235,6 +265,29 @@
     --color-md-ref-palette-neutral-variant80
   );
 
+  /* surface container */
+  --color-md-sys-color-surface-container-highest-dark: var(
+    --color-md-ref-palette-neutral22
+  );
+  --color-md-sys-color-surface-container-high-dark: var(
+    --color-md-ref-palette-neutral17
+  );
+  --color-md-sys-color-surface-container-dark: var(
+    --color-md-ref-palette-neutral12
+  );
+  --color-md-sys-color-surface-container-low-dark: var(
+    --color-md-ref-palette-neutral10
+  );
+  --color-md-sys-color-surface-container-lowest-dark: var(
+    --color-md-ref-palette-neutral4
+  );
+
+  /* surface bright/dim */
+  --color-md-sys-color-surface-bright-dark: var(
+    --color-md-ref-palette-neutral24
+  );
+  --color-md-sys-color-surface-dim-dark: var(--color-md-ref-palette-neutral6);
+
   /* inverse colors */
   --color-md-sys-color-inverse-surface-dark: var(
     --color-md-ref-palette-neutral90
@@ -250,10 +303,15 @@
   --color-md-sys-color-outline-dark: var(
     --color-md-ref-palette-neutral-variant60
   );
+  --color-md-sys-color-outline-variant-dark: var(
+    --color-md-ref-palette-neutral-variant30
+  );
   --color-md-sys-color-scrim-dark: var(--color-md-ref-palette-neutral0);
   --color-md-sys-color-shadow-dark: var(--color-md-ref-palette-neutral0);
 
-  /* Dynamic system color tokens */
+  /*
+   * System tokens: Dynamic colors
+   */
 
   /* primary colors */
   --color-primary: light-dark(
@@ -345,6 +403,38 @@
     var(--color-md-sys-color-on-surface-variant-dark)
   );
 
+  /* surface container */
+  --color-surface-container-highest: light-dark(
+    var(--color-md-sys-color-surface-container-highest-light),
+    var(--color-md-sys-color-surface-container-highest-dark)
+  );
+  --color-surface-container-high: light-dark(
+    var(--color-md-sys-color-surface-container-high-light),
+    var(--color-md-sys-color-surface-container-high-dark)
+  );
+  --color-surface-container: light-dark(
+    var(--color-md-sys-color-surface-container-light),
+    var(--color-md-sys-color-surface-container-dark)
+  );
+  --color-surface-container-low: light-dark(
+    var(--color-md-sys-color-surface-container-low-light),
+    var(--color-md-sys-color-surface-container-low-dark)
+  );
+  --color-surface-container-lowest: light-dark(
+    var(--color-md-sys-color-surface-container-lowest-light),
+    var(--color-md-sys-color-surface-container-lowest-dark)
+  );
+
+  /* surface bright/dim */
+  --color-surface-bright: light-dark(
+    var(--color-md-sys-color-surface-bright-light),
+    var(--color-md-sys-color-surface-bright-dark)
+  );
+  --color-surface-dim: light-dark(
+    var(--color-md-sys-color-surface-dim-light),
+    var(--color-md-sys-color-surface-dim-dark)
+  );
+
   /* inverse colors */
   --color-inverse-surface: light-dark(
     var(--color-md-sys-color-inverse-surface-light),
@@ -363,6 +453,10 @@
   --color-outline: light-dark(
     var(--color-md-sys-color-outline-light),
     var(--color-md-sys-color-outline-dark)
+  );
+  --color-outline-variant: light-dark(
+    var(--color-md-sys-color-outline-variant-light),
+    var(--color-md-sys-color-outline-variant-dark)
   );
   --color-scrim: light-dark(
     var(--color-md-sys-color-scrim-light),
