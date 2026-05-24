@@ -1,5 +1,6 @@
 @layer theme, base, mui, components, utilities;
 @import 'tailwindcss';
+@import './material-baseline.css';
 
 @import './syncfusion.css';
 
