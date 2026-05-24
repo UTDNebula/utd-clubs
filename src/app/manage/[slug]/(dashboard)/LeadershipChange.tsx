@@ -39,8 +39,8 @@ const LeadershipChange = ({ clubId }: { clubId: string }) => {
           <div className="flex flex-col gap-4 px-2">
             <p>
               If your organization has had a change in leadership, have your
-              successors sign in to UTD Clubs, then add them as admins or
-              collaborators{' '}
+              successors create an account on UTD Clubs, then add them as admins
+              or collaborators{' '}
               <a
                 href="#collaborators"
                 className="text-royal dark:text-cornflower-300 underline"
@@ -57,8 +57,8 @@ const LeadershipChange = ({ clubId }: { clubId: string }) => {
                 size="large"
                 onClick={() => setOpenConfirmation(true)}
               >
-                I have added my organizations new leadership to manage this
-                listing
+                I have added my organization&apos;s new leadership to manage
+                this listing
               </Button>
               <Button
                 variant="contained"
@@ -76,18 +76,16 @@ const LeadershipChange = ({ clubId }: { clubId: string }) => {
       <Confirmation
         open={openConfirmation}
         onClose={() => setOpenConfirmation(false)}
-        title="Confirm Collaborators Are up to Date"
+        title="Confirm Collaborators are up to date"
         contentText={
-          <div className="flex flex-col gap-2">
-            <p>
-              Confirm you&apos;ve added everybody in your organization who needs
-              access to UTD Clubs next semester.
-            </p>
-            <p>
-              You will not be emailed or reminded to do this again until the end
-              of next semester.
-            </p>
-          </div>
+          <>
+            Confirm you&apos;ve added everybody in your organization who needs
+            access to UTD Clubs next semester.
+            <br />
+            <br />
+            You will not be emailed or reminded to do this again until the end
+            of next semester.
+          </>
         }
         confirmText="Confirm"
         confirmColor="primary"
