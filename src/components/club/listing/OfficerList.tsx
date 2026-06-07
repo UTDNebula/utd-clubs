@@ -93,7 +93,7 @@ export default function OfficerList({
           <div className="bg-white dark:bg-neutral-800 pt-2 border-t border-slate-300 dark:border-slate-700 z-10">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="w-full text-sm font-semibold text-royal dark:text-cornflower-300 hover:text-royalDark dark:hover:text-cornflower-400 underline decoration-transparent hover:decoration-inherit transition text-center"
+              className="w-full text-sm font-semibold text-royal dark:text-cornflower-300 hover:text-royalDark dark:hover:text-cornflower-400 underline decoration-transparent hover:decoration-inherit outline-0 focus:decoration-inherit focus:text-royalDark dark:focus:text-cornflower-400 transition text-center"
             >
               {isExpanded ? 'Show less' : 'See all officers'}
             </button>

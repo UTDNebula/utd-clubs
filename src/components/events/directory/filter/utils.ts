@@ -2,7 +2,7 @@ import { FetchStatus } from '@tanstack/react-query';
 import { create } from 'zustand';
 import { PanelProps } from '@src/components/common/Panel';
 import { EventParamsSchema } from '@src/utils/eventFilter';
-import { ParamSetter } from '@src/utils/searchParams';
+import { createParamSetter } from '@src/utils/searchParams';
 
 type EventDirectoryStoreState = {
   selectedCount: number | undefined;
@@ -55,7 +55,7 @@ function unsetPage(params: URLSearchParams, name: string) {
     params.delete('page');
 }
 
-const EventParamSetter = new ParamSetter<EventParamsSchema>({
+export const setEventsParams = createParamSetter<EventParamsSchema>({
   onAppend(name, value, rawParams) {
     unsetPage(rawParams, name);
   },
@@ -66,5 +66,3 @@ const EventParamSetter = new ParamSetter<EventParamsSchema>({
     unsetPage(rawParams, name);
   },
 });
-
-export const setEventsParams = EventParamSetter.setParams;

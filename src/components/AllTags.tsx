@@ -11,7 +11,7 @@ export const AllTags = ({
   options = [],
   label = '•••',
 }: {
-  options?: string[];
+  options?: { tag: string; count: number }[];
   label?: string;
 }) => {
   const { tags, setTags, setShouldFocus } = useSearchStore((s) => s);
@@ -48,8 +48,6 @@ export const AllTags = ({
     setShouldFocus(true);
   };
 
-  const sorted = options.sort((a, b) => a.localeCompare(b));
-
   return (
     <>
       <Button
@@ -71,9 +69,18 @@ export const AllTags = ({
           list: { onClick: (e: React.MouseEvent) => e.stopPropagation() },
         }}
       >
-        {sorted.map((tag) => (
-          <MenuItem key={tag} onClick={() => handleChange(tag)}>
-            <ListItemText primary={tag} />
+        {options.map((option) => (
+          <MenuItem key={option.tag} onClick={() => handleChange(option.tag)}>
+            <ListItemText
+              primary={
+                <>
+                  <span>{option.tag}</span>
+                  <span className="ml-2 text-sm text-slate-600 dark:text-slate-400">
+                    ({option.count})
+                  </span>
+                </>
+              }
+            />
           </MenuItem>
         ))}
       </Menu>

@@ -39,8 +39,8 @@ import {
 } from '@src/server/db/schema/users';
 import { stopWatching } from '@src/utils/calendar';
 import {
-  dateSchemaLegacy,
-  eventParamsSchemaOutput,
+  dateSchema,
+  eventFiltersSchema,
   temporalDeixisCustomDateSentinelValue,
 } from '@src/utils/eventFilter';
 import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
@@ -70,8 +70,15 @@ const byClubIdSchema = z.object({
 
 const countSchema = z.object({
   clubId: z.string().optional(),
-  includePast: z.boolean().optional().default(false),
-  currentTime: z.optional(z.date()),
+  /**
+   * Whether to include past events.
+   */
+  includePast: z.boolean().default(false),
+  /**
+   * Whether to include events farther than a year out.
+   */
+  includeAll: z.boolean().default(false),
+  currentTime: z.date().optional(),
 });
 const clubUpcomingEventsSchema = z.object({
   clubId: z.string(),
@@ -82,10 +89,10 @@ const byDateRangeSchema = z.object({
   endTime: z.date().optional(),
 });
 export const findByFilterSchema = z.object({
-  filters: eventParamsSchemaOutput,
+  filters: eventFiltersSchema,
 });
 export const findByDateSchema = z.object({
-  date: dateSchemaLegacy,
+  date: dateSchema,
 });
 
 const byIdSchema = z.object({
@@ -134,7 +141,7 @@ export const eventRouter = createTRPCRouter({
       }
     }),
   count: publicProcedure.input(countSchema).query(async ({ input, ctx }) => {
-    const { clubId, includePast } = input;
+    const { clubId, includePast, includeAll } = input;
     const now = input.currentTime ?? new Date();
 
     try {
@@ -143,6 +150,9 @@ export const eventRouter = createTRPCRouter({
       conditions.push(eq(events.status, 'approved'));
       if (!includePast) {
         conditions.push(gte(events.endTime, now));
+      }
+      if (!includeAll) {
+        conditions.push(lte(events.startTime, add(now, { years: 1 })));
       }
       if (clubId) {
         conditions.push(eq(events.clubId, clubId));
@@ -387,17 +397,9 @@ export const eventRouter = createTRPCRouter({
 
               if (startTime && endTime) {
                 conditions.push(
-                  or(
-                    between(events.startTime, startTime, endTime),
-                    between(events.endTime, startTime, endTime),
-                    and(
-                      lte(events.startTime, startTime),
-                      gte(events.endTime, startTime),
-                    ),
-                    and(
-                      lte(events.startTime, endTime),
-                      gte(events.endTime, endTime),
-                    ),
+                  and(
+                    lte(events.startTime, endTime),
+                    gte(events.endTime, startTime),
                   ),
                 );
               } else if (
@@ -414,7 +416,10 @@ export const eventRouter = createTRPCRouter({
             } else {
               // Get events in the present and future
               conditions.push(
-                or(gte(events.startTime, now), gte(events.endTime, now)),
+                and(
+                  or(gte(events.startTime, now), gte(events.endTime, now)),
+                  lte(events.startTime, add(now, { years: 1 })),
+                ),
               );
             }
 
@@ -679,14 +684,33 @@ export const eventRouter = createTRPCRouter({
           image: data.image,
           updatedAt: new Date(),
         })
-        .where(eq(events.id, id))
+        .where(and(eq(events.id, id), eq(events.google, false)))
         .returning({ id: events.id });
 
-      if (res.length == 0)
+      if (res.length === 0) {
+        const existing = await ctx.db.query.events.findFirst({
+          where: (e) => eq(e.id, id),
+        });
+
+        if (!existing) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Event not found.',
+          });
+        }
+
+        if (existing.google) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Cannot edit a Google Calendar event directly.',
+          });
+        }
+
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to update event',
+          message: 'Failed to update event.',
         });
+      }
       return res[0]?.id;
     }),
   delete: protectedProcedure
@@ -807,6 +831,26 @@ export const eventRouter = createTRPCRouter({
             input.keepPastEvents ? gt(events.startTime, new Date()) : undefined, // IF indicated, delete only events that have not yet started
           ),
         );
+
+      // Mark kept past events as non-google so they become editable
+      if (input.keepPastEvents) {
+        await ctx.db
+          .update(events)
+          .set({ google: false })
+          .where(
+            and(
+              eq(events.clubId, input.clubId),
+              eq(events.google, true),
+              lte(events.startTime, new Date()),
+              clubRecord.calendarId
+                ? or(
+                    eq(events.calendarId, clubRecord.calendarId),
+                    isNull(events.calendarId),
+                  )
+                : undefined,
+            ),
+          );
+      }
 
       // remove google calendar info from the club
       await ctx.db

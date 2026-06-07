@@ -20,8 +20,8 @@ import {
   splitArrayField,
   temporalDeixisStrings,
 } from '@src/utils/eventFilter';
+import FilterChip from './base/FilterChip';
 import EventsFilterPanels from './EventsFilterPanels';
-import FilterChip from './FilterChip';
 import { setEventsParams } from './utils';
 
 const hiddenFields: (keyof EventFiltersSchema)[] = [
@@ -154,49 +154,57 @@ export default memo(function EventsFilterBar({
               transition={{ duration: 0.1 }}
             >
               {filter.field === 'tags' ? (
-                <TagChip
-                  icon={<TagIcon color="inherit" />}
-                  tag={filter.value}
-                  onClick={() => handleDeleteTag(filter)}
-                  onDelete={() => handleDeleteTag(filter)}
-                />
+                <Tooltip title="Click to remove tag" disableInteractive>
+                  <span>
+                    <TagChip
+                      icon={<TagIcon color="inherit" />}
+                      tag={filter.value}
+                      onClick={() => handleDeleteTag(filter)}
+                      onDelete={() => handleDeleteTag(filter)}
+                    />
+                  </span>
+                </Tooltip>
               ) : (
-                <FilterChip
-                  label={getChipLabel(filter, selectedFilters)}
-                  onDelete={() => {
-                    setEventsParams((params) => {
-                      if (splitArrayField(filter.field)) {
-                        // If field is an array but filter is a single item, handle accordingly
-                        const newValue = params
-                          .get(filterFieldToParam[filter.field])
-                          ?.split(',')
-                          .filter((ele) => ele !== filter.value)
-                          .join(',');
+                <Tooltip title="Click to remove filter" disableInteractive>
+                  <span>
+                    <FilterChip
+                      label={getChipLabel(filter, selectedFilters)}
+                      onDelete={() => {
+                        setEventsParams((params) => {
+                          if (splitArrayField(filter.field)) {
+                            // If field is an array but filter is a single item, handle accordingly
+                            const newValue = params
+                              .get(filterFieldToParam[filter.field])
+                              ?.split(',')
+                              .filter((ele) => ele !== filter.value)
+                              .join(',');
 
-                        if (newValue === '') {
-                          params.delete(filterFieldToParam[filter.field]);
-                        } else if (newValue) {
-                          params.set(
-                            filterFieldToParam[filter.field],
-                            newValue,
-                          );
-                        }
-                      } else {
-                        // Otherwise, handle normally
-                        params.delete(filterFieldToParam[filter.field]);
+                            if (newValue === '') {
+                              params.delete(filterFieldToParam[filter.field]);
+                            } else if (newValue) {
+                              params.set(
+                                filterFieldToParam[filter.field],
+                                newValue,
+                              );
+                            }
+                          } else {
+                            // Otherwise, handle normally
+                            params.delete(filterFieldToParam[filter.field]);
 
-                        // Special case: Delete dateStart and dateEnd if custom date is removed
-                        if (
-                          filter.field === 'date' &&
-                          filter.value === 'custom'
-                        ) {
-                          params.delete('dateStart');
-                          params.delete('dateEnd');
-                        }
-                      }
-                    });
-                  }}
-                />
+                            // Special case: Delete dateStart and dateEnd if custom date is removed
+                            if (
+                              filter.field === 'date' &&
+                              filter.value === 'custom'
+                            ) {
+                              params.delete('dateStart');
+                              params.delete('dateEnd');
+                            }
+                          }
+                        });
+                      }}
+                    />
+                  </span>
+                </Tooltip>
               )}
             </motion.div>
           ))}
@@ -212,7 +220,7 @@ export default memo(function EventsFilterBar({
               <Button
                 size="small"
                 color="inherit"
-                className="normal-case whitespace-nowrap min-h-8 text-neutral-600 dark:text-neutral-400"
+                className="normal-case whitespace-nowrap min-h-8 px-2 text-neutral-600 dark:text-neutral-400"
                 onClick={clearAllFilters}
               >
                 Clear {filtersArray.length} filters
@@ -286,8 +294,8 @@ function getChipLabel(
     case 'date':
       const dateStart = allFilters?.find((ele) => ele.field === 'dateStart');
       const dateEnd = allFilters?.find((ele) => ele.field === 'dateEnd');
-      if (filter.value === 'custom' && (dateStart || dateEnd)) {
-        return `${dateStart?.value?.toLocaleDateString()} - ${dateEnd?.value?.toLocaleDateString()}`;
+      if (filter.value === 'custom' && (dateStart?.value || dateEnd?.value)) {
+        return `${dateStart?.value?.toLocaleDateString() ?? '??'} - ${dateEnd?.value?.toLocaleDateString() ?? '??'}`;
       } else {
         return `${filter.value ? temporalDeixisStrings[filter.value] : ''}`;
       }

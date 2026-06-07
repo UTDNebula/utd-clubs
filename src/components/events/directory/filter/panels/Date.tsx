@@ -8,7 +8,7 @@ import {
   temporalDeixisCustomDateSentinelValue,
   temporalDeixisWithCustomFilterEnum,
 } from '@src/utils/eventFilter';
-import FilterList, { FilterListItem } from '../FilterList';
+import FilterList, { FilterListItem } from '../base/FilterList';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 export type DatePanelFields = Pick<
@@ -21,10 +21,10 @@ export default memo(function DatePanel(
 ) {
   const date = props.filters.date;
 
-  const [customDate, setCustomDate] = useState<Date | null>(
+  const [customDate, setCustomDate] = useState<Date | null | undefined>(
     props.filters.dateStart,
   );
-  const [customDateEnd, setCustomDateEnd] = useState<Date | null>(
+  const [customDateEnd, setCustomDateEnd] = useState<Date | null | undefined>(
     props.filters.dateEnd,
   );
 

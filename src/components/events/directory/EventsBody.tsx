@@ -7,16 +7,16 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import EventDirectorySearchBar from '@src/components/searchBar/EventDirectorySearchBar';
 import { RouterOutputs } from '@src/trpc/shared';
 import {
-  eventFiltersSchema,
+  eventParamsToFilters,
   listSelectedEventFilters,
 } from '@src/utils/eventFilter';
 import useStable from '@src/utils/useStable';
 import { EventCardVariants } from '../EventCard';
+import EventDirectoryGrid from './filter/EventDirectoryGrid';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
+import EventsViewOptionsBar from './filter/EventsViewOptionsBar';
 import { setEventsParams, useEventDirectoryStore } from './filter/utils';
-import EventDirectoryGrid from './filter/view/EventDirectoryGrid';
-import ViewOptionsBar from './filter/ViewOptionsBar';
 
 type EventsBodyProps = {
   initialQueryData?: RouterOutputs['event']['findByFilters'];
@@ -24,11 +24,13 @@ type EventsBodyProps = {
 };
 
 const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
-  useEventDirectoryStore.getState().setTotalCount(total);
+  useEffect(() => {
+    useEventDirectoryStore.getState().setTotalCount(total);
+  }, [total]);
 
   const searchParams = useSearchParams();
 
-  const filters = eventFiltersSchema.parse(Object.fromEntries(searchParams));
+  const filters = eventParamsToFilters.parse(Object.fromEntries(searchParams));
   const selectedFilters = useStable(listSelectedEventFilters(filters));
 
   const [showSidebar, setShowSidebar] = useState(true);
@@ -113,7 +115,7 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
       </Collapse>
       <div id="events-content" className="flex flex-col gap-4 grow w-min">
         <div
-          className="sticky z-40 bg-linear-to-b from-light dark:from-dark to-transparent from-75% py-4 -mb-4 max-sm:-mx-4 max-sm:px-4"
+          className="sticky z-40 bg-linear-to-b from-light dark:from-dark to-transparent from-75% py-4 -mb-4 -mx-4 px-4"
           // TODO: The top property should be BaseHeader's height. Replace this with a dynamic variable
           style={{ top: 68 }}
         >
@@ -128,7 +130,7 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
           showSidebar={showSidebar}
           onClickSidebar={setShowSidebar}
         />
-        <ViewOptionsBar
+        <EventsViewOptionsBar
           filters={filters}
           pageCount={pageCount}
           defaultViewValue={defaultViewLayout}

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import EventsTitle from '@src/components/events/directory/EventsTitle';
+import EventsHeader from '@src/components/events/directory/EventsHeader';
 import { EventHeader } from '@src/components/header/Header';
 
 type EventDirectoryLayoutProps = {
@@ -14,7 +14,7 @@ export default async function EventDirectoryLayout({
       <EventHeader />
       <main className="mb-5 flex flex-col sm:px-4 max-w-6xl mx-auto">
         {/* EventsTitle should be in layout.tsx so that it doesn't re-render between pages */}
-        <EventsTitle />
+        <EventsHeader />
         <div className="flex flex-col gap-y-4 max-sm:px-4">{children}</div>
       </main>
     </>

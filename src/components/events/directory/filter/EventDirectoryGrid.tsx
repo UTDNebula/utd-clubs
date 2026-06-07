@@ -11,13 +11,13 @@ import EventCard, { EventCardVariants } from '@src/components/events/EventCard';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
-import { EventParamsSchemaOutput } from '@src/utils/eventFilter';
+import { EventFiltersSchema } from '@src/utils/eventFilter';
 import useDebounce from '@src/utils/useDebounce';
 import useStable from '@src/utils/useStable';
-import { useEventDirectoryStore } from '../utils';
+import { useEventDirectoryStore } from './utils';
 
 type EventDirectoryGridProps = {
-  filters: EventParamsSchemaOutput;
+  filters: EventFiltersSchema;
   initialQueryData?: RouterOutputs['event']['findByFilters'];
   /**
    * @default "card"
@@ -87,7 +87,7 @@ export default function EventDirectoryGrid({
         </div>
       )}
       <div
-        className={`${viewLayout === 'card' ? `grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))]` : viewLayout === 'list' ? 'grid auto-rows-fr max-sm:-mx-4' : ''} items-center max-sm:gap-2 gap-4 transition-opacity ${query.isFetching ? 'opacity-50 select-none pointer-events-none' : ''}`}
+        className={`${viewLayout === 'card' ? `grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))]` : viewLayout === 'list' ? 'flex flex-col max-sm:-mx-4' : ''} items-center max-sm:gap-2 gap-4 transition-opacity ${query.isFetching ? 'opacity-50 select-none pointer-events-none' : ''}`}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           {events.map((event) => (
@@ -105,6 +105,7 @@ export default function EventDirectoryGrid({
                 opacity: { duration: 0.3 },
               }}
               className="w-full"
+              tabIndex={-1}
             >
               <EventCard event={event} variant={viewLayout} responsive />
             </motion.div>

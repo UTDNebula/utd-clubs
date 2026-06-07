@@ -2,7 +2,10 @@ import { type Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import EventsBody from '@src/components/events/directory/EventsBody';
 import { api } from '@src/trpc/server';
-import { eventFiltersSchema, EventParamsSchema } from '@src/utils/eventFilter';
+import {
+  EventParamsSchema,
+  eventParamsToFilters,
+} from '@src/utils/eventFilter';
 
 export const metadata: Metadata = {
   title: 'Events',
@@ -17,7 +20,7 @@ export const metadata: Metadata = {
 };
 const Events = async (props: { searchParams: Promise<EventParamsSchema> }) => {
   const searchParams = await props.searchParams;
-  const parsed = eventFiltersSchema.parse(searchParams);
+  const parsed = eventParamsToFilters.parse(searchParams);
 
   // Server-side query to avoid client-side fetching on load
   const results = await Promise.allSettled([

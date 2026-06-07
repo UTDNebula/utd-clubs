@@ -159,6 +159,7 @@ export async function syncCalendar(
                   'createdAt',
                   'updatedAt',
                   'calendarId',
+                  'google',
                 ]),
               });
           }

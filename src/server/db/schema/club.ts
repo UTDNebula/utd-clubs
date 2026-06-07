@@ -114,7 +114,7 @@ export const usedTags = pgMaterializedView('used_tags', {
     COUNT(*) as count, 
     ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC)::integer as id 
   FROM (
-    SELECT UNNEST(${club.tags}) as tag FROM ${club}
+    SELECT UNNEST(${club.tags}) as tag FROM ${club} WHERE club.approved = 'approved'
   ) sub 
   GROUP BY tag 
   ORDER BY count DESC

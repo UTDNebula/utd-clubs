@@ -44,6 +44,7 @@ export default async function Page({
   const totalCount = await api.event.count({
     clubId: club.id,
     includePast,
+    includeAll: true,
     currentTime: now,
   });
 
