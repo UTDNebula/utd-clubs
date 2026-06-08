@@ -19,6 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import { startOfDay } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
+import NotRegistered from '@src/components/community/NotRegistered';
 import EventCard from '@src/components/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
@@ -195,14 +196,7 @@ const EventCalendar = () => {
   return (
     <>
       {showEmpty ? (
-        <div className="w-full py-12 text-center">
-          <p className="font-bold text-slate-500">
-            You haven&apos;t registered for any events yet.
-          </p>
-          <p className="mt-2 text-slate-500">
-            Register for events to see them on your calendar.
-          </p>
-        </div>
+        <NotRegistered />
       ) : (
         <div className="h-[650px] w-full">
           {isFetching && (
