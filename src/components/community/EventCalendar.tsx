@@ -202,8 +202,12 @@ const EventCalendar = () => {
         <NotRegistered />
       ) : (
         <div className="h-[650px] w-full">
-          {isFetching && (
+          {isFetching ? (
             <div className="mb-2 px-1 text-sm text-slate-500">Loading…</div>
+          ) : (
+            <div className="mb-2 px-1 text-sm text-slate-500">
+              {events.length} registered event{events.length !== 0 ? 's' : ''}.
+            </div>
           )}
           {isDesktop ? (
             <div
