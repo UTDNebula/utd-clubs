@@ -28,6 +28,7 @@ import {
   getRangeForView,
   type CalendarRange,
 } from '@src/utils/calendarRange';
+import { BaseCard } from '../common/BaseCard';
 
 type RegisteredEvent =
   RouterOutputs['userMetadata']['getRegisteredEventsByRange'][number];
@@ -171,26 +172,28 @@ const EventCalendar = () => {
   const showEmpty = !isFetching && events.length === 0;
 
   const schedule = (
-    <ScheduleComponent
-      ref={(el: ScheduleComponent | null) => {
-        scheduleRef.current = el;
-      }}
-      height="100%"
-      selectedDate={initialDate}
-      currentView={isDesktop ? 'Week' : 'Day'}
-      readonly={true}
-      popupOpen={handlePopupOpen}
-      actionComplete={handleActionComplete}
-      eventSettings={{ dataSource: schedulerData, fields: SCHEDULE_FIELDS }}
-      eventClick={handleEventClick}
-    >
-      <ViewsDirective>
-        <ViewDirective option="Day" />
-        <ViewDirective option="Week" />
-        <ViewDirective option="Month" />
-      </ViewsDirective>
-      <Inject services={[Day, Week, Month]} />
-    </ScheduleComponent>
+    <BaseCard className="overflow-hidden">
+      <ScheduleComponent
+        ref={(el: ScheduleComponent | null) => {
+          scheduleRef.current = el;
+        }}
+        height="100%"
+        selectedDate={initialDate}
+        currentView={isDesktop ? 'Week' : 'Day'}
+        readonly={true}
+        popupOpen={handlePopupOpen}
+        actionComplete={handleActionComplete}
+        eventSettings={{ dataSource: schedulerData, fields: SCHEDULE_FIELDS }}
+        eventClick={handleEventClick}
+      >
+        <ViewsDirective>
+          <ViewDirective option="Day" />
+          <ViewDirective option="Week" />
+          <ViewDirective option="Month" />
+        </ViewsDirective>
+        <Inject services={[Day, Week, Month]} />
+      </ScheduleComponent>
+    </BaseCard>
   );
 
   return (
