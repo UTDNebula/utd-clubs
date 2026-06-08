@@ -242,6 +242,7 @@ const EventCalendar = () => {
             onMouseLeave: clearHover,
             className:
               'pointer-events-auto overflow-visible bg-transparent shadow-none',
+            elevation: 0,
           },
         }}
       >
@@ -255,6 +256,7 @@ const EventCalendar = () => {
         slotProps={{
           paper: {
             className: 'bg-transparent shadow-none overflow-visible',
+            elevation: 0,
           },
         }}
       >
