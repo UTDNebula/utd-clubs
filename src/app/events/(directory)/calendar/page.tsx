@@ -11,9 +11,5 @@ export default async function CalendarPage() {
     redirect(await signInRoute('events/calendar'));
   }
 
-  return (
-    <div className="mt-4">
-      <EventCalendar />
-    </div>
-  );
+  return <EventCalendar />;
 }

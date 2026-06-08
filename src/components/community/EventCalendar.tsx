@@ -201,7 +201,7 @@ const EventCalendar = () => {
       {showEmpty ? (
         <NotRegistered />
       ) : (
-        <div className="h-[650px] w-full">
+        <div className="mt-4 h-[650px] w-full">
           {isFetching ? (
             <div className="mb-2 px-1 text-sm text-slate-500">Loading…</div>
           ) : (
