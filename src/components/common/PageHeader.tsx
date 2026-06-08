@@ -9,7 +9,13 @@ import Tabs, { TabsProps } from '@mui/material/Tabs';
 import Tooltip from '@mui/material/Tooltip';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ReactElement, ReactNode, SyntheticEvent, useState } from 'react';
+import {
+  ReactElement,
+  ReactNode,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from 'react';
 import BackButton from '../BackButton';
 
 export type PageHeaderTab = {
@@ -113,6 +119,10 @@ export default function PageHeader({
   const [selectedTabOptimistic, setSelectedTabOptimistic] = useState(
     defaultSelectedTab ?? tabIndex,
   );
+
+  useEffect(() => {
+    setSelectedTabOptimistic(tabIndex);
+  }, [pathname]);
 
   const selectedTab = disableOptimistic ? tabIndex : selectedTabOptimistic;
 
