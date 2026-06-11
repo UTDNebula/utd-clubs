@@ -206,7 +206,7 @@ const EventCalendar = () => {
             <div className="mb-2 px-1 text-sm text-slate-500">Loading…</div>
           ) : (
             <div className="mb-2 px-1 text-sm text-slate-500">
-              {events.length} registered event{events.length !== 0 ? 's' : ''}.
+              {events.length} registered event{events.length !== 1 ? 's' : ''}.
             </div>
           )}
           {isDesktop ? (
