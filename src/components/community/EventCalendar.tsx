@@ -24,6 +24,7 @@ import { useQuery } from '@tanstack/react-query';
 import { startOfDay } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import NotRegistered from '@src/components/community/NotRegistered';
 import EventCard from '@src/components/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
@@ -176,12 +177,23 @@ const EventCalendar = () => {
 
   const showEmpty = !isFetching && events.length === 0;
 
+  const [spinnerTarget, setSpinnerTarget] = useState<HTMLElement | null>(null);
+
+  const handleCreated = () => {
+    const target = scheduleRef.current?.element.querySelector(
+      '#calendar-spinner',
+    ) as HTMLElement | null;
+
+    setSpinnerTarget(target);
+  };
+
   const schedule = (
     <BaseCard className="overflow-hidden">
       <ScheduleComponent
         ref={(el: ScheduleComponent | null) => {
           scheduleRef.current = el;
         }}
+        created={handleCreated}
         height="100%"
         selectedDate={initialDate}
         currentView={isDesktop ? 'Week' : 'Day'}
@@ -196,7 +208,7 @@ const EventCalendar = () => {
           { name: 'DateRangeText', align: 'Left' },
           {
             name: 'Custom',
-            template: '#calendarLoadingSpinner',
+            template: '<div id="calendar-spinner" />',
             overflow: 'Show',
           },
           { name: 'Today', align: 'Right' },
@@ -228,16 +240,16 @@ const EventCalendar = () => {
         ) : (
           schedule
         )}
-        <div
-          id="calendarLoadingSpinner"
-          className="flex items-center cursor-default"
-        >
-          <CircularProgress
-            size="1.5rem"
-            aria-label="Loading…"
-            className={!isFetching ? 'invisible' : ''}
-          />
-        </div>
+        {spinnerTarget &&
+          createPortal(
+            <div className="h-full flex items-center cursor-default">
+              <CircularProgress
+                size="1.5rem"
+                className={!isFetching ? 'invisible' : ''}
+              />
+            </div>,
+            spinnerTarget,
+          )}
       </div>
 
       <Popover
