@@ -1,6 +1,11 @@
 'use client';
 
-import { Dialog, Popover, useMediaQuery } from '@mui/material';
+import {
+  CircularProgress,
+  Dialog,
+  Popover,
+  useMediaQuery,
+} from '@mui/material';
 import {
   Day,
   Inject,
@@ -185,6 +190,18 @@ const EventCalendar = () => {
         actionComplete={handleActionComplete}
         eventSettings={{ dataSource: schedulerData, fields: SCHEDULE_FIELDS }}
         eventClick={handleEventClick}
+        toolbarItems={[
+          { name: 'Previous', align: 'Left' },
+          { name: 'Next', align: 'Left' },
+          { name: 'DateRangeText', align: 'Left' },
+          {
+            name: 'Custom',
+            template: '#calendarLoadingSpinner',
+            overflow: 'Show',
+          },
+          { name: 'Today', align: 'Right' },
+          { name: 'Views', align: 'Right' },
+        ]}
       >
         <ViewsDirective>
           <ViewDirective option="Day" />
@@ -198,30 +215,30 @@ const EventCalendar = () => {
 
   return (
     <>
-      {showEmpty ? (
-        <NotRegistered />
-      ) : (
-        <div className="mt-4 h-[650px] w-full">
-          {isFetching ? (
-            <div className="mb-2 px-1 text-sm text-slate-500">Loading…</div>
-          ) : (
-            <div className="mb-2 px-1 text-sm text-slate-500">
-              {events.length} registered event{events.length !== 1 ? 's' : ''}.
-            </div>
-          )}
-          {isDesktop ? (
-            <div
-              className="h-full"
-              onMouseOver={handleScheduleMouseOver}
-              onMouseLeave={clearHover}
-            >
-              {schedule}
-            </div>
-          ) : (
-            schedule
-          )}
+      <div className="mt-4 h-[650px] w-full flex flex-col gap-8">
+        {showEmpty && <NotRegistered />}
+        {isDesktop ? (
+          <div
+            className="h-full"
+            onMouseOver={handleScheduleMouseOver}
+            onMouseLeave={clearHover}
+          >
+            {schedule}
+          </div>
+        ) : (
+          schedule
+        )}
+        <div
+          id="calendarLoadingSpinner"
+          className="flex items-center cursor-default"
+        >
+          <CircularProgress
+            size="1.5rem"
+            aria-label="Loading…"
+            className={!isFetching ? 'invisible' : ''}
+          />
         </div>
-      )}
+      </div>
 
       <Popover
         open={Boolean(hoverAnchorEl) && !isDialogOpen}

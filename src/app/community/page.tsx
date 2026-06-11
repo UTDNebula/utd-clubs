@@ -1,5 +1,4 @@
 import { type Metadata } from 'next';
-import Header from '@src/components/header/Header';
 import { ClubEvents, RegisteredEvents } from './communityEvents';
 
 type SearchParams = { page?: string; pageSize?: string };
