@@ -152,7 +152,7 @@
   .e-schedule .e-appointment {
     cursor: pointer;
   }
-  
+
   .e-schedule .e-appointment {
     background-color: var(--color-royal);
     outline-color: var(--color-royal);
