@@ -168,15 +168,6 @@
     cursor: pointer;
   }
 
-  .e-schedule .e-appointment {
-    background-color: var(--color-royal);
-    outline-color: var(--color-royal);
-    @variant dark {
-      background-color: var(--color-cornflower-300);
-      outline-color: var(--color-cornflower-300);
-    }
-  }
-
   .e-schedule .e-vertical-view .e-appointment {
     padding: 8px !important;
   }
