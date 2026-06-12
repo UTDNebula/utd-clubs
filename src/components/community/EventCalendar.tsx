@@ -6,6 +6,7 @@ import {
   Popover,
   useMediaQuery,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import {
   Day,
   Inject,
@@ -66,6 +67,7 @@ const EventCalendar = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const [initialView] = useState(params.view ?? (isDesktop ? 'Week' : 'Day'));
+  const isFinePointer = useMediaQuery('(pointer: fine)');
 
   const [selectedEvent, setSelectedEvent] = useState<RegisteredEvent | null>(
     null,
@@ -113,7 +115,7 @@ const EventCalendar = () => {
     const event = eventMap.get(eventId);
     if (!event) return;
 
-    if (isDesktop) {
+    if (isFinePointer) {
       router.push(`/events/${event.id}`);
     } else {
       setSelectedEvent(event);
@@ -247,8 +249,8 @@ const EventCalendar = () => {
         {showEmpty && <NotRegistered />}
         <div
           className="h-full"
-          onMouseOver={isDesktop ? handleScheduleMouseOver : undefined}
-          onMouseLeave={isDesktop ? clearHover : undefined}
+          onMouseOver={isFinePointer ? handleScheduleMouseOver : undefined}
+          onMouseLeave={isFinePointer ? clearHover : undefined}
         >
           {schedule}
         </div>
