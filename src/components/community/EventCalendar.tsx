@@ -63,7 +63,8 @@ const EventCalendar = () => {
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [initialDate] = useState(startOfDay(params.anchor ?? new Date()));
-  const isDesktop = useMediaQuery('(min-width:1024px)');
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const [initialView] = useState(params.view ?? (isDesktop ? 'Week' : 'Day'));
 
   const [selectedEvent, setSelectedEvent] = useState<RegisteredEvent | null>(
@@ -244,17 +245,13 @@ const EventCalendar = () => {
     <>
       <div className="mt-4 h-[650px] w-full flex flex-col gap-8">
         {showEmpty && <NotRegistered />}
-        {isDesktop ? (
-          <div
-            className="h-full"
-            onMouseOver={handleScheduleMouseOver}
-            onMouseLeave={clearHover}
-          >
-            {schedule}
-          </div>
-        ) : (
-          schedule
-        )}
+        <div
+          className="h-full"
+          onMouseOver={isDesktop ? handleScheduleMouseOver : undefined}
+          onMouseLeave={isDesktop ? clearHover : undefined}
+        >
+          {schedule}
+        </div>
         {spinnerTarget &&
           createPortal(
             <div className="h-full flex items-center cursor-default">
