@@ -79,11 +79,11 @@ const EventCalendar = () => {
     getBufferedRangeForWeek(initialDate),
   );
 
-  const trpc = useTRPC();
+  const api = useTRPC();
   const router = useRouter();
 
   const { data: events = [], isFetching } = useQuery(
-    trpc.userMetadata.getRegisteredEventsByRange.queryOptions(range, {
+    api.userMetadata.getRegisteredEventsByRange.queryOptions(range, {
       staleTime: 30_000,
       refetchOnWindowFocus: false,
     }),
