@@ -206,7 +206,7 @@ const EventCalendar = () => {
   };
 
   const schedule = (
-    <BaseCard className="overflow-hidden">
+    <BaseCard className="h-screen overflow-hidden">
       <ScheduleComponent
         ref={(el: ScheduleComponent | null) => {
           scheduleRef.current = el;
@@ -245,10 +245,10 @@ const EventCalendar = () => {
 
   return (
     <>
-      <div className="mt-4 h-[650px] w-full flex flex-col gap-8">
+      <div className="mt-4 h-screen w-full flex flex-col gap-8">
         {showEmpty && <NotRegistered />}
         <div
-          className="h-full"
+          className="h-screen"
           onMouseOver={isFinePointer ? handleScheduleMouseOver : undefined}
           onMouseLeave={isFinePointer ? clearHover : undefined}
         >
