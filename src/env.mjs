@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 /**
  * Specify your server-side environment variables schema here. This way you can ensure the app isn't
  * built with invalid env vars.
@@ -8,10 +10,9 @@ const server = z.object({
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
-  BETTER_AUTH_SECRET:
-    process.env.NODE_ENV === 'production'
-      ? z.string().min(1)
-      : z.string().min(1).optional(),
+  BETTER_AUTH_SECRET: isProduction
+    ? z.string().min(1)
+    : z.string().min(1).optional(),
   BETTER_AUTH_URL: z.preprocess(
     // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
     // Since NextAuth.js automatically uses the VERCEL_URL if present.
@@ -33,7 +34,9 @@ const server = z.object({
   NEBULA_API_STORAGE_KEY: z.string().min(1),
   NEBULA_API_EMAIL_KEY: z.string().optional(),
   GEMINI_SERVICE_ACCOUNT: z.string().optional(),
-  NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY: z.string().optional(),
+  NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY: isProduction
+    ? z.string().min(1)
+    : z.string().optional(),
   AUTH_TRUSTED_ORIGINS: z.union([z.string(), z.string().array()]).optional(),
 });
 
