@@ -134,6 +134,21 @@
 
 /* Syncfusion Schedule overrides */
 @layer utilities {
+  :root {
+    --color-sf-primary: 87, 61, 255 !important; /* royal */
+    --color-sf-on-primary: 255, 255, 255 !important;
+    --color-sf-surface: 255, 255, 255 !important;
+    --color-sf-on-surface: 9, 11, 44 !important; /* haiti */
+    --color-sf-on-background: 9, 11, 44 !important; /* haiti */
+    @variant dark {
+      --color-sf-primary: 162, 151, 253 !important; /* cornflower-300 */
+      --color-sf-on-primary: 9, 11, 44 !important; /* haiti */
+      --color-sf-surface: 38, 38, 38 !important; /* neutral-800 */
+      --color-sf-on-surface: 255, 255, 255 !important;
+      --color-sf-on-background: 255, 255, 255 !important;
+    }
+  }
+
   .e-schedule .e-control,
   .e-schedule .e-css {
     font-family: var(--font-main), sans-serif !important;
