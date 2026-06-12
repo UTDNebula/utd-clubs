@@ -34,9 +34,6 @@ const server = z.object({
   NEBULA_API_STORAGE_KEY: z.string().min(1),
   NEBULA_API_EMAIL_KEY: z.string().optional(),
   GEMINI_SERVICE_ACCOUNT: z.string().optional(),
-  NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY: isProduction
-    ? z.string().min(1)
-    : z.string().optional(),
   AUTH_TRUSTED_ORIGINS: z.union([z.string(), z.string().array()]).optional(),
 });
 
@@ -45,8 +42,10 @@ const server = z.object({
  * built with invalid env vars. To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 const client = z.object({
-  // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
   NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
+  NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY: isProduction
+    ? z.string().min(1)
+    : z.string().optional(),
 });
 
 /**
@@ -82,7 +81,7 @@ const processEnv = {
 // Don't touch the part below
 // --------------------------
 
-const merged = server.merge(client);
+const merged = server.extend(client.shape);
 
 /** @typedef {z.input<typeof merged>} MergedInput */
 /** @typedef {z.infer<typeof merged>} MergedOutput */
@@ -100,11 +99,15 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
   );
 
   if (parsed.success === false) {
-    console.error(
-      '❌ Invalid environment variables:',
-      parsed.error.flatten().fieldErrors,
-    );
-    throw new Error('Invalid environment variables');
+    const errors = z.treeifyError(parsed.error).properties ?? [];
+
+    let errorString = '';
+    for (const [key, value] of Object.entries(errors)) {
+      errorString += `\n • ${key} - ${value.errors.join('; ')}`;
+    }
+
+    console.error('❌ Invalid environment variables:', errors);
+    throw new Error(`Invalid environment variables:${errorString}`);
   }
 
   env = new Proxy(parsed.data, {
