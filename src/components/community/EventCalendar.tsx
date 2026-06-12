@@ -22,7 +22,7 @@ import {
 } from '@syncfusion/ej2-schedule';
 import { useQuery } from '@tanstack/react-query';
 import { startOfDay } from 'date-fns';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import NotRegistered from '@src/components/community/NotRegistered';
@@ -34,6 +34,11 @@ import {
   getRangeForView,
   type CalendarRange,
 } from '@src/utils/calendarRange';
+import {
+  calendarParamsSchema,
+  type CalendarParamsSchema,
+} from '@src/utils/eventFilter';
+import { createParamSetter } from '@src/utils/searchParams';
 import { BaseCard } from '../common/BaseCard';
 
 type RegisteredEvent =
@@ -48,12 +53,18 @@ const SCHEDULE_FIELDS = {
   description: { name: 'Description' },
 } as const;
 
+export const setCalendarParams = createParamSetter<CalendarParamsSchema>();
+
 const EventCalendar = () => {
+  const searchParams = useSearchParams();
+  const params = calendarParamsSchema.parse(Object.fromEntries(searchParams));
+
   const scheduleRef = useRef<ScheduleComponent | null>(null);
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const initialDate = useMemo(() => startOfDay(new Date()), []);
+  const [initialDate] = useState(startOfDay(params.anchor ?? new Date()));
   const isDesktop = useMediaQuery('(min-width:1024px)');
+  const [initialView] = useState(params.view ?? (isDesktop ? 'Week' : 'Day'));
 
   const [selectedEvent, setSelectedEvent] = useState<RegisteredEvent | null>(
     null,
@@ -129,6 +140,10 @@ const EventCalendar = () => {
     }
     const view = scheduleRef.current?.currentView ?? 'Week';
     const anchor = scheduleRef.current?.selectedDate ?? initialDate;
+    setCalendarParams((params) => {
+      params.set('view', view);
+      params.set('anchor', anchor.toISOString().slice(0, 10));
+    });
     setRange(getRangeForView(view, new Date(anchor)));
   };
 
@@ -196,7 +211,7 @@ const EventCalendar = () => {
         created={handleCreated}
         height="100%"
         selectedDate={initialDate}
-        currentView={isDesktop ? 'Week' : 'Day'}
+        currentView={initialView}
         readonly={true}
         popupOpen={handlePopupOpen}
         actionComplete={handleActionComplete}
