@@ -24,6 +24,12 @@ export const approvedEnum = pgEnum('approved_enum', [
   'deleted',
 ]);
 
+export const membershipPolicyEnum = pgEnum('membership_policy', [
+  'open',
+  'request',
+  'closed',
+]);
+
 export const schoolEnum = pgEnum('school_enum', [
   'Harry W. Bass Jr. School of Arts, Humanities, and Technology',
   'School of Behavioral and Brain Sciences',
@@ -74,6 +80,9 @@ export const club = pgTable(
       () => user.id,
       { onDelete: 'set null' },
     ),
+    membershipPolicy: membershipPolicyEnum('membership_policy')
+      .notNull()
+      .default('open'),
     // Changed from single school enum to an array of school enums
     schools: schoolEnum()
       .array()

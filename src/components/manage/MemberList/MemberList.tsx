@@ -60,6 +60,10 @@ const MemberList = ({ members, club }: MemberListProps) => {
     z.infer<typeof removeMembersSchema>
   >(api.club.edit.removeMembers.mutationOptions({}));
 
+  const updateMemberStatus = useMutation(
+    api.club.updateMemberStatus.mutationOptions({}),
+  );
+
   // For refresh button
   const getMembers = useQuery(
     api.club.getMembers.queryOptions({ id: club.id }, { enabled: false }),
@@ -218,15 +222,26 @@ const MemberList = ({ members, club }: MemberListProps) => {
     });
   }, [getMembers]);
 
+  const handleUpdateMemberStatus = useCallback(
+    (userId: string, newStatus: 'Follower' | 'Member') => {
+      updateMemberStatus.mutate(
+        { clubId: club.id, userId, newStatus },
+        { onSuccess: () => void refreshList() },
+      );
+    },
+    [updateMemberStatus, club.id, refreshList],
+  );
+
   /*
    * Abilities
    */
 
   const self = rows.find((row) => row.userId === session.data?.user.id);
 
-  const isAdmin =
-    rows.find((row) => row.userId === session.data?.user.id)?.memberType ===
-    'President';
+  const selfMemberType = self?.memberType;
+  const isAdmin = selfMemberType === 'President';
+  const isOfficerOrAdmin =
+    selfMemberType === 'Officer' || selfMemberType === 'President';
 
   const memberListAbilities: MemberListAbilities = useMemo(() => {
     return {
@@ -237,8 +252,10 @@ const MemberList = ({ members, club }: MemberListProps) => {
     };
   }, [isAdmin]);
 
-  // Shows action column only if user is an admin
-  const actionedColumns = isAdmin ? [...columns, actionColumn] : columns;
+  // Shows action column if user is an officer or admin (for approve/deny and removal)
+  const actionedColumns = isOfficerOrAdmin
+    ? [...columns, actionColumn]
+    : columns;
 
   /*
    * Context
@@ -256,6 +273,8 @@ const MemberList = ({ members, club }: MemberListProps) => {
       refreshList,
       rowSelectionModel,
       selfRowId: self?.id,
+      clubId: club.id,
+      onUpdateMemberStatus: handleUpdateMemberStatus,
     }),
     [
       memberListDeletionState,
@@ -267,6 +286,8 @@ const MemberList = ({ members, club }: MemberListProps) => {
       refreshList,
       rowSelectionModel,
       self?.id,
+      club.id,
+      handleUpdateMemberStatus,
     ],
   );
 

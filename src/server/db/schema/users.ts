@@ -26,6 +26,8 @@ export const clubRoleEnum = pgEnum('member_type', [
   'President',
   'Officer',
   'Member',
+  'Follower',
+  'Requested',
 ]);
 
 export const userMetadata = pgTable('user_metadata', {
@@ -51,9 +53,9 @@ export const userMetadataToClubs = pgTable(
       .notNull()
       .references(() => club.id, { onDelete: 'cascade' }),
     memberType: clubRoleEnum('member_type')
-      .$default(() => 'Member')
+      .$default(() => 'Follower')
       .notNull(),
-    joinedAt: timestamp('joined_at').defaultNow().notNull(),
+    joinedAt: timestamp('joined_at'),
   },
   (t) => [primaryKey({ columns: [t.userId, t.clubId] })],
 );

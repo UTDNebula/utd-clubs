@@ -166,6 +166,7 @@ export const userMetadataRouter = createTRPCRouter({
           and(
             eq(userMetadataToClubs.userId, ctx.session.user.id),
             inArray(userMetadataToClubs.memberType, [
+              'Follower',
               'Member',
               'Officer',
               'President',
@@ -203,6 +204,7 @@ export const userMetadataRouter = createTRPCRouter({
           and(
             eq(userMetadataToClubs.userId, ctx.session.user.id),
             inArray(userMetadataToClubs.memberType, [
+              'Follower',
               'Member',
               'Officer',
               'President',

@@ -26,7 +26,7 @@ import {
 export const defaultUserSort = (
   a: SelectUserMetadataToClubsWithUserMetadataWithUser,
   b: SelectUserMetadataToClubsWithUserMetadataWithUser,
-) => b.joinedAt.getTime() - a.joinedAt.getTime();
+) => (b.joinedAt?.getTime() ?? 0) - (a.joinedAt?.getTime() ?? 0);
 
 /**
  * Wrapper function for {@linkcode formatListString()} that takes in a list of users and returns the users' first names formatted as a list.
@@ -236,6 +236,10 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
             return 'Admin';
           case 'Officer':
             return 'Collaborator';
+          case 'Member':
+            return 'Member';
+          case 'Requested':
+            return 'Requested';
           default:
             return 'Follower';
         }
@@ -261,7 +265,7 @@ export const actionColumn: GridColDef<SelectUserMetadataToClubsWithUserMetadataW
   {
     field: 'actions',
     type: 'actions',
-    width: 40,
+    width: 120,
     renderCell: (params) => <ActionsCell {...params} />,
     resizable: false,
   };
