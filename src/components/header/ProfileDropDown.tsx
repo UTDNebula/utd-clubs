@@ -25,6 +25,11 @@ type Props = {
 
 export const ProfileDropDown = ({ shadow = false }: Props) => {
   const { data: session } = authClient.useSession();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
@@ -48,10 +53,10 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
   return (
     <>
       <Avatar
-        alt={session?.user.name ?? undefined}
-        src={session?.user.image ?? undefined}
+        alt={isMounted ? (session?.user.name ?? undefined) : undefined}
+        src={isMounted ? (session?.user.image ?? undefined) : undefined}
         onClick={(e) => {
-          if (session !== null) {
+          if (session) {
             setAnchorEl(open ? null : e.currentTarget);
           } else {
             setShowRegisterModal(true);
@@ -60,7 +65,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
         component="button"
         className={`cursor-pointer ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
       />
-      {session && (
+      {isMounted && session && (
         <Popover
           open={open}
           anchorEl={anchorEl}

@@ -5,6 +5,7 @@ import { Button, IconButton } from '@mui/material';
 import Link from 'next/link';
 import { authClient } from '@src/utils/auth-client';
 import { useRegisterModal } from '../global/RegisterModalProvider';
+import { useEffect, useState } from 'react';
 
 const shadowStyle = 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]';
 
@@ -18,6 +19,11 @@ export default function ClubMatchButton({
   iconOnly?: boolean;
 }) {
   const { data: session } = authClient.useSession();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const { setShowRegisterModal } = useRegisterModal();
 
@@ -27,7 +33,7 @@ export default function ClubMatchButton({
       }
     : undefined;
 
-  const hrefConditionalProp = session ? { href: '/club-match/results' } : {};
+  const hrefConditionalProp = isMounted && session ? { href: '/club-match/results' } : {};
 
   return iconOnly ? (
     <IconButton
