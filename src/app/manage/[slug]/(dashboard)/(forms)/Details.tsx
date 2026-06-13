@@ -172,7 +172,7 @@ const Details = ({ club }: DetailsProps) => {
                             .join('. ') + '.'
                         : undefined
                     }
-                    className="grow w-48"
+                    className="w-48 grow"
                   />
                 )}
               </form.Field>
@@ -201,7 +201,7 @@ const Details = ({ club }: DetailsProps) => {
                             .join('. ') + '.'
                         : undefined
                     }
-                    className="grow w-48"
+                    className="w-48 grow"
                   />
                 )}
               </form.Field>
@@ -320,7 +320,7 @@ const Details = ({ club }: DetailsProps) => {
               )}
             </form.Field>
           </div>
-          <div className="flex flex-wrap justify-end items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <form.AppForm>
               <form.ResetButton />
             </form.AppForm>

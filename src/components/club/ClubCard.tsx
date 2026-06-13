@@ -23,7 +23,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
     >
       <Link
         href={manageView ? `/manage/${club.slug}` : `/directory/${club.slug}`}
-        className="grow flex flex-col"
+        className="flex grow flex-col"
       >
         <div className="relative aspect-square overflow-hidden rounded-t-lg">
           <div className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-800" />
@@ -65,7 +65,7 @@ export const ClubCardSkeleton = () => {
       variant="interactive"
       className="flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between md:min-h-[600px]"
     >
-      <div className="grow flex flex-col">
+      <div className="flex grow flex-col">
         <div className="relative aspect-square overflow-hidden rounded-t-lg">
           <Skeleton
             variant="rectangular"
@@ -74,11 +74,11 @@ export const ClubCardSkeleton = () => {
         </div>
         <div className="flex flex-col space-y-2 p-6">
           <Skeleton variant="text" className="text-xl font-medium" />
-          <Skeleton variant="text" className="text-xl font-medium w-1/2" />
+          <Skeleton variant="text" className="w-1/2 text-xl font-medium" />
           <Skeleton variant="text" className="text-base" />
           <Skeleton variant="text" className="text-base" />
           <Skeleton variant="text" className="text-base" />
-          <Skeleton variant="text" className="text-base w-1/4" />
+          <Skeleton variant="text" className="w-1/4 text-base" />
         </div>
       </div>
       <div className="m-5 mt-0 flex flex-row space-x-2">

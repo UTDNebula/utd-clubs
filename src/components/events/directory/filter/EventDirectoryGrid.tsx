@@ -82,12 +82,12 @@ export default function EventDirectoryGrid({
   return (
     <div>
       {events.length <= 0 && (
-        <div className="w-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl text-base font-medium text-slate-600 dark:text-slate-400">
+        <div className="flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 py-12 text-base font-medium text-slate-600 dark:border-slate-800 dark:text-slate-400">
           No events found
         </div>
       )}
       <div
-        className={`${viewLayout === 'card' ? `grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))]` : viewLayout === 'list' ? 'flex flex-col max-sm:-mx-4' : ''} items-center max-sm:gap-2 gap-4 transition-opacity ${query.isFetching ? 'opacity-50 select-none pointer-events-none' : ''}`}
+        className={`${viewLayout === 'card' ? `grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))]` : viewLayout === 'list' ? 'flex flex-col max-sm:-mx-4' : ''} items-center gap-4 transition-opacity max-sm:gap-2 ${query.isFetching ? 'pointer-events-none opacity-50 select-none' : ''}`}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           {events.map((event) => (

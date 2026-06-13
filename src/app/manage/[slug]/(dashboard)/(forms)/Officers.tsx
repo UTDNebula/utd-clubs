@@ -220,7 +220,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
                     />
                   ))}
                   <Button
-                    className="normal-case mb-2"
+                    className="mb-2 normal-case"
                     startIcon={<AddIcon />}
                     size="large"
                     onClick={() => {
@@ -257,7 +257,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
             ) : null}
           </DragOverlay>
         </DndContext>
-        <div className="flex flex-wrap justify-end items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <form.AppForm>
             <form.ResetButton
               onClick={() => {

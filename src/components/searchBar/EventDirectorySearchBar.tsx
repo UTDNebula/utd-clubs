@@ -89,7 +89,7 @@ export default function EventDirectorySearchBar({
       />
       {!focused && (
         <LinearProgress
-          className={`absolute bottom-0 w-full transition-[height,_opacity] ${loading ? 'opacity-100 h-1' : 'opacity-0 h-0'}`}
+          className={`absolute bottom-0 w-full transition-[height,_opacity] ${loading ? 'h-1 opacity-100' : 'h-0 opacity-0'}`}
         />
       )}
     </Box>

@@ -65,7 +65,7 @@ export default function ChangeClubStatus({ club }: Props) {
 
   return (
     <Panel heading="Status">
-      <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
+      <div className="mb-4 ml-2 text-sm text-slate-600 dark:text-slate-400">
         <p>Only accepted organizations are shown on UTD Clubs.</p>
       </div>
       <div className="m-2 mt-0 flex flex-col gap-4">

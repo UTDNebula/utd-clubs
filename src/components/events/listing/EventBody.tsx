@@ -34,11 +34,11 @@ const EventBody = async ({
   return (
     <section
       id="event-body"
-      className="w-full rounded-lg grid grid-cols-1 md:grid-cols-[16rem_1fr] gap-4 items-start"
+      className="grid w-full grid-cols-1 items-start gap-4 rounded-lg md:grid-cols-[16rem_1fr]"
     >
       <div
         id="club-content-left"
-        className="flex flex-col gap-4 h-full order-2 md:order-1"
+        className="order-2 flex h-full flex-col gap-4 md:order-1"
       >
         <EventCountdownCard
           id="countdown"
@@ -52,7 +52,7 @@ const EventBody = async ({
       </div>
       <div
         id="club-content-right"
-        className="flex flex-col gap-4 order-1 md:order-2 min-w-0"
+        className="order-1 flex min-w-0 flex-col gap-4 md:order-2"
       >
         <EventDescriptionCard id="description" event={event} />
         <div className="hidden md:block">{clubUpcomingEventsCard}</div>

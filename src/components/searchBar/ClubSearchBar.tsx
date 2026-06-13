@@ -66,7 +66,7 @@ export const ClubSearchBar = () => {
             input: {
               ...params.InputProps,
               endAdornment: (
-                <div className="flex gap-2 items-center">
+                <div className="flex items-center gap-2">
                   <InputAdornment position="end">
                     {params.InputProps.endAdornment}
                     {isFetching ? (

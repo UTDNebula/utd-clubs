@@ -97,25 +97,25 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
   return (
     <section
       id="events-body"
-      className="w-full flex items-start"
+      className="flex w-full items-start"
       // TODO: The scrollMarginTop property should be BaseHeader's height. Replace this with a dynamic variable
       style={{ scrollMarginTop: 68 }}
     >
       <Collapse
         orientation="horizontal"
         in={showSidebar}
-        className="max-md:hidden mt-4"
+        className="mt-4 max-md:hidden"
       >
         <div
           id="events-filters"
-          className="flex flex-col gap-4 h-full w-76 mr-4"
+          className="mr-4 flex h-full w-76 flex-col gap-4"
         >
           <EventsFilterPanels backgroundHover filters={filters} />
         </div>
       </Collapse>
-      <div id="events-content" className="flex flex-col gap-4 grow w-min">
+      <div id="events-content" className="flex w-min grow flex-col gap-4">
         <div
-          className="sticky z-40 bg-linear-to-b from-light dark:from-dark to-transparent from-75% py-4 -mb-4 -mx-4 px-4"
+          className="from-light dark:from-dark sticky z-40 -mx-4 -mb-4 bg-linear-to-b from-75% to-transparent px-4 py-4"
           // TODO: The top property should be BaseHeader's height. Replace this with a dynamic variable
           style={{ top: 68 }}
         >

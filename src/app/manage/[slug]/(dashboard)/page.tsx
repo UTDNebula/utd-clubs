@@ -19,11 +19,11 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
   return (
     <>
       <ManageHeader club={club} hrefBack="/manage">
-        <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
+        <div className="flex flex-wrap items-center gap-x-10 gap-y-2 max-sm:gap-x-4">
           <LinkButton
             href={`/manage/${slug}/followers`}
             variant="contained"
-            className="normal-case whitespace-nowrap"
+            className="whitespace-nowrap normal-case"
             startIcon={<PeopleIcon />}
             size="large"
           >
@@ -32,7 +32,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
           <LinkButton
             href={`/manage/${slug}/events`}
             variant="contained"
-            className="normal-case whitespace-nowrap"
+            className="whitespace-nowrap normal-case"
             startIcon={<EventIcon />}
             size="large"
           >
@@ -42,7 +42,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
             <LinkButton
               href={`/directory/${slug}`}
               variant="contained"
-              className="normal-case whitespace-pre"
+              className="whitespace-pre normal-case"
               startIcon={<PreviewIcon />}
               size="large"
             >

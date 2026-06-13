@@ -54,7 +54,7 @@ const ClubManageForm = async ({
     );
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-6xl">
+    <div className="flex w-full max-w-6xl flex-col gap-8">
       {club.approved !== 'approved' && <NotApproved status={club.approved} />}
       <Details club={club} />
       <Calendar

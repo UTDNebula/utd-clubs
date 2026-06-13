@@ -63,7 +63,7 @@ export default function DeleteClub({ view, club }: Props) {
             ? 'Restore'
             : 'Delete'
         }
-        className="bg-red-100 dark:bg-red-950 border border-red-500 dark:border-red-700"
+        className="border border-red-500 bg-red-100 dark:border-red-700 dark:bg-red-950"
         description={
           <div className="text-slate-800 dark:text-slate-200">
             {view === 'admin' && (

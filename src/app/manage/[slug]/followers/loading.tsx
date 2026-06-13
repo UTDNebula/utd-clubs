@@ -6,7 +6,7 @@ export default function Loading() {
     <>
       <ManageHeader loading path={['Followers']} />
       <div className="flex w-full flex-col items-center">
-        <div className="flex flex-col gap-8 w-full max-w-6xl">
+        <div className="flex w-full max-w-6xl flex-col gap-8">
           <PanelSkeleton />
         </div>
       </div>

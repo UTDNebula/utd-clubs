@@ -27,7 +27,7 @@ export default async function Page() {
   return (
     <>
       <Header />
-      <main className="p-4 flex w-full flex-col items-center">
+      <main className="flex w-full flex-col items-center p-4">
         <CreateClubForm />
       </main>
     </>

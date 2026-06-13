@@ -25,11 +25,11 @@ export const RegisterModalContents = ({
 }: Pick<RegisterModalProps, 'className' | 'onClose' | 'closeButton'>) => {
   return (
     <div
-      className={`flex flex-col items-center z-20 w-fit rounded-lg bg-white dark:bg-neutral-800 p-4 shadow-lg dark:shadow-xl ${className}`}
+      className={`z-20 flex w-fit flex-col items-center rounded-lg bg-white p-4 shadow-lg dark:bg-neutral-800 dark:shadow-xl ${className}`}
     >
-      <div className="flex flex-col h-fit w-full">
+      <div className="flex h-fit w-full flex-col">
         {closeButton && (
-          <div className="sm:absolute self-end">
+          <div className="self-end sm:absolute">
             <IconButton onClick={onClose} aria-label="close modal">
               <CloseRoundedIcon />
             </IconButton>
@@ -37,19 +37,19 @@ export const RegisterModalContents = ({
         )}
         <Typography
           variant="h1"
-          className="font-display text-2xl font-bold text-slate-600 dark:text-slate-400 grow-1 self-center text-center px-4 mt-1 mb-2"
+          className="font-display mt-1 mb-2 grow-1 self-center px-4 text-center text-2xl font-bold text-slate-600 dark:text-slate-400"
         >
           Sign In / Sign Up
         </Typography>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-3 sm:flex-row p-4">
+      <div className="flex w-full flex-col items-center justify-center gap-3 p-4 sm:flex-row">
         {providers.map((provider) => (
           <ProviderButton key={provider} provider={provider} />
         ))}
       </div>
       <Typography
         variant="body1"
-        className="font-display text-slate-600 dark:text-slate-400 grow-1 self-center text-center px-4 mt-1 mb-2"
+        className="font-display mt-1 mb-2 grow-1 self-center px-4 text-center text-slate-600 dark:text-slate-400"
       >
         Are you UTD Faculty/Staff?{' '}
         <Link
@@ -82,7 +82,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     <Modal
       open={open}
       onClose={onClose}
-      className={`flex justify-center items-center h-screen p-4 ${className}`}
+      className={`flex h-screen items-center justify-center p-4 ${className}`}
     >
       {/* This span is required to receive the tabIndex prop, which will let the user quickly navigate the modal using the keyboard */}
       <span>

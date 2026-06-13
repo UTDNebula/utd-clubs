@@ -35,14 +35,14 @@ const NotApproved = ({
           If you have any questions, please reach out on our{' '}
           <a
             href="https://discord.utdnebula.com/"
-            className="text-royal dark:text-cornflower-300 underline decoration-transparent hover:decoration-inherit transition"
+            className="text-royal dark:text-cornflower-300 underline decoration-transparent transition hover:decoration-inherit"
           >
             Discord
           </a>{' '}
           or{' '}
           <a
             href="https://www.instagram.com/utdnebula/"
-            className="text-royal dark:text-cornflower-300 underline decoration-transparent hover:decoration-inherit transition"
+            className="text-royal dark:text-cornflower-300 underline decoration-transparent transition hover:decoration-inherit"
           >
             {' '}
             Instagram

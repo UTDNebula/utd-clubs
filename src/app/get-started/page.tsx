@@ -17,17 +17,17 @@ export default async function Page() {
   const userMetadata = await api.userMetadata.byId({ id: session.user.id });
 
   return (
-    <main className="min-h-screen relative pb-24">
-      <div className="fixed inset-0 h-full w-full overflow-hidden bg-royal">
+    <main className="relative min-h-screen pb-24">
+      <div className="bg-royal fixed inset-0 h-full w-full overflow-hidden">
         <Image
           src={'/banner.png'}
           alt="background"
           fill
           objectFit="cover"
-          className="select-none -z-20"
+          className="-z-20 select-none"
           draggable={false}
         />
-        <div className="absolute inset-0 dark:bg-slightly-darken" />
+        <div className="dark:bg-slightly-darken absolute inset-0" />
       </div>
       <div className="relative z-20">
         <Header

@@ -234,12 +234,12 @@ export default function FilterChip(props: FilterChipProps) {
               {action === 'popover' ? (
                 <ArrowDropDownIcon
                   fontSize="small"
-                  className="-ml-1.5 mr-1.25 fill-[rgba(var(--mui-palette-text-primaryChannel)/0.26)] group-hover/chip:fill-[rgba(var(--mui-palette-text-primaryChannel)/0.4)]"
+                  className="mr-1.25 -ml-1.5 fill-[rgba(var(--mui-palette-text-primaryChannel)/0.26)] group-hover/chip:fill-[rgba(var(--mui-palette-text-primaryChannel)/0.4)]"
                 />
               ) : action === 'delete' ? (
                 <ClearIcon
                   fontSize="small"
-                  className="-ml-1.5 mr-1.25 fill-[rgba(var(--mui-palette-text-primaryChannel)/0.26)] group-hover/chip:fill-[rgba(var(--mui-palette-text-primaryChannel)/0.4)]"
+                  className="mr-1.25 -ml-1.5 fill-[rgba(var(--mui-palette-text-primaryChannel)/0.26)] group-hover/chip:fill-[rgba(var(--mui-palette-text-primaryChannel)/0.4)]"
                 />
               ) : undefined}
             </span>
