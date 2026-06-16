@@ -1,5 +1,6 @@
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
+import useDebounce from 'src/utils/useDebounce';
 
 type Props = {
   value: string | number;
@@ -14,18 +15,11 @@ export default function DebouncedInput({
   ...props
 }: Props) {
   const [value, setValue] = useState(initialValue);
+  const debouncedValue = useDebounce(value, debounce);
 
   useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value);
-    }, debounce);
-
-    return () => clearTimeout(timeout);
-  }, [value, debounce, onChange]);
+    onChange(debouncedValue);
+  }, [debouncedValue, onChange]);
 
   return (
     <TextField

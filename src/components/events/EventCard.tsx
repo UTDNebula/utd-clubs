@@ -173,7 +173,7 @@ const EventCard = ({
                   </div>
                 </div>
                 <div
-                  className={`${view === 'normal' ? 'max-sm:hidden' : ''} shrink-0 @max-sm/event-list-content:-mb-3 @sm/event-list-content:self-center`}
+                  className={`${view === 'normal' ? 'max-sm:hidden' : ''} z-20 shrink-0 @max-sm/event-list-content:-mb-3 @sm/event-list-content:self-center`}
                 >
                   <div className="flex h-fit flex-wrap gap-2">
                     {EventButtons}
@@ -225,7 +225,7 @@ const EventCard = ({
               </div>
             </div>
 
-            <div className="m-4 mt-auto flex shrink-0 flex-wrap gap-2">
+            <div className="z-20 m-4 mt-auto flex shrink-0 flex-wrap gap-2">
               {EventButtons}
             </div>
           </div>

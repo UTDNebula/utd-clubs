@@ -128,6 +128,7 @@ const Collaborators = ({
       }}
     >
       <Panel
+        id="collaborators"
         heading="Collaborators"
         description={
           <>

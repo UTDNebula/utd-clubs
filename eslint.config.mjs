@@ -15,6 +15,13 @@ const eslintConfig = defineConfig([
     'build/**',
     'next-env.d.ts',
   ]),
+  // Allow HTML <img> elements in Next.JS generated image metadata files
+  {
+    files: ['src/**/{opengraph,twitter}-image.{js,jsx,ts,tsx}'],
+    rules: {
+      '@next/next/no-img-element': 'off',
+    },
+  },
 ]);
 
 export default eslintConfig;
