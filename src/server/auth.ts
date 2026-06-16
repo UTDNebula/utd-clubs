@@ -6,15 +6,9 @@ import { db } from './db';
 import { InsertUserMetadata } from './db/models';
 import { userMetadata } from './db/schema/users';
 
-let AUTH_TRUSTED_ORIGINS: string[] = [];
-
-if (process.env.AUTH_TRUSTED_ORIGINS) {
-  try {
-    AUTH_TRUSTED_ORIGINS = JSON.parse(process.env.AUTH_TRUSTED_ORIGINS ?? '');
-  } catch {
-    AUTH_TRUSTED_ORIGINS = [process.env.AUTH_TRUSTED_ORIGINS];
-  }
-}
+const AUTH_TRUSTED_ORIGINS = Array.isArray(env.AUTH_TRUSTED_ORIGINS)
+  ? env.AUTH_TRUSTED_ORIGINS
+  : [env.AUTH_TRUSTED_ORIGINS ?? ''];
 
 /**
  * Options for Better Auth used to configure adapters, providers, callbacks, etc.

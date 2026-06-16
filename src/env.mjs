@@ -14,8 +14,8 @@ const server = z.object({
     ? z.string().min(1)
     : z.string().min(1).optional(),
   BETTER_AUTH_URL: z.preprocess(
-    // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
-    // Since NextAuth.js automatically uses the VERCEL_URL if present.
+    // This makes Vercel deployments not fail if you don't set BETTER_AUTH_URL
+    // Since Better Auth automatically uses the VERCEL_URL if present.
     (str) => process.env.VERCEL_URL ?? str,
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string().min(1) : z.url(),
@@ -34,7 +34,18 @@ const server = z.object({
   NEBULA_API_STORAGE_KEY: z.string().min(1),
   NEBULA_API_EMAIL_KEY: z.string().optional(),
   GEMINI_SERVICE_ACCOUNT: z.string().optional(),
-  AUTH_TRUSTED_ORIGINS: z.union([z.string(), z.string().array()]).optional(),
+  AUTH_TRUSTED_ORIGINS: z.preprocess(
+    (val) => {
+      if (typeof val === 'string') {
+        try {
+          return JSON.parse(val);
+        } catch {
+          return val;
+        }
+      }
+    },
+    z.union([z.string(), z.string().array()]).optional(),
+  ),
 });
 
 /**
