@@ -135,7 +135,13 @@ const SelectMultipleInput = ({
             ))}
           </div>
         )}
-        MenuProps={{ PaperProps: { className: 'max-h-60' } }}
+        MenuProps={{
+          slotProps: {
+            paper: {
+              className: 'max-h-60',
+            }
+          }
+        }}
         error={shouldShowError}
       >
         <MenuItem disabled value="">

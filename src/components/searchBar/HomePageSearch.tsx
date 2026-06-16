@@ -151,12 +151,13 @@ export const HomePageSearchBar = () => {
               placeholder="Search for Clubs or Tags"
               inputRef={inputRef}
               slotProps={{
+                ...params.slotProps,
                 input: {
-                  ...params.InputProps,
+                  ...params.slotProps.input,
                   endAdornment: (
                     <div className="flex gap-2 items-center">
                       <InputAdornment position="start">
-                        {params.InputProps.endAdornment}
+                        {params.slotProps.input.endAdornment}
                         {isFetching ? (
                           <CircularProgress color="inherit" size={24} />
                         ) : (
@@ -167,7 +168,7 @@ export const HomePageSearchBar = () => {
                   ),
                   className:
                     'bg-white dark:bg-neutral-800 ' +
-                    params.InputProps.className,
+                    params.slotProps.input.className,
                   sx: {
                     borderRadius: theme.shape.borderRadius,
                   },
