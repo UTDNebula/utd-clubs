@@ -46,7 +46,7 @@ export const ClubSchoolEdit = ({
           {...params}
           placeholder="Search schools"
           label="Schools"
-          className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-900"
+          className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-800"
           error={error}
           helperText={helperText}
         />

@@ -23,8 +23,7 @@ export default async function Page() {
           src={'/banner.png'}
           alt="background"
           fill
-          objectFit="cover"
-          className="select-none -z-20"
+          className="object-cover select-none -z-20"
           draggable={false}
         />
         <div className="absolute inset-0 dark:bg-slightly-darken" />

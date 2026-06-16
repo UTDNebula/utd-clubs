@@ -29,6 +29,7 @@ const Home = async () => {
                 sizes="120vw"
                 alt="Gradient Background"
                 className="bg-no-repeat object-cover select-none"
+                loading="eager"
               />
               <Image
                 src={planetsDoodle}

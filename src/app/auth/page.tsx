@@ -25,8 +25,7 @@ export default async function Auth(props: {
             src={'/banner.png'}
             alt="background"
             fill
-            objectFit="cover"
-            className="select-none"
+            className="object-cover select-none"
           />
         </div>
         <div className="fixed inset-0 dark:bg-slightly-darken" />

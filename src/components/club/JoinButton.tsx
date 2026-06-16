@@ -141,35 +141,37 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
         </div>
       }
     >
-      <Button
-        variant="contained"
-        size={isHeader ? 'large' : 'small'}
-        startIcon={memberType ? <CheckIcon /> : <AddIcon />}
-        onClick={async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+      <span>
+        <Button
+          variant="contained"
+          size={isHeader ? 'large' : 'small'}
+          startIcon={memberType ? <CheckIcon /> : <AddIcon />}
+          onClick={async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-          if (isPending || joinLeave.isPending) return;
+            if (isPending || joinLeave.isPending) return;
 
-          if (!session) {
-            // This will use auth page when this JoinButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
-            if (useAuthPage.current) {
-              router.push(
-                `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
-              );
-            } else {
-              setShowRegisterModal(true);
+            if (!session) {
+              // This will use auth page when this JoinButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
+              if (useAuthPage.current) {
+                router.push(
+                  `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
+                );
+              } else {
+                setShowRegisterModal(true);
+              }
+              return;
             }
-            return;
-          }
 
-          void joinLeave.mutate({ clubId });
-        }}
-        className="normal-case"
-        loading={isPending || joinLeave.isPending}
-      >
-        {memberType ? 'Following' : 'Follow'}
-      </Button>
+            void joinLeave.mutate({ clubId });
+          }}
+          className="normal-case"
+          loading={isPending || joinLeave.isPending}
+        >
+          {memberType ? 'Following' : 'Follow'}
+        </Button>
+      </span>
     </Tooltip>
   );
 };

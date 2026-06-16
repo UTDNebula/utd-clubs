@@ -169,16 +169,18 @@ const EventRegisterButton = ({
           </div>
         }
       >
-        <Button
-          onClick={onClick}
-          loading={isPending || toggleRegistration.isPending}
-          variant="contained"
-          className="normal-case"
-          size={isHeader ? 'large' : 'small'}
-          startIcon={registered ? <CheckIcon /> : <AddIcon />}
-        >
-          {registered ? 'Registered' : 'Register'}
-        </Button>
+        <span>
+          <Button
+            onClick={onClick}
+            loading={toggleRegistration.isPending}
+            variant="contained"
+            className="normal-case"
+            size={isHeader ? 'large' : 'small'}
+            startIcon={registered ? <CheckIcon /> : <AddIcon />}
+          >
+            {registered ? 'Registered' : 'Register'}
+          </Button>
+        </span>
       </Tooltip>
       {!isHeader &&
         (memberType === 'President' || memberType === 'Officer') && (
