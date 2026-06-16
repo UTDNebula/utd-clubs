@@ -147,16 +147,18 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
 
       {memberListAbilities.refresh && (
         <Tooltip title="Refresh" className="max-sm:hidden">
-          <ToolbarButton
-            onClick={refreshList}
-            disabled={getMembers?.isFetching}
-          >
-            {getMembers?.isFetching ? (
-              <CircularProgress color="inherit" size={20} />
-            ) : (
-              <RefreshIcon fontSize="small" />
-            )}
-          </ToolbarButton>
+          <span>
+            <ToolbarButton
+              onClick={refreshList}
+              disabled={getMembers?.isFetching}
+            >
+              {getMembers?.isFetching ? (
+                <CircularProgress color="inherit" size={20} />
+              ) : (
+                <RefreshIcon fontSize="small" />
+              )}
+            </ToolbarButton>
+          </span>
         </Tooltip>
       )}
 

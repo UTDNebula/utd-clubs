@@ -138,19 +138,20 @@ export const BaseHeader = ({
   return (
     <BaseHeaderContext.Provider value={{ openCompactSearchBar }}>
       <div
-        className={`${disableSticky ? '' : 'sticky'} top-0 z-50 flex min-h-17 w-full items-center justify-between gap-x-2 gap-y-2 px-4 py-2 md:gap-x-4 lg:gap-x-8 ${menu ? 'max-sm:pl-2' : ''} flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
+        className={`${disableSticky ? 'relative' : 'sticky'} min-h-17 top-0 z-50 flex w-full justify-between items-center gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-4 ${menu ? 'max-sm:pl-2' : ''} flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
       >
         {!transparent && (
-          <>
+          <div className="absolute -z-20 inset-0">
             <Image
               src={gradientBG}
               alt="gradient background"
               fill
-              className="-z-20 object-cover select-none"
+              className="object-cover -z-10 select-none"
               sizes="120vw"
+              loading="eager"
             />
-            <div className="bg-lighten dark:bg-darken absolute inset-0 -z-10"></div>
-          </>
+            <div className="absolute inset-0 bg-lighten dark:bg-darken"></div>
+          </div>
         )}
         {!openCompactSearchBar ? (
           <>
