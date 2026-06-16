@@ -521,7 +521,7 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
           </div>
           <Panel smallPadding className="mt-6 dark:bg-neutral-700">
             <p className="text-sm text-slate-800 dark:text-slate-200">
-              <span className="font-semibold">Disclaimer:</span> Club
+              <span className="font-semibold">Disclaimer: </span>Club
               recommendations are generated using Google&apos;s Gemini AI. While
               we strive for accuracy, AI recommendations may not perfectly match
               your preferences. We recommend reviewing the suggested clubs to
