@@ -14,9 +14,6 @@ const server = z.object({
   BETTER_AUTH_SECRET: isProduction
     ? z.string().min(1)
     : z.string().min(1).optional(),
-  OAUTH_PROXY_SECRET: isProduction
-    ? z.string().min(1)
-    : z.string().min(1).optional(),
   BETTER_AUTH_URL: z.preprocess(
     // This makes Vercel deployments not fail if you don't set BETTER_AUTH_URL
     // Since Better Auth automatically uses the VERCEL_URL if present.
@@ -73,7 +70,6 @@ const processEnv = {
   DATABASE_URL: process.env.DATABASE_URL,
   BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
   BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
-  OAUTH_PROXY_SECRET: process.env.OAUTH_PROXY_SECRET,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,

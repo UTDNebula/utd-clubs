@@ -1,6 +1,5 @@
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { betterAuth } from 'better-auth/minimal';
-import { oAuthProxy } from 'better-auth/plugins';
 import { eq } from 'drizzle-orm';
 import { env } from '@src/env.mjs';
 import { db } from './db';
@@ -20,12 +19,6 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: 'pg', // or "pg" or "mysql"
   }),
-  plugins: [
-    oAuthProxy({
-      productionURL: 'https://clubs.utdnebula.com',
-      secret: env.OAUTH_PROXY_SECRET,
-    }),
-  ],
   socialProviders: {
     google:
       env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
