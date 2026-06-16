@@ -139,8 +139,8 @@ const SelectMultipleInput = ({
           slotProps: {
             paper: {
               className: 'max-h-60',
-            }
-          }
+            },
+          },
         }}
         error={shouldShowError}
       >

@@ -136,16 +136,18 @@ export default function CompactPagination({
             )
           }
         >
-          <PaginationItem
-            className="mx-0"
-            type="previous"
-            onClick={() => {
-              if (!disablePrev) {
-                setPage((prev) => prev - 1);
-              }
-            }}
-            disabled={disablePrev}
-          />
+          <span>
+            <PaginationItem
+              className="mx-0"
+              type="previous"
+              onClick={() => {
+                if (!disablePrev) {
+                  setPage((prev) => prev - 1);
+                }
+              }}
+              disabled={disablePrev}
+            />
+          </span>
         </Tooltip>
         <PaginationItem
           role="textbox"
@@ -179,16 +181,18 @@ export default function CompactPagination({
             )
           }
         >
-          <PaginationItem
-            className="mx-0"
-            type="next"
-            onClick={() => {
-              if (!disableNext) {
-                setPage((prev) => prev + 1);
-              }
-            }}
-            disabled={disableNext}
-          />
+          <span>
+            <PaginationItem
+              className="mx-0"
+              type="next"
+              onClick={() => {
+                if (!disableNext) {
+                  setPage((prev) => prev + 1);
+                }
+              }}
+              disabled={disableNext}
+            />
+          </span>
         </Tooltip>
       </div>
       <Popover
