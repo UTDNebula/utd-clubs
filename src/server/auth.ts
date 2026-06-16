@@ -20,19 +20,28 @@ export const auth = betterAuth({
     provider: 'pg', // or "pg" or "mysql"
   }),
   socialProviders: {
-    google: {
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-      accessType: 'offline',
-    },
-    discord: {
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    },
-    microsoft: {
-      clientId: env.MICROSOFT_CLIENT_ID,
-      clientSecret: env.MICROSOFT_CLIENT_SECRET, // Prod and dev secrets expire 2028-02-11
-    },
+    google:
+      env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
+        ? {
+            clientId: env.GOOGLE_CLIENT_ID,
+            clientSecret: env.GOOGLE_CLIENT_SECRET,
+            accessType: 'offline',
+          }
+        : undefined,
+    discord:
+      env.DISCORD_CLIENT_ID && env.DISCORD_CLIENT_SECRET
+        ? {
+            clientId: env.DISCORD_CLIENT_ID,
+            clientSecret: env.DISCORD_CLIENT_SECRET,
+          }
+        : undefined,
+    microsoft:
+      env.MICROSOFT_CLIENT_ID && env.MICROSOFT_CLIENT_SECRET
+        ? {
+            clientId: env.MICROSOFT_CLIENT_ID,
+            clientSecret: env.MICROSOFT_CLIENT_SECRET, // Prod and dev secrets expire 2028-02-11
+          }
+        : undefined,
   },
   databaseHooks: {
     account: {

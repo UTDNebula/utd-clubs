@@ -10,6 +10,7 @@ const server = z.object({
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
+  DATABASE_URL: z.string().min(1),
   BETTER_AUTH_SECRET: isProduction
     ? z.string().min(1)
     : z.string().min(1).optional(),
@@ -20,20 +21,19 @@ const server = z.object({
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string().min(1) : z.url(),
   ),
-  GOOGLE_CLIENT_ID: z.string().min(1),
-  GOOGLE_CLIENT_SECRET: z.string().min(1),
-  DATABASE_URL: z.string().min(1),
-  DISCORD_CLIENT_ID: z.string().min(1),
-  DISCORD_CLIENT_SECRET: z.string().min(1),
-  MICROSOFT_CLIENT_ID: z.string().min(1),
-  MICROSOFT_CLIENT_SECRET: z.string().min(1),
-  SENTRY_AUTH_TOKEN: z.string().optional(),
+  GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+  GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
+  DISCORD_CLIENT_ID: z.string().min(1).optional(),
+  DISCORD_CLIENT_SECRET: z.string().min(1).optional(),
+  MICROSOFT_CLIENT_ID: z.string().min(1).optional(),
+  MICROSOFT_CLIENT_SECRET: z.string().min(1).optional(),
   NEBULA_API_URL: z.string().min(1),
   NEBULA_API_STORAGE_BUCKET: z.string().min(1),
   NEBULA_API_KEY: z.string().min(1),
   NEBULA_API_STORAGE_KEY: z.string().min(1),
   NEBULA_API_EMAIL_KEY: z.string().optional(),
   GEMINI_SERVICE_ACCOUNT: z.string().optional(),
+  SENTRY_AUTH_TOKEN: z.string().optional(),
   AUTH_TRUSTED_ORIGINS: z.preprocess(
     (val) => {
       if (typeof val === 'string') {
@@ -67,25 +67,25 @@ const client = z.object({
  */
 const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
+  DATABASE_URL: process.env.DATABASE_URL,
   BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
   BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  DATABASE_URL: process.env.DATABASE_URL,
   DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
   MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
   MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,
-  SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
-  NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   NEBULA_API_URL: process.env.NEBULA_API_URL,
   NEBULA_API_STORAGE_BUCKET: process.env.NEBULA_API_KEY,
   NEBULA_API_KEY: process.env.NEBULA_API_KEY,
   NEBULA_API_STORAGE_KEY: process.env.NEBULA_API_KEY,
-  GEMINI_SERVICE_ACCOUNT: process.env.GEMINI_SERVICE_ACCOUNT,
   NEBULA_API_EMAIL_KEY: process.env.NEBULA_API_EMAIL_KEY,
+  GEMINI_SERVICE_ACCOUNT: process.env.GEMINI_SERVICE_ACCOUNT,
   NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY:
     process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY,
+  SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+  NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   AUTH_TRUSTED_ORIGINS: process.env.AUTH_TRUSTED_ORIGINS,
 };
 
