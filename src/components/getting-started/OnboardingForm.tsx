@@ -73,7 +73,7 @@ export default function OnboardingForm({
         console.error(e);
       }
     },
-    validators: { onChange: accountOnboardingSchema },
+    validators: { onSubmit: accountOnboardingSchema },
   });
 
   const FormElement = (
