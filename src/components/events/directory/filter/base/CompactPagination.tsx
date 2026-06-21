@@ -129,7 +129,7 @@ export default function CompactPagination({
             disablePrev ? undefined : (
               <span>
                 Previous page{' '}
-                <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
+                <kbd className="mx-1 rounded-sm px-1 py-0.5 outline-1 outline-white">
                   &larr;
                 </kbd>
               </span>
@@ -151,7 +151,7 @@ export default function CompactPagination({
         </Tooltip>
         <PaginationItem
           role="textbox"
-          className="mx-0 cursor-text outline-neutral-800 dark:outline-neutral-200 hover:outline-1"
+          className="mx-0 cursor-text outline-neutral-800 hover:outline-1 dark:outline-neutral-200"
           style={{
             // Ensures consistent min width of button, dependent on number of characters of button text
             // This ensures compactness while preventing the previous page button from shifting around
@@ -174,7 +174,7 @@ export default function CompactPagination({
             disableNext ? undefined : (
               <span>
                 Next page{' '}
-                <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
+                <kbd className="mx-1 rounded-sm px-1 py-0.5 outline-1 outline-white">
                   &rarr;
                 </kbd>
               </span>
@@ -209,7 +209,7 @@ export default function CompactPagination({
             : { elevation: 0, className: 'bg-transparent' },
           backdrop: { className: 'bg-black/50' },
         }}
-        className={smallScreen ? 'flex justify-center w-screen p-4' : ''}
+        className={smallScreen ? 'flex w-screen justify-center p-4' : ''}
       >
         <form
           onSubmit={(e) => {
@@ -219,7 +219,7 @@ export default function CompactPagination({
         >
           <div
             className={
-              smallScreen ? 'flex flex-col gap-4 items-center mx-6 my-4' : ''
+              smallScreen ? 'mx-6 my-4 flex flex-col items-center gap-4' : ''
             }
           >
             {smallScreen && (
@@ -263,7 +263,7 @@ export default function CompactPagination({
               }}
             />
             {smallScreen && (
-              <div className="flex justify-end w-full">
+              <div className="flex w-full justify-end">
                 <Button
                   type="submit"
                   variant="contained"

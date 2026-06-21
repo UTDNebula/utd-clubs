@@ -100,9 +100,9 @@ export default function CustomToolbar({ club }: CustomToolbarProps) {
     <Toolbar
       className={`${selectedRowCount ? 'bg-[var(--DataGrid-t-color-interactive-selected)]/8' : ''}`}
     >
-      <div className="grow-1 ml-2 shrink-1 max-w-full overflow-hidden whitespace-nowrap">
+      <div className="ml-2 max-w-full shrink-1 grow-1 overflow-hidden whitespace-nowrap">
         {selectedRowCount ? (
-          <div className="flex items-center gap-2 shrink-1">
+          <div className="flex shrink-1 items-center gap-2">
             <span>{`Selection (${selectedRowCount} ${selectedRowCount == 1 ? 'person' : 'people'})`}</span>
             <div>
               {memberListAbilities.removeUsers && (

@@ -1,6 +1,6 @@
 const Events = async () => {
   return (
-    <main className="font-bold relative select-none h-72">
+    <main className="relative h-72 font-bold select-none">
       <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[200px] text-slate-200 dark:text-slate-800">
         WIP
       </h1>

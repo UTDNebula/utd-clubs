@@ -16,7 +16,7 @@ const ClubEventHeader = async ({ club }: { club: Club }) => {
   }
 
   return (
-    <BaseCard className="relative w-full aspect-[4.5/1] overflow-hidden">
+    <BaseCard className="relative aspect-[4.5/1] w-full overflow-hidden">
       <Image
         src={addVersionToImage(club.bannerImage, club.updatedAt?.getTime())}
         alt="Club banner"

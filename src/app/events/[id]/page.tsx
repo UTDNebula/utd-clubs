@@ -33,7 +33,7 @@ export default async function EventsPage(props: Params) {
   return (
     <>
       <EventHeader />
-      <main className="mb-5 flex flex-col gap-y-8 p-4 max-w-6xl mx-auto">
+      <main className="mx-auto mb-5 flex max-w-6xl flex-col gap-y-8 p-4">
         <ClubEventHeader club={event.club} />
         <EventTitle event={event} />
         <EventBody event={event} />

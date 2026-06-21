@@ -40,7 +40,7 @@ const CreateClubForm = () => {
       }}
     >
       <Panel heading="Create New Organization">
-        <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
+        <div className="mb-4 ml-2 text-sm text-slate-600 dark:text-slate-400">
           <p>
             We&apos;ll start with the basics then get your organization&apos;s
             logo, officers, contact information, and collaborators on the next
@@ -98,7 +98,7 @@ const CreateClubForm = () => {
             )}
           </form.Field>
         </div>
-        <div className="flex flex-wrap justify-end items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <form.AppForm>
             <form.ResetButton />
           </form.AppForm>

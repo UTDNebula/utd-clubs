@@ -26,7 +26,7 @@ const SidebarItems = ({
 
   return (
     <Link
-      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white dark:bg-neutral-800 shadow-md dark:shadow-lg' : ''} hover:bg-royal/10 dark:hover:bg-neutral-700`}
+      className={`group flex items-center gap-x-4 rounded-full px-5 py-2.5 transition-colors duration-200 ${active ? 'bg-white shadow-md dark:bg-neutral-800 dark:shadow-lg' : ''} hover:bg-royal/10 dark:hover:bg-neutral-700`}
       href={route}
       target={route.startsWith('http') ? '_blank' : ''}
     >
@@ -42,7 +42,7 @@ const SidebarItems = ({
         </Badge>
       )}
       <h2
-        className={`text-base font-medium capitalize md:text-sm ${active ? 'text-royal dark:text-cornflower-300' : 'text-slate-800 dark:text-slate-200'} transition-colors group-hover:text-royal dark:group-hover:text-cornflower-300`}
+        className={`text-base font-medium capitalize md:text-sm ${active ? 'text-royal dark:text-cornflower-300' : 'text-slate-800 dark:text-slate-200'} group-hover:text-royal dark:group-hover:text-cornflower-300 transition-colors`}
       >
         {cat}
       </h2>

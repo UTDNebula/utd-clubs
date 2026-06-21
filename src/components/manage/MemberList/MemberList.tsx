@@ -271,7 +271,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
   );
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-6xl">
+    <div className="flex w-full max-w-6xl flex-col gap-8">
       <MemberListContext.Provider value={MemberListContextValues}>
         <DataGrid
           rows={rows}

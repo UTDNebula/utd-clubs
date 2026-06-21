@@ -217,8 +217,8 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
 
   return (
     <Panel heading="Club Tags">
-      <div className="flex flex-row gap-2 flex-wrap justify-between items-start w-fill mx-2 mb-4">
-        <div className="text-slate-600 dark:text-slate-400 text-sm">
+      <div className="w-fill mx-2 mb-4 flex flex-row flex-wrap items-start justify-between gap-2">
+        <div className="text-sm text-slate-600 dark:text-slate-400">
           {tags.length} unique {tags.length === 1 ? 'tag' : 'tags'} from all
           approved clubs.
           <br />
@@ -227,7 +227,7 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
         <Button
           variant="contained"
           color="inherit"
-          className="normal-case whitespace-nowrap shrink-0"
+          className="shrink-0 whitespace-nowrap normal-case"
           startIcon={<RefreshIcon />}
           loading={changeTags.isPending}
           loadingPosition="start"
@@ -303,7 +303,7 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
           >
             <div>
               <ListItemText primary={tag.tag} />
-              <span className="flex flex-row gap-2 w-fit">
+              <span className="flex w-fit flex-row gap-2">
                 <ListItemText
                   secondary={`${tag.count} ${tag.count === 1 ? 'club' : 'clubs'}`}
                 />

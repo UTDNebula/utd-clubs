@@ -43,7 +43,7 @@ const Community = async ({
             />
           </div>
           <div className="h-full">
-            <h1 className="font-display text-slate-800 dark:text-slate-200 pt-5 pb-1 text-center text-3xl font-bold">
+            <h1 className="font-display pt-5 pb-1 text-center text-3xl font-bold text-slate-800 dark:text-slate-200">
               Please Sign in to Use the Community Page.
             </h1>
           </div>
@@ -60,12 +60,12 @@ const Community = async ({
     <>
       <Header />
       <main className="p-4">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 min-h-16 px-4">
+        <div className="flex min-h-16 flex-col items-center justify-between gap-4 px-4 md:flex-row">
           <h1 className="font-display text-2xl font-bold">Community Events</h1>
         </div>
-        <h2 className="font-display text-xl font-bold mt-4 px-4">Registered</h2>
+        <h2 className="font-display mt-4 px-4 text-xl font-bold">Registered</h2>
         <RegisteredEvents />
-        <h2 className="font-display text-xl font-bold mt-4 px-4">
+        <h2 className="font-display mt-4 px-4 text-xl font-bold">
           From Your Followed Clubs
         </h2>
         <ClubEvents page={page} pageSize={pageSize} />

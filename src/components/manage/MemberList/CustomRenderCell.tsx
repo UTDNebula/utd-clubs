@@ -15,11 +15,8 @@ import { MemberListContext } from './MemberListContext';
 
 export function SmallTextCell(params: GridRenderCellParams) {
   return (
-    <div className="flex items-center h-full">
-      <Typography
-        variant="body2"
-        className=" overflow-hidden overflow-ellipsis"
-      >
+    <div className="flex h-full items-center">
+      <Typography variant="body2" className="overflow-hidden overflow-ellipsis">
         {params.value}
       </Typography>
     </div>
@@ -66,7 +63,7 @@ export function JoinedAtCell(params: GridRenderCellParams) {
     >
       <Typography
         variant="body2"
-        className="flex items-center h-full text-wrap"
+        className="flex h-full items-center text-wrap"
       >
         {expandTimestamps
           ? localeDateString
@@ -86,14 +83,14 @@ export function ContactEmailCell(params: GridRenderCellParams) {
   };
 
   return (
-    <div className="flex gap-1 items-center h-full">
+    <div className="flex h-full items-center gap-1">
       <Tooltip title={contactEmailsVisible ? 'Hide' : 'Show'}>
         <IconButton
           size="small"
           onClick={handleOnClick}
           aria-label="Toggle email visibility"
         >
-          <div className="flex justify-center items-center text-slate-600 dark:text-slate-400 h-4 *:w-4 *:h-4">
+          <div className="flex h-4 items-center justify-center text-slate-600 *:h-4 *:w-4 dark:text-slate-400">
             {contactEmailsVisible ? (
               <VisibilityOutlinedIcon />
             ) : (
@@ -117,7 +114,7 @@ export function ContactEmailCell(params: GridRenderCellParams) {
         // deterministic based off the row ID (i.e. row number)
         <Typography
           variant="body2"
-          className="text-slate-600 dark:text-slate-400 select-none tracking-tighter"
+          className="tracking-tighter text-slate-600 select-none dark:text-slate-400"
         >
           {'•'.repeat(12 + Math.sin(Number(params.id.valueOf()) * 2) * 3)}
         </Typography>

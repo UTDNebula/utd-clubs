@@ -118,7 +118,7 @@ export const ClubTags = (props: ClubTagsProps) => {
   return (
     <div
       ref={containerRef}
-      className={`flex flex-wrap gap-1 mt-2 ${!isReady ? 'invisible' : ''}`} // hide container when measuring
+      className={`mt-2 flex flex-wrap gap-1 ${!isReady ? 'invisible' : ''}`} // hide container when measuring
     >
       {/* Render all tags invisibly first to measure, then only the tags that fit visibly */}
       {(isReady ? visibleTags : props.tags).map((tag) => (
@@ -132,7 +132,7 @@ export const ClubTags = (props: ClubTagsProps) => {
           <TagChip
             tag={`+${overflowTags.length} ${overflowTags.length === 1 ? 'tag' : 'tags'}`}
             onClick={handleMenuOpen}
-            className="!font-bold !hover:bg-slate-300 !dark:hover:bg-slate-700 !cursor-pointer"
+            className="!hover:bg-slate-300 !dark:hover:bg-slate-700 !cursor-pointer !font-bold"
           />
           {anchorEl && (
             <Menu

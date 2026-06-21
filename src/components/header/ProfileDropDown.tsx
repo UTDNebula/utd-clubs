@@ -76,7 +76,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
                   <Avatar
                     alt={session.user.name}
                     src={session.user.image ?? undefined}
-                    className="w-6 h-6"
+                    className="h-6 w-6"
                   />
                 </ListItemIcon>
                 <div>

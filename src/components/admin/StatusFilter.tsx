@@ -46,7 +46,7 @@ export default function StatusFilter<T>({ column }: Props<T>) {
       <Select
         value={value}
         onChange={(e) => updateFilterValue(e.target.value)}
-        className="min-w-24 normal-case max-h-8 text-xs"
+        className="max-h-8 min-w-24 text-xs normal-case"
       >
         <MenuItem value="All">All</MenuItem>
         <MenuItem value="approved">Approved</MenuItem>

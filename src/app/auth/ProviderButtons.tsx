@@ -27,11 +27,11 @@ const ProviderButton = ({
         newUserCallbackURL: '/get-started',
       });
     }}
-    className="bg-white hover:bg-neutral-100 dark:bg-neutral-700 dark:hover:bg-neutral-600 normal-case whitespace-nowrap min-w-max"
+    className="min-w-max bg-white whitespace-nowrap normal-case hover:bg-neutral-100 dark:bg-neutral-700 dark:hover:bg-neutral-600"
     startIcon={AuthIcons[provider]}
   >
     <Typography
-      className={`text-base font-extrabold md:text-xs text-slate-800 dark:text-slate-200`}
+      className={`text-base font-extrabold text-slate-800 md:text-xs dark:text-slate-200`}
     >
       <span className="min-w-fit">Sign in with {providerNames[provider]}</span>
     </Typography>

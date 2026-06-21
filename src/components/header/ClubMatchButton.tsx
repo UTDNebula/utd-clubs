@@ -20,7 +20,7 @@ export default function ClubMatchButton({
       LinkComponent={Link}
       href="/club-match/results"
       size="large"
-      className={`rounded-full w-10 h-10 bg-[var(--mui-palette-primary-main)] hover:bg-[var(--mui-palette-primary-dark)] text-white dark:text-haiti ${shadow ? shadowStyle : ''}`}
+      className={`dark:text-haiti h-10 w-10 rounded-full bg-[var(--mui-palette-primary-main)] text-white hover:bg-[var(--mui-palette-primary-dark)] ${shadow ? shadowStyle : ''}`}
       aria-label="Club Match"
     >
       {icon}
@@ -30,7 +30,7 @@ export default function ClubMatchButton({
       LinkComponent={Link}
       href="/club-match/results"
       variant="contained"
-      className={`normal-case px-5 py-2 h-10 whitespace-nowrap ${shadow ? shadowStyle : ''}`}
+      className={`h-10 px-5 py-2 whitespace-nowrap normal-case ${shadow ? shadowStyle : ''}`}
       startIcon={icon}
       disableElevation
     >

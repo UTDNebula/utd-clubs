@@ -94,14 +94,14 @@ export default memo(function EventsFilterBar({
 
   return (
     <>
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         {showSidebar !== undefined && (
           <Tooltip
             disableInteractive
             title={
               <span>
                 {showSidebar ? 'Collapse' : 'Expand'} sidebar{' '}
-                <kbd className="outline-1 outline-white rounded-sm px-1 py-0.5 mx-1">
+                <kbd className="mx-1 rounded-sm px-1 py-0.5 outline-1 outline-white">
                   \
                 </kbd>
               </span>
@@ -134,7 +134,7 @@ export default memo(function EventsFilterBar({
         />
         <span className="relative">
           {filtersArray && filtersLength <= 0 && (
-            <span className="absolute h-full ml-2 flex items-center text-sm text-neutral-600 dark:text-neutral-400 italic select-none text-nowrap">
+            <span className="absolute ml-2 flex h-full items-center text-sm text-nowrap text-neutral-600 italic select-none dark:text-neutral-400">
               No filters selected
             </span>
           )}
@@ -220,7 +220,7 @@ export default memo(function EventsFilterBar({
               <Button
                 size="small"
                 color="inherit"
-                className="normal-case whitespace-nowrap min-h-8 px-2 text-neutral-600 dark:text-neutral-400"
+                className="min-h-8 px-2 whitespace-nowrap text-neutral-600 normal-case dark:text-neutral-400"
                 onClick={clearAllFilters}
               >
                 Clear {filtersArray.length} filters
@@ -242,10 +242,10 @@ export default memo(function EventsFilterBar({
           },
         }}
       >
-        <div className="relative overflow-auto max-h-[calc(100dvh-6rem)] px-2 pt-5">
+        <div className="relative max-h-[calc(100dvh-6rem)] overflow-auto px-2 pt-5">
           <EventsFilterPanels filters={filters} />
         </div>
-        <div className="flex flex-wrap justify-between items-center gap-2 px-5 pb-5">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-5 pb-5">
           <Button
             onClick={clearAllFilters}
             color="warning"

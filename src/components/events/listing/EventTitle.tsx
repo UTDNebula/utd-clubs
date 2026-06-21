@@ -33,9 +33,9 @@ const EventTitle = async ({
   return (
     <section
       id="event-title"
-      className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+      className="flex w-full flex-col items-start justify-between gap-4 rounded-lg md:flex-row md:items-center"
     >
-      <div className="flex flex-col gap-4 flex-grow min-w-0 overflow-hidden">
+      <div className="flex min-w-0 flex-grow flex-col gap-4 overflow-hidden">
         {event.name && (
           <h1
             className={`font-display font-bold text-slate-800 dark:text-slate-200 ${
@@ -49,13 +49,13 @@ const EventTitle = async ({
             {event.name}
           </h1>
         )}
-        <div className="flex flex-wrap flex-col lg:flex-row gap-4 text-slate-600 dark:text-slate-400 lg:items-center text-sm md:text-base">
-          <span className="flex gap-2 items-center">
+        <div className="flex flex-col flex-wrap gap-4 text-sm text-slate-600 md:text-base lg:flex-row lg:items-center dark:text-slate-400">
+          <span className="flex items-center gap-2">
             <EventIcon className="text-xl md:text-2xl" />
             {format(startTime, 'EEE, LLLL d, yyyy @ h:mm a')}
           </span>
           <Divider orientation="vertical" flexItem className="hidden lg:flex" />
-          <span className="flex gap-2 items-center">
+          <span className="flex items-center gap-2">
             <AccessTimeIcon className="text-xl md:text-2xl" />
             {startTime.getTime() === endTime.getTime()
               ? 'No end time specified'
@@ -73,13 +73,13 @@ const EventTitle = async ({
                 )} (till ${isSameDay(startTime, endTime) ? format(endTime, 'h:mm a') : format(endTime, 'EEE, LLLL d, yyyy @ h:mm a')})`}
           </span>
           <Divider orientation="vertical" flexItem className="hidden lg:flex" />
-          <span className="flex gap-2 items-center">
+          <span className="flex items-center gap-2">
             <LocationPinIcon className="text-xl md:text-2xl" />
             {event.location || <i>No Location</i>}
           </span>
         </div>
       </div>
-      <div className="w-full md:w-auto flex-shrink-0 flex md:ml-auto justify-end items-center gap-2">
+      <div className="flex w-full flex-shrink-0 items-center justify-end gap-2 md:ml-auto md:w-auto">
         <EventRegisterButton
           isHeader
           clubId={event.club.id}

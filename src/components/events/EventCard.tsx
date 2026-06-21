@@ -132,21 +132,21 @@ const EventCard = ({
       return (
         <BaseCard
           variant={smallScreen ? 'transparent' : 'interactive'}
-          className={`relative flex flex-col w-full min-h-15 overflow-hidden max-sm:rounded-none! sm:bg-white sm:dark:bg-neutral-800 sm:has-[.EventCardLink:focus]:bg-neutral-200 sm:dark:has-[.EventCardLink:focus]:bg-neutral-700 max-sm:has-[.EventCardLink:focus]:bg-neutral-500/20 ${className ?? ''}`}
+          className={`relative flex min-h-15 w-full flex-col overflow-hidden max-sm:rounded-none! max-sm:has-[.EventCardLink:focus]:bg-neutral-500/20 sm:bg-white sm:has-[.EventCardLink:focus]:bg-neutral-200 sm:dark:bg-neutral-800 sm:dark:has-[.EventCardLink:focus]:bg-neutral-700 ${className ?? ''}`}
         >
           <Link
             href={`/events/${event.id}`}
             className="EventCardLink absolute inset-0 z-10"
           />
-          <div className="flex flex-row max-sm:pl-4 max-sm:gap-3 gap-5">
-            <div className="shrink basis-64 min-w-24 flex items-center">
+          <div className="flex flex-row gap-5 max-sm:gap-3 max-sm:pl-4">
+            <div className="flex min-w-24 shrink basis-64 items-center">
               <div className="relative aspect-[1.6] w-full">
                 {EventImage}
-                <div className="absolute inset-0 max-sm:p-1 p-2 max-sm:scale-75 origin-top-left pointer-events-none">
+                <div className="pointer-events-none absolute inset-0 origin-top-left p-2 max-sm:scale-75 max-sm:p-1">
                   <EventTimeAlert event={event} />
                 </div>
                 {event.google && (
-                  <div className="absolute top-0 right-0 max-sm:p-1 p-2 max-sm:scale-75 origin-top-right">
+                  <div className="absolute top-0 right-0 origin-top-right p-2 max-sm:scale-75 max-sm:p-1">
                     <Tooltip title="Synced from Google Calendar.">
                       <GoogleIcon />
                     </Tooltip>
@@ -154,18 +154,18 @@ const EventCard = ({
                 )}
               </div>
             </div>
-            <div className="@container/event-list-content shrink basis-96 grow min-h-full pl-0! max-sm:p-2 sm:p-5">
-              <div className="flex flex-col gap-4 @sm/event-list-content:gap-2 @sm/event-list-content:flex-row @sm/event-list-content:justify-between h-full">
+            <div className="@container/event-list-content min-h-full shrink grow basis-96 pl-0! max-sm:p-2 sm:p-5">
+              <div className="flex h-full flex-col gap-4 @sm/event-list-content:flex-row @sm/event-list-content:justify-between @sm/event-list-content:gap-2">
                 <div className="flex flex-col sm:gap-2">
-                  <h3 className="line-clamp-2 text-base sm:text-xl font-medium">
+                  <h3 className="line-clamp-2 text-base font-medium sm:text-xl">
                     {event.name}
                   </h3>
                   {view !== 'manage' && view !== 'admin' && (
-                    <div className="line-clamp-2 max-sm:text-[0.75rem] text-base font-medium text-neutral-600 dark:text-neutral-400">
+                    <div className="line-clamp-2 text-base font-medium text-neutral-600 max-sm:text-[0.75rem] dark:text-neutral-400">
                       {event.club.name}
                     </div>
                   )}
-                  <div className="text-royal dark:text-cornflower-300 max-sm:text-[0.75rem] text-base">
+                  <div className="text-royal dark:text-cornflower-300 text-base max-sm:text-[0.75rem]">
                     <ClientEventTime
                       startTime={event.startTime}
                       endTime={event.endTime}
@@ -173,9 +173,9 @@ const EventCard = ({
                   </div>
                 </div>
                 <div
-                  className={`${view === 'normal' ? 'max-sm:hidden' : ''} @max-sm/event-list-content:-mb-3 shrink-0 @sm/event-list-content:self-center z-20`}
+                  className={`${view === 'normal' ? 'max-sm:hidden' : ''} z-20 shrink-0 @max-sm/event-list-content:-mb-3 @sm/event-list-content:self-center`}
                 >
-                  <div className="flex flex-wrap gap-2 h-fit">
+                  <div className="flex h-fit flex-wrap gap-2">
                     {EventButtons}
                   </div>
                 </div>
@@ -190,16 +190,16 @@ const EventCard = ({
       return (
         <BaseCard
           variant="interactive"
-          className={`relative flex ${responsive ? 'min-h-104 min-w-64' : 'h-104 w-64'} flex-col overflow-hidden bg-white dark:bg-neutral-800 has-[.EventCardLink:focus]:bg-neutral-200 dark:has-[.EventCardLink:focus]:bg-neutral-700 ${className ?? ''}`}
+          className={`relative flex ${responsive ? 'min-h-104 min-w-64' : 'h-104 w-64'} flex-col overflow-hidden bg-white has-[.EventCardLink:focus]:bg-neutral-200 dark:bg-neutral-800 dark:has-[.EventCardLink:focus]:bg-neutral-700 ${className ?? ''}`}
         >
           <Link
             href={`/events/${event.id}`}
             className="EventCardLink absolute inset-0 z-10"
           />
-          <div className="flex flex-1 min-h-0 flex-col">
-            <div className="relative min-h-40 shrink-0 w-full">
+          <div className="flex min-h-0 flex-1 flex-col">
+            <div className="relative min-h-40 w-full shrink-0">
               {EventImage}
-              <div className="absolute inset-0 p-2 pointer-events-none">
+              <div className="pointer-events-none absolute inset-0 p-2">
                 <EventTimeAlert event={event} />
               </div>
               {event.google && (
@@ -210,7 +210,7 @@ const EventCard = ({
                 </div>
               )}
             </div>
-            <div className="flex flex-col p-5 space-y-2.5">
+            <div className="flex flex-col space-y-2.5 p-5">
               <h3 className="line-clamp-2 text-xl font-medium">{event.name}</h3>
               {view !== 'manage' && view !== 'admin' && (
                 <div className="line-clamp-2 text-base font-medium">
@@ -225,7 +225,7 @@ const EventCard = ({
               </div>
             </div>
 
-            <div className="m-4 mt-auto flex shrink-0 flex-wrap gap-2 z-20">
+            <div className="z-20 m-4 mt-auto flex shrink-0 flex-wrap gap-2">
               {EventButtons}
             </div>
           </div>
@@ -246,14 +246,14 @@ export const EventCardSkeleton = ({ manageView }: EventCardSkeletonProps) => {
       variant="interactive"
       className="flex h-104 w-64 flex-col overflow-hidden"
     >
-      <div className="flex flex-1 min-h-0 flex-col">
-        <div className="relative h-40 shrink-0 w-full">
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="relative h-40 w-full shrink-0">
           <Skeleton
             variant="rectangular"
             className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-800"
           />
         </div>
-        <div className="flex flex-col p-5 space-y-2.5">
+        <div className="flex flex-col space-y-2.5 p-5">
           <Skeleton variant="text" className="text-xl font-medium" />
           <Skeleton variant="text" className="text-base font-medium" />
           <Skeleton variant="text" className="text-base" />

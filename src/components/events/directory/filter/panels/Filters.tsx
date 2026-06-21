@@ -66,7 +66,7 @@ export default memo(function FiltersPanel(
           }
         }}
         size="small"
-        className="[&>.MuiButtonBase-root]:normal-case [&>.MuiButtonBase-root]:grow"
+        className="[&>.MuiButtonBase-root]:grow [&>.MuiButtonBase-root]:normal-case"
         aria-label="Relevance"
       >
         <ToggleButton value="all">All</ToggleButton>
