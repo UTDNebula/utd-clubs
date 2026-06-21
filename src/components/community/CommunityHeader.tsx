@@ -16,6 +16,6 @@ export default function CommunityHeader() {
           icon: <CalendarMonthIcon />,
         },
       ]}
-    ></PageHeader>
+    />
   );
 }
