@@ -46,7 +46,7 @@ export interface SnackbarType {
    *   timeout: true,
    * }
    */
-  closeOn?: Record<SnackbarCloseReason | 'dismiss', boolean>;
+  closeOn?: Partial<Record<SnackbarCloseReason | 'dismiss', boolean>>;
   /**
    * Whether to show the close button on the snackbar.
    *
