@@ -21,13 +21,15 @@ export const SnackbarDefault: SnackbarType = {
  *
  * Presets can also be functions that work as templates. These functions return a Snackbar object and accept any number of arguments.
  *
- * @example <caption>Basic usage</caption>
+ * @example <caption>Basic usage (using object)</caption>
  * setSnackbar(SnackbarPresets.saved)
  *
  * @example <caption>Using a function template</caption>
  * setSnackbar(SnackbarPresets.savedName("form"))
- * // OR
- * setSnackbar(SnackbarPresets["savedName"]("form"))
+ *
+ * @example <caption>Using helper function and preset template</caption>
+ * setSnackbarWithPreset("savedName", "form")
+ *
  */
 const SnackbarPresets = {
   success: (message: string) => ({

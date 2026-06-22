@@ -4,11 +4,10 @@ import { createContext, useContext } from 'react';
 import { SnackbarDefault } from './presets';
 import { SnackbarFunctions, SnackbarType } from './types';
 
-/*
- * Snackbar Context
- */
-
 export interface SnackbarContextType extends SnackbarFunctions {
+  /**
+   * Current state of the snackbar.
+   */
   snackbar: SnackbarType;
 }
 
@@ -37,7 +36,6 @@ export const SnackbarContext = createContext<SnackbarContextType>(
  * @example <caption>Reading snackbar</caption>
  * const { snackbar, setSnackbar } = useSnackbar();
  * setSnackbar("foo bar");
- * console.log("snackbar.message") // Output: foo bar
+ * console.log(snackbar.message) // Output: foo bar
  */
 export const useSnackbar = () => useContext(SnackbarContext);
-export { SnackbarDefault };

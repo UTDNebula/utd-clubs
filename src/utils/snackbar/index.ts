@@ -7,7 +7,7 @@
  * const { setSnackbar } = useSnackbar();
  * setSnackbar("Lorem ipsum dolor sit amet");
  *
- * @example <caption>Shortcut (using global function)</caption>
+ * @example <caption>Using global function</caption>
  * setSnackbar("Lorem ipsum dolor sit amet");
  */
 

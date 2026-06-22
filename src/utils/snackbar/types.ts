@@ -77,19 +77,42 @@ export type setSnackbarFn = (
   snackbar: string | SnackbarType,
 ) => SnackbarType | void;
 
-type SnackbarPresets = typeof SnackbarPresets;
-
-export type setSnackbarWithPresetFn = <Preset extends keyof SnackbarPresets>(
+export type setSnackbarWithPresetFn = <
+  Preset extends keyof typeof SnackbarPresets,
+>(
   preset: Preset,
-  ...args: SnackbarPresets[Preset] extends (...args: infer Args) => unknown
+  ...args: (typeof SnackbarPresets)[Preset] extends (
+    ...args: infer Args
+  ) => unknown
     ? Args
     : []
-) => void;
+) => SnackbarType | void;
 
 export type closeSnackbarFn = (id?: string) => SnackbarType | void;
 
 export interface SnackbarFunctions {
+  /**
+   * Sets the snackbar to the options defined in the function argument.
+   *
+   * @example <caption>Basic usage</caption>
+   * const { setSnackbar } = useSnackbar();
+   * setSnackbar("Lorem ipsum dolor sit amet");
+   */
   setSnackbar: setSnackbarFn;
+  /**
+   * Sets the snackbar to a preset, along with any additional preset template parameters.
+   *
+   * @example <caption>Basic usage (with preset template parameter)</caption>
+   * const { setSnackbarWithPreset } = useSnackbar();
+   * setSnackbarWithPreset("savedName", "lorem ipsum dolor sit amet");
+   */
   setSnackbarWithPreset: setSnackbarWithPresetFn;
+  /**
+   * Closes the snackbar. Can filter for a particular snackbar ID.
+   *
+   * @example <caption>Basic usage (with snackbar ID filter)</caption>
+   * const { closeSnackbar } = useSnackbar();
+   * closeSnackbar("loginMessage");
+   */
   closeSnackbar: closeSnackbarFn;
 }
