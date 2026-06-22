@@ -69,17 +69,8 @@ export interface SnackbarType {
   updateCurrent?: boolean;
 }
 
-export type CreateSnackbar = Omit<SnackbarType, 'updateCurrent'>;
-
-export type UpdateSnackbar = SnackbarType;
-
-export type pushSnackbarFn = (
-  snackbar: string | SnackbarType,
-) => SnackbarType | void;
-
 export type setSnackbarFn = (
-  id: string,
   snackbar: string | SnackbarType,
 ) => SnackbarType | void;
 
-export type closeSnackbarFn = (id: string) => SnackbarType | void;
+export type closeSnackbarFn = (key: string) => SnackbarType | void;

@@ -12,9 +12,9 @@ import {
   SnackbarContextDefault,
   SnackbarDefault,
 } from './context';
-import { pushSnackbarFn, SnackbarType } from './types';
+import { setSnackbarFn, SnackbarType } from './types';
 
-let pushSnackbarRef: pushSnackbarFn = () => {
+let setSnackbarRef: setSnackbarFn = () => {
   console.warn('Snackbar context not initialized');
 };
 
@@ -24,8 +24,8 @@ let pushSnackbarRef: pushSnackbarFn = () => {
  * @example <caption>Basic usage</caption>
  * setSnackbar("Lorem ipsum dolor sit amet");
  */
-export const setSnackbar: pushSnackbarFn = (snackbar) =>
-  pushSnackbarRef(snackbar);
+export const setSnackbar: setSnackbarFn = (snackbar) =>
+  setSnackbarRef(snackbar);
 
 export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   // Timeout timer that resets anytime `setSnackbar()` is called, to ensure users are able to read consecutive snackbars before it closes
@@ -37,7 +37,7 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
     SnackbarContextDefault['snackbar'],
   );
 
-  const setSnackbar: pushSnackbarFn = (arg) => {
+  const setSnackbar: setSnackbarFn = (arg) => {
     let newSnackbarState: SnackbarType = SnackbarDefault;
 
     if (typeof arg === 'string') {
@@ -73,9 +73,9 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
 
   // Sync global setSnackbarRef with local component state
   useEffect(() => {
-    pushSnackbarRef = setSnackbar;
+    setSnackbarRef = setSnackbar;
     return () => {
-      pushSnackbarRef = () => console.warn('Provider unmounted');
+      setSnackbarRef = () => console.warn('Provider unmounted');
     };
   });
 

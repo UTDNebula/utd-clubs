@@ -1,5 +1,7 @@
+'use client';
+
 import { createContext, useContext } from 'react';
-import { pushSnackbarFn, SnackbarType } from './types';
+import { setSnackbarFn, SnackbarType } from './types';
 
 export const SnackbarDefault: SnackbarType = {
   message: '',
@@ -23,7 +25,7 @@ export const SnackbarDefault: SnackbarType = {
 
 export interface SnackbarProviderContext {
   snackbar: SnackbarType;
-  setSnackbar: pushSnackbarFn;
+  setSnackbar: setSnackbarFn;
 }
 
 export const SnackbarContextDefault: SnackbarProviderContext = {
