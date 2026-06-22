@@ -6,7 +6,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
 import Panel from '@src/components/common/Panel';
 import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
-import { setSnackbar } from '@src/components/global/Snackbar';
+import { setSnackbar } from 'src/utils/snackbar';
 import { authClient } from '@src/utils/auth-client';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';

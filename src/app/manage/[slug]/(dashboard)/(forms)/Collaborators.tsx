@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
 import Panel from '@src/components/common/Panel';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import CollaboratorListItem from '@src/components/manage/CollaboratorListItem';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 import type {

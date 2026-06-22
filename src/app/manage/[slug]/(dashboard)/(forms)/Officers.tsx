@@ -25,7 +25,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@src/components/common/Panel';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import OfficerListItem from '@src/components/manage/OfficerListItem';
 import type { SelectClub, SelectOfficer } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';

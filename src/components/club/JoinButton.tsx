@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 

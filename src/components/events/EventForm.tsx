@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';

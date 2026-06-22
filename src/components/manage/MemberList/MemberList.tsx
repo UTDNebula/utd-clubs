@@ -13,7 +13,7 @@ import { TRPCClientErrorLike } from '@trpc/client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import z from 'zod';
 import Confirmation from '@src/components/Confirmation';
-import { useSnackbar } from '@src/components/global/Snackbar';
+import { useSnackbar } from 'src/utils/snackbar';
 import { AppRouter } from '@src/server/api/root';
 import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
 import {

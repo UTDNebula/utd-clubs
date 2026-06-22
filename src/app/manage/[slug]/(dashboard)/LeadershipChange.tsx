@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import Panel from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import { useTRPC } from '@src/trpc/react';
 
 const LeadershipChange = ({ clubId }: { clubId: string }) => {
