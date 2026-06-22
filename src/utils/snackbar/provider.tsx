@@ -12,9 +12,9 @@ import {
   SnackbarContextDefault,
   SnackbarDefault,
 } from './context';
-import { setSnackbarFn, SnackbarType } from './types';
+import { pushSnackbarFn, SnackbarType } from './types';
 
-let setSnackbarRef: setSnackbarFn = () => {
+let pushSnackbarRef: pushSnackbarFn = () => {
   console.warn('Snackbar context not initialized');
 };
 
@@ -24,8 +24,8 @@ let setSnackbarRef: setSnackbarFn = () => {
  * @example <caption>Basic usage</caption>
  * setSnackbar("Lorem ipsum dolor sit amet");
  */
-export const setSnackbar: setSnackbarFn = (snackbar) =>
-  setSnackbarRef(snackbar);
+export const setSnackbar: pushSnackbarFn = (snackbar) =>
+  pushSnackbarRef(snackbar);
 
 export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   // Timeout timer that resets anytime `setSnackbar()` is called, to ensure users are able to read consecutive snackbars before it closes
@@ -37,13 +37,20 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
     SnackbarContextDefault['snackbar'],
   );
 
-  const setSnackbar: setSnackbarFn = (arg) => {
+  const setSnackbar: pushSnackbarFn = (arg) => {
     let newSnackbarState: SnackbarType = SnackbarDefault;
 
     if (typeof arg === 'string') {
       newSnackbarState = { ...newSnackbarState, message: arg };
     } else {
-      newSnackbarState = { ...newSnackbarState, ...arg };
+      newSnackbarState = {
+        ...newSnackbarState,
+        ...arg,
+        closeOn: {
+          ...newSnackbarState.closeOn,
+          ...arg.closeOn,
+        } as SnackbarType['closeOn'],
+      };
     }
 
     newSnackbarState = {
@@ -66,9 +73,9 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
 
   // Sync global setSnackbarRef with local component state
   useEffect(() => {
-    setSnackbarRef = setSnackbar;
+    pushSnackbarRef = setSnackbar;
     return () => {
-      setSnackbarRef = () => console.warn('Provider unmounted');
+      pushSnackbarRef = () => console.warn('Provider unmounted');
     };
   });
 

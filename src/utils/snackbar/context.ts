@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { setSnackbarFn, SnackbarType } from './types';
+import { pushSnackbarFn, SnackbarType } from './types';
 
 export const SnackbarDefault: SnackbarType = {
   message: '',
@@ -23,7 +23,7 @@ export const SnackbarDefault: SnackbarType = {
 
 export interface SnackbarProviderContext {
   snackbar: SnackbarType;
-  setSnackbar: setSnackbarFn;
+  setSnackbar: pushSnackbarFn;
 }
 
 export const SnackbarContextDefault: SnackbarProviderContext = {
