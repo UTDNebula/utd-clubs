@@ -6,8 +6,8 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
 import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
+import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 import EventEditButton from './EventEditButton';
@@ -72,7 +72,12 @@ const EventRegisterButton = ({
           type: joined ? 'success' : 'info',
           autoHideDuration: true,
           fitContent: true,
-          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+          closeOn: {
+            clickaway: false,
+            dismiss: true,
+            escapeKeyDown: true,
+            timeout: true,
+          },
         });
       },
       onError: (error, _vars, context) => {

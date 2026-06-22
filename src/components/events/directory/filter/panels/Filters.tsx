@@ -4,9 +4,9 @@ import Switch from '@mui/material/Switch';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
+import { setSnackbar } from 'src/utils/snackbar';
 import Panel from '@src/components/common/Panel';
 import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
-import { setSnackbar } from 'src/utils/snackbar';
 import { authClient } from '@src/utils/auth-client';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
@@ -29,7 +29,12 @@ export default memo(function FiltersPanel(
       message: "This filter option only works when you're signed in",
       autoHideDuration: true,
       fitContent: true,
-      closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+      closeOn: {
+        clickaway: false,
+        dismiss: true,
+        escapeKeyDown: true,
+        timeout: true,
+      },
       action: (
         <Button
           size="small"

@@ -8,8 +8,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
 import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
+import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 
@@ -66,7 +66,12 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
           type: joined ? 'success' : 'info',
           autoHideDuration: true,
           fitContent: true,
-          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+          closeOn: {
+            clickaway: false,
+            dismiss: true,
+            escapeKeyDown: true,
+            timeout: true,
+          },
         });
       },
       onError: (error, _vars, context) => {
