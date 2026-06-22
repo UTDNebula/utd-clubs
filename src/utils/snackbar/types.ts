@@ -1,8 +1,6 @@
-import {
-  AlertColor,
-  SnackbarCloseReason,
-} from 'node_modules/@mui/material/index.mjs';
-import { ReactNode } from 'node_modules/@types/react';
+import { AlertColor } from '@mui/material/Alert';
+import { SnackbarCloseReason } from '@mui/material/Snackbar';
+import { ReactNode } from 'react';
 import SnackbarPresets from './presets';
 
 export interface SnackbarType {

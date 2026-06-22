@@ -6,6 +6,7 @@ import {
   EventParamsSchema,
   eventParamsToFilters,
 } from '@src/utils/eventFilter';
+import { SnackbarPresets, SSRSnackbarWrapper } from '@src/utils/snackbar';
 
 export const metadata: Metadata = {
   title: 'Events',
@@ -40,10 +41,27 @@ const Events = async (props: { searchParams: Promise<EventParamsSchema> }) => {
     redirect('/events');
   }
 
+  // If error, show snackbar
+  let errorReason: unknown;
+  let disableSnackbar = true;
+  for (const result of results) {
+    if (result.status === 'rejected') {
+      errorReason = result.reason;
+      disableSnackbar = false;
+      break;
+    }
+  }
+
   return (
-    <>
+    <SSRSnackbarWrapper
+      disabled={disableSnackbar}
+      snackbar={SnackbarPresets.errorCustomWithMessage(
+        'An error occurred on the server',
+        String(errorReason),
+      )}
+    >
       <EventsBody initialQueryData={initialEvents} total={count} />
-    </>
+    </SSRSnackbarWrapper>
   );
 };
 

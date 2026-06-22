@@ -19,3 +19,4 @@ export {
   SnackbarProvider,
 } from './provider';
 export { default as 'SnackbarPresets' } from './presets';
+export { default as 'SSRSnackbarWrapper' } from './SSRSnackbarWrapper';
