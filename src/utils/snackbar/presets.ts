@@ -30,6 +30,38 @@ export const SnackbarDefault: SnackbarType = {
  * setSnackbar(SnackbarPresets["savedName"]("form"))
  */
 const SnackbarPresets = {
+  success: (message: string) => ({
+    message: message,
+    type: 'success',
+    autoHideDuration: true,
+    fitContent: true,
+    closeOn: {
+      clickaway: false,
+      dismiss: true,
+      escapeKeyDown: true,
+      timeout: true,
+    },
+  }),
+  error: {
+    message: 'An error occurred',
+    type: 'error',
+    autoHideDuration: false,
+    showClose: true,
+  },
+  errorWithMessage: (message: string) => ({
+    title: 'An error occurred',
+    message: message,
+    type: 'error',
+    autoHideDuration: false,
+    showClose: true,
+  }),
+  errorCustomWithMessage: (title: string, message: string) => ({
+    title: title,
+    message: message,
+    type: 'error',
+    autoHideDuration: false,
+    showClose: true,
+  }),
   saved: {
     message: 'Saved!',
     type: 'success',
@@ -54,33 +86,14 @@ const SnackbarPresets = {
       timeout: true,
     },
   }),
-  savedCustom: (message: string) => ({
-    message: message,
-    type: 'success',
-    autoHideDuration: true,
-    fitContent: true,
-    closeOn: {
-      clickaway: false,
-      dismiss: true,
-      escapeKeyDown: true,
-      timeout: true,
-    },
-  }),
-  error: {
+  saveFailed: {
     message: 'Failed to save!',
     type: 'error',
     autoHideDuration: false,
     showClose: true,
   },
-  errorMessage: (message: string) => ({
+  saveFailedWithMessage: (message: string) => ({
     title: `Failed to save!`,
-    message: message,
-    type: 'error',
-    autoHideDuration: false,
-    showClose: true,
-  }),
-  errorCustomMessage: (title: string, message: string) => ({
-    title: title,
     message: message,
     type: 'error',
     autoHideDuration: false,

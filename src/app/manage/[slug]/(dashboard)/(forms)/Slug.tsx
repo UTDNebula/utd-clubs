@@ -30,7 +30,7 @@ const Slug = ({ club, role }: DetailsProps) => {
         setSnackbar(SnackbarPresets.savedName('club listing URL'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );

@@ -45,7 +45,7 @@ const Details = ({ club }: DetailsProps) => {
         setSnackbar(SnackbarPresets.savedName('club details'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );

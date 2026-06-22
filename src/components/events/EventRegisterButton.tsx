@@ -81,12 +81,7 @@ const EventRegisterButton = ({
         });
       },
       onError: (error, _vars, context) => {
-        setSnackbar(
-          SnackbarPresets.errorCustomMessage(
-            'An error occurred',
-            error.message,
-          ),
-        );
+        setSnackbar(SnackbarPresets.errorWithMessage(error.message));
         if (context?.previousState) {
           queryClient.setQueryData(context.queryKey, context.previousState);
         }

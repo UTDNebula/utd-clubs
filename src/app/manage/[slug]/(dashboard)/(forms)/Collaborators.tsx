@@ -58,7 +58,7 @@ const Collaborators = ({
         setSnackbar(SnackbarPresets.savedName('club collaborators'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );

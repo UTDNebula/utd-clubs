@@ -22,9 +22,9 @@ import {
 } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import Panel from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
-import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
 
@@ -53,14 +53,14 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
       },
       onSuccess: (data) => {
         setSnackbar(
-          SnackbarPresets.savedCustom(
+          SnackbarPresets.success(
             `Modified the tags for ${data.affected} clubs.`,
           ),
         );
       },
       onError: (error) => {
         setSnackbar(
-          SnackbarPresets.errorCustomMessage(
+          SnackbarPresets.errorCustomWithMessage(
             'An error occurred while updating the tag',
             error.message,
           ),
@@ -76,15 +76,10 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
         setOpenRegenConfirmation(false);
       },
       onSuccess: () => {
-        setSnackbar(SnackbarPresets.savedCustom('Regenerated club tags list!'));
+        setSnackbar(SnackbarPresets.success('Regenerated club tags list!'));
       },
       onError: (error) => {
-        setSnackbar(
-          SnackbarPresets.errorCustomMessage(
-            'An error occurred',
-            error.message,
-          ),
-        );
+        setSnackbar(SnackbarPresets.errorWithMessage(error.message));
       },
     }),
   );

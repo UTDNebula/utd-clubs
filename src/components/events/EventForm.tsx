@@ -48,10 +48,10 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const createMutation = useMutation(
     api.event.create.mutationOptions({
       onSuccess: () => {
-        setSnackbar(SnackbarPresets.savedCustom('Created event!'));
+        setSnackbar(SnackbarPresets.success('Created event!'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );
@@ -61,7 +61,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
         setSnackbar(SnackbarPresets.savedName('event'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );

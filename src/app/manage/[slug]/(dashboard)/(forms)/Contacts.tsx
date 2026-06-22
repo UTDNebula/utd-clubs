@@ -63,7 +63,7 @@ const Contacts = ({ club }: ContactsProps) => {
         setSnackbar(SnackbarPresets.savedName('club contacts'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );

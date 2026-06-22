@@ -84,11 +84,11 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
                 );
 
                 joinedClubs.splice(removeIndex, 1);
-                setSnackbar(SnackbarPresets.savedCustom('Left club!'));
+                setSnackbar(SnackbarPresets.success('Left club!'));
               },
               onError: (e) => {
                 setSnackbar(
-                  SnackbarPresets.errorCustomMessage(
+                  SnackbarPresets.errorCustomWithMessage(
                     'Failed to leave club!',
                     e.message,
                   ),

@@ -31,7 +31,7 @@ export default function UserInfo({ user }: UserInfoProps) {
         setSnackbar(SnackbarPresets.savedName('user info'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );

@@ -7,8 +7,8 @@ import {
 } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
-import EventCard, { EventCardVariants } from '@src/components/events/EventCard';
 import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
+import EventCard, { EventCardVariants } from '@src/components/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
@@ -71,9 +71,7 @@ export default function EventDirectoryGrid({
   // On query error
   useEffect(() => {
     if (query.isError) {
-      setSnackbar(
-        SnackbarPresets.errorCustomMessage('Error!', query.error.message),
-      );
+      setSnackbar(SnackbarPresets.errorWithMessage(query.error.message));
     }
   }, [query.error?.message, query.isError]);
 

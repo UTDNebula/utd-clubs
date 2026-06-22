@@ -65,7 +65,7 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
         setSnackbar(SnackbarPresets.savedName('club listed officer'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );
