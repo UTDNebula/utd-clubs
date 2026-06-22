@@ -136,7 +136,7 @@ export default function PageHeader({
       {...slotProps?.backLink}
       className={`flex flex-row items-center ${slotProps?.backLink?.className}`}
     >
-      <ChevronLeftIcon className="group-active/back-link:-translate-x-1 transition-transform duration-100" />
+      <ChevronLeftIcon className="transition-transform duration-100 group-active/back-link:-translate-x-1" />
       <span>{backButton.title ?? 'Back'}</span>
     </div>
   );
@@ -170,13 +170,13 @@ export default function PageHeader({
 
   return (
     <div
-      className="flex justify-between mt-4 border-b-1 border-[var(--mui-palette-divider)]"
+      className="mt-4 flex justify-between border-b-1 border-[var(--mui-palette-divider)]"
       {...props}
     >
       <div
-        className={`grow flex ${variant === 'compact' ? `flex-row items-end gap-8 ${backButtonEnabled && backButton.type !== 'link' ? 'ml-2 mr-4' : 'mx-4'}` : 'flex-col mx-4'}`}
+        className={`flex grow ${variant === 'compact' ? `flex-row items-end gap-8 ${backButtonEnabled && backButton.type !== 'link' ? 'mr-4 ml-2' : 'mx-4'}` : 'mx-4 flex-col'}`}
       >
-        <div className="group/back-link flex items-center gap-3 min-h-12 py-2">
+        <div className="group/back-link flex min-h-12 items-center gap-3 py-2">
           {backButtonEnabled && backButton.type !== 'link' && (
             <Tooltip title={backButton.title}>
               <BackButton href={backButton.href} {...slotProps?.backButton} />
@@ -186,11 +186,11 @@ export default function PageHeader({
             className={`flex flex-col items-start ${variant === 'compact' ? 'gap-1' : 'gap-3'}`}
           >
             {backButtonEnabled && backButton.type === 'link' ? (
-              <div className="text-neutral-600 dark:text-neutral-400 hover:underline select-none">
+              <div className="text-neutral-600 select-none hover:underline dark:text-neutral-400">
                 {backButton.href ? (
                   <Link
                     href={backButton.href}
-                    className="focus:underline focus:text-royal focus:dark:text-cornflower-300 outline-none"
+                    className="focus:text-royal focus:dark:text-cornflower-300 outline-none focus:underline"
                   >
                     {backLink}
                   </Link>
@@ -207,7 +207,7 @@ export default function PageHeader({
                 )}
               </div>
             ) : undefined}
-            <div className="flex flex-col justify-center gap-2 min-h-12">
+            <div className="flex min-h-12 flex-col justify-center gap-2">
               <div className="flex items-end gap-3">
                 {title && (
                   <h1 className="font-display text-3xl font-semibold">
@@ -229,7 +229,7 @@ export default function PageHeader({
           </div>
         </div>
         {tabs && tabs.length > 0 && (
-          <div className="flex items-center justify-between grow relative">
+          <div className="relative flex grow items-center justify-between">
             <Tabs
               value={selectedTab}
               onChange={handleChangeTab}
@@ -252,7 +252,7 @@ export default function PageHeader({
           </div>
         )}
       </div>
-      <div className="flex gap-4 items-center max-sm:hidden">
+      <div className="flex items-center gap-4 max-sm:hidden">
         {children}
         {moreButton}
       </div>

@@ -99,11 +99,12 @@ export default function ClubTagAutocomplete({
           label={label ?? 'Tags'}
           className="[&>.MuiInputBase-root]:bg-white dark:[&>.MuiInputBase-root]:bg-neutral-800"
           slotProps={{
+            ...params.slotProps,
             input: {
-              ...params.InputProps,
+              ...params.slotProps.input,
               className: vertical
                 ? 'flex-col items-start'
-                : params.InputProps.className,
+                : params.slotProps.input.className,
               endAdornment: (
                 <>
                   {isFetching ? (
@@ -115,7 +116,7 @@ export default function ClubTagAutocomplete({
                       }
                     />
                   ) : null}
-                  {params.InputProps.endAdornment}
+                  {params.slotProps.input.endAdornment}
                 </>
               ),
             },

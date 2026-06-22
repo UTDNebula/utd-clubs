@@ -59,18 +59,19 @@ export const UserSearchBar = ({
           size="small"
           className={'w-full' + ' ' + className}
           slotProps={{
+            ...params.slotProps,
             input: {
-              ...params.InputProps,
+              ...params.slotProps.input,
               type: 'search',
               className:
                 'bg-white dark:bg-neutral-800 rounded-full ' +
-                params.InputProps.className,
+                params.slotProps.input.className,
               endAdornment: (
                 <>
                   {isLoading ? (
                     <CircularProgress color="inherit" size={20} />
                   ) : null}
-                  {params.InputProps.endAdornment}
+                  {params.slotProps.input.endAdornment}
                 </>
               ),
             },

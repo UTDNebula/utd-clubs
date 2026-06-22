@@ -27,9 +27,9 @@ const Community = async ({
 
   return (
     <div>
-      <h2 className="font-display text-xl font-bold mt-4 px-4">Registered</h2>
+      <h2 className="font-display mt-4 px-4 text-xl font-bold">Registered</h2>
       <RegisteredEvents />
-      <h2 className="font-display text-xl font-bold mt-4 px-4">
+      <h2 className="font-display mt-4 px-4 text-xl font-bold">
         From Your Followed Clubs
       </h2>
       <ClubEvents page={page} pageSize={pageSize} />

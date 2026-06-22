@@ -259,7 +259,7 @@ export default function FilterList({
                     ) : (
                       <BlockIcon
                         fontSize="small"
-                        className={`transition-opacity ${excluded.includes(option.value) ? 'text-rose-400 dark:text-rose-600' : 'text-neutral-400 dark:text-neutral-600 group-hover/secondary:text-neutral-600 dark:group-hover/secondary:text-neutral-400 pointer-fine:invisible group-hover/li:visible group-focus-visible/secondary:visible'}`}
+                        className={`transition-opacity ${excluded.includes(option.value) ? 'text-rose-400 dark:text-rose-600' : 'text-neutral-400 group-hover/li:visible group-hover/secondary:text-neutral-600 group-focus-visible/secondary:visible dark:text-neutral-600 dark:group-hover/secondary:text-neutral-400 pointer-fine:invisible'}`}
                       />
                     )}
                   </IconButton>
@@ -270,13 +270,13 @@ export default function FilterList({
           >
             <ListItemButton
               onClick={() => handleToggle(option)}
-              className={`p-0 rounded-lg transition-colors ${!disableSelectedBackdrop && (option.checkboxOverride?.checked ?? selected.includes(option.value)) ? 'bg-royal/10 dark:bg-cornflower-300/10' : ''}`}
+              className={`rounded-lg p-0 transition-colors ${!disableSelectedBackdrop && (option.checkboxOverride?.checked ?? selected.includes(option.value)) ? 'bg-royal/10 dark:bg-cornflower-300/10' : ''}`}
             >
               {enableExclusion &&
                 !disableExcludedBackdrop &&
                 !option.disableExclusion && (
                   <div
-                    className={`absolute inset-0 rounded-lg bg-linear-to-l from-rose-300/20 dark:from-rose-800/20 to-transparent to-75% transition-opacity opacity-0 ${excluded.includes(option.value) ? 'opacity-100' : ''}`}
+                    className={`absolute inset-0 rounded-lg bg-linear-to-l from-rose-300/20 to-transparent to-75% opacity-0 transition-opacity dark:from-rose-800/20 ${excluded.includes(option.value) ? 'opacity-100' : ''}`}
                   />
                 )}
               <ListItemIcon className="min-w-8">
@@ -313,7 +313,7 @@ export default function FilterList({
                 ) : undefined}
               </ListItemIcon>
               {renderOptionContent ? (
-                <div className="flex flex-row justify-start items-center">
+                <div className="flex flex-row items-center justify-start">
                   {renderOptionContent(
                     { slotProps: { primary: { className: 'text-sm' } } },
                     option,

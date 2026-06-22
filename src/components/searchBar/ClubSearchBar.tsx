@@ -63,12 +63,13 @@ export const ClubSearchBar = () => {
           // Focus small screen search bar whenever user presses search icon button
           autoFocus={openCompactSearchBar}
           slotProps={{
+            ...params.slotProps,
             input: {
-              ...params.InputProps,
+              ...params.slotProps.input,
               endAdornment: (
-                <div className="flex gap-2 items-center">
+                <div className="flex items-center gap-2">
                   <InputAdornment position="end">
-                    {params.InputProps.endAdornment}
+                    {params.slotProps.input.endAdornment}
                     {isFetching ? (
                       <CircularProgress color="inherit" size={24} />
                     ) : (
@@ -80,7 +81,7 @@ export const ClubSearchBar = () => {
               type: 'search',
               className:
                 'bg-white dark:bg-neutral-800 rounded-full ' +
-                params.InputProps.className,
+                params.slotProps.input.className,
             },
           }}
           placeholder="Search for Clubs"

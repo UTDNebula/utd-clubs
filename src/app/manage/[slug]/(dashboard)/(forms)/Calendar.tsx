@@ -107,7 +107,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
           !isSyncing) ? ( // if there is already a calendar assigned tho (by someone else), show that
           <Button
             variant="contained"
-            className="normal-case w-full"
+            className="w-full normal-case"
             startIcon={<GoogleIcon />}
             disabled={isLoading}
             loading={isLoading}

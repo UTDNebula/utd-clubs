@@ -245,7 +245,7 @@ const EventCalendar = () => {
 
   return (
     <>
-      <div className="mt-4 h-screen w-full flex flex-col gap-8">
+      <div className="mt-4 flex h-screen w-full flex-col gap-8">
         {showEmpty && <NotRegistered />}
         <div
           className="h-screen"
@@ -256,7 +256,7 @@ const EventCalendar = () => {
         </div>
         {spinnerTarget &&
           createPortal(
-            <div className="h-full flex items-center cursor-default">
+            <div className="flex h-full cursor-default items-center">
               <CircularProgress
                 size="1.5rem"
                 className={!isFetching ? 'invisible' : ''}

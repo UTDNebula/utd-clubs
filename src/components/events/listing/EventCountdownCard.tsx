@@ -92,7 +92,7 @@ export default function EventCountdownCard({
 
   return (
     <Panel id={id} smallPadding heading="Event Starts In">
-      <div className="grid grid-flow-col auto-cols-fr gap-2 w-fit text-center mx-auto">
+      <div className="mx-auto grid w-fit auto-cols-fr grid-flow-col gap-2 text-center">
         {timeRemaining.days !== 0 && (
           <div className="flex flex-col">
             <p className="font-display text-2xl">

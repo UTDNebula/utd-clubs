@@ -141,7 +141,7 @@ export default function ViewOption<Value>({
           <IconButton
             id={`${title}-dropdown`}
             size="small"
-            className="aspect-square text-neutral-600 dark:text-neutral-400 *:text-[18px]"
+            className="aspect-square text-neutral-600 *:text-[18px] dark:text-neutral-400"
             onClick={handleClick}
             onMouseDown={type === 'select' ? handleClick : undefined}
             aria-controls={openMenu ? `${title}-menu` : undefined}
@@ -156,7 +156,7 @@ export default function ViewOption<Value>({
           id={`${title}-dropdown`}
           size="small"
           color="inherit"
-          className="normal-case px-3 whitespace-nowrap min-h-8"
+          className="min-h-8 px-3 whitespace-nowrap normal-case"
           startIcon={selected?.icon ?? icon}
           endIcon={dropdownIcon ? <ArrowDropDownIcon /> : undefined}
           onClick={handleClick}

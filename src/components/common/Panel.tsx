@@ -133,8 +133,7 @@ const Panel = ({
 
   return (
     <BaseCard
-      className={`flex flex-col ${smallPadding ? 'p-5' : 'sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4'} min-w-0 max-w-6xl
-        target:outline-2 outline-royal dark:outline-cornflower-300 ${transparent === 'falseOnHover' ? 'transition-colors hover:bg-neutral-200 hover:dark:bg-neutral-950' : ''} ${className ?? ''}`}
+      className={`flex flex-col ${smallPadding ? 'p-5' : 'max-sm:px-2 max-sm:py-4 sm:px-14 sm:py-10'} outline-royal dark:outline-cornflower-300 max-w-6xl min-w-0 target:outline-2 ${transparent === 'falseOnHover' ? 'transition-colors hover:bg-neutral-200 hover:dark:bg-neutral-950' : ''} ${className ?? ''}`}
       {...(id ? { id } : {})}
       style={style}
       variant={transparent ? 'transparent' : 'flat'}
@@ -159,7 +158,7 @@ const Panel = ({
               collapseOptions.iconPosition === 'left' &&
               CollapseButton}
             <div
-              className={`flex items-center gap-2 min-h-10 ${smallPadding ? '' : 'ml-2'}`}
+              className={`flex min-h-10 items-center gap-2 ${smallPadding ? '' : 'ml-2'}`}
             >
               {startAdornment}
               {heading && (
@@ -186,7 +185,7 @@ const Panel = ({
         <div className={`flex flex-col gap-2 ${hasHeading ? 'pt-2' : ''}`}>
           {description && (
             <div
-              className={`mb-4 text-slate-600 dark:text-slate-400 text-sm ${smallPadding ? '' : 'ml-2'} ${slotClassNames?.description}`}
+              className={`mb-4 text-sm text-slate-600 dark:text-slate-400 ${smallPadding ? '' : 'ml-2'} ${slotClassNames?.description}`}
             >
               {description}
             </div>
@@ -208,7 +207,7 @@ export const PanelSkeleton = (props: PanelSkeletonProps) => {
   return (
     <Skeleton
       className={
-        'flex flex-col gap-2 rounded-lg sm:px-14 max-sm:px-2 sm:py-10 max-sm:py-4 min-w-0 w-6xl ' +
+        'flex w-6xl min-w-0 flex-col gap-2 rounded-lg max-sm:px-2 max-sm:py-4 sm:px-14 sm:py-10 ' +
         props.className
       }
       variant="rounded"

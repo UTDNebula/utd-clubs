@@ -41,12 +41,13 @@ export const EventSearchBar = () => {
           // Focus small screen search bar whenever user presses search icon button
           autoFocus={openCompactSearchBar}
           slotProps={{
+            ...params.slotProps,
             input: {
-              ...params.InputProps,
+              ...params.slotProps.input,
               type: 'search',
               className:
                 'bg-white dark:bg-neutral-800 rounded-full ' +
-                params.InputProps.className,
+                params.slotProps.input.className,
             },
           }}
           placeholder="Search for Events"

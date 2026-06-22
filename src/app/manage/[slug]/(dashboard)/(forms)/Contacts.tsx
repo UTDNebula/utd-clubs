@@ -203,7 +203,7 @@ const Contacts = ({ club }: ContactsProps) => {
           >
             <form.Field name="contacts" mode="array">
               {(field) => (
-                <div className="flex flex-col gap-2 max-w-full">
+                <div className="flex max-w-full flex-col gap-2">
                   {field.state.value.map((value, index) => (
                     <ContactListItem
                       key={value.platform}
@@ -215,20 +215,20 @@ const Contacts = ({ club }: ContactsProps) => {
                     />
                   ))}
                   {available.length > 0 && (
-                    <div className="flex gap-2 sm:items-center max-sm:flex-col sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800 max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 transition-colors rounded-lg">
+                    <div className="flex gap-2 rounded-lg transition-colors max-sm:flex-col max-sm:bg-neutral-100 sm:items-center sm:hover:bg-neutral-100 dark:max-sm:bg-neutral-800 dark:sm:hover:bg-neutral-800">
                       <Typography
                         variant="button"
-                        className="flex shrink-0 items-center max-sm:justify-center whitespace-nowrap min-w-32 sm:h-14 sm:pl-4 max-sm:pt-4 max-h-full text-base text-slate-600 dark:text-slate-400 normal-case"
+                        className="flex max-h-full min-w-32 shrink-0 items-center text-base whitespace-nowrap text-slate-600 normal-case max-sm:justify-center max-sm:pt-4 sm:h-14 sm:pl-4 dark:text-slate-400"
                       >
                         Add Contact...
                       </Typography>
-                      <div className="flex flex-wrap relative p-2 gap-2 overflow-x-auto">
+                      <div className="relative flex flex-wrap gap-2 overflow-x-auto p-2">
                         {available.map((platform) => (
                           <Button
                             key={platform}
                             variant="contained"
                             value={platform}
-                            className="normal-case min-w-fit"
+                            className="min-w-fit normal-case"
                             onClick={() =>
                               field.pushValue({ platform, url: '' })
                             }
@@ -271,7 +271,7 @@ const Contacts = ({ club }: ContactsProps) => {
             ) : null}
           </DragOverlay>
         </DndContext>
-        <div className="flex flex-wrap justify-end items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <form.AppForm>
             <form.ResetButton
               onClick={() => {

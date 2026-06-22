@@ -189,7 +189,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="grow flex flex-col gap-4 max-w-full"
+        className="flex max-w-full grow flex-col gap-4"
       >
         <Panel>
           <div className="flex flex-col gap-4">
@@ -312,7 +312,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
               </form.Field>
             </div>
           </div>
-          <div className="flex flex-wrap justify-end items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <form.AppForm>
               <form.ResetButton />
             </form.AppForm>
@@ -352,7 +352,7 @@ export default EventForm;
 export const EventFormSkeleton = () => {
   return (
     <div className="flex w-full flex-wrap justify-start gap-10">
-      <div className="grow flex flex-col gap-4 max-w-full">
+      <div className="flex max-w-full grow flex-col gap-4">
         <PanelSkeleton />
       </div>
       <div className="flex flex-col gap-4">

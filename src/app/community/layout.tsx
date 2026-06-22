@@ -30,7 +30,7 @@ export default async function CommunityLayout({
             />
           </div>
           <div className="h-full">
-            <h1 className="font-display text-slate-800 dark:text-slate-200 pt-5 pb-1 text-center text-3xl font-bold">
+            <h1 className="font-display pt-5 pb-1 text-center text-3xl font-bold text-slate-800 dark:text-slate-200">
               Please Sign in to Use the Community Page.
             </h1>
           </div>
@@ -42,7 +42,7 @@ export default async function CommunityLayout({
   return (
     <>
       <Header />
-      <main className="mb-5 flex flex-col sm:px-4 max-w-6xl mx-auto">
+      <main className="mx-auto mb-5 flex max-w-6xl flex-col sm:px-4">
         {/* CommunityHeader should be in layout.tsx so that it doesn't re-render between pages */}
         <CommunityHeader />
         <div className="flex flex-col gap-y-4 max-sm:px-4">{children}</div>

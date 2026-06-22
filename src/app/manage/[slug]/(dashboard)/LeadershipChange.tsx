@@ -32,7 +32,7 @@ const LeadershipChange = ({ clubId }: { clubId: string }) => {
     <>
       <Collapse in={showPanel}>
         <Panel
-          className="bg-red-100 dark:bg-red-950 border border-red-500 dark:border-red-700"
+          className="border border-red-500 bg-red-100 dark:border-red-700 dark:bg-red-950"
           startAdornment={<GppMaybeIcon />}
           heading="Update your collaborators for next semester."
         >

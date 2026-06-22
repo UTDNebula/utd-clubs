@@ -27,7 +27,7 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
   return (
     <>
       <Header />
-      <main className="mb-5 flex flex-col gap-y-8 p-4 max-w-6xl mx-auto">
+      <main className="mx-auto mb-5 flex max-w-6xl flex-col gap-y-8 p-4">
         <ClubEventHeader club={club} />
         <ClubTitle club={club} />
         <ClubBody club={club} />

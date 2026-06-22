@@ -3,7 +3,7 @@ import { LinkButton } from '@src/components/LinkButton';
 
 export default function NotRegistered() {
   return (
-    <div className="flex flex-col items-center gap-4 mt-4">
+    <div className="mt-4 flex flex-col items-center gap-4">
       <p className="font-bold text-slate-500 dark:text-slate-400">
         You haven&apos;t registered for any events.
       </p>

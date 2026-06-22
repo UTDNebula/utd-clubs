@@ -24,7 +24,7 @@ export default function FormQuestion({
       <div className="flex flex-col gap-2">
         <Typography variant="body1">{question}</Typography>
       </div>
-      <div className="flex flex-wrap gap-6 w-full">{children}</div>
+      <div className="flex w-full flex-wrap gap-6">{children}</div>
     </div>
   );
 }

@@ -90,7 +90,7 @@ export default function UserInfo({ user }: UserInfoProps) {
       }}
     >
       <Panel heading="Personal Information">
-        <div className="m-2 flex flex-col gap-6 max-w-2xl">
+        <div className="m-2 flex max-w-2xl flex-col gap-6">
           <form.FieldSet name="name" title="Name" icon={<PersonIconOutlined />}>
             <div className="flex flex-wrap gap-6">
               <form.AppField name="firstName">
@@ -180,7 +180,7 @@ export default function UserInfo({ user }: UserInfoProps) {
             title="Contact"
             icon={<EmailOutlinedIcon />}
           >
-            <div className="flex flex-wrap gap-6 w-full">
+            <div className="flex w-full flex-wrap gap-6">
               <form.AppField name="contactEmail">
                 {(field) => (
                   <div className="grow">
@@ -195,7 +195,7 @@ export default function UserInfo({ user }: UserInfoProps) {
             </div>
           </form.FieldSet>
         </div>
-        <div className="flex flex-wrap justify-end items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <form.AppForm>
             <form.ResetButton />
           </form.AppForm>
