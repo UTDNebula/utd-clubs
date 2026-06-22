@@ -12,10 +12,23 @@ import {
   SnackbarContextDefault,
   SnackbarDefault,
 } from './context';
-import { setSnackbarFn, SnackbarType } from './types';
+import {
+  closeSnackbarFn,
+  setSnackbarFn,
+  SnackbarFunctions,
+  SnackbarType,
+} from './types';
 
-let setSnackbarRef: setSnackbarFn = () => {
-  console.warn('Snackbar context not initialized');
+/**
+ * Mutable global snackbar functions
+ */
+const globalSnackbarFunctions: SnackbarFunctions = {
+  setSnackbar: () => {
+    console.warn('Global snackbar functions not initialized');
+  },
+  closeSnackbar: () => {
+    console.warn('Global snackbar functions not initialized');
+  },
 };
 
 /**
@@ -24,8 +37,12 @@ let setSnackbarRef: setSnackbarFn = () => {
  * @example <caption>Basic usage</caption>
  * setSnackbar("Lorem ipsum dolor sit amet");
  */
-export const setSnackbar: setSnackbarFn = (snackbar) =>
-  setSnackbarRef(snackbar);
+
+export const setSnackbar: setSnackbarFn = (...args) =>
+  globalSnackbarFunctions.setSnackbar(...args);
+
+export const closeSnackbar: closeSnackbarFn = (...args) =>
+  globalSnackbarFunctions.closeSnackbar(...args);
 
 export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   // Timeout timer that resets anytime `setSnackbar()` is called, to ensure users are able to read consecutive snackbars before it closes
@@ -36,6 +53,8 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   const [snackbar, setSnackbarState] = useState<SnackbarType>(
     SnackbarContextDefault['snackbar'],
   );
+
+  const [snackbarKey, setSnackbarKey] = useState('');
 
   const setSnackbar: setSnackbarFn = (arg) => {
     let newSnackbarState: SnackbarType = SnackbarDefault;
@@ -53,12 +72,9 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
       };
     }
 
-    newSnackbarState = {
-      ...newSnackbarState,
-      key: newSnackbarState.updateCurrent
-        ? snackbar?.key
-        : new Date().getTime(),
-    };
+    if (!newSnackbarState.updateCurrent) {
+      setSnackbarKey(new Date().getTime().toString());
+    }
 
     setSnackbarState({ ...newSnackbarState });
     setOpen(true);
@@ -71,11 +87,22 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
     return newSnackbarState;
   };
 
-  // Sync global setSnackbarRef with local component state
+  const closeSnackbar: closeSnackbarFn = (id) => {
+    if (typeof id === 'undefined' || snackbar.id === id) {
+      setOpen(false);
+    }
+  };
+
+  // Sync global snackbar functions with local component functions
   useEffect(() => {
-    setSnackbarRef = setSnackbar;
+    globalSnackbarFunctions.setSnackbar = setSnackbar;
+    globalSnackbarFunctions.closeSnackbar = closeSnackbar;
+
     return () => {
-      setSnackbarRef = () => console.warn('Provider unmounted');
+      globalSnackbarFunctions.setSnackbar = () =>
+        console.warn('Snackbar provider unmounted');
+      globalSnackbarFunctions.closeSnackbar = () =>
+        console.warn('Snackbar provider unmounted');
     };
   });
 
@@ -107,11 +134,11 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   }, [handleClose, snackbar.autoHideDuration]);
 
   return (
-    <SnackbarContext.Provider value={{ snackbar, setSnackbar }}>
+    <SnackbarContext.Provider value={{ snackbar, setSnackbar, closeSnackbar }}>
       {children}
       <Snackbar
         open={open}
-        key={snackbar.key}
+        key={`${snackbar.id ?? 'unknown'}-${snackbarKey}`}
         onClose={(_event, reason) => {
           handleClose(reason);
         }}

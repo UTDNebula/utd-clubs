@@ -1,39 +1,28 @@
 'use client';
 
 import { createContext, useContext } from 'react';
-import { setSnackbarFn, SnackbarType } from './types';
-
-export const SnackbarDefault: SnackbarType = {
-  message: '',
-  title: false,
-  type: 'default',
-  autoHideDuration: null,
-  closeOn: {
-    clickaway: false,
-    dismiss: false,
-    escapeKeyDown: true,
-    timeout: true,
-  },
-  showClose: false,
-  action: undefined,
-  fitContent: false,
-};
+import { SnackbarDefault } from './presets';
+import { SnackbarFunctions, SnackbarType } from './types';
 
 /*
  * Snackbar Context
  */
 
-export interface SnackbarProviderContext {
+export interface SnackbarContextType extends SnackbarFunctions {
   snackbar: SnackbarType;
-  setSnackbar: setSnackbarFn;
 }
 
-export const SnackbarContextDefault: SnackbarProviderContext = {
+export const SnackbarContextDefault: SnackbarContextType = {
   snackbar: SnackbarDefault,
-  setSnackbar: () => {},
+  setSnackbar: () => {
+    console.warn('Snackbar context not initialized');
+  },
+  closeSnackbar: () => {
+    console.warn('Snackbar context not initialized');
+  },
 };
 
-export const SnackbarContext = createContext<SnackbarProviderContext>(
+export const SnackbarContext = createContext<SnackbarContextType>(
   SnackbarContextDefault,
 );
 
@@ -50,3 +39,4 @@ export const SnackbarContext = createContext<SnackbarProviderContext>(
  * console.log("snackbar.message") // Output: foo bar
  */
 export const useSnackbar = () => useContext(SnackbarContext);
+export { SnackbarDefault };

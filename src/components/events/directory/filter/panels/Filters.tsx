@@ -4,12 +4,14 @@ import Switch from '@mui/material/Switch';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
-import { setSnackbar } from 'src/utils/snackbar';
+import { closeSnackbar, setSnackbar } from 'src/utils/snackbar';
 import Panel from '@src/components/common/Panel';
 import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
 import { authClient } from '@src/utils/auth-client';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
+
+const eventsFiltersSnackbarId = 'eventsFilters';
 
 export type FiltersPanelFields = Pick<
   EventFiltersSchema,
@@ -26,6 +28,7 @@ export default memo(function FiltersPanel(
 
   function showSignInMessage() {
     setSnackbar({
+      id: eventsFiltersSnackbarId,
       message: "This filter option only works when you're signed in",
       autoHideDuration: true,
       fitContent: true,
@@ -60,7 +63,13 @@ export default memo(function FiltersPanel(
         exclusive
         onChange={(_e, newValue) => {
           if (newValue !== null) {
-            if (!signedIn && newValue !== 'all') showSignInMessage();
+            if (!signedIn) {
+              if (newValue !== 'all') {
+                showSignInMessage();
+              } else {
+                closeSnackbar(eventsFiltersSnackbarId);
+              }
+            }
             setEventsParams((params) => {
               if (newValue !== 'all') {
                 params.set('clubs', newValue);
@@ -84,7 +93,13 @@ export default memo(function FiltersPanel(
           <Switch
             checked={hideRegistered}
             onChange={(_e, newValue) => {
-              if (!signedIn && newValue === true) showSignInMessage();
+              if (!signedIn) {
+                if (newValue) {
+                  showSignInMessage();
+                } else {
+                  closeSnackbar(eventsFiltersSnackbarId);
+                }
+              }
               setEventsParams((params) => {
                 if (newValue) {
                   params.set('hideRegistered', '');

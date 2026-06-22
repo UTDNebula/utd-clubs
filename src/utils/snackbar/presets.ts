@@ -1,5 +1,21 @@
 import { SnackbarType } from './types';
 
+export const SnackbarDefault: SnackbarType = {
+  message: '',
+  title: false,
+  type: 'default',
+  autoHideDuration: null,
+  closeOn: {
+    clickaway: false,
+    dismiss: false,
+    escapeKeyDown: true,
+    timeout: true,
+  },
+  showClose: false,
+  action: undefined,
+  fitContent: false,
+};
+
 /**
  * Snackbar presets that can be used as an input for `setSnackbar()`. Modify this file to add other snackbar presets.
  *

@@ -5,7 +5,10 @@ import {
 import { ReactNode } from 'node_modules/@types/react';
 
 export interface SnackbarType {
-  key?: number;
+  /**
+   * Identifier for the snackbar. Allows filtering for snackbars with this ID when calling {@linkcode closeSnackbarFn | closeSnackbar}
+   */
+  id?: string;
   /**
    * Message displayed in snackbar
    */
@@ -73,4 +76,9 @@ export type setSnackbarFn = (
   snackbar: string | SnackbarType,
 ) => SnackbarType | void;
 
-export type closeSnackbarFn = (key: string) => SnackbarType | void;
+export type closeSnackbarFn = (id?: string) => SnackbarType | void;
+
+export interface SnackbarFunctions {
+  setSnackbar: setSnackbarFn;
+  closeSnackbar: closeSnackbarFn;
+};

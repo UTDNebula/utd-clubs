@@ -7,10 +7,10 @@
  * const { setSnackbar } = useSnackbar();
  * setSnackbar("Lorem ipsum dolor sit amet");
  *
- * @example <caption>Shortcut (using global ref)</caption>
+ * @example <caption>Shortcut (using global function)</caption>
  * setSnackbar("Lorem ipsum dolor sit amet");
  */
 
 export { useSnackbar } from './context';
-export { setSnackbar, SnackbarProvider } from './provider';
+export { setSnackbar, closeSnackbar, SnackbarProvider } from './provider';
 export { default as 'SnackbarPresets' } from './presets';
