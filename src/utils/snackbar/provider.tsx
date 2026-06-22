@@ -12,23 +12,30 @@ import {
   SnackbarContextDefault,
   SnackbarDefault,
 } from './context';
+import SnackbarPresets from './presets';
 import {
   closeSnackbarFn,
   setSnackbarFn,
+  setSnackbarWithPresetFn,
   SnackbarFunctions,
   SnackbarType,
 } from './types';
+
+const globalContextFunctionsDefault = () => {
+  console.warn('Global snackbar functions not initialized');
+};
+
+const globalContextFunctionsUnmounted = () => {
+  console.warn('Snackbar provider unmounted');
+};
 
 /**
  * Mutable global snackbar functions
  */
 const globalSnackbarFunctions: SnackbarFunctions = {
-  setSnackbar: () => {
-    console.warn('Global snackbar functions not initialized');
-  },
-  closeSnackbar: () => {
-    console.warn('Global snackbar functions not initialized');
-  },
+  setSnackbar: globalContextFunctionsDefault,
+  closeSnackbar: globalContextFunctionsDefault,
+  setSnackbarWithPreset: globalContextFunctionsDefault,
 };
 
 /**
@@ -40,6 +47,11 @@ const globalSnackbarFunctions: SnackbarFunctions = {
 
 export const setSnackbar: setSnackbarFn = (...args) =>
   globalSnackbarFunctions.setSnackbar(...args);
+
+export const setSnackbarWithPreset: setSnackbarWithPresetFn = (
+  preset,
+  ...args
+) => globalSnackbarFunctions.setSnackbarWithPreset(preset, ...args);
 
 export const closeSnackbar: closeSnackbarFn = (...args) =>
   globalSnackbarFunctions.closeSnackbar(...args);
@@ -87,6 +99,24 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
     return newSnackbarState;
   };
 
+  const setSnackbarWithPreset: setSnackbarWithPresetFn = (preset, ...args) => {
+    const presetData = SnackbarPresets[preset];
+
+    let snackbarData: SnackbarType = {
+      message: 'Unknown snackbar preset',
+      type: 'error',
+    };
+
+    if (typeof presetData === 'function') {
+      snackbarData = (presetData as (...args: unknown[]) => SnackbarType)(
+        ...args,
+      );
+    } else {
+      snackbarData = presetData;
+    }
+    setSnackbar(snackbarData);
+  };
+
   const closeSnackbar: closeSnackbarFn = (id) => {
     if (typeof id === 'undefined' || snackbar.id === id) {
       setOpen(false);
@@ -96,13 +126,14 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   // Sync global snackbar functions with local component functions
   useEffect(() => {
     globalSnackbarFunctions.setSnackbar = setSnackbar;
+    globalSnackbarFunctions.setSnackbarWithPreset = setSnackbarWithPreset;
     globalSnackbarFunctions.closeSnackbar = closeSnackbar;
 
     return () => {
-      globalSnackbarFunctions.setSnackbar = () =>
-        console.warn('Snackbar provider unmounted');
-      globalSnackbarFunctions.closeSnackbar = () =>
-        console.warn('Snackbar provider unmounted');
+      globalSnackbarFunctions.setSnackbar = globalContextFunctionsUnmounted;
+      globalSnackbarFunctions.setSnackbarWithPreset =
+        globalContextFunctionsUnmounted;
+      globalSnackbarFunctions.closeSnackbar = globalContextFunctionsUnmounted;
     };
   });
 
@@ -134,7 +165,9 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   }, [handleClose, snackbar.autoHideDuration]);
 
   return (
-    <SnackbarContext.Provider value={{ snackbar, setSnackbar, closeSnackbar }}>
+    <SnackbarContext.Provider
+      value={{ snackbar, setSnackbar, closeSnackbar, setSnackbarWithPreset }}
+    >
       {children}
       <Snackbar
         open={open}

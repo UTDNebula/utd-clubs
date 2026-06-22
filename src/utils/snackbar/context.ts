@@ -12,14 +12,15 @@ export interface SnackbarContextType extends SnackbarFunctions {
   snackbar: SnackbarType;
 }
 
+const SnackbarContextFunctionsDefault = () => {
+  console.warn('Snackbar context not initialized');
+};
+
 export const SnackbarContextDefault: SnackbarContextType = {
   snackbar: SnackbarDefault,
-  setSnackbar: () => {
-    console.warn('Snackbar context not initialized');
-  },
-  closeSnackbar: () => {
-    console.warn('Snackbar context not initialized');
-  },
+  setSnackbar: SnackbarContextFunctionsDefault,
+  setSnackbarWithPreset: SnackbarContextFunctionsDefault,
+  closeSnackbar: SnackbarContextFunctionsDefault,
 };
 
 export const SnackbarContext = createContext<SnackbarContextType>(

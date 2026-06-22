@@ -3,6 +3,7 @@ import {
   SnackbarCloseReason,
 } from 'node_modules/@mui/material/index.mjs';
 import { ReactNode } from 'node_modules/@types/react';
+import SnackbarPresets from './presets';
 
 export interface SnackbarType {
   /**
@@ -76,9 +77,19 @@ export type setSnackbarFn = (
   snackbar: string | SnackbarType,
 ) => SnackbarType | void;
 
+type SnackbarPresets = typeof SnackbarPresets;
+
+export type setSnackbarWithPresetFn = <Preset extends keyof SnackbarPresets>(
+  preset: Preset,
+  ...args: SnackbarPresets[Preset] extends (...args: infer Args) => unknown
+    ? Args
+    : []
+) => void;
+
 export type closeSnackbarFn = (id?: string) => SnackbarType | void;
 
 export interface SnackbarFunctions {
   setSnackbar: setSnackbarFn;
+  setSnackbarWithPreset: setSnackbarWithPresetFn;
   closeSnackbar: closeSnackbarFn;
-};
+}
