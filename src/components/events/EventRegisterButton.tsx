@@ -100,7 +100,7 @@ const EventRegisterButton = ({
   const router = useRouter();
 
   const useAuthPage = useRef(false);
-  const { setShowLoginModal } = useLoginModal({
+  const { openLoginModal } = useLoginModal({
     onNoProvider: () => {
       useAuthPage.current = true;
     },
@@ -121,7 +121,7 @@ const EventRegisterButton = ({
           `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
         );
       } else {
-        setShowLoginModal(true);
+        openLoginModal();
       }
       return;
     }

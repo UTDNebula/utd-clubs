@@ -13,3 +13,18 @@ export type useLoginModalOptions = {
 };
 
 export type LoginProviders = 'google' | 'discord';
+
+export type openLoginModalOptions = {
+  /**
+   * URL to navigate to after logging in
+   */
+  callbackURL?: string;
+  /**
+   * Callback for when login modal is closed
+   */
+  onClose?: () => void;
+};
+
+export type openLoginModalFn = (options?: openLoginModalOptions) => void;
+
+export type closeLoginModalFn = () => void;

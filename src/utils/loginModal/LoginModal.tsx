@@ -5,7 +5,6 @@ import IconButton from '@mui/material/IconButton';
 import Modal, { ModalProps } from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
-import React from 'react';
 import { authClient } from '@src/utils/auth-client';
 import LoginProviderButton from './LoginProviderButton';
 import { LoginProviders } from './types';
@@ -20,13 +19,18 @@ type LoginModalProps = Omit<ModalProps, 'children'> & {
   onClose?: () => void;
   closeButton?: boolean;
   className?: string;
+  callbackURL?: string;
 };
 
 export const LoginModalContents = ({
   className,
   onClose,
   closeButton,
-}: Pick<LoginModalProps, 'className' | 'onClose' | 'closeButton'>) => {
+  callbackURL,
+}: Pick<
+  LoginModalProps,
+  'className' | 'onClose' | 'closeButton' | 'callbackURL'
+>) => {
   return (
     <div
       className={`z-20 flex w-fit flex-col items-center rounded-lg bg-white p-4 shadow-lg dark:bg-neutral-800 dark:shadow-xl ${className}`}
@@ -48,7 +52,11 @@ export const LoginModalContents = ({
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-3 p-4 sm:flex-row">
         {loginProviders.map((loginProvider) => (
-          <LoginProviderButton key={loginProvider} provider={loginProvider} />
+          <LoginProviderButton
+            key={loginProvider}
+            provider={loginProvider}
+            callbackURL={callbackURL}
+          />
         ))}
       </div>
       <Typography
@@ -62,7 +70,7 @@ export const LoginModalContents = ({
           onClick={() => {
             void authClient.signIn.social({
               provider: 'microsoft',
-              callbackURL: window.location.href,
+              callbackURL: callbackURL ?? window.location.href,
               newUserCallbackURL: '/get-started',
             });
           }}
@@ -74,12 +82,14 @@ export const LoginModalContents = ({
   );
 };
 
-const LoginModal: React.FC<LoginModalProps> = ({
+const LoginModal = ({
   open,
   onClose,
   closeButton,
   className,
-}) => {
+  callbackURL,
+  ...props
+}: LoginModalProps) => {
   if (!open) return null;
 
   return (
@@ -87,12 +97,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
       open={open}
       onClose={onClose}
       className={`flex h-screen items-center justify-center p-4 ${className}`}
+      {...props}
     >
       {/* This span is required to receive the tabIndex prop, which will let the user quickly navigate the modal using the keyboard */}
       <span>
         <LoginModalContents
           onClose={onClose}
           closeButton={closeButton ?? true}
+          callbackURL={callbackURL}
         />
       </span>
     </Modal>

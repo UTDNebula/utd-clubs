@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 
-const AuthIcons: { [provider: string]: ReactElement } = {
+const LoginProviderIcons: { [provider: string]: ReactElement } = {
   google: (
     <svg
       width="32"
@@ -45,4 +45,4 @@ const AuthIcons: { [provider: string]: ReactElement } = {
   ),
 };
 
-export default AuthIcons;
+export default LoginProviderIcons;

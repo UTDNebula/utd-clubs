@@ -22,7 +22,7 @@ export default memo(function FiltersPanel(
   const session = authClient.useSession();
   const signedIn = Boolean(session.data);
 
-  const { setShowLoginModal } = useLoginModal();
+  const { openLoginModal } = useLoginModal();
 
   function showSignInMessage() {
     setSnackbar({
@@ -34,7 +34,7 @@ export default memo(function FiltersPanel(
         <Button
           size="small"
           onClick={() => {
-            setShowLoginModal(true);
+            openLoginModal();
           }}
           color="inherit"
         >

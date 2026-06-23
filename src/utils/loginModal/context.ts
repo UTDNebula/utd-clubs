@@ -1,18 +1,27 @@
 import { createContext, useContext } from 'react';
-import { NoLoginModalProviderError, useLoginModalOptions } from './types';
+import {
+  closeLoginModalFn,
+  NoLoginModalProviderError,
+  openLoginModalFn,
+  useLoginModalOptions,
+} from './types';
 
 export interface LoginModalContextType {
   inProvider: boolean;
-  showLoginModal: boolean;
-  setShowLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean;
+  openLoginModal: openLoginModalFn;
+  closeLoginModal: closeLoginModalFn;
 }
+
+const LoginModalContextFunctionsDefault = () => {
+  console.warn('Login modal context not initialized');
+};
 
 export const LoginModalContextDefault: LoginModalContextType = {
   inProvider: false,
-  showLoginModal: false,
-  setShowLoginModal: () => {
-    console.warn('Login modal context not initialized');
-  },
+  open: false,
+  openLoginModal: LoginModalContextFunctionsDefault,
+  closeLoginModal: LoginModalContextFunctionsDefault,
 };
 
 export const LoginModalContext = createContext<LoginModalContextType>(

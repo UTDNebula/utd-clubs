@@ -95,7 +95,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
   const useAuthPage = useRef(false);
 
-  const { setShowLoginModal } = useLoginModal({
+  const { openLoginModal } = useLoginModal({
     onNoProvider: () => {
       useAuthPage.current = true;
     },
@@ -161,7 +161,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
                   `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
                 );
               } else {
-                setShowLoginModal(true);
+                openLoginModal();
               }
               return;
             }
