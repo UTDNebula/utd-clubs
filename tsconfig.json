@@ -17,8 +17,8 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
-      "*": ["./*"],
-      "@src/*": ["./src/*"]
+      "@src/*": ["./src/*"],
+      "@public/*": ["./public/*"]
     },
     "plugins": [
       {

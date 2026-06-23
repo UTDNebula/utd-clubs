@@ -3,7 +3,6 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import type z from 'zod';
 import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
@@ -16,6 +15,7 @@ import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubFormSchema, schools } from '@src/utils/formSchemas';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { useUploadToUploadURL } from '@src/utils/uploadImage';
 
 type DetailsProps = {
   club: SelectClub;
