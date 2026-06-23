@@ -1,14 +1,5 @@
 import { createContext, useContext } from 'react';
-
-/**
- * Catchable error for when {@linkcode useLoginModalContext()} isn't used in a child component of a {@linkcode LoginModalProvider}.
- */
-export class NoLoginModalProviderError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'NoLoginModalProviderError';
-  }
-}
+import { NoLoginModalProviderError, useLoginModalOptions } from './types';
 
 export interface LoginModalContextType {
   inProvider: boolean;
@@ -29,9 +20,9 @@ export const LoginModalContext = createContext<LoginModalContextType>(
 );
 
 /**
- * Wrapper function for `useContext(LoginModalContext)` that safely throws a {@linkcode NoLoginModalProviderError} if it is used outside of a {@linkcode LoginModalProvider}.
+ * Wrapper function for `useContext(LoginModalContext)` that throws a {@linkcode NoLoginModalProviderError} if it is used outside of a {@linkcode LoginModalProvider}.
  */
-export function useLoginModalContext() {
+export function useLoginModalContext(): LoginModalContextType {
   const context = useContext(LoginModalContext);
   if (context.inProvider == false) {
     throw new NoLoginModalProviderError(
@@ -44,19 +35,16 @@ export function useLoginModalContext() {
 /**
  * Hook that grants access to the login modal system.
  *
- * If not used in a {@linkcode LoginModalProvider}, will run the callback function in {@linkcode onError}.
+ * If not used in a {@linkcode LoginModalProvider}, will run the callback function in {@linkcode useLoginModalOptions.onNoProvider | onNoProvider}.
  */
 export function useLoginModal(
-  onError?: (e?: NoLoginModalProviderError) => void,
-) {
+  options?: useLoginModalOptions,
+): LoginModalContextType {
   try {
-    const context = useLoginModalContext();
-    return context;
+    return useLoginModalContext();
   } catch (e) {
     if (e instanceof NoLoginModalProviderError) {
-      if (onError) {
-        onError(e);
-      }
+      options?.onNoProvider?.(e);
     } else {
       throw e;
     }

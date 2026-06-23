@@ -100,10 +100,10 @@ const EventRegisterButton = ({
   const router = useRouter();
 
   const useAuthPage = useRef(false);
-  // Although this feature is named similarly, it is unrelated to the event registration button.
-  // Rather, it relates to the sign in/sign up authentication modal.
-  const { setShowLoginModal } = useLoginModal(() => {
-    useAuthPage.current = true;
+  const { setShowLoginModal } = useLoginModal({
+    onNoProvider: () => {
+      useAuthPage.current = true;
+    },
   });
 
   const registered = registerState?.registered ?? false;

@@ -95,8 +95,10 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
   const useAuthPage = useRef(false);
 
-  const { setShowLoginModal } = useLoginModal(() => {
-    useAuthPage.current = true;
+  const { setShowLoginModal } = useLoginModal({
+    onNoProvider: () => {
+      useAuthPage.current = true;
+    },
   });
 
   const memberType = memberState?.memberType ?? null;
