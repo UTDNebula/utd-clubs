@@ -7,7 +7,13 @@ import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import React from 'react';
 import { authClient } from '@src/utils/auth-client';
-import ProviderButton from './LoginProviderButton';
+import LoginProviderButton from './LoginProviderButton';
+import { LoginProviders } from './types';
+
+const loginProviders = [
+  'google',
+  'discord',
+] as const satisfies LoginProviders[];
 
 type LoginModalProps = Omit<ModalProps, 'children'> & {
   open: boolean;
@@ -15,8 +21,6 @@ type LoginModalProps = Omit<ModalProps, 'children'> & {
   closeButton?: boolean;
   className?: string;
 };
-
-const providers = ['google', 'discord'] as const;
 
 export const LoginModalContents = ({
   className,
@@ -43,8 +47,8 @@ export const LoginModalContents = ({
         </Typography>
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-3 p-4 sm:flex-row">
-        {providers.map((provider) => (
-          <ProviderButton key={provider} provider={provider} />
+        {loginProviders.map((loginProvider) => (
+          <LoginProviderButton key={loginProvider} provider={loginProvider} />
         ))}
       </div>
       <Typography

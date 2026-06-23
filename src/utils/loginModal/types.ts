@@ -11,3 +11,5 @@ export class NoLoginModalProviderError extends Error {
 export type useLoginModalOptions = {
   onNoProvider?: (e?: NoLoginModalProviderError) => void;
 };
+
+export type LoginProviders = 'google' | 'discord';
