@@ -8,7 +8,7 @@ import { CheckRefreshToken } from '@src/components/auth/CheckRefreshToken';
 import { SnackbarProvider } from '@src/components/global/Snackbar';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
-import { RegisterModalProvider } from '@src/utils/LoginModal/provider';
+import { LoginModalProvider } from '@src/utils/LoginModal/provider';
 import theme from '@src/utils/theme';
 
 const inter = Inter({
@@ -71,12 +71,12 @@ export default async function RootLayout({
           <TRPCReactProvider>
             <ThemeProvider theme={theme}>
               <ClientLocalizationProvider>
-                <RegisterModalProvider>
+                <LoginModalProvider>
                   <SnackbarProvider>
                     <CheckRefreshToken />
                     {children}
                   </SnackbarProvider>
-                </RegisterModalProvider>
+                </LoginModalProvider>
               </ClientLocalizationProvider>
             </ThemeProvider>
           </TRPCReactProvider>

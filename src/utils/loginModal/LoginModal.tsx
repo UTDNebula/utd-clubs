@@ -9,7 +9,7 @@ import React from 'react';
 import ProviderButton from '@src/app/auth/ProviderButtons';
 import { authClient } from '@src/utils/auth-client';
 
-type RegisterModalProps = Omit<ModalProps, 'children'> & {
+type LoginModalProps = Omit<ModalProps, 'children'> & {
   open: boolean;
   onClose?: () => void;
   closeButton?: boolean;
@@ -18,11 +18,11 @@ type RegisterModalProps = Omit<ModalProps, 'children'> & {
 
 const providers = ['google', 'discord'] as const;
 
-export const RegisterModalContents = ({
+export const LoginModalContents = ({
   className,
   onClose,
   closeButton,
-}: Pick<RegisterModalProps, 'className' | 'onClose' | 'closeButton'>) => {
+}: Pick<LoginModalProps, 'className' | 'onClose' | 'closeButton'>) => {
   return (
     <div
       className={`z-20 flex w-fit flex-col items-center rounded-lg bg-white p-4 shadow-lg dark:bg-neutral-800 dark:shadow-xl ${className}`}
@@ -70,7 +70,7 @@ export const RegisterModalContents = ({
   );
 };
 
-const RegisterModal: React.FC<RegisterModalProps> = ({
+const LoginModal: React.FC<LoginModalProps> = ({
   open,
   onClose,
   closeButton,
@@ -86,7 +86,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     >
       {/* This span is required to receive the tabIndex prop, which will let the user quickly navigate the modal using the keyboard */}
       <span>
-        <RegisterModalContents
+        <LoginModalContents
           onClose={onClose}
           closeButton={closeButton ?? true}
         />
@@ -95,4 +95,4 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   );
 };
 
-export default RegisterModal;
+export default LoginModal;

@@ -11,7 +11,7 @@ import { useRef } from 'react';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
-import { useRegisterModal } from '@src/utils/LoginModal/provider';
+import { useLoginModal } from '@src/utils/LoginModal';
 
 type JoinButtonProps = {
   isHeader?: boolean;
@@ -95,7 +95,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
   const useAuthPage = useRef(false);
 
-  const { setShowRegisterModal } = useRegisterModal(() => {
+  const { setShowLoginModal } = useLoginModal(() => {
     useAuthPage.current = true;
   });
 
@@ -153,13 +153,13 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
             if (isPending || joinLeave.isPending) return;
 
             if (!session) {
-              // This will use auth page when this JoinButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
+              // This will use auth page when this JoinButton and a LoginModal are not wrapped in a `<LoginModalProvider>`.
               if (useAuthPage.current) {
                 router.push(
                   `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
                 );
               } else {
-                setShowRegisterModal(true);
+                setShowLoginModal(true);
               }
               return;
             }
