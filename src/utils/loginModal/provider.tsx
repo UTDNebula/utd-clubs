@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import RegisterModal from './RegisterModal';
+import RegisterModal from './LoginModal';
 
 /**
  * Catchable error for when {@linkcode useRegisterModalContext()} isn't used in a child component of a {@link RegisterModalProvider \<RegisterModalProvider\>}.
