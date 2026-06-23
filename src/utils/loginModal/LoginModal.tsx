@@ -6,8 +6,8 @@ import Modal, { ModalProps } from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import React from 'react';
-import ProviderButton from '@src/app/auth/ProviderButtons';
 import { authClient } from '@src/utils/auth-client';
+import ProviderButton from './LoginProviderButton';
 
 type LoginModalProps = Omit<ModalProps, 'children'> & {
   open: boolean;
