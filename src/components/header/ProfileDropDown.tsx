@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { authClient } from '@src/utils/auth-client';
-import { useLoginModal } from '@src/utils/LoginModal';
+import { openLoginModal } from '@src/utils/LoginModal';
 
 type Props = {
   shadow?: boolean;
@@ -27,8 +27,6 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
   const { data: session, isPending } = authClient.useSession();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
-
-  const { openLoginModal } = useLoginModal();
 
   const router = useRouter();
 

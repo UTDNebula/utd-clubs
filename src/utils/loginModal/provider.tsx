@@ -2,6 +2,7 @@
 
 import { ReactNode, useState } from 'react';
 import { LoginModalContext } from './context';
+import { useAttachGlobalLoginModalFunctions } from './global';
 import LoginModal from './LoginModal';
 import { closeLoginModalFn, openLoginModalFn } from './types';
 
@@ -32,6 +33,8 @@ export const LoginModalProvider = ({ children }: LoginModalProviderProps) => {
     setCallbackURL(undefined);
     setOnClose(undefined);
   };
+
+  useAttachGlobalLoginModalFunctions({ openLoginModal, closeLoginModal });
 
   return (
     <LoginModalContext.Provider

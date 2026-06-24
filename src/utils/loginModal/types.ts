@@ -28,3 +28,8 @@ export type openLoginModalOptions = {
 export type openLoginModalFn = (options?: openLoginModalOptions) => void;
 
 export type closeLoginModalFn = () => void;
+
+export interface LoginModalFunctions {
+  openLoginModal: openLoginModalFn;
+  closeLoginModal: closeLoginModalFn;
+}

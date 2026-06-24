@@ -8,7 +8,7 @@ import Panel from '@src/components/common/Panel';
 import { setSnackbar } from '@src/components/global/Snackbar';
 import { authClient } from '@src/utils/auth-client';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
-import { useLoginModal } from '@src/utils/LoginModal';
+import { openLoginModal } from '@src/utils/LoginModal';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 export type FiltersPanelFields = Pick<
@@ -21,8 +21,6 @@ export default memo(function FiltersPanel(
 ) {
   const session = authClient.useSession();
   const signedIn = Boolean(session.data);
-
-  const { openLoginModal } = useLoginModal();
 
   function showSignInMessage() {
     setSnackbar({
