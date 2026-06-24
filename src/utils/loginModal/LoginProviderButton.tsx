@@ -1,7 +1,6 @@
 'use client';
 
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import { authClient } from '@src/utils/auth-client';
 import LoginProviderIcons from './icons';
 import { LoginProviders } from './types';
@@ -31,16 +30,12 @@ export default function LoginProviderButton({
           newUserCallbackURL: '/get-started',
         });
       }}
-      className="min-w-max bg-white whitespace-nowrap normal-case hover:bg-neutral-100 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      startIcon={LoginProviderIcons[provider]}
+      className="min-w-max bg-white pr-5 pl-3 whitespace-nowrap text-slate-800 normal-case outline-1 outline-transparent transition-[outline-color] duration-500 not-active:outline-neutral-300 hover:bg-neutral-100 dark:bg-neutral-700 dark:text-slate-200 dark:not-active:outline-neutral-600 dark:hover:bg-neutral-600"
+      startIcon={
+        <span className="scale-125">{LoginProviderIcons[provider]}</span>
+      }
     >
-      <Typography
-        className={`text-base font-extrabold text-slate-800 md:text-xs dark:text-slate-200`}
-      >
-        <span className="min-w-fit">
-          Sign in with {loginProviderNames[provider]}
-        </span>
-      </Typography>
+      Continue with {loginProviderNames[provider]}
     </Button>
   );
 }

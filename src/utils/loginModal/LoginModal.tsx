@@ -45,9 +45,9 @@ export const LoginModalContents = ({
         )}
         <Typography
           variant="h1"
-          className="font-display mt-1 mb-2 grow-1 self-center px-4 text-center text-2xl font-bold text-slate-600 dark:text-slate-400"
+          className="font-display mt-1 mb-2 grow-1 self-center text-center text-2xl font-bold text-balance text-neutral-700 dark:text-neutral-300"
         >
-          Sign In / Sign Up
+          Sign in or sign up
         </Typography>
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-3 p-4 sm:flex-row">
@@ -61,12 +61,12 @@ export const LoginModalContents = ({
       </div>
       <Typography
         variant="body1"
-        className="font-display mt-1 mb-2 grow-1 self-center px-4 text-center text-slate-600 dark:text-slate-400"
+        className="mt-1 mb-2 grow-1 self-center px-4 text-center text-neutral-600 dark:text-neutral-400"
       >
         Are you UTD Faculty/Staff?{' '}
         <Link
           href="#"
-          className="font-bold"
+          className="font-bold whitespace-nowrap text-slate-600 underline underline-offset-2 dark:text-slate-400"
           onClick={() => {
             void authClient.signIn.social({
               provider: 'microsoft',
