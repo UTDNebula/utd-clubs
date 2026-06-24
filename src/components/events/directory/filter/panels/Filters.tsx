@@ -8,7 +8,7 @@ import Panel from '@src/components/common/Panel';
 import { setSnackbar } from '@src/components/global/Snackbar';
 import { authClient } from '@src/utils/auth-client';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
-import { openLoginModal } from '@src/utils/LoginModal';
+import { openLoginModal } from '@src/utils/loginModal';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 export type FiltersPanelFields = Pick<

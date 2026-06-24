@@ -11,7 +11,7 @@ import { useRef } from 'react';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
-import { useLoginModal } from '@src/utils/LoginModal';
+import { useLoginModal } from '@src/utils/loginModal';
 
 type JoinButtonProps = {
   isHeader?: boolean;
