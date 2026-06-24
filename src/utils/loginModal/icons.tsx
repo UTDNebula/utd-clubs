@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
+import type { LoginProviders } from './types';
 
-const LoginProviderIcons: { [provider: string]: ReactElement } = {
+const LoginProviderIcons: Record<LoginProviders, ReactElement> = {
   google: (
     <svg
       width="32"
