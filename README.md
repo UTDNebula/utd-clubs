@@ -68,3 +68,40 @@ If your changes involve any changes to the database schema please read `/docs/db
 
 When you are ready to merge your branch into the `develop` branch, please create a pull request and request a review from the Clubs Dev Team.
 Please include details about what issue you are addressing with the pull request, what changes you made, and any other relevant information.
+
+#### Library
+
+When working in the `src/nebula-library` folder you are working in a shared component library. Follow these steps to create a secondary Pull Request (PR) for your library changes.
+
+##### 1. Checkout a Branch
+
+```bash
+cd src/nebula-library
+git checkout -b feature/<feature-name>
+```
+
+##### 2. Make Your Changes
+
+##### 3. Push Your Changes
+
+```bash
+git push
+cd ../..
+```
+
+##### 4. Make a Pull Request
+
+Make a PR from your branch into `main` at [github.com/UTDNebula/nebula-library](https://github.com/UTDNebula/nebula-library) and request your project lead as a reviewer.
+
+Wait for your PR to be approved.
+
+In the meantime you can make a normal PR for Clubs. It's checks and build may not pass without your changes in `src/nebula-library` so you can switch the branch and push with `git submodule set-branch --branch feature/<feature-name> src/nebula-library`. Just make sure to switch back to `main` in the next step.
+
+##### 5. After Your PR is Merged
+
+Pull your changes from the library and push them to Clubs. Then make a PR on Clubs.
+
+```bash
+git submodule update --recursive --remote
+git push
+```
