@@ -1,5 +1,6 @@
 import { type Metadata } from 'next';
-import { ClubEvents, RegisteredEvents } from './communityEvents';
+import ClubEvents from '@src/components/community/ClubEvents';
+import RegisteredEvents from '@src/components/community/RegisteredEvents';
 
 type SearchParams = { page?: string; pageSize?: string };
 

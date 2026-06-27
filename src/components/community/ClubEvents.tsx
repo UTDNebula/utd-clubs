@@ -8,31 +8,13 @@ import EventsPagination from '@src/components/events/EventPagination';
 import { LinkButton } from '@src/components/LinkButton';
 import { api } from '@src/trpc/server';
 
-export const RegisteredEvents = async () => {
-  const events = await api.userMetadata.getEvents({
-    currentTime: TZDateMini.tz('America/Chicago'),
-    sortByDate: true,
-  });
-
-  if (events.length == 0) {
-    return <NotRegistered />;
-  }
-  return (
-    <div className="flex w-full flex-wrap items-center justify-evenly gap-4 pt-10">
-      {events.map((event) => (
-        <EventCard key={event.id} event={event} />
-      ))}
-    </div>
-  );
-};
-
-export const ClubEvents = async ({
+export default async function ClubEvents({
   page,
   pageSize,
 }: {
   page: number;
   pageSize: number;
-}) => {
+}) {
   const now = TZDateMini.tz('America/Chicago');
   const [clubs, events] = await Promise.all([
     api.club.getMemberClubs(),
