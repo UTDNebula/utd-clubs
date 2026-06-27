@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
+    'src/nebula-library/**',
   ]),
   // Allow HTML <img> elements in Next.JS generated image metadata files
   {
