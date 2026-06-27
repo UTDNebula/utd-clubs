@@ -2,7 +2,7 @@
 
 import { TZDateMini } from '@date-fns/tz';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import NotRegistered from '@src/components/community/NotRegistered';
+import NotFollowingOrRegistered from '@src/components/community/NotFollowingOrRegistered';
 import EventCard from '@src/components/events/EventCard';
 import EventsPagination from '@src/components/events/EventPagination';
 import { LinkButton } from '@src/components/LinkButton';
@@ -27,22 +27,7 @@ export default async function ClubEvents({
   ]);
 
   if (clubs.length === 0) {
-    return (
-      <div className="mt-4 flex flex-col items-center gap-4">
-        <p className="font-bold text-slate-500 dark:text-slate-400">
-          You aren&apos;t following any clubs.
-        </p>
-        <LinkButton
-          href="/"
-          variant="contained"
-          className="normal-case"
-          size="large"
-          endIcon={<ArrowForwardIcon />}
-        >
-          Check Out Clubs
-        </LinkButton>
-      </div>
-    );
+    return <NotFollowingOrRegistered type="clubs" />;
   }
 
   if (events.length === 0) {
@@ -87,4 +72,4 @@ export default async function ClubEvents({
       </div>
     </>
   );
-};
+}

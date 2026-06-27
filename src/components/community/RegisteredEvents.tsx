@@ -1,7 +1,7 @@
 'use server';
 
 import { TZDateMini } from '@date-fns/tz';
-import NotRegistered from '@src/components/community/NotRegistered';
+import NotFollowingOrRegistered from '@src/components/community/NotFollowingOrRegistered';
 import EventCard from '@src/components/events/EventCard';
 import { api } from '@src/trpc/server';
 
@@ -12,7 +12,7 @@ export default async function RegisteredEvents() {
   });
 
   if (events.length == 0) {
-    return <NotRegistered />;
+    return <NotFollowingOrRegistered type="events" />;
   }
   return (
     <div className="flex w-full flex-wrap items-center justify-evenly gap-4 pt-10">
@@ -21,4 +21,4 @@ export default async function RegisteredEvents() {
       ))}
     </div>
   );
-};
+}

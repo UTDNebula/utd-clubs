@@ -26,7 +26,7 @@ import { startOfDay } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import NotRegistered from '@src/components/community/NotRegistered';
+import NotFollowingOrRegistered from '@src/components/community/NotFollowingOrRegistered';
 import EventCard from '@src/components/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
@@ -246,7 +246,7 @@ const EventCalendar = () => {
   return (
     <>
       <div className="mt-4 flex h-screen w-full flex-col gap-8">
-        {showEmpty && <NotRegistered />}
+        {showEmpty && <NotFollowingOrRegistered type="events" />}
         <div
           className="h-screen"
           onMouseOver={isFinePointer ? handleScheduleMouseOver : undefined}
