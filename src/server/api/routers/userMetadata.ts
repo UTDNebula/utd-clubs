@@ -40,6 +40,11 @@ const joinedClubEventsSchema = z.object({
   pageSize: z.number().int().positive().optional(),
 });
 
+const getByRangeSchema = z.object({
+  startDate: z.string(),
+  endDate: z.string(),
+});
+
 export const userMetadataRouter = createTRPCRouter({
   byId: protectedProcedure
     .input(byIdSchema)
@@ -121,7 +126,7 @@ export const userMetadataRouter = createTRPCRouter({
     await ctx.db.delete(userMetadata).where(eq(userMetadata.id, user.id));
   }),
   getRegisteredEventsByRange: protectedProcedure
-    .input(z.object({ startDate: z.string(), endDate: z.string() }))
+    .input(getByRangeSchema)
     .query(async ({ input, ctx }) => {
       const start = new Date(input.startDate);
       const end = new Date(input.endDate);
