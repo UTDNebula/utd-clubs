@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
-import Panel from '@src/components/common/Panel';
+import Panel from '@src/nebula-library/components/Panel';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 

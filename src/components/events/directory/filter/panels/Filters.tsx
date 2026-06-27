@@ -4,7 +4,7 @@ import Switch from '@mui/material/Switch';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@src/nebula-library/components/Panel';
 import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
 import { setSnackbar } from '@src/components/global/Snackbar';
 import { authClient } from '@src/utils/auth-client';

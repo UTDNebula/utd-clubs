@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, IconButton } from '@mui/material';
 import Image from 'next/image';
 import { useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@src/nebula-library/components/Panel';
 import ExpandableMarkdownText from '@src/components/ExpandableMarkdownText';
 import { RouterOutputs } from '@src/trpc/shared';
 import { addVersionToImage } from '@src/utils/imageCacheBust';

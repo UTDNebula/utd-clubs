@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
 import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
-import Panel, { PanelSkeleton } from '@src/components/common/Panel';
+import Panel, { PanelSkeleton } from '@src/nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { ClubSchoolEdit } from '@src/components/manage/form/ClubSchoolEdit';

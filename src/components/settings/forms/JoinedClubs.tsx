@@ -12,7 +12,7 @@ import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@src/nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import MemberRoleChip from '@src/components/manage/MemberRoleChip';

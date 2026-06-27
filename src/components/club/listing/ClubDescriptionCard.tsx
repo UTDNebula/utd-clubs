@@ -1,4 +1,4 @@
-import Panel from '@src/components/common/Panel';
+import Panel from '@src/nebula-library/components/Panel';
 import ExpandableMarkdownText from '@src/components/ExpandableMarkdownText';
 import { RouterOutputs } from '@src/trpc/shared';
 

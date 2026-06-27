@@ -2,7 +2,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { memo, useState } from 'react';
 import z from 'zod';
-import Panel from '@src/components/common/Panel';
+import Panel from '@src/nebula-library/components/Panel';
 import {
   EventFiltersSchema,
   temporalDeixisCustomDateSentinelValue,

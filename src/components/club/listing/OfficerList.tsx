@@ -1,7 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef, useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@src/nebula-library/components/Panel';
 import { SelectOfficer } from '@src/server/db/models';
 import ClubOfficer from './ClubOfficer';
 

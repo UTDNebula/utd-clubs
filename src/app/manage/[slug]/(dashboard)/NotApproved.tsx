@@ -1,5 +1,5 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import Panel from '@src/components/common/Panel';
+import Panel from '@src/nebula-library/components/Panel';
 import { SelectClub } from '@src/server/db/models';
 
 const NotApproved = ({

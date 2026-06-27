@@ -1,6 +1,6 @@
 import { FetchStatus } from '@tanstack/react-query';
 import { create } from 'zustand';
-import { PanelProps } from '@src/components/common/Panel';
+import { PanelProps } from '@src/nebula-library/components/Panel';
 import { EventParamsSchema } from '@src/utils/eventFilter';
 import { createParamSetter } from '@src/utils/searchParams';
 

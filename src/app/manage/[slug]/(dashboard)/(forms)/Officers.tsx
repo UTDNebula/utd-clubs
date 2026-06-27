@@ -24,7 +24,7 @@ import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
-import Panel from '@src/components/common/Panel';
+import Panel from '@src/nebula-library/components/Panel';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import OfficerListItem from '@src/components/manage/OfficerListItem';
 import type { SelectClub, SelectOfficer } from '@src/server/db/models';

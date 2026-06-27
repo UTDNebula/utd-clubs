@@ -1,5 +1,5 @@
 import { Skeleton } from '@mui/material';
-import { PanelSkeleton } from '@src/components/common/Panel';
+import { PanelSkeleton } from '@src/nebula-library/components/Panel';
 import ManageHeader from '@src/components/manage/ManageHeader';
 
 export default function Loading() {

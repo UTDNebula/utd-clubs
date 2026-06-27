@@ -11,7 +11,7 @@ import useMediaQuery from '@mui/system/useMediaQuery';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { MouseEvent, useCallback, useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@src/nebula-library/components/Panel';
 import { WizardStepObject } from '@src/components/form/FormWizard';
 import { BaseCard } from '@src/nebula-library/components/BaseCard';
 import { SelectUserMetadataWithClubs } from '@src/server/db/models';
