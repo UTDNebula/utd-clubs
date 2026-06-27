@@ -18,7 +18,7 @@ Please make sure you have at least [NodeJS v22](https://nodejs.org/en) or greate
 Start by cloning the repository to your local machine.
 
 ```bash
-git clone https://github.com/UTDNebula/utd-clubs.git
+git clone https://github.com/UTDNebula/utd-clubs.git --recurse-submodules
 ```
 
 Next, navigate to the project directory and install the dependencies.
