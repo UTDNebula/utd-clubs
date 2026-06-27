@@ -5,10 +5,10 @@ import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import { Button, Collapse } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import Panel from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { useTRPC } from '@src/trpc/react';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 const LeadershipChange = ({ clubId }: { clubId: string }) => {
   const [openConfirmation, setOpenConfirmation] = useState(false);

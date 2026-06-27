@@ -4,11 +4,11 @@ import Switch from '@mui/material/Switch';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
-import { closeSnackbar, setSnackbar } from 'src/utils/snackbar';
 import Panel from '@src/components/common/Panel';
 import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
 import { authClient } from '@src/utils/auth-client';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
+import { closeSnackbar, setSnackbar } from '@src/utils/snackbar';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 const eventsFiltersSnackbarId = 'eventsFilters';

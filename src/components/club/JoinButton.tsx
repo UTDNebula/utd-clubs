@@ -8,10 +8,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 type JoinButtonProps = {
   isHeader?: boolean;

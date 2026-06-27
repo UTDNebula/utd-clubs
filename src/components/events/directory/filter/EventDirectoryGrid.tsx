@@ -7,11 +7,11 @@ import {
 } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
-import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import EventCard, { EventCardVariants } from '@src/components/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 import useDebounce from '@src/utils/useDebounce';
 import useStable from '@src/utils/useStable';
 import { useEventDirectoryStore } from './utils';

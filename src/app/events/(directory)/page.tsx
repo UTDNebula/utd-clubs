@@ -1,13 +1,16 @@
 import { type Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { SnackbarType } from 'src/utils/snackbar/types';
 import EventsBody from '@src/components/events/directory/EventsBody';
 import { api } from '@src/trpc/server';
 import {
   EventParamsSchema,
   eventParamsToFilters,
 } from '@src/utils/eventFilter';
-import { SnackbarPresets, SSRSnackbarWrapper } from '@src/utils/snackbar';
+import {
+  SnackbarPresets,
+  SnackbarType,
+  SSRSnackbarWrapper,
+} from '@src/utils/snackbar';
 
 export const metadata: Metadata = {
   title: 'Events',

@@ -22,7 +22,6 @@ import { Button, Typography } from '@mui/material';
 import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import z from 'zod';
 import Panel from '@src/components/common/Panel';
 import ContactListItem from '@src/components/manage/ContactListItem';
@@ -31,6 +30,7 @@ import { contactNames, startContacts } from '@src/server/db/schema/contacts';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubContactSchema } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 type FormData = z.infer<typeof editClubContactSchema>;
 type ContactPlatform = keyof typeof contactNames;

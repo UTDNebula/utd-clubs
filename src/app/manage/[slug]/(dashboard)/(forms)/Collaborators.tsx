@@ -2,7 +2,6 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import type z from 'zod';
 import Panel from '@src/components/common/Panel';
 import CollaboratorListItem from '@src/components/manage/CollaboratorListItem';
@@ -14,6 +13,7 @@ import type {
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editOfficerSchema } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 type FormData = z.infer<typeof editOfficerSchema>;
 

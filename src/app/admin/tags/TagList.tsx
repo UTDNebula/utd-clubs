@@ -22,11 +22,11 @@ import {
 } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import Panel from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 type TagListProps = {
   tags?: RouterOutputs['club']['distinctTags'];

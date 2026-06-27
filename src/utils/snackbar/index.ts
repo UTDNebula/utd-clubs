@@ -12,11 +12,8 @@
  */
 
 export { useSnackbar } from './context';
-export {
-  setSnackbar,
-  setSnackbarWithPreset,
-  closeSnackbar,
-  SnackbarProvider,
-} from './provider';
+export { SnackbarProvider } from './provider';
+export { setSnackbar, setSnackbarWithPreset, closeSnackbar } from './global';
 export { default as 'SnackbarPresets' } from './presets';
 export { default as 'SSRSnackbarWrapper' } from './SSRSnackbarWrapper';
+export type { SnackbarType } from './types';

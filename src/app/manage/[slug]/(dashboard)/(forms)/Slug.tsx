@@ -8,13 +8,13 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
 import Panel from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editSlugSchema } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 import useDebounce from '@src/utils/useDebounce';
 
 type DetailsProps = {
