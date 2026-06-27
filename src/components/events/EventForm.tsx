@@ -6,8 +6,6 @@ import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import { setSnackbar, SnackbarPresets } from 'src/utils/snackbar';
-import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import Panel, { PanelSkeleton } from '@src/components/common/Panel';
 import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
@@ -19,6 +17,8 @@ import {
   editEventFormSchema,
 } from '@src/utils/formSchemas';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { useUploadToUploadURL } from '@src/utils/uploadImage';
 import EventCard, { EventCardSkeleton } from './EventCard';
 
 type EventFormProps =
