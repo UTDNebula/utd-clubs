@@ -11,7 +11,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { BaseCard } from '@src/components/common/BaseCard';
+import { BaseCard } from '@src/nebula-library/components/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
 import ClientEventTime from './ClientEventTime';
@@ -132,7 +132,7 @@ const EventCard = ({
       return (
         <BaseCard
           variant={smallScreen ? 'transparent' : 'interactive'}
-          className={`relative flex min-h-15 w-full flex-col overflow-hidden max-sm:rounded-none! max-sm:has-[.EventCardLink:focus]:bg-neutral-500/20 sm:bg-white sm:has-[.EventCardLink:focus]:bg-neutral-200 sm:dark:bg-neutral-800 sm:dark:has-[.EventCardLink:focus]:bg-neutral-700 ${className ?? ''}`}
+          className={`relative flex min-h-15 w-full flex-col overflow-hidden max-sm:rounded-none max-sm:has-[.EventCardLink:focus]:bg-neutral-500/20 sm:bg-white sm:has-[.EventCardLink:focus]:bg-neutral-200 sm:dark:bg-neutral-800 sm:dark:has-[.EventCardLink:focus]:bg-neutral-700 ${className ?? ''}`}
         >
           <Link
             href={`/events/${event.id}`}

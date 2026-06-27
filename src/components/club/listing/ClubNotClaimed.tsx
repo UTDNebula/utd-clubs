@@ -1,6 +1,6 @@
 // component with info for clubs not on the platform
 
-import { BaseCard } from '@src/components/common/BaseCard';
+import { BaseCard } from '@src/nebula-library/components/BaseCard';
 
 export const ClubNotClaimed = () => {
   return (

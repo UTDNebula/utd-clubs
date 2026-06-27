@@ -3,7 +3,7 @@
 import { ChevronRight } from '@mui/icons-material';
 import { Collapse, IconButton, Skeleton, Typography } from '@mui/material';
 import React, { useState, type ReactNode } from 'react';
-import { BaseCard } from '@src/components/common/BaseCard';
+import { BaseCard } from '@src/nebula-library/components/BaseCard';
 
 type CollapseOptions = {
   /**

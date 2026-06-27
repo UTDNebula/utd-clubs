@@ -23,7 +23,7 @@ export default function ClubUpcomingEventsCard({
             <div key={event.id} className="shrink-0">
               <EventCard
                 event={event}
-                className="bg-white! has-[.EventCardLink:focus]:bg-neutral-200! dark:bg-neutral-700! dark:has-[.EventCardLink:focus]:bg-neutral-600!"
+                className="bg-white has-[.EventCardLink:focus]:bg-neutral-200 dark:bg-neutral-700 dark:has-[.EventCardLink:focus]:bg-neutral-600"
               />
             </div>
           ))
