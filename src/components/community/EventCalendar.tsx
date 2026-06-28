@@ -143,10 +143,15 @@ const EventCalendar = () => {
     }
     const view = scheduleRef.current?.currentView ?? 'Week';
     const anchor = scheduleRef.current?.selectedDate ?? initialDate;
-    setCalendarParams((params) => {
-      params.set('view', view);
-      params.set('anchor', anchor.toISOString().slice(0, 10));
-    });
+    if (args.requestType === 'dateNavigate') {
+      setCalendarParams((params) => {
+        params.set('anchor', anchor.toISOString().slice(0, 10));
+      });
+    } else if (args.requestType === 'viewNavigate') {
+      setCalendarParams((params) => {
+        params.set('view', view);
+      });
+    }
     setRange(getRangeForView(view, new Date(anchor)));
   };
 
