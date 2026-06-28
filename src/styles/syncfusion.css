@@ -1,0 +1,86 @@
+@import '@syncfusion/ej2-base/styles/material3.css' screen;
+@import '@syncfusion/ej2-buttons/styles/material3.css' screen;
+@import '@syncfusion/ej2-calendars/styles/material3.css' screen;
+@import '@syncfusion/ej2-dropdowns/styles/material3.css' screen;
+@import '@syncfusion/ej2-inputs/styles/material3.css' screen;
+@import '@syncfusion/ej2-lists/styles/material3.css' screen;
+@import '@syncfusion/ej2-navigations/styles/material3.css' screen;
+@import '@syncfusion/ej2-popups/styles/material3.css' screen;
+@import '@syncfusion/ej2-splitbuttons/styles/material3.css' screen;
+@import '@syncfusion/ej2-react-schedule/styles/material3.css' screen;
+@import '@syncfusion/ej2-base/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-buttons/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-calendars/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-dropdowns/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-inputs/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-lists/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-navigations/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-popups/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-splitbuttons/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-react-schedule/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+
+/* Syncfusion Schedule Overrides */
+@layer utilities {
+  :root {
+    --color-sf-primary: 87, 61, 255 !important; /* royal */
+    --color-sf-on-primary: 255, 255, 255 !important;
+    --color-sf-surface: 255, 255, 255 !important;
+    --color-sf-on-surface: 9, 11, 44 !important; /* haiti */
+    --color-sf-on-background: 9, 11, 44 !important; /* haiti */
+    @variant dark {
+      --color-sf-primary: 162, 151, 253 !important; /* cornflower-300 */
+      --color-sf-on-primary: 9, 11, 44 !important; /* haiti */
+      --color-sf-surface: 38, 38, 38 !important; /* neutral-800 */
+      --color-sf-on-surface: 255, 255, 255 !important;
+      --color-sf-on-background: 255, 255, 255 !important;
+    }
+  }
+
+  .e-schedule .e-control,
+  .e-schedule .e-css {
+    font-family: var(--font-main), sans-serif !important;
+  }
+
+  .e-schedule {
+    border: none;
+  }
+
+  .e-schedule .e-header-date,
+  .e-schedule .e-header-day {
+    text-align: center !important;
+    display: block !important;
+  }
+
+  .e-schedule .e-appointment {
+    cursor: pointer;
+  }
+
+  .e-schedule .e-vertical-view .e-appointment {
+    padding: 8px;
+  }
+
+  .e-schedule .e-appointment .e-subject.e-text-center {
+    text-align: left !important;
+  }
+
+  .e-schedule .e-month-view .e-appointment .e-time,
+  .e-schedule .e-month-view .e-appointment .e-location {
+    display: none;
+  }
+
+  .e-schedule .e-more-popup-wrapper,
+  .e-schedule .e-quick-popup-wrapper,
+  .e-schedule .e-schedule-dialog {
+    overflow: hidden !important;
+  }
+}
