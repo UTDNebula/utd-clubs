@@ -220,6 +220,7 @@ const EventCalendar = () => {
         actionComplete={handleActionComplete}
         eventSettings={{ dataSource: schedulerData, fields: SCHEDULE_FIELDS }}
         eventClick={handleEventClick}
+        workHours={{ highlight: false }}
         toolbarItems={[
           { name: 'Previous', align: 'Left' },
           { name: 'Next', align: 'Left' },
