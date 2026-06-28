@@ -154,7 +154,7 @@
   }
 
   .e-schedule .e-vertical-view .e-appointment {
-    padding: 8px !important;
+    padding: 8px;
   }
 
   .e-schedule .e-appointment .e-subject.e-text-center {
@@ -163,7 +163,7 @@
 
   .e-schedule .e-month-view .e-appointment .e-time,
   .e-schedule .e-month-view .e-appointment .e-location {
-    display: none !important;
+    display: none;
   }
 
   .e-schedule .e-more-popup-wrapper,
