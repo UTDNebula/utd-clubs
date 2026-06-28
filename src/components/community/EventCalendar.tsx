@@ -29,11 +29,7 @@ import { createPortal } from 'react-dom';
 import EventCard from '@src/components/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
-import {
-  getBufferedRangeForWeek,
-  getRangeForView,
-  type CalendarRange,
-} from '@src/utils/calendarRange';
+import { getRangeForView, type CalendarRange } from '@src/utils/calendarRange';
 import {
   calendarParamsSchema,
   type CalendarParamsSchema,
@@ -75,7 +71,7 @@ const EventCalendar = () => {
   const [hoverAnchorEl, setHoverAnchorEl] = useState<Element | null>(null);
   const [hoverEvent, setHoverEvent] = useState<RegisteredEvent | null>(null);
   const [range, setRange] = useState<CalendarRange>(() =>
-    getBufferedRangeForWeek(initialDate),
+    getRangeForView(initialView, initialDate),
   );
 
   const api = useTRPC();
