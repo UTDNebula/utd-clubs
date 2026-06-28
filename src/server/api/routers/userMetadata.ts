@@ -131,18 +131,19 @@ export const userMetadataRouter = createTRPCRouter({
       const start = new Date(input.startDate);
       const end = new Date(input.endDate);
 
-      const userEventIds = ctx.db
-        .select({ id: userMetadataToEvents.eventId })
-        .from(userMetadataToEvents)
-        .where(eq(userMetadataToEvents.userId, ctx.session.user.id));
-
       return ctx.db.query.events.findMany({
         where: (e) =>
           and(
-            inArray(e.id, userEventIds),
             eq(e.status, 'approved'),
             lt(e.startTime, end),
             gt(e.endTime, start),
+            inArray(
+              e.id,
+              ctx.db
+                .select({ id: userMetadataToEvents.eventId })
+                .from(userMetadataToEvents)
+                .where(eq(userMetadataToEvents.userId, ctx.session.user.id)),
+            ),
           ),
         with: { club: true },
       });
