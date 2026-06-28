@@ -1,3 +1,8 @@
+/*
+Utilities to fetch extra days worth of events.
+Used to perform optimistic fetching for pagination.
+*/
+
 import { addDays, startOfDay } from 'date-fns';
 
 export type CalendarRange = { startDate: string; endDate: string };
