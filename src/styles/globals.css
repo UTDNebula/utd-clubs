@@ -1,41 +1,26 @@
 @layer theme, base, mui, components, utilities;
 @import 'tailwindcss';
 
-@import '@syncfusion/ej2-base/styles/material3.css' layer(components) screen;
-@import '@syncfusion/ej2-buttons/styles/material3.css' layer(components) screen;
-@import '@syncfusion/ej2-calendars/styles/material3.css' layer(components)
-  screen;
-@import '@syncfusion/ej2-dropdowns/styles/material3.css' layer(components)
-  screen;
-@import '@syncfusion/ej2-inputs/styles/material3.css' layer(components) screen;
-@import '@syncfusion/ej2-lists/styles/material3.css' layer(components) screen;
-@import '@syncfusion/ej2-navigations/styles/material3.css' layer(components)
-  screen;
-@import '@syncfusion/ej2-popups/styles/material3.css' layer(components) screen;
-@import '@syncfusion/ej2-splitbuttons/styles/material3.css' layer(components)
-  screen;
-@import '@syncfusion/ej2-react-schedule/styles/material3.css' layer(components)
-  screen;
-@import '@syncfusion/ej2-base/styles/material3-dark.css' layer(components)
-  screen and (prefers-color-scheme: dark);
-@import '@syncfusion/ej2-buttons/styles/material3-dark.css' layer(components)
-  screen and (prefers-color-scheme: dark);
-@import '@syncfusion/ej2-calendars/styles/material3-dark.css' layer(components)
-  screen and (prefers-color-scheme: dark);
-@import '@syncfusion/ej2-dropdowns/styles/material3-dark.css' layer(components)
-  screen and (prefers-color-scheme: dark);
-@import '@syncfusion/ej2-inputs/styles/material3-dark.css' layer(components)
-  screen and (prefers-color-scheme: dark);
-@import '@syncfusion/ej2-lists/styles/material3-dark.css' layer(components)
-  screen and (prefers-color-scheme: dark);
-@import '@syncfusion/ej2-navigations/styles/material3-dark.css'
-  layer(components) screen and (prefers-color-scheme: dark);
-@import '@syncfusion/ej2-popups/styles/material3-dark.css' layer(components)
-  screen and (prefers-color-scheme: dark);
-@import '@syncfusion/ej2-splitbuttons/styles/material3-dark.css'
-  layer(components) screen and (prefers-color-scheme: dark);
-@import '@syncfusion/ej2-react-schedule/styles/material3-dark.css'
-  layer(components) screen and (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-base/styles/material3.css' screen;
+@import '@syncfusion/ej2-buttons/styles/material3.css' screen;
+@import '@syncfusion/ej2-calendars/styles/material3.css' screen;
+@import '@syncfusion/ej2-dropdowns/styles/material3.css' screen;
+@import '@syncfusion/ej2-inputs/styles/material3.css' screen;
+@import '@syncfusion/ej2-lists/styles/material3.css' screen;
+@import '@syncfusion/ej2-navigations/styles/material3.css' screen;
+@import '@syncfusion/ej2-popups/styles/material3.css' screen;
+@import '@syncfusion/ej2-splitbuttons/styles/material3.css' screen;
+@import '@syncfusion/ej2-react-schedule/styles/material3.css' screen;
+@import '@syncfusion/ej2-base/styles/material3-dark.css' screen and (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-buttons/styles/material3-dark.css' screen and (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-calendars/styles/material3-dark.css' screen and (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-dropdowns/styles/material3-dark.css' screen and (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-inputs/styles/material3-dark.css' screen and (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-lists/styles/material3-dark.css' screen and (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-navigations/styles/material3-dark.css' screen and (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-popups/styles/material3-dark.css' screen and (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-splitbuttons/styles/material3-dark.css' screen and (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-react-schedule/styles/material3-dark.css' screen and (prefers-color-scheme: dark);
 
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/typography';
