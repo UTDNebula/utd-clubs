@@ -9,7 +9,7 @@ export default function CommunityHeader() {
       tabs={[
         { label: 'Events', href: '/community', icon: <EventIcon /> },
         {
-          label: 'Registered Calendar',
+          label: 'My Calendar',
           href: '/community/calendar',
           icon: <CalendarMonthIcon />,
         },
