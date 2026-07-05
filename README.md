@@ -69,7 +69,7 @@ If your changes involve any changes to the database schema please read `/docs/db
 When you are ready to merge your branch into the `develop` branch, please create a pull request and request a review from the Clubs Dev Team.
 Please include details about what issue you are addressing with the pull request, what changes you made, and any other relevant information.
 
-#### Library
+#### Nebula Library
 
 When working in the `src/nebula-library` folder you are working in a shared component library. Follow these steps to create a secondary Pull Request (PR) for your library changes.
 
