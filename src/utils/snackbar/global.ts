@@ -76,5 +76,9 @@ export function useAttachGlobalSnackbarFunctions(functions: SnackbarFunctions) {
         globalContextFunctionsUnmounted;
       globalSnackbarFunctions.closeSnackbar = globalContextFunctionsUnmounted;
     };
-  });
+  }, [
+    functions.setSnackbar,
+    functions.setSnackbarWithPreset,
+    functions.closeSnackbar,
+  ]);
 }
