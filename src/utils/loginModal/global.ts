@@ -45,5 +45,5 @@ export function useAttachGlobalLoginModalFunctions(
       globalLoginModalFunctions.closeLoginModal =
         globalLoginModalFunctionsUnmounted;
     };
-  });
+  }, [functions.closeLoginModal, functions.openLoginModal]);
 }
