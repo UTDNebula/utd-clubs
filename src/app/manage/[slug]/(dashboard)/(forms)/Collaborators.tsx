@@ -3,10 +3,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
+import Panel from '@nebula-library/components/Panel';
 import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import CollaboratorListItem from '@src/components/manage/CollaboratorListItem';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
-import Panel from '@src/nebula-library/components/Panel';
 import type {
   SelectClub,
   SelectUserMetadataToClubsWithUserMetadataWithUser,

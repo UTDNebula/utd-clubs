@@ -11,7 +11,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { BaseCard } from '@src/nebula-library/components/BaseCard';
+import { BaseCard } from '@nebula-library/components/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
 import ClientEventTime from './ClientEventTime';

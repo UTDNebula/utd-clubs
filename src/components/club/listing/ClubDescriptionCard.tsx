@@ -1,5 +1,5 @@
+import Panel from '@nebula-library/components/Panel';
 import ExpandableMarkdownText from '@src/components/ExpandableMarkdownText';
-import Panel from '@src/nebula-library/components/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
 
 type ClubDescriptionCardProps = {

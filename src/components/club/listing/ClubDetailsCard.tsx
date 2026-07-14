@@ -1,7 +1,7 @@
 import { Divider, Tooltip } from '@mui/material';
 import { subMinutes } from 'date-fns';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
-import Panel from '@src/nebula-library/components/Panel';
+import Panel from '@nebula-library/components/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
 
 type ClubDetailsCardProps = {

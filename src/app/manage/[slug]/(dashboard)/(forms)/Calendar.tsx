@@ -13,8 +13,8 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
-import Panel from '@src/nebula-library/components/Panel';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';

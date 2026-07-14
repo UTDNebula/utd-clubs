@@ -17,6 +17,7 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
+      "@nebula-library/*": ["./src/nebula-library/*"],
       "@src/*": ["./src/*"],
       "@public/*": ["./public/*"]
     },

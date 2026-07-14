@@ -1,4 +1,4 @@
-import Panel from '@src/nebula-library/components/Panel';
+import Panel from '@nebula-library/components/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
 import ContactButton from './ContactButton';
 

@@ -1,7 +1,7 @@
 import { Tooltip } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import Panel from '@src/nebula-library/components/Panel';
+import Panel from '@nebula-library/components/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
 
