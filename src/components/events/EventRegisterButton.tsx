@@ -6,9 +6,9 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import { useLoginModal } from '@src/utils/loginModal';
 import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 import EventEditButton from './EventEditButton';
 
@@ -100,10 +100,10 @@ const EventRegisterButton = ({
   const router = useRouter();
 
   const useAuthPage = useRef(false);
-  // Although this feature is named similarly, it is unrelated to the event registration button.
-  // Rather, it relates to the sign in/sign up authentication modal.
-  const { setShowRegisterModal } = useRegisterModal(() => {
-    useAuthPage.current = true;
+  const { openLoginModal } = useLoginModal({
+    onNoProvider: () => {
+      useAuthPage.current = true;
+    },
   });
 
   const registered = registerState?.registered ?? false;
@@ -115,13 +115,13 @@ const EventRegisterButton = ({
     if (isPending || toggleRegistration.isPending) return;
 
     if (!session) {
-      // This will use auth page when this EventRegisterButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
+      // This will use auth page when this EventRegisterButton and a LoginModal are not wrapped in a `<LoginModalProvider>`.
       if (useAuthPage.current) {
         router.push(
           `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
         );
       } else {
-        setShowRegisterModal(true);
+        openLoginModal();
       }
       return;
     }

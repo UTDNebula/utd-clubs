@@ -5,9 +5,9 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
 import { authClient } from '@src/utils/auth-client';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
+import { openLoginModal } from '@src/utils/loginModal';
 import { closeSnackbar, setSnackbar } from '@src/utils/snackbar';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
@@ -23,8 +23,6 @@ export default memo(function FiltersPanel(
 ) {
   const session = authClient.useSession();
   const signedIn = Boolean(session.data);
-
-  const { setShowRegisterModal } = useRegisterModal();
 
   function showSignInMessage() {
     setSnackbar({
@@ -42,7 +40,7 @@ export default memo(function FiltersPanel(
         <Button
           size="small"
           onClick={() => {
-            setShowRegisterModal(true);
+            openLoginModal();
           }}
           color="inherit"
         >

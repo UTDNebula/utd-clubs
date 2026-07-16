@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { authClient } from '@src/utils/auth-client';
-import { useRegisterModal } from '../global/RegisterModalProvider';
+import { openLoginModal } from '@src/utils/loginModal';
 
 type Props = {
   shadow?: boolean;
@@ -27,8 +27,6 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
   const { data: session, isPending } = authClient.useSession();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
-
-  const { setShowRegisterModal } = useRegisterModal();
 
   const router = useRouter();
 
@@ -54,7 +52,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
           if (session !== null) {
             setAnchorEl(open ? null : e.currentTarget);
           } else {
-            setShowRegisterModal(true);
+            openLoginModal();
           }
         }}
         component="button"

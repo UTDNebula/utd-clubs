@@ -5,9 +5,9 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
 import { CheckRefreshToken } from '@src/components/auth/CheckRefreshToken';
-import { RegisterModalProvider } from '@src/components/global/RegisterModalProvider';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
+import { LoginModalProvider } from '@src/utils/loginModal/provider';
 import { SnackbarProvider } from '@src/utils/snackbar';
 import theme from '@src/utils/theme';
 
@@ -71,12 +71,12 @@ export default async function RootLayout({
           <TRPCReactProvider>
             <ThemeProvider theme={theme}>
               <ClientLocalizationProvider>
-                <RegisterModalProvider>
+                <LoginModalProvider>
                   <SnackbarProvider>
                     <CheckRefreshToken />
                     {children}
                   </SnackbarProvider>
-                </RegisterModalProvider>
+                </LoginModalProvider>
               </ClientLocalizationProvider>
             </ThemeProvider>
           </TRPCReactProvider>
