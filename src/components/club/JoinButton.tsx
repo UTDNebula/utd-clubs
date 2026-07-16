@@ -8,10 +8,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
 import { useLoginModal } from '@src/utils/loginModal';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 type JoinButtonProps = {
   isHeader?: boolean;
@@ -66,16 +66,16 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
           type: joined ? 'success' : 'info',
           autoHideDuration: true,
           fitContent: true,
-          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+          closeOn: {
+            clickaway: false,
+            dismiss: true,
+            escapeKeyDown: true,
+            timeout: true,
+          },
         });
       },
       onError: (error, _vars, context) => {
-        setSnackbar(
-          SnackbarPresets.errorCustomMessage(
-            'An error occurred',
-            error.message,
-          ),
-        );
+        setSnackbar(SnackbarPresets.errorWithMessage(error.message));
         if (context?.previousState) {
           queryClient.setQueryData(context.queryKey, context.previousState);
         }

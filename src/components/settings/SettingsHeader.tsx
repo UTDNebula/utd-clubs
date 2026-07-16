@@ -1,5 +1,5 @@
 import Avatar from '@mui/material/Avatar';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import { SelectUser } from '@src/server/db/models';
 
 type SettingsHeaderProps = {

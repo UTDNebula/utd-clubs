@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';

@@ -6,8 +6,7 @@ import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import Panel, { PanelSkeleton } from '@src/components/common/Panel';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import Panel, { PanelSkeleton } from '@nebula-library/components/Panel';
 import FormImage from '@src/components/manage/form/FormImage';
 import { type SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -18,6 +17,7 @@ import {
   editEventFormSchema,
 } from '@src/utils/formSchemas';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 import { useUploadToUploadURL } from '@src/utils/uploadImage';
 import EventCard, { EventCardSkeleton } from './EventCard';
 
@@ -48,10 +48,10 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const createMutation = useMutation(
     api.event.create.mutationOptions({
       onSuccess: () => {
-        setSnackbar(SnackbarPresets.savedCustom('Created event!'));
+        setSnackbar(SnackbarPresets.success('Created event!'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );
@@ -61,7 +61,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
         setSnackbar(SnackbarPresets.savedName('event'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );

@@ -36,7 +36,7 @@ export default function EventsHeader({
       title="Events"
       metaText={
         hasCount
-          ? `(${selectedCount}${
+          ? `(${selectedCount ?? ''}${
               selectedCount !== undefined
                 ? totalCount !== undefined
                   ? ' out of '

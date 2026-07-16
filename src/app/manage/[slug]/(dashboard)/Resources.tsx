@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 
 const Resources = () => {
   return (
