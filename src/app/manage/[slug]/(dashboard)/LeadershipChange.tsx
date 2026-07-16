@@ -7,8 +7,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 const LeadershipChange = ({ clubId }: { clubId: string }) => {
   const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -23,7 +23,7 @@ const LeadershipChange = ({ clubId }: { clubId: string }) => {
         setShowPanel(false);
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );

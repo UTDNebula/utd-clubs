@@ -6,9 +6,9 @@ import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
 import { CheckRefreshToken } from '@src/components/auth/CheckRefreshToken';
 import { RegisterModalProvider } from '@src/components/global/RegisterModalProvider';
-import { SnackbarProvider } from '@src/components/global/Snackbar';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
+import { SnackbarProvider } from '@src/utils/snackbar';
 import theme from '@src/utils/theme';
 
 const inter = Inter({

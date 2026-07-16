@@ -6,10 +6,12 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
-import { setSnackbar } from '@src/components/global/Snackbar';
 import { authClient } from '@src/utils/auth-client';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
+import { closeSnackbar, setSnackbar } from '@src/utils/snackbar';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
+
+const eventsFiltersSnackbarId = 'eventsFilters';
 
 export type FiltersPanelFields = Pick<
   EventFiltersSchema,
@@ -26,10 +28,16 @@ export default memo(function FiltersPanel(
 
   function showSignInMessage() {
     setSnackbar({
+      id: eventsFiltersSnackbarId,
       message: "This filter option only works when you're signed in",
       autoHideDuration: true,
       fitContent: true,
-      closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+      closeOn: {
+        clickaway: false,
+        dismiss: true,
+        escapeKeyDown: true,
+        timeout: true,
+      },
       action: (
         <Button
           size="small"
@@ -55,7 +63,13 @@ export default memo(function FiltersPanel(
         exclusive
         onChange={(_e, newValue) => {
           if (newValue !== null) {
-            if (!signedIn && newValue !== 'all') showSignInMessage();
+            if (!signedIn) {
+              if (newValue !== 'all') {
+                showSignInMessage();
+              } else {
+                closeSnackbar(eventsFiltersSnackbarId);
+              }
+            }
             setEventsParams((params) => {
               if (newValue !== 'all') {
                 params.set('clubs', newValue);
@@ -79,7 +93,13 @@ export default memo(function FiltersPanel(
           <Switch
             checked={hideRegistered}
             onChange={(_e, newValue) => {
-              if (!signedIn && newValue === true) showSignInMessage();
+              if (!signedIn) {
+                if (newValue) {
+                  showSignInMessage();
+                } else {
+                  closeSnackbar(eventsFiltersSnackbarId);
+                }
+              }
               setEventsParams((params) => {
                 if (newValue) {
                   params.set('hideRegistered', '');

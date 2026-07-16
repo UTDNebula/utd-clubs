@@ -7,7 +7,6 @@ import type z from 'zod';
 import Panel, { PanelSkeleton } from '@nebula-library/components/Panel';
 import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
 import Confirmation from '@src/components/Confirmation';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { ClubSchoolEdit } from '@src/components/manage/form/ClubSchoolEdit';
 import FormImage from '@src/components/manage/form/FormImage';
 import { SelectClub } from '@src/server/db/models';
@@ -15,6 +14,7 @@ import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubFormSchema, schools } from '@src/utils/formSchemas';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 import { useUploadToUploadURL } from '@src/utils/uploadImage';
 
 type DetailsProps = {
@@ -45,7 +45,7 @@ const Details = ({ club }: DetailsProps) => {
         setSnackbar(SnackbarPresets.savedName('club details'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );

@@ -14,11 +14,11 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import MemberRoleChip from '@src/components/manage/MemberRoleChip';
 import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 type ClubsProps = {
   joinedClubs: SelectUserMetadataToClubsWithClub[];
@@ -84,11 +84,11 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
                 );
 
                 joinedClubs.splice(removeIndex, 1);
-                setSnackbar(SnackbarPresets.savedCustom('Left club!'));
+                setSnackbar(SnackbarPresets.success('Left club!'));
               },
               onError: (e) => {
                 setSnackbar(
-                  SnackbarPresets.errorCustomMessage(
+                  SnackbarPresets.errorCustomWithMessage(
                     'Failed to leave club!',
                     e.message,
                   ),
