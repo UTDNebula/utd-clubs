@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { BaseCard } from '@src/components/common/BaseCard';
+import { BaseCard } from '@nebula-library/components/BaseCard';
 import type {
   SelectContact as Contacts,
   SelectClub,

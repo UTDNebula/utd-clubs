@@ -3,7 +3,7 @@
 import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BaseCard } from '@src/components/common/BaseCard';
+import { BaseCard } from '@nebula-library/components/BaseCard';
 import type { SelectClub as Club } from '@src/server/db/models';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
 import { convertMarkdownToPlaintext } from '@src/utils/markdown';

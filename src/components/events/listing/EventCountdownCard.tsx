@@ -2,7 +2,7 @@
 
 import { formatDistanceStrict } from 'date-fns';
 import { useEffect, useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 
 const calculateTimeRemaining = (now: number, eventStartTime: number) => {
   const timeUntilStart = eventStartTime - now;
