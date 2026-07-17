@@ -1,6 +1,6 @@
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
-import useDebounce from 'src/utils/useDebounce';
+import useDebounce from '@src/utils/useDebounce';
 
 type Props = {
   value: string | number;
@@ -27,7 +27,7 @@ export default function DebouncedInput({
       value={value}
       onChange={(e) => setValue(e.target.value)}
       size="small"
-      className={`min-w-16 [&>.MuiInputBase-root]:max-h-8 text-xs ${props.className ?? ''}`}
+      className={`min-w-16 text-xs [&>.MuiInputBase-root]:max-h-8 ${props.className ?? ''}`}
     />
   );
 }

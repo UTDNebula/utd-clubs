@@ -8,10 +8,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import { useLoginModal } from '@src/utils/loginModal';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 type JoinButtonProps = {
   isHeader?: boolean;
@@ -66,16 +66,16 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
           type: joined ? 'success' : 'info',
           autoHideDuration: true,
           fitContent: true,
-          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+          closeOn: {
+            clickaway: false,
+            dismiss: true,
+            escapeKeyDown: true,
+            timeout: true,
+          },
         });
       },
       onError: (error, _vars, context) => {
-        setSnackbar(
-          SnackbarPresets.errorCustomMessage(
-            'An error occurred',
-            error.message,
-          ),
-        );
+        setSnackbar(SnackbarPresets.errorWithMessage(error.message));
         if (context?.previousState) {
           queryClient.setQueryData(context.queryKey, context.previousState);
         }
@@ -95,8 +95,10 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
   const useAuthPage = useRef(false);
 
-  const { setShowRegisterModal } = useRegisterModal(() => {
-    useAuthPage.current = true;
+  const { openLoginModal } = useLoginModal({
+    onNoProvider: () => {
+      useAuthPage.current = true;
+    },
   });
 
   const memberType = memberState?.memberType ?? null;
@@ -141,35 +143,37 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
         </div>
       }
     >
-      <Button
-        variant="contained"
-        size={isHeader ? 'large' : 'small'}
-        startIcon={memberType ? <CheckIcon /> : <AddIcon />}
-        onClick={async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+      <span>
+        <Button
+          variant="contained"
+          size={isHeader ? 'large' : 'small'}
+          startIcon={memberType ? <CheckIcon /> : <AddIcon />}
+          onClick={async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-          if (isPending || joinLeave.isPending) return;
+            if (isPending || joinLeave.isPending) return;
 
-          if (!session) {
-            // This will use auth page when this JoinButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
-            if (useAuthPage.current) {
-              router.push(
-                `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
-              );
-            } else {
-              setShowRegisterModal(true);
+            if (!session) {
+              // This will use auth page when this JoinButton and a LoginModal are not wrapped in a `<LoginModalProvider>`.
+              if (useAuthPage.current) {
+                router.push(
+                  `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
+                );
+              } else {
+                openLoginModal();
+              }
+              return;
             }
-            return;
-          }
 
-          void joinLeave.mutate({ clubId });
-        }}
-        className="normal-case"
-        loading={isPending || joinLeave.isPending}
-      >
-        {memberType ? 'Following' : 'Follow'}
-      </Button>
+            void joinLeave.mutate({ clubId });
+          }}
+          className="normal-case"
+          loading={isPending || joinLeave.isPending}
+        >
+          {memberType ? 'Following' : 'Follow'}
+        </Button>
+      </span>
     </Tooltip>
   );
 };

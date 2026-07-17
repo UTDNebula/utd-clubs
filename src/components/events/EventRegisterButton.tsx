@@ -6,10 +6,10 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { useRegisterModal } from '@src/components/global/RegisterModalProvider';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import { useLoginModal } from '@src/utils/loginModal';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 import EventEditButton from './EventEditButton';
 
 type EventRegisterButtonProps = {
@@ -72,16 +72,16 @@ const EventRegisterButton = ({
           type: joined ? 'success' : 'info',
           autoHideDuration: true,
           fitContent: true,
-          closeOn: ['timeout', 'escapeKeyDown', 'dismiss'],
+          closeOn: {
+            clickaway: false,
+            dismiss: true,
+            escapeKeyDown: true,
+            timeout: true,
+          },
         });
       },
       onError: (error, _vars, context) => {
-        setSnackbar(
-          SnackbarPresets.errorCustomMessage(
-            'An error occurred',
-            error.message,
-          ),
-        );
+        setSnackbar(SnackbarPresets.errorWithMessage(error.message));
         if (context?.previousState) {
           queryClient.setQueryData(context.queryKey, context.previousState);
         }
@@ -100,10 +100,10 @@ const EventRegisterButton = ({
   const router = useRouter();
 
   const useAuthPage = useRef(false);
-  // Although this feature is named similarly, it is unrelated to the event registration button.
-  // Rather, it relates to the sign in/sign up authentication modal.
-  const { setShowRegisterModal } = useRegisterModal(() => {
-    useAuthPage.current = true;
+  const { openLoginModal } = useLoginModal({
+    onNoProvider: () => {
+      useAuthPage.current = true;
+    },
   });
 
   const registered = registerState?.registered ?? false;
@@ -115,13 +115,13 @@ const EventRegisterButton = ({
     if (isPending || toggleRegistration.isPending) return;
 
     if (!session) {
-      // This will use auth page when this EventRegisterButton and a RegisterModal are not wrapped in a `<RegisterModalProvider>`.
+      // This will use auth page when this EventRegisterButton and a LoginModal are not wrapped in a `<LoginModalProvider>`.
       if (useAuthPage.current) {
         router.push(
           `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
         );
       } else {
-        setShowRegisterModal(true);
+        openLoginModal();
       }
       return;
     }
@@ -169,16 +169,18 @@ const EventRegisterButton = ({
           </div>
         }
       >
-        <Button
-          onClick={onClick}
-          loading={isPending || toggleRegistration.isPending}
-          variant="contained"
-          className="normal-case"
-          size={isHeader ? 'large' : 'small'}
-          startIcon={registered ? <CheckIcon /> : <AddIcon />}
-        >
-          {registered ? 'Registered' : 'Register'}
-        </Button>
+        <span>
+          <Button
+            onClick={onClick}
+            loading={toggleRegistration.isPending}
+            variant="contained"
+            className="normal-case"
+            size={isHeader ? 'large' : 'small'}
+            startIcon={registered ? <CheckIcon /> : <AddIcon />}
+          >
+            {registered ? 'Registered' : 'Register'}
+          </Button>
+        </span>
       </Tooltip>
       {!isHeader &&
         (memberType === 'President' || memberType === 'Officer') && (

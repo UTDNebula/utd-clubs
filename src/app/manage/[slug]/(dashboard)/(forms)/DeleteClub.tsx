@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -63,7 +63,7 @@ export default function DeleteClub({ view, club }: Props) {
             ? 'Restore'
             : 'Delete'
         }
-        className="bg-red-100 dark:bg-red-950 border border-red-500 dark:border-red-700"
+        className="border border-red-500 bg-red-100 dark:border-red-700 dark:bg-red-950"
         description={
           <div className="text-slate-800 dark:text-slate-200">
             {view === 'admin' && (

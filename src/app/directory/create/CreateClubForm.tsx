@@ -3,8 +3,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+import Panel from '@nebula-library/components/Panel';
 import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
-import Panel from '@src/components/common/Panel';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { createClubSchema } from '@src/utils/formSchemas';
@@ -40,7 +40,7 @@ const CreateClubForm = () => {
       }}
     >
       <Panel heading="Create New Organization">
-        <div className="ml-2 mb-4 text-slate-600 dark:text-slate-400 text-sm">
+        <div className="mb-4 ml-2 text-sm text-slate-600 dark:text-slate-400">
           <p>
             We&apos;ll start with the basics then get your organization&apos;s
             logo, officers, contact information, and collaborators on the next
@@ -98,7 +98,7 @@ const CreateClubForm = () => {
             )}
           </form.Field>
         </div>
-        <div className="flex flex-wrap justify-end items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <form.AppForm>
             <form.ResetButton />
           </form.AppForm>

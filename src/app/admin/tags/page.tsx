@@ -11,7 +11,7 @@ export default async function Page() {
   return (
     <>
       <AdminHeader path={[{ text: 'Admin', href: '/admin' }, 'Tags']} />
-      <main className="mb-5 flex flex-col gap-y-8 max-w-2xl mx-auto">
+      <main className="mx-auto mb-5 flex max-w-2xl flex-col gap-y-8">
         <TagList tags={tags} topTags={topTags} />
       </main>
     </>

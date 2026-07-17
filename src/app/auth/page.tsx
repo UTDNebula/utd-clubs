@@ -2,9 +2,9 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { RegisterModalContents } from '@src/components/global/RegisterModal';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { auth } from '@src/server/auth';
+import { LoginModalContents } from '@src/utils/loginModal';
 
 export default async function Auth(props: {
   searchParams: Promise<{ [key: string]: string }>;
@@ -25,30 +25,29 @@ export default async function Auth(props: {
             src={'/banner.png'}
             alt="background"
             fill
-            objectFit="cover"
-            className="select-none"
+            className="object-cover select-none"
           />
         </div>
-        <div className="fixed inset-0 dark:bg-slightly-darken" />
+        <div className="dark:bg-slightly-darken fixed inset-0" />
         <div className="z-10">
           <Link
             href="/"
-            className="font-display flex gap-2 items-center select-none text-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
+            className="font-display flex items-center gap-2 text-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] select-none"
           >
             <div className="flex flex-row items-center">
               <UTDClubsLogoStandalone className="h-10 w-auto fill-white" />
             </div>
             <div className="flex flex-col">
-              <span className="whitespace-nowrap text-lg md:text-xl font-bold leading-5">
+              <span className="text-lg leading-5 font-bold whitespace-nowrap md:text-xl">
                 UTD CLUBS
               </span>
-              <span className="whitespace-nowrap text-xs md:text-sm font-medium">
+              <span className="text-xs font-medium whitespace-nowrap md:text-sm">
                 by Nebula Labs
               </span>
             </div>
           </Link>
         </div>
-        <RegisterModalContents />
+        <LoginModalContents />
       </div>
     </main>
   );

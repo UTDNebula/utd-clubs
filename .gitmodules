@@ -1,0 +1,3 @@
+[submodule "src/nebula-library"]
+	path = src/nebula-library
+	url = https://github.com/UTDNebula/nebula-library.git

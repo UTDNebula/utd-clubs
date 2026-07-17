@@ -120,7 +120,7 @@ export const HomePageSearchBar = () => {
       )}
       <div
         ref={isSticky ? null : measureRef}
-        className={`drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] pt-2 w-full max-w-xs transition-all md:max-w-sm lg:max-w-md ${
+        className={`w-full max-w-xs pt-2 drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] transition-all md:max-w-sm lg:max-w-md ${
           isSticky ? 'fixed top-0 z-50 justify-center' : 'relative'
         }`}
       >
@@ -151,12 +151,13 @@ export const HomePageSearchBar = () => {
               placeholder="Search for Clubs or Tags"
               inputRef={inputRef}
               slotProps={{
+                ...params.slotProps,
                 input: {
-                  ...params.InputProps,
+                  ...params.slotProps.input,
                   endAdornment: (
-                    <div className="flex gap-2 items-center">
+                    <div className="flex items-center gap-2">
                       <InputAdornment position="start">
-                        {params.InputProps.endAdornment}
+                        {params.slotProps.input.endAdornment}
                         {isFetching ? (
                           <CircularProgress color="inherit" size={24} />
                         ) : (
@@ -167,7 +168,7 @@ export const HomePageSearchBar = () => {
                   ),
                   className:
                     'bg-white dark:bg-neutral-800 ' +
-                    params.InputProps.className,
+                    params.slotProps.input.className,
                   sx: {
                     borderRadius: theme.shape.borderRadius,
                   },

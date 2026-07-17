@@ -1,7 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef, useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import { SelectOfficer } from '@src/server/db/models';
 import ClubOfficer from './ClubOfficer';
 
@@ -68,14 +68,14 @@ export default function OfficerList({
       collapse={needsTruncation && !isExpanded}
       onCollapseClick={() => setIsExpanded((prev) => !prev)}
     >
-      <div className="flex-1 min-h-0 overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-hidden">
         <div ref={contentRef} className="flex flex-col gap-4">
           {officers.length > 0 ? (
             officers.map((officer) => (
               <ClubOfficer key={officer.name} officer={officer} />
             ))
           ) : (
-            <span className="text-slate-600 dark:text-slate-400 text-sm">
+            <span className="text-sm text-slate-600 dark:text-slate-400">
               No officers listed
             </span>
           )}
@@ -88,12 +88,12 @@ export default function OfficerList({
         >
           {/* fade overlay only shows if content is taller than right side AND not expanded */}
           {!isExpanded && (
-            <div className="h-16 bg-gradient-to-t from-white dark:from-neutral-800 to-transparent pointer-events-none" />
+            <div className="pointer-events-none h-16 bg-gradient-to-t from-white to-transparent dark:from-neutral-800" />
           )}
-          <div className="bg-white dark:bg-neutral-800 pt-2 border-t border-slate-300 dark:border-slate-700 z-10">
+          <div className="z-10 border-t border-slate-300 bg-white pt-2 dark:border-slate-700 dark:bg-neutral-800">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="w-full text-sm font-semibold text-royal dark:text-cornflower-300 hover:text-royalDark dark:hover:text-cornflower-400 underline decoration-transparent hover:decoration-inherit outline-0 focus:decoration-inherit focus:text-royalDark dark:focus:text-cornflower-400 transition text-center"
+              className="text-royal dark:text-cornflower-300 hover:text-royalDark dark:hover:text-cornflower-400 focus:text-royalDark dark:focus:text-cornflower-400 w-full text-center text-sm font-semibold underline decoration-transparent outline-0 transition hover:decoration-inherit focus:decoration-inherit"
             >
               {isExpanded ? 'Show less' : 'See all officers'}
             </button>

@@ -3,12 +3,10 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useUploadToUploadURL } from 'src/utils/uploadImage';
 import type z from 'zod';
+import Panel, { PanelSkeleton } from '@nebula-library/components/Panel';
 import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
-import Panel, { PanelSkeleton } from '@src/components/common/Panel';
 import Confirmation from '@src/components/Confirmation';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { ClubSchoolEdit } from '@src/components/manage/form/ClubSchoolEdit';
 import FormImage from '@src/components/manage/form/FormImage';
 import { SelectClub } from '@src/server/db/models';
@@ -16,6 +14,8 @@ import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubFormSchema, schools } from '@src/utils/formSchemas';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { useUploadToUploadURL } from '@src/utils/uploadImage';
 
 type DetailsProps = {
   club: SelectClub;
@@ -45,7 +45,7 @@ const Details = ({ club }: DetailsProps) => {
         setSnackbar(SnackbarPresets.savedName('club details'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );
@@ -172,7 +172,7 @@ const Details = ({ club }: DetailsProps) => {
                             .join('. ') + '.'
                         : undefined
                     }
-                    className="grow w-48"
+                    className="w-48 grow"
                   />
                 )}
               </form.Field>
@@ -201,7 +201,7 @@ const Details = ({ club }: DetailsProps) => {
                             .join('. ') + '.'
                         : undefined
                     }
-                    className="grow w-48"
+                    className="w-48 grow"
                   />
                 )}
               </form.Field>
@@ -320,7 +320,7 @@ const Details = ({ club }: DetailsProps) => {
               )}
             </form.Field>
           </div>
-          <div className="flex flex-wrap justify-end items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <form.AppForm>
               <form.ResetButton />
             </form.AppForm>

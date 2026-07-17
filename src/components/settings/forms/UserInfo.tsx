@@ -6,8 +6,7 @@ import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import Panel from '@src/components/common/Panel';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import Panel from '@nebula-library/components/Panel';
 import { majors, minors } from '@src/constants/utdDegrees';
 import { SelectUserMetadataWithClubs } from '@src/server/db/models';
 import { studentClassificationEnum } from '@src/server/db/schema/users';
@@ -17,6 +16,7 @@ import {
   AccountSettingsSchema,
   accountSettingsSchema,
 } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 type UserInfoProps = {
   user: SelectUserMetadataWithClubs;
@@ -31,7 +31,7 @@ export default function UserInfo({ user }: UserInfoProps) {
         setSnackbar(SnackbarPresets.savedName('user info'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );
@@ -90,7 +90,7 @@ export default function UserInfo({ user }: UserInfoProps) {
       }}
     >
       <Panel heading="Personal Information">
-        <div className="m-2 flex flex-col gap-6 max-w-2xl">
+        <div className="m-2 flex max-w-2xl flex-col gap-6">
           <form.FieldSet name="name" title="Name" icon={<PersonIconOutlined />}>
             <div className="flex flex-wrap gap-6">
               <form.AppField name="firstName">
@@ -180,7 +180,7 @@ export default function UserInfo({ user }: UserInfoProps) {
             title="Contact"
             icon={<EmailOutlinedIcon />}
           >
-            <div className="flex flex-wrap gap-6 w-full">
+            <div className="flex w-full flex-wrap gap-6">
               <form.AppField name="contactEmail">
                 {(field) => (
                   <div className="grow">
@@ -195,7 +195,7 @@ export default function UserInfo({ user }: UserInfoProps) {
             </div>
           </form.FieldSet>
         </div>
-        <div className="flex flex-wrap justify-end items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <form.AppForm>
             <form.ResetButton />
           </form.AppForm>

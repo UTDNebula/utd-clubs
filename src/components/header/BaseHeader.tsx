@@ -3,9 +3,9 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton } from '@mui/material';
+import gradientBG from '@public/images/landingGradient.png';
 import Image from 'next/image';
 import Link from 'next/link';
-import gradientBG from 'public/images/landingGradient.png';
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { ProfileDropDown } from './ProfileDropDown';
@@ -138,28 +138,29 @@ export const BaseHeader = ({
   return (
     <BaseHeaderContext.Provider value={{ openCompactSearchBar }}>
       <div
-        className={`${disableSticky ? '' : 'sticky'} min-h-17 top-0 z-50 flex w-full justify-between items-center gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-8 py-2 px-4 ${menu ? 'max-sm:pl-2' : ''} flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
+        className={`${disableSticky ? 'relative' : 'sticky'} top-0 z-50 flex min-h-17 w-full items-center justify-between gap-x-2 gap-y-2 px-4 py-2 md:gap-x-4 lg:gap-x-8 ${menu ? 'max-sm:pl-2' : ''} flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
       >
         {!transparent && (
-          <>
+          <div className="absolute inset-0 -z-20">
             <Image
               src={gradientBG}
               alt="gradient background"
               fill
-              className="object-cover -z-20 select-none"
+              className="-z-10 object-cover select-none"
               sizes="120vw"
+              loading="eager"
             />
-            <div className="absolute inset-0 bg-lighten dark:bg-darken -z-10"></div>
-          </>
+            <div className="bg-lighten dark:bg-darken absolute inset-0"></div>
+          </div>
         )}
         {!openCompactSearchBar ? (
           <>
-            <div className="grow basis-0 flex gap-x-2 sm:gap-x-8">
+            <div className="flex grow basis-0 gap-x-2 sm:gap-x-8">
               {menuVisibility && menu}
               {logoVisibility && (
                 <Link
                   href="/"
-                  className={`font-display flex gap-2 items-center select-none ${
+                  className={`font-display flex items-center gap-2 select-none ${
                     color?.startsWith('light') ? 'text-white' : 'text-haiti'
                   } ${
                     color === 'lightDark'
@@ -190,10 +191,10 @@ export const BaseHeader = ({
                   )}
                   {logoTextVisibility && (
                     <div className="flex flex-col">
-                      <span className="whitespace-nowrap text-lg md:text-xl font-bold leading-5">
+                      <span className="text-lg leading-5 font-bold whitespace-nowrap md:text-xl">
                         UTD CLUBS
                       </span>
-                      <span className="whitespace-nowrap text-xs md:text-sm font-medium">
+                      <span className="text-xs font-medium whitespace-nowrap md:text-sm">
                         by Nebula Labs
                       </span>
                     </div>
@@ -203,13 +204,13 @@ export const BaseHeader = ({
             </div>
             {fullSearchBarVisibility && searchBar && (
               <div
-                className={`order-last max-sm:basis-full basis-128 sm:order-none gap-x-2 md:gap-x-4 lg:gap-x-8 ${searchVisibility === true ? 'max-md:hidden' : ''} ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+                className={`order-last basis-128 gap-x-2 max-sm:basis-full sm:order-none md:gap-x-4 lg:gap-x-8 ${searchVisibility === true ? 'max-md:hidden' : ''} ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
               >
                 {searchBar}
               </div>
             )}
             <div
-              className={`grow basis-0 flex justify-end items-center gap-x-2 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.2)]' : ''}`}
+              className={`flex grow basis-0 items-center justify-end gap-x-2 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.2)]' : ''}`}
             >
               {compactSearchBarVisibility && searchBar && (
                 <IconButton
@@ -226,8 +227,8 @@ export const BaseHeader = ({
             </div>
           </>
         ) : (
-          <div className="w-full flex justify-center">
-            <div className="w-full max-w-128 flex gap-x-2 items-center">
+          <div className="flex w-full justify-center">
+            <div className="flex w-full max-w-128 items-center gap-x-2">
               <IconButton
                 size="large"
                 onClick={() => setOpenCompactSearchBar(false)}

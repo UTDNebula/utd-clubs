@@ -1,6 +1,6 @@
+import gradientBG from '@public/images/landingGradient.png';
+import planetsDoodle from '@public/images/PlanetsDoodle.png';
 import Image from 'next/image';
-import gradientBG from 'public/images/landingGradient.png';
-import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import { AllTags } from '@src/components/AllTags';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
 import Header from '@src/components/header/Header';
@@ -29,19 +29,20 @@ const Home = async () => {
                 sizes="120vw"
                 alt="Gradient Background"
                 className="bg-no-repeat object-cover select-none"
+                loading="eager"
               />
               <Image
                 src={planetsDoodle}
                 alt="Planets Doodle"
                 width={574}
                 height={200}
-                className="hidden md:block absolute right-[10%] bottom-[30%] w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover"
+                className="absolute right-[10%] bottom-[30%] hidden w-[clamp(200px,20vw,300px)] bg-no-repeat object-cover md:block"
               />
-              <StarDoodle className="w-18 h-18 fill-white absolute top-[15%] right-[15%] w-[clamp(56px,7vw,72px)] animate-spin [animation-direction:reverse] [animation-duration:77s]" />
-              <StarDoodle className="w-12 h-12 fill-white hidden md:block absolute bottom-[35%] left-[10%] w-[clamp(32px,4vw,48px)] animate-spin [animation-duration:60s]" />
-              <div className="absolute inset-0 dark:bg-slightly-darken" />
+              <StarDoodle className="absolute top-[15%] right-[15%] h-18 w-[clamp(56px,7vw,72px)] animate-spin fill-white [animation-direction:reverse] [animation-duration:77s]" />
+              <StarDoodle className="absolute bottom-[35%] left-[10%] hidden h-12 w-[clamp(32px,4vw,48px)] animate-spin fill-white [animation-duration:60s] md:block" />
+              <div className="dark:bg-slightly-darken absolute inset-0" />
             </section>
-            <section className="absolute top-[100vh] z-10 h-[20vh] w-full bg-linear-to-t from-[#f6f6f6] dark:from-[#101010] to-transparent"></section>
+            <section className="absolute top-[100vh] z-10 h-[20vh] w-full bg-linear-to-t from-[#f6f6f6] to-transparent dark:from-[#101010]"></section>
           </div>
         </div>
         <div className="relative inset-0 z-20 bg-transparent">

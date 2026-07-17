@@ -1,6 +1,6 @@
 import { memo } from 'react';
+import Panel from '@nebula-library/components/Panel';
 import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
-import Panel from '@src/components/common/Panel';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
@@ -17,7 +17,7 @@ export default memo(function TagsPanel(
         <>
           Tags
           {tags.length > 0 && (
-            <span className=" ml-2 text-base font-normal text-neutral-600 dark:text-neutral-400">
+            <span className="ml-2 text-base font-normal text-neutral-600 dark:text-neutral-400">
               ({tags.length})
             </span>
           )}

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { BaseCard } from '@src/components/common/BaseCard';
+import { BaseCard } from '@nebula-library/components/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 
 interface MembershipFormCardProps {
@@ -48,11 +48,11 @@ const MembershipFormCard = ({ form }: MembershipFormCardProps) => {
     >
       <Link
         href={form.url}
-        className="grow flex flex-col"
+        className="flex grow flex-col"
         target="_blank"
         rel="noopener"
       >
-        <div className="relative h-40 shrink-0 w-full bg-neutral-100 dark:bg-neutral-700">
+        <div className="relative h-40 w-full shrink-0 bg-neutral-100 dark:bg-neutral-700">
           {/* render form image on top*/}
           {showFormImage && (
             <Image
@@ -67,7 +67,7 @@ const MembershipFormCard = ({ form }: MembershipFormCardProps) => {
             />
           )}
         </div>
-        <div className="flex h-full flex-col p-5 space-y-2.5">
+        <div className="flex h-full flex-col space-y-2.5 p-5">
           <h3 className="text-lg font-medium">{form.name}</h3>
         </div>
       </Link>

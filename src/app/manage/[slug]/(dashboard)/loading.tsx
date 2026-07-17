@@ -1,5 +1,5 @@
 import { Skeleton } from '@mui/material';
-import { PanelSkeleton } from '@src/components/common/Panel';
+import { PanelSkeleton } from '@nebula-library/components/Panel';
 import ManageHeader from '@src/components/manage/ManageHeader';
 
 export default function Loading() {
@@ -28,7 +28,7 @@ export default function Loading() {
         </div>
       </ManageHeader>
       <div className="flex w-full flex-col items-center">
-        <div className="flex flex-col gap-8 w-full max-w-6xl">
+        <div className="flex w-full max-w-6xl flex-col gap-8">
           <PanelSkeleton />
           <PanelSkeleton />
           <PanelSkeleton />
