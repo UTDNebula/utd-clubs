@@ -6,9 +6,9 @@ import Modal, { ModalProps } from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import { authClient } from '@src/utils/auth-client';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 import LoginProviderButton from './LoginProviderButton';
 import { LoginProviders } from './types';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 const loginProviders = [
   'google',
