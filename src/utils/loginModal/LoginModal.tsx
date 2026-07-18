@@ -6,6 +6,7 @@ import Modal, { ModalProps } from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import { authClient } from '@src/utils/auth-client';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 import LoginProviderButton from './LoginProviderButton';
 import { LoginProviders } from './types';
 
@@ -31,6 +32,21 @@ export const LoginModalContents = ({
   LoginModalProps,
   'className' | 'onClose' | 'closeButton' | 'callbackURL'
 >) => {
+  const handleSignIn = () => {
+    void authClient.signIn.social(
+      {
+        provider: 'microsoft',
+        callbackURL: callbackURL ?? window.location.href,
+        newUserCallbackURL: '/get-started',
+      },
+      {
+        onError: (ctx) => {
+          setSnackbar(SnackbarPresets.errorWithMessage(ctx.error.message));
+        },
+      },
+    );
+  };
+
   return (
     <div
       className={`z-20 flex w-fit flex-col items-center rounded-lg bg-white p-4 shadow-lg dark:bg-neutral-800 dark:shadow-xl ${className}`}
@@ -68,11 +84,7 @@ export const LoginModalContents = ({
           href="#"
           className="font-bold whitespace-nowrap text-slate-600 underline underline-offset-2 dark:text-slate-400"
           onClick={() => {
-            void authClient.signIn.social({
-              provider: 'microsoft',
-              callbackURL: callbackURL ?? window.location.href,
-              newUserCallbackURL: '/get-started',
-            });
+            handleSignIn();
           }}
         >
           Sign In Here
