@@ -21,12 +21,7 @@ import { userMetadataToClubs } from '@src/server/db/schema/users';
 import { syncCalendar, watchCalendar } from '@src/utils/calendar';
 import { createClubSchema } from '@src/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/utils/googleAuth';
-import {
-  adminProcedure,
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from '../trpc';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { clubEditRouter } from './clubEdit';
 
 const byNameSchema = z.object({
@@ -44,11 +39,6 @@ const bySlugSchema = z.object({
 
 const joinLeaveSchema = z.object({
   clubId: z.string().default(''),
-});
-
-const tagReplaceSchema = z.object({
-  oldTag: z.string(),
-  newTag: z.string(),
 });
 
 const searchSchema = z.object({
@@ -136,8 +126,10 @@ export const clubRouter = createTRPCRouter({
   }),
   distinctTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = (await ctx.db.select().from(usedTags)).map((obj) => obj.tag);
-      return tags;
+      return await ctx.db
+        .select()
+        .from(usedTags)
+        .orderBy(desc(usedTags.count), asc(usedTags.tag));
     } catch (e) {
       console.error(e);
       return [];
@@ -145,10 +137,11 @@ export const clubRouter = createTRPCRouter({
   }),
   topTags: publicProcedure.query(async ({ ctx }) => {
     try {
-      const tags = (await ctx.db.select().from(usedTags).limit(5)).map(
-        (obj) => obj.tag,
-      );
-      return tags;
+      return await ctx.db
+        .select()
+        .from(usedTags)
+        .orderBy(desc(usedTags.count), asc(usedTags.tag))
+        .limit(5);
     } catch (e) {
       console.error(e);
       return [];
@@ -261,15 +254,22 @@ export const clubRouter = createTRPCRouter({
             eq(userMetadataToClubs.clubId, clubId),
           ),
       });
-      if (dataExists && dataExists.memberType == 'Member') {
-        await ctx.db
-          .delete(userMetadataToClubs)
-          .where(
-            and(
-              eq(userMetadataToClubs.userId, joinUserId),
-              eq(userMetadataToClubs.clubId, clubId),
-            ),
-          );
+      if (dataExists) {
+        if (dataExists.memberType !== 'President') {
+          await ctx.db
+            .delete(userMetadataToClubs)
+            .where(
+              and(
+                eq(userMetadataToClubs.userId, joinUserId),
+                eq(userMetadataToClubs.clubId, clubId),
+              ),
+            );
+        } else {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Cannot remove yourself because you are an admin',
+          });
+        }
       } else {
         await ctx.db
           .insert(userMetadataToClubs)
@@ -439,31 +439,6 @@ export const clubRouter = createTRPCRouter({
         console.error(e);
         throw e;
       }
-    }),
-  changeTags: adminProcedure
-    .input(tagReplaceSchema)
-    .mutation(async ({ input, ctx }) => {
-      const clubsToChange = await ctx.db.query.club.findMany({
-        where: sql`${input.oldTag} = ANY(tags)`,
-      });
-      clubsToChange.map((club) => {
-        club.tags = club.tags.map((tag) =>
-          tag == input.oldTag ? input.newTag : tag,
-        );
-        return club;
-      });
-      const clubPromise: Promise<unknown>[] = [];
-      for (const clu of clubsToChange) {
-        clubPromise.push(
-          ctx.db
-            .update(club)
-            .set({ tags: clu.tags })
-            .where(eq(club.id, clu.id)),
-        );
-      }
-      await Promise.all(clubPromise);
-      await ctx.db.refreshMaterializedView(usedTags);
-      return { affected: clubsToChange.length };
     }),
   tagSearch: publicProcedure
     .input(searchTagSchema)
@@ -663,6 +638,7 @@ export const clubRouter = createTRPCRouter({
           bannerImage: true,
           clubSize: true,
           updatedAt: true,
+          schools: true,
         },
       });
 

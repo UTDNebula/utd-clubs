@@ -38,9 +38,10 @@ export default async function Page({ params, searchParams }: Props) {
       includePast,
       currentTime: now,
     }),
-    api.event.countByClubId({
+    api.event.count({
       clubId: club.id,
       includePast,
+      includeAll: true,
       currentTime: now,
     }),
   ]);
@@ -59,7 +60,7 @@ export default async function Page({ params, searchParams }: Props) {
       >
         <IncludePastSwitch checked={includePast} />
       </AdminHeader>
-      <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
+      <div className="flex w-full flex-wrap items-center justify-evenly gap-4 pt-10">
         {events?.map((event) => (
           <EventCard key={event.id} event={event} view="admin" />
         ))}

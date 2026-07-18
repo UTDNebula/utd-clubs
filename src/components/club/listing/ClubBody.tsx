@@ -30,11 +30,11 @@ const ClubBody = async ({
   return (
     <section
       id="club-body"
-      className="w-full rounded-lg grid grid-cols-1 md:grid-cols-[16rem_1fr] gap-4 items-start"
+      className="grid w-full grid-cols-1 items-start gap-4 rounded-lg md:grid-cols-[16rem_1fr]"
     >
       <div
         id="club-content-left"
-        className="flex flex-col gap-4 h-full order-2 md:order-1"
+        className="order-2 flex h-full flex-col gap-4 md:order-1"
       >
         <ClubDetailsCard
           id="details"
@@ -46,7 +46,7 @@ const ClubBody = async ({
       </div>
       <div
         id="club-content-right"
-        className="flex flex-col gap-4 order-1 md:order-2 min-w-0"
+        className="order-1 flex min-w-0 flex-col gap-4 md:order-2"
       >
         <ClubDescriptionCard id="description" club={club} />
         {forms.length !== 0 && (
@@ -64,7 +64,7 @@ const ClubBody = async ({
           emptyText={
             club.updatedAt == null || club.updatedAt < oneYearAgo
               ? 'No info about upcoming events'
-              : 'There are no upcoming events'
+              : "This club hasn't posted info about upcoming events"
           }
         />
       </div>

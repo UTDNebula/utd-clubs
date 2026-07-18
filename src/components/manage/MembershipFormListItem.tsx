@@ -69,8 +69,7 @@ const MembershipFormListItem = withForm({
         // isDragging: If true, hide visibility of children but keep them in document flow (to maintain size of list item)
         //   - Do NOT use the `hidden` class, as this removes children from the document flow
         // isSorting: If true, disable hover state, to prevent visual noise when reordering items
-        className={`relative grid sm:gap-2 transition-colors rounded-lg
-          ${isDragging ? '*:invisible' : `max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 ${isSorting ? '' : 'sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800'}`}`}
+        className={`relative grid rounded-lg transition-colors sm:gap-2 ${isDragging ? '*:invisible' : `max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 ${isSorting ? '' : 'sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800'}`}`}
         sx={{
           gridTemplateAreas: {
             sm: `'handle name position buttons'`,
@@ -86,11 +85,11 @@ const MembershipFormListItem = withForm({
       >
         {isDragging && (
           // Placeholder/ghost element indicator. Note the `visible!` to ensure this element remains visible
-          <div className="absolute inset-0 m-1 outline-royal/50 outline-2 rounded-lg visible!" />
+          <div className="outline-royal/50 visible! absolute inset-0 m-1 rounded-lg outline-2" />
         )}
         <div
           style={{ gridArea: 'handle' }}
-          className="h-full flex items-center select-none cursor-grab rounded-md touch-none max-sm:p-4 sm:p-2"
+          className="flex h-full cursor-grab touch-none items-center rounded-md select-none max-sm:p-4 sm:p-2"
           {...attributes} // Makes handle tabbable for keyboard input
           {...listeners} // Turns element into a drag handle
         >
@@ -127,7 +126,7 @@ const MembershipFormListItem = withForm({
         </div>
         <div
           style={{ gridArea: 'buttons' }}
-          className="flex max-sm:h=fill sm:h-fit max-sm:ml-2 sm:my-2 mr-2"
+          className="mr-2 flex max-sm:ml-2 max-sm:h-full sm:my-2 sm:h-fit"
         >
           <Tooltip title="Remove" className="h-fit self-center">
             <IconButton aria-label="remove" onClick={handleRemove}>

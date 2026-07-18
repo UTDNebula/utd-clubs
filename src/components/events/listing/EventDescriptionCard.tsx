@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, IconButton } from '@mui/material';
 import Image from 'next/image';
 import { useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import ExpandableMarkdownText from '@src/components/ExpandableMarkdownText';
 import { RouterOutputs } from '@src/trpc/shared';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
@@ -30,7 +30,8 @@ export default function EventDescriptionCard({
         {showImageTrigger && (
           <button
             onClick={() => setOpen(true)}
-            className={`w-fit max-h-64 mx-auto mb-6 cursor-zoom-in ${
+            aria-label="View full size event poster"
+            className={`mx-auto mb-6 max-h-64 w-fit cursor-zoom-in ${
               imgLoaded ? 'block' : 'hidden' // hide button until loaded
             }`}
           >
@@ -39,7 +40,7 @@ export default function EventDescriptionCard({
               alt="Event poster"
               height={256}
               width={512}
-              className="rounded-lg max-h-64 w-fit object-contain object-center"
+              className="max-h-64 w-fit rounded-lg object-contain object-center"
               onError={() => setImgError(true)}
               onLoad={() => setImgLoaded(true)}
               priority // ensure fetch even when hidden
@@ -70,11 +71,12 @@ export default function EventDescriptionCard({
         >
           <IconButton
             onClick={() => setOpen(false)}
-            className="absolute top-4 right-4 text-white z-10"
+            aria-label="Close"
+            className="absolute top-4 right-4 z-10 text-white"
           >
             <CloseIcon />
           </IconButton>
-          <div className="relative w-full h-full flex items-center justify-center">
+          <div className="relative flex h-full w-full items-center justify-center">
             <Image
               src={addVersionToImage(event.image!, event.updatedAt.getTime())}
               alt="Event poster fullscreen"

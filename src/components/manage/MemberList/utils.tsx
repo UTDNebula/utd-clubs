@@ -62,8 +62,8 @@ export const ColumnHeaderWithIcon = ({
   icon,
   children,
 }: ColumnHeaderWithIconProps) => (
-  <span className="flex gap-1 items-center">
-    <div className="flex justify-center items-center text-slate-600 dark:text-slate-400 h-4 *:w-4 *:h-4">
+  <span className="flex items-center gap-1">
+    <div className="flex h-4 items-center justify-center text-slate-600 *:h-4 *:w-4 dark:text-slate-400">
       {icon}
     </div>
     {/* Matches font weight of header text to default font weight of MUI Data Grid headers */}
@@ -89,7 +89,7 @@ const AvatarImage = ({
   if (imageError) {
     // Fallback to first initial if no image
     return (
-      <div className="flex h-10 w-10 items-center justify-center bg-neutral-200 dark:bg-neutral-900 text-slate-500 text-sm font-bold rounded-full">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-200 text-sm font-bold text-slate-500 dark:bg-neutral-900">
         {initial}
       </div>
     );
@@ -100,7 +100,7 @@ const AvatarImage = ({
       alt={alt}
       width={40}
       height={40}
-      className="rounded-full object-cover object-left z-10"
+      className="z-10 rounded-full object-cover object-left"
       onLoad={() => setImageError(false)}
       onError={() => setImageError(true)}
       {...props}
@@ -124,7 +124,7 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
       width: 60,
       renderCell: (params) => {
         return (
-          <div className="flex items-center h-full">
+          <div className="flex h-full items-center">
             <AvatarImage
               src={params.value}
               alt={'Avatar'}

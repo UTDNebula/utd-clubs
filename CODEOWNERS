@@ -1,3 +1,5 @@
-# for now project lead or engineering head should signoff on any prs
-* @BK2004 @Shivhare-Ayush
+# Clubs Project Lead or Head of Engineering should sign off on any PRs
+* @UTDNebula/clubs-lead @UTDNebula/head-of-engineering
+
+# Database migrations need to be checked by someone
 src/server/db/migrations/* @nl32

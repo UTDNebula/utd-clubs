@@ -1,6 +1,6 @@
 /**
  * @see https://prettier.io/docs/en/configuration.html
- * @type {import("prettier").Config}
+ * @type {import("prettier").Config & import("prettier-plugin-tailwindcss").PluginOptions}
  */
 const config = {
   printWidth: 80,
@@ -12,12 +12,13 @@ const config = {
   bracketSameLine: false,
   endOfLine: 'auto',
   plugins: [
-    'prettier-plugin-tailwindcss',
     '@ianvs/prettier-plugin-sort-imports',
+    'prettier-plugin-tailwindcss',
   ],
   importOrder: [
     '<BUILTIN_MODULES>', // Node.js built-in modules
     '<THIRD_PARTY_MODULES>', // Imports not matched by other special words or groups.
+    '^(@nebula-library)(/.*)$', // Nebula library
     '^(@src)(/.*)$',
     '^[.]', // relative imports
   ],

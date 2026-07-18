@@ -75,7 +75,7 @@ const ContactButton = ({ contact }: ContactButtonProps) => {
         }
         target="_blank"
         variant="contained"
-        className="normal-case bg-white dark:bg-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700 shadow-sm dark:shadow-md w-full text-haiti dark:text-white font-normal justify-start pl-3 pr-1"
+        className="text-haiti w-full justify-start bg-white py-1.5 pr-1 pl-3 font-normal normal-case shadow-sm hover:bg-neutral-100 dark:bg-neutral-700 dark:text-white dark:shadow-md dark:hover:bg-neutral-700"
         startIcon={logo[contact.platform]}
         size="large"
       >

@@ -13,7 +13,6 @@ import { TRPCClientErrorLike } from '@trpc/client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import z from 'zod';
 import Confirmation from '@src/components/Confirmation';
-import { useSnackbar } from '@src/components/global/Snackbar';
 import { AppRouter } from '@src/server/api/root';
 import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
 import {
@@ -22,6 +21,7 @@ import {
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
+import { useSnackbar } from '@src/utils/snackbar';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';
 import { MemberListContext, MemberListContextType } from './MemberListContext';
@@ -271,7 +271,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
   );
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-6xl">
+    <div className="flex w-full max-w-6xl flex-col gap-8">
       <MemberListContext.Provider value={MemberListContextValues}>
         <DataGrid
           rows={rows}

@@ -44,8 +44,8 @@ const CollaboratorListItem = withForm({
     };
 
     return (
-      <div className="flex flex-wrap items-center gap-2 p-2 sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800 max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 transition-colors rounded-lg">
-        <div className="flex flex-col grow pl-2 pr-4 max-h-full min-h-12 justify-center">
+      <div className="flex flex-wrap items-center gap-2 rounded-lg p-2 transition-colors max-sm:bg-neutral-100 sm:hover:bg-neutral-100 dark:max-sm:bg-neutral-800 dark:sm:hover:bg-neutral-800">
+        <div className="flex max-h-full min-h-12 grow flex-col justify-center pr-4 pl-2">
           <Tooltip
             title={`User ID: ${form.getFieldValue(`officers[${index}].userId`)}`}
           >
@@ -58,7 +58,7 @@ const CollaboratorListItem = withForm({
             <span>{form.getFieldValue(`officers[${index}].email`)}</span>
           </Typography>
         </div>
-        <div className="flex items-center gap-2 grow justify-end">
+        <div className="flex grow items-center justify-end gap-2">
           <form.AppField name={`officers[${index}].position`}>
             {(subField) => (
               <Tooltip
@@ -88,7 +88,7 @@ const CollaboratorListItem = withForm({
                       <OutlinedInput
                         id="collaborator-role-select"
                         readOnly={self || !canTogglePresident}
-                        className="rounded-full [&>.MuiSelect-select]:pr-8 [&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2"
+                        className="rounded-full [&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2 [&>.MuiSelect-select]:pr-8"
                       />
                     }
                     renderValue={(selected) => {

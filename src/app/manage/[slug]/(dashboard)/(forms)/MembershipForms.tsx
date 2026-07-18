@@ -24,7 +24,7 @@ import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import MembershipFormListItem from '@src/components/manage/MembershipFormListItem';
 import type { SelectClub, SelectMembershipForm } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -219,7 +219,7 @@ const MembershipForms = ({
                     />
                   ))}
                   <Button
-                    className="normal-case mb-2"
+                    className="mb-2 normal-case"
                     startIcon={<AddIcon />}
                     size="large"
                     onClick={() => {
@@ -260,7 +260,7 @@ const MembershipForms = ({
             ) : null}
           </DragOverlay>
         </DndContext>
-        <div className="flex flex-wrap justify-end items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <form.AppForm>
             <form.ResetButton
               onClick={() => {

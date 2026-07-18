@@ -3,8 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
-import Panel from '@src/components/common/Panel';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
+import Panel from '@nebula-library/components/Panel';
 import CollaboratorListItem from '@src/components/manage/CollaboratorListItem';
 import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
 import type {
@@ -14,6 +13,7 @@ import type {
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editOfficerSchema } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 type FormData = z.infer<typeof editOfficerSchema>;
 
@@ -58,7 +58,7 @@ const Collaborators = ({
         setSnackbar(SnackbarPresets.savedName('club collaborators'));
       },
       onError: (error) => {
-        setSnackbar(SnackbarPresets.errorMessage(error.message));
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
       },
     }),
   );
@@ -128,6 +128,7 @@ const Collaborators = ({
       }}
     >
       <Panel
+        id="collaborators"
         heading="Collaborators"
         description={
           <>
@@ -175,7 +176,7 @@ const Collaborators = ({
             </div>
           )}
         </form.Field>
-        <div className="flex flex-wrap justify-end items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <form.AppForm>
             <form.ResetButton
               onClick={() => {

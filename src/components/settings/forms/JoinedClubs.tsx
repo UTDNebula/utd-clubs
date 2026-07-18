@@ -12,12 +12,13 @@ import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
 import MemberRoleChip from '@src/components/manage/MemberRoleChip';
 import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
 type ClubsProps = {
   joinedClubs: SelectUserMetadataToClubsWithClub[];
@@ -46,7 +47,7 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
           />
         ))
       ) : (
-        <div className="w-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl text-md font-medium text-slate-600 dark:text-slate-400">
+        <div className="text-md flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 py-12 font-medium text-slate-600 dark:border-slate-800 dark:text-slate-400">
           Not following any clubs.
         </div>
       )}
@@ -83,6 +84,15 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
                 );
 
                 joinedClubs.splice(removeIndex, 1);
+                setSnackbar(SnackbarPresets.success('Left club!'));
+              },
+              onError: (e) => {
+                setSnackbar(
+                  SnackbarPresets.errorCustomWithMessage(
+                    'Failed to leave club!',
+                    e.message,
+                  ),
+                );
               },
             },
           );
@@ -106,16 +116,18 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
     joinedClub?.memberType === 'Officer' ||
     joinedClub?.memberType === 'President';
 
+  const isAdmin = joinedClub?.memberType === 'President';
+
   return (
-    <div className="flex flex-wrap items-center gap-2 p-2 min-h-16 max-sm:bg-neutral-100 dark:max-sm:bg-neutral-800 sm:hover:bg-neutral-100 dark:sm:hover:bg-neutral-800 transition-colors rounded-lg">
+    <div className="flex min-h-16 flex-wrap items-center gap-2 rounded-lg p-2 transition-colors max-sm:bg-neutral-100 sm:hover:bg-neutral-100 dark:max-sm:bg-neutral-800 dark:sm:hover:bg-neutral-800">
       <Tooltip title="View club directory page" disableInteractive>
         <Link
           href={club.approved === 'approved' ? `/directory/${club.slug}` : ''}
-          className={`flex gap-2 pl-2 pr-4 items-center ${club.approved !== 'approved' ? 'pointer-events-none' : ''}`}
+          className={`flex items-center gap-2 pr-4 pl-2 ${club.approved !== 'approved' ? 'pointer-events-none' : ''}`}
           aria-disabled={!clubApproved}
           tabIndex={!clubApproved ? -1 : undefined}
         >
-          <div className="min-w-10 min-h-10">
+          <div className="min-h-10 min-w-10">
             {club.profileImage && (
               <Image
                 src={addVersionToImage(
@@ -129,7 +141,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
               />
             )}
           </div>
-          <div className="flex flex-col grow pl-2 justify-center">
+          <div className="flex grow flex-col justify-center pl-2">
             <Typography variant="body1">{club.name}</Typography>
             {joinedClub && (
               <Typography
@@ -153,10 +165,10 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
           </div>
         </Link>
       </Tooltip>
-      <div className="flex items-center gap-2 grow justify-end">
+      <div className="flex grow items-center justify-end gap-2">
         {canManage && (
           <Chip
-            className="h-fit rounded-full bg-white dark:bg-neutral-800 border-1 border-neutral-400 dark:border-neutral-600 [&>.MuiChip-label]:inline-block [&>.MuiChip-label]:p-1.5"
+            className="h-fit rounded-full border-1 border-neutral-400 bg-white dark:border-neutral-600 dark:bg-neutral-800 [&>.MuiChip-label]:inline-block [&>.MuiChip-label]:p-1.5"
             label={
               <div className="flex gap-2">
                 <MemberRoleChip memberType={joinedClub.memberType} />
@@ -174,10 +186,29 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
             }
           />
         )}
-        <Tooltip title="Unfollow club">
-          <IconButton aria-label="unfollow" onClick={onLeave}>
-            <DeleteIcon />
-          </IconButton>
+        <Tooltip
+          title={
+            isAdmin ? (
+              <div className="text-center">
+                You cannot unfollow a club you manage
+                <br />
+                Another admin must remove you
+              </div>
+            ) : (
+              'Unfollow club'
+            )
+          }
+        >
+          {/* This span is required to ensure the locked tooltip shows when the IconButton is disabled */}
+          <span>
+            <IconButton
+              aria-label="unfollow"
+              onClick={onLeave}
+              disabled={isAdmin}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </span>
         </Tooltip>
       </div>
     </div>

@@ -5,10 +5,10 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
 import { CheckRefreshToken } from '@src/components/auth/CheckRefreshToken';
-import { RegisterModalProvider } from '@src/components/global/RegisterModalProvider';
-import { SnackbarProvider } from '@src/components/global/Snackbar';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
+import { LoginModalProvider } from '@src/utils/loginModal/provider';
+import { SnackbarProvider } from '@src/utils/snackbar';
 import theme from '@src/utils/theme';
 
 const inter = Inter({
@@ -18,7 +18,7 @@ const inter = Inter({
 
 const baiJamjuree = Bai_Jamjuree({
   subsets: ['latin'],
-  weight: ['500', '700'],
+  weight: ['500', '600', '700'],
   variable: '--font-display',
 });
 
@@ -63,7 +63,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body
         className={`bg-light dark:bg-dark ${inter.variable} font-main ${baiJamjuree.variable} text-haiti dark:text-white`}
       >
@@ -71,12 +71,12 @@ export default async function RootLayout({
           <TRPCReactProvider>
             <ThemeProvider theme={theme}>
               <ClientLocalizationProvider>
-                <RegisterModalProvider>
+                <LoginModalProvider>
                   <SnackbarProvider>
                     <CheckRefreshToken />
                     {children}
                   </SnackbarProvider>
-                </RegisterModalProvider>
+                </LoginModalProvider>
               </ClientLocalizationProvider>
             </ThemeProvider>
           </TRPCReactProvider>

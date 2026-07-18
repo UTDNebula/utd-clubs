@@ -15,8 +15,8 @@ export const RegisteredEvents = async () => {
 
   if (events.length == 0) {
     return (
-      <div className="flex flex-col items-center gap-4 mt-4">
-        <p className="font-bold text-slate-500">
+      <div className="mt-4 flex flex-col items-center gap-4">
+        <p className="font-bold text-slate-500 dark:text-slate-400">
           You haven&apos;t registered for any events.
         </p>
         <LinkButton
@@ -32,7 +32,7 @@ export const RegisteredEvents = async () => {
     );
   }
   return (
-    <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
+    <div className="flex w-full flex-wrap items-center justify-evenly gap-4 pt-10">
       {events.map((event) => (
         <EventCard key={event.id} event={event} />
       ))}
@@ -60,8 +60,8 @@ export const ClubEvents = async ({
 
   if (clubs.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 mt-4">
-        <p className="font-bold text-slate-500">
+      <div className="mt-4 flex flex-col items-center gap-4">
+        <p className="font-bold text-slate-500 dark:text-slate-400">
           You aren&apos;t following any clubs.
         </p>
         <LinkButton
@@ -79,8 +79,8 @@ export const ClubEvents = async ({
 
   if (events.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 mt-4">
-        <p className="font-bold text-slate-500">
+      <div className="mt-4 flex flex-col items-center gap-4">
+        <p className="font-bold text-slate-500 dark:text-slate-400">
           Your followed clubs don&apos;t have any events.
         </p>
         <LinkButton
@@ -104,7 +104,7 @@ export const ClubEvents = async ({
 
   return (
     <>
-      <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
+      <div className="flex w-full flex-wrap items-center justify-evenly gap-4 pt-10">
         {events.map((event) => (
           <EventCard key={event.id} event={event} />
         ))}

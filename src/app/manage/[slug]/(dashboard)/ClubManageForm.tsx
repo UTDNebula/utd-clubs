@@ -10,6 +10,7 @@ import Details from './(forms)/Details';
 import MembershipForms from './(forms)/MembershipForms';
 import Officers from './(forms)/Officers';
 import Slug from './(forms)/Slug';
+import LeadershipChange from './LeadershipChange';
 import NotApproved from './NotApproved';
 import Resources from './Resources';
 
@@ -54,8 +55,14 @@ const ClubManageForm = async ({
     );
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-6xl">
+    <div className="flex w-full max-w-6xl flex-col gap-8">
       {club.approved !== 'approved' && <NotApproved status={club.approved} />}
+      {/*TODO: Update range to display banner for a month before the semester ends and until the next semester starts*/}
+      {club.approved === 'approved' &&
+        (club.updatedAt == null || club.updatedAt < new Date(2026, 4, 5)) &&
+        new Date() < new Date(2026, 7, 24) && (
+          <LeadershipChange clubId={club.id} />
+        )}
       <Details club={club} />
       <Calendar
         club={club}

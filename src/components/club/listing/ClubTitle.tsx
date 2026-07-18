@@ -12,10 +12,10 @@ const ClubTitle = async ({
   return (
     <section
       id="club-title"
-      className="w-full rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+      className="flex w-full flex-col items-start justify-between gap-4 rounded-lg md:flex-row md:items-center"
     >
       <div
-        className={`flex ${club.name.length > 40 ? 'flex-col ' : 'flex-row '} md:flex-row gap-4 w-full md:w-auto flex-grow items-start`}
+        className={`flex ${club.name.length > 40 ? 'flex-col' : 'flex-row'} w-full flex-grow items-start gap-4 md:w-auto md:flex-row`}
       >
         {club.profileImage && (
           <Image
@@ -27,11 +27,11 @@ const ClubTitle = async ({
             width={128}
             height={128}
             // flex-shrink-0 prevents the image from squishing if text is long
-            className="rounded-lg w-20 md:w-32 h-auto flex-shrink-0"
+            className="h-auto w-20 flex-shrink-0 rounded-lg md:w-32"
           />
         )}
 
-        <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
+        <div className="flex min-w-0 flex-grow flex-col overflow-hidden">
           {club.name && (
             <h1
               className={`font-display font-bold text-slate-800 dark:text-slate-200 ${
@@ -48,7 +48,7 @@ const ClubTitle = async ({
           {club.tags && club.tags.length > 0 && <ClubTags tags={club.tags} />}
         </div>
       </div>
-      <div className="w-full md:w-auto flex-shrink-0 flex md:ml-auto justify-end">
+      <div className="flex w-full flex-shrink-0 justify-end md:ml-auto md:w-auto">
         <JoinButton isHeader clubId={club.id} clubSlug={club.slug} />
       </div>
     </section>
