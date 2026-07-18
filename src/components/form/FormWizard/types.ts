@@ -54,13 +54,9 @@ export type StepConfig =
   | (StepConfigBase & { variant: 'body'; fields: string[] })
   | (StepConfigBase & { variant: 'start' | 'finish' });
 
-export type ActiveStep = {
-  index: number;
-  previous: number | undefined;
-};
-
 export type WizardContextType = {
-  activeStep: ActiveStep;
+  activeStep: number;
+  previousStep: number | undefined;
   steps: StepConfig[];
   goNext: () => void;
   goBack: () => void;

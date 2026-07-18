@@ -21,12 +21,7 @@ import {
 import { BaseCard } from '@nebula-library/components/BaseCard';
 import Panel from '@nebula-library/components/Panel';
 import { useAppForm, useFormContext } from '@src/utils/form';
-import {
-  ActiveStep,
-  FormWizardProps,
-  FormWizardStepProps,
-  StepConfig,
-} from './types';
+import { FormWizardProps, FormWizardStepProps, StepConfig } from './types';
 import { WizardContext } from './WizardContext';
 
 /**
@@ -104,10 +99,23 @@ export default function FormWizard({
   const shouldAutoAdvanceOnSubmit = autoAdvanceOnSubmit ?? hasFinish;
 
   // Step navigation state
-  const [activeStep, setActiveStep] = useState<ActiveStep>({
+  const [activeStepState, setActiveStepState] = useState<{
+    index: number;
+    previous: number | undefined;
+  }>({
     index: 0,
     previous: undefined,
   });
+
+  const setActiveStep = (value: React.SetStateAction<number>) => {
+    setActiveStepState((prev) => ({
+      index: typeof value === 'function' ? value(prev.index) : value,
+      previous: prev.index,
+    }));
+  };
+
+  const activeStep = activeStepState.index;
+  const previousStep = activeStepState.previous;
 
   // Loading state to prevent flash before first render measurement
   const [mounting, setMounting] = useState(true);
@@ -163,15 +171,12 @@ export default function FormWizard({
 
   // Navigation
   const goNext = useCallback(() => {
-    validateStepFields(activeStep.index);
-    if (!areStepFieldsValid(activeStep.index)) return;
+    validateStepFields(activeStep);
+    if (!areStepFieldsValid(activeStep)) return;
 
-    if (activeStep.index < lastBodyIndex) {
-      setActiveStep((prev) => ({
-        index: prev.index + 1,
-        previous: prev.index,
-      }));
-    } else if (hasFinish && activeStep.index === steps.length - 1) {
+    if (activeStep < lastBodyIndex) {
+      setActiveStep((prev) => prev + 1);
+    } else if (hasFinish && activeStep === steps.length - 1) {
       onComplete?.();
     }
   }, [
@@ -185,29 +190,20 @@ export default function FormWizard({
   ]);
 
   const goBack = useCallback(() => {
-    if (activeStep.index > 0) {
-      setActiveStep((prev) => ({
-        index: prev.index - 1,
-        previous: prev.index,
-      }));
+    if (activeStep > 0) {
+      setActiveStep((prev) => prev - 1);
     }
   }, [activeStep]);
 
   const goToStep = useCallback(
     (index: number) => {
-      if (index < activeStep.index) {
-        setActiveStep((prev) => ({
-          index: index,
-          previous: prev.index,
-        }));
-      } else if (index > activeStep.index) {
-        validateStepFields(activeStep.index);
-        if (!areStepFieldsValid(activeStep.index)) return;
-        if (index - 1 > activeStep.index) return;
-        setActiveStep((prev) => ({
-          index: index,
-          previous: prev.index,
-        }));
+      if (index < activeStep) {
+        setActiveStep(index);
+      } else if (index > activeStep) {
+        validateStepFields(activeStep);
+        if (!areStepFieldsValid(activeStep)) return;
+        if (index - 1 > activeStep) return;
+        setActiveStep(index);
       }
     },
     [activeStep, validateStepFields, areStepFieldsValid],
@@ -216,10 +212,7 @@ export default function FormWizard({
   // Advance to finish step after successful form submission
   const goToFinish = useCallback(() => {
     if (hasFinish) {
-      setActiveStep((prev) => ({
-        index: steps.length - 1,
-        previous: prev.index,
-      }));
+      setActiveStep(steps.length - 1);
     }
   }, [hasFinish, steps.length]);
 
@@ -227,15 +220,12 @@ export default function FormWizard({
     // Always prevent native submit; we call form.handleSubmit() explicitly
     event.preventDefault();
 
-    validateStepFields(activeStep.index);
-    if (!areStepFieldsValid(activeStep.index)) return;
+    validateStepFields(activeStep);
+    if (!areStepFieldsValid(activeStep)) return;
 
-    if (activeStep.index < lastBodyIndex) {
-      setActiveStep((prev) => ({
-        index: prev.index + 1,
-        previous: prev.index,
-      }));
-    } else if (activeStep.index === lastBodyIndex) {
+    if (activeStep < lastBodyIndex) {
+      setActiveStep((prev) => prev + 1);
+    } else if (activeStep === lastBodyIndex) {
       // Submit the form; only advance to the finish step once the API call
       // resolves successfully so the step does not jump early
       void form.handleSubmit().then(() => {
@@ -244,13 +234,10 @@ export default function FormWizard({
           shouldAutoAdvanceOnSubmit &&
           hasFinish
         ) {
-          setActiveStep({
-            index: steps.length - 1,
-            previous: activeStep.index,
-          });
+          setActiveStep(steps.length - 1);
         }
       });
-    } else if (hasFinish && activeStep.index === steps.length - 1) {
+    } else if (hasFinish && activeStep === steps.length - 1) {
       // "Continue" button on finish screen
       onComplete?.();
     }
@@ -260,19 +247,20 @@ export default function FormWizard({
   const contextValue = useMemo(
     () => ({
       activeStep,
+      previousStep,
       steps,
       goNext,
       goBack,
       goToStep,
       goToFinish,
     }),
-    [activeStep, steps, goNext, goBack, goToStep, goToFinish],
+    [activeStep, previousStep, steps, goNext, goBack, goToStep, goToFinish],
   );
 
   // Button labels and states
-  const isOnFinishStep = hasFinish && activeStep.index === steps.length - 1;
-  const isOnLastBodyStep = activeStep.index === lastBodyIndex;
-  const isOnStartStep = hasStart && activeStep.index === 0;
+  const isOnFinishStep = hasFinish && activeStep === steps.length - 1;
+  const isOnLastBodyStep = activeStep === lastBodyIndex;
+  const isOnStartStep = hasStart && activeStep === 0;
 
   const nextButtonLabel = isOnFinishStep
     ? 'Continue'
@@ -282,7 +270,7 @@ export default function FormWizard({
         ? 'Start'
         : 'Next';
 
-  const currentFieldsValid = areStepFieldsValid(activeStep.index);
+  const currentFieldsValid = areStepFieldsValid(activeStep);
 
   return (
     <WizardContext.Provider value={contextValue}>
@@ -303,23 +291,21 @@ export default function FormWizard({
                   return (
                     <Step
                       key={step.label}
-                      completed={index < activeStep.index}
-                      active={index === activeStep.index}
+                      completed={index < activeStep}
+                      active={index === activeStep}
                     >
                       <StepButton
                         color="inherit"
                         onClick={() => goToStep(index)}
                         disabled={
-                          index - 1 > activeStep.index ||
+                          index - 1 > activeStep ||
                           isOnFinishStep ||
-                          (!currentFieldsValid && index >= activeStep.index)
+                          (!currentFieldsValid && index >= activeStep)
                         }
                       >
                         <StepLabel
                           className="cursor-pointer"
-                          error={
-                            !currentFieldsValid && index === activeStep.index
-                          }
+                          error={!currentFieldsValid && index === activeStep}
                         >
                           {step.label}
                         </StepLabel>
@@ -344,18 +330,18 @@ export default function FormWizard({
             )}
 
             {steps.map((step, index) => {
-              const isActive = activeStep.index === index;
+              const isActive = activeStep === index;
 
               // Determines the direction of the slide transition
               const direction =
-                activeStep.previous !== undefined
-                  ? activeStep.index > activeStep.previous
+                previousStep !== undefined
+                  ? activeStep > previousStep
                     ? // on next
-                      activeStep.index === index
+                      activeStep === index
                       ? 'left' // entering
                       : 'right' // exiting
                     : // on back
-                      activeStep.index === index
+                      activeStep === index
                       ? 'right' // entering
                       : 'left' // exiting
                   : // on mount
@@ -384,7 +370,7 @@ export default function FormWizard({
               loadingPosition="start"
               color="primary"
               onClick={goBack}
-              disabled={activeStep.index === 0 || isOnFinishStep}
+              disabled={activeStep === 0 || isOnFinishStep}
             >
               Back
             </Button>

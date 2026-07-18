@@ -4,7 +4,8 @@ import { createContext, useContext } from 'react';
 import { WizardContextType } from './types';
 
 const defaultContext: WizardContextType = {
-  activeStep: { index: 0, previous: undefined },
+  activeStep: 0,
+  previousStep: undefined,
   steps: [],
   goNext: () => {},
   goBack: () => {},
