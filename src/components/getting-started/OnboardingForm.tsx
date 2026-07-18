@@ -81,7 +81,7 @@ export default function OnboardingForm({
       <form.Wizard onComplete={() => router.push('/')}>
         <form.WizardStep startStep>
           <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2 ml-3.5">
+            <div className="ml-3.5 flex flex-col gap-2">
               <Typography
                 variant="h1"
                 className="font-display text-4xl font-bold"
@@ -164,7 +164,7 @@ export default function OnboardingForm({
                       }}
                       value={field.state.value ?? null}
                       label="Graduation Date"
-                      className="[&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-800 w-64 grow"
+                      className="w-64 grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-800"
                       slotProps={{
                         actionBar: {
                           actions: ['accept'],
@@ -216,7 +216,7 @@ export default function OnboardingForm({
 
         <form.WizardStep finishStep>
           <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2 ml-3.5">
+            <div className="ml-3.5 flex flex-col gap-2">
               <Typography
                 variant="h1"
                 className="font-display text-4xl font-bold"
