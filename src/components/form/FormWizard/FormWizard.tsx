@@ -20,39 +20,39 @@ import {
 } from 'react';
 import { BaseCard } from '@nebula-library/components/BaseCard';
 import Panel from '@nebula-library/components/Panel';
-import { useFormContext } from '@src/utils/form';
+import { useAppForm, useFormContext } from '@src/utils/form';
 import {
   ActiveStep,
   FormWizardProps,
   FormWizardStepProps,
   StepConfig,
 } from './types';
-import { useWizardContext, WizardContext } from './WizardContext';
+import { WizardContext } from './WizardContext';
 
 /**
  * Reusable multi-step form wizard that integrates with TanStack Form.
  *
- * Usage:
- * ```tsx
+ * @example
+ * const form = useAppForm({...})
+ *
  * <form.Wizard onComplete={() => router.push('/')}>
  *   <form.WizardStep startStep>
- *     <Intro />
+ *     ...
  *   </form.WizardStep>
  *   <form.WizardStep label="Name" fields={['firstName', 'lastName']}>
  *     ...form fields...
  *   </form.WizardStep>
  *   <form.WizardStep finishStep>
- *     <Done />
+ *     ...
  *   </form.WizardStep>
  * </form.Wizard>
- * ```
  */
 export default function FormWizard({
   onComplete,
   autoAdvanceOnSubmit,
   children,
 }: FormWizardProps) {
-  const form = useFormContext();
+  const form = useFormContext() as unknown as ReturnType<typeof useAppForm>;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -101,7 +101,7 @@ export default function FormWizard({
 
   const hasStart = steps[0]?.variant === 'start';
   const hasFinish = steps[steps.length - 1]?.variant === 'finish';
-  const shouldAutoAdvance = autoAdvanceOnSubmit ?? hasFinish;
+  const shouldAutoAdvanceOnSubmit = autoAdvanceOnSubmit ?? hasFinish;
 
   // Step navigation state
   const [activeStep, setActiveStep] = useState<ActiveStep>({
@@ -142,9 +142,7 @@ export default function FormWizard({
     (stepIndex: number) => {
       const step = steps[stepIndex];
       if (step?.variant !== 'body' || !step.fields.length) return;
-      step.fields.forEach((field) =>
-        form.validateField(field as never, 'change'),
-      );
+      step.fields.forEach((field) => form.validateField(field, 'change'));
     },
     [steps, form],
   );
@@ -154,13 +152,7 @@ export default function FormWizard({
       const step = steps[stepIndex];
       if (step?.variant !== 'body' || !step.fields.length) return true;
       return step.fields.every(
-        (field) =>
-          (
-            form.state.fieldMeta as Record<
-              string,
-              { isValid?: boolean } | undefined
-            >
-          )[field]?.isValid ?? true,
+        (field) => form.state.fieldMeta[field]?.isValid ?? true,
       );
     },
     [steps, form.state.fieldMeta],
@@ -249,7 +241,7 @@ export default function FormWizard({
       void form.handleSubmit().then(() => {
         if (
           form.store.state.isSubmitSuccessful &&
-          shouldAutoAdvance &&
+          shouldAutoAdvanceOnSubmit &&
           hasFinish
         ) {
           setActiveStep({
@@ -318,7 +310,9 @@ export default function FormWizard({
                         color="inherit"
                         onClick={() => goToStep(index)}
                         disabled={
-                          index - 1 > activeStep.index || isOnFinishStep
+                          index - 1 > activeStep.index ||
+                          isOnFinishStep ||
+                          (!currentFieldsValid && index >= activeStep.index)
                         }
                       >
                         <StepLabel
@@ -343,22 +337,29 @@ export default function FormWizard({
             style={mounting ? undefined : { height: `${formHeight}px` }}
           >
             {/* Hidden step for initial sizing */}
-            <div className="invisible">
-              <div className="mx-2">{steps[0]?.content}</div>
-            </div>
+            {mounting && (
+              <div className="invisible">
+                <div className="mx-2">{steps[0]?.content}</div>
+              </div>
+            )}
 
             {steps.map((step, index) => {
               const isActive = activeStep.index === index;
+
+              // Determines the direction of the slide transition
               const direction =
                 activeStep.previous !== undefined
                   ? activeStep.index > activeStep.previous
-                    ? activeStep.index === index
-                      ? 'left'
-                      : 'right'
-                    : activeStep.index === index
-                      ? 'right'
-                      : 'left'
-                  : 'left';
+                    ? // on next
+                      activeStep.index === index
+                      ? 'left' // entering
+                      : 'right' // exiting
+                    : // on back
+                      activeStep.index === index
+                      ? 'right' // entering
+                      : 'left' // exiting
+                  : // on mount
+                    'left';
 
               return (
                 <Slide
@@ -404,6 +405,3 @@ export default function FormWizard({
     </WizardContext.Provider>
   );
 }
-
-// Re-export for consumers that need wizard context
-export { useWizardContext };
