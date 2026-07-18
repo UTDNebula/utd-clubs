@@ -9,13 +9,12 @@ import {
 import { clubMatchFormSchema } from '@src/utils/formSchemas';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
-const GEMINI_SERVICE_ACCOUNT =
-  process.env.GEMINI_SERVICE_ACCOUNT !== undefined
-    ? (JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT ?? '') as {
-        client_email: string;
-        private_key: string;
-      })
-    : { client_email: '', private_key: '' };
+const GEMINI_SERVICE_ACCOUNT = Boolean(process.env.GEMINI_SERVICE_ACCOUNT)
+  ? (JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT ?? '') as {
+      client_email: string;
+      private_key: string;
+    })
+  : { client_email: '', private_key: '' };
 
 const ai = new GoogleGenAI({
   vertexai: true,

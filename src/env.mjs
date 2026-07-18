@@ -11,9 +11,7 @@ const server = z.object({
     .enum(['development', 'test', 'production'])
     .default('development'),
   DATABASE_URL: z.string().min(1),
-  BETTER_AUTH_SECRET: isProduction
-    ? z.string().min(1)
-    : z.string().min(1).optional(),
+  BETTER_AUTH_SECRET: isProduction ? z.string().min(1) : z.string().optional(),
   BETTER_AUTH_URL: z.preprocess(
     // This makes Vercel deployments not fail if you don't set BETTER_AUTH_URL
     // Since Better Auth automatically uses the VERCEL_URL if present.
@@ -21,12 +19,12 @@ const server = z.object({
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string().min(1) : z.url(),
   ),
-  GOOGLE_CLIENT_ID: z.string().min(1).optional(),
-  GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
-  DISCORD_CLIENT_ID: z.string().min(1).optional(),
-  DISCORD_CLIENT_SECRET: z.string().min(1).optional(),
-  MICROSOFT_CLIENT_ID: z.string().min(1).optional(),
-  MICROSOFT_CLIENT_SECRET: z.string().min(1).optional(),
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  DISCORD_CLIENT_ID: z.string().optional(),
+  DISCORD_CLIENT_SECRET: z.string().optional(),
+  MICROSOFT_CLIENT_ID: z.string().optional(),
+  MICROSOFT_CLIENT_SECRET: z.string().optional(),
   NEBULA_API_URL: z.string().min(1),
   NEBULA_API_STORAGE_BUCKET: z.string().min(1),
   NEBULA_API_KEY: z.string().min(1),
@@ -59,6 +57,11 @@ const client = z.object({
     : z.string().optional(),
 });
 
+const clean = (/** @type {string | undefined} */ input) => {
+  const trimmed = input?.trim();
+  return trimmed !== '' ? trimmed : undefined;
+};
+
 /**
  * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
  * middlewares) or client-side so we need to destruct manually.
@@ -66,27 +69,28 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
-  NODE_ENV: process.env.NODE_ENV,
-  DATABASE_URL: process.env.DATABASE_URL,
-  BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-  BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
-  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-  DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-  MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
-  MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,
-  NEBULA_API_URL: process.env.NEBULA_API_URL,
-  NEBULA_API_STORAGE_BUCKET: process.env.NEBULA_API_KEY,
-  NEBULA_API_KEY: process.env.NEBULA_API_KEY,
-  NEBULA_API_STORAGE_KEY: process.env.NEBULA_API_KEY,
-  NEBULA_API_EMAIL_KEY: process.env.NEBULA_API_EMAIL_KEY,
-  GEMINI_SERVICE_ACCOUNT: process.env.GEMINI_SERVICE_ACCOUNT,
-  NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY:
+  NODE_ENV: clean(process.env.NODE_ENV),
+  DATABASE_URL: clean(process.env.DATABASE_URL),
+  BETTER_AUTH_SECRET: clean(process.env.BETTER_AUTH_SECRET),
+  BETTER_AUTH_URL: clean(process.env.BETTER_AUTH_URL),
+  GOOGLE_CLIENT_ID: clean(process.env.GOOGLE_CLIENT_ID),
+  GOOGLE_CLIENT_SECRET: clean(process.env.GOOGLE_CLIENT_SECRET),
+  DISCORD_CLIENT_ID: clean(process.env.DISCORD_CLIENT_ID),
+  DISCORD_CLIENT_SECRET: clean(process.env.DISCORD_CLIENT_SECRET),
+  MICROSOFT_CLIENT_ID: clean(process.env.MICROSOFT_CLIENT_ID),
+  MICROSOFT_CLIENT_SECRET: clean(process.env.MICROSOFT_CLIENT_SECRET),
+  NEBULA_API_URL: clean(process.env.NEBULA_API_URL),
+  NEBULA_API_STORAGE_BUCKET: clean(process.env.NEBULA_API_KEY),
+  NEBULA_API_KEY: clean(process.env.NEBULA_API_KEY),
+  NEBULA_API_STORAGE_KEY: clean(process.env.NEBULA_API_KEY),
+  NEBULA_API_EMAIL_KEY: clean(process.env.NEBULA_API_EMAIL_KEY),
+  GEMINI_SERVICE_ACCOUNT: clean(process.env.GEMINI_SERVICE_ACCOUNT),
+  NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY: clean(
     process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY,
-  SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
-  NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  AUTH_TRUSTED_ORIGINS: process.env.AUTH_TRUSTED_ORIGINS,
+  ),
+  SENTRY_AUTH_TOKEN: clean(process.env.SENTRY_AUTH_TOKEN),
+  NEXT_PUBLIC_SENTRY_DSN: clean(process.env.NEXT_PUBLIC_SENTRY_DSN),
+  AUTH_TRUSTED_ORIGINS: clean(process.env.AUTH_TRUSTED_ORIGINS),
 };
 
 // Don't touch the part below
