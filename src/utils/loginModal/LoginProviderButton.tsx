@@ -2,6 +2,7 @@
 
 import Button from '@mui/material/Button';
 import { authClient } from '@src/utils/auth-client';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 import LoginProviderIcons from './icons';
 import { LoginProviders } from './types';
 
@@ -24,11 +25,18 @@ export default function LoginProviderButton({
       variant="contained"
       size="large"
       onClick={() => {
-        void authClient.signIn.social({
-          provider: provider,
-          callbackURL: callbackURL ?? window.location.href,
-          newUserCallbackURL: '/get-started',
-        });
+        void authClient.signIn.social(
+          {
+            provider: provider,
+            callbackURL: callbackURL ?? window.location.href,
+            newUserCallbackURL: '/get-started',
+          },
+          {
+            onError: (ctx) => {
+              setSnackbar(SnackbarPresets.errorWithMessage(ctx.error.message));
+            },
+          },
+        );
       }}
       className="min-w-max bg-white pr-5 pl-3 whitespace-nowrap text-slate-800 normal-case outline-1 outline-transparent transition-[outline-color] duration-500 not-active:outline-neutral-300 hover:bg-neutral-100 dark:bg-neutral-700 dark:text-slate-200 dark:not-active:outline-neutral-600 dark:hover:bg-neutral-600"
       startIcon={
