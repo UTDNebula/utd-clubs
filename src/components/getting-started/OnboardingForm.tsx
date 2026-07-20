@@ -35,51 +35,57 @@ export default function OnboardingForm({
   const [defaultValues, setDefaultValues] = useState<
     Partial<AccountOnboardingSchema>
   >({
-    firstName: userMetadata?.firstName,
-    lastName: userMetadata?.lastName,
-    major: userMetadata?.major,
-    minor: userMetadata?.minor,
-    studentClassification: userMetadata?.studentClassification,
-    graduationDate: userMetadata?.graduationDate
-      ? new Date(
-          userMetadata?.graduationDate?.getTime() +
-            userMetadata?.graduationDate?.getTimezoneOffset() * 60 * 1000,
-        )
-      : undefined,
-    contactEmail: userMetadata?.contactEmail ?? '',
+    name: {
+      firstName: userMetadata?.firstName ?? '',
+      lastName: userMetadata?.lastName,
+    },
+    collegeInfo: {
+      major: userMetadata?.major,
+      minor: userMetadata?.minor,
+      studentClassification: userMetadata?.studentClassification ?? 'Student',
+      graduationDate: userMetadata?.graduationDate
+        ? new Date(
+            userMetadata?.graduationDate?.getTime() +
+              userMetadata?.graduationDate?.getTimezoneOffset() * 60 * 1000,
+          )
+        : null,
+    },
+    contactEmail: {
+      contactEmail: userMetadata?.contactEmail ?? '',
+    },
   });
 
   const form = useAppForm({
     defaultValues,
-    onSubmit: async ({ value, formApi }) => {
-      try {
-        const updated = await editAccountMutation.mutateAsync({
-          updateUser: value,
-        });
-        if (updated) {
-          const updatedFixed = {
-            ...updated,
-            graduationDate: updated?.graduationDate
-              ? new Date(
-                  updated?.graduationDate?.getTime() +
-                    updated?.graduationDate?.getTimezoneOffset() * 60 * 1000,
-                )
-              : null,
-          };
-          setDefaultValues(updatedFixed);
-          formApi.reset(updatedFixed);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    validators: { onSubmit: accountOnboardingSchema },
+    // onSubmit: async ({ value, formApi }) => {
+    //   try {
+    //     const updated = await editAccountMutation.mutateAsync({
+    //       updateUser: value,
+    //     });
+    //     if (updated) {
+    //       const updatedFixed = {
+    //         ...updated,
+    //         graduationDate: updated?.graduationDate
+    //           ? new Date(
+    //               updated?.graduationDate?.getTime() +
+    //                 updated?.graduationDate?.getTimezoneOffset() * 60 * 1000,
+    //             )
+    //           : null,
+    //       };
+    //       setDefaultValues(updatedFixed);
+    //       formApi.reset(updatedFixed);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // },
+    validators: { onChange: accountOnboardingSchema },
   });
 
   const FormElement = (
     <form.AppForm>
       <form.Wizard onComplete={() => router.push('/')}>
-        <form.WizardStep startStep>
+        <form.WizardStep name="welcome" hidden>
           <div className="flex flex-col gap-6">
             <div className="ml-3.5 flex flex-col gap-2">
               <Typography
@@ -95,10 +101,10 @@ export default function OnboardingForm({
           </div>
         </form.WizardStep>
 
-        <form.WizardStep label="Name" fields={['firstName', 'lastName']}>
+        <form.WizardStep name="name" label="Name">
           <FormStepContent title="Name">
             <form.Question question="Please check that your name is correct. This is how you will appear to fellow students on UTD Clubs.">
-              <form.AppField name="firstName">
+              <form.AppField name="name.firstName">
                 {(field) => (
                   <field.TextField
                     label="First Name"
@@ -107,7 +113,7 @@ export default function OnboardingForm({
                   />
                 )}
               </form.AppField>
-              <form.AppField name="lastName">
+              <form.AppField name="name.lastName">
                 {(field) => (
                   <field.TextField label="Last Name" className="grow" />
                 )}
@@ -116,17 +122,14 @@ export default function OnboardingForm({
           </FormStepContent>
         </form.WizardStep>
 
-        <form.WizardStep
-          label="College Info"
-          fields={['major', 'minor', 'studentClassification', 'graduationDate']}
-        >
+        <form.WizardStep name="collegeInfo" label="College Info">
           <FormStepContent title="College Info">
             <form.Question
               question={
                 'Enter your college major or "Undecided". If applicable, add your college minor.'
               }
             >
-              <form.AppField name="major">
+              <form.AppField name="collegeInfo.major">
                 {(field) => (
                   <field.AutocompleteFreeSolo
                     label="Major"
@@ -135,7 +138,7 @@ export default function OnboardingForm({
                   />
                 )}
               </form.AppField>
-              <form.AppField name="minor">
+              <form.AppField name="collegeInfo.minor">
                 {(field) => (
                   <field.AutocompleteFreeSolo
                     label="Minor"
@@ -146,7 +149,7 @@ export default function OnboardingForm({
               </form.AppField>
             </form.Question>
             <form.Question question="Are you a student? When do you graduate?">
-              <form.AppField name="studentClassification">
+              <form.AppField name="collegeInfo.studentClassification">
                 {(field) => (
                   <field.Select
                     label="Classification"
@@ -155,7 +158,7 @@ export default function OnboardingForm({
                   />
                 )}
               </form.AppField>
-              <form.AppField name="graduationDate">
+              <form.AppField name="collegeInfo.graduationDate">
                 {(field) => {
                   return (
                     <DatePicker
@@ -195,10 +198,10 @@ export default function OnboardingForm({
           </FormStepContent>
         </form.WizardStep>
 
-        <form.WizardStep label="Contact Email" fields={['contactEmail']}>
+        <form.WizardStep name="contactEmail" label="Contact Email">
           <FormStepContent title="Contact Email">
             <form.Question question="Please enter your UTD email so club and event organizers can contact you.">
-              <form.AppField name="contactEmail">
+              <form.AppField name="contactEmail.contactEmail">
                 {(field) => (
                   <div className="grow">
                     <field.TextField
@@ -214,7 +217,7 @@ export default function OnboardingForm({
           </FormStepContent>
         </form.WizardStep>
 
-        <form.WizardStep finishStep>
+        <form.WizardStep name="finish" hidden>
           <div className="flex flex-col gap-6">
             <div className="ml-3.5 flex flex-col gap-2">
               <Typography

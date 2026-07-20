@@ -20,13 +20,19 @@ export const accountSettingsSchema = z.object({
 
 export type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
 
-export const accountOnboardingSchema = z.object({
+export const accountOnboardingNameSchema = z.object({
   firstName: z.string().min(1, 'Name is required'),
   lastName: z.string().optional(),
+});
+
+export const accountOnboardingCollegeInfoSchema = z.object({
   major: z.string().optional(),
   minor: z.string().nullable().optional(),
   studentClassification: z.enum(studentClassificationEnum.enumValues),
   graduationDate: z.date({ error: 'Graduation date is required' }).nullable(),
+});
+
+export const accountOnboardingContactEmailSchema = z.object({
   contactEmail: z
     .email({
       error: 'Use your UT Dallas email',
@@ -35,6 +41,12 @@ export const accountOnboardingSchema = z.object({
     })
     .min(1, 'Contact email is required')
     .nullable(),
+});
+
+export const accountOnboardingSchema = z.object({
+  name: accountOnboardingNameSchema,
+  collegeInfo: accountOnboardingCollegeInfoSchema,
+  contactEmail: accountOnboardingContactEmailSchema,
 });
 
 export type AccountOnboardingSchema = z.infer<typeof accountOnboardingSchema>;

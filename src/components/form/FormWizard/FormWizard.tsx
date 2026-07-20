@@ -65,37 +65,23 @@ export default function FormWizard({
           children: ReactNode;
         };
 
-        if (props.startStep) {
-          result.push({
-            label: props.label ?? 'Get Started',
-            content: props.children,
-            variant: 'start',
-            hidden: true,
-          });
-        } else if (props.finishStep) {
-          result.push({
-            label: props.label ?? 'Finish',
-            content: props.children,
-            variant: 'finish',
-            hidden: true,
-          });
-        } else {
-          result.push({
-            label: props.label ?? '',
-            fields: props.fields ?? [],
-            content: props.children,
-            variant: 'body',
-            hidden: false,
-          });
-        }
+        result.push({
+          name: props.name,
+          label: props.label ?? props.name ?? '',
+          render: props.children,
+          hidden: props.hidden ?? false,
+        });
       }
     });
 
     return result;
   }, [children]);
 
-  const hasStart = steps[0]?.variant === 'start';
-  const hasFinish = steps[steps.length - 1]?.variant === 'finish';
+  const hasStart = true;
+  const hasFinish = true;
+
+  // const hasStart = steps[0]?.variant === 'start';
+  // const hasFinish = steps[steps.length - 1]?.variant === 'end';
   const shouldAutoAdvanceOnSubmit = autoAdvanceOnSubmit ?? hasFinish;
 
   // Step navigation state
@@ -145,49 +131,17 @@ export default function FormWizard({
     }
   }, []);
 
-  // Validation helpers
-  const validateStepFields = useCallback(
-    (stepIndex: number) => {
-      const step = steps[stepIndex];
-      if (step?.variant !== 'body' || !step.fields.length) return;
-      step.fields.forEach((field) => form.validateField(field, 'change'));
-    },
-    [steps, form],
-  );
-
-  const areStepFieldsValid = useCallback(
-    (stepIndex: number) => {
-      const step = steps[stepIndex];
-      if (step?.variant !== 'body' || !step.fields.length) return true;
-      return step.fields.every(
-        (field) => form.state.fieldMeta[field]?.isValid ?? true,
-      );
-    },
-    [steps, form.state.fieldMeta],
-  );
-
   // Last body step index (the step that triggers form submission)
   const lastBodyIndex = hasFinish ? steps.length - 2 : steps.length - 1;
 
   // Navigation
   const goNext = useCallback(() => {
-    validateStepFields(activeStep);
-    if (!areStepFieldsValid(activeStep)) return;
-
     if (activeStep < lastBodyIndex) {
       setActiveStep((prev) => prev + 1);
     } else if (hasFinish && activeStep === steps.length - 1) {
       onComplete?.();
     }
-  }, [
-    activeStep,
-    lastBodyIndex,
-    hasFinish,
-    steps.length,
-    onComplete,
-    validateStepFields,
-    areStepFieldsValid,
-  ]);
+  }, [activeStep, lastBodyIndex, hasFinish, steps.length, onComplete]);
 
   const goBack = useCallback(() => {
     if (activeStep > 0) {
@@ -200,13 +154,11 @@ export default function FormWizard({
       if (index < activeStep) {
         setActiveStep(index);
       } else if (index > activeStep) {
-        validateStepFields(activeStep);
-        if (!areStepFieldsValid(activeStep)) return;
         if (index - 1 > activeStep) return;
         setActiveStep(index);
       }
     },
-    [activeStep, validateStepFields, areStepFieldsValid],
+    [activeStep],
   );
 
   // Advance to finish step after successful form submission
@@ -219,9 +171,6 @@ export default function FormWizard({
   const handleNext = (event: MouseEvent<HTMLButtonElement>) => {
     // Always prevent native submit; we call form.handleSubmit() explicitly
     event.preventDefault();
-
-    validateStepFields(activeStep);
-    if (!areStepFieldsValid(activeStep)) return;
 
     if (activeStep < lastBodyIndex) {
       setActiveStep((prev) => prev + 1);
@@ -270,7 +219,9 @@ export default function FormWizard({
         ? 'Start'
         : 'Next';
 
-  const currentFieldsValid = areStepFieldsValid(activeStep);
+  const currentFieldsValid = true;
+
+  const formGroupApis = form.formGroupApis.values().toArray();
 
   return (
     <WizardContext.Provider value={contextValue}>
@@ -283,6 +234,38 @@ export default function FormWizard({
         className="flex w-full flex-col gap-8"
         noValidate
       >
+        <div>
+          <Button
+            onClick={() => {
+              console.log(
+                'formGroupMetaDerived',
+                form.formGroupMetaDerived.get(),
+              );
+              console.log(
+                'values',
+                Object.entries(form.formGroupMetaDerived.get()).forEach(
+                  ([name, value]) => {
+                    console.log(`${name} is submitted`, value.isSubmitted);
+                  },
+                ),
+              );
+            }}
+          >
+            log
+          </Button>
+          <Button
+            onClick={() => {
+              const foundGroupApi = formGroupApis.find(
+                (groupApi) => groupApi.name === 'name',
+              );
+              console.log('foundGroupApi', foundGroupApi);
+              foundGroupApi?.handleSubmit();
+            }}
+          >
+            submit
+          </Button>
+        </div>
+
         <BaseCard className="overflow-clip py-4 max-sm:px-0 sm:px-2">
           <div>
             <Stepper alternativeLabel={isSmallScreen}>
@@ -325,7 +308,7 @@ export default function FormWizard({
             {/* Hidden step for initial sizing */}
             {mounting && (
               <div className="invisible">
-                <div className="mx-2">{steps[0]?.content}</div>
+                <div className="mx-2">{steps[0]?.render}</div>
               </div>
             )}
 
@@ -358,7 +341,13 @@ export default function FormWizard({
                   className={`absolute top-0 left-0 ${mounting ? 'invisible' : ''}`}
                 >
                   <div ref={isActive ? measureFormStepRef : undefined}>
-                    <div className="mx-2">{step.content}</div>
+                    <div className="mx-2">
+                      <form.FormGroup
+                        name={step.name ?? step.label ?? `_unknown-${index}`}
+                      >
+                        {() => <>{step.render}</>}
+                      </form.FormGroup>
+                    </div>
                   </div>
                 </Slide>
               );
