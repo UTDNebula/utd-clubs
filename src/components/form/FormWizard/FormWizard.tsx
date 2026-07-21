@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@mui/material/Button';
-import Slide from '@mui/material/Slide';
+import Slide, { SlideProps } from '@mui/material/Slide';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
 import StepLabel from '@mui/material/StepLabel';
@@ -21,7 +21,13 @@ import {
 import { BaseCard } from '@nebula-library/components/BaseCard';
 import Panel from '@nebula-library/components/Panel';
 import { useAppForm, useFormContext } from '@src/utils/form';
-import { FormWizardProps, FormWizardStepProps, StepConfig } from './types';
+import {
+  FormWizardProps,
+  FormWizardStepProps,
+  StepState,
+  WizardAction,
+  WizardStepConfig,
+} from './types';
 import { WizardContext } from './WizardContext';
 
 /**
@@ -42,73 +48,92 @@ import { WizardContext } from './WizardContext';
  *   </form.WizardStep>
  * </form.Wizard>
  */
-export default function FormWizard({
-  onComplete,
-  autoAdvanceOnSubmit,
-  children,
-}: FormWizardProps) {
+export default function FormWizard({ onComplete, children }: FormWizardProps) {
   const form = useFormContext() as unknown as ReturnType<typeof useAppForm>;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Build step config from children
-  const steps = useMemo<StepConfig[]>(() => {
-    const result: StepConfig[] = [];
+  const steps = useMemo<WizardStepConfig[]>(
+    () =>
+      Children.toArray(children).flatMap((child) => {
+        if (
+          isValidElement(child) &&
+          typeof child.type !== 'string' &&
+          '_isWizardStep' in child.type
+        ) {
+          return [
+            child.props as FormWizardStepProps & {
+              children: ReactNode;
+            },
+          ];
+        } else {
+          return [];
+        }
+      }),
+    [children],
+  );
 
-    Children.toArray(children).forEach((child) => {
-      if (
-        isValidElement(child) &&
-        typeof child.type !== 'string' &&
-        '_isWizardStep' in child.type
-      ) {
-        const props = child.props as FormWizardStepProps & {
-          children: ReactNode;
-        };
-
-        result.push({
-          name: props.name,
-          label: props.label ?? props.name ?? '',
-          render: props.children,
-          hidden: props.hidden ?? false,
-        });
-      }
-    });
-
-    return result;
-  }, [children]);
-
-  const hasStart = true;
-  const hasFinish = true;
-
-  // const hasStart = steps[0]?.variant === 'start';
-  // const hasFinish = steps[steps.length - 1]?.variant === 'end';
-  const shouldAutoAdvanceOnSubmit = autoAdvanceOnSubmit ?? hasFinish;
-
-  // Step navigation state
-  const [activeStepState, setActiveStepState] = useState<{
-    index: number;
-    previous: number | undefined;
-  }>({
-    index: 0,
+  const defaultStepState = {
+    current: { config: steps[0], index: 0 },
     previous: undefined,
-  });
-
-  const setActiveStep = (value: React.SetStateAction<number>) => {
-    setActiveStepState((prev) => ({
-      index: typeof value === 'function' ? value(prev.index) : value,
-      previous: prev.index,
-    }));
   };
 
-  const activeStep = activeStepState.index;
-  const previousStep = activeStepState.previous;
+  const [stepState, setStepState] = useState<StepState>(defaultStepState);
 
-  // Loading state to prevent flash before first render measurement
-  const [mounting, setMounting] = useState(true);
+  const setCurrentStep = useCallback(
+    (value: React.SetStateAction<WizardStepConfig | undefined>) => {
+      setStepState((prev) => {
+        const config =
+          typeof value === 'function' ? value(prev.current?.config) : value;
+        return {
+          current: {
+            config,
+            index: steps.findIndex((step) => step.name === config?.name),
+          },
+          previous: prev.current,
+        };
+      });
+    },
+    [steps],
+  );
+
+  // Handle edge cases due to programmatically adding or removing a step, or because of unknown step.
+  // Without these checks, the form could skip to the next step, which could be undesirable depending on how the form is structured.
+  const findStepIndex = steps.findIndex(
+    (step) => step.name === stepState.current?.config?.name,
+  );
+  if (findStepIndex === -1) {
+    // If unknown step, return to first step
+    if (steps.length > 0) {
+      setStepState(defaultStepState);
+      console.error(
+        `Returned to first step because of unknown step "${stepState.current.config?.name}" at index ${stepState.current.index}. This can happen if:\n\n- Tried switching to a step with an unknown name\n- This wizard step was removed while it was the active step. Please only remove a step once another step is active.`,
+      );
+    }
+  } else if (findStepIndex !== stepState.current.index) {
+    // An earlier step was added or removed, so adjust state's step index
+    console.log('non matching edge case');
+    setStepState((prev) => ({
+      ...prev,
+      current: {
+        ...prev.current,
+        index: findStepIndex,
+      },
+    }));
+  }
+
+  const currentStep = stepState.current?.config;
+  const previousStep = stepState.previous?.config;
+
+  const currentStepIndex = stepState.current.index;
+  const previousStepIndex = stepState.previous?.index;
+
+  const onFirstStep = currentStepIndex === 0;
+  const onLastStep = currentStepIndex === steps.length - 1;
 
   // Dynamic height for absolutely-positioned step content
   const [formHeight, setFormHeight] = useState(0);
-
+  const [mounting, setMounting] = useState(true);
   const observerRef = useRef<ResizeObserver | null>(null);
 
   const measureFormStepRef = useCallback((node: HTMLDivElement | null) => {
@@ -131,100 +156,120 @@ export default function FormWizard({
     }
   }, []);
 
-  // Last body step index (the step that triggers form submission)
-  const lastBodyIndex = hasFinish ? steps.length - 2 : steps.length - 1;
+  const dispatchWizardAction = useCallback(
+    (action: WizardAction, options?: { targetStep?: WizardStepConfig }) => {
+      // No navigation allowed while submitting form
+      if (form.state.isSubmitting) return;
 
-  // Navigation
-  const goNext = useCallback(() => {
-    if (activeStep < lastBodyIndex) {
-      setActiveStep((prev) => prev + 1);
-    } else if (hasFinish && activeStep === steps.length - 1) {
-      onComplete?.();
-    }
-  }, [activeStep, lastBodyIndex, hasFinish, steps.length, onComplete]);
-
-  const goBack = useCallback(() => {
-    if (activeStep > 0) {
-      setActiveStep((prev) => prev - 1);
-    }
-  }, [activeStep]);
-
-  const goToStep = useCallback(
-    (index: number) => {
-      if (index < activeStep) {
-        setActiveStep(index);
-      } else if (index > activeStep) {
-        if (index - 1 > activeStep) return;
-        setActiveStep(index);
+      switch (action) {
+        case 'next':
+          if (!onLastStep) {
+            setCurrentStep(steps[currentStepIndex + 1]);
+          } else {
+            onComplete?.();
+          }
+          break;
+        case 'back':
+          if (!onFirstStep) {
+            setCurrentStep(steps[currentStepIndex - 1]);
+          }
+          break;
+        case 'target':
+          setCurrentStep(options?.targetStep);
+          break;
+        case 'submit':
+          form.handleSubmit();
+          break;
+        case 'submitAndNext':
+          form.handleSubmit().then(() => {
+            // Only advance to next step if submission handled successfully
+            if (form.state.isSubmitSuccessful) {
+              if (!onLastStep) {
+                setCurrentStep(steps[currentStepIndex + 1]);
+              } else {
+                onComplete?.();
+              }
+            }
+          });
+          break;
+        case 'reset':
+          form.reset();
+          break;
+        default:
+          console.error(`Unknown wizard action "${action}"`);
       }
     },
-    [activeStep],
+    [
+      currentStepIndex,
+      form,
+      onComplete,
+      onFirstStep,
+      onLastStep,
+      setCurrentStep,
+      steps,
+    ],
   );
 
-  // Advance to finish step after successful form submission
-  const goToFinish = useCallback(() => {
-    if (hasFinish) {
-      setActiveStep(steps.length - 1);
-    }
-  }, [hasFinish, steps.length]);
-
-  const handleNext = (event: MouseEvent<HTMLButtonElement>) => {
-    // Always prevent native submit; we call form.handleSubmit() explicitly
+  const handleNextClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    dispatchWizardAction(
+      currentStep?.nextButtonConfig?.type ??
+        (onLastStep ? 'submitAndNext' : 'next'),
+    );
+  };
 
-    if (activeStep < lastBodyIndex) {
-      setActiveStep((prev) => prev + 1);
-    } else if (activeStep === lastBodyIndex) {
-      // Submit the form; only advance to the finish step once the API call
-      // resolves successfully so the step does not jump early
-      void form.handleSubmit().then(() => {
-        if (
-          form.store.state.isSubmitSuccessful &&
-          shouldAutoAdvanceOnSubmit &&
-          hasFinish
-        ) {
-          setActiveStep(steps.length - 1);
-        }
-      });
-    } else if (hasFinish && activeStep === steps.length - 1) {
-      // "Continue" button on finish screen
-      onComplete?.();
-    }
+  const handleBackClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    dispatchWizardAction(currentStep?.backButtonConfig?.type ?? 'back');
+  };
+
+  const handleStepClick = (
+    event: MouseEvent<HTMLButtonElement>,
+    step: WizardStepConfig,
+  ) => {
+    event.preventDefault();
+    dispatchWizardAction('target', { targetStep: step });
   };
 
   // Context value
-  const contextValue = useMemo(
-    () => ({
-      activeStep,
-      previousStep,
-      steps,
-      goNext,
-      goBack,
-      goToStep,
-      goToFinish,
-    }),
-    [activeStep, previousStep, steps, goNext, goBack, goToStep, goToFinish],
-  );
-
-  // Button labels and states
-  const isOnFinishStep = hasFinish && activeStep === steps.length - 1;
-  const isOnLastBodyStep = activeStep === lastBodyIndex;
-  const isOnStartStep = hasStart && activeStep === 0;
-
-  const nextButtonLabel = isOnFinishStep
-    ? 'Continue'
-    : isOnLastBodyStep
-      ? 'Submit'
-      : isOnStartStep
-        ? 'Start'
-        : 'Next';
+  // const contextValue = useMemo(
+  //   () => ({
+  //     activeStep: activeStepIndex,
+  //     previousStep: previousStepIndex,
+  //     steps,
+  //     goNext,
+  //     goBack,
+  //     goToStep,
+  //     goToFinish,
+  //   }),
+  //   [
+  //     activeStepIndex,
+  //     previousStepIndex,
+  //     steps,
+  //     goNext,
+  //     goBack,
+  //     goToStep,
+  //     goToFinish,
+  //   ],
+  // );
 
   const currentFieldsValid = true;
 
   const formGroupApis = form.formGroupApis.values().toArray();
 
   return (
-    <WizardContext.Provider value={contextValue}>
+    // <WizardContext.Provider value={contextValue}>
+    <WizardContext.Provider
+      value={{
+        activeStep: 0,
+        previousStep: undefined,
+        steps: [],
+        goNext: () => {},
+        goBack: () => {},
+        goToStep: () => {},
+        goToFinish: () => {},
+      }}
+    >
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -237,6 +282,8 @@ export default function FormWizard({
         <div>
           <Button
             onClick={() => {
+              console.log('currentStep:', currentStepIndex, currentStep);
+              console.log('previousStep:', previousStepIndex, previousStep);
               console.log(
                 'formGroupMetaDerived',
                 form.formGroupMetaDerived.get(),
@@ -267,38 +314,43 @@ export default function FormWizard({
         </div>
 
         <BaseCard className="overflow-clip py-4 max-sm:px-0 sm:px-2">
-          <div>
-            <Stepper alternativeLabel={isSmallScreen}>
-              {steps.map((step, index) => {
-                if (!step.hidden) {
-                  return (
-                    <Step
-                      key={step.label}
-                      completed={index < activeStep}
-                      active={index === activeStep}
-                    >
-                      <StepButton
-                        color="inherit"
-                        onClick={() => goToStep(index)}
-                        disabled={
-                          index - 1 > activeStep ||
-                          isOnFinishStep ||
-                          (!currentFieldsValid && index >= activeStep)
-                        }
+          <form.Subscribe selector={(state) => state.isSubmitting}>
+            {(isSubmitting) => (
+              <Stepper alternativeLabel={isSmallScreen}>
+                {steps.map((step, index) => {
+                  if (!step.hidden) {
+                    return (
+                      <Step
+                        key={step.label}
+                        completed={index < currentStepIndex}
+                        active={index === currentStepIndex}
                       >
-                        <StepLabel
-                          className="cursor-pointer"
-                          error={!currentFieldsValid && index === activeStep}
+                        <StepButton
+                          color="inherit"
+                          onClick={(e) => handleStepClick(e, step)}
+                          disabled={
+                            isSubmitting ||
+                            index - 1 > currentStepIndex ||
+                            // isOnFinishStep ||
+                            (!currentFieldsValid && index >= currentStepIndex)
+                          }
                         >
-                          {step.label}
-                        </StepLabel>
-                      </StepButton>
-                    </Step>
-                  );
-                }
-              })}
-            </Stepper>
-          </div>
+                          <StepLabel
+                            className="cursor-pointer"
+                            error={
+                              !currentFieldsValid && index === currentStepIndex
+                            }
+                          >
+                            {step.label}
+                          </StepLabel>
+                        </StepButton>
+                      </Step>
+                    );
+                  }
+                })}
+              </Stepper>
+            )}
+          </form.Subscribe>
         </BaseCard>
         <Panel className="overflow-clip shadow-lg">
           <div
@@ -308,23 +360,23 @@ export default function FormWizard({
             {/* Hidden step for initial sizing */}
             {mounting && (
               <div className="invisible">
-                <div className="mx-2">{steps[0]?.render}</div>
+                <div className="mx-2">{steps[0]?.children}</div>
               </div>
             )}
 
             {steps.map((step, index) => {
-              const isActive = activeStep === index;
+              const isActive = currentStepIndex === index;
 
               // Determines the direction of the slide transition
-              const direction =
-                previousStep !== undefined
-                  ? activeStep > previousStep
+              const direction: SlideProps['direction'] =
+                previousStepIndex !== undefined
+                  ? currentStepIndex > previousStepIndex
                     ? // on next
-                      activeStep === index
+                      currentStepIndex === index
                       ? 'left' // entering
                       : 'right' // exiting
                     : // on back
-                      activeStep === index
+                      currentStepIndex === index
                       ? 'right' // entering
                       : 'left' // exiting
                   : // on mount
@@ -332,7 +384,7 @@ export default function FormWizard({
 
               return (
                 <Slide
-                  key={index}
+                  key={step.name}
                   direction={direction}
                   timeout={250}
                   mountOnEnter
@@ -345,7 +397,7 @@ export default function FormWizard({
                       <form.FormGroup
                         name={step.name ?? step.label ?? `_unknown-${index}`}
                       >
-                        {() => <>{step.render}</>}
+                        {() => <>{step.children}</>}
                       </form.FormGroup>
                     </div>
                   </div>
@@ -353,28 +405,39 @@ export default function FormWizard({
               );
             })}
           </div>
-          <div className="flex flex-row items-center justify-end gap-2">
-            <Button
-              className={`normal-case ${isOnFinishStep ? 'invisible' : ''}`}
-              loadingPosition="start"
-              color="primary"
-              onClick={goBack}
-              disabled={activeStep === 0 || isOnFinishStep}
-            >
-              Back
-            </Button>
-            <Button
-              variant="contained"
-              className="normal-case"
-              disabled={!currentFieldsValid}
-              loading={form.state.isSubmitting}
-              loadingPosition="start"
-              color={!currentFieldsValid ? 'inherit' : 'primary'}
-              onClick={handleNext}
-            >
-              {nextButtonLabel}
-            </Button>
-          </div>
+          <form.Subscribe selector={(state) => state.isSubmitting}>
+            {(isSubmitting) => (
+              <div className="flex flex-row items-center justify-end gap-2">
+                <Button
+                  className={`normal-case ${currentStep?.backButtonConfig?.hidden ? 'invisible' : ''}`}
+                  disabled={
+                    isSubmitting ||
+                    currentStepIndex <= 0 ||
+                    currentStep?.backButtonConfig?.disabled
+                  }
+                  color="primary"
+                  onClick={handleBackClick}
+                >
+                  {currentStep?.backButtonConfig?.label ?? 'Back'}
+                </Button>
+                <Button
+                  variant="contained"
+                  className="normal-case"
+                  disabled={
+                    !currentFieldsValid ||
+                    currentStep?.nextButtonConfig?.disabled
+                  }
+                  loading={isSubmitting}
+                  loadingPosition="start"
+                  color={!currentFieldsValid ? 'inherit' : 'primary'}
+                  onClick={handleNextClick}
+                >
+                  {currentStep?.nextButtonConfig?.label ??
+                    (onLastStep ? 'Submit' : 'Next')}
+                </Button>
+              </div>
+            )}
+          </form.Subscribe>
         </Panel>
       </form>
     </WizardContext.Provider>

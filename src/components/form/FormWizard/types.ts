@@ -1,22 +1,41 @@
 import { DeepKeys } from '@tanstack/react-form';
 import { MouseEventHandler, ReactNode } from 'react';
 
+export type StepStateConfig = {
+  config?: WizardStepConfig;
+  index: number;
+};
+
+export type StepState = {
+  current: StepStateConfig;
+  previous: StepStateConfig | undefined;
+};
+
+/**
+ * Actions that may be dispatched to the form wizard:
+ * - `"next"` Validates current step and goes to next step if successful *(default for next button)*
+ * - `"back"` Goes back to previous step *(default for back button)*
+ * - `"target"` Goes to the step whose name matches {@linkcode WizardStepButtonConfig.targetStepName | targetStepName}
+ * - `"submit"` Validates entire form and submits form if successful
+ * - `"submitAndNext"` Validates entire form, submits form if successful, then goes to next step *(default for next button on last step)*
+ * - `"reset"` Resets entire form
+ */
+export type WizardAction =
+  | 'next'
+  | 'back'
+  | 'target'
+  | 'submit'
+  | 'submitAndNext'
+  | 'reset';
+
 /**
  * Configurations for the wizard buttons that may differ between steps
  */
 export type WizardStepButtonConfig = {
   /** Label on button. */
   label?: string;
-  /**
-   * Action that takes place when interacting with the button.
-   * - `"next"` Validates current step and goes to next step if successful
-   * - `"back"` Goes back to previous step
-   * - `"target"` Goes to the step whose name matches {@linkcode WizardStepButtonConfig.targetStepName | targetStepName}
-   * - `"submit"` Validates entire form and submits form if successful
-   * - `"submitAndNext"` Validates entire form, submits form if successful, then goes to next step
-   * - `"reset"` Resets the current step
-   */
-  type?: 'next' | 'back' | 'target' | 'submit' | 'submitAndNext' | 'reset';
+  /** Action that takes place when interacting with the button. */
+  type?: WizardAction;
   /** Step's name to jump to, if {@linkcode WizardStepButtonConfig.type | type} is `"target"`. */
   targetStepName?: string;
   /** Whether the button is disabled. */
@@ -27,7 +46,7 @@ export type WizardStepButtonConfig = {
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
-type FormWizardStepPropsBase<TFormData> = {
+export type WizardStepConfig<TFormData = unknown> = {
   /** Step content */
   children?: ReactNode;
   /** Name of form group */
@@ -43,33 +62,19 @@ type FormWizardStepPropsBase<TFormData> = {
 };
 
 export type FormWizardStepProps<TFormData = unknown> =
-  FormWizardStepPropsBase<TFormData>;
+  WizardStepConfig<TFormData>;
 
 export type FormWizardProps = {
-  /** Called when the user clicks "Continue" on the finish step */
+  /** A function to be called when interacting with the next button on the last step. */
   onComplete?: () => void;
-  /**
-   * If true, automatically advances to the finish step after successful
-   * form submission. Defaults to true when a finishStep child is present.
-   */
-  autoAdvanceOnSubmit?: boolean;
   /** Wizard step children */
   children: ReactNode;
 };
 
-type StepConfigBase<TFormData> = {
-  render: ReactNode;
-  name: DeepKeys<TFormData>;
-  label: string;
-  hidden: boolean;
-};
-
-export type StepConfig<TFormData = unknown> = StepConfigBase<TFormData>;
-
 export type WizardContextType = {
   activeStep: number;
   previousStep: number | undefined;
-  steps: StepConfig[];
+  steps: WizardStepConfig[];
   goNext: () => void;
   goBack: () => void;
   goToStep: (index: number) => void;

@@ -57,6 +57,9 @@ export default function OnboardingForm({
 
   const form = useAppForm({
     defaultValues,
+    onSubmit: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+    },
     // onSubmit: async ({ value, formApi }) => {
     //   try {
     //     const updated = await editAccountMutation.mutateAsync({
@@ -82,10 +85,16 @@ export default function OnboardingForm({
     validators: { onChange: accountOnboardingSchema },
   });
 
+  const [showStep, setShowStep] = useState(false);
+
   const FormElement = (
     <form.AppForm>
       <form.Wizard onComplete={() => router.push('/')}>
-        <form.WizardStep name="welcome" hidden>
+        <form.WizardStep
+          name="welcome"
+          hidden
+          nextButtonConfig={{ label: 'Start' }}
+        >
           <div className="flex flex-col gap-6">
             <div className="ml-3.5 flex flex-col gap-2">
               <Typography
@@ -98,8 +107,38 @@ export default function OnboardingForm({
                 Welcome to UTD Clubs! Let&apos;s get you set up.
               </Typography>
             </div>
+            <button
+              onClick={() => {
+                setShowStep((prev) => !prev);
+              }}
+            >
+              Toggle step: ({showStep ? 'visible' : 'hidden'})
+            </button>
           </div>
         </form.WizardStep>
+
+        {showStep && (
+          <form.WizardStep name="hidden" label="Hidden">
+            <div className="flex flex-col gap-6">
+              <div className="ml-3.5 flex flex-col gap-2">
+                <Typography
+                  variant="h1"
+                  className="font-display text-4xl font-bold"
+                >
+                  Hmm
+                </Typography>
+                <Typography variant="body1">lets be sneaky :D</Typography>
+              </div>
+              <button
+                onClick={() => {
+                  setShowStep((prev) => !prev);
+                }}
+              >
+                Toggle step: ({showStep ? 'visible' : 'hidden'})
+              </button>
+            </div>
+          </form.WizardStep>
+        )}
 
         <form.WizardStep name="name" label="Name">
           <FormStepContent title="Name">
@@ -119,6 +158,13 @@ export default function OnboardingForm({
                 )}
               </form.AppField>
             </form.Question>
+            <button
+              onClick={() => {
+                setShowStep((prev) => !prev);
+              }}
+            >
+              Toggle step: ({showStep ? 'visible' : 'hidden'})
+            </button>
           </FormStepContent>
         </form.WizardStep>
 
@@ -198,7 +244,11 @@ export default function OnboardingForm({
           </FormStepContent>
         </form.WizardStep>
 
-        <form.WizardStep name="contactEmail" label="Contact Email">
+        <form.WizardStep
+          name="contactEmail"
+          label="Contact Email"
+          nextButtonConfig={{ label: 'Submit', type: 'submitAndNext' }}
+        >
           <FormStepContent title="Contact Email">
             <form.Question question="Please enter your UTD email so club and event organizers can contact you.">
               <form.AppField name="contactEmail.contactEmail">
@@ -217,7 +267,11 @@ export default function OnboardingForm({
           </FormStepContent>
         </form.WizardStep>
 
-        <form.WizardStep name="finish" hidden>
+        <form.WizardStep
+          name="finish"
+          hidden
+          nextButtonConfig={{ label: 'Continue', type: 'next' }}
+        >
           <div className="flex flex-col gap-6">
             <div className="ml-3.5 flex flex-col gap-2">
               <Typography
