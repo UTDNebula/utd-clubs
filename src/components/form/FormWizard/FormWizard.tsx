@@ -38,21 +38,27 @@ import { WizardContext } from './WizardContext';
  * const form = useAppForm({...})
  *
  * <form.Wizard onComplete={() => router.push('/')}>
- *   <form.WizardStep startStep>
- *     ...
+ *   <form.WizardStep name="welcome" hidden >
+ *     <h1>Welcome!</h1>
  *   </form.WizardStep>
- *   <form.WizardStep label="Name" fields={['firstName', 'lastName']}>
- *     ...form fields...
+ *   <form.WizardStep name="step1" label="Step 1" >
+ *     ...Step 1 form fields...
  *   </form.WizardStep>
- *   <form.WizardStep finishStep>
- *     ...
+ *   <form.WizardStep name="step2" label="Step 2" >
+ *     ...Step 2 form fields...
  *   </form.WizardStep>
  * </form.Wizard>
  */
-export default function FormWizard({ onComplete, children }: FormWizardProps) {
+export default function FormWizard({
+  children,
+  onComplete,
+  hideStepper,
+}: FormWizardProps) {
   const form = useFormContext() as unknown as ReturnType<typeof useAppForm>;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const LTR =
+    window.getComputedStyle(document.documentElement).direction === 'ltr';
 
   const steps = useMemo<WizardStepConfig[]>(
     () =>
@@ -137,10 +143,12 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
     (furthestStepIndex + 1);
 
   const onFirstStep = currentStepIndex === 0;
-  const onLastStep =
-    currentStepIndex === steps.findLastIndex((step) => !step.disabled);
+  const onLastStep = (() => {
+    const index = steps.findLastIndex((step) => !step.disabled);
+    return index === -1 ? true : currentStepIndex === index;
+  })();
 
-  if (steps[currentStepIndex]?.disabled) {
+  if (steps[currentStepIndex]?.disabled && !steps[0]?.disabled) {
     setStepState(defaultStepState);
     console.error(
       `Returned to first step because step "${currentStep?.name}" at index ${currentStepIndex} was disabled while it was the active step. Please only disable a step once another step is active.`,
@@ -206,7 +214,9 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
           }
           break;
         case 'target':
-          setCurrentStep(options?.targetStep);
+          if (currentStep?.name !== options?.targetStep?.name) {
+            setCurrentStep(options?.targetStep);
+          }
           break;
         case 'submit':
           form.handleSubmit();
@@ -227,6 +237,7 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
       }
     },
     [
+      currentStep?.name,
       currentStepIndex,
       form,
       onComplete,
@@ -347,46 +358,48 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
           </Button>
         </div>
 
-        <BaseCard className="overflow-clip py-4 max-sm:px-0 sm:px-2">
-          <form.Subscribe selector={(state) => state.isSubmitting}>
-            {(isSubmitting) => (
-              <Stepper alternativeLabel={isSmallScreen}>
-                {steps.map((step, index) => {
-                  if (step.disabled || step.hidden) return;
+        {!hideStepper && (
+          <BaseCard className="overflow-clip py-4 max-sm:px-0 sm:px-2">
+            <form.Subscribe selector={(state) => state.isSubmitting}>
+              {(isSubmitting) => (
+                <Stepper alternativeLabel={isSmallScreen}>
+                  {steps.map((step, index) => {
+                    if (step.disabled || step.hidden) return;
 
-                  return (
-                    <Step
-                      key={step.label}
-                      completed={index < currentStepIndex}
-                      active={index === currentStepIndex}
-                    >
-                      <StepButton
-                        color="inherit"
-                        onClick={(e) => handleStepClick(e, step)}
-                        disabled={
-                          isSubmitting ||
-                          index > nextInaccessibleStepIndex || // Don't allow skipping forward if next button is disabled or hidden
-                          index < prevInaccessibleStepIndex || // Don't allow skipping backward if back button is disabled or hidden
-                          index > nextFromFurthestEnabledStepIndex // Skip only to the (enabled) step directly after the furthest visited step
-                          // (!currentFieldsValid && index >= currentStepIndex)
-                        }
+                    return (
+                      <Step
+                        key={step.label}
+                        completed={index < currentStepIndex}
+                        active={index === currentStepIndex}
                       >
-                        <StepLabel
-                          className="cursor-pointer"
-                          // error={
-                          //   !currentFieldsValid && index === currentStepIndex
-                          // }
+                        <StepButton
+                          color="inherit"
+                          onClick={(e) => handleStepClick(e, step)}
+                          disabled={
+                            isSubmitting ||
+                            index > nextInaccessibleStepIndex || // Don't allow skipping forward if next button is disabled or hidden
+                            index < prevInaccessibleStepIndex || // Don't allow skipping backward if back button is disabled or hidden
+                            index > nextFromFurthestEnabledStepIndex // Skip only to the (enabled) step directly after the furthest visited step
+                            // (!currentFieldsValid && index >= currentStepIndex)
+                          }
                         >
-                          {step.label}
-                        </StepLabel>
-                      </StepButton>
-                    </Step>
-                  );
-                })}
-              </Stepper>
-            )}
-          </form.Subscribe>
-        </BaseCard>
+                          <StepLabel
+                            className="cursor-pointer"
+                            // error={
+                            //   !currentFieldsValid && index === currentStepIndex
+                            // }
+                          >
+                            {step.label}
+                          </StepLabel>
+                        </StepButton>
+                      </Step>
+                    );
+                  })}
+                </Stepper>
+              )}
+            </form.Subscribe>
+          </BaseCard>
+        )}
         <Panel className="overflow-clip shadow-lg">
           <div
             className="relative mb-4 transition-[height] duration-250 ease-in-out"
@@ -404,20 +417,23 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
 
               const isActive = currentStepIndex === index;
 
+              const fore = LTR ? 'left' : 'right';
+              const aft = LTR ? 'right' : 'left';
+
               // Determines the direction of the slide transition
               const direction: SlideProps['direction'] =
                 previousStepIndex !== undefined
                   ? currentStepIndex > previousStepIndex
                     ? // on next
                       currentStepIndex === index
-                      ? 'left' // entering
-                      : 'right' // exiting
+                      ? fore // entering
+                      : aft // exiting
                     : // on back
                       currentStepIndex === index
-                      ? 'right' // entering
-                      : 'left' // exiting
+                      ? aft // entering
+                      : fore // exiting
                   : // on mount
-                    'left';
+                    fore;
 
               return (
                 <Slide
@@ -427,7 +443,7 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
                   mountOnEnter
                   unmountOnExit
                   in={isActive}
-                  className={`absolute top-0 left-0 ${mounting ? 'invisible' : ''}`}
+                  className={`absolute top-0 ${LTR ? 'left-0' : 'right-0'} ${mounting ? 'invisible' : ''}`}
                 >
                   <div ref={isActive ? measureFormStepRef : undefined}>
                     <div className="mx-2">

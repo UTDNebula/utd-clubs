@@ -1,5 +1,5 @@
 import { DeepKeys } from '@tanstack/react-form';
-import { MouseEventHandler, ReactNode } from 'react';
+import { MouseEventHandler, ReactElement, ReactNode } from 'react';
 
 export type StepStateConfig = {
   config?: WizardStepConfig;
@@ -68,10 +68,12 @@ export type FormWizardStepProps<TFormData = unknown> =
   WizardStepConfig<TFormData>;
 
 export type FormWizardProps = {
+  /** Wizard step children */
+  children: ReactElement | ReactElement[];
   /** A function to be called when interacting with the next button on the last step. */
   onComplete?: () => void;
-  /** Wizard step children */
-  children: ReactNode;
+  /** Don't display the progress bar stepper on top */
+  hideStepper?: boolean;
 };
 
 export type WizardContextType = {
