@@ -9,6 +9,7 @@ export type StepStateConfig = {
 export type StepState = {
   current: StepStateConfig;
   previous: StepStateConfig | undefined;
+  furthest: StepStateConfig;
 };
 
 /**
@@ -53,6 +54,8 @@ export type WizardStepConfig<TFormData = unknown> = {
   name: DeepKeys<TFormData>;
   /** Label shown in the stepper */
   label?: string;
+  /** Disables the step entirely. Use this instead of conditionally rendering the `<form.WizardStep>` component */
+  disabled?: boolean;
   /** Hides step from stepper */
   hidden?: boolean;
   /** Configuration options for the next button for this step. */

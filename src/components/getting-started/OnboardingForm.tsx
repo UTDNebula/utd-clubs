@@ -58,7 +58,7 @@ export default function OnboardingForm({
   const form = useAppForm({
     defaultValues,
     onSubmit: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
     },
     // onSubmit: async ({ value, formApi }) => {
     //   try {
@@ -85,8 +85,6 @@ export default function OnboardingForm({
     validators: { onChange: accountOnboardingSchema },
   });
 
-  const [showStep, setShowStep] = useState(false);
-
   const FormElement = (
     <form.AppForm>
       <form.Wizard onComplete={() => router.push('/')}>
@@ -107,38 +105,8 @@ export default function OnboardingForm({
                 Welcome to UTD Clubs! Let&apos;s get you set up.
               </Typography>
             </div>
-            <button
-              onClick={() => {
-                setShowStep((prev) => !prev);
-              }}
-            >
-              Toggle step: ({showStep ? 'visible' : 'hidden'})
-            </button>
           </div>
         </form.WizardStep>
-
-        {showStep && (
-          <form.WizardStep name="hidden" label="Hidden">
-            <div className="flex flex-col gap-6">
-              <div className="ml-3.5 flex flex-col gap-2">
-                <Typography
-                  variant="h1"
-                  className="font-display text-4xl font-bold"
-                >
-                  Hmm
-                </Typography>
-                <Typography variant="body1">lets be sneaky :D</Typography>
-              </div>
-              <button
-                onClick={() => {
-                  setShowStep((prev) => !prev);
-                }}
-              >
-                Toggle step: ({showStep ? 'visible' : 'hidden'})
-              </button>
-            </div>
-          </form.WizardStep>
-        )}
 
         <form.WizardStep name="name" label="Name">
           <FormStepContent title="Name">
@@ -158,13 +126,6 @@ export default function OnboardingForm({
                 )}
               </form.AppField>
             </form.Question>
-            <button
-              onClick={() => {
-                setShowStep((prev) => !prev);
-              }}
-            >
-              Toggle step: ({showStep ? 'visible' : 'hidden'})
-            </button>
           </FormStepContent>
         </form.WizardStep>
 
@@ -270,6 +231,7 @@ export default function OnboardingForm({
         <form.WizardStep
           name="finish"
           hidden
+          backButtonConfig={{ hidden: true }}
           nextButtonConfig={{ label: 'Continue', type: 'next' }}
         >
           <div className="flex flex-col gap-6">

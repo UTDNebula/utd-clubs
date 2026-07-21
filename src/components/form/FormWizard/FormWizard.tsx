@@ -25,6 +25,7 @@ import {
   FormWizardProps,
   FormWizardStepProps,
   StepState,
+  StepStateConfig,
   WizardAction,
   WizardStepConfig,
 } from './types';
@@ -73,9 +74,11 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
     [children],
   );
 
-  const defaultStepState = {
-    current: { config: steps[0], index: 0 },
+  const firstEnabledStep = steps.find((step) => !step.disabled);
+  const defaultStepState: StepState = {
+    current: { config: firstEnabledStep, index: 0 },
     previous: undefined,
+    furthest: { config: firstEnabledStep, index: 0 },
   };
 
   const [stepState, setStepState] = useState<StepState>(defaultStepState);
@@ -83,53 +86,66 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
   const setCurrentStep = useCallback(
     (value: React.SetStateAction<WizardStepConfig | undefined>) => {
       setStepState((prev) => {
-        const config =
-          typeof value === 'function' ? value(prev.current?.config) : value;
+        const config: WizardStepConfig | undefined =
+          typeof value === 'function' ? value(prev.current.config) : value;
+        const index = Math.max(
+          steps.findIndex((step) => step.name === config?.name),
+          0,
+        );
+        const newCurrent: StepStateConfig = { config, index };
+
         return {
-          current: {
-            config,
-            index: steps.findIndex((step) => step.name === config?.name),
-          },
+          current: newCurrent,
           previous: prev.current,
+          furthest:
+            index > (prev.furthest.index ?? -1) ? newCurrent : prev.furthest,
         };
       });
     },
     [steps],
   );
 
-  // Handle edge cases due to programmatically adding or removing a step, or because of unknown step.
-  // Without these checks, the form could skip to the next step, which could be undesirable depending on how the form is structured.
-  const findStepIndex = steps.findIndex(
-    (step) => step.name === stepState.current?.config?.name,
-  );
-  if (findStepIndex === -1) {
-    // If unknown step, return to first step
-    if (steps.length > 0) {
-      setStepState(defaultStepState);
-      console.error(
-        `Returned to first step because of unknown step "${stepState.current.config?.name}" at index ${stepState.current.index}. This can happen if:\n\n- Tried switching to a step with an unknown name\n- This wizard step was removed while it was the active step. Please only remove a step once another step is active.`,
-      );
-    }
-  } else if (findStepIndex !== stepState.current.index) {
-    // An earlier step was added or removed, so adjust state's step index
-    console.log('non matching edge case');
-    setStepState((prev) => ({
-      ...prev,
-      current: {
-        ...prev.current,
-        index: findStepIndex,
-      },
-    }));
-  }
-
-  const currentStep = stepState.current?.config;
+  const currentStep = stepState.current.config;
   const previousStep = stepState.previous?.config;
+  const furthestStep = stepState.furthest.config;
 
   const currentStepIndex = stepState.current.index;
   const previousStepIndex = stepState.previous?.index;
+  const furthestStepIndex = stepState.furthest.index;
+
+  const nextInaccessibleStepIndex = (() => {
+    const index = steps
+      .slice(currentStepIndex)
+      .findIndex(
+        (step) =>
+          !step.disabled &&
+          (step.nextButtonConfig?.disabled ||
+            step.nextButtonConfig?.hidden ||
+            step.nextButtonConfig?.type === 'submitAndNext'),
+      );
+    return index === -1 ? Infinity : index + currentStepIndex;
+  })();
+  const prevInaccessibleStepIndex = steps
+    .slice(undefined, currentStepIndex + 1)
+    .findLastIndex(
+      (step) =>
+        !step.disabled &&
+        (step.backButtonConfig?.disabled || step.backButtonConfig?.hidden),
+    );
+  const nextFromFurthestEnabledStepIndex =
+    steps.slice(furthestStepIndex + 1).findIndex((step) => !step.disabled) +
+    (furthestStepIndex + 1);
 
   const onFirstStep = currentStepIndex === 0;
-  const onLastStep = currentStepIndex === steps.length - 1;
+  const onLastStep =
+    currentStepIndex === steps.findLastIndex((step) => !step.disabled);
+
+  if (steps[currentStepIndex]?.disabled) {
+    setStepState(defaultStepState);
+    console.error(
+      `Returned to first step because step "${currentStep?.name}" at index ${currentStepIndex} was disabled while it was the active step. Please only disable a step once another step is active.`,
+    );
+  }
 
   // Dynamic height for absolutely-positioned step content
   const [formHeight, setFormHeight] = useState(0);
@@ -161,17 +177,32 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
       // No navigation allowed while submitting form
       if (form.state.isSubmitting) return;
 
+      const goNext = () => {
+        if (!onLastStep) {
+          const nextEnabledStep = steps
+            .slice(currentStepIndex + 1)
+            .find((step) => !step.disabled);
+          setCurrentStep(nextEnabledStep);
+        } else {
+          onComplete?.();
+        }
+      };
+      const goBack = () => {
+        if (!onFirstStep) {
+          const prevEnabledStep = steps
+            .slice(0, currentStepIndex)
+            .findLast((step) => !step.disabled);
+          setCurrentStep(prevEnabledStep);
+        }
+      };
+
       switch (action) {
         case 'next':
-          if (!onLastStep) {
-            setCurrentStep(steps[currentStepIndex + 1]);
-          } else {
-            onComplete?.();
-          }
+          goNext();
           break;
         case 'back':
           if (!onFirstStep) {
-            setCurrentStep(steps[currentStepIndex - 1]);
+            goBack();
           }
           break;
         case 'target':
@@ -184,11 +215,7 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
           form.handleSubmit().then(() => {
             // Only advance to next step if submission handled successfully
             if (form.state.isSubmitSuccessful) {
-              if (!onLastStep) {
-                setCurrentStep(steps[currentStepIndex + 1]);
-              } else {
-                onComplete?.();
-              }
+              goNext();
             }
           });
           break;
@@ -284,6 +311,24 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
             onClick={() => {
               console.log('currentStep:', currentStepIndex, currentStep);
               console.log('previousStep:', previousStepIndex, previousStep);
+              console.log('furthestStep:', furthestStepIndex, furthestStep);
+            }}
+          >
+            Log state
+          </Button>
+          <Button
+            onClick={() => {
+              const foundGroupApi = formGroupApis.find(
+                (groupApi) => groupApi.name === 'name',
+              );
+              console.log('foundGroupApi', foundGroupApi);
+              foundGroupApi?.handleSubmit();
+            }}
+          >
+            submit
+          </Button>
+          <Button
+            onClick={() => {
               console.log(
                 'formGroupMetaDerived',
                 form.formGroupMetaDerived.get(),
@@ -298,18 +343,7 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
               );
             }}
           >
-            log
-          </Button>
-          <Button
-            onClick={() => {
-              const foundGroupApi = formGroupApis.find(
-                (groupApi) => groupApi.name === 'name',
-              );
-              console.log('foundGroupApi', foundGroupApi);
-              foundGroupApi?.handleSubmit();
-            }}
-          >
-            submit
+            Log submission
           </Button>
         </div>
 
@@ -318,35 +352,36 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
             {(isSubmitting) => (
               <Stepper alternativeLabel={isSmallScreen}>
                 {steps.map((step, index) => {
-                  if (!step.hidden) {
-                    return (
-                      <Step
-                        key={step.label}
-                        completed={index < currentStepIndex}
-                        active={index === currentStepIndex}
+                  if (step.disabled || step.hidden) return;
+
+                  return (
+                    <Step
+                      key={step.label}
+                      completed={index < currentStepIndex}
+                      active={index === currentStepIndex}
+                    >
+                      <StepButton
+                        color="inherit"
+                        onClick={(e) => handleStepClick(e, step)}
+                        disabled={
+                          isSubmitting ||
+                          index > nextInaccessibleStepIndex || // Don't allow skipping forward if next button is disabled or hidden
+                          index < prevInaccessibleStepIndex || // Don't allow skipping backward if back button is disabled or hidden
+                          index > nextFromFurthestEnabledStepIndex // Skip only to the (enabled) step directly after the furthest visited step
+                          // (!currentFieldsValid && index >= currentStepIndex)
+                        }
                       >
-                        <StepButton
-                          color="inherit"
-                          onClick={(e) => handleStepClick(e, step)}
-                          disabled={
-                            isSubmitting ||
-                            index - 1 > currentStepIndex ||
-                            // isOnFinishStep ||
-                            (!currentFieldsValid && index >= currentStepIndex)
-                          }
+                        <StepLabel
+                          className="cursor-pointer"
+                          // error={
+                          //   !currentFieldsValid && index === currentStepIndex
+                          // }
                         >
-                          <StepLabel
-                            className="cursor-pointer"
-                            error={
-                              !currentFieldsValid && index === currentStepIndex
-                            }
-                          >
-                            {step.label}
-                          </StepLabel>
-                        </StepButton>
-                      </Step>
-                    );
-                  }
+                          {step.label}
+                        </StepLabel>
+                      </StepButton>
+                    </Step>
+                  );
                 })}
               </Stepper>
             )}
@@ -365,6 +400,8 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
             )}
 
             {steps.map((step, index) => {
+              if (step.disabled) return;
+
               const isActive = currentStepIndex === index;
 
               // Determines the direction of the slide transition
@@ -422,7 +459,7 @@ export default function FormWizard({ onComplete, children }: FormWizardProps) {
                 </Button>
                 <Button
                   variant="contained"
-                  className="normal-case"
+                  className={`normal-case ${currentStep?.nextButtonConfig?.hidden ? 'invisible' : ''}`}
                   disabled={
                     !currentFieldsValid ||
                     currentStep?.nextButtonConfig?.disabled
