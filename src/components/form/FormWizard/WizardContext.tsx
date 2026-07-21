@@ -4,13 +4,20 @@ import { createContext, useContext } from 'react';
 import { WizardContextType } from './types';
 
 const defaultContext: WizardContextType = {
-  activeStep: 0,
-  previousStep: undefined,
+  dispatchWizardAction: () => {},
+  stepState: {
+    current: { index: 0 },
+    previous: undefined,
+    furthest: { index: 0 },
+  },
   steps: [],
-  goNext: () => {},
-  goBack: () => {},
-  goToStep: () => {},
-  goToFinish: () => {},
+  meta: {
+    nextInaccessibleStepIndex: Infinity,
+    prevInaccessibleStepIndex: -1,
+    nextFromFurthestEnabledStepIndex: 1,
+    onFirstStep: true,
+    onLastStep: false,
+  },
 };
 
 export const WizardContext = createContext<WizardContextType>(defaultContext);

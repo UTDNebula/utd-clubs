@@ -76,12 +76,22 @@ export type FormWizardProps = {
   hideStepper?: boolean;
 };
 
+export type WizardActionDispatcher = (
+  action: WizardAction,
+  options?: {
+    targetStep?: WizardStepConfig;
+  },
+) => void;
+
 export type WizardContextType = {
-  activeStep: number;
-  previousStep: number | undefined;
+  dispatchWizardAction: WizardActionDispatcher;
+  stepState: StepState;
   steps: WizardStepConfig[];
-  goNext: () => void;
-  goBack: () => void;
-  goToStep: (index: number) => void;
-  goToFinish: () => void;
+  meta: {
+    nextInaccessibleStepIndex: number;
+    prevInaccessibleStepIndex: number;
+    nextFromFurthestEnabledStepIndex: number;
+    onFirstStep: boolean;
+    onLastStep: boolean;
+  };
 };

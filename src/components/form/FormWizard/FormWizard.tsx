@@ -26,7 +26,7 @@ import {
   FormWizardStepProps,
   StepState,
   StepStateConfig,
-  WizardAction,
+  WizardActionDispatcher,
   WizardStepConfig,
 } from './types';
 import { WizardContext } from './WizardContext';
@@ -58,7 +58,9 @@ export default function FormWizard({
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const LTR =
-    window.getComputedStyle(document.documentElement).direction === 'ltr';
+    typeof window !== 'undefined'
+      ? window.getComputedStyle(document.documentElement).direction === 'ltr'
+      : true;
 
   const steps = useMemo<WizardStepConfig[]>(
     () =>
@@ -180,8 +182,8 @@ export default function FormWizard({
     }
   }, []);
 
-  const dispatchWizardAction = useCallback(
-    (action: WizardAction, options?: { targetStep?: WizardStepConfig }) => {
+  const dispatchWizardAction: WizardActionDispatcher = useCallback(
+    (action, options) => {
       // No navigation allowed while submitting form
       if (form.state.isSubmitting) return;
 
@@ -270,44 +272,37 @@ export default function FormWizard({
   };
 
   // Context value
-  // const contextValue = useMemo(
-  //   () => ({
-  //     activeStep: activeStepIndex,
-  //     previousStep: previousStepIndex,
-  //     steps,
-  //     goNext,
-  //     goBack,
-  //     goToStep,
-  //     goToFinish,
-  //   }),
-  //   [
-  //     activeStepIndex,
-  //     previousStepIndex,
-  //     steps,
-  //     goNext,
-  //     goBack,
-  //     goToStep,
-  //     goToFinish,
-  //   ],
-  // );
+  const contextValue = useMemo(
+    () => ({
+      dispatchWizardAction,
+      stepState,
+      steps,
+      meta: {
+        nextInaccessibleStepIndex,
+        prevInaccessibleStepIndex,
+        nextFromFurthestEnabledStepIndex,
+        onFirstStep,
+        onLastStep,
+      },
+    }),
+    [
+      dispatchWizardAction,
+      stepState,
+      steps,
+      nextInaccessibleStepIndex,
+      prevInaccessibleStepIndex,
+      nextFromFurthestEnabledStepIndex,
+      onFirstStep,
+      onLastStep,
+    ],
+  );
 
   const currentFieldsValid = true;
 
   const formGroupApis = form.formGroupApis.values().toArray();
 
   return (
-    // <WizardContext.Provider value={contextValue}>
-    <WizardContext.Provider
-      value={{
-        activeStep: 0,
-        previousStep: undefined,
-        steps: [],
-        goNext: () => {},
-        goBack: () => {},
-        goToStep: () => {},
-        goToFinish: () => {},
-      }}
-    >
+    <WizardContext.Provider value={contextValue}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
