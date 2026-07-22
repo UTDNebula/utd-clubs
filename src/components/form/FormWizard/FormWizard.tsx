@@ -444,27 +444,29 @@ export default function FormWizard({
                     const isCurrentStepValid =
                       form.getFormGroupMeta(currentStep?.name ?? '_unknown')
                         ?.isValid ?? true;
+                    const isDisabled = Boolean(
+                      !isMounted ||
+                      isSubmitting ||
+                      (step.fake && !step.onStepperClick) || // Can't skip to fake steps. Enable just for onStepperClick functionality
+                      index > nextInaccessibleStepIndex || // Don't allow skipping forward if next button is disabled or hidden
+                      index < prevInaccessibleStepIndex || // Don't allow skipping backward if back button is disabled or hidden
+                      index > nextEnabledAfterFurthestStepIndex || // Skip only to the (enabled) step directly after the furthest visited step
+                      (!isCurrentStepValid && index > currentStepIndex), // If current step invalid, don't allow skipping forward
+                    );
 
                     return (
                       <Step
                         key={step.label}
                         completed={index < currentStepIndex}
                         active={index === currentStepIndex}
-                        disabled={
-                          !isMounted ||
-                          isSubmitting ||
-                          (step.fake && !step.onStepperClick) || // Can't skip to fake steps. Enable just for onStepperClick functionality
-                          index > nextInaccessibleStepIndex || // Don't allow skipping forward if next button is disabled or hidden
-                          index < prevInaccessibleStepIndex || // Don't allow skipping backward if back button is disabled or hidden
-                          index > nextEnabledAfterFurthestStepIndex || // Skip only to the (enabled) step directly after the furthest visited step
-                          (!isCurrentStepValid && index > currentStepIndex) // If current step invalid, don't allow skipping forward
-                        }
+                        disabled={isDisabled}
                       >
                         <StepButton
                           onClick={(e) => handleStepClick(e, step)}
                           icon={
                             isValid ? undefined : <WarningIcon color="error" />
                           }
+                          aria-controls="form-wizard-content"
                         >
                           <Typography
                             variant="inherit"
@@ -481,7 +483,7 @@ export default function FormWizard({
             </form.Subscribe>
           </BaseCard>
         )}
-        <Panel className="overflow-clip shadow-lg">
+        <Panel className="overflow-clip shadow-lg" id="form-wizard-content">
           <div
             className="relative mb-4 transition-[height] duration-250 ease-in-out"
             style={isMounted ? { height: `${formHeight}px` } : undefined}
@@ -550,13 +552,13 @@ export default function FormWizard({
                   <div className="flex flex-row items-center justify-end gap-2">
                     <Button
                       className={`normal-case ${currentStep?.backButtonConfig?.hidden ? 'invisible' : ''}`}
-                      disabled={
+                      disabled={Boolean(
                         isSubmitting ||
                         currentStep?.backButtonConfig?.disabled ||
                         // Disable on first step unless user-configured event handler
                         (currentStepIndex <= firstStepIndex &&
-                          !currentStep?.backButtonConfig?.onClick)
-                      }
+                          !currentStep?.backButtonConfig?.onClick),
+                      )}
                       color="primary"
                       onClick={handleBackClick}
                     >
@@ -565,9 +567,9 @@ export default function FormWizard({
                     <Button
                       variant="contained"
                       className={`normal-case ${currentStep?.nextButtonConfig?.hidden ? 'invisible' : ''}`}
-                      disabled={
-                        !isValid || currentStep?.nextButtonConfig?.disabled
-                      }
+                      disabled={Boolean(
+                        !isValid || currentStep?.nextButtonConfig?.disabled,
+                      )}
                       loading={isSubmitting}
                       loadingPosition="start"
                       color="primary"

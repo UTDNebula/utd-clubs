@@ -126,12 +126,17 @@ export default function OnboardingForm({
                     label="First Name"
                     className="grow"
                     required
+                    autoComplete="given-name"
                   />
                 )}
               </form.AppField>
               <form.AppField name="name.lastName">
                 {(field) => (
-                  <field.TextField label="Last Name" className="grow" />
+                  <field.TextField
+                    label="Last Name"
+                    className="grow"
+                    autoComplete="family-name"
+                  />
                 )}
               </form.AppField>
             </form.Question>
@@ -266,6 +271,7 @@ export default function OnboardingForm({
                       placeholder="abc123456@utdallas.edu"
                       className="w-full"
                       required
+                      autoComplete="email"
                     />
                   </div>
                 )}

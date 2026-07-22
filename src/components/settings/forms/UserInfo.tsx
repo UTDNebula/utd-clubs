@@ -5,6 +5,7 @@ import PersonIconOutlined from '@mui/icons-material/PersonOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
+import { add } from 'date-fns';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import { majors, minors } from '@src/constants/utdDegrees';
@@ -17,7 +18,6 @@ import {
   accountSettingsSchema,
 } from '@src/utils/formSchemas';
 import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
-import { add } from 'date-fns';
 
 type UserInfoProps = {
   user: SelectUserMetadataWithClubs;
@@ -100,12 +100,17 @@ export default function UserInfo({ user }: UserInfoProps) {
                     label="First Name"
                     className="grow"
                     required
+                    autoComplete="given-name"
                   />
                 )}
               </form.AppField>
               <form.AppField name="lastName">
                 {(field) => (
-                  <field.TextField label="Last Name" className="grow" />
+                  <field.TextField
+                    label="Last Name"
+                    className="grow"
+                    autoComplete="family-name"
+                  />
                 )}
               </form.AppField>
             </div>
@@ -231,6 +236,7 @@ export default function UserInfo({ user }: UserInfoProps) {
                       placeholder="abc123456@utdallas.edu"
                       className="w-full"
                       required
+                      autoComplete="email"
                     />
                   </div>
                 )}
