@@ -117,7 +117,7 @@ export default function OnboardingForm({
           </div>
         </form.WizardStep>
 
-        <form.WizardStep name="name" label="Name">
+        <form.WizardStep<AccountOnboardingSchema> name="name" label="Name">
           <FormStepContent title="Name">
             <form.Question question="Please check that your name is correct. This is how you will appear to fellow students on UTD Clubs.">
               <form.AppField name="name.firstName">
@@ -138,7 +138,10 @@ export default function OnboardingForm({
           </FormStepContent>
         </form.WizardStep>
 
-        <form.WizardStep name="collegeInfo" label="College Info">
+        <form.WizardStep<AccountOnboardingSchema>
+          name="collegeInfo"
+          label="College Info"
+        >
           <FormStepContent title="College Info">
             <form.Question
               question={
@@ -248,7 +251,7 @@ export default function OnboardingForm({
           </FormStepContent>
         </form.WizardStep>
 
-        <form.WizardStep
+        <form.WizardStep<AccountOnboardingSchema>
           name="contactEmail"
           label="Contact Email"
           nextButtonConfig={{ label: 'Submit', type: 'submitAndNext' }}

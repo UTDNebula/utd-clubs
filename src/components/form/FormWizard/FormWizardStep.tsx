@@ -1,20 +1,49 @@
 'use client';
 
-import { ReactNode } from 'react';
 import { FormWizardStepProps } from './types';
 
-type WizardStepComponent = ((props: FormWizardStepProps) => ReactNode) & {
-  _isWizardStep: true;
-};
-
 /**
- * Declarative step component for FormWizard.
- * FormWizard reads its props via React.Children to build step configuration.
- * The component itself simply renders its children when active.
+ * A single customizable step for FormWizard. Corresponds to a FormGroup.
+ *
+ * Must be direct descendants of a single `<FormWizard />` component.
+ *
+ * @example
+ * const schema = z.object({
+ *   step1: z.object({
+ *     name: z.string(),
+ *   }),
+ *   step2: z.object({
+ *     email: z.email(),
+ *   }),
+ * });
+ *
+ * type Schema = z.infer<typeof schema>;
+ *
+ * const form = useAppForm({
+ *   validators: { onSubmit: schema },
+ * });
+ *
+ * return (
+ *   <form.AppForm>
+ *     <form.Wizard onComplete={() => router.push('/')}>
+ *       <form.WizardStep name="welcome" hidden>
+ *         <h1>Welcome!</h1>
+ *       </form.WizardStep>
+ *       <form.WizardStep<Schema> name="step1" label="Step 1">
+ *         ...Step 1 form fields...
+ *       </form.WizardStep>
+ *       <form.WizardStep<Schema> name="step2" label="Step 2">
+ *         ...Step 2 form fields...
+ *       </form.WizardStep>
+ *     </form.Wizard>
+ *   </form.AppForm>
+ * );
  */
-const FormWizardStep: WizardStepComponent = ({ children }) => {
+function FormWizardStep<TFormData>({
+  children,
+}: FormWizardStepProps<TFormData>) {
   return <>{children}</>;
-};
+}
 
 FormWizardStep._isWizardStep = true;
 

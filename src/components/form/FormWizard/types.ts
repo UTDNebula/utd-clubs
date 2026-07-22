@@ -7,8 +7,11 @@ export type StepStateConfig = {
 };
 
 export type StepState = {
+  /** Current step */
   current: StepStateConfig;
+  /** Most recently visited step */
   previous: StepStateConfig | undefined;
+  /** Furthest visited step */
   furthest: StepStateConfig;
 };
 
@@ -30,47 +33,106 @@ export type WizardAction =
   | 'reset';
 
 /**
- * Configurations for the wizard buttons that may differ between steps
+ * Configurations for the wizard's buttons, as these may differ between steps.
  */
 export type WizardStepButtonConfig = {
   /** Label on button. */
   label?: string;
   /** Action that takes place when interacting with the button. */
   type?: WizardAction;
-  /** Step's name to jump to, if {@linkcode WizardStepButtonConfig.type | type} is `"target"`. */
+  /**
+   * Name of step to jump to if {@linkcode WizardStepButtonConfig.type | type}
+   * is `"target"` and button is interacted with.
+   */
   targetStepName?: string;
-  /** Whether the button is disabled. */
+  /**
+   * Whether the button is disabled.
+   * Also prevents using the stepper from skipping to steps past this button.
+   */
   disabled?: boolean;
-  /** Whether the button is completely hidden. */
+  /**
+   * Whether the button is completely hidden.
+   * Also prevents using the stepper from skipping to steps past this button.
+   */
   hidden?: boolean;
-  /** A function to be called before the default action(s), as configured through {@linkcode WizardStepButtonConfig.type | type}. */
+  /**
+   * A function to be called before the default action(s), as configured
+   * through {@linkcode WizardStepButtonConfig.type | type}.
+   */
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
 export type WizardStepConfig<TFormData = unknown> = {
-  /** Step content */
+  /** Form fields for step. */
   children?: ReactNode;
-  /** Name of form group */
+  /**
+   * Unique identifier for the form step. Also used as the `name` prop for
+   * `form.FormGroup`, which is used for validation and progression handling.
+   *
+   * **If this form step has fields that need to be validated, this prop MUST
+   * match the key of the step's object in your schema.**
+   *
+   * For type safety and IntelliSense, pass your form's schema type into this
+   * step's generic slot. Example below:
+   *
+   * @example
+   * const schema = z.object({
+   *   step1: z.object({
+   *     name: z.string(),
+   *   }),
+   *   step2: z.object({
+   *     email: z.email(),
+   *   }),
+   * });
+   *
+   * type Schema = z.infer<typeof schema>;
+   *
+   * const form = useAppForm({
+   *   validators: { onSubmit: schema },
+   * });
+   *
+   * return (
+   *   <form.AppForm>
+   *     <form.Wizard>
+   *       <form.WizardStep<Schema> name="step1">
+   *         // Notice this step has a "<Schema>" type argument. This adds type
+   *         // safety and IntelliSense options to the name prop.
+   *       </form.WizardStep>
+   *       <form.WizardStep<Schema> name="step2">
+   *         ...
+   *       </form.WizardStep>
+   *       <form.WizardStep name="finish" hidden>
+   *         // For steps that don't need validation, you can omit "<Schema>"
+   *         // and use an arbitrary (but unique) value for the name prop.
+   *       </form.WizardStep>
+   *     </form.Wizard>
+   *   </form.AppForm>
+   * );
+   */
   name: DeepKeys<TFormData>;
-  /** Label shown in the stepper. */
+  /** Label shown in stepper. */
   label?: string;
-  /** Disables the step entirely. Use this instead of conditionally rendering the `<form.WizardStep>` component. */
+  /** Disables step entirely. Use this instead of conditionally rendering the `<form.WizardStep>` component. */
   disabled?: boolean;
-  /** Hides step from stepper */
+  /** Hides step from stepper. */
   hidden?: boolean;
-  /** Shows step in stepper, but functionally disables the step */
+  /** Shows step in stepper, but functionally disables the step. */
   fake?: boolean;
   /** Configuration options for the next button for this step. */
   nextButtonConfig?: WizardStepButtonConfig;
   /** Configuration options for the back button for this step. */
   backButtonConfig?: WizardStepButtonConfig;
+  /**
+   * A function to be called for this step's stepper item. Called before jumping to this step.
+   */
+  onStepperClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
 export type FormWizardStepProps<TFormData = unknown> =
   WizardStepConfig<TFormData>;
 
 export type FormWizardProps = {
-  /** Wizard step children */
+  /** Must be one or multiple `<FormWizardStep />`s. */
   children: ReactElement | ReactElement[];
   /** A function to be called when interacting with the next button on the last step. */
   onComplete?: () => void;
@@ -83,17 +145,56 @@ export type WizardActionDispatcher = (
   options?: {
     targetStep?: WizardStepConfig;
   },
-) => void;
+) => boolean;
+
+export type WizardMetaValues = {
+  /**
+   * Index of the earliest future step that is accessible. This means:
+   * - Step isn't disabled
+   * - The step right before doesn't require submitting the form first
+   * - The next button for the step right before isn't disabled or hidden
+   */
+  nextInaccessibleStepIndex: number;
+  /**
+   * Index of the most recent step that is accessible. This means:
+   * - Step isn't disabled
+   * - The back button for the step right after isn't disabled or hidden
+   */
+  prevInaccessibleStepIndex: number;
+  /**
+   * Index of the step right after the furthest step that isn't disabled or fake.
+   */
+  nextEnabledAfterFurthestStepIndex: number;
+  /**
+   * Whether currently on the first step that isn't disabled or fake.
+   */
+  onFirstStep: boolean;
+  /**
+   * Whether currently on the last step that isn't disabled or fake.
+   */
+  onLastStep: boolean;
+};
 
 export type WizardContextType = {
+  /**
+   * Function to safely call an action from the wizard.
+   *
+   * @param {WizardAction} action The action to dispatch to the wizard.
+   * @param options Additional options that may be required depending on `action`
+   *
+   * @returns Whether the action was successful.
+   */
   dispatchWizardAction: WizardActionDispatcher;
+  /**
+   * Configuration object and index of the following steps:
+   * - Current step
+   * - Most recently visited step
+   * - Furthest visited step
+   */
   stepState: StepState;
+  /**
+   * Array of all steps registered to the wizard
+   */
   steps: WizardStepConfig[];
-  meta: {
-    nextInaccessibleStepIndex: number;
-    prevInaccessibleStepIndex: number;
-    nextFromFurthestEnabledStepIndex: number;
-    onFirstStep: boolean;
-    onLastStep: boolean;
-  };
+  meta: WizardMetaValues;
 };
