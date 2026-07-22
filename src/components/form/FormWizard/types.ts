@@ -52,12 +52,14 @@ export type WizardStepConfig<TFormData = unknown> = {
   children?: ReactNode;
   /** Name of form group */
   name: DeepKeys<TFormData>;
-  /** Label shown in the stepper */
+  /** Label shown in the stepper. */
   label?: string;
-  /** Disables the step entirely. Use this instead of conditionally rendering the `<form.WizardStep>` component */
+  /** Disables the step entirely. Use this instead of conditionally rendering the `<form.WizardStep>` component. */
   disabled?: boolean;
   /** Hides step from stepper */
   hidden?: boolean;
+  /** Shows step in stepper, but functionally disables the step */
+  fake?: boolean;
   /** Configuration options for the next button for this step. */
   nextButtonConfig?: WizardStepButtonConfig;
   /** Configuration options for the back button for this step. */

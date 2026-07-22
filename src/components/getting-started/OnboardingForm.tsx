@@ -77,6 +77,8 @@ export default function OnboardingForm({
   const FormElement = (
     <form.AppForm>
       <form.Wizard onComplete={() => router.push('/')}>
+        <form.WizardStep name="create" label="Create Account" fake />
+
         <form.WizardStep
           name="welcome"
           hidden

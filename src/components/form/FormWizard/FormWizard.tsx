@@ -87,11 +87,19 @@ export default function FormWizard({
     [children],
   );
 
-  const firstEnabledStep = steps.find((step) => !step.disabled);
+  const firstStepIndex = steps.findIndex(
+    (step) => !step.disabled && !step.fake,
+  );
   const defaultStepState: StepState = {
-    current: { config: firstEnabledStep, index: 0 },
+    current: {
+      config: steps[firstStepIndex],
+      index: firstStepIndex,
+    },
     previous: undefined,
-    furthest: { config: firstEnabledStep, index: 0 },
+    furthest: {
+      config: steps[firstStepIndex],
+      index: firstStepIndex,
+    },
   };
 
   const [stepState, setStepState] = useState<StepState>(defaultStepState);
@@ -152,16 +160,18 @@ export default function FormWizard({
         (step.backButtonConfig?.disabled || step.backButtonConfig?.hidden),
     );
   const nextFromFurthestEnabledStepIndex =
-    steps.slice(furthestStepIndex + 1).findIndex((step) => !step.disabled) +
+    steps
+      .slice(furthestStepIndex + 1)
+      .findIndex((step) => !step.disabled && !step.fake) +
     (furthestStepIndex + 1);
 
-  const onFirstStep = currentStepIndex === 0;
+  const onFirstStep = currentStepIndex === firstStepIndex;
   const onLastStep = (() => {
-    const index = steps.findLastIndex((step) => !step.disabled);
+    const index = steps.findLastIndex((step) => !step.disabled && !step.fake);
     return index === -1 ? true : currentStepIndex === index;
   })();
 
-  if (steps[currentStepIndex]?.disabled && !steps[0]?.disabled) {
+  if (steps[currentStepIndex]?.disabled && !steps[firstStepIndex]?.disabled) {
     setStepState(defaultStepState);
     console.error(
       `Returned to first step because step "${currentStep?.name}" at index ${currentStepIndex} was disabled while it was the active step. Please only disable a step once another step is active.`,
@@ -201,8 +211,8 @@ export default function FormWizard({
         if (!onLastStep) {
           const nextEnabledStep = steps
             .slice(currentStepIndex + 1)
-            .find((step) => !step.disabled);
-          setCurrentStep(nextEnabledStep);
+            .find((step) => !step.disabled && !step.fake);
+          if (nextEnabledStep) setCurrentStep(nextEnabledStep);
         } else {
           onComplete?.();
         }
@@ -211,8 +221,8 @@ export default function FormWizard({
         if (!onFirstStep) {
           const prevEnabledStep = steps
             .slice(0, currentStepIndex)
-            .findLast((step) => !step.disabled);
-          setCurrentStep(prevEnabledStep);
+            .findLast((step) => !step.disabled && !step.fake);
+          if (prevEnabledStep) setCurrentStep(prevEnabledStep);
         }
       };
       const validateStep = async () => {
@@ -243,18 +253,24 @@ export default function FormWizard({
           }
           break;
         case 'target':
-          // Prevent unnecessary targeting of current step
-          if (currentStep?.name !== options?.targetStep?.name) {
+          const targetStep = options?.targetStep;
+
+          // Prevent targeting current step, disabled steps, or fake steps
+          if (
+            currentStep?.name !== targetStep?.name &&
+            !targetStep?.disabled &&
+            !targetStep?.fake
+          ) {
             const targetStepIndex = steps.findIndex(
-              (step) => step.name === options?.targetStep?.name,
+              (step) => step.name === targetStep?.name,
             );
             if (targetStepIndex < currentStepIndex) {
-              setCurrentStep(options?.targetStep);
+              setCurrentStep(targetStep);
             } else {
               // Prevent skipping if targeting a further step
               validateStep().then((isValid) => {
                 if (isValid) {
-                  setCurrentStep(options?.targetStep);
+                  setCurrentStep(targetStep);
                 }
               });
             }
@@ -372,6 +388,7 @@ export default function FormWizard({
                         disabled={
                           !isMounted ||
                           isSubmitting ||
+                          step.fake || // Can't skip to fake steps
                           index > nextInaccessibleStepIndex || // Don't allow skipping forward if next button is disabled or hidden
                           index < prevInaccessibleStepIndex || // Don't allow skipping backward if back button is disabled or hidden
                           index > nextFromFurthestEnabledStepIndex || // Skip only to the (enabled) step directly after the furthest visited step
@@ -407,12 +424,12 @@ export default function FormWizard({
             {/* Hidden step for initial sizing */}
             {!isMounted && (
               <div className="invisible">
-                <div className="mx-2">{steps[0]?.children}</div>
+                <div className="mx-2">{steps[firstStepIndex]?.children}</div>
               </div>
             )}
 
             {steps.map((step, index) => {
-              if (step.disabled) return;
+              if (step.disabled || step.fake) return;
 
               const isActive = currentStepIndex === index;
 
@@ -469,7 +486,7 @@ export default function FormWizard({
                       className={`normal-case ${currentStep?.backButtonConfig?.hidden ? 'invisible' : ''}`}
                       disabled={
                         isSubmitting ||
-                        currentStepIndex <= 0 ||
+                        currentStepIndex <= firstStepIndex ||
                         currentStep?.backButtonConfig?.disabled
                       }
                       color="primary"
