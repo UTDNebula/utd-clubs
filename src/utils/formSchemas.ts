@@ -3,56 +3,40 @@ import { insertUserMetadata } from '@src/server/db/models';
 import { studentClassificationEnum } from '@src/server/db/schema/users';
 import { contactSchema } from './contact';
 
-export const accountSettingsSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  major: z.string().min(1, 'College major is required'),
-  minor: z.string().nullable(),
-  studentClassification: z.enum(studentClassificationEnum.enumValues),
-  graduationDate: z.date().nullable(),
-  contactEmail: z
-    .email({
-      error: 'Use your UT Dallas email ending with "@utdallas.edu"',
-      pattern:
-        /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)*utdallas\.edu$/i,
-    })
-    .nullable(),
-});
-
-export type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
-
-export const accountOnboardingNameSchema = z.object({
+export const accountNameSchema = z.object({
   firstName: z.string().min(1, 'Name is required'),
   lastName: z.string().optional(),
 });
 
-export const accountOnboardingCollegeInfoSchema = z
-  .object({
-    major: z.string().min(1, 'College major is required'),
-    minor: z.string().nullable().optional(),
-    studentClassification: z.enum(studentClassificationEnum.enumValues, {
-      error: 'Classification is required',
-    }),
-    graduationDate: z
-      .date({
-        error: 'Graduation date is required, but this error is hidden sooo',
-      })
-      .nullable(),
-  })
-  .superRefine((data, ctx) => {
-    if (
-      !['Faculty', 'Staff'].includes(data.studentClassification) &&
-      !data.graduationDate
-    ) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Graduation date is required',
-        path: ['graduationDate'],
-      });
-    }
-  });
+const accountCollegeInfoSchemaBase = z.object({
+  major: z.string().min(1, 'College major is required'),
+  minor: z.string().nullable().optional(),
+  studentClassification: z.enum(studentClassificationEnum.enumValues, {
+    error: 'Classification is required',
+  }),
+  graduationDate: z.date().nullable(),
+});
 
-export const accountOnboardingContactEmailSchema = z.object({
+const accountCollegeInfoRefinement = (
+  data: z.infer<typeof accountCollegeInfoSchemaBase>,
+  ctx: z.RefinementCtx,
+) => {
+  if (
+    !['Faculty', 'Staff'].includes(data.studentClassification) &&
+    !data.graduationDate
+  ) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'Graduation date is required',
+      path: ['graduationDate'],
+    });
+  }
+};
+
+export const accountCollegeInfoSchema =
+  accountCollegeInfoSchemaBase.superRefine(accountCollegeInfoRefinement);
+
+export const accountContactEmailSchema = z.object({
   contactEmail: z
     .email({
       error: 'Use your UT Dallas email ending with "@utdallas.edu"',
@@ -63,10 +47,17 @@ export const accountOnboardingContactEmailSchema = z.object({
     .nullable(),
 });
 
+export const accountSettingsSchema = accountNameSchema
+  .extend(accountCollegeInfoSchemaBase.shape)
+  .extend(accountContactEmailSchema.shape)
+  .superRefine(accountCollegeInfoRefinement);
+
+export type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
+
 export const accountOnboardingSchema = z.object({
-  name: accountOnboardingNameSchema,
-  collegeInfo: accountOnboardingCollegeInfoSchema,
-  contactEmail: accountOnboardingContactEmailSchema,
+  name: accountNameSchema,
+  collegeInfo: accountCollegeInfoSchema,
+  contactEmail: accountContactEmailSchema,
 });
 
 export type AccountOnboardingSchema = z.infer<typeof accountOnboardingSchema>;

@@ -20,7 +20,9 @@ const defaultContext: WizardContextType = {
   },
 };
 
-export const WizardContext = createContext<WizardContextType>(defaultContext);
+const WizardContext = createContext<WizardContextType>(defaultContext);
+
+export default WizardContext;
 
 export function useWizardContext() {
   return useContext(WizardContext);

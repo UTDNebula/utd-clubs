@@ -34,7 +34,7 @@ import {
   WizardActionDispatcher,
   WizardStepConfig,
 } from './types';
-import { WizardContext } from './WizardContext';
+import WizardContext from './WizardContext';
 
 /**
  * Reusable multi-step form wizard that integrates with TanStack Form.
