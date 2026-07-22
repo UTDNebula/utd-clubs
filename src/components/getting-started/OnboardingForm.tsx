@@ -14,6 +14,7 @@ import { useAppForm } from '@src/utils/form';
 import {
   accountOnboardingSchema,
   AccountOnboardingSchema,
+  userMetadataToAccountOnboardingSchema,
 } from '@src/utils/formSchemas';
 
 type OnboardingFormProps = {
@@ -34,54 +35,42 @@ export default function OnboardingForm({
 
   const [defaultValues, setDefaultValues] = useState<
     Partial<AccountOnboardingSchema>
-  >({
-    name: {
-      firstName: userMetadata?.firstName ?? '',
-      lastName: userMetadata?.lastName,
-    },
-    collegeInfo: {
-      major: userMetadata?.major,
-      minor: userMetadata?.minor,
-      studentClassification: userMetadata?.studentClassification ?? 'Student',
-      graduationDate: userMetadata?.graduationDate
-        ? new Date(
-            userMetadata?.graduationDate?.getTime() +
-              userMetadata?.graduationDate?.getTimezoneOffset() * 60 * 1000,
-          )
-        : null,
-    },
-    contactEmail: {
-      contactEmail: userMetadata?.contactEmail ?? '',
-    },
-  });
+  >(
+    userMetadata
+      ? userMetadataToAccountOnboardingSchema.decode(userMetadata)
+      : {},
+  );
 
   const form = useAppForm({
     defaultValues,
-    onSubmit: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    onSubmit: async ({ value, formApi }) => {
+      try {
+        const encoded = userMetadataToAccountOnboardingSchema.encode(value);
+        const updatedUserMetadata = await editAccountMutation.mutateAsync({
+          updateUser: encoded,
+        });
+        if (updatedUserMetadata) {
+          const fixedUserMetadata: typeof updatedUserMetadata = {
+            ...updatedUserMetadata,
+            graduationDate: updatedUserMetadata.graduationDate
+              ? new Date(
+                  updatedUserMetadata.graduationDate.getTime() +
+                    updatedUserMetadata.graduationDate.getTimezoneOffset() *
+                      60 *
+                      1000,
+                )
+              : null,
+          };
+          const decodedFormData: Partial<AccountOnboardingSchema> =
+            userMetadataToAccountOnboardingSchema.decode(fixedUserMetadata);
+
+          setDefaultValues(decodedFormData);
+          formApi.reset(decodedFormData);
+        }
+      } catch (e) {
+        console.error(e);
+      }
     },
-    // onSubmit: async ({ value, formApi }) => {
-    //   try {
-    //     const updated = await editAccountMutation.mutateAsync({
-    //       updateUser: value,
-    //     });
-    //     if (updated) {
-    //       const updatedFixed = {
-    //         ...updated,
-    //         graduationDate: updated?.graduationDate
-    //           ? new Date(
-    //               updated?.graduationDate?.getTime() +
-    //                 updated?.graduationDate?.getTimezoneOffset() * 60 * 1000,
-    //             )
-    //           : null,
-    //       };
-    //       setDefaultValues(updatedFixed);
-    //       formApi.reset(updatedFixed);
-    //     }
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-    // },
     validators: { onChange: accountOnboardingSchema },
   });
 

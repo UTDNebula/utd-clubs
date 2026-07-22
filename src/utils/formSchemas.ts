@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { insertUserMetadata } from '@src/server/db/models';
 import { studentClassificationEnum } from '@src/server/db/schema/users';
 import { contactSchema } from './contact';
 
@@ -50,6 +51,42 @@ export const accountOnboardingSchema = z.object({
 });
 
 export type AccountOnboardingSchema = z.infer<typeof accountOnboardingSchema>;
+
+export const userMetadataToAccountOnboardingSchema = z.codec(
+  insertUserMetadata.partial().omit({ id: true }),
+  accountOnboardingSchema.partial(),
+  {
+    decode: (userMetadata) => ({
+      name: {
+        firstName: userMetadata?.firstName ?? '',
+        lastName: userMetadata?.lastName,
+      },
+      collegeInfo: {
+        major: userMetadata?.major,
+        minor: userMetadata?.minor,
+        studentClassification: userMetadata?.studentClassification ?? 'Student',
+        graduationDate: userMetadata?.graduationDate
+          ? new Date(
+              userMetadata?.graduationDate?.getTime() +
+                userMetadata?.graduationDate?.getTimezoneOffset() * 60 * 1000,
+            )
+          : null,
+      },
+      contactEmail: {
+        contactEmail: userMetadata?.contactEmail ?? '',
+      },
+    }),
+    encode: (form) => ({
+      firstName: form.name?.firstName,
+      lastName: form.name?.lastName,
+      major: form.collegeInfo?.major,
+      minor: form.collegeInfo?.minor,
+      studentClassification: form.collegeInfo?.studentClassification,
+      graduationDate: form.collegeInfo?.graduationDate,
+      contactEmail: form.contactEmail?.contactEmail,
+    }),
+  },
+);
 
 const tagsSchema = z
   .array(z.string())
