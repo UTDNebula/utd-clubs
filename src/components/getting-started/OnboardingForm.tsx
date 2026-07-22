@@ -3,6 +3,7 @@
 import Typography from '@mui/material/Typography';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
+import { add } from 'date-fns';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useState } from 'react';
@@ -33,13 +34,30 @@ export default function OnboardingForm({
     api.userMetadata.updateById.mutationOptions({}),
   );
 
+  // Don't use userMetadataToAccountOnboardingSchema.decode(userMetadata)
+  // because that causes an error for unset default values
   const [defaultValues, setDefaultValues] = useState<
     Partial<AccountOnboardingSchema>
-  >(
-    userMetadata
-      ? userMetadataToAccountOnboardingSchema.decode(userMetadata)
-      : {},
-  );
+  >({
+    name: {
+      firstName: userMetadata?.firstName ?? '',
+      lastName: userMetadata?.lastName,
+    },
+    collegeInfo: {
+      major: userMetadata?.major ?? '',
+      minor: userMetadata?.minor,
+      studentClassification: userMetadata?.studentClassification ?? 'Student',
+      graduationDate: userMetadata?.graduationDate
+        ? new Date(
+            userMetadata?.graduationDate?.getTime() +
+              userMetadata?.graduationDate?.getTimezoneOffset() * 60 * 1000,
+          )
+        : null,
+    },
+    contactEmail: {
+      contactEmail: userMetadata?.contactEmail ?? '',
+    },
+  });
 
   const form = useAppForm({
     defaultValues,
@@ -133,6 +151,7 @@ export default function OnboardingForm({
                     label="Major"
                     options={majors}
                     className="grow"
+                    required
                   />
                 )}
               </form.AppField>
@@ -153,45 +172,78 @@ export default function OnboardingForm({
                     label="Classification"
                     options={studentClassificationEnum.enumValues}
                     className="grow"
+                    required
                   />
                 )}
               </form.AppField>
-              <form.AppField name="collegeInfo.graduationDate">
-                {(field) => {
+              <form.Subscribe
+                selector={(state) =>
+                  state.values.collegeInfo?.studentClassification
+                }
+              >
+                {(studentClassification) => {
+                  if (
+                    studentClassification &&
+                    ['Faculty', 'Staff'].includes(studentClassification)
+                  )
+                    return <div className="w-64 grow-1" />;
                   return (
-                    <DatePicker
-                      onChange={(value) => {
-                        field.handleChange(value);
+                    <form.AppField name="collegeInfo.graduationDate">
+                      {(field) => {
+                        return (
+                          <DatePicker
+                            onChange={(value) => {
+                              const selectedValue = value as Date;
+
+                              field.handleChange(selectedValue);
+                              if (selectedValue < new Date()) {
+                                form.setFieldValue(
+                                  'collegeInfo.studentClassification',
+                                  'Alum',
+                                );
+                              } else if (
+                                selectedValue > new Date() &&
+                                form.getFieldValue(
+                                  'collegeInfo.studentClassification',
+                                ) === 'Alum'
+                              ) {
+                                form.setFieldValue(
+                                  'collegeInfo.studentClassification',
+                                  'Student',
+                                );
+                              }
+                            }}
+                            value={field.state.value ?? null}
+                            label="Graduation Date"
+                            className="w-64 grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-800"
+                            slotProps={{
+                              actionBar: {
+                                actions: ['accept'],
+                              },
+                              textField: {
+                                size: 'small',
+                                error: !field.state.meta.isValid,
+                                helperText: !field.state.meta.isValid
+                                  ? field.state.meta.errors
+                                      .map((err) => err?.message)
+                                      .join('. ') + '.'
+                                  : undefined,
+                                required: true,
+                              },
+                            }}
+                            timezone="UTC"
+                            views={['year', 'month']}
+                            minDate={new Date(1973, 0, 1)} // Earliest UTD graduating class
+                            maxDate={add(new Date(), { years: 9 })} // Divisible by the 3 years per row
+                            yearsPerRow={3}
+                            openTo="year"
+                          />
+                        );
                       }}
-                      value={field.state.value ?? null}
-                      label="Graduation Date"
-                      className="w-64 grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-800"
-                      slotProps={{
-                        actionBar: {
-                          actions: ['accept'],
-                        },
-                        textField: {
-                          size: 'small',
-                          error: !field.state.meta.isValid,
-                          helperText: !field.state.meta.isValid
-                            ? (
-                                field.state.meta.errors as unknown as {
-                                  message: string;
-                                }[]
-                              )
-                                .map((err) => err?.message)
-                                .join('. ') + '.'
-                            : undefined,
-                          required: true,
-                        },
-                      }}
-                      timezone="UTC"
-                      views={['year', 'month']}
-                      openTo="year"
-                    />
+                    </form.AppField>
                   );
                 }}
-              </form.AppField>
+              </form.Subscribe>
             </form.Question>
           </FormStepContent>
         </form.WizardStep>

@@ -6,12 +6,14 @@ type FormAutocompleteFreeSoloProps = {
   label: string;
   options: string[];
   className?: string;
+  required?: boolean;
 };
 
 export function FormAutocompleteFreeSolo({
   label,
   options,
   className,
+  required,
   ...props
 }: FormAutocompleteFreeSoloProps) {
   const field = useFieldContext<string>();
@@ -30,6 +32,7 @@ export function FormAutocompleteFreeSolo({
           {...params}
           label={label}
           error={!field.state.meta.isValid}
+          required={required}
           helperText={
             !field.state.meta.isValid
               ? (

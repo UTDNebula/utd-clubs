@@ -12,7 +12,7 @@ export const accountSettingsSchema = z.object({
   graduationDate: z.date().nullable(),
   contactEmail: z
     .email({
-      error: 'Use your UT Dallas email',
+      error: 'Use your UT Dallas email ending with "@utdallas.edu"',
       pattern:
         /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)*utdallas\.edu$/i,
     })
@@ -26,17 +26,36 @@ export const accountOnboardingNameSchema = z.object({
   lastName: z.string().optional(),
 });
 
-export const accountOnboardingCollegeInfoSchema = z.object({
-  major: z.string().optional(),
-  minor: z.string().nullable().optional(),
-  studentClassification: z.enum(studentClassificationEnum.enumValues),
-  graduationDate: z.date({ error: 'Graduation date is required' }).nullable(),
-});
+export const accountOnboardingCollegeInfoSchema = z
+  .object({
+    major: z.string().min(1, 'College major is required'),
+    minor: z.string().nullable().optional(),
+    studentClassification: z.enum(studentClassificationEnum.enumValues, {
+      error: 'Classification is required',
+    }),
+    graduationDate: z
+      .date({
+        error: 'Graduation date is required, but this error is hidden sooo',
+      })
+      .nullable(),
+  })
+  .superRefine((data, ctx) => {
+    if (
+      !['Faculty', 'Staff'].includes(data.studentClassification) &&
+      !data.graduationDate
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Graduation date is required',
+        path: ['graduationDate'],
+      });
+    }
+  });
 
 export const accountOnboardingContactEmailSchema = z.object({
   contactEmail: z
     .email({
-      error: 'Use your UT Dallas email',
+      error: 'Use your UT Dallas email ending with "@utdallas.edu"',
       pattern:
         /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)*utdallas\.edu$/i,
     })
@@ -62,7 +81,7 @@ export const userMetadataToAccountOnboardingSchema = z.codec(
         lastName: userMetadata?.lastName,
       },
       collegeInfo: {
-        major: userMetadata?.major,
+        major: userMetadata?.major ?? '',
         minor: userMetadata?.minor,
         studentClassification: userMetadata?.studentClassification ?? 'Student',
         graduationDate: userMetadata?.graduationDate

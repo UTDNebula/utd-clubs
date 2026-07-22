@@ -47,7 +47,11 @@ export default function FormSelect({
 
   return (
     <FormControl className={`w-64 ${className}`} size="small">
-      {label ? <InputLabel>{label}</InputLabel> : null}
+      {label ? (
+        <InputLabel error={!field.state.meta.isValid} required={props.required}>
+          {label}
+        </InputLabel>
+      ) : null}
       <GenericSelect
         value={field.state.value}
         onBlur={field.handleBlur}
@@ -70,7 +74,7 @@ export default function FormSelect({
           </MenuItem>
         ))}
       </GenericSelect>
-      <FormHelperText>
+      <FormHelperText error={!field.state.meta.isValid}>
         {!field.state.meta.isValid
           ? field.state.meta.errors.map((err) => err?.message).join('. ') + '.'
           : undefined}

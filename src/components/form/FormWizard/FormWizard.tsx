@@ -375,7 +375,8 @@ export default function FormWizard({
                     if (step.disabled || step.hidden) return;
 
                     const isValid =
-                      form.getFormGroupMeta(step.name)?.isValid ?? true;
+                      index > furthestStepIndex ||
+                      (form.getFormGroupMeta(step.name)?.isValid ?? true);
                     const isCurrentStepValid =
                       form.getFormGroupMeta(currentStep?.name ?? '_unknown')
                         ?.isValid ?? true;
@@ -460,6 +461,7 @@ export default function FormWizard({
                     <Slide
                       direction={direction}
                       timeout={250}
+                      mountOnEnter
                       in={isActive}
                       className={`absolute top-0 ${LTR ? 'left-0' : 'right-0'} ${isMounted ? '' : 'invisible'}`}
                     >
