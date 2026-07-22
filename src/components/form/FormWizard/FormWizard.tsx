@@ -1,19 +1,22 @@
 'use client';
 
+import WarningIcon from '@mui/icons-material/Warning';
 import Button from '@mui/material/Button';
 import Slide, { SlideProps } from '@mui/material/Slide';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
-import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { AnyFormGroupApi } from '@tanstack/react-form';
 import {
   Children,
   isValidElement,
   MouseEvent,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -21,6 +24,8 @@ import {
 import { BaseCard } from '@nebula-library/components/BaseCard';
 import Panel from '@nebula-library/components/Panel';
 import { useAppForm, useFormContext } from '@src/utils/form';
+import { TanstackSubscribe } from '@src/utils/Subscribe';
+import { useIsMounted } from '@src/utils/useIsMounted';
 import {
   FormWizardProps,
   FormWizardStepProps,
@@ -113,9 +118,15 @@ export default function FormWizard({
     [steps],
   );
 
+  const groupApi = useRef<AnyFormGroupApi | undefined>(undefined);
+  useEffect(() => {
+    groupApi.current = form.formGroupApis
+      .values()
+      .toArray()
+      .find((groupApi) => groupApi.name === stepState.current.config?.name);
+  }, [form.formGroupApis, stepState]);
+
   const currentStep = stepState.current.config;
-  const previousStep = stepState.previous?.config;
-  const furthestStep = stepState.furthest.config;
 
   const currentStepIndex = stepState.current.index;
   const previousStepIndex = stepState.previous?.index;
@@ -159,7 +170,7 @@ export default function FormWizard({
 
   // Dynamic height for absolutely-positioned step content
   const [formHeight, setFormHeight] = useState(0);
-  const [mounting, setMounting] = useState(true);
+  const isMounted = useIsMounted();
   const observerRef = useRef<ResizeObserver | null>(null);
 
   const measureFormStepRef = useCallback((node: HTMLDivElement | null) => {
@@ -170,7 +181,6 @@ export default function FormWizard({
     }
 
     if (node !== null) {
-      setMounting(false);
       setFormHeight(node.clientHeight);
 
       const observer = new ResizeObserver((entries) => {
@@ -205,10 +215,27 @@ export default function FormWizard({
           setCurrentStep(prevEnabledStep);
         }
       };
+      const validateStep = async () => {
+        const currentGroupApi = groupApi.current;
+        if (!currentGroupApi) {
+          console.error('Could not find currentGroupApi');
+          throw new Error('Could not find currentGroupApi');
+        }
+        await currentGroupApi?.handleSubmit();
+        if (currentGroupApi.state.meta.isSubmitSuccessful) {
+          return true;
+        } else {
+          return false;
+        }
+      };
 
       switch (action) {
         case 'next':
-          goNext();
+          validateStep().then((isValid) => {
+            if (isValid) {
+              goNext();
+            }
+          });
           break;
         case 'back':
           if (!onFirstStep) {
@@ -216,8 +243,21 @@ export default function FormWizard({
           }
           break;
         case 'target':
+          // Prevent unnecessary targeting of current step
           if (currentStep?.name !== options?.targetStep?.name) {
-            setCurrentStep(options?.targetStep);
+            const targetStepIndex = steps.findIndex(
+              (step) => step.name === options?.targetStep?.name,
+            );
+            if (targetStepIndex < currentStepIndex) {
+              setCurrentStep(options?.targetStep);
+            } else {
+              // Prevent skipping if targeting a further step
+              validateStep().then((isValid) => {
+                if (isValid) {
+                  setCurrentStep(options?.targetStep);
+                }
+              });
+            }
           }
           break;
         case 'submit':
@@ -225,7 +265,6 @@ export default function FormWizard({
           break;
         case 'submitAndNext':
           form.handleSubmit().then(() => {
-            // Only advance to next step if submission handled successfully
             if (form.state.isSubmitSuccessful) {
               goNext();
             }
@@ -271,7 +310,6 @@ export default function FormWizard({
     dispatchWizardAction('target', { targetStep: step });
   };
 
-  // Context value
   const contextValue = useMemo(
     () => ({
       dispatchWizardAction,
@@ -297,10 +335,6 @@ export default function FormWizard({
     ],
   );
 
-  const currentFieldsValid = true;
-
-  const formGroupApis = form.formGroupApis.values().toArray();
-
   return (
     <WizardContext.Provider value={contextValue}>
       <form
@@ -312,80 +346,50 @@ export default function FormWizard({
         className="flex w-full flex-col gap-8"
         noValidate
       >
-        <div>
-          <Button
-            onClick={() => {
-              console.log('currentStep:', currentStepIndex, currentStep);
-              console.log('previousStep:', previousStepIndex, previousStep);
-              console.log('furthestStep:', furthestStepIndex, furthestStep);
-            }}
-          >
-            Log state
-          </Button>
-          <Button
-            onClick={() => {
-              const foundGroupApi = formGroupApis.find(
-                (groupApi) => groupApi.name === 'name',
-              );
-              console.log('foundGroupApi', foundGroupApi);
-              foundGroupApi?.handleSubmit();
-            }}
-          >
-            submit
-          </Button>
-          <Button
-            onClick={() => {
-              console.log(
-                'formGroupMetaDerived',
-                form.formGroupMetaDerived.get(),
-              );
-              console.log(
-                'values',
-                Object.entries(form.formGroupMetaDerived.get()).forEach(
-                  ([name, value]) => {
-                    console.log(`${name} is submitted`, value.isSubmitted);
-                  },
-                ),
-              );
-            }}
-          >
-            Log submission
-          </Button>
-        </div>
-
         {!hideStepper && (
           <BaseCard className="overflow-clip py-4 max-sm:px-0 sm:px-2">
-            <form.Subscribe selector={(state) => state.isSubmitting}>
-              {(isSubmitting) => (
+            <form.Subscribe
+              selector={(state) => ({
+                isSubmitting: state.isSubmitting,
+              })}
+            >
+              {({ isSubmitting }) => (
                 <Stepper alternativeLabel={isSmallScreen}>
                   {steps.map((step, index) => {
                     if (step.disabled || step.hidden) return;
+
+                    const isValid =
+                      form.getFormGroupMeta(step.name)?.isValid ?? true;
+                    const isCurrentStepValid =
+                      form.getFormGroupMeta(currentStep?.name ?? '_unknown')
+                        ?.isValid ?? true;
 
                     return (
                       <Step
                         key={step.label}
                         completed={index < currentStepIndex}
                         active={index === currentStepIndex}
+                        disabled={
+                          !isMounted ||
+                          isSubmitting ||
+                          index > nextInaccessibleStepIndex || // Don't allow skipping forward if next button is disabled or hidden
+                          index < prevInaccessibleStepIndex || // Don't allow skipping backward if back button is disabled or hidden
+                          index > nextFromFurthestEnabledStepIndex || // Skip only to the (enabled) step directly after the furthest visited step
+                          (!isCurrentStepValid && index > currentStepIndex) // If current step invalid, don't allow skipping forward
+                        }
                       >
                         <StepButton
-                          color="inherit"
                           onClick={(e) => handleStepClick(e, step)}
-                          disabled={
-                            isSubmitting ||
-                            index > nextInaccessibleStepIndex || // Don't allow skipping forward if next button is disabled or hidden
-                            index < prevInaccessibleStepIndex || // Don't allow skipping backward if back button is disabled or hidden
-                            index > nextFromFurthestEnabledStepIndex // Skip only to the (enabled) step directly after the furthest visited step
-                            // (!currentFieldsValid && index >= currentStepIndex)
+                          icon={
+                            isValid ? undefined : <WarningIcon color="error" />
                           }
                         >
-                          <StepLabel
-                            className="cursor-pointer"
-                            // error={
-                            //   !currentFieldsValid && index === currentStepIndex
-                            // }
+                          <Typography
+                            variant="inherit"
+                            color={isValid ? 'inherit' : 'error'}
                           >
                             {step.label}
-                          </StepLabel>
+                          </Typography>
                         </StepButton>
                       </Step>
                     );
@@ -398,10 +402,10 @@ export default function FormWizard({
         <Panel className="overflow-clip shadow-lg">
           <div
             className="relative mb-4 transition-[height] duration-250 ease-in-out"
-            style={mounting ? undefined : { height: `${formHeight}px` }}
+            style={isMounted ? { height: `${formHeight}px` } : undefined}
           >
             {/* Hidden step for initial sizing */}
-            {mounting && (
+            {!isMounted && (
               <div className="invisible">
                 <div className="mx-2">{steps[0]?.children}</div>
               </div>
@@ -431,59 +435,65 @@ export default function FormWizard({
                     fore;
 
               return (
-                <Slide
+                <form.FormGroup
                   key={step.name}
-                  direction={direction}
-                  timeout={250}
-                  mountOnEnter
-                  unmountOnExit
-                  in={isActive}
-                  className={`absolute top-0 ${LTR ? 'left-0' : 'right-0'} ${mounting ? 'invisible' : ''}`}
+                  name={step.name ?? step.label ?? `_unknown-${index}`}
                 >
-                  <div ref={isActive ? measureFormStepRef : undefined}>
-                    <div className="mx-2">
-                      <form.FormGroup
-                        name={step.name ?? step.label ?? `_unknown-${index}`}
-                      >
-                        {() => <>{step.children}</>}
-                      </form.FormGroup>
-                    </div>
-                  </div>
-                </Slide>
+                  {() => (
+                    <Slide
+                      direction={direction}
+                      timeout={250}
+                      in={isActive}
+                      className={`absolute top-0 ${LTR ? 'left-0' : 'right-0'} ${isMounted ? '' : 'invisible'}`}
+                    >
+                      <div ref={isActive ? measureFormStepRef : undefined}>
+                        <div className="mx-2">{step.children}</div>
+                      </div>
+                    </Slide>
+                  )}
+                </form.FormGroup>
               );
             })}
           </div>
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (
-              <div className="flex flex-row items-center justify-end gap-2">
-                <Button
-                  className={`normal-case ${currentStep?.backButtonConfig?.hidden ? 'invisible' : ''}`}
-                  disabled={
-                    isSubmitting ||
-                    currentStepIndex <= 0 ||
-                    currentStep?.backButtonConfig?.disabled
-                  }
-                  color="primary"
-                  onClick={handleBackClick}
-                >
-                  {currentStep?.backButtonConfig?.label ?? 'Back'}
-                </Button>
-                <Button
-                  variant="contained"
-                  className={`normal-case ${currentStep?.nextButtonConfig?.hidden ? 'invisible' : ''}`}
-                  disabled={
-                    !currentFieldsValid ||
-                    currentStep?.nextButtonConfig?.disabled
-                  }
-                  loading={isSubmitting}
-                  loadingPosition="start"
-                  color={!currentFieldsValid ? 'inherit' : 'primary'}
-                  onClick={handleNextClick}
-                >
-                  {currentStep?.nextButtonConfig?.label ??
-                    (onLastStep ? 'Submit' : 'Next')}
-                </Button>
-              </div>
+              <TanstackSubscribe
+                store={form.formGroupMetaDerived}
+                selector={(state) =>
+                  state[currentStep?.name ?? '_unknown']?.isValid ?? true
+                }
+              >
+                {(isValid) => (
+                  <div className="flex flex-row items-center justify-end gap-2">
+                    <Button
+                      className={`normal-case ${currentStep?.backButtonConfig?.hidden ? 'invisible' : ''}`}
+                      disabled={
+                        isSubmitting ||
+                        currentStepIndex <= 0 ||
+                        currentStep?.backButtonConfig?.disabled
+                      }
+                      color="primary"
+                      onClick={handleBackClick}
+                    >
+                      {currentStep?.backButtonConfig?.label ?? 'Back'}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      className={`normal-case ${currentStep?.nextButtonConfig?.hidden ? 'invisible' : ''}`}
+                      disabled={
+                        !isValid || currentStep?.nextButtonConfig?.disabled
+                      }
+                      loading={isSubmitting}
+                      loadingPosition="start"
+                      color="primary"
+                      onClick={handleNextClick}
+                    >
+                      {currentStep?.nextButtonConfig?.label ??
+                        (onLastStep ? 'Submit' : 'Next')}
+                    </Button>
+                  </div>
+                )}
+              </TanstackSubscribe>
             )}
           </form.Subscribe>
         </Panel>
