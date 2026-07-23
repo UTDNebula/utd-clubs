@@ -70,7 +70,8 @@
     "superjson": "^2.2.6",
     "ws": "^8.21.0",
     "zod": "^4.4.3",
-    "zustand": "^5.0.13"
+    "zustand": "^5.0.13",
+    "nebula-library": "file:src/nebula-library"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",

@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import z from 'zod';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import {
   EventFiltersSchema,
   eventLocationFilterEnum,

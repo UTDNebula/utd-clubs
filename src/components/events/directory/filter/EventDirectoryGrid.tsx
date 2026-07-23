@@ -8,10 +8,10 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
 import EventCard, { EventCardVariants } from '@src/components/events/EventCard';
-import { setSnackbar, SnackbarPresets } from '@src/components/global/Snackbar';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 import useDebounce from '@src/utils/useDebounce';
 import useStable from '@src/utils/useStable';
 import { useEventDirectoryStore } from './utils';
@@ -71,9 +71,7 @@ export default function EventDirectoryGrid({
   // On query error
   useEffect(() => {
     if (query.isError) {
-      setSnackbar(
-        SnackbarPresets.errorCustomMessage('Error!', query.error.message),
-      );
+      setSnackbar(SnackbarPresets.errorWithMessage(query.error.message));
     }
   }, [query.error?.message, query.isError]);
 

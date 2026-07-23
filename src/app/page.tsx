@@ -1,6 +1,6 @@
+import gradientBG from '@public/images/landingGradient.png';
+import planetsDoodle from '@public/images/PlanetsDoodle.png';
 import Image from 'next/image';
-import gradientBG from 'public/images/landingGradient.png';
-import planetsDoodle from 'public/images/PlanetsDoodle.png';
 import { AllTags } from '@src/components/AllTags';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
 import Header from '@src/components/header/Header';

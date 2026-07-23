@@ -1,4 +1,4 @@
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import EventCard from '@src/components/events/EventCard';
 import { RouterOutputs } from '@src/trpc/shared';
 
@@ -23,7 +23,7 @@ export default function ClubUpcomingEventsCard({
             <div key={event.id} className="shrink-0">
               <EventCard
                 event={event}
-                className="bg-white! has-[.EventCardLink:focus]:bg-neutral-200! dark:bg-neutral-700! dark:has-[.EventCardLink:focus]:bg-neutral-600!"
+                className="bg-white has-[.EventCardLink:focus]:bg-neutral-200 dark:bg-neutral-700 dark:has-[.EventCardLink:focus]:bg-neutral-600"
               />
             </div>
           ))

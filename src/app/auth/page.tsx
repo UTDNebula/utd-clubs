@@ -2,9 +2,9 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { RegisterModalContents } from '@src/components/global/RegisterModal';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { auth } from '@src/server/auth';
+import { LoginModalContents } from '@src/utils/loginModal';
 
 export default async function Auth(props: {
   searchParams: Promise<{ [key: string]: string }>;
@@ -47,7 +47,7 @@ export default async function Auth(props: {
             </div>
           </Link>
         </div>
-        <RegisterModalContents />
+        <LoginModalContents />
       </div>
     </main>
   );

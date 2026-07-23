@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { BaseCard } from '@src/components/common/BaseCard';
+import { BaseCard } from '@nebula-library/components/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
 
 interface MembershipFormCardProps {
