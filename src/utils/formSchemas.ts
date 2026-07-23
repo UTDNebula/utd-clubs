@@ -111,10 +111,29 @@ const tagsSchema = z
   );
 
 export const createClubSchema = z.object({
-  name: z.string().min(3, 'Name must be at least 3 characters'),
-  description: z.string().min(1, 'Description is required'),
-  tags: tagsSchema,
+  name: z.object({
+    name: z
+      .string()
+      .min(3, 'Name must be at least 3 characters')
+      .max(100, 'Character limit reached'),
+    alias: z
+      .string()
+      .max(100, 'Character limit reached')
+      .optional()
+      .refine(
+        (val) => val === undefined || val.length === 0 || val.length >= 2,
+        {
+          message: 'Alias must be at least 2 characters',
+        },
+      ),
+  }),
+  meta: z.object({
+    description: z.string().min(1, 'Description is required'),
+    tags: tagsSchema,
+  }),
 });
+
+export type CreateClubSchema = z.infer<typeof createClubSchema>;
 
 export const editClubContactSchema = z.object({
   contacts: contactSchema.array(),
