@@ -198,7 +198,7 @@ const CreateClubForm = () => {
                 '.'
               )}
               <br />
-              Please ask for support in {' '}
+              Please ask for support in{' '}
               <a
                 href="https://discord.utdnebula.com/"
                 rel="noreferrer"
