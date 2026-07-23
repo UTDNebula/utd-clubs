@@ -26,6 +26,7 @@ import { startOfDay } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { BaseCard } from '@nebula-library/components/BaseCard';
 import EventCard from '@src/components/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
@@ -35,7 +36,6 @@ import {
   type CalendarParamsSchema,
 } from '@src/utils/eventFilter';
 import { createParamSetter } from '@src/utils/searchParams';
-import { BaseCard } from '../common/BaseCard';
 
 type RegisteredEvent =
   RouterOutputs['userMetadata']['getRegisteredEventsByRange'][number];
