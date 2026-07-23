@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 
 type FormQuestionProps = {
   children: ReactNode;
+  className?: string;
   /**
    * Text for the question
    */
@@ -15,12 +16,15 @@ type FormQuestionProps = {
 };
 
 export default function FormQuestion({
+  className,
   children,
   question,
   density = 'full',
 }: FormQuestionProps) {
   return (
-    <div className={`flex flex-col ${density === 'full' ? 'gap-6' : 'gap-2'}`}>
+    <div
+      className={`flex flex-col ${density === 'full' ? 'gap-6' : 'gap-2'} ${className}`}
+    >
       <div className="flex flex-col gap-2">
         <Typography variant="body1">{question}</Typography>
       </div>

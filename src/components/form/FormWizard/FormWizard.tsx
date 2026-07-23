@@ -12,11 +12,13 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { AnyFormGroupApi } from '@tanstack/react-form';
 import {
   Children,
+  forwardRef,
   isValidElement,
   MouseEvent,
   ReactNode,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -32,6 +34,7 @@ import {
   StepState,
   StepStateConfig,
   WizardActionDispatcher,
+  WizardRef,
   WizardStepConfig,
 } from './types';
 import WizardContext from './WizardContext';
@@ -56,11 +59,10 @@ import WizardContext from './WizardContext';
  *   </form.WizardStep>
  * </form.Wizard>
  */
-export default function FormWizard({
-  children,
-  onComplete,
-  hideStepper,
-}: FormWizardProps) {
+const FormWizard = forwardRef<WizardRef, FormWizardProps>(function FormWizard(
+  { children, onComplete, hideStepper },
+  ref,
+) {
   const form = useFormContext() as unknown as ReturnType<typeof useAppForm>;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -96,17 +98,20 @@ export default function FormWizard({
   const firstStepIndex = steps.findIndex(
     (step) => !step.disabled && !step.fake,
   );
-  const defaultStepState: StepState = {
-    current: {
-      config: steps[firstStepIndex],
-      index: firstStepIndex,
-    },
-    previous: undefined,
-    furthest: {
-      config: steps[firstStepIndex],
-      index: firstStepIndex,
-    },
-  };
+  const defaultStepState: StepState = useMemo(
+    () => ({
+      current: {
+        config: steps[firstStepIndex],
+        index: firstStepIndex,
+      },
+      previous: undefined,
+      furthest: {
+        config: steps[firstStepIndex],
+        index: firstStepIndex,
+      },
+    }),
+    [firstStepIndex, steps],
+  );
 
   const [stepState, setStepState] = useState<StepState>(defaultStepState);
 
@@ -148,11 +153,13 @@ export default function FormWizard({
 
   /**
    * Index of the earliest future step that is accessible. This means:
+   * - User is allowed to advance
    * - Step isn't disabled
    * - The step right before doesn't require submitting the form first
    * - The next button for the step right before isn't disabled or hidden
    */
   const nextInaccessibleStepIndex = (() => {
+    if (currentStep?.noAdvance) return currentStepIndex;
     const index = steps
       .slice(currentStepIndex)
       .findIndex(
@@ -167,16 +174,19 @@ export default function FormWizard({
 
   /**
    * Index of the most recent step that is accessible. This means:
+   * - User is allowed to backtrack
    * - Step isn't disabled
    * - The back button for the step right after isn't disabled or hidden
    */
-  const prevInaccessibleStepIndex = steps
-    .slice(undefined, currentStepIndex + 1)
-    .findLastIndex(
-      (step) =>
-        !step.disabled &&
-        (step.backButtonConfig?.disabled || step.backButtonConfig?.hidden),
-    );
+  const prevInaccessibleStepIndex = currentStep?.noBacktrack
+    ? currentStepIndex
+    : steps
+        .slice(undefined, currentStepIndex + 1)
+        .findLastIndex(
+          (step) =>
+            !step.disabled &&
+            (step.backButtonConfig?.disabled || step.backButtonConfig?.hidden),
+        );
 
   /**
    * Index of the step right after the furthest step that isn't disabled or fake.
@@ -199,14 +209,6 @@ export default function FormWizard({
     const index = steps.findLastIndex((step) => !step.disabled && !step.fake);
     return index === -1 ? true : currentStepIndex === index;
   })();
-
-  if (steps[currentStepIndex]?.disabled && !steps[firstStepIndex]?.disabled) {
-    setStepState(defaultStepState);
-    console.error(
-      `Returned to first step because step "${currentStep?.name}" at index ${currentStepIndex} was disabled while it was the active step. ` +
-        'Please only disable a step once another step is active.',
-    );
-  }
 
   // Dynamic height for absolutely-positioned step content
   const [formHeight, setFormHeight] = useState(0);
@@ -234,16 +236,19 @@ export default function FormWizard({
 
   const dispatchWizardAction: WizardActionDispatcher = useCallback(
     (action, options) => {
+      const noValidate = options?.noValidate;
+      const allowDisabled = options?.allowDisabled;
+
       // No navigation allowed while submitting form
-      if (form.state.isSubmitting) return false;
+      if (form.state.isSubmitting && !noValidate) return false;
 
       let success = false;
 
       const goNext = () => {
-        if (!onLastStep) {
+        if (!onLastStep && !currentStep?.noAdvance) {
           const nextEnabledStep = steps
             .slice(currentStepIndex + 1)
-            .find((step) => !step.disabled && !step.fake);
+            .find((step) => (!step.disabled || allowDisabled) && !step.fake);
           if (!nextEnabledStep) return;
           setCurrentStep(nextEnabledStep);
           success = true;
@@ -253,16 +258,20 @@ export default function FormWizard({
         }
       };
       const goBack = () => {
-        if (!onFirstStep) {
+        if (!onFirstStep && !currentStep?.noBacktrack) {
           const prevEnabledStep = steps
             .slice(0, currentStepIndex)
-            .findLast((step) => !step.disabled && !step.fake);
+            .findLast(
+              (step) => (!step.disabled || allowDisabled) && !step.fake,
+            );
           if (!prevEnabledStep) return;
           setCurrentStep(prevEnabledStep);
           success = true;
         }
       };
       const validateStep = async () => {
+        if (noValidate) return true;
+
         const currentGroupApi = groupApi.current;
         if (!currentGroupApi) {
           console.error('Could not find currentGroupApi');
@@ -275,8 +284,14 @@ export default function FormWizard({
           return false;
         }
       };
+      const restart = () => {
+        // Set previousIndex to Infinity so transition slides in correct direction
+        setStepState({ ...defaultStepState, previous: { index: Infinity } });
+      };
 
       switch (action) {
+        case 'none':
+          break;
         case 'next':
           validateStep().then((isValid) => {
             if (isValid) {
@@ -290,28 +305,35 @@ export default function FormWizard({
           }
           break;
         case 'target':
-          const targetStep = options?.targetStep;
+          const targetStep: WizardStepConfig | undefined =
+            typeof options?.targetStep === 'string'
+              ? steps.find((step) => step.name === options?.targetStep)
+              : options?.targetStep;
 
-          // Prevent targeting current step, disabled steps, or fake steps
+          // Prevent targeting current step, disabled steps (unless allowDisabled), or fake steps
           if (
             currentStep?.name !== targetStep?.name &&
-            !targetStep?.disabled &&
+            (!targetStep?.disabled || allowDisabled) &&
             !targetStep?.fake
           ) {
             const targetStepIndex = steps.findIndex(
               (step) => step.name === targetStep?.name,
             );
-            if (targetStepIndex < currentStepIndex) {
-              setCurrentStep(targetStep);
-              success = true;
+            if (noValidate || targetStepIndex < currentStepIndex) {
+              if (noValidate || !currentStep?.noBacktrack) {
+                setCurrentStep(targetStep);
+                success = true;
+              }
             } else {
-              // Prevent skipping if targeting a further step
-              validateStep().then((isValid) => {
-                if (isValid) {
-                  setCurrentStep(targetStep);
-                  success = true;
-                }
-              });
+              if (noValidate || !currentStep?.noAdvance) {
+                // Prevent skipping if targeting a further step
+                validateStep().then((isValid) => {
+                  if (isValid) {
+                    setCurrentStep(targetStep);
+                    success = true;
+                  }
+                });
+              }
             }
           }
           break;
@@ -332,6 +354,11 @@ export default function FormWizard({
           break;
         case 'reset':
           form.reset();
+          restart();
+          success = true;
+          break;
+        case 'restart':
+          restart();
           success = true;
           break;
         default:
@@ -341,7 +368,10 @@ export default function FormWizard({
     },
     [
       currentStep?.name,
+      currentStep?.noAdvance,
+      currentStep?.noBacktrack,
       currentStepIndex,
+      defaultStepState,
       form,
       onComplete,
       onFirstStep,
@@ -358,12 +388,7 @@ export default function FormWizard({
       currentStep?.nextButtonConfig?.type ??
         (onLastStep ? 'submitAndNext' : 'next'),
       {
-        targetStep: currentStep?.nextButtonConfig?.targetStepName
-          ? steps.find(
-              (step) =>
-                step.name === currentStep?.nextButtonConfig?.targetStepName,
-            )
-          : undefined,
+        targetStep: currentStep?.nextButtonConfig?.targetStepName,
       },
     );
   };
@@ -372,12 +397,7 @@ export default function FormWizard({
     event.preventDefault();
     currentStep?.backButtonConfig?.onClick?.(event);
     dispatchWizardAction(currentStep?.backButtonConfig?.type ?? 'back', {
-      targetStep: currentStep?.backButtonConfig?.targetStepName
-        ? steps.find(
-            (step) =>
-              step.name === currentStep?.backButtonConfig?.targetStepName,
-          )
-        : undefined,
+      targetStep: currentStep?.backButtonConfig?.targetStepName,
     });
   };
 
@@ -414,6 +434,10 @@ export default function FormWizard({
       onLastStep,
     ],
   );
+
+  useImperativeHandle(ref, () => {
+    return contextValue;
+  }, [contextValue]);
 
   return (
     <WizardContext.Provider value={contextValue}>
@@ -496,7 +520,9 @@ export default function FormWizard({
             )}
 
             {steps.map((step, index) => {
-              if (step.disabled || step.fake) return;
+              // Don't mount if disabled (unless absolutely necessary) or fake
+              if ((step.disabled && currentStepIndex !== index) || step.fake)
+                return;
 
               const isActive = currentStepIndex === index;
 
@@ -529,7 +555,7 @@ export default function FormWizard({
                       timeout={250}
                       mountOnEnter
                       in={isActive}
-                      className={`absolute top-0 ${LTR ? 'left-0' : 'right-0'} ${isMounted ? '' : 'invisible'}`}
+                      className={`absolute inset-x-0 top-0 ${isMounted ? '' : 'invisible'}`}
                     >
                       <div ref={isActive ? measureFormStepRef : undefined}>
                         <div className="mx-2">{step.children}</div>
@@ -552,13 +578,23 @@ export default function FormWizard({
                   <div className="flex flex-row items-center justify-end gap-2">
                     <Button
                       className={`normal-case ${currentStep?.backButtonConfig?.hidden ? 'invisible' : ''}`}
-                      disabled={Boolean(
-                        isSubmitting ||
-                        currentStep?.backButtonConfig?.disabled ||
-                        // Disable on first step unless user-configured event handler
-                        (currentStepIndex <= firstStepIndex &&
-                          !currentStep?.backButtonConfig?.onClick),
-                      )}
+                      disabled={(() => {
+                        // Don't disable if user configures event handler or explicitly sets disable to false
+                        const userAllowedConditions =
+                          currentStep?.backButtonConfig?.disabled !== false &&
+                          !currentStep?.backButtonConfig?.onClick;
+
+                        // Conditions enabled only if userAllowedConditions is false
+                        const conditionalConditions =
+                          currentStepIndex <= firstStepIndex ||
+                          currentStep?.noBacktrack;
+
+                        return Boolean(
+                          isSubmitting ||
+                          currentStep?.backButtonConfig?.disabled ||
+                          (userAllowedConditions && conditionalConditions),
+                        );
+                      })()}
                       color="primary"
                       onClick={handleBackClick}
                     >
@@ -567,9 +603,21 @@ export default function FormWizard({
                     <Button
                       variant="contained"
                       className={`normal-case ${currentStep?.nextButtonConfig?.hidden ? 'invisible' : ''}`}
-                      disabled={Boolean(
-                        !isValid || currentStep?.nextButtonConfig?.disabled,
-                      )}
+                      disabled={(() => {
+                        // Don't disable if user configures event handler or explicitly sets disable to false
+                        const userAllowedConditions =
+                          currentStep?.nextButtonConfig?.disabled !== false &&
+                          !currentStep?.nextButtonConfig?.onClick;
+
+                        // Conditions enabled only if userAllowedConditions is false
+                        const conditionalConditions =
+                          !isValid || currentStep?.noAdvance;
+
+                        return Boolean(
+                          currentStep?.nextButtonConfig?.disabled ||
+                          (userAllowedConditions && conditionalConditions),
+                        );
+                      })()}
                       loading={isSubmitting}
                       loadingPosition="start"
                       color="primary"
@@ -587,4 +635,6 @@ export default function FormWizard({
       </form>
     </WizardContext.Provider>
   );
-}
+});
+
+export default FormWizard;

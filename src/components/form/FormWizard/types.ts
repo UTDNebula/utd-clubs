@@ -1,5 +1,5 @@
 import { DeepKeys } from '@tanstack/react-form';
-import { MouseEventHandler, ReactElement, ReactNode } from 'react';
+import { MouseEventHandler, ReactElement, ReactNode, Ref } from 'react';
 
 export type StepStateConfig = {
   config?: WizardStepConfig;
@@ -22,7 +22,9 @@ export type StepState = {
  * - `"target"` Goes to the step whose name matches {@linkcode WizardStepButtonConfig.targetStepName | targetStepName}
  * - `"submit"` Validates entire form and submits form if successful
  * - `"submitAndNext"` Validates entire form, submits form if successful, then goes to next step *(default for next button on last step)*
- * - `"reset"` Resets entire form
+ * - `"reset"` Resets entire form and restarts wizard
+ * - `"restart"` Restarts wizard from the first step without resetting the form's data
+ * - `"none"` No action
  */
 export type WizardAction =
   | 'next'
@@ -30,7 +32,9 @@ export type WizardAction =
   | 'target'
   | 'submit'
   | 'submitAndNext'
-  | 'reset';
+  | 'reset'
+  | 'restart'
+  | 'none';
 
 /**
  * Configurations for the wizard's buttons, as these may differ between steps.
@@ -118,6 +122,10 @@ export type WizardStepConfig<TFormData = unknown> = {
   hidden?: boolean;
   /** Shows step in stepper, but functionally disables the step. */
   fake?: boolean;
+  /** Prevents retreating to previous steps. Disables back button and stepper buttons for previous steps. */
+  noBacktrack?: boolean;
+  /** Prevents advancing to future steps. Disables next button and stepper buttons for future steps.  */
+  noAdvance?: boolean;
   /** Configuration options for the next button for this step. */
   nextButtonConfig?: WizardStepButtonConfig;
   /** Configuration options for the back button for this step. */
@@ -138,12 +146,24 @@ export type FormWizardProps = {
   onComplete?: () => void;
   /** Don't display the progress bar stepper on top */
   hideStepper?: boolean;
+  ref?: Ref<WizardContextType>;
 };
 
 export type WizardActionDispatcher = (
   action: WizardAction,
   options?: {
-    targetStep?: WizardStepConfig;
+    /**
+     * Jump to this step if action is `"target"`. Can be a step object or a step name string.
+     */
+    targetStep?: WizardStepConfig | string;
+    /**
+     * Dispatches event unconditionally without form validation (except for submission actions).
+     */
+    noValidate?: boolean;
+    /**
+     * Allow jumping to a disabled step.
+     */
+    allowDisabled?: boolean;
   },
 ) => boolean;
 
@@ -175,7 +195,7 @@ export type WizardMetaValues = {
   onLastStep: boolean;
 };
 
-export type WizardContextType = {
+export interface WizardContextType {
   /**
    * Function to safely call an action from the wizard.
    *
@@ -197,4 +217,7 @@ export type WizardContextType = {
    */
   steps: WizardStepConfig[];
   meta: WizardMetaValues;
-};
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface WizardRef extends WizardContextType {}

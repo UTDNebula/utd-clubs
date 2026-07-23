@@ -283,6 +283,7 @@ export default function OnboardingForm({
         <form.WizardStep
           name="finish"
           hidden
+          noBacktrack
           backButtonConfig={{ hidden: true }}
           nextButtonConfig={{ label: 'Continue', type: 'next' }}
         >
@@ -329,7 +330,7 @@ function FormStepContent({
   children: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex w-fit flex-col gap-2">
       <Typography variant="h2" className="font-display text-2xl font-bold">
         {title}
       </Typography>
