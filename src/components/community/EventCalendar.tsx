@@ -22,11 +22,10 @@ import {
   type PopupOpenEventArgs,
 } from '@syncfusion/ej2-schedule';
 import { useQuery } from '@tanstack/react-query';
-import { startOfDay } from 'date-fns';
+import { isSameDay, startOfDay } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { BaseCard } from '@nebula-library/components/BaseCard';
 import EventCard from '@src/components/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
@@ -140,6 +139,8 @@ const EventCalendar = () => {
     const anchor = scheduleRef.current?.selectedDate ?? initialDate;
     if (args.requestType === 'dateNavigate') {
       setCalendarParams((params) => {
+        // Don't set anchor if today and doesn't already exist; likely means Today button clicked
+        if (isSameDay(anchor, initialDate) && !params.has('anchor')) return;
         params.set('anchor', anchor.toISOString().slice(0, 10));
       });
     } else if (args.requestType === 'viewNavigate') {
@@ -196,73 +197,78 @@ const EventCalendar = () => {
   const [spinnerTarget, setSpinnerTarget] = useState<HTMLElement | null>(null);
 
   const handleCreated = () => {
-    const target = scheduleRef.current?.element.querySelector(
+    const spinnerTarget = scheduleRef.current?.element.querySelector(
       '#calendar-spinner',
     ) as HTMLElement | null;
+    const todayButton = scheduleRef.current?.element.querySelector(
+      '.e-toolbar-item.e-today > button:first-of-type',
+    ) as HTMLButtonElement | null;
+    todayButton?.addEventListener('click', (e) => {
+      console.log('click today!');
+      setCalendarParams((params) => {
+        params.delete('anchor');
+      });
+    });
 
-    setSpinnerTarget(target);
+    setSpinnerTarget(spinnerTarget);
   };
 
   const schedule = (
-    <BaseCard className="h-screen overflow-hidden">
-      <ScheduleComponent
-        ref={(el: ScheduleComponent | null) => {
-          scheduleRef.current = el;
-        }}
-        created={handleCreated}
-        height="100%"
-        selectedDate={initialDate}
-        currentView={initialView}
-        readonly={true}
-        popupOpen={handlePopupOpen}
-        actionComplete={handleActionComplete}
-        eventSettings={{ dataSource: schedulerData, fields: SCHEDULE_FIELDS }}
-        eventClick={handleEventClick}
-        workHours={{ highlight: false }}
-        toolbarItems={[
-          { name: 'Previous', align: 'Left' },
-          { name: 'Next', align: 'Left' },
-          { name: 'DateRangeText', align: 'Left' },
-          {
-            name: 'Custom',
-            template: '<div id="calendar-spinner" />',
-            overflow: 'Show',
-          },
-          { name: 'Today', align: 'Right' },
-          { name: 'Views', align: 'Right' },
-        ]}
-      >
-        <ViewsDirective>
-          <ViewDirective option="Day" />
-          <ViewDirective option="Week" />
-          <ViewDirective option="Month" />
-        </ViewsDirective>
-        <Inject services={[Day, Week, Month]} />
-      </ScheduleComponent>
-    </BaseCard>
+    <ScheduleComponent
+      ref={(el: ScheduleComponent | null) => {
+        scheduleRef.current = el;
+      }}
+      created={handleCreated}
+      selectedDate={initialDate}
+      currentView={initialView}
+      readonly={true}
+      popupOpen={handlePopupOpen}
+      actionComplete={handleActionComplete}
+      eventSettings={{ dataSource: schedulerData, fields: SCHEDULE_FIELDS }}
+      eventClick={handleEventClick}
+      workHours={{ highlight: false }}
+      toolbarItems={[
+        { name: 'Previous', align: 'Left' },
+        { name: 'Next', align: 'Left' },
+        { name: 'DateRangeText', align: 'Left' },
+        {
+          name: 'Custom',
+          template: '<div id="calendar-spinner" />',
+          overflow: 'Show',
+        },
+        { name: 'Today', align: 'Right' },
+        { name: 'Views', align: 'Right' },
+      ]}
+    >
+      <ViewsDirective>
+        <ViewDirective option="Day" />
+        <ViewDirective option="Week" />
+        <ViewDirective option="Month" />
+      </ViewsDirective>
+      <Inject services={[Day, Week, Month]} />
+    </ScheduleComponent>
   );
 
   return (
     <>
-      <div className="mt-4 flex h-screen w-full flex-col gap-8">
-        <div
-          className="h-screen"
-          onMouseOver={isFinePointer ? handleScheduleMouseOver : undefined}
-          onMouseLeave={isFinePointer ? clearHover : undefined}
-        >
-          {schedule}
-        </div>
-        {spinnerTarget &&
-          createPortal(
-            <div className="flex h-full cursor-default items-center">
-              <CircularProgress
-                size="1.5rem"
-                className={!isFetching ? 'invisible' : ''}
-              />
-            </div>,
-            spinnerTarget,
-          )}
+      <div
+        className="mt-4"
+        onMouseOver={isFinePointer ? handleScheduleMouseOver : undefined}
+        onMouseLeave={isFinePointer ? clearHover : undefined}
+      >
+        {schedule}
       </div>
+
+      {spinnerTarget &&
+        createPortal(
+          <div className="flex h-full cursor-default items-center">
+            <CircularProgress
+              size="1.5rem"
+              className={!isFetching ? 'invisible' : ''}
+            />
+          </div>,
+          spinnerTarget,
+        )}
 
       <Popover
         open={Boolean(hoverAnchorEl) && !isDialogOpen}
