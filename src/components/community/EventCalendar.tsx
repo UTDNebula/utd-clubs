@@ -252,7 +252,7 @@ const EventCalendar = () => {
   return (
     <>
       <div
-        className="mt-4"
+        className="use-sticky-schedule-header [--sticky-schedule-header-padding:calc(var(--spacing)_*_4)]"
         onMouseOver={isFinePointer ? handleScheduleMouseOver : undefined}
         onMouseLeave={isFinePointer ? clearHover : undefined}
       >

@@ -51,8 +51,64 @@
     font-family: var(--font-main), sans-serif !important;
   }
 
-  .e-schedule {
-    border: none;
+  .use-sticky-schedule-header {
+    /* TODO: Remove when #675 is merged */
+    --navbar-height: 68px;
+
+    --e-schedule-toolbar-container-height: 48px;
+
+    /* Larger mobile view */
+    .e-device {
+      --e-schedule-toolbar-container-height: 56px;
+    }
+
+    .e-schedule {
+      margin-top: var(--sticky-schedule-header-padding, 0);
+      overflow: visible !important;
+      border-radius: var(--radius-lg);
+
+      .e-schedule-toolbar-container {
+        z-index: 2;
+        margin: -0.8px;
+        position: sticky;
+        top: calc(
+          var(--navbar-height) + var(--sticky-schedule-header-padding, 0)
+        );
+
+        &::before {
+          content: '';
+          z-index: -1;
+          position: absolute;
+          inset: calc(var(--sticky-schedule-header-padding, 0) * -1) -1px 0 -1px;
+          background: var(--color-light);
+          @variant dark {
+            background: var(--color-dark);
+          }
+        }
+
+        .e-schedule-toolbar {
+          border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+          border: 1px solid rgba(var(--color-sf-outline-variant)) !important;
+
+          .e-toolbar-items {
+            border-radius: inherit !important;
+          }
+
+          .e-_nav {
+            border-top-right-radius: inherit !important;
+          }
+        }
+      }
+
+      .e-schedule-table.e-outer-table > tbody > tr:first-of-type {
+        z-index: 1;
+        position: sticky;
+        top: calc(
+          var(--navbar-height) + var(--e-schedule-toolbar-container-height) +
+            var(--sticky-schedule-header-padding, 0)
+        );
+      }
+    }
   }
 
   .e-schedule .e-header-date,
