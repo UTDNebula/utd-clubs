@@ -1,12 +1,10 @@
 'use client';
 
-import {
-  CircularProgress,
-  Dialog,
-  Popover,
-  useMediaQuery,
-} from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import Popover from '@mui/material/Popover';
 import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   Day,
   Inject,
@@ -140,7 +138,7 @@ const EventCalendar = () => {
     if (args.requestType === 'dateNavigate') {
       setCalendarParams((params) => {
         // Don't set anchor if today and doesn't already exist; likely means Today button clicked
-        if (isSameDay(anchor, initialDate) && !params.has('anchor')) return;
+        if (isSameDay(anchor, new Date()) && !params.has('anchor')) return;
         params.set('anchor', anchor.toISOString().slice(0, 10));
       });
     } else if (args.requestType === 'viewNavigate') {
@@ -203,8 +201,7 @@ const EventCalendar = () => {
     const todayButton = scheduleRef.current?.element.querySelector(
       '.e-toolbar-item.e-today > button:first-of-type',
     ) as HTMLButtonElement | null;
-    todayButton?.addEventListener('click', (e) => {
-      console.log('click today!');
+    todayButton?.addEventListener('click', () => {
       setCalendarParams((params) => {
         params.delete('anchor');
       });
