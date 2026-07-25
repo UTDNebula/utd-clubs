@@ -114,7 +114,16 @@ export default function PageHeader({
     defaultSelectedTab ?? tabIndex,
   );
 
-  const selectedTab = disableOptimistic ? tabIndex : selectedTabOptimistic;
+  const selectedTab = disableOptimistic
+    ? tabIndex
+    : (selectedTabOptimistic ?? tabIndex);
+
+  if (
+    typeof selectedTabOptimistic !== 'undefined' &&
+    selectedTabOptimistic === tabIndex
+  ) {
+    setSelectedTabOptimistic(undefined);
+  }
 
   const handleChangeTab = (e: SyntheticEvent, newValue: number) => {
     if (!disableOptimistic) {

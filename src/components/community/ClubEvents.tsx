@@ -2,51 +2,19 @@
 
 import { TZDateMini } from '@date-fns/tz';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import NotFollowingOrRegistered from '@src/components/community/NotFollowingOrRegistered';
 import EventCard from '@src/components/events/EventCard';
 import EventsPagination from '@src/components/events/EventPagination';
 import { LinkButton } from '@src/components/LinkButton';
 import { api } from '@src/trpc/server';
 
-export const RegisteredEvents = async () => {
-  const events = await api.userMetadata.getEvents({
-    currentTime: TZDateMini.tz('America/Chicago'),
-    sortByDate: true,
-  });
-
-  if (events.length == 0) {
-    return (
-      <div className="mt-4 flex flex-col items-center gap-4">
-        <p className="font-bold text-slate-500 dark:text-slate-400">
-          You haven&apos;t registered for any events.
-        </p>
-        <LinkButton
-          href="/events"
-          variant="contained"
-          className="normal-case"
-          size="large"
-          endIcon={<ArrowForwardIcon />}
-        >
-          Check Out Events
-        </LinkButton>
-      </div>
-    );
-  }
-  return (
-    <div className="flex w-full flex-wrap items-center justify-evenly gap-4 pt-10">
-      {events.map((event) => (
-        <EventCard key={event.id} event={event} />
-      ))}
-    </div>
-  );
-};
-
-export const ClubEvents = async ({
+export default async function ClubEvents({
   page,
   pageSize,
 }: {
   page: number;
   pageSize: number;
-}) => {
+}) {
   const now = TZDateMini.tz('America/Chicago');
   const [clubs, events] = await Promise.all([
     api.club.getMemberClubs(),
@@ -59,22 +27,7 @@ export const ClubEvents = async ({
   ]);
 
   if (clubs.length === 0) {
-    return (
-      <div className="mt-4 flex flex-col items-center gap-4">
-        <p className="font-bold text-slate-500 dark:text-slate-400">
-          You aren&apos;t following any clubs.
-        </p>
-        <LinkButton
-          href="/"
-          variant="contained"
-          className="normal-case"
-          size="large"
-          endIcon={<ArrowForwardIcon />}
-        >
-          Check Out Clubs
-        </LinkButton>
-      </div>
-    );
+    return <NotFollowingOrRegistered type="clubs" />;
   }
 
   if (events.length === 0) {
@@ -119,4 +72,4 @@ export const ClubEvents = async ({
       </div>
     </>
   );
-};
+}

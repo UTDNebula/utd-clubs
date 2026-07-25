@@ -1,0 +1,142 @@
+@import '@syncfusion/ej2-base/styles/material3.css' screen;
+@import '@syncfusion/ej2-buttons/styles/material3.css' screen;
+@import '@syncfusion/ej2-calendars/styles/material3.css' screen;
+@import '@syncfusion/ej2-dropdowns/styles/material3.css' screen;
+@import '@syncfusion/ej2-inputs/styles/material3.css' screen;
+@import '@syncfusion/ej2-lists/styles/material3.css' screen;
+@import '@syncfusion/ej2-navigations/styles/material3.css' screen;
+@import '@syncfusion/ej2-popups/styles/material3.css' screen;
+@import '@syncfusion/ej2-splitbuttons/styles/material3.css' screen;
+@import '@syncfusion/ej2-react-schedule/styles/material3.css' screen;
+@import '@syncfusion/ej2-base/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-buttons/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-calendars/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-dropdowns/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-inputs/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-lists/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-navigations/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-popups/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-splitbuttons/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+@import '@syncfusion/ej2-react-schedule/styles/material3-dark.css' screen and
+  (prefers-color-scheme: dark);
+
+/* Syncfusion Schedule Overrides */
+@layer utilities {
+  :root {
+    --color-sf-primary: 87, 61, 255 !important; /* royal */
+    --color-sf-on-primary: 255, 255, 255 !important;
+    --color-sf-surface: 255, 255, 255 !important;
+    --color-sf-on-surface: 9, 11, 44 !important; /* haiti */
+    --color-sf-on-background: 9, 11, 44 !important; /* haiti */
+    @variant dark {
+      --color-sf-primary: 162, 151, 253 !important; /* cornflower-300 */
+      --color-sf-on-primary: 9, 11, 44 !important; /* haiti */
+      --color-sf-surface: 38, 38, 38 !important; /* neutral-800 */
+      --color-sf-on-surface: 255, 255, 255 !important;
+      --color-sf-on-background: 255, 255, 255 !important;
+    }
+  }
+
+  .e-schedule .e-control,
+  .e-schedule .e-css {
+    font-family: var(--font-main), sans-serif !important;
+  }
+
+  .use-sticky-schedule-header {
+    /* TODO: Remove when #675 is merged */
+    --navbar-height: 68px;
+
+    --e-schedule-toolbar-container-height: 48px;
+
+    /* Larger mobile view */
+    .e-device {
+      --e-schedule-toolbar-container-height: 56px;
+    }
+
+    .e-schedule {
+      margin-top: var(--sticky-schedule-header-padding, 0);
+      overflow: visible !important;
+      border-radius: var(--radius-lg);
+
+      .e-schedule-toolbar-container {
+        z-index: 2;
+        margin: -0.8px;
+        position: sticky;
+        top: calc(
+          var(--navbar-height) + var(--sticky-schedule-header-padding, 0)
+        );
+
+        &::before {
+          content: '';
+          z-index: -1;
+          position: absolute;
+          inset: calc(var(--sticky-schedule-header-padding, 0) * -1) -1px 0 -1px;
+          background: var(--color-light);
+          @variant dark {
+            background: var(--color-dark);
+          }
+        }
+
+        .e-schedule-toolbar {
+          border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+          border: 1px solid rgba(var(--color-sf-outline-variant)) !important;
+
+          .e-toolbar-items {
+            border-radius: inherit !important;
+          }
+
+          .e-_nav {
+            border-top-right-radius: inherit !important;
+          }
+        }
+      }
+
+      .e-schedule-table.e-outer-table > tbody > tr:first-of-type {
+        z-index: 1;
+        position: sticky;
+        top: calc(
+          var(--navbar-height) + var(--e-schedule-toolbar-container-height) +
+            var(--sticky-schedule-header-padding, 0)
+        );
+      }
+    }
+  }
+
+  .e-schedule .e-header-date,
+  .e-schedule .e-header-day {
+    text-align: center !important;
+    display: block !important;
+  }
+
+  .e-schedule .e-appointment {
+    cursor: pointer;
+  }
+
+  .e-schedule .e-vertical-view .e-appointment {
+    padding: 8px;
+  }
+
+  .e-schedule .e-appointment .e-subject.e-text-center {
+    text-align: left !important;
+  }
+
+  .e-schedule .e-month-view .e-appointment .e-time,
+  .e-schedule .e-month-view .e-appointment .e-location {
+    display: none;
+  }
+
+  .e-schedule .e-more-popup-wrapper,
+  .e-schedule .e-quick-popup-wrapper,
+  .e-schedule .e-schedule-dialog {
+    overflow: hidden !important;
+  }
+}

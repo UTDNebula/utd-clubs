@@ -1,5 +1,8 @@
 @layer theme, base, mui, components, utilities;
 @import 'tailwindcss';
+
+@import './syncfusion.css';
+
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/typography';
 
