@@ -20,6 +20,7 @@ export function FormAutocompleteFreeSolo({
   return (
     <Autocomplete
       freeSolo
+      autoSelect
       options={options}
       className={`w-64 ${className}`}
       size="small"
