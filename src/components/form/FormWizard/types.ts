@@ -1,18 +1,18 @@
 import { DeepKeys } from '@tanstack/react-form';
 import { MouseEventHandler, ReactElement, ReactNode, Ref } from 'react';
 
-export type StepStateConfig = {
+export type StepStateItem = {
   config?: WizardStepConfig;
   index: number;
 };
 
 export type StepState = {
   /** Current step */
-  current: StepStateConfig;
+  current: StepStateItem;
   /** Most recently visited step */
-  previous: StepStateConfig | undefined;
+  previous: StepStateItem | undefined;
   /** Furthest visited step */
-  furthest: StepStateConfig;
+  furthest: StepStateItem;
 };
 
 /**
@@ -165,26 +165,36 @@ export type WizardActionDispatcher = (
      */
     allowDisabled?: boolean;
   },
-) => boolean;
+) => Promise<boolean>;
 
 export type WizardMetaValues = {
   /**
-   * Index of the earliest future step that is accessible. This means:
+   * Index of the furthest future step that is accessible. This means:
+   *
+   * - User is allowed to advance up to this step
    * - Step isn't disabled
    * - The step right before doesn't require submitting the form first
    * - The next button for the step right before isn't disabled or hidden
+   *
+   * This does NOT check if steps are valid; you should also use {@linkcode WizardMetaValues.earliestInvalidStepIndex | earliestInvalidStepIndex}.
    */
-  nextInaccessibleStepIndex: number;
+  latestAccessibleStepIndex: number;
   /**
-   * Index of the most recent step that is accessible. This means:
+   * Index of the earliest past step that is accessible. This means:
+   *
+   * - User is allowed to backtrack up to this step
    * - Step isn't disabled
    * - The back button for the step right after isn't disabled or hidden
    */
-  prevInaccessibleStepIndex: number;
+  earliestAccessibleStepIndex: number;
   /**
    * Index of the step right after the furthest step that isn't disabled or fake.
    */
   nextEnabledAfterFurthestStepIndex: number;
+  /**
+   * Index of the first step that is invalid.
+   */
+  earliestInvalidStepIndex: number;
   /**
    * Whether currently on the first step that isn't disabled or fake.
    */

@@ -4,7 +4,7 @@ import { createContext, useContext } from 'react';
 import { WizardContextType } from './types';
 
 const defaultContext: WizardContextType = {
-  dispatchWizardAction: () => false,
+  dispatchWizardAction: async () => false,
   stepState: {
     current: { index: 0 },
     previous: undefined,
@@ -12,9 +12,10 @@ const defaultContext: WizardContextType = {
   },
   steps: [],
   meta: {
-    nextInaccessibleStepIndex: Infinity,
-    prevInaccessibleStepIndex: -1,
+    latestAccessibleStepIndex: Infinity,
+    earliestAccessibleStepIndex: -1,
     nextEnabledAfterFurthestStepIndex: 1,
+    earliestInvalidStepIndex: Infinity,
     onFirstStep: true,
     onLastStep: false,
   },

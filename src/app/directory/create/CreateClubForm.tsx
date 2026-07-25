@@ -7,7 +7,7 @@ import { TRPCClientErrorLike } from '@trpc/client';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
-import { WizardRef } from '@src/components/form/FormWizard/types';
+import { WizardRef } from '@src/components/form/FormWizard';
 import { AppRouter } from '@src/server/api/root';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
@@ -35,14 +35,15 @@ const CreateClubForm = () => {
     } as CreateClubSchema,
     onSubmit: async ({ value }) => {
       const slug = await createClub.mutateAsync(value, {
-        onError: (error) => {
+        onError: async (error) => {
           setError(error);
-          const success = wizardRef.current?.dispatchWizardAction('target', {
-            targetStep: 'error',
-            noValidate: true,
-            allowDisabled: true,
-          });
-          if (!success)
+          const targetErrorSuccess =
+            await wizardRef.current?.dispatchWizardAction('target', {
+              targetStep: 'error',
+              noValidate: true,
+              allowDisabled: true,
+            });
+          if (!targetErrorSuccess)
             throw new Error('Failed to show step with error message');
         },
       });
