@@ -221,7 +221,7 @@ export const BaseHeader = ({
     useState(false);
 
   const headerRef = useRef<HTMLDivElement>(null);
-  // Dynamically stores header height into a CSS variable called `--base-header-height`.
+  // Dynamically stores header height into a CSS variable called `--navbar-height`.
   // Useful for elements that need top offsets with `position: fixed` or `scroll-margin-top`.
   useEffect(() => {
     const header = headerRef.current;
@@ -231,7 +231,7 @@ export const BaseHeader = ({
       const height =
         entry?.borderBoxSize[0]?.blockSize ?? entry?.contentRect.height;
       document.documentElement.style.setProperty(
-        '--base-header-height',
+        '--navbar-height',
         `${height}px`,
       );
     });
