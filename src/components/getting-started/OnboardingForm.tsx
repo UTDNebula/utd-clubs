@@ -103,7 +103,7 @@ export default function OnboardingForm({
           nextButtonConfig={{ label: 'Start' }}
         >
           <div className="flex flex-col gap-6">
-            <div className="ml-3.5 flex flex-col gap-2">
+            <div className="ml-2 flex flex-col gap-2">
               <Typography
                 variant="h1"
                 className="font-display text-4xl font-bold"

@@ -55,7 +55,7 @@
     "google-auth-library": "^10.6.2",
     "googleapis": "^173.0.0",
     "nebula-library": "file:src/nebula-library",
-    "next": "^16.2.6",
+    "next": "^16.2.7",
     "postgres": "^3.4.9",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
