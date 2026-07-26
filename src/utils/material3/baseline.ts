@@ -238,4 +238,5 @@ export const baselineMaterial3Theme = createDynamicMaterial3Theme({
       fixed: baselineMaterialFixedColorTokens,
     },
   },
+  comp: {},
 });
