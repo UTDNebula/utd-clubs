@@ -97,9 +97,7 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
   return (
     <section
       id="events-body"
-      className="flex w-full items-start"
-      // TODO: The scrollMarginTop property should be BaseHeader's height. Replace this with a dynamic variable
-      style={{ scrollMarginTop: 68 }}
+      className="flex w-full scroll-mt-[var(--navbar-height)] items-start"
     >
       <Collapse
         orientation="horizontal"
@@ -114,11 +112,7 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
         </div>
       </Collapse>
       <div id="events-content" className="flex w-min grow flex-col gap-4">
-        <div
-          className="from-light dark:from-dark sticky z-40 -mx-4 -mb-4 bg-linear-to-b from-75% to-transparent px-4 py-4"
-          // TODO: The top property should be BaseHeader's height. Replace this with a dynamic variable
-          style={{ top: 68 }}
-        >
+        <div className="from-light dark:from-dark sticky top-[var(--navbar-height)] z-40 -mx-4 -mb-4 bg-linear-to-b from-75% to-transparent px-4 py-4">
           <EventDirectorySearchBar
             initialValue={filters.query}
             onChange={handleChangeQuery}

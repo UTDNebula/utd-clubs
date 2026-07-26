@@ -52,9 +52,6 @@
   }
 
   .use-sticky-schedule-header {
-    /* TODO: Remove when #675 is merged */
-    --navbar-height: 68px;
-
     --e-schedule-toolbar-container-height: 48px;
 
     /* Larger mobile view */
@@ -68,11 +65,11 @@
       border-radius: var(--radius-lg);
 
       .e-schedule-toolbar-container {
-        z-index: 2;
+        z-index: 3;
         margin: -0.8px;
         position: sticky;
         top: calc(
-          var(--navbar-height) + var(--sticky-schedule-header-padding, 0)
+          var(--navbar-height, 0px) + var(--sticky-schedule-header-padding, 0px)
         );
 
         &::before {
@@ -101,11 +98,12 @@
       }
 
       .e-schedule-table.e-outer-table > tbody > tr:first-of-type {
-        z-index: 1;
+        z-index: 2;
         position: sticky;
         top: calc(
-          var(--navbar-height) + var(--e-schedule-toolbar-container-height) +
-            var(--sticky-schedule-header-padding, 0)
+          var(--navbar-height, 0px) +
+            var(--e-schedule-toolbar-container-height) +
+            var(--sticky-schedule-header-padding, 0px)
         );
       }
     }

@@ -31,7 +31,7 @@ export const ClubSearchBar = () => {
     ),
   );
 
-  const { openCompactSearchBar } = useBaseHeaderContext();
+  const { openCollapsibleSearchBar } = useBaseHeaderContext();
 
   return (
     <Autocomplete
@@ -61,7 +61,7 @@ export const ClubSearchBar = () => {
           size="small"
           className="w-full"
           // Focus small screen search bar whenever user presses search icon button
-          autoFocus={openCompactSearchBar}
+          autoFocus={openCollapsibleSearchBar}
           slotProps={{
             ...params.slotProps,
             input: {
