@@ -14,8 +14,6 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
-import { ProfileDropDown } from './ProfileDropDown';
 
 /**
  * Determines when a color should be styled light or dark
@@ -42,17 +40,40 @@ export type HeaderItemVisibility = {
    * @default true
    */
   logo?: true | false | 'both' | 'icon' | 'text';
-  /**
-   * Visibility options for the header search bar. Valid options:
-   * - `true` Automatically switches between "full" or "compact" based on screen size
-   * - `false` Disabled
-   * - `"full"` Always show full search bar
-   * - `"compact"` Always show collapsed search button
-   * @default true
-   */
-  search?: true | false | 'full' | 'compact';
+  search?: boolean;
   children?: boolean;
   account?: boolean;
+};
+
+type SearchDisplayValues = 'inline' | 'collapsible' | 'adjacent' | 'hidden';
+
+export type HeaderItemConfig = {
+  search?: {
+    /**
+     * Visibility options for the header search bar. Valid options:
+     * - `"inline"` Show full search bar inside the header
+     * - `"collapsible"` Collapse search bar behind a compact search button
+     * - `"adjacent"` Show full search bar beneath the header
+     * - `"hidden"` Hides the search bar
+     *
+     * If an object is provided, sets search bar visibility options that depend on screen size
+     * @example <caption>"inline" on large screens, "collapsible" on small screens</caption>
+     * {md: "collapsible", lg: "inline"}
+     *
+     * @default {md: "collapsible", lg: "inline"}
+     */
+    display?:
+      | SearchDisplayValues
+      | {
+          md: SearchDisplayValues;
+          lg: SearchDisplayValues;
+        };
+    /**
+     * Alignment of the search bar
+     * @default "center"
+     */
+    align?: 'left' | 'center' | 'right';
+  };
 };
 
 export type BaseHeaderProps = {
@@ -63,15 +84,34 @@ export type BaseHeaderProps = {
    */
   menu?: ReactNode;
   /**
+   * Component displayed for logo icon slot
+   */
+  logoIcon?: ReactNode;
+  /**
+   * Logo text displayed adjacently to logo icon
+   */
+  logoText?: {
+    projectName?: string;
+    byline?: string;
+  };
+  /**
    * Component displayed for search bar slot. If prop is omitted, search functionality is not displayed
    */
   searchBar?: ReactNode;
+  /**
+   * Component displayed for account slot
+   */
+  account?: ReactNode;
   /**
    * Manages the visibility of items in the header
    */
   itemVisibility?: HeaderItemVisibility;
   /**
-   * Hides the background gradient on the header
+   * Optional config for items in the header
+   */
+  itemConfig?: HeaderItemConfig;
+  /**
+   * Hides the background image on the header
    * @default false
    */
   transparent?: boolean;
@@ -100,7 +140,7 @@ export type BaseHeaderProps = {
  * Context for child components of BaseHeader
  */
 export const BaseHeaderContext = createContext({
-  openCompactSearchBar: false,
+  openCollapsibleSearchBar: false,
 });
 
 export function useBaseHeaderContext() {
@@ -111,13 +151,28 @@ export const BaseHeader = ({
   children,
   className,
   menu,
+  logoIcon,
+  logoText: {
+    projectName: logoTextProjectName = 'Project Name',
+    byline: logoTextByline = 'by Nebula Labs',
+  } = {},
   searchBar,
+  account,
   itemVisibility: {
     menu: menuVisibility = true,
     logo: logoVisibility = true,
     search: searchVisibility = true,
     children: childrenVisibility = true,
     account: accountVisibility = true,
+  } = {},
+  itemConfig: {
+    search: {
+      display: itemConfigSearchDisplay = {
+        md: 'collapsible',
+        lg: 'inline',
+      } as const,
+      align: itemConfigSearchAlign = 'center',
+    } = {},
   } = {},
   transparent = false,
   shadow = false,
@@ -133,14 +188,37 @@ export const BaseHeader = ({
     logoVisibility === 'both' ||
     logoVisibility === 'text';
 
-  // Main search bar
-  const fullSearchBarVisibility =
-    searchVisibility === true || searchVisibility === 'full';
-  // Search bar for small screens
-  const compactSearchBarVisibility =
-    searchVisibility === true || searchVisibility === 'compact';
+  // If true, then the visible search bar will switch depending on screen size
+  const dynamicSearchBarSwapping = typeof itemConfigSearchDisplay !== 'string';
 
-  const [openCompactSearchBar, setOpenCompactSearchBar] = useState(false);
+  const dynamicVisibilityClasses = (display: SearchDisplayValues) => {
+    if (dynamicSearchBarSwapping) {
+      const classes = [];
+
+      if (itemConfigSearchDisplay.md !== display) classes.push('max-md:hidden');
+      if (itemConfigSearchDisplay.lg !== display) classes.push('md:hidden');
+      return classes.join(' ');
+    }
+    return '';
+  };
+
+  const searchBarComponentVisibility = (display: SearchDisplayValues) => {
+    if (!searchVisibility) return false;
+    return dynamicSearchBarSwapping
+      ? // Enable specific search bar component if required for dynamic swapping
+        itemConfigSearchDisplay.md === display ||
+          itemConfigSearchDisplay.lg === display
+      : // Enable specific search bar component if directly enabled
+        itemConfigSearchDisplay === display;
+  };
+
+  const inlineSearchBarVisibility = searchBarComponentVisibility('inline');
+  const collapsibleSearchBarVisibility =
+    searchBarComponentVisibility('collapsible');
+  const adjacentSearchBarVisibility = searchBarComponentVisibility('adjacent');
+
+  const [openCollapsibleSearchBar, setOpenCollapsibleSearchBar] =
+    useState(false);
 
   const headerRef = useRef<HTMLDivElement>(null);
   // Dynamically stores header height into a CSS variable called `--base-header-height`.
@@ -166,10 +244,10 @@ export const BaseHeader = ({
   }, []);
 
   return (
-    <BaseHeaderContext.Provider value={{ openCompactSearchBar }}>
+    <BaseHeaderContext.Provider value={{ openCollapsibleSearchBar }}>
       <div
         ref={headerRef}
-        className={`${disableSticky ? 'relative' : 'sticky'} top-0 z-50 flex min-h-17 w-full items-center justify-between gap-x-2 gap-y-2 px-4 py-2 md:gap-x-4 lg:gap-x-8 ${menu ? 'max-sm:pl-2' : ''} flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
+        className={`${disableSticky ? 'relative' : 'sticky'} top-0 z-50 flex min-h-17 w-full items-center justify-between gap-x-2 gap-y-2 overflow-hidden px-4 py-2 md:gap-x-4 lg:gap-x-8 ${menu || openCollapsibleSearchBar ? 'max-sm:pl-2' : ''} flex-wrap sm:flex-nowrap ${transparent ? '' : 'bg-lighten dark:bg-darken'} ${className}`}
       >
         {!transparent && (
           <div className="absolute inset-0 -z-20">
@@ -184,9 +262,13 @@ export const BaseHeader = ({
             <div className="bg-lighten dark:bg-darken absolute inset-0"></div>
           </div>
         )}
-        {!openCompactSearchBar ? (
+        {!openCollapsibleSearchBar ? (
+          // Main header
           <>
-            <div className="flex grow basis-0 gap-x-2 sm:gap-x-8">
+            {/* Left */}
+            <div
+              className={`flex basis-0 gap-x-2 sm:gap-x-8 ${itemConfigSearchAlign !== 'left' ? 'grow' : ''}`}
+            >
               {menuVisibility && menu}
               {logoVisibility && (
                 <Link
@@ -205,75 +287,91 @@ export const BaseHeader = ({
                     <div
                       className={`flex flex-row items-center ${logoVisibility === true ? 'max-sm:hidden' : ''}`}
                     >
-                      <UTDClubsLogoStandalone
-                        className={`h-10 w-auto ${
+                      <div
+                        className={`*:h-10 *:w-auto ${
                           color?.startsWith('light')
-                            ? 'fill-white'
-                            : 'fill-haiti'
+                            ? '*:fill-white'
+                            : '*:fill-haiti'
                         } ${
                           color === 'lightDark'
-                            ? 'dark:fill-haiti'
+                            ? '*:dark:fill-haiti'
                             : color === 'darkLight'
-                              ? 'dark:fill-white'
+                              ? '*:dark:fill-white'
                               : ''
                         }`}
-                      />
+                      >
+                        {logoIcon}
+                      </div>
                     </div>
                   )}
                   {logoTextVisibility && (
                     <div className="flex flex-col">
                       <span className="text-lg leading-5 font-bold whitespace-nowrap md:text-xl">
-                        UTD CLUBS
+                        {logoTextProjectName}
                       </span>
                       <span className="text-xs font-medium whitespace-nowrap md:text-sm">
-                        by Nebula Labs
+                        {logoTextByline}
                       </span>
                     </div>
                   )}
                 </Link>
               )}
             </div>
-            {fullSearchBarVisibility && searchBar && (
+
+            {/* Center */}
+            {inlineSearchBarVisibility && searchBar && (
               <div
-                className={`order-last basis-128 gap-x-2 max-sm:basis-full sm:order-none md:gap-x-4 lg:gap-x-8 ${searchVisibility === true ? 'max-md:hidden' : ''} ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+                className={`order-last basis-128 max-sm:basis-full sm:order-none ${dynamicVisibilityClasses('inline')} ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
               >
                 {searchBar}
               </div>
             )}
+
+            {/* Right */}
             <div
-              className={`flex grow basis-0 items-center justify-end gap-x-2 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.2)]' : ''}`}
+              className={`flex grow basis-0 items-center justify-end gap-x-2 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.2)]' : ''} ${itemConfigSearchAlign !== 'right' ? 'grow' : ''}`}
             >
-              {compactSearchBarVisibility && searchBar && (
+              {collapsibleSearchBarVisibility && searchBar && (
                 <IconButton
                   size="large"
-                  className={`${searchVisibility === true ? 'md:hidden' : ''}`}
+                  className={`${dynamicVisibilityClasses('collapsible')}`}
                   aria-label="Search"
-                  onClick={() => setOpenCompactSearchBar(true)}
+                  onClick={() => setOpenCollapsibleSearchBar((prev) => !prev)}
                 >
                   <SearchIcon />
                 </IconButton>
               )}
               {childrenVisibility && children}
-              {accountVisibility && <ProfileDropDown />}
+              {accountVisibility && account}
             </div>
           </>
         ) : (
+          // Collapsible search bar
           <div className="flex w-full justify-center">
             <div className="flex w-full max-w-128 items-center gap-x-2">
               <IconButton
                 size="large"
-                onClick={() => setOpenCompactSearchBar(false)}
+                onClick={() => setOpenCollapsibleSearchBar(false)}
                 aria-label="Go back"
               >
                 <ArrowBackIcon />
               </IconButton>
-              {compactSearchBarVisibility && (
+              {collapsibleSearchBarVisibility && (
                 <div className="grow">{searchBar}</div>
               )}
             </div>
           </div>
         )}
       </div>
+      {adjacentSearchBarVisibility && searchBar ? (
+        <div className={`px-4 py-2 ${dynamicVisibilityClasses('adjacent')}`}>
+          <div
+            className={`max-w-128 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+          >
+            {searchBar}
+          </div>
+        </div>
+      ) : undefined}
     </BaseHeaderContext.Provider>
   );
 };
