@@ -1,7 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef, useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import { SelectOfficer } from '@src/server/db/models';
 import ClubOfficer from './ClubOfficer';
 
@@ -36,7 +36,7 @@ export default function OfficerList({
       // The height of the officer card at start should be the distance between officer's top and the right side's bottom
       const targetHeight = rightBottom - officerTop; // will be negative in mobile -> sets truncation to true, but maxHeight is default 300px
       const contentHeight = contentRef.current.scrollHeight + 80; // height of the full officer card + padding/header space
-      setMaxHeight(targetHeight > 300 ? targetHeight : 300); // at least 300px to show 2 officers
+      setMaxHeight(Math.max(targetHeight, 230)); // at least 230px to show 2 officers
       setNeedsTruncation(contentHeight > targetHeight && officers.length > 0); // if no officers, no truncation -- just show error text
     };
 
@@ -50,49 +50,54 @@ export default function OfficerList({
     return () => observer.disconnect();
   }, [officers, id]);
 
-  // dynamically determine css height in expanded or normal states
-  const containerStyle =
-    isExpanded || !needsTruncation
-      ? { height: 'auto' }
-      : maxHeight
-        ? { height: `${maxHeight}px` }
-        : { height: 'auto' };
-
   return (
     <Panel
       className="text-sm"
+      slotClassNames={{ collapse: 'relative' }}
       id={id}
       smallPadding
       heading="Officers"
-      style={containerStyle}
+      enableCollapsing={
+        needsTruncation
+          ? {
+              toggleOnHeadingClick: true,
+              collapsedSize: maxHeight ?? undefined,
+            }
+          : false
+      }
+      collapse={needsTruncation && !isExpanded}
+      onCollapseClick={() => setIsExpanded((prev) => !prev)}
     >
-      <div className="relative flex-1 min-h-0 overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-hidden">
         <div ref={contentRef} className="flex flex-col gap-4">
           {officers.length > 0 ? (
             officers.map((officer) => (
               <ClubOfficer key={officer.name} officer={officer} />
             ))
           ) : (
-            <span className="text-slate-600 dark:text-slate-400 text-sm">
+            <span className="text-sm text-slate-600 dark:text-slate-400">
               No officers listed
             </span>
           )}
         </div>
-
-        {/* fade overlay only shows if content is taller than right side AND not expanded */}
-        {needsTruncation && !isExpanded && (
-          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-white dark:from-neutral-800 to-transparent pointer-events-none" />
-        )}
       </div>
 
       {needsTruncation && (
-        <div className="mt-2 pt-2 border-t border-slate-300 dark:border-slate-700 z-10">
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full text-sm font-semibold text-royal dark:text-cornflower-300 hover:text-royalDark dark:hover:text-cornflower-400 underline decoration-transparent hover:decoration-inherit transition text-center"
-          >
-            {isExpanded ? 'Show less' : 'See all officers'}
-          </button>
+        <div
+          className={`${needsTruncation && !isExpanded ? 'absolute' : ''} bottom-0 left-0 w-full`}
+        >
+          {/* fade overlay only shows if content is taller than right side AND not expanded */}
+          {!isExpanded && (
+            <div className="pointer-events-none h-16 bg-gradient-to-t from-white to-transparent dark:from-neutral-800" />
+          )}
+          <div className="z-10 border-t border-slate-300 bg-white pt-2 dark:border-slate-700 dark:bg-neutral-800">
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-royal dark:text-cornflower-300 hover:text-royalDark dark:hover:text-cornflower-400 focus:text-royalDark dark:focus:text-cornflower-400 w-full text-center text-sm font-semibold underline decoration-transparent outline-0 transition hover:decoration-inherit focus:decoration-inherit"
+            >
+              {isExpanded ? 'Show less' : 'See all officers'}
+            </button>
+          </div>
         </div>
       )}
     </Panel>

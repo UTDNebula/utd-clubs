@@ -3,8 +3,10 @@
 import Diversity3Icon from '@mui/icons-material/Diversity3';
 import { Button, IconButton } from '@mui/material';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { MouseEventHandler, useRef } from 'react';
 import { authClient } from '@src/utils/auth-client';
-import { useRegisterModal } from '../global/RegisterModalProvider';
+import { useLoginModal } from '@src/utils/loginModal';
 
 const shadowStyle = 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]';
 
@@ -18,35 +20,47 @@ export default function ClubMatchButton({
   iconOnly?: boolean;
 }) {
   const { data: session } = authClient.useSession();
+  const router = useRouter();
+  const useAuthPage = useRef(false);
+  const { openLoginModal } = useLoginModal({
+    onNoProvider: () => {
+      useAuthPage.current = true;
+    },
+  });
 
-  const { setShowRegisterModal } = useRegisterModal();
-
-  const handleClick = !session
-    ? () => {
-        setShowRegisterModal(true);
+  const handleButtonClick: MouseEventHandler<HTMLAnchorElement> = (e) => {
+    if (!session) {
+      e.preventDefault();
+      // Use auth page if not not wrapped in a `<LoginModalProvider>`
+      if (useAuthPage.current) {
+        router.push(
+          `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
+        );
+      } else {
+        openLoginModal();
       }
-    : undefined;
-
-  const hrefConditionalProp = session ? { href: '/club-match/results' } : {};
+    }
+  };
 
   return iconOnly ? (
     <IconButton
       LinkComponent={Link}
-      {...hrefConditionalProp}
+      onClick={handleButtonClick}
+      href="/club-match/results"
       size="large"
-      className={`rounded-full w-10 h-10 bg-[var(--mui-palette-primary-main)] hover:bg-[var(--mui-palette-primary-dark)] text-white dark:text-haiti ${shadow ? shadowStyle : ''}`}
-      onClick={handleClick}
+      className={`dark:text-haiti h-10 w-10 rounded-full bg-[var(--mui-palette-primary-main)] text-white hover:bg-[var(--mui-palette-primary-dark)] ${shadow ? shadowStyle : ''}`}
+      aria-label="Club Match"
     >
       {icon}
     </IconButton>
   ) : (
     <Button
       LinkComponent={Link}
-      {...hrefConditionalProp}
+      onClick={handleButtonClick}
+      href="/club-match/results"
       variant="contained"
-      className={`normal-case px-5 py-2 h-10 whitespace-nowrap ${shadow ? shadowStyle : ''}`}
+      className={`h-10 px-5 py-2 whitespace-nowrap normal-case ${shadow ? shadowStyle : ''}`}
       startIcon={icon}
-      onClick={handleClick}
       disableElevation
     >
       Club Match

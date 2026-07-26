@@ -14,7 +14,7 @@ import type { AnyFieldApi } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import { Binoculars } from '@src/icons/OtherIcons';
 import { SelectUserMetadata } from '@src/server/db/models';
 import { ClubMatchResponses } from '@src/server/db/schema/users';
@@ -104,7 +104,7 @@ const SelectMultipleInput = ({
     field.state.meta.isTouched && !field.state.meta.isValid;
   const value: string[] = field.state.value ?? [];
   return (
-    <FormControl className="flex flex-col gap-1 w-full">
+    <FormControl className="flex w-full flex-col gap-1">
       {label ? (
         <label htmlFor={id} className="whitespace-pre-line">
           {label}
@@ -135,7 +135,13 @@ const SelectMultipleInput = ({
             ))}
           </div>
         )}
-        MenuProps={{ PaperProps: { className: 'max-h-60' } }}
+        MenuProps={{
+          slotProps: {
+            paper: {
+              className: 'max-h-60',
+            },
+          },
+        }}
         error={shouldShowError}
       >
         <MenuItem disabled value="">
@@ -196,7 +202,7 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
   });
 
   return (
-    <main className="p-4 mb-10">
+    <main className="mb-10 p-4">
       <h1 className="font-display mb-2 text-center text-4xl font-bold">
         Club Match
       </h1>
@@ -466,7 +472,7 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
                         {(field) => (
                           <field.TextField
                             placeholder="Please specify"
-                            className="w-full mt-2"
+                            className="mt-2 w-full"
                             required={isFieldRequired('genderOther')}
                           />
                         )}
@@ -498,7 +504,7 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
             </div>
           </div>
 
-          <div className="flex flex-wrap justify-end items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <form.AppForm>
               <form.ResetButton />
             </form.AppForm>
@@ -513,15 +519,15 @@ const ClubMatch = ({ response, userMetadata }: ClubMatchProps) => {
               />
             </form.AppForm>
           </div>
-          <div className="mt-6 p-4 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
-            <p className="text-sm text-slate-700 dark:text-slate-300">
-              <span className="font-semibold">Disclaimer:</span> Club
+          <Panel smallPadding className="mt-6 dark:bg-neutral-700">
+            <p className="text-sm text-slate-800 dark:text-slate-200">
+              <span className="font-semibold">Disclaimer: </span>Club
               recommendations are generated using Google&apos;s Gemini AI. While
               we strive for accuracy, AI recommendations may not perfectly match
               your preferences. We recommend reviewing the suggested clubs to
               find the best fit for you.
             </p>
-          </div>
+          </Panel>
         </Panel>
       </form>
     </main>

@@ -16,6 +16,7 @@ const config: JestConfigWithTsJest = {
   },
   detectOpenHandles: true,
   forceExit: true,
+  testPathIgnorePatterns: ['<rootDir>/src/nebula-library'],
 };
 
 export default config;

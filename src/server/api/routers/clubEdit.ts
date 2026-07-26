@@ -35,6 +35,10 @@ async function isUserPresident(userId: string, clubId: string) {
   return officer?.memberType == 'President';
 }
 
+const byIdSchema = z.object({
+  id: z.string().default(''),
+});
+
 const editContactSchema = z.object({
   clubId: z.string(),
   deleted: selectContact.shape.platform.array(),
@@ -126,11 +130,27 @@ export const clubEditRouter = createTRPCRouter({
           foundingDate: input.foundingDate,
           clubSize: input.clubSize,
           updatedAt: new Date(),
+          schools: input.schools,
         })
         .where(eq(club.id, input.id))
         .returning();
 
       return updatedClub[0];
+    }),
+  setUpdatedAt: protectedProcedure
+    .input(byIdSchema)
+    .mutation(async ({ input, ctx }) => {
+      const isOfficer = await isUserOfficer(ctx.session.user.id, input.id);
+      if (!isOfficer) throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+      await ctx.db
+        .update(club)
+        .set({
+          updatedAt: new Date(),
+        })
+        .where(eq(club.id, input.id));
+
+      return { success: true };
     }),
   contacts: protectedProcedure
     .input(editContactSchema)

@@ -16,7 +16,7 @@ const RedoClubMatchButton = () => {
       href="/club-match"
       loading={loading}
       loadingPosition="start"
-      className="rounded-full w-fit normal-case self-center"
+      className="w-fit self-center rounded-full normal-case"
       startIcon={<RestartAlt />}
     >
       {loading ? 'Loading...' : 'Redo Club Match'}

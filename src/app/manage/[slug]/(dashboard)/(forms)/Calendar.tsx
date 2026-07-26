@@ -13,7 +13,7 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -28,9 +28,10 @@ type CalendarProps = {
 const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const isSyncing = !!club.calendarId && !!club.calendarName;
   const trpc = useTRPC();
-  const { data, isSuccess, isLoading } = useQuery(
-    trpc.event.getUserCalendars.queryOptions(),
-  );
+  const { data, isSuccess, isLoading } = useQuery({
+    ...trpc.event.getUserCalendars.queryOptions(),
+    enabled: hasScopes,
+  });
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedCalendar, setSelectedCalendar] = useState<{
     id: string;
@@ -106,7 +107,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
           !isSyncing) ? ( // if there is already a calendar assigned tho (by someone else), show that
           <Button
             variant="contained"
-            className="normal-case w-full"
+            className="w-full normal-case"
             startIcon={<GoogleIcon />}
             disabled={isLoading}
             loading={isLoading}

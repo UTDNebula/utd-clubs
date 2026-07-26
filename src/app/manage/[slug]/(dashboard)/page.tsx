@@ -1,6 +1,7 @@
 import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import PreviewIcon from '@mui/icons-material/Preview';
+import Tooltip from '@mui/material/Tooltip';
 import { notFound } from 'next/navigation';
 import { LinkButton } from '@src/components/LinkButton';
 import ManageHeader from '@src/components/manage/ManageHeader';
@@ -18,11 +19,11 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
   return (
     <>
       <ManageHeader club={club} hrefBack="/manage">
-        <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
+        <div className="flex flex-wrap items-center gap-x-10 gap-y-2 max-sm:gap-x-4">
           <LinkButton
             href={`/manage/${slug}/followers`}
             variant="contained"
-            className="normal-case whitespace-nowrap"
+            className="whitespace-nowrap normal-case"
             startIcon={<PeopleIcon />}
             size="large"
           >
@@ -31,7 +32,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
           <LinkButton
             href={`/manage/${slug}/events`}
             variant="contained"
-            className="normal-case whitespace-nowrap"
+            className="whitespace-nowrap normal-case"
             startIcon={<EventIcon />}
             size="large"
           >
@@ -41,11 +42,16 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
             <LinkButton
               href={`/directory/${slug}`}
               variant="contained"
-              className="normal-case whitespace-nowrap"
+              className="whitespace-pre normal-case"
               startIcon={<PreviewIcon />}
               size="large"
             >
               Listing
+              <Tooltip title="Refreshes Daily">
+                <span className="ml-1 text-xs text-slate-300 dark:text-slate-700">
+                  ({club.pageViews?.toLocaleString() ?? 0} views in past week)
+                </span>
+              </Tooltip>
             </LinkButton>
           )}
         </div>

@@ -1,7 +1,7 @@
 import { Divider, Tooltip } from '@mui/material';
 import { subMinutes } from 'date-fns';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
 
 type ClubDetailsCardProps = {
@@ -109,18 +109,20 @@ export default function ClubDetailsCard({
   }
 
   return (
-    <Panel className="text-sm !gap-1" id={id} smallPadding heading="Details">
-      {items.length ? (
-        items.flatMap((item, index) => {
-          const row = [item];
-          if (index < items.length - 1) {
-            row.push(<Divider key={index} />);
-          }
-          return row;
-        })
-      ) : (
-        <span className="text-slate-600 dark:text-slate-400">No details</span>
-      )}
+    <Panel className="text-sm" id={id} smallPadding heading="Details">
+      <div className="flex flex-col gap-1">
+        {items.length ? (
+          items.flatMap((item, index) => {
+            const row = [item];
+            if (index < items.length - 1) {
+              row.push(<Divider key={index} />);
+            }
+            return row;
+          })
+        ) : (
+          <span className="text-slate-600 dark:text-slate-400">No details</span>
+        )}
+      </div>
     </Panel>
   );
 }

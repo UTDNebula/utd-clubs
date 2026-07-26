@@ -11,8 +11,8 @@ import useMediaQuery from '@mui/system/useMediaQuery';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { MouseEvent, useCallback, useState } from 'react';
-import { BaseCard } from '@src/components/common/BaseCard';
-import Panel from '@src/components/common/Panel';
+import { BaseCard } from '@nebula-library/components/BaseCard';
+import Panel from '@nebula-library/components/Panel';
 import { WizardStepObject } from '@src/components/form/FormWizard';
 import { SelectUserMetadataWithClubs } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
@@ -272,10 +272,10 @@ export default function OnboardingForm({
         e.stopPropagation();
         form.handleSubmit();
       }}
-      className="flex flex-col gap-8 w-full"
+      className="flex w-full flex-col gap-8"
       noValidate
     >
-      <BaseCard className="max-sm:px-0 sm:px-2 py-4 overflow-clip">
+      <BaseCard className="overflow-clip py-4 max-sm:px-0 sm:px-2">
         <div>
           <Stepper
             alternativeLabel={useMediaQuery(theme.breakpoints.down('sm'))}
@@ -322,7 +322,7 @@ export default function OnboardingForm({
           </Stepper>
         </div>
       </BaseCard>
-      <Panel className="shadow-lg overflow-clip">
+      <Panel className="overflow-clip shadow-lg">
         <div
           className="relative mb-4 transition-[height] duration-250 ease-in-out"
           style={
@@ -382,7 +382,7 @@ export default function OnboardingForm({
             );
           })}
         </div>
-        <div className="flex flex-row justify-end items-center gap-2">
+        <div className="flex flex-row items-center justify-end gap-2">
           {BackButton}
           {NextButton}
         </div>

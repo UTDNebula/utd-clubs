@@ -1,4 +1,4 @@
-import Panel from '@src/components/common/Panel';
+import Panel from '@nebula-library/components/Panel';
 import { RouterOutputs } from '@src/trpc/shared';
 import ContactButton from './ContactButton';
 
@@ -17,7 +17,7 @@ export default function ClubContactCard({ club, id }: ClubContactCardProps) {
           <ContactButton key={contact.platform} contact={contact} />
         ))
       ) : (
-        <span className="text-slate-600 dark:text-slate-400 text-sm">
+        <span className="text-sm text-slate-600 dark:text-slate-400">
           No contact info
         </span>
       )}
