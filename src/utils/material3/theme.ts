@@ -36,12 +36,14 @@ export type DynamicMaterial3ThemeValues = {
   comp: Material3CompTokens;
 };
 
+export type ColorScheme = 'light' | 'dark';
+
 export type DynamicMaterial3ThemeVariants = {
   /**
    * Whether to return values corresponding to the light or dark color scheme
    * @default "light"
    */
-  colorScheme: 'light' | 'dark';
+  colorScheme: ColorScheme;
 };
 
 export type DynamicMaterial3ThemeOptions<GetValues extends boolean> = {
@@ -55,13 +57,13 @@ export type DynamicMaterial3ThemeOptions<GetValues extends boolean> = {
 export type DynamicMaterial3Theme = {
   // options.getValue == false (default)
   <GetValues extends false = false>(
-    variant: DynamicMaterial3ThemeVariants,
+    variant: DynamicMaterial3ThemeVariants | ColorScheme,
     options?: DynamicMaterial3ThemeOptions<GetValues>,
   ): Material3TokenClasses;
 
   // options.getValue == true
   <GetValues extends true>(
-    variant: DynamicMaterial3ThemeVariants,
+    variant: DynamicMaterial3ThemeVariants | ColorScheme,
     options: DynamicMaterial3ThemeOptions<GetValues>,
   ): DynamicMaterial3ThemeValues;
 };
@@ -71,27 +73,32 @@ export function createDynamicMaterial3Theme(
 ): DynamicMaterial3Theme {
   // Declaration: options.getValue == false (default)
   function themeFn(
-    variant: DynamicMaterial3ThemeVariants,
+    variant: DynamicMaterial3ThemeVariants | ColorScheme,
     options?: DynamicMaterial3ThemeOptions<false>,
   ): Material3TokenClasses;
 
   // Declaration: options.getValue == true
   function themeFn(
-    variant: DynamicMaterial3ThemeVariants,
+    variant: DynamicMaterial3ThemeVariants | ColorScheme,
     options: DynamicMaterial3ThemeOptions<true>,
   ): DynamicMaterial3ThemeValues;
 
   // Definition
   function themeFn(
-    variant: DynamicMaterial3ThemeVariants,
+    variantParameter: DynamicMaterial3ThemeVariants | ColorScheme,
     options?: DynamicMaterial3ThemeOptions<boolean>,
   ): DynamicMaterial3ThemeValues | Material3TokenClasses {
     if (options?.getValues) {
       return values;
     }
 
+    const variant: DynamicMaterial3ThemeVariants =
+      typeof variantParameter === 'string'
+        ? { colorScheme: variantParameter }
+        : variantParameter;
+
     return {
-      ref: values.ref,
+      ref: values.ref ?? { palette: {} },
       sys: {
         color: values.sys.colorScheme.fixed
           ? {
