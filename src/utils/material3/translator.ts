@@ -27,12 +27,12 @@ declare module '@mui/material/styles' {
 /**
  * Generates a MUI theme augmented with Material 3 tokens.
  * @param material3Theme Inserts this Material 3 theme into relevant MUI theme locations and other augmented locations.
- * @param options An incomplete MUI theme object for customizing the returned theme object.
+ * @param optionOverrides An incomplete MUI theme object for customizing the returned theme object.
  * @returns A complete, ready-to-use theme object.
  */
-export function createMaterial3MuiTheme(
+export function createMuiThemeWithM3(
   material3Theme: DynamicMaterial3Theme,
-  options?: ThemeOptions,
+  optionOverrides?: ThemeOptions,
 ) {
   const translatedMaterial3MuiThemeOptions: ThemeOptions = {
     cssVariables: true,
@@ -59,5 +59,7 @@ export function createMaterial3MuiTheme(
     },
   };
 
-  return createTheme(deepmerge(translatedMaterial3MuiThemeOptions, options));
+  return createTheme(
+    deepmerge(translatedMaterial3MuiThemeOptions, optionOverrides),
+  );
 }

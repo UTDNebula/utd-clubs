@@ -7,15 +7,26 @@ import {
   Material3TokenClasses,
 } from './types';
 
+export type ColorScheme = 'light' | 'dark';
+
+/**
+ * A static object of tokens representing a particular variant of a Material 3 theme.
+ */
+export type Material3Theme = Material3TokenClasses;
+
 type DynamicMaterial3ThemeColorSchemeValues =
   | {
+      /** Value of the system color tokens in light mode. */
       light: Material3SysColorTokens;
+      /** Value of the system color tokens in dark mode. */
       dark: Material3SysColorTokens;
       fixed?: never;
     }
   | {
+      /** Value of the system color tokens in light mode. */
       light: Material3SysDynamicColorTokens &
         Partial<Material3SysFixedColorTokens>;
+      /** Value of the system color tokens in dark mode. */
       dark: Material3SysDynamicColorTokens &
         Partial<Material3SysFixedColorTokens>;
       /**
@@ -35,8 +46,6 @@ export type DynamicMaterial3ThemeValues = {
   };
   comp: Material3CompTokens;
 };
-
-export type ColorScheme = 'light' | 'dark';
 
 export type DynamicMaterial3ThemeVariants = {
   /**
@@ -59,7 +68,7 @@ export type DynamicMaterial3Theme = {
   <GetValues extends false = false>(
     variant: DynamicMaterial3ThemeVariants | ColorScheme,
     options?: DynamicMaterial3ThemeOptions<GetValues>,
-  ): Material3TokenClasses;
+  ): Material3Theme;
 
   // options.getValue == true
   <GetValues extends true>(
@@ -75,7 +84,7 @@ export function createDynamicMaterial3Theme(
   function themeFn(
     variant: DynamicMaterial3ThemeVariants | ColorScheme,
     options?: DynamicMaterial3ThemeOptions<false>,
-  ): Material3TokenClasses;
+  ): Material3Theme;
 
   // Declaration: options.getValue == true
   function themeFn(
@@ -87,7 +96,7 @@ export function createDynamicMaterial3Theme(
   function themeFn(
     variantParameter: DynamicMaterial3ThemeVariants | ColorScheme,
     options?: DynamicMaterial3ThemeOptions<boolean>,
-  ): DynamicMaterial3ThemeValues | Material3TokenClasses {
+  ): DynamicMaterial3ThemeValues | Material3Theme {
     if (options?.getValues) {
       return values;
     }

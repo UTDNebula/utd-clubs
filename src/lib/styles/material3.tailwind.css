@@ -170,3 +170,32 @@
   --color-on-background: var(--mui-palette-sys-onBackground);
   --color-surface-tint: var(--mui-palette-sys-surfaceTint);
 }
+
+/* 
+ * Fixed System Tokens
+ */
+@theme inline {
+  /* primary colors */
+  --color-fixed-primary: var(--mui-palette-sys-primaryFixed);
+  --color-fixed-on-primary: var(--mui-palette-sys-onPrimaryFixed);
+  --color-fixed-primary-dim: var(--mui-palette-sys-primaryFixedDim);
+  --color-fixed-on-primary-variant: var(
+    --mui-palette-sys-onPrimaryFixedVariant
+  );
+
+  /* secondary colors */
+  --color-fixed-secondary: var(--mui-palette-sys-secondaryFixed);
+  --color-fixed-on-secondary: var(--mui-palette-sys-onSecondaryFixed);
+  --color-fixed-secondary-dim: var(--mui-palette-sys-secondaryFixedDim);
+  --color-fixed-on-secondary-variant: var(
+    --mui-palette-sys-onSecondaryFixedVariant
+  );
+
+  /* tertiary colors */
+  --color-fixed-tertiary: var(--mui-palette-sys-tertiaryFixed);
+  --color-fixed-on-tertiary: var(--mui-palette-sys-onTertiaryFixed);
+  --color-fixed-tertiary-dim: var(--mui-palette-sys-tertiaryFixedDim);
+  --color-fixed-on-tertiary-variant: var(
+    --mui-palette-sys-onTertiaryFixedVariant
+  );
+}
