@@ -14,7 +14,7 @@ export type ColorScheme = 'light' | 'dark';
  */
 export type Material3Theme = Material3TokenClasses;
 
-type DynamicMaterial3ThemeColorSchemeValues =
+export type DynamicMaterial3ThemeColorSchemeValues =
   | {
       /** Value of the system color tokens in light mode. */
       light: Material3SysColorTokens;

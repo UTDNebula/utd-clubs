@@ -2,7 +2,30 @@
 
 import { ThemeOptions } from '@mui/material/styles';
 import { createMuiThemeWithM3 } from './material3/translator';
-import { baselineMaterial3Theme } from './material3/baseline';
+import {
+  baselineMapPaletteToSchemes,
+  baselineMaterialColorPalette,
+} from './material3/baseline';
+import { createDynamicMaterial3Theme } from './material3/theme';
+import { Material3RefPaletteTokens } from './material3/types';
+
+const ClubsColorPalette: Material3RefPaletteTokens = {
+  ...baselineMaterialColorPalette,
+  primary40: '#573dff',
+  primary80: '#a297fd',
+  tertiary40: '#b64af9',
+  black: '#000000',
+  white: '#ffffff',
+};
+
+const ClubsThemeSystemColorSchemeValues =
+  baselineMapPaletteToSchemes(ClubsColorPalette);
+
+export const ClubsTheme = createDynamicMaterial3Theme({
+  ref: { palette: ClubsColorPalette },
+  sys: { colorScheme: ClubsThemeSystemColorSchemeValues },
+  comp: {},
+});
 
 const lightPalette = {
   palette: {
@@ -68,6 +91,6 @@ const themeOptions: ThemeOptions = {
   },
 };
 
-const theme = createMuiThemeWithM3(baselineMaterial3Theme, themeOptions);
+const theme = createMuiThemeWithM3(ClubsTheme, themeOptions);
 
 export default theme;

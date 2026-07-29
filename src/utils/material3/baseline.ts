@@ -1,15 +1,14 @@
-import { createDynamicMaterial3Theme } from './theme';
 import {
-  Material3RefPaletteTokens,
-  Material3SysDynamicColorTokens,
-  Material3SysFixedColorTokens,
-} from './types';
+  createDynamicMaterial3Theme,
+  DynamicMaterial3ThemeColorSchemeValues,
+} from './theme';
+import { Material3RefPaletteTokens } from './types';
 
 /**
  * @see
  * Palettes category of https://m3.material.io/styles/color/static/baseline#c9263303-f4ef-4a33-ad57-7d91dc736b6b
  */
-const baselineMaterialColorPalette: Material3RefPaletteTokens = {
+export const baselineMaterialColorPalette: Material3RefPaletteTokens = {
   primary100: '#ffffff',
   primary99: '#fffbfe',
   primary98: '#fef7ff',
@@ -115,128 +114,127 @@ const baselineMaterialColorPalette: Material3RefPaletteTokens = {
 };
 
 /**
+ * Maps the values of color tokens to Material 3 system tokens, using the mapping from the baseline Material 3 theme.
+ * @param refPalette Palette of reference tokens.
+ * @returns The color tokens for light mode, dark mode, and fixed color tokens.
+ *
  * @see
- * Color schemes category with light theme of https://m3.material.io/styles/color/static/baseline#c9263303-f4ef-4a33-ad57-7d91dc736b6b
+ * Mappings sourced from the light and dark themes under the color schemes category of https://m3.material.io/styles/color/static/baseline#c9263303-f4ef-4a33-ad57-7d91dc736b6b
  */
-const baselineMaterialLightColorScheme: Material3SysDynamicColorTokens = {
-  primary: baselineMaterialColorPalette.primary40,
-  onPrimary: baselineMaterialColorPalette.primary100,
-  primaryContainer: baselineMaterialColorPalette.primary90,
-  onPrimaryContainer: baselineMaterialColorPalette.primary30,
+export const baselineMapPaletteToSchemes = (
+  refPalette: Material3RefPaletteTokens,
+): DynamicMaterial3ThemeColorSchemeValues => ({
+  light: {
+    primary: refPalette.primary40,
+    onPrimary: refPalette.primary100,
+    primaryContainer: refPalette.primary90,
+    onPrimaryContainer: refPalette.primary30,
 
-  secondary: baselineMaterialColorPalette.secondary40,
-  onSecondary: baselineMaterialColorPalette.secondary100,
-  secondaryContainer: baselineMaterialColorPalette.secondary90,
-  onSecondaryContainer: baselineMaterialColorPalette.secondary30,
+    secondary: refPalette.secondary40,
+    onSecondary: refPalette.secondary100,
+    secondaryContainer: refPalette.secondary90,
+    onSecondaryContainer: refPalette.secondary30,
 
-  tertiary: baselineMaterialColorPalette.tertiary40,
-  onTertiary: baselineMaterialColorPalette.tertiary100,
-  tertiaryContainer: baselineMaterialColorPalette.tertiary90,
-  onTertiaryContainer: baselineMaterialColorPalette.tertiary30,
+    tertiary: refPalette.tertiary40,
+    onTertiary: refPalette.tertiary100,
+    tertiaryContainer: refPalette.tertiary90,
+    onTertiaryContainer: refPalette.tertiary30,
 
-  error: baselineMaterialColorPalette.error40,
-  onError: baselineMaterialColorPalette.error100,
-  errorContainer: baselineMaterialColorPalette.error90,
-  onErrorContainer: baselineMaterialColorPalette.error30,
+    error: refPalette.error40,
+    onError: refPalette.error100,
+    errorContainer: refPalette.error90,
+    onErrorContainer: refPalette.error30,
 
-  surface: baselineMaterialColorPalette.neutral98,
-  onSurface: baselineMaterialColorPalette.neutral10,
-  surfaceVariant: baselineMaterialColorPalette.neutralVariant90,
-  onSurfaceVariant: baselineMaterialColorPalette.neutralVariant30,
+    surface: refPalette.neutral98,
+    onSurface: refPalette.neutral10,
+    surfaceVariant: refPalette.neutralVariant90,
+    onSurfaceVariant: refPalette.neutralVariant30,
 
-  surfaceContainerHighest: baselineMaterialColorPalette.neutral90,
-  surfaceContainerHigh: baselineMaterialColorPalette.neutral92,
-  surfaceContainer: baselineMaterialColorPalette.neutral94,
-  surfaceContainerLow: baselineMaterialColorPalette.neutral96,
-  surfaceContainerLowest: baselineMaterialColorPalette.neutral100,
+    surfaceContainerHighest: refPalette.neutral90,
+    surfaceContainerHigh: refPalette.neutral92,
+    surfaceContainer: refPalette.neutral94,
+    surfaceContainerLow: refPalette.neutral96,
+    surfaceContainerLowest: refPalette.neutral100,
 
-  surfaceBright: baselineMaterialColorPalette.neutral98,
-  surfaceDim: baselineMaterialColorPalette.neutral87,
+    surfaceBright: refPalette.neutral98,
+    surfaceDim: refPalette.neutral87,
 
-  inverseSurface: baselineMaterialColorPalette.neutral20,
-  inverseOnSurface: baselineMaterialColorPalette.neutral95,
-  inversePrimary: baselineMaterialColorPalette.primary80,
+    inverseSurface: refPalette.neutral20,
+    inverseOnSurface: refPalette.neutral95,
+    inversePrimary: refPalette.primary80,
 
-  outline: baselineMaterialColorPalette.neutralVariant50,
-  outlineVariant: baselineMaterialColorPalette.neutralVariant80,
-  scrim: baselineMaterialColorPalette.neutral0,
-  shadow: baselineMaterialColorPalette.neutral0,
-};
+    outline: refPalette.neutralVariant50,
+    outlineVariant: refPalette.neutralVariant80,
+    scrim: refPalette.neutral0,
+    shadow: refPalette.neutral0,
+  },
+  dark: {
+    primary: refPalette.primary80,
+    onPrimary: refPalette.primary20,
+    primaryContainer: refPalette.primary30,
+    onPrimaryContainer: refPalette.primary90,
 
-/**
- * @see
- * Color schemes category with dark theme of https://m3.material.io/styles/color/static/baseline#c9263303-f4ef-4a33-ad57-7d91dc736b6b
- */
-const baselineMaterialDarkColorScheme: Material3SysDynamicColorTokens = {
-  primary: baselineMaterialColorPalette.primary80,
-  onPrimary: baselineMaterialColorPalette.primary20,
-  primaryContainer: baselineMaterialColorPalette.primary30,
-  onPrimaryContainer: baselineMaterialColorPalette.primary90,
+    secondary: refPalette.secondary80,
+    onSecondary: refPalette.secondary20,
+    secondaryContainer: refPalette.secondary30,
+    onSecondaryContainer: refPalette.secondary90,
 
-  secondary: baselineMaterialColorPalette.secondary80,
-  onSecondary: baselineMaterialColorPalette.secondary20,
-  secondaryContainer: baselineMaterialColorPalette.secondary30,
-  onSecondaryContainer: baselineMaterialColorPalette.secondary90,
+    tertiary: refPalette.tertiary80,
+    onTertiary: refPalette.tertiary20,
+    tertiaryContainer: refPalette.tertiary30,
+    onTertiaryContainer: refPalette.tertiary90,
 
-  tertiary: baselineMaterialColorPalette.tertiary80,
-  onTertiary: baselineMaterialColorPalette.tertiary20,
-  tertiaryContainer: baselineMaterialColorPalette.tertiary30,
-  onTertiaryContainer: baselineMaterialColorPalette.tertiary90,
+    error: refPalette.error80,
+    onError: refPalette.error20,
+    errorContainer: refPalette.error30,
+    onErrorContainer: refPalette.error90,
 
-  error: baselineMaterialColorPalette.error80,
-  onError: baselineMaterialColorPalette.error20,
-  errorContainer: baselineMaterialColorPalette.error30,
-  onErrorContainer: baselineMaterialColorPalette.error90,
+    surface: refPalette.neutral6,
+    onSurface: refPalette.neutral90,
+    surfaceVariant: refPalette.neutralVariant30,
+    onSurfaceVariant: refPalette.neutralVariant80,
 
-  surface: baselineMaterialColorPalette.neutral6,
-  onSurface: baselineMaterialColorPalette.neutral90,
-  surfaceVariant: baselineMaterialColorPalette.neutralVariant30,
-  onSurfaceVariant: baselineMaterialColorPalette.neutralVariant80,
+    surfaceContainerHighest: refPalette.neutral22,
+    surfaceContainerHigh: refPalette.neutral17,
+    surfaceContainer: refPalette.neutral12,
+    surfaceContainerLow: refPalette.neutral10,
+    surfaceContainerLowest: refPalette.neutral4,
 
-  surfaceContainerHighest: baselineMaterialColorPalette.neutral22,
-  surfaceContainerHigh: baselineMaterialColorPalette.neutral17,
-  surfaceContainer: baselineMaterialColorPalette.neutral12,
-  surfaceContainerLow: baselineMaterialColorPalette.neutral10,
-  surfaceContainerLowest: baselineMaterialColorPalette.neutral4,
+    surfaceBright: refPalette.neutral24,
+    surfaceDim: refPalette.neutral6,
 
-  surfaceBright: baselineMaterialColorPalette.neutral24,
-  surfaceDim: baselineMaterialColorPalette.neutral6,
+    inverseSurface: refPalette.neutral90,
+    inverseOnSurface: refPalette.neutral20,
+    inversePrimary: refPalette.primary40,
 
-  inverseSurface: baselineMaterialColorPalette.neutral90,
-  inverseOnSurface: baselineMaterialColorPalette.neutral20,
-  inversePrimary: baselineMaterialColorPalette.primary40,
+    outline: refPalette.neutralVariant60,
+    outlineVariant: refPalette.neutralVariant30,
+    scrim: refPalette.neutral0,
+    shadow: refPalette.neutral0,
+  },
+  fixed: {
+    primaryFixed: refPalette.primary90,
+    onPrimaryFixed: refPalette.primary10,
+    primaryFixedDim: refPalette.primary80,
+    onPrimaryFixedVariant: refPalette.primary30,
 
-  outline: baselineMaterialColorPalette.neutralVariant60,
-  outlineVariant: baselineMaterialColorPalette.neutralVariant30,
-  scrim: baselineMaterialColorPalette.neutral0,
-  shadow: baselineMaterialColorPalette.neutral0,
-};
+    secondaryFixed: refPalette.secondary90,
+    onSecondaryFixed: refPalette.secondary10,
+    secondaryFixedDim: refPalette.secondary80,
+    onSecondaryFixedVariant: refPalette.secondary30,
 
-const baselineMaterialFixedColorTokens: Material3SysFixedColorTokens = {
-  primaryFixed: baselineMaterialColorPalette.primary90,
-  onPrimaryFixed: baselineMaterialColorPalette.primary10,
-  primaryFixedDim: baselineMaterialColorPalette.primary80,
-  onPrimaryFixedVariant: baselineMaterialColorPalette.primary30,
+    tertiaryFixed: refPalette.tertiary90,
+    onTertiaryFixed: refPalette.tertiary10,
+    tertiaryFixedDim: refPalette.tertiary80,
+    onTertiaryFixedVariant: refPalette.tertiary30,
+  },
+});
 
-  secondaryFixed: baselineMaterialColorPalette.secondary90,
-  onSecondaryFixed: baselineMaterialColorPalette.secondary10,
-  secondaryFixedDim: baselineMaterialColorPalette.secondary80,
-  onSecondaryFixedVariant: baselineMaterialColorPalette.secondary30,
-
-  tertiaryFixed: baselineMaterialColorPalette.tertiary90,
-  onTertiaryFixed: baselineMaterialColorPalette.tertiary10,
-  tertiaryFixedDim: baselineMaterialColorPalette.tertiary80,
-  onTertiaryFixedVariant: baselineMaterialColorPalette.tertiary30,
-};
+const baselineSystemColorSchemeValues =
+  baselineMapPaletteToSchemes(baselineMaterialColorPalette);
 
 export const baselineMaterial3Theme = createDynamicMaterial3Theme({
   ref: { palette: baselineMaterialColorPalette },
-  sys: {
-    colorScheme: {
-      light: baselineMaterialLightColorScheme,
-      dark: baselineMaterialDarkColorScheme,
-      fixed: baselineMaterialFixedColorTokens,
-    },
-  },
+  sys: { colorScheme: baselineSystemColorSchemeValues },
   comp: {},
 });
