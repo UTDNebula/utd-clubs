@@ -2,7 +2,7 @@
  * @file Translates a Material 3 theme to a MUI theme with Material 3 color tokens
  */
 
-import { createTheme, ThemeOptions } from '@mui/material/styles';
+import { createTheme, Theme, ThemeOptions } from '@mui/material/styles';
 import { deepmerge } from '@mui/utils';
 import { DynamicMaterial3Theme } from './theme';
 import {
@@ -25,41 +25,92 @@ declare module '@mui/material/styles' {
 }
 
 /**
+ * Maps the values of a Material 3 theme to a MUI theme.
+ * @param m3Theme Source Material 3 theme.
+ * @returns Translated MUI theme.
+ */
+export type M3toMuiTranslator = (
+  m3Theme: DynamicMaterial3Theme,
+) => ThemeOptions;
+
+/**
+ * Default function to translate a Material 3 theme to a MUI theme.
+ *
+ * @see
+ * An approximate reversal of https://m3.material.io/blog/migrating-material-3
+ */
+export const translateM3toMui: M3toMuiTranslator = function (m3Theme) {
+  const lightTheme = m3Theme('light');
+  const darkTheme = m3Theme('dark');
+  // Variant doesn't matter when using getValues
+  const themeValues = m3Theme('light', { getValues: true });
+
+  return {
+    palette: {
+      primary: {
+        main: themeValues.ref.palette.primary40,
+      },
+    },
+  };
+};
+
+/**
  * Generates a MUI theme augmented with Material 3 tokens.
- * @param material3Theme Inserts this Material 3 theme into relevant MUI theme locations and other augmented locations.
+ * @param m3Theme Translates this Material 3 theme to a MUI theme by translating to appropriate locations and inserting into augmented locations.
  * @param optionOverrides An incomplete MUI theme object for customizing the returned theme object.
  * @returns A complete, ready-to-use theme object.
  */
 export function createMuiThemeWithM3(
-  material3Theme: DynamicMaterial3Theme,
+  m3Theme: DynamicMaterial3Theme,
   optionOverrides?: ThemeOptions,
-) {
-  const translatedMaterial3MuiThemeOptions: ThemeOptions = {
+  options?: {
+    /**
+     * Whether to insert the Material 3 theme's tokens into appropriate locations in the MUI theme.
+     * @default true
+     */
+    translate?: boolean;
+    /**
+     * Function used to translate the Material 3 theme to the MUI theme. If omitted, uses the default translator function ({@linkcode translateM3toMui})
+     */
+    translateFn?: M3toMuiTranslator;
+  },
+): Theme {
+  const lightTheme = m3Theme('light');
+  const darkTheme = m3Theme('dark');
+  // Variant doesn't matter when using getValues
+  const themeValues = m3Theme('light', { getValues: true });
+
+  const augmentedOptions: ThemeOptions = {
     cssVariables: true,
     colorSchemes: {
       light: {
         palette: {
-          ref: material3Theme('light').ref.palette,
-          sys: material3Theme('light').sys.color,
-          comp: material3Theme('light').comp,
+          ref: lightTheme.ref.palette,
+          sys: lightTheme.sys.color,
+          comp: lightTheme.comp,
         },
       },
       dark: {
         palette: {
-          ref: material3Theme('dark').ref.palette,
-          sys: material3Theme('dark').sys.color,
-          comp: material3Theme('dark').comp,
+          ref: darkTheme.ref.palette,
+          sys: darkTheme.sys.color,
+          comp: darkTheme.comp,
         },
       },
     },
     palette: {
-      ref: material3Theme('light', { getValues: true }).ref.palette,
-      sys: material3Theme('light').sys.color,
-      comp: material3Theme('light').comp,
+      ref: themeValues.ref.palette,
+      sys: lightTheme.sys.color,
+      comp: lightTheme.comp,
     },
   };
 
-  return createTheme(
-    deepmerge(translatedMaterial3MuiThemeOptions, optionOverrides),
-  );
+  const translateFn = options?.translateFn ?? translateM3toMui;
+
+  const translatedOptions: ThemeOptions =
+    (options?.translate ?? true)
+      ? deepmerge(augmentedOptions, translateFn(m3Theme))
+      : augmentedOptions;
+
+  return createTheme(deepmerge(translatedOptions, optionOverrides));
 }

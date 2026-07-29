@@ -153,10 +153,10 @@ const darkPalette = {
 };
 const themeOptions: ThemeOptions = {
   cssVariables: true,
-  colorSchemes: {
-    light: lightPalette,
-    dark: darkPalette,
-  },
+  // colorSchemes: {
+  //   light: lightPalette,
+  //   dark: darkPalette,
+  // },
   typography: {
     fontFamily: 'inherit',
   },
