@@ -1,0 +1,172 @@
+/*
+ * Reference Tokens
+ */
+@theme inline {
+  --color-ref-primary100: var(--mui-palette-ref-primary100);
+  --color-ref-primary99: var(--mui-palette-ref-primary99);
+  --color-ref-primary98: var(--mui-palette-ref-primary98);
+  --color-ref-primary95: var(--mui-palette-ref-primary95);
+  --color-ref-primary90: var(--mui-palette-ref-primary90);
+  --color-ref-primary80: var(--mui-palette-ref-primary80);
+  --color-ref-primary70: var(--mui-palette-ref-primary70);
+  --color-ref-primary60: var(--mui-palette-ref-primary60);
+  --color-ref-primary50: var(--mui-palette-ref-primary50);
+  --color-ref-primary40: var(--mui-palette-ref-primary40);
+  --color-ref-primary30: var(--mui-palette-ref-primary30);
+  --color-ref-primary20: var(--mui-palette-ref-primary20);
+  --color-ref-primary10: var(--mui-palette-ref-primary10);
+  --color-ref-primary0: var(--mui-palette-ref-primary0);
+
+  --color-ref-secondary100: var(--mui-palette-ref-secondary100);
+  --color-ref-secondary99: var(--mui-palette-ref-secondary99);
+  --color-ref-secondary98: var(--mui-palette-ref-secondary98);
+  --color-ref-secondary95: var(--mui-palette-ref-secondary95);
+  --color-ref-secondary90: var(--mui-palette-ref-secondary90);
+  --color-ref-secondary80: var(--mui-palette-ref-secondary80);
+  --color-ref-secondary70: var(--mui-palette-ref-secondary70);
+  --color-ref-secondary60: var(--mui-palette-ref-secondary60);
+  --color-ref-secondary50: var(--mui-palette-ref-secondary50);
+  --color-ref-secondary40: var(--mui-palette-ref-secondary40);
+  --color-ref-secondary30: var(--mui-palette-ref-secondary30);
+  --color-ref-secondary20: var(--mui-palette-ref-secondary20);
+  --color-ref-secondary10: var(--mui-palette-ref-secondary10);
+  --color-ref-secondary0: var(--mui-palette-ref-secondary0);
+
+  --color-ref-tertiary100: var(--mui-palette-ref-tertiary100);
+  --color-ref-tertiary99: var(--mui-palette-ref-tertiary99);
+  --color-ref-tertiary98: var(--mui-palette-ref-tertiary98);
+  --color-ref-tertiary95: var(--mui-palette-ref-tertiary95);
+  --color-ref-tertiary90: var(--mui-palette-ref-tertiary90);
+  --color-ref-tertiary80: var(--mui-palette-ref-tertiary80);
+  --color-ref-tertiary70: var(--mui-palette-ref-tertiary70);
+  --color-ref-tertiary60: var(--mui-palette-ref-tertiary60);
+  --color-ref-tertiary50: var(--mui-palette-ref-tertiary50);
+  --color-ref-tertiary40: var(--mui-palette-ref-tertiary40);
+  --color-ref-tertiary30: var(--mui-palette-ref-tertiary30);
+  --color-ref-tertiary20: var(--mui-palette-ref-tertiary20);
+  --color-ref-tertiary10: var(--mui-palette-ref-tertiary10);
+  --color-ref-tertiary0: var(--mui-palette-ref-tertiary0);
+
+  --color-ref-error100: var(--mui-palette-ref-error100);
+  --color-ref-error99: var(--mui-palette-ref-error99);
+  --color-ref-error98: var(--mui-palette-ref-error98);
+  --color-ref-error95: var(--mui-palette-ref-error95);
+  --color-ref-error90: var(--mui-palette-ref-error90);
+  --color-ref-error80: var(--mui-palette-ref-error80);
+  --color-ref-error70: var(--mui-palette-ref-error70);
+  --color-ref-error60: var(--mui-palette-ref-error60);
+  --color-ref-error50: var(--mui-palette-ref-error50);
+  --color-ref-error40: var(--mui-palette-ref-error40);
+  --color-ref-error30: var(--mui-palette-ref-error30);
+  --color-ref-error20: var(--mui-palette-ref-error20);
+  --color-ref-error10: var(--mui-palette-ref-error10);
+  --color-ref-error0: var(--mui-palette-ref-error0);
+
+  --color-ref-neutral100: var(--mui-palette-ref-neutral100);
+  --color-ref-neutral99: var(--mui-palette-ref-neutral99);
+  --color-ref-neutral98: var(--mui-palette-ref-neutral98);
+  --color-ref-neutral96: var(--mui-palette-ref-neutral96);
+  --color-ref-neutral95: var(--mui-palette-ref-neutral95);
+  --color-ref-neutral94: var(--mui-palette-ref-neutral94);
+  --color-ref-neutral92: var(--mui-palette-ref-neutral92);
+  --color-ref-neutral90: var(--mui-palette-ref-neutral90);
+  --color-ref-neutral87: var(--mui-palette-ref-neutral87);
+  --color-ref-neutral80: var(--mui-palette-ref-neutral80);
+  --color-ref-neutral70: var(--mui-palette-ref-neutral70);
+  --color-ref-neutral60: var(--mui-palette-ref-neutral60);
+  --color-ref-neutral50: var(--mui-palette-ref-neutral50);
+  --color-ref-neutral40: var(--mui-palette-ref-neutral40);
+  --color-ref-neutral30: var(--mui-palette-ref-neutral30);
+  --color-ref-neutral24: var(--mui-palette-ref-neutral24);
+  --color-ref-neutral22: var(--mui-palette-ref-neutral22);
+  --color-ref-neutral20: var(--mui-palette-ref-neutral20);
+  --color-ref-neutral17: var(--mui-palette-ref-neutral17);
+  --color-ref-neutral12: var(--mui-palette-ref-neutral12);
+  --color-ref-neutral10: var(--mui-palette-ref-neutral10);
+  --color-ref-neutral6: var(--mui-palette-ref-neutral6);
+  --color-ref-neutral4: var(--mui-palette-ref-neutral4);
+  --color-ref-neutral0: var(--mui-palette-ref-neutral0);
+
+  --color-ref-neutral-variant100: var(--mui-palette-ref-neutralVariant100);
+  --color-ref-neutral-variant99: var(--mui-palette-ref-neutralVariant99);
+  --color-ref-neutral-variant98: var(--mui-palette-ref-neutralVariant98);
+  --color-ref-neutral-variant95: var(--mui-palette-ref-neutralVariant95);
+  --color-ref-neutral-variant90: var(--mui-palette-ref-neutralVariant90);
+  --color-ref-neutral-variant80: var(--mui-palette-ref-neutralVariant80);
+  --color-ref-neutral-variant70: var(--mui-palette-ref-neutralVariant70);
+  --color-ref-neutral-variant60: var(--mui-palette-ref-neutralVariant60);
+  --color-ref-neutral-variant50: var(--mui-palette-ref-neutralVariant50);
+  --color-ref-neutral-variant40: var(--mui-palette-ref-neutralVariant40);
+  --color-ref-neutral-variant30: var(--mui-palette-ref-neutralVariant30);
+  --color-ref-neutral-variant20: var(--mui-palette-ref-neutralVariant20);
+  --color-ref-neutral-variant10: var(--mui-palette-ref-neutralVariant10);
+  --color-ref-neutral-variant0: var(--mui-palette-ref-neutralVariant0);
+}
+
+/* 
+ * System Tokens
+ */
+@theme inline {
+  /* primary colors */
+  --color-primary: var(--mui-palette-sys-primary);
+  --color-on-primary: var(--mui-palette-sys-onPrimary);
+  --color-primary-container: var(--mui-palette-sys-primaryContainer);
+  --color-on-primary-container: var(--mui-palette-sys-onPrimaryContainer);
+
+  /* secondary colors */
+  --color-secondary: var(--mui-palette-sys-secondary);
+  --color-on-secondary: var(--mui-palette-sys-onSecondary);
+  --color-secondary-container: var(--mui-palette-sys-secondaryContainer);
+  --color-on-secondary-container: var(--mui-palette-sys-onSecondaryContainer);
+
+  /* tertiary colors */
+  --color-tertiary: var(--mui-palette-sys-tertiary);
+  --color-on-tertiary: var(--mui-palette-sys-onTertiary);
+  --color-tertiary-container: var(--mui-palette-sys-tertiaryContainer);
+  --color-on-tertiary-container: var(--mui-palette-sys-onTertiaryContainer);
+
+  /* error colors */
+  --color-error: var(--mui-palette-sys-error);
+  --color-on-error: var(--mui-palette-sys-onError);
+  --color-error-container: var(--mui-palette-sys-errorContainer);
+  --color-on-error-container: var(--mui-palette-sys-onErrorContainer);
+
+  /* surface colors */
+  --color-surface: var(--mui-palette-sys-surface);
+  --color-on-surface: var(--mui-palette-sys-onSurface);
+  --color-surface-variant: var(--mui-palette-sys-surfaceVariant);
+  --color-on-surface-variant: var(--mui-palette-sys-onSurfaceVariant);
+
+  /* surface container */
+  --color-surface-container-highest: var(
+    --mui-palette-sys-surfaceContainerHighest
+  );
+  --color-surface-container-high: var(--mui-palette-sys-surfaceContainerHigh);
+  --color-surface-container: var(--mui-palette-sys-surfaceContainer);
+  --color-surface-container-low: var(--mui-palette-sys-surfaceContainerLow);
+  --color-surface-container-lowest: var(
+    --mui-palette-sys-surfaceContainerLowest
+  );
+
+  /* surface bright/dim */
+  --color-surface-bright: var(--mui-palette-sys-surfaceBright);
+  --color-surface-dim: var(--mui-palette-sys-surfaceDim);
+
+  /* outline colors */
+  --color-outline: var(--mui-palette-sys-outline);
+  --color-outline-variant: var(--mui-palette-sys-outlineVariant);
+
+  /* scrim and shadow colors */
+  --color-scrim: var(--mui-palette-sys-scrim);
+  --color-shadow: var(--mui-palette-sys-shadow);
+
+  /* inverse colors */
+  --color-inverse-surface: var(--mui-palette-sys-inverseSurface);
+  --color-inverse-on-surface: var(--mui-palette-sys-inverseOnSurface);
+  --color-inverse-primary: var(--mui-palette-sys-inversePrimary);
+
+  /* deprecated colors */
+  --color-background: var(--mui-palette-sys-background);
+  --color-on-background: var(--mui-palette-sys-onBackground);
+  --color-surface-tint: var(--mui-palette-sys-surfaceTint);
+}

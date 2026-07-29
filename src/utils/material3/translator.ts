@@ -32,7 +32,7 @@ declare module '@mui/material/styles' {
  */
 export function createMaterial3MuiTheme(
   material3Theme: DynamicMaterial3Theme,
-  options: ThemeOptions,
+  options?: ThemeOptions,
 ) {
   const translatedMaterial3MuiThemeOptions: ThemeOptions = {
     cssVariables: true,
@@ -54,6 +54,8 @@ export function createMaterial3MuiTheme(
     },
     palette: {
       ref: material3Theme('light', { getValues: true }).ref.palette,
+      sys: material3Theme('light').sys.color,
+      comp: material3Theme('light').comp,
     },
   };
 

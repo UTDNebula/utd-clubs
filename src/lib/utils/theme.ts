@@ -1,6 +1,8 @@
 'use client';
 
-import { createTheme } from '@mui/material/styles';
+import { createTheme, ThemeOptions } from '@mui/material/styles';
+import { createMaterial3MuiTheme } from './material3/translator';
+import { baselineMaterial3Theme } from './material3/baseline';
 
 const lightPalette = {
   palette: {
@@ -37,7 +39,7 @@ const darkPalette = {
     },
   },
 };
-const theme = createTheme({
+const themeOptions: ThemeOptions = {
   cssVariables: true,
   colorSchemes: {
     light: lightPalette,
@@ -64,6 +66,8 @@ const theme = createTheme({
       },
     },
   },
-});
+};
+
+const theme = createMaterial3MuiTheme(baselineMaterial3Theme, themeOptions);
 
 export default theme;
