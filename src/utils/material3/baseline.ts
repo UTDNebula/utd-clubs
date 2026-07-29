@@ -1,14 +1,11 @@
-import {
-  createDynamicMaterial3Theme,
-  DynamicMaterial3ThemeColorSchemeValues,
-} from './theme';
+import { createDynamicMaterial3Theme, PaletteMapper } from './theme';
 import { Material3RefPaletteTokens } from './types';
 
 /**
  * @see
  * Palettes category of https://m3.material.io/styles/color/static/baseline#c9263303-f4ef-4a33-ad57-7d91dc736b6b
  */
-export const baselineMaterialColorPalette: Material3RefPaletteTokens = {
+export const baselinePalette: Material3RefPaletteTokens = {
   primary100: '#ffffff',
   primary99: '#fffbfe',
   primary98: '#fef7ff',
@@ -114,127 +111,122 @@ export const baselineMaterialColorPalette: Material3RefPaletteTokens = {
 };
 
 /**
- * Maps the values of color tokens to Material 3 system tokens, using the mapping from the baseline Material 3 theme.
- * @param refPalette Palette of reference tokens.
+ * Maps the values of reference color tokens to system color tokens, using the mapping from the baseline Material 3 theme.
+ * @param palette Palette of reference tokens.
  * @returns The color tokens for light mode, dark mode, and fixed color tokens.
  *
  * @see
  * Mappings sourced from the light and dark themes under the color schemes category of https://m3.material.io/styles/color/static/baseline#c9263303-f4ef-4a33-ad57-7d91dc736b6b
  */
-export const baselineMapPaletteToSchemes = (
-  refPalette: Material3RefPaletteTokens,
-): DynamicMaterial3ThemeColorSchemeValues => ({
+export const baselinePaletteMapper: PaletteMapper = (palette) => ({
   light: {
-    primary: refPalette.primary40,
-    onPrimary: refPalette.primary100,
-    primaryContainer: refPalette.primary90,
-    onPrimaryContainer: refPalette.primary30,
+    primary: palette.primary40,
+    onPrimary: palette.primary100,
+    primaryContainer: palette.primary90,
+    onPrimaryContainer: palette.primary30,
 
-    secondary: refPalette.secondary40,
-    onSecondary: refPalette.secondary100,
-    secondaryContainer: refPalette.secondary90,
-    onSecondaryContainer: refPalette.secondary30,
+    secondary: palette.secondary40,
+    onSecondary: palette.secondary100,
+    secondaryContainer: palette.secondary90,
+    onSecondaryContainer: palette.secondary30,
 
-    tertiary: refPalette.tertiary40,
-    onTertiary: refPalette.tertiary100,
-    tertiaryContainer: refPalette.tertiary90,
-    onTertiaryContainer: refPalette.tertiary30,
+    tertiary: palette.tertiary40,
+    onTertiary: palette.tertiary100,
+    tertiaryContainer: palette.tertiary90,
+    onTertiaryContainer: palette.tertiary30,
 
-    error: refPalette.error40,
-    onError: refPalette.error100,
-    errorContainer: refPalette.error90,
-    onErrorContainer: refPalette.error30,
+    error: palette.error40,
+    onError: palette.error100,
+    errorContainer: palette.error90,
+    onErrorContainer: palette.error30,
 
-    surface: refPalette.neutral98,
-    onSurface: refPalette.neutral10,
-    surfaceVariant: refPalette.neutralVariant90,
-    onSurfaceVariant: refPalette.neutralVariant30,
+    surface: palette.neutral98,
+    onSurface: palette.neutral10,
+    surfaceVariant: palette.neutralVariant90,
+    onSurfaceVariant: palette.neutralVariant30,
 
-    surfaceContainerHighest: refPalette.neutral90,
-    surfaceContainerHigh: refPalette.neutral92,
-    surfaceContainer: refPalette.neutral94,
-    surfaceContainerLow: refPalette.neutral96,
-    surfaceContainerLowest: refPalette.neutral100,
+    surfaceContainerHighest: palette.neutral90,
+    surfaceContainerHigh: palette.neutral92,
+    surfaceContainer: palette.neutral94,
+    surfaceContainerLow: palette.neutral96,
+    surfaceContainerLowest: palette.neutral100,
 
-    surfaceBright: refPalette.neutral98,
-    surfaceDim: refPalette.neutral87,
+    surfaceBright: palette.neutral98,
+    surfaceDim: palette.neutral87,
 
-    inverseSurface: refPalette.neutral20,
-    inverseOnSurface: refPalette.neutral95,
-    inversePrimary: refPalette.primary80,
+    inverseSurface: palette.neutral20,
+    inverseOnSurface: palette.neutral95,
+    inversePrimary: palette.primary80,
 
-    outline: refPalette.neutralVariant50,
-    outlineVariant: refPalette.neutralVariant80,
-    scrim: refPalette.neutral0,
-    shadow: refPalette.neutral0,
+    outline: palette.neutralVariant50,
+    outlineVariant: palette.neutralVariant80,
+    scrim: palette.neutral0,
+    shadow: palette.neutral0,
   },
   dark: {
-    primary: refPalette.primary80,
-    onPrimary: refPalette.primary20,
-    primaryContainer: refPalette.primary30,
-    onPrimaryContainer: refPalette.primary90,
+    primary: palette.primary80,
+    onPrimary: palette.primary20,
+    primaryContainer: palette.primary30,
+    onPrimaryContainer: palette.primary90,
 
-    secondary: refPalette.secondary80,
-    onSecondary: refPalette.secondary20,
-    secondaryContainer: refPalette.secondary30,
-    onSecondaryContainer: refPalette.secondary90,
+    secondary: palette.secondary80,
+    onSecondary: palette.secondary20,
+    secondaryContainer: palette.secondary30,
+    onSecondaryContainer: palette.secondary90,
 
-    tertiary: refPalette.tertiary80,
-    onTertiary: refPalette.tertiary20,
-    tertiaryContainer: refPalette.tertiary30,
-    onTertiaryContainer: refPalette.tertiary90,
+    tertiary: palette.tertiary80,
+    onTertiary: palette.tertiary20,
+    tertiaryContainer: palette.tertiary30,
+    onTertiaryContainer: palette.tertiary90,
 
-    error: refPalette.error80,
-    onError: refPalette.error20,
-    errorContainer: refPalette.error30,
-    onErrorContainer: refPalette.error90,
+    error: palette.error80,
+    onError: palette.error20,
+    errorContainer: palette.error30,
+    onErrorContainer: palette.error90,
 
-    surface: refPalette.neutral6,
-    onSurface: refPalette.neutral90,
-    surfaceVariant: refPalette.neutralVariant30,
-    onSurfaceVariant: refPalette.neutralVariant80,
+    surface: palette.neutral6,
+    onSurface: palette.neutral90,
+    surfaceVariant: palette.neutralVariant30,
+    onSurfaceVariant: palette.neutralVariant80,
 
-    surfaceContainerHighest: refPalette.neutral22,
-    surfaceContainerHigh: refPalette.neutral17,
-    surfaceContainer: refPalette.neutral12,
-    surfaceContainerLow: refPalette.neutral10,
-    surfaceContainerLowest: refPalette.neutral4,
+    surfaceContainerHighest: palette.neutral22,
+    surfaceContainerHigh: palette.neutral17,
+    surfaceContainer: palette.neutral12,
+    surfaceContainerLow: palette.neutral10,
+    surfaceContainerLowest: palette.neutral4,
 
-    surfaceBright: refPalette.neutral24,
-    surfaceDim: refPalette.neutral6,
+    surfaceBright: palette.neutral24,
+    surfaceDim: palette.neutral6,
 
-    inverseSurface: refPalette.neutral90,
-    inverseOnSurface: refPalette.neutral20,
-    inversePrimary: refPalette.primary40,
+    inverseSurface: palette.neutral90,
+    inverseOnSurface: palette.neutral20,
+    inversePrimary: palette.primary40,
 
-    outline: refPalette.neutralVariant60,
-    outlineVariant: refPalette.neutralVariant30,
-    scrim: refPalette.neutral0,
-    shadow: refPalette.neutral0,
+    outline: palette.neutralVariant60,
+    outlineVariant: palette.neutralVariant30,
+    scrim: palette.neutral0,
+    shadow: palette.neutral0,
   },
   fixed: {
-    primaryFixed: refPalette.primary90,
-    onPrimaryFixed: refPalette.primary10,
-    primaryFixedDim: refPalette.primary80,
-    onPrimaryFixedVariant: refPalette.primary30,
+    primaryFixed: palette.primary90,
+    onPrimaryFixed: palette.primary10,
+    primaryFixedDim: palette.primary80,
+    onPrimaryFixedVariant: palette.primary30,
 
-    secondaryFixed: refPalette.secondary90,
-    onSecondaryFixed: refPalette.secondary10,
-    secondaryFixedDim: refPalette.secondary80,
-    onSecondaryFixedVariant: refPalette.secondary30,
+    secondaryFixed: palette.secondary90,
+    onSecondaryFixed: palette.secondary10,
+    secondaryFixedDim: palette.secondary80,
+    onSecondaryFixedVariant: palette.secondary30,
 
-    tertiaryFixed: refPalette.tertiary90,
-    onTertiaryFixed: refPalette.tertiary10,
-    tertiaryFixedDim: refPalette.tertiary80,
-    onTertiaryFixedVariant: refPalette.tertiary30,
+    tertiaryFixed: palette.tertiary90,
+    onTertiaryFixed: palette.tertiary10,
+    tertiaryFixedDim: palette.tertiary80,
+    onTertiaryFixedVariant: palette.tertiary30,
   },
 });
 
-const baselineSystemColorSchemeValues =
-  baselineMapPaletteToSchemes(baselineMaterialColorPalette);
-
 export const baselineMaterial3Theme = createDynamicMaterial3Theme({
-  ref: { palette: baselineMaterialColorPalette },
-  sys: { colorScheme: baselineSystemColorSchemeValues },
+  ref: { palette: baselinePalette },
+  sys: { colorScheme: baselinePaletteMapper },
   comp: {},
 });

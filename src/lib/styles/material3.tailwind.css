@@ -101,6 +101,9 @@
   --color-ref-neutral-variant20: var(--mui-palette-ref-neutralVariant20);
   --color-ref-neutral-variant10: var(--mui-palette-ref-neutralVariant10);
   --color-ref-neutral-variant0: var(--mui-palette-ref-neutralVariant0);
+
+  --color-ref-black: var(--mui-palette-ref-black);
+  --color-ref-white: var(--mui-palette-ref-white);
 }
 
 /* 

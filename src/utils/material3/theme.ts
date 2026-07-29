@@ -7,14 +7,43 @@ import {
   Material3TokenClasses,
 } from './types';
 
-export type ColorScheme = 'light' | 'dark';
-
 /**
  * A static object of tokens representing a particular variant of a Material 3 theme.
  */
 export type Material3Theme = Material3TokenClasses;
 
-export type DynamicMaterial3ThemeColorSchemeValues =
+////////////////////////////////////////////////////////////////////////////////
+// Palette
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Helper function to create Material 3 reference palette tokens.
+ */
+export const createPalette = <
+  TParentPalette extends Material3RefPaletteTokens | undefined = undefined,
+>(
+  /** Object of reference palette tokens. */
+  palette: TParentPalette extends Material3RefPaletteTokens
+    ? Partial<Material3RefPaletteTokens>
+    : Material3RefPaletteTokens,
+  /** Pre-filled palette to extend, if you don't wish to provide values for every token. */
+  parentPalette?: TParentPalette,
+): Material3RefPaletteTokens => {
+  if (parentPalette) {
+    return { ...parentPalette, ...palette };
+  } else {
+    // ParentPalette is undefined, so palette is not partial
+    return palette as Material3RefPaletteTokens;
+  }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Color Scheme
+////////////////////////////////////////////////////////////////////////////////
+
+export type ColorScheme = 'light' | 'dark';
+
+export type ColorSchemeValues =
   | {
       /** Value of the system color tokens in light mode. */
       light: Material3SysColorTokens;
@@ -31,18 +60,36 @@ export type DynamicMaterial3ThemeColorSchemeValues =
         Partial<Material3SysFixedColorTokens>;
       /**
        * Keys here will take precedence over those in
-       * {@linkcode DynamicMaterial3ThemeColorSchemeValues.light | light}
-       * and {@linkcode DynamicMaterial3ThemeColorSchemeValues.dark | dark}
+       * {@linkcode ColorSchemeValues.light | light}
+       * and {@linkcode ColorSchemeValues.dark | dark}
        */
       fixed: Material3SysFixedColorTokens;
     };
+
+/**
+ * Maps the values of reference palette tokens to system color tokens.
+ * @param palette Palette of reference tokens.
+ * @returns The color tokens for light mode, dark mode, and fixed color tokens.
+ */
+export type PaletteMapper = (
+  palette: Material3RefPaletteTokens,
+) => ColorSchemeValues;
+
+////////////////////////////////////////////////////////////////////////////////
+// Dynamic Theme
+////////////////////////////////////////////////////////////////////////////////
 
 export type DynamicMaterial3ThemeValues = {
   ref: {
     palette: Material3RefPaletteTokens;
   };
   sys: {
-    colorScheme: DynamicMaterial3ThemeColorSchemeValues;
+    /**
+     * The system color tokens for light mode, dark mode, and fixed tokens.
+     * Can either be an object with new values or a function that maps the
+     * theme's reference palette tokens to this object.
+     */
+    colorScheme: ColorSchemeValues | PaletteMapper;
   };
   comp: Material3CompTokens;
 };
@@ -63,6 +110,9 @@ export type DynamicMaterial3ThemeOptions<GetValues extends boolean> = {
   getValues?: GetValues;
 };
 
+/**
+ * A function that returns a static object of tokens depending on the variant (e.g. light or dark mode) it is called with.
+ */
 export type DynamicMaterial3Theme = {
   // options.getValue == false (default)
   <GetValues extends false = false>(
@@ -80,6 +130,11 @@ export type DynamicMaterial3Theme = {
 export function createDynamicMaterial3Theme(
   values: DynamicMaterial3ThemeValues,
 ): DynamicMaterial3Theme {
+  const colorSchemeValues: ColorSchemeValues =
+    typeof values.sys.colorScheme === 'function'
+      ? values.sys.colorScheme(values.ref.palette)
+      : values.sys.colorScheme;
+
   // Declaration: options.getValue == false (default)
   function themeFn(
     variant: DynamicMaterial3ThemeVariants | ColorScheme,
@@ -109,21 +164,21 @@ export function createDynamicMaterial3Theme(
     return {
       ref: values.ref ?? { palette: {} },
       sys: {
-        color: values.sys.colorScheme.fixed
+        color: colorSchemeValues.fixed
           ? {
               ...(variant.colorScheme === 'light'
-                ? values.sys.colorScheme.light
+                ? colorSchemeValues.light
                 : variant.colorScheme === 'dark'
-                  ? values.sys.colorScheme.dark
-                  : values.sys.colorScheme.light),
-              ...values.sys.colorScheme.fixed,
+                  ? colorSchemeValues.dark
+                  : colorSchemeValues.light),
+              ...colorSchemeValues.fixed,
             }
           : {
               ...(variant.colorScheme === 'light'
-                ? values.sys.colorScheme.light
+                ? colorSchemeValues.light
                 : variant.colorScheme === 'dark'
-                  ? values.sys.colorScheme.dark
-                  : values.sys.colorScheme.light),
+                  ? colorSchemeValues.dark
+                  : colorSchemeValues.light),
             },
       },
       comp: values.comp,
