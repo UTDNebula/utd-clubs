@@ -1,9 +1,9 @@
 'use client';
 
 import { ThemeOptions } from '@mui/material/styles';
-import { baselinePaletteMapper, baselinePalette } from './material3/baseline';
+import { baselinePalette, baselinePaletteMapper } from './material3/baseline';
+import { createThemeFromM3 } from './material3/integration/mui';
 import { createDynamicMaterial3Theme, createPalette } from './material3/theme';
-import { createMuiThemeWithM3 } from './material3/integration/mui';
 
 const ClubsColorPalette = createPalette(
   {
@@ -180,6 +180,6 @@ const themeOptions: ThemeOptions = {
   },
 };
 
-const theme = createMuiThemeWithM3(ClubsTheme, themeOptions);
+const theme = createThemeFromM3(ClubsTheme, themeOptions);
 
 export default theme;
