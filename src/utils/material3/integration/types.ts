@@ -5,6 +5,10 @@ import { DynamicMaterial3Theme } from '../theme';
  * @param m3Theme Source Material 3 theme.
  * @returns Translated theme.
  */
-export type M3Translator<TranslatedTheme> = (
+export type M3Translator<
+  TranslatedTheme,
+  TranslatorOptions extends Record<string, unknown> = never,
+> = (
   m3Theme: DynamicMaterial3Theme,
+  options?: TranslatorOptions,
 ) => TranslatedTheme;

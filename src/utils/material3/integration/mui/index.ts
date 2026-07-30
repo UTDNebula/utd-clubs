@@ -4,7 +4,7 @@
 
 import { createTheme, Theme, ThemeOptions } from '@mui/material/styles';
 import { deepmerge } from '@mui/utils';
-import { DynamicMaterial3Theme } from '../../theme';
+import { ColorScheme, DynamicMaterial3Theme } from '../../theme';
 import {
   Material3CompTokens,
   Material3RefPaletteTokens,
@@ -45,12 +45,26 @@ export function createThemeFromM3(
      * Function used to translate the Material 3 theme to the MUI theme. If omitted, uses the default translator function: {@linkcode defaultTranslateM3toMui}
      */
     translateFn?: M3Translator<ThemeOptions>;
+    /**
+     * Whether to augment MUI's legacy {@linkcode ThemeOptions.palette} field with Material 3 tokens.
+     * - `false` Use MUI's newer {@linkcode ThemeOptions.colorSchemes} field (default)
+     * - `"light"` or `true` Use M3 light mode tokens. Replaces `light` field of `colorSchemes`
+     * - `"dark"` Use M3 dark mode tokens. Replaces `dark` field of `colorSchemes`
+     *
+     * @default false
+     */
+    augmentLegacyPalette?: boolean | ColorScheme;
   },
 ): Theme {
   const lightTheme = m3Theme('light');
   const darkTheme = m3Theme('dark');
-  // Variant doesn't matter when using getValues
-  const themeValues = m3Theme('light', { getValues: true });
+
+  const augmentLegacyPaletteMode =
+    typeof options?.augmentLegacyPalette === 'string'
+      ? options?.augmentLegacyPalette
+      : 'light';
+  const augmentLegacyPaletteTheme =
+    augmentLegacyPaletteMode === 'dark' ? darkTheme : lightTheme;
 
   const augmentedOptions: ThemeOptions = {
     cssVariables: true,
@@ -70,11 +84,14 @@ export function createThemeFromM3(
         },
       },
     },
-    palette: {
-      ref: themeValues.ref.palette,
-      sys: lightTheme.sys.color,
-      comp: lightTheme.comp,
-    },
+    palette: options?.augmentLegacyPalette
+      ? {
+          mode: augmentLegacyPaletteMode,
+          ref: augmentLegacyPaletteTheme.ref.palette,
+          sys: augmentLegacyPaletteTheme.sys.color,
+          comp: augmentLegacyPaletteTheme.comp,
+        }
+      : undefined,
   };
 
   const translateFn = options?.translateFn ?? defaultTranslateM3toMui;
