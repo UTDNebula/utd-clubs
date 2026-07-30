@@ -116,47 +116,7 @@ export const ClubsTheme = createDynamicMaterial3Theme({
   comp: {},
 });
 
-const lightPalette = {
-  palette: {
-    //copied from globals.css
-    primary: {
-      main: '#573dff',
-    },
-    secondary: {
-      main: '#573dff',
-      light: '#c2c8ff',
-    },
-    error: {
-      main: '#ff5743',
-    },
-    info: {
-      light: '#857efc',
-      main: '#6266fa',
-      dark: '#45449f',
-    },
-  },
-};
-const darkPalette = {
-  palette: {
-    //copied from globals.css
-    primary: {
-      main: '#a297fd',
-    },
-    secondary: {
-      main: '#573dff',
-      light: '#c2c8ff',
-    },
-    error: {
-      main: '#ff5743',
-    },
-  },
-};
 const themeOptions: ThemeOptions = {
-  cssVariables: true,
-  // colorSchemes: {
-  //   light: lightPalette,
-  //   dark: darkPalette,
-  // },
   typography: {
     fontFamily: 'inherit',
   },

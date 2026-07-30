@@ -1,12 +1,10 @@
-import { ColorString } from '../types';
-
 /**
  * Adds opacity to a CSS color string
  * @param color CSS color string
  * @param opacity Opacity from 0 to 1
  * @returns Formatted CSS color string
  */
-export const rgba = (color: ColorString, opacity: number): ColorString =>
+export const rgba = (color: string, opacity: number): string =>
   `rgb(from ${color} r g b / ${opacity})`;
 
 /**
