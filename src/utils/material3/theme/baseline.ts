@@ -1,5 +1,6 @@
-import { createDynamicMaterial3Theme, PaletteMapper } from './theme';
-import { Material3RefPaletteTokens } from './types';
+import { Material3RefPaletteTokens } from '../tokens/ref';
+import { createM3Theme } from './createM3Theme';
+import { PaletteMapper } from './types';
 
 /**
  * @see
@@ -225,7 +226,7 @@ export const baselinePaletteMapper: PaletteMapper = (palette) => ({
   },
 });
 
-export const baselineMaterial3Theme = createDynamicMaterial3Theme({
+export const baselineMaterial3Theme = createM3Theme({
   ref: { palette: baselinePalette },
   sys: { colorScheme: baselinePaletteMapper },
   comp: {},

@@ -1,6 +1,7 @@
 import { Color, ColorSystemOptions, ThemeOptions } from '@mui/material';
-import { Material3Theme } from '../../../theme';
-import { ColorString, Material3RefPaletteTokens } from '../../../types';
+import { StaticM3Theme } from '../../../theme/types';
+import { Material3RefPaletteTokens } from '../../../tokens/ref';
+import { ColorString } from '../../../tokens/types';
 import { M3Translator } from '../../types';
 import { RemoveDigits, rgba } from '../../utils';
 
@@ -62,7 +63,7 @@ const simpleTranslateM3toMui: M3Translator<
   const lightTheme = m3Theme('light');
   const darkTheme = m3Theme('dark');
 
-  const getColorScheme = (theme: Material3Theme): ColorSystemOptions => ({
+  const getColorScheme = (theme: StaticM3Theme): ColorSystemOptions => ({
     palette: {
       common: {
         black: theme.ref.palette.black,

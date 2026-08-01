@@ -4,12 +4,10 @@
 
 import { createTheme, Theme, ThemeOptions } from '@mui/material/styles';
 import { deepmerge } from '@mui/utils';
-import { ColorScheme, DynamicMaterial3Theme } from '../../theme';
-import {
-  Material3CompTokens,
-  Material3RefPaletteTokens,
-  Material3SysColorTokens,
-} from '../../types';
+import { ColorScheme, M3Theme } from '../../theme/types';
+import { Material3CompTokens } from '../../tokens';
+import { Material3RefPaletteTokens } from '../../tokens/ref';
+import { Material3SysColorTokens } from '../../tokens/sys';
 import { M3Translator } from '../types';
 import defaultTranslateM3toMui from './translator';
 
@@ -55,7 +53,7 @@ export type CreateThemeOptions = {
  * @returns A complete, ready-to-use theme object.
  */
 export function createThemeFromM3(
-  m3Theme: DynamicMaterial3Theme,
+  m3Theme: M3Theme,
   optionOverrides?: ThemeOptions,
   options?: CreateThemeOptions,
 ): Theme {
