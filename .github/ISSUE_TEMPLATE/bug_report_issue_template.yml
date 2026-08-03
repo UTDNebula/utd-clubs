@@ -1,57 +1,59 @@
 name: Bug Report
 description: File a bug report
-labels: ['Type: Bug Report']
+labels: ['Bug']
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report! By giving as
-        much detail as possible, you'll help us identify what went wrong and
-        fixing the behavior.
+        Thanks for taking the time to fill out this bug report!
   - type: textarea
-    id: what-was-expected
+    id: description
     attributes:
-      label: What did you expect to happen?
-      description: Describe the expected functionality of the feature/component.
-    validations:
-      required: true
-  - type: textarea
-    id: what-happened
-    attributes:
-      label: What happened?
+      label: Description
       description: |
-        Describe the behavior you encountered. Please be as detailed as
-        possible.
+        Give a brief explanation of what the bug is
       placeholder: Tell us what you see!
     validations:
       required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps To Reproduce
+      description: |
+        Describe how to reproduce this bug. Be sure to include screenshots or logs if they would help!
+    validations:
+      required: true
+  - type: textarea
+    id: explanation
+    attributes:
+      label: Additional Context
+      description: |
+        Not Required - Describe the bug in more detail. You could could include related issues, helpful 
+        background knowledge, related documentation, or anything else that will help
+    validations:
+      required: false
   - type: dropdown
     id: version
     attributes:
       label: Version
-      description: What version of our software are you running?
+      description: Where did you encounter the bug?
+      multiple: true
       options:
         - clubs.utdnebula.com
         - dev.clubs.utdnebula.com
-        - a branch (specify above)
+        - a local development branch (specify above)
     validations:
       required: true
   - type: dropdown
     id: browsers
     attributes:
-      label: What browsers are you seeing the problem on?
+      label: What browser did you encounter this issue on?
       multiple: true
       options:
         - Firefox
-        - Chrome
+        - Chromium
         - Safari
-        - Microsoft Edge
-  - type: textarea
-    id: logs
-    attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
-      render: shell
+        - Not Applicable
   - type: checkboxes
     id: terms
     attributes:
