@@ -5,7 +5,7 @@ import { Button, IconButton } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { MouseEventHandler, useRef } from 'react';
-import { authClient } from '@src/utils/auth-client';
+import { authClient } from '@src/common/modules/auth/auth-client';
 import { useLoginModal } from '@src/common/modules/loginModal';
 
 const shadowStyle = 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]';

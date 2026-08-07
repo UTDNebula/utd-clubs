@@ -3,7 +3,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { useTRPC } from '@src/trpc/react';
-import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import { useSearchStore } from '@src/systems/dashboard/SearchStoreProvider';
 import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 
 export default function InfiniteScrollGrid() {

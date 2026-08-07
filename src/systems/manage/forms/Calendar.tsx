@@ -17,7 +17,7 @@ import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
 import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
-import { authClient } from '@src/utils/auth-client';
+import { authClient } from '@src/common/modules/auth/auth-client';
 
 type CalendarProps = {
   club: SelectClub;

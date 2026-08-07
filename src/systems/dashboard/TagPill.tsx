@@ -1,7 +1,7 @@
 'use client';
 
 import { Tooltip } from '@mui/material';
-import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import { useSearchStore } from '@src/systems/dashboard/SearchStoreProvider';
 import { TagChip } from '@src/components/common/TagChip';
 
 export const TagPill = ({

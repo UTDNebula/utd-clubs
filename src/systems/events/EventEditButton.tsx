@@ -3,7 +3,7 @@
 import EditIcon from '@mui/icons-material/Edit';
 import { Button } from '@mui/material';
 import Link from 'next/link';
-import { getGcalEventLink } from '@src/modules/googleCalendar';
+import { getGcalEventLink } from '@src/common/modules/googleCalendar/googleCalendar';
 
 export default function EventEditButton({
   isHeader,

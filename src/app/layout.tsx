@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
-import { CheckRefreshToken } from '@src/components/auth/CheckRefreshToken';
+import { CheckRefreshToken } from '@src/common/modules/auth/CheckRefreshToken';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
 import { LoginModalProvider } from '@src/common/modules/loginModal/provider';

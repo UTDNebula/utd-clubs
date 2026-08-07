@@ -3,7 +3,7 @@ import { lte } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import { db } from '@src/server/db';
 import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
-import { stopWatching, watchCalendar } from '@src/utils/calendar';
+import { stopWatching, watchCalendar } from '@src/common/modules/googleCalendar/calendar';
 
 export const dynamic = 'force-dynamic'; // do not cache response
 

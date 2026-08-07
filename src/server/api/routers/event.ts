@@ -37,14 +37,14 @@ import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@src/server/db/schema/users';
-import { stopWatching } from '@src/utils/calendar';
+import { stopWatching } from '@src/common/modules/googleCalendar/calendar';
 import {
   dateSchema,
   eventFiltersSchema,
   temporalDeixisCustomDateSentinelValue,
 } from '@src/utils/eventFilter';
 import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
-import { getGoogleAccessToken } from '@src/utils/googleAuth';
+import { getGoogleAccessToken } from '@src/common/modules/auth/googleAuth';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 async function isUserOfficer(userId: string, clubId: string) {

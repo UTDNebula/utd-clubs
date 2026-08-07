@@ -20,7 +20,7 @@ import {
   SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
-import { authClient } from '@src/utils/auth-client';
+import { authClient } from '@src/common/modules/auth/auth-client';
 import { useSnackbar } from '@src/common/modules/snackbar';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';

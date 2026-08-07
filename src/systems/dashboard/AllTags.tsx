@@ -5,7 +5,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useRef, useState } from 'react';
-import { useSearchStore } from '@src/utils/SearchStoreProvider';
+import { useSearchStore } from '@src/systems/dashboard/SearchStoreProvider';
 
 export const AllTags = ({
   options = [],

@@ -9,7 +9,7 @@ import { TagPill } from '@src/systems/dashboard/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import StarDoodle from '@src/icons/StarDoodle';
 import { api } from '@src/trpc/server';
-import { SearchStoreProvider } from '@src/utils/SearchStoreProvider';
+import { SearchStoreProvider } from '@src/systems/dashboard/SearchStoreProvider';
 
 const Home = async () => {
   const [tags, allTags] = await Promise.all([
