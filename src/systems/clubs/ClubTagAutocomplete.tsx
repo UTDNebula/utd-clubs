@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { TagChip } from '@src/components/common/TagChip';
+import { TagChip } from '@src/common/components/common/TagChip';
 import { useTRPC } from '@src/trpc/react';
 
 type ClubTagAutocompleteProps = {

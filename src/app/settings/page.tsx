@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import Header from '@src/common/modules/navigation/header/Header';
 import SettingsForm from '@src/systems/settings/SettingsForm';
 import { auth } from '@src/server/auth';
-import { signInRoute } from '@src/utils/redirect';
+import { signInRoute } from '@src/common/utils/redirect';
 
 export const metadata: Metadata = {
   title: 'Settings',

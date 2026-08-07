@@ -4,8 +4,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import z from 'zod';
-import { withForm } from '@src/utils/form';
-import { editListedMembershipFormSchema } from '@src/utils/formSchemas';
+import { withForm } from '@src/common/utils/form';
+import { editListedMembershipFormSchema } from '@src/common/utils/formSchemas';
 
 type FormData = z.infer<typeof editListedMembershipFormSchema>;
 

@@ -13,11 +13,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import Confirmation from '@src/components/Confirmation';
+import Confirmation from '@src/common/components/Confirmation';
 import MemberRoleChip from '@src/systems/manage/MemberRoleChip';
 import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
-import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { addVersionToImage } from '@src/common/utils/imageCacheBust';
 import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 
 type ClubsProps = {

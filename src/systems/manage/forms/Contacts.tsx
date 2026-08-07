@@ -28,8 +28,8 @@ import ContactListItem from '@src/systems/manage/ContactListItem';
 import type { SelectClub, SelectContact } from '@src/server/db/models';
 import { contactNames, startContacts } from '@src/server/db/schema/contacts';
 import { useTRPC } from '@src/trpc/react';
-import { useAppForm } from '@src/utils/form';
-import { editClubContactSchema } from '@src/utils/formSchemas';
+import { useAppForm } from '@src/common/utils/form';
+import { editClubContactSchema } from '@src/common/utils/formSchemas';
 import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 
 type FormData = z.infer<typeof editClubContactSchema>;

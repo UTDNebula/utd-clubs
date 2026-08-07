@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
-import useDebounce from '@src/utils/useDebounce';
+import useDebounce from '@src/common/utils/useDebounce';
 import { useBaseHeaderContext } from '@src/common/modules/navigation/header/BaseHeader';
 
 export const EventSearchBar = () => {

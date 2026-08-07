@@ -11,7 +11,7 @@ import EventBody from '@src/systems/events/listing/EventBody';
 import EventTitle from '@src/systems/events/listing/EventTitle';
 import { EventHeader } from '@src/common/modules/navigation/header/Header';
 import { api } from '@src/trpc/server';
-import { convertMarkdownToPlaintext } from '@src/utils/markdown';
+import { convertMarkdownToPlaintext } from '@src/common/utils/markdown';
 
 const distanceTokenUnits: Partial<Record<FormatDistanceToken, string>> = {
   xSeconds: 's',

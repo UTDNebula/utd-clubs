@@ -8,7 +8,7 @@ import JoinButton from '@src/systems/clubs/JoinButton';
 import Header from '@src/common/modules/navigation/header/Header';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
-import { signInRoute } from '@src/utils/redirect';
+import { signInRoute } from '@src/common/utils/redirect';
 import RedoClubMatchButton from '@src/systems/clubs/RedoClubMatchButton';
 
 export const metadata: Metadata = {

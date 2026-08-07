@@ -1,8 +1,8 @@
 import { FetchStatus } from '@tanstack/react-query';
 import { create } from 'zustand';
 import { PanelProps } from '@nebula-library/components/Panel';
-import { EventParamsSchema } from '@src/utils/eventFilter';
-import { createParamSetter } from '@src/utils/searchParams';
+import { EventParamsSchema } from '@src/common/utils/eventFilter';
+import { createParamSetter } from '@src/common/utils/searchParams';
 
 type EventDirectoryStoreState = {
   selectedCount: number | undefined;

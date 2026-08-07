@@ -1,6 +1,6 @@
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
-import useDebounce from '@src/utils/useDebounce';
+import useDebounce from '@src/common/utils/useDebounce';
 
 type Props = {
   value: string | number;

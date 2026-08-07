@@ -8,7 +8,7 @@ import ChangeClubStatus from '@src/systems/admin/ChangeClubStatus';
 import ClubBody from '@src/systems/clubs/listing/ClubBody';
 import ClubEventHeader from '@src/systems/clubs/listing/ClubEventHeader';
 import ClubTitle from '@src/systems/clubs/listing/ClubTitle';
-import { LinkButton } from '@src/components/LinkButton';
+import { LinkButton } from '@src/common/components/LinkButton';
 import { api } from '@src/trpc/server';
 
 type Props = { params: Promise<{ slug: string }> };

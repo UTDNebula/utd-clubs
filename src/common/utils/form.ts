@@ -1,14 +1,14 @@
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
-import { FormAutocompleteFreeSolo } from '@src/components/form/FormAutocomplete';
+import { FormAutocompleteFreeSolo } from '@src/common/components/form/FormAutocomplete';
 import {
   FormResetButton,
   FormSubmitButton,
-} from '@src/components/form/FormButtons';
-import FormFieldSet from '@src/components/form/FormFieldSet';
-import FormQuestion from '@src/components/form/FormQuestion';
-import FormSelect from '@src/components/form/FormSelect';
-import FormTextField from '@src/components/form/FormTextField';
-import { FormWizard, FormWizardStep } from '@src/components/form/FormWizard';
+} from '@src/common/components/form/FormButtons';
+import FormFieldSet from '@src/common/components/form/FormFieldSet';
+import FormQuestion from '@src/common/components/form/FormQuestion';
+import FormSelect from '@src/common/components/form/FormSelect';
+import FormTextField from '@src/common/components/form/FormTextField';
+import { FormWizard, FormWizardStep } from '@src/common/components/form/FormWizard';
 
 // export useFieldContext for use in your custom components
 export const { fieldContext, useFieldContext, formContext, useFormContext } =

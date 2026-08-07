@@ -23,7 +23,7 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import Confirmation from '@src/components/Confirmation';
+import Confirmation from '@src/common/components/Confirmation';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
 import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';

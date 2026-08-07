@@ -6,16 +6,16 @@ import { useState } from 'react';
 import type z from 'zod';
 import Panel, { PanelSkeleton } from '@nebula-library/components/Panel';
 import ClubTagAutocomplete from '@src/systems/clubs/ClubTagAutocomplete';
-import Confirmation from '@src/components/Confirmation';
+import Confirmation from '@src/common/components/Confirmation';
 import { ClubSchoolEdit } from '@src/systems/manage/form/ClubSchoolEdit';
 import FormImage from '@src/systems/manage/form/FormImage';
 import { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
-import { useAppForm } from '@src/utils/form';
-import { editClubFormSchema, schools } from '@src/utils/formSchemas';
-import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { useAppForm } from '@src/common/utils/form';
+import { editClubFormSchema, schools } from '@src/common/utils/formSchemas';
+import { addVersionToImage } from '@src/common/utils/imageCacheBust';
 import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
-import { useUploadToUploadURL } from '@src/utils/uploadImage';
+import { useUploadToUploadURL } from '@src/common/utils/uploadImage';
 
 type DetailsProps = {
   club: SelectClub;

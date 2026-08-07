@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useBaseHeaderContext } from '@src/common/modules/navigation/header/BaseHeader';
 import { useTRPC } from '@src/trpc/react';
-import useDebounce from '@src/utils/useDebounce';
+import useDebounce from '@src/common/utils/useDebounce';
 
 export const ClubSearchBar = () => {
   const [input, setInput] = useState('');

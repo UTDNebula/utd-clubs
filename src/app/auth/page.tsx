@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
+import { UTDClubsLogoStandalone } from '@src/common/icons/UTDClubsLogo';
 import { auth } from '@src/server/auth';
 import { LoginModalContents } from '@src/common/modules/loginModal';
 

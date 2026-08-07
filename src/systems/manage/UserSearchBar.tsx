@@ -9,7 +9,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
-import useDebounce from '@src/utils/useDebounce';
+import useDebounce from '@src/common/utils/useDebounce';
 
 function getFullName(user: {
   firstName: string | null;

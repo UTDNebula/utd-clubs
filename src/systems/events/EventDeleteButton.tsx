@@ -5,7 +5,7 @@ import { Button, IconButton, Tooltip } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Confirmation from '@src/components/Confirmation';
+import Confirmation from '@src/common/components/Confirmation';
 import { SelectEvent } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 

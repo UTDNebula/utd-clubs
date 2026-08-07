@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { ClubTags } from '@src/systems/clubs/ClubTags';
 import { type RouterOutputs } from '@src/trpc/shared';
-import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { addVersionToImage } from '@src/common/utils/imageCacheBust';
 import JoinButton from '../JoinButton';
 
 const ClubTitle = async ({

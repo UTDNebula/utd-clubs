@@ -5,8 +5,8 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type z from 'zod';
-import { withForm } from '@src/utils/form';
-import { editOfficerSchema } from '@src/utils/formSchemas';
+import { withForm } from '@src/common/utils/form';
+import { editOfficerSchema } from '@src/common/utils/formSchemas';
 import MemberRoleChip, { MemberTypes } from './MemberRoleChip';
 
 type FormData = z.infer<typeof editOfficerSchema>;

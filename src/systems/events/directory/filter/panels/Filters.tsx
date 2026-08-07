@@ -6,7 +6,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import { authClient } from '@src/common/modules/auth/auth-client';
-import { EventFiltersSchema } from '@src/utils/eventFilter';
+import { EventFiltersSchema } from '@src/common/utils/eventFilter';
 import { openLoginModal } from '@src/common/modules/loginModal';
 import { closeSnackbar, setSnackbar } from '@src/common/modules/snackbar';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';

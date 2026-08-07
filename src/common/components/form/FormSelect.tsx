@@ -4,7 +4,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectProps } from '@mui/material/Select';
 import { ReactNode } from 'react';
-import { useFieldContext } from '@src/utils/form';
+import { useFieldContext } from '@src/common/utils/form';
 
 export interface SelectOptionBase<T = string> {
   label: string;

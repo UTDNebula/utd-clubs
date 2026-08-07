@@ -5,8 +5,8 @@ import {
   mainCats,
   moreCats,
   type personalCats,
-} from '@src/constants/categories';
-import { UTDClubsLogoCombination } from '@src/icons/UTDClubsLogo';
+} from '@src/common/modules/navigation/categories';
+import { UTDClubsLogoCombination } from '@src/common/icons/UTDClubsLogo';
 import SidebarItems from './SidebarItems';
 
 type NavMenuProps = {

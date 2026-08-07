@@ -3,7 +3,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import TagIcon from '@mui/icons-material/Tag';
 import { Button, Tooltip } from '@mui/material';
 import AdminHeader from '@src/systems/admin/AdminHeader';
-import { LinkButton } from '@src/components/LinkButton';
+import { LinkButton } from '@src/common/components/LinkButton';
 
 export default function Page() {
   return (

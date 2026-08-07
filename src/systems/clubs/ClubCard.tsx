@@ -5,8 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { BaseCard } from '@nebula-library/components/BaseCard';
 import type { SelectClub as Club } from '@src/server/db/models';
-import { addVersionToImage } from '@src/utils/imageCacheBust';
-import { convertMarkdownToPlaintext } from '@src/utils/markdown';
+import { addVersionToImage } from '@src/common/utils/imageCacheBust';
+import { convertMarkdownToPlaintext } from '@src/common/utils/markdown';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
 
 type Props = { club: Club; priority?: boolean; manageView?: boolean };

@@ -8,8 +8,8 @@ import { contacts } from '@src/server/db/schema/contacts';
 import { membershipForms } from '@src/server/db/schema/membershipForms';
 import { officers } from '@src/server/db/schema/officers';
 import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { editClubDetailsSchema, editSlugSchema } from '@src/utils/formSchemas';
-import { callStorageAPI } from '@src/utils/storage';
+import { editClubDetailsSchema, editSlugSchema } from '@src/common/utils/formSchemas';
+import { callStorageAPI } from '@src/common/utils/storage';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 async function isUserOfficer(userId: string, clubId: string) {

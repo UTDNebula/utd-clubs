@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { BaseCard } from '@nebula-library/components/BaseCard';
 import { type RouterOutputs } from '@src/trpc/shared';
-import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { addVersionToImage } from '@src/common/utils/imageCacheBust';
 import ClientEventTime from './ClientEventTime';
 import EventDeleteButton from './EventDeleteButton';
 import EventRegisterButton, {

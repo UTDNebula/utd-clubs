@@ -3,7 +3,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import SortIcon from '@mui/icons-material/Sort';
 import { memo } from 'react';
 import { EventCardVariants } from '@src/systems/events/EventCard';
-import { EventFiltersSchema, sortEnum } from '@src/utils/eventFilter';
+import { EventFiltersSchema, sortEnum } from '@src/common/utils/eventFilter';
 import CompactPagination from './base/CompactPagination';
 import ViewOption, { ViewOptionItem } from './base/ViewOptionItem';
 import { setEventsParams } from './utils';

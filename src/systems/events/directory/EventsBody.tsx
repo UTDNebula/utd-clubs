@@ -9,8 +9,8 @@ import { RouterOutputs } from '@src/trpc/shared';
 import {
   eventParamsToFilters,
   listSelectedEventFilters,
-} from '@src/utils/eventFilter';
-import useStable from '@src/utils/useStable';
+} from '@src/common/utils/eventFilter';
+import useStable from '@src/common/utils/useStable';
 import { EventCardVariants } from '../EventCard';
 import EventDirectoryGrid from './filter/EventDirectoryGrid';
 import EventsFilterBar from './filter/EventsFilterBar';

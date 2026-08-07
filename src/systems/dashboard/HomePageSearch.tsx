@@ -12,9 +12,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/systems/dashboard/SearchStoreProvider';
-import theme from '@src/utils/theme';
-import useDebounce from '@src/utils/useDebounce';
-import { TagChip } from '@src/components/common/TagChip';
+import theme from '@src/common/utils/theme';
+import useDebounce from '@src/common/utils/useDebounce';
+import { TagChip } from '@src/common/components/common/TagChip';
 
 export const HomePageSearchBar = () => {
   const {

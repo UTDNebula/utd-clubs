@@ -42,8 +42,8 @@ import {
   dateSchema,
   eventFiltersSchema,
   temporalDeixisCustomDateSentinelValue,
-} from '@src/utils/eventFilter';
-import { createEventSchema, editEventSchema } from '@src/utils/formSchemas';
+} from '@src/common/utils/eventFilter';
+import { createEventSchema, editEventSchema } from '@src/common/utils/formSchemas';
 import { getGoogleAccessToken } from '@src/common/modules/auth/googleAuth';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 

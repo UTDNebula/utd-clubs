@@ -1,6 +1,6 @@
 import { Tooltip } from '@mui/material';
-import { LinkButton } from '@src/components/LinkButton';
-import { logo } from '@src/icons/ContactIcons';
+import { LinkButton } from '@src/common/components/LinkButton';
+import { logo } from '@src/common/icons/ContactIcons';
 import type { SelectContact } from '@src/server/db/models';
 import { contactNames } from '@src/server/db/schema/contacts';
 

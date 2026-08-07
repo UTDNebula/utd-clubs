@@ -7,11 +7,11 @@ import { TRPCClientErrorLike } from '@trpc/client';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import ClubTagAutocomplete from '@src/systems/clubs/ClubTagAutocomplete';
-import { WizardRef } from '@src/components/form/FormWizard';
+import { WizardRef } from '@src/common/components/form/FormWizard';
 import { AppRouter } from '@src/server/api/root';
 import { useTRPC } from '@src/trpc/react';
-import { useAppForm } from '@src/utils/form';
-import { createClubSchema, CreateClubSchema } from '@src/utils/formSchemas';
+import { useAppForm } from '@src/common/utils/form';
+import { createClubSchema, CreateClubSchema } from '@src/common/utils/formSchemas';
 
 const CreateClubForm = () => {
   const api = useTRPC();

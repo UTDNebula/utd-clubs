@@ -5,7 +5,7 @@ import OnboardingForm from '@src/systems/settings/OnboardingForm';
 import Header from '@src/common/modules/navigation/header/Header';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
-import { signInRoute } from '@src/utils/redirect';
+import { signInRoute } from '@src/common/utils/redirect';
 
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });

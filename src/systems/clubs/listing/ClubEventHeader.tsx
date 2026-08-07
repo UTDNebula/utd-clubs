@@ -4,7 +4,7 @@ import type {
   SelectContact as Contacts,
   SelectClub,
 } from '@src/server/db/models';
-import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { addVersionToImage } from '@src/common/utils/imageCacheBust';
 
 type Club = SelectClub & {
   contacts?: Contacts[];

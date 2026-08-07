@@ -9,7 +9,7 @@ import { getUrl, makeQueryClient, transformer } from './shared';
 
 const Devtools =
   process.env.NODE_ENV === 'development'
-    ? lazy(() => import('../components/TanstackDevtools'))
+    ? lazy(() => import('../common/components/TanstackDevtools'))
     : () => null;
 
 let browserQueryClient: QueryClient;

@@ -1,7 +1,7 @@
 import { and, count, eq, gt, gte, inArray, lt, or, sql } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { z } from 'zod';
-import { type personalCats } from '@src/constants/categories';
+import { type personalCats } from '@src/common/modules/navigation/categories';
 import { auth } from '@src/server/auth';
 import {
   insertUserMetadata,

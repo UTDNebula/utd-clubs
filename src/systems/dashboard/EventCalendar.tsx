@@ -27,12 +27,12 @@ import { createPortal } from 'react-dom';
 import EventCard from '@src/systems/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
-import { getRangeForView, type CalendarRange } from '@src/utils/calendarRange';
+import { getRangeForView, type CalendarRange } from '@src/common/utils/calendarRange';
 import {
   calendarParamsSchema,
   type CalendarParamsSchema,
-} from '@src/utils/eventFilter';
-import { createParamSetter } from '@src/utils/searchParams';
+} from '@src/common/utils/eventFilter';
+import { createParamSetter } from '@src/common/utils/searchParams';
 
 type RegisteredEvent =
   RouterOutputs['userMetadata']['getRegisteredEventsByRange'][number];

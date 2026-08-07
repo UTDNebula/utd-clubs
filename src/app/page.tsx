@@ -6,8 +6,8 @@ import ClubDirectoryGrid from '@src/systems/clubs/directory/ClubDirectoryGrid';
 import Header from '@src/common/modules/navigation/header/Header';
 import { HomePageSearchBar } from '@src/systems/dashboard/HomePageSearch';
 import { TagPill } from '@src/systems/dashboard/TagPill';
-import NebulaLogo from '@src/icons/NebulaLogo';
-import StarDoodle from '@src/icons/StarDoodle';
+import NebulaLogo from '@src/common/icons/NebulaLogo';
+import StarDoodle from '@src/common/icons/StarDoodle';
 import { api } from '@src/trpc/server';
 import { SearchStoreProvider } from '@src/systems/dashboard/SearchStoreProvider';
 

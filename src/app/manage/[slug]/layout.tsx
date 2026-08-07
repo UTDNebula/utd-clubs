@@ -4,7 +4,7 @@ import { type ReactNode } from 'react';
 import Header from '@src/common/modules/navigation/header/Header';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
-import { signInRoute } from '@src/utils/redirect';
+import { signInRoute } from '@src/common/utils/redirect';
 
 const Layout = async ({
   params,
