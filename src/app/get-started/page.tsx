@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
-import OnboardingForm from '@src/features/settings/OnboardingForm';
+import OnboardingForm from '@src/systems/settings/OnboardingForm';
 import Header from '@src/common/modules/navigation/header/Header';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';

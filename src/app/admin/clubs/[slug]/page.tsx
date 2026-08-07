@@ -3,11 +3,11 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import { notFound } from 'next/navigation';
 import Collaborators from '@src/app/manage/[slug]/(dashboard)/(forms)/Collaborators';
 import DeleteClub from '@src/app/manage/[slug]/(dashboard)/(forms)/DeleteClub';
-import AdminHeader from '@src/features/admin/AdminHeader';
-import ChangeClubStatus from '@src/features/admin/ChangeClubStatus';
-import ClubBody from '@src/features/clubs/listing/ClubBody';
-import ClubEventHeader from '@src/features/clubs/listing/ClubEventHeader';
-import ClubTitle from '@src/features/clubs/listing/ClubTitle';
+import AdminHeader from '@src/systems/admin/AdminHeader';
+import ChangeClubStatus from '@src/systems/admin/ChangeClubStatus';
+import ClubBody from '@src/systems/clubs/listing/ClubBody';
+import ClubEventHeader from '@src/systems/clubs/listing/ClubEventHeader';
+import ClubTitle from '@src/systems/clubs/listing/ClubTitle';
 import { LinkButton } from '@src/components/LinkButton';
 import { api } from '@src/trpc/server';
 

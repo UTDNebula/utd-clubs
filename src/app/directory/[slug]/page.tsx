@@ -1,9 +1,9 @@
 import { type Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
-import ClubBody from '@src/features/clubs/listing/ClubBody';
-import ClubEventHeader from '@src/features/clubs/listing/ClubEventHeader';
-import { ClubNotClaimed } from '@src/features/clubs/listing/ClubNotClaimed';
-import ClubTitle from '@src/features/clubs/listing/ClubTitle';
+import ClubBody from '@src/systems/clubs/listing/ClubBody';
+import ClubEventHeader from '@src/systems/clubs/listing/ClubEventHeader';
+import { ClubNotClaimed } from '@src/systems/clubs/listing/ClubNotClaimed';
+import ClubTitle from '@src/systems/clubs/listing/ClubTitle';
 import Header from '@src/common/modules/navigation/header/Header';
 import { api } from '@src/trpc/server';
 import { convertMarkdownToPlaintext } from '@src/utils/markdown';

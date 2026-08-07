@@ -1,4 +1,4 @@
-import AdminHeader from '@src/features/admin/AdminHeader';
+import AdminHeader from '@src/systems/admin/AdminHeader';
 import { api } from '@src/trpc/server';
 import TagList from './TagList';
 

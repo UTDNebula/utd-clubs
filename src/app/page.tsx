@@ -2,7 +2,7 @@ import gradientBG from '@public/images/landingGradient.png';
 import planetsDoodle from '@public/images/PlanetsDoodle.png';
 import Image from 'next/image';
 import { AllTags } from '@src/components/AllTags';
-import ClubDirectoryGrid from '@src/features/clubs/directory/ClubDirectoryGrid';
+import ClubDirectoryGrid from '@src/systems/clubs/directory/ClubDirectoryGrid';
 import Header from '@src/common/modules/navigation/header/Header';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
