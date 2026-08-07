@@ -26,7 +26,7 @@ import Link from 'next/link';
 import { useMemo, useRef, useState } from 'react';
 import { RouterOutputs } from '@src/trpc/shared';
 import { fuzzyFilter } from '@src/utils/table';
-import { ClubTags } from '../common/ClubTags';
+import { ClubTags } from '@src/components/common/ClubTags';
 import Filter from './Filter';
 import StatusFilter from './StatusFilter';
 

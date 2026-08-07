@@ -2,7 +2,7 @@ import { type Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Header from '@src/components/header/Header';
-import SettingsForm from '@src/components/settings/SettingsForm';
+import SettingsForm from '@src/features/settings/SettingsForm';
 import { auth } from '@src/server/auth';
 import { signInRoute } from '@src/utils/redirect';
 

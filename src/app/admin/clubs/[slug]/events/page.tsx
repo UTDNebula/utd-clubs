@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import AdminHeader from '@src/components/admin/AdminHeader';
+import AdminHeader from '@src/features/admin/AdminHeader';
 import EventCard from '@src/components/events/EventCard';
 import EventsPagination from '@src/components/events/EventPagination';
 import IncludePastSwitch from '@src/components/events/IncludePastSwitch';

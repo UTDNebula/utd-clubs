@@ -1,5 +1,5 @@
 import Panel from '@nebula-library/components/Panel';
-import DeleteButton from '@src/components/settings/DeleteButton';
+import DeleteButton from '../DeleteButton';
 
 export default function DeleteAccount() {
   return (

@@ -1,5 +1,5 @@
-import AdminHeader from '@src/components/admin/AdminHeader';
-import ClubTable from '@src/components/admin/ClubTable';
+import AdminHeader from '@src/features/admin/AdminHeader';
+import ClubTable from '@src/features/admin/ClubTable';
 import { api } from '@src/trpc/server';
 
 export default async function Page() {
