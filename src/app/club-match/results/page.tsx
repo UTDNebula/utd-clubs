@@ -9,7 +9,7 @@ import Header from '@src/common/modules/navigation/header/Header';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { signInRoute } from '@src/utils/redirect';
-import RedoClubMatchButton from './RedoClubMatchButton';
+import RedoClubMatchButton from '@src/systems/clubs/RedoClubMatchButton';
 
 export const metadata: Metadata = {
   title: 'Club Match Results',

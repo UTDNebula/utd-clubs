@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 import theme from '@src/utils/theme';
-import { useEventDirectoryStore } from '../../systems/events/directory/filter/utils';
+import { useEventDirectoryStore } from './directory/filter/utils';
 
 type EventDirectorySearchBarProps = {
   initialValue?: string;

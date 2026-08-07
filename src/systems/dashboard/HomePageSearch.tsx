@@ -14,7 +14,7 @@ import { useTRPC } from '@src/trpc/react';
 import { useSearchStore } from '@src/utils/SearchStoreProvider';
 import theme from '@src/utils/theme';
 import useDebounce from '@src/utils/useDebounce';
-import { TagChip } from '../common/TagChip';
+import { TagChip } from '@src/components/common/TagChip';
 
 export const HomePageSearchBar = () => {
   const {

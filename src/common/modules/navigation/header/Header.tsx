@@ -2,8 +2,8 @@
 
 import ClubMatchButton from '@src/common/modules/navigation/header/ClubMatchButton';
 import Sidebar from '@src/common/modules/navigation/drawer/Sidebar';
-import { ClubSearchBar } from '@src/components/searchBar/ClubSearchBar';
-import { EventSearchBar } from '@src/components/searchBar/EventSearchBar';
+import { ClubSearchBar } from '@src/systems/clubs/ClubSearchBar';
+import { EventSearchBar } from '@src/systems/events/EventSearchBar';
 import UTDClubsLogoStandalone from '@src/icons/UTDClubsLogo';
 import { BaseHeader, BaseHeaderProps } from './BaseHeader';
 import { ProfileDropDown } from './ProfileDropDown';

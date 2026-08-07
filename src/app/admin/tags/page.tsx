@@ -1,6 +1,6 @@
 import AdminHeader from '@src/systems/admin/AdminHeader';
 import { api } from '@src/trpc/server';
-import TagList from './TagList';
+import TagList from '@src/systems/admin/TagList';
 
 export default async function Page() {
   const [tags, topTags] = await Promise.all([

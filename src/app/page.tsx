@@ -1,11 +1,11 @@
 import gradientBG from '@public/images/landingGradient.png';
 import planetsDoodle from '@public/images/PlanetsDoodle.png';
 import Image from 'next/image';
-import { AllTags } from '@src/components/AllTags';
+import { AllTags } from '@src/systems/dashboard/AllTags';
 import ClubDirectoryGrid from '@src/systems/clubs/directory/ClubDirectoryGrid';
 import Header from '@src/common/modules/navigation/header/Header';
-import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
-import { TagPill } from '@src/components/TagPill';
+import { HomePageSearchBar } from '@src/systems/dashboard/HomePageSearch';
+import { TagPill } from '@src/systems/dashboard/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';
 import StarDoodle from '@src/icons/StarDoodle';
 import { api } from '@src/trpc/server';

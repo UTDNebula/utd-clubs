@@ -7,7 +7,7 @@ import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';
-import ClubMatch from './ClubMatch';
+import ClubMatch from '@src/systems/clubs/ClubMatch';
 
 export const metadata: Metadata = {
   title: 'Club Match',

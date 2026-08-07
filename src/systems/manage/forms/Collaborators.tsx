@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type z from 'zod';
 import Panel from '@nebula-library/components/Panel';
 import CollaboratorListItem from '@src/systems/manage/CollaboratorListItem';
-import { UserSearchBar } from '@src/components/searchBar/UserSearchBar';
+import { UserSearchBar } from '@src/systems/manage/UserSearchBar';
 import type {
   SelectClub,
   SelectUserMetadataToClubsWithUserMetadataWithUser,

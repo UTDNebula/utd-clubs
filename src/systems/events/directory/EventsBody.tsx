@@ -4,7 +4,7 @@ import Collapse from '@mui/material/Collapse';
 import Pagination from '@mui/material/Pagination';
 import { useSearchParams } from 'next/navigation';
 import { ChangeEvent, useEffect, useState } from 'react';
-import EventDirectorySearchBar from '@src/components/searchBar/EventDirectorySearchBar';
+import EventDirectorySearchBar from '@src/systems/events/EventDirectorySearchBar';
 import { RouterOutputs } from '@src/trpc/shared';
 import {
   eventParamsToFilters,
