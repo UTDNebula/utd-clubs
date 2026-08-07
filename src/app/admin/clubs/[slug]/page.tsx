@@ -5,9 +5,9 @@ import Collaborators from '@src/app/manage/[slug]/(dashboard)/(forms)/Collaborat
 import DeleteClub from '@src/app/manage/[slug]/(dashboard)/(forms)/DeleteClub';
 import AdminHeader from '@src/features/admin/AdminHeader';
 import ChangeClubStatus from '@src/features/admin/ChangeClubStatus';
-import ClubBody from '@src/components/club/listing/ClubBody';
-import ClubEventHeader from '@src/components/club/listing/ClubEventHeader';
-import ClubTitle from '@src/components/club/listing/ClubTitle';
+import ClubBody from '@src/features/clubs/listing/ClubBody';
+import ClubEventHeader from '@src/features/clubs/listing/ClubEventHeader';
+import ClubTitle from '@src/features/clubs/listing/ClubTitle';
 import { LinkButton } from '@src/components/LinkButton';
 import { api } from '@src/trpc/server';
 

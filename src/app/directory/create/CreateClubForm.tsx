@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import ClubTagAutocomplete from '@src/components/club/ClubTagAutocomplete';
+import ClubTagAutocomplete from '@src/features/clubs/ClubTagAutocomplete';
 import { WizardRef } from '@src/components/form/FormWizard';
 import { AppRouter } from '@src/server/api/root';
 import { useTRPC } from '@src/trpc/react';

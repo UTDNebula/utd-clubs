@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { BaseCard } from '@nebula-library/components/BaseCard';
-import JoinButton from '@src/components/club/JoinButton';
+import JoinButton from '@src/features/clubs/JoinButton';
 import Header from '@src/common/modules/navigation/header/Header';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
