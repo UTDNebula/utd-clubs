@@ -20,7 +20,7 @@ import {
   splitArrayField,
   temporalDeixisStrings,
 } from '@/common/utils/eventFilter';
-import FilterChip from './base/FilterChip';
+import FilterChip from '../../../../common/components/filter/FilterChip';
 import EventsFilterPanels from './EventsFilterPanels';
 import { setEventsParams } from './utils';
 

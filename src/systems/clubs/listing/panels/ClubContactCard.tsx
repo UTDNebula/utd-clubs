@@ -1,6 +1,6 @@
 import Panel from '@nebula-library/components/Panel';
 import { RouterOutputs } from '@/trpc/shared';
-import ContactButton from './ContactButton';
+import ContactButton from '../ContactButton';
 
 type ClubContactCardProps = {
   club:

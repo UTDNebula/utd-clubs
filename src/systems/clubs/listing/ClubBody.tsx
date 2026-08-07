@@ -1,12 +1,12 @@
 import { TZDateMini } from '@date-fns/tz';
 import { api } from '@/trpc/server';
 import { type RouterOutputs } from '@/trpc/shared';
-import ClubContactCard from './ClubContactCard';
-import ClubDescriptionCard from './ClubDescriptionCard';
-import ClubDetailsCard from './ClubDetailsCard';
-import ClubMembershipFormsCard from './ClubMembershipFormsCard';
-import ClubUpcomingEventsCard from './ClubUpcomingEventsCard';
-import OfficerList from './OfficerList';
+import ClubContactCard from './panels/ClubContactCard';
+import ClubDescriptionCard from './panels/ClubDescriptionCard';
+import ClubDetailsCard from './panels/ClubDetailsCard';
+import ClubMembershipFormsCard from './panels/ClubMembershipFormsCard';
+import ClubUpcomingEventsCard from './panels/ClubUpcomingEventsCard';
+import OfficerList from './panels/ClubOfficerListCard';
 
 const ClubBody = async ({
   club,

@@ -6,10 +6,10 @@ import {
   type FormatDistanceToken,
 } from 'date-fns';
 import { type Metadata } from 'next';
-import ClubEventHeader from '@/systems/clubs/listing/ClubEventHeader';
+import EventHeader from '@/systems/events/listing/EventHeader';
 import EventBody from '@/systems/events/listing/EventBody';
 import EventTitle from '@/systems/events/listing/EventTitle';
-import { EventHeader } from '@/common/modules/navigation/header';
+import { EventHeader as Header } from '@/common/modules/navigation/header';
 import { api } from '@/trpc/server';
 import { convertMarkdownToPlaintext } from '@/common/utils/markdown';
 
@@ -32,9 +32,9 @@ export default async function EventsPage(props: Params) {
 
   return (
     <>
-      <EventHeader />
+      <Header />
       <main className="mx-auto mb-5 flex max-w-6xl flex-col gap-y-8 p-4">
-        <ClubEventHeader club={event.club} />
+        <EventHeader club={event.club} />
         <EventTitle event={event} />
         <EventBody event={event} />
       </main>

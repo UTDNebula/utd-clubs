@@ -10,7 +10,7 @@ type Club = SelectClub & {
   contacts?: Contacts[];
   tags: string[];
 };
-const ClubEventHeader = async ({ club }: { club: Club }) => {
+const ClubHeader = async ({ club }: { club: Club }) => {
   if (!club.bannerImage) {
     return null;
   }
@@ -27,4 +27,4 @@ const ClubEventHeader = async ({ club }: { club: Club }) => {
   );
 };
 
-export default ClubEventHeader;
+export default ClubHeader;

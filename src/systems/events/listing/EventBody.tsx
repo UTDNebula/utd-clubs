@@ -1,12 +1,12 @@
 import { TZDateMini } from '@date-fns/tz';
-import ClubContactCard from '@/systems/clubs/listing/ClubContactCard';
-import ClubUpcomingEventsCard from '@/systems/clubs/listing/ClubUpcomingEventsCard';
+import ClubContactCard from '@/systems/clubs/listing/panels/ClubContactCard';
+import ClubUpcomingEventsCard from '@/systems/clubs/listing/panels/ClubUpcomingEventsCard';
 import { api } from '@/trpc/server';
 import { type RouterOutputs } from '@/trpc/shared';
-import EventCountdownCard from './EventCountdownCard';
-import EventDescriptionCard from './EventDescriptionCard';
-import EventDetailsCard from './EventDetailsCard';
-import EventHostClubCard from './EventHostClubCard';
+import EventCountdownCard from './panels/EventCountdownCard';
+import EventDescriptionCard from './panels/EventDescriptionCard';
+import EventDetailsCard from './panels/EventDetailsCard';
+import EventHostClubCard from './panels/EventHostClubCard';
 
 const EventBody = async ({
   event,
