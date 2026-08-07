@@ -1,5 +1,5 @@
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { useFieldContext } from '@src/common/utils/form';
+import { useFieldContext } from '@/common/utils/form';
 
 type StyledTextFieldProps = TextFieldProps;
 

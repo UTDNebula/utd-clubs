@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { insertUserMetadata } from '@src/server/db/models';
-import { studentClassificationEnum } from '@src/server/db/schema/users';
+import { insertUserMetadata } from '@/server/db/models';
+import { studentClassificationEnum } from '@/server/db/schema/users';
 import { contactSchema } from './contact';
 
 export const accountNameSchema = z.object({

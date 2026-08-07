@@ -30,21 +30,21 @@ import {
 } from 'drizzle-orm';
 import { OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
-import { db } from '@src/server/db';
-import { club } from '@src/server/db/schema/club';
-import { events } from '@src/server/db/schema/events';
+import { db } from '@/server/db';
+import { club } from '@/server/db/schema/club';
+import { events } from '@/server/db/schema/events';
 import {
   userMetadataToClubs,
   userMetadataToEvents,
-} from '@src/server/db/schema/users';
-import { stopWatching } from '@src/common/modules/googleCalendar/calendar';
+} from '@/server/db/schema/users';
+import { stopWatching } from '@/common/modules/googleCalendar/calendar';
 import {
   dateSchema,
   eventFiltersSchema,
   temporalDeixisCustomDateSentinelValue,
-} from '@src/common/utils/eventFilter';
-import { createEventSchema, editEventSchema } from '@src/common/utils/formSchemas';
-import { getGoogleAccessToken } from '@src/common/modules/auth/googleAuth';
+} from '@/common/utils/eventFilter';
+import { createEventSchema, editEventSchema } from '@/common/utils/formSchemas';
+import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 async function isUserOfficer(userId: string, clubId: string) {

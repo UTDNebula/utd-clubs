@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { api } from '@src/trpc/server';
+import { api } from '@/trpc/server';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch all clubs and events

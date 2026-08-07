@@ -2,8 +2,8 @@ import { Tooltip } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import Panel from '@nebula-library/components/Panel';
-import { RouterOutputs } from '@src/trpc/shared';
-import { addVersionToImage } from '@src/common/utils/imageCacheBust';
+import { RouterOutputs } from '@/trpc/shared';
+import { addVersionToImage } from '@/common/utils/imageCacheBust';
 
 type EventHostClubCardProps = {
   club: NonNullable<RouterOutputs['event']['getListingInfo']>['club'];

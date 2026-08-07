@@ -10,8 +10,8 @@ import { ReactNode, useState } from 'react';
 import {
   SelectUserMetadataToClubsWithUserMetadata,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
-} from '@src/server/db/models';
-import formatListString from '@src/common/utils/formatListString';
+} from '@/server/db/models';
+import formatListString from '@/common/utils/formatListString';
 import {
   ActionsCell,
   ContactEmailCell,

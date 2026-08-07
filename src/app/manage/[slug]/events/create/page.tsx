@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import EventForm from '@src/systems/events/EventForm';
-import ManageHeader from '@src/systems/manage/ManageHeader';
-import { api } from '@src/trpc/server';
+import EventForm from '@/systems/events/EventForm';
+import ManageHeader from '@/systems/manage/ManageHeader';
+import { api } from '@/trpc/server';
 
 const Page = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params;

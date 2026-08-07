@@ -7,13 +7,13 @@ import {
 } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
-import EventCard, { EventCardVariants } from '@src/systems/events/EventCard';
-import { useTRPC } from '@src/trpc/react';
-import { RouterOutputs } from '@src/trpc/shared';
-import { EventFiltersSchema } from '@src/common/utils/eventFilter';
-import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
-import useDebounce from '@src/common/utils/useDebounce';
-import useStable from '@src/common/utils/useStable';
+import EventCard, { EventCardVariants } from '@/systems/events/EventCard';
+import { useTRPC } from '@/trpc/react';
+import { RouterOutputs } from '@/trpc/shared';
+import { EventFiltersSchema } from '@/common/utils/eventFilter';
+import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
+import useDebounce from '@/common/utils/useDebounce';
+import useStable from '@/common/utils/useStable';
 import { useEventDirectoryStore } from './utils';
 
 type EventDirectoryGridProps = {

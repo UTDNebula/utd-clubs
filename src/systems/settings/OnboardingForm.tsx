@@ -7,16 +7,16 @@ import { add } from 'date-fns';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useState } from 'react';
-import { majors, minors } from '@src/common/utils/utdDegrees';
-import { SelectUserMetadataWithClubs } from '@src/server/db/models';
-import { studentClassificationEnum } from '@src/server/db/schema/users';
-import { useTRPC } from '@src/trpc/react';
-import { useAppForm } from '@src/common/utils/form';
+import { majors, minors } from '@/common/utils/utdDegrees';
+import { SelectUserMetadataWithClubs } from '@/server/db/models';
+import { studentClassificationEnum } from '@/server/db/schema/users';
+import { useTRPC } from '@/trpc/react';
+import { useAppForm } from '@/common/utils/form';
 import {
   accountOnboardingSchema,
   AccountOnboardingSchema,
   userMetadataToAccountOnboardingSchema,
-} from '@src/common/utils/formSchemas';
+} from '@/common/utils/formSchemas';
 
 type OnboardingFormProps = {
   userMetadata?: SelectUserMetadataWithClubs;

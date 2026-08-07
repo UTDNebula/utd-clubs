@@ -1,7 +1,7 @@
 import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import BackButton from '@src/common/components/BackButton';
+import BackButton from '@/common/components/BackButton';
 
 type PathItem =
   | {

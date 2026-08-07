@@ -1,7 +1,7 @@
 'use server';
 
-import type { ContentComponentColor } from '@src/common/modules/navigation/header/BaseHeader';
-import { api } from '@src/trpc/server';
+import type { ContentComponentColor } from '@/common/modules/navigation/header/BaseHeader';
+import { api } from '@/trpc/server';
 import NewSidebar from './Slide';
 
 // Keep in mind that in all routes we need pl-72 for the sidebar

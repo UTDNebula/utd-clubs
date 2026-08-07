@@ -1,6 +1,6 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Panel from '@nebula-library/components/Panel';
-import { SelectClub } from '@src/server/db/models';
+import { SelectClub } from '@/server/db/models';
 
 const NotApproved = ({
   status,

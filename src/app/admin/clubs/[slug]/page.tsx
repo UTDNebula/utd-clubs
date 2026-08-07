@@ -1,15 +1,15 @@
 import EventIcon from '@mui/icons-material/Event';
 import PreviewIcon from '@mui/icons-material/Preview';
 import { notFound } from 'next/navigation';
-import Collaborators from '@src/systems/manage/forms/Collaborators';
-import DeleteClub from '@src/systems/manage/forms/DeleteClub';
-import AdminHeader from '@src/systems/admin/AdminHeader';
-import ChangeClubStatus from '@src/systems/admin/ChangeClubStatus';
-import ClubBody from '@src/systems/clubs/listing/ClubBody';
-import ClubEventHeader from '@src/systems/clubs/listing/ClubEventHeader';
-import ClubTitle from '@src/systems/clubs/listing/ClubTitle';
-import { LinkButton } from '@src/common/components/LinkButton';
-import { api } from '@src/trpc/server';
+import Collaborators from '@/systems/manage/forms/Collaborators';
+import DeleteClub from '@/systems/manage/forms/DeleteClub';
+import AdminHeader from '@/systems/admin/AdminHeader';
+import ChangeClubStatus from '@/systems/admin/ChangeClubStatus';
+import ClubBody from '@/systems/clubs/listing/ClubBody';
+import ClubEventHeader from '@/systems/clubs/listing/ClubEventHeader';
+import ClubTitle from '@/systems/clubs/listing/ClubTitle';
+import { LinkButton } from '@/common/components/LinkButton';
+import { api } from '@/trpc/server';
 
 type Props = { params: Promise<{ slug: string }> };
 

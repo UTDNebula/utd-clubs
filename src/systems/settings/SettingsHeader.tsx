@@ -1,6 +1,6 @@
 import Avatar from '@mui/material/Avatar';
 import Panel from '@nebula-library/components/Panel';
-import { SelectUser } from '@src/server/db/models';
+import { SelectUser } from '@/server/db/models';
 
 type SettingsHeaderProps = {
   user?: Omit<SelectUser, 'image'> & Partial<Pick<SelectUser, 'image'>>;

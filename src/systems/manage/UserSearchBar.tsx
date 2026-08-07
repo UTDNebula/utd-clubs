@@ -8,8 +8,8 @@ import {
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { useTRPC } from '@src/trpc/react';
-import useDebounce from '@src/common/utils/useDebounce';
+import { useTRPC } from '@/trpc/react';
+import useDebounce from '@/common/utils/useDebounce';
 
 function getFullName(user: {
   firstName: string | null;

@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import { SelectOfficer } from '@src/server/db/models';
+import { SelectOfficer } from '@/server/db/models';
 import ClubOfficer from './ClubOfficer';
 
 export default function OfficerList({

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import EventsHeader from '@src/systems/events/directory/EventsHeader';
-import { EventHeader } from '@src/common/modules/navigation/header/Header';
+import EventsHeader from '@/systems/events/directory/EventsHeader';
+import { EventHeader } from '@/common/modules/navigation/header/Header';
 
 type EventDirectoryLayoutProps = {
   children: ReactNode;

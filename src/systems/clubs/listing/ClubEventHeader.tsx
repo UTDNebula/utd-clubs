@@ -3,8 +3,8 @@ import { BaseCard } from '@nebula-library/components/BaseCard';
 import type {
   SelectContact as Contacts,
   SelectClub,
-} from '@src/server/db/models';
-import { addVersionToImage } from '@src/common/utils/imageCacheBust';
+} from '@/server/db/models';
+import { addVersionToImage } from '@/common/utils/imageCacheBust';
 
 type Club = SelectClub & {
   contacts?: Contacts[];

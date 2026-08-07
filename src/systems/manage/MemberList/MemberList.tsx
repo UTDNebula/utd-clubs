@@ -12,16 +12,16 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import z from 'zod';
-import Confirmation from '@src/common/components/Confirmation';
-import { AppRouter } from '@src/server/api/root';
-import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
+import Confirmation from '@/common/components/Confirmation';
+import { AppRouter } from '@/server/api/root';
+import { removeMembersSchema } from '@/server/api/routers/clubEdit';
 import {
   SelectClub,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
-} from '@src/server/db/models';
-import { useTRPC } from '@src/trpc/react';
-import { authClient } from '@src/common/modules/auth/auth-client';
-import { useSnackbar } from '@src/common/modules/snackbar';
+} from '@/server/db/models';
+import { useTRPC } from '@/trpc/react';
+import { authClient } from '@/common/modules/auth/auth-client';
+import { useSnackbar } from '@/common/modules/snackbar';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';
 import { MemberListContext, MemberListContextType } from './MemberListContext';

@@ -3,9 +3,9 @@ import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { createContext } from 'react';
 import z from 'zod';
-import { AppRouter } from '@src/server/api/root';
-import { removeMembersSchema } from '@src/server/api/routers/clubEdit';
-import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
+import { AppRouter } from '@/server/api/root';
+import { removeMembersSchema } from '@/server/api/routers/clubEdit';
+import { SelectUserMetadataToClubsWithUserMetadata } from '@/server/db/models';
 import useMemberListDeletionState from './useMemberListDeletionState';
 import { MemberListAbilities } from './utils';
 

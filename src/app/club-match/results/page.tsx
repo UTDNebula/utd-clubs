@@ -4,12 +4,12 @@ import { headers } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { BaseCard } from '@nebula-library/components/BaseCard';
-import JoinButton from '@src/systems/clubs/JoinButton';
-import Header from '@src/common/modules/navigation/header/Header';
-import { auth } from '@src/server/auth';
-import { db } from '@src/server/db';
-import { signInRoute } from '@src/common/utils/redirect';
-import RedoClubMatchButton from '@src/systems/clubs/RedoClubMatchButton';
+import JoinButton from '@/systems/clubs/JoinButton';
+import Header from '@/common/modules/navigation/header/Header';
+import { auth } from '@/server/auth';
+import { db } from '@/server/db';
+import { signInRoute } from '@/common/utils/redirect';
+import RedoClubMatchButton from '@/systems/clubs/RedoClubMatchButton';
 
 export const metadata: Metadata = {
   title: 'Club Match Results',

@@ -1,16 +1,16 @@
-import '@src/common/styles/global.css';
+import '@/common/styles/global.css';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
-import { CheckRefreshToken } from '@src/common/modules/auth/CheckRefreshToken';
-import { TRPCReactProvider } from '@src/trpc/react';
-import ClientLocalizationProvider from '@src/common/components/ClientLocalizationProvider';
-import { LoginModalProvider } from '@src/common/modules/loginModal/provider';
-import { SnackbarProvider } from '@src/common/modules/snackbar';
-import SyncfusionWrapper from '@src/common/components/SyncfusionWrapper';
-import theme from '@src/common/utils/theme';
+import { CheckRefreshToken } from '@/common/modules/auth/CheckRefreshToken';
+import { TRPCReactProvider } from '@/trpc/react';
+import ClientLocalizationProvider from '@/common/components/ClientLocalizationProvider';
+import { LoginModalProvider } from '@/common/modules/loginModal/provider';
+import { SnackbarProvider } from '@/common/modules/snackbar';
+import SyncfusionWrapper from '@/common/components/SyncfusionWrapper';
+import theme from '@/common/utils/theme';
 
 const inter = Inter({
   subsets: ['latin'],

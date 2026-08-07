@@ -23,7 +23,7 @@ const eslintConfig = defineConfig([
       '@next/next/no-img-element': 'off',
     },
   },
-  // Enforce shorter path alias '@nebula-library/*' instead of '@src/nebula-library/*'
+  // Enforce shorter path alias '@nebula-library/*' instead of '@/nebula-library/*'
   {
     rules: {
       'no-restricted-imports': [
@@ -31,9 +31,9 @@ const eslintConfig = defineConfig([
         {
           patterns: [
             {
-              group: ['@src/nebula-library', '@src/nebula-library/*'],
+              group: ['@/nebula-library', '@/nebula-library/*'],
               message:
-                "Please use the shorter path alias '@nebula-library/*' instead of '@src/nebula-library/*'.",
+                "Please use the shorter path alias '@nebula-library/*' instead of '@/nebula-library/*'.",
             },
           ],
         },

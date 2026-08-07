@@ -13,12 +13,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import Confirmation from '@src/common/components/Confirmation';
-import MemberRoleChip from '@src/systems/manage/MemberRoleChip';
-import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
-import { useTRPC } from '@src/trpc/react';
-import { addVersionToImage } from '@src/common/utils/imageCacheBust';
-import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
+import Confirmation from '@/common/components/Confirmation';
+import MemberRoleChip from '@/systems/manage/MemberRoleChip';
+import { SelectUserMetadataToClubsWithClub } from '@/server/db/models';
+import { useTRPC } from '@/trpc/react';
+import { addVersionToImage } from '@/common/utils/imageCacheBust';
+import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 
 type ClubsProps = {
   joinedClubs: SelectUserMetadataToClubsWithClub[];

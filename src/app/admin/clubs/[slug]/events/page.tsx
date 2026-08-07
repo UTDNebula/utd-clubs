@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
-import AdminHeader from '@src/systems/admin/AdminHeader';
-import EventCard from '@src/systems/events/EventCard';
-import EventsPagination from '@src/systems/events/EventPagination';
-import IncludePastSwitch from '@src/systems/events/IncludePastSwitch';
-import { api } from '@src/trpc/server';
+import AdminHeader from '@/systems/admin/AdminHeader';
+import EventCard from '@/systems/events/EventCard';
+import EventsPagination from '@/systems/events/EventPagination';
+import IncludePastSwitch from '@/systems/events/IncludePastSwitch';
+import { api } from '@/trpc/server';
 
 type SearchParams = {
   page?: string;

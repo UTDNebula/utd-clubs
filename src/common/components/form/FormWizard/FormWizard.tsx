@@ -25,9 +25,9 @@ import {
 } from 'react';
 import { BaseCard } from '@nebula-library/components/BaseCard';
 import Panel from '@nebula-library/components/Panel';
-import { useAppForm, useFormContext } from '@src/common/utils/form';
-import { TanstackSubscribe } from '@src/common/components/Subscribe';
-import { useIsMounted } from '@src/common/utils/useIsMounted';
+import { useAppForm, useFormContext } from '@/common/utils/form';
+import { TanstackSubscribe } from '@/common/components/Subscribe';
+import { useIsMounted } from '@/common/utils/useIsMounted';
 import {
   FormWizardProps,
   FormWizardStepProps,

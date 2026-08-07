@@ -1,5 +1,5 @@
 import { Avatar } from '@mui/material';
-import { SelectOfficer } from '@src/server/db/models';
+import { SelectOfficer } from '@/server/db/models';
 
 type ClubOfficerProps = {
   officer: SelectOfficer;

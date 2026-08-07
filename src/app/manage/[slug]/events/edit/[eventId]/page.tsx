@@ -1,10 +1,10 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import EventForm from '@src/systems/events/EventForm';
-import ManageHeader from '@src/systems/manage/ManageHeader';
-import { getGcalEventLink } from '@src/common/modules/googleCalendar/googleCalendar';
-import { auth } from '@src/server/auth';
-import { api } from '@src/trpc/server';
+import EventForm from '@/systems/events/EventForm';
+import ManageHeader from '@/systems/manage/ManageHeader';
+import { getGcalEventLink } from '@/common/modules/googleCalendar/googleCalendar';
+import { auth } from '@/server/auth';
+import { api } from '@/trpc/server';
 
 const EditEventPage = async (props: {
   params: Promise<{ slug: string; eventId: string }>;

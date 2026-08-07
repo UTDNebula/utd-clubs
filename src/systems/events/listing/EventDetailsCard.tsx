@@ -1,7 +1,7 @@
 import { Divider, Tooltip } from '@mui/material';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import Panel from '@nebula-library/components/Panel';
-import { RouterOutputs } from '@src/trpc/shared';
+import { RouterOutputs } from '@/trpc/shared';
 
 type EventDetailsCardProps = {
   event: NonNullable<RouterOutputs['event']['getListingInfo']>;

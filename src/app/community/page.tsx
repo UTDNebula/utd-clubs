@@ -1,6 +1,6 @@
 import { type Metadata } from 'next';
-import ClubEvents from '@src/systems/dashboard/ClubEvents';
-import RegisteredEvents from '@src/systems/dashboard/RegisteredEvents';
+import ClubEvents from '@/systems/dashboard/ClubEvents';
+import RegisteredEvents from '@/systems/dashboard/RegisteredEvents';
 
 type SearchParams = { page?: string; pageSize?: string };
 

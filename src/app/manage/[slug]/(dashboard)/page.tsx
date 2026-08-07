@@ -3,10 +3,10 @@ import PeopleIcon from '@mui/icons-material/People';
 import PreviewIcon from '@mui/icons-material/Preview';
 import Tooltip from '@mui/material/Tooltip';
 import { notFound } from 'next/navigation';
-import { LinkButton } from '@src/common/components/LinkButton';
-import ManageHeader from '@src/systems/manage/ManageHeader';
-import { api } from '@src/trpc/server';
-import ClubManageForm from '@src/systems/manage/ClubManageForm';
+import { LinkButton } from '@/common/components/LinkButton';
+import ManageHeader from '@/systems/manage/ManageHeader';
+import { api } from '@/trpc/server';
+import ClubManageForm from '@/systems/manage/ClubManageForm';
 
 const Page = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params;

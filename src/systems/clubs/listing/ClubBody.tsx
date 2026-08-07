@@ -1,6 +1,6 @@
 import { TZDateMini } from '@date-fns/tz';
-import { api } from '@src/trpc/server';
-import { type RouterOutputs } from '@src/trpc/shared';
+import { api } from '@/trpc/server';
+import { type RouterOutputs } from '@/trpc/shared';
 import ClubContactCard from './ClubContactCard';
 import ClubDescriptionCard from './ClubDescriptionCard';
 import ClubDetailsCard from './ClubDetailsCard';

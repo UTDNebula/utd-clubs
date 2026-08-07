@@ -1,6 +1,6 @@
 import Panel from '@nebula-library/components/Panel';
-import ExpandableMarkdownText from '@src/common/components/ExpandableMarkdownText';
-import { RouterOutputs } from '@src/trpc/shared';
+import ExpandableMarkdownText from '@/common/components/ExpandableMarkdownText';
+import { RouterOutputs } from '@/trpc/shared';
 
 type ClubDescriptionCardProps = {
   club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;

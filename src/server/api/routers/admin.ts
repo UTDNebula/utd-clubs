@@ -1,13 +1,13 @@
 import { TRPCError } from '@trpc/server';
 import { and, count, desc, eq, inArray, lte, sql } from 'drizzle-orm';
 import { z } from 'zod';
-import { club, usedTags } from '@src/server/db/schema/club';
-import { events } from '@src/server/db/schema/events';
+import { club, usedTags } from '@/server/db/schema/club';
+import { events } from '@/server/db/schema/events';
 import {
   userMetadataToClubs,
   userMetadataToEvents,
-} from '@src/server/db/schema/users';
-import { callStorageAPI } from '@src/common/utils/storage';
+} from '@/server/db/schema/users';
+import { callStorageAPI } from '@/common/utils/storage';
 import { adminProcedure, createTRPCRouter } from '../trpc';
 import { editCollaboratorSchema } from './clubEdit';
 

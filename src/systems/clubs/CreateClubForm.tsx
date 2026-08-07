@@ -6,12 +6,12 @@ import { useMutation } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import ClubTagAutocomplete from '@src/systems/clubs/ClubTagAutocomplete';
-import { WizardRef } from '@src/common/components/form/FormWizard';
-import { AppRouter } from '@src/server/api/root';
-import { useTRPC } from '@src/trpc/react';
-import { useAppForm } from '@src/common/utils/form';
-import { createClubSchema, CreateClubSchema } from '@src/common/utils/formSchemas';
+import ClubTagAutocomplete from '@/systems/clubs/ClubTagAutocomplete';
+import { WizardRef } from '@/common/components/form/FormWizard';
+import { AppRouter } from '@/server/api/root';
+import { useTRPC } from '@/trpc/react';
+import { useAppForm } from '@/common/utils/form';
+import { createClubSchema, CreateClubSchema } from '@/common/utils/formSchemas';
 
 const CreateClubForm = () => {
   const api = useTRPC();

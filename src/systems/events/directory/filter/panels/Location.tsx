@@ -4,7 +4,7 @@ import Panel from '@nebula-library/components/Panel';
 import {
   EventFiltersSchema,
   eventLocationFilterEnum,
-} from '@src/common/utils/eventFilter';
+} from '@/common/utils/eventFilter';
 import FilterList, { FilterListItem } from '../base/FilterList';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 

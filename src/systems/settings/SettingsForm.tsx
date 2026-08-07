@@ -1,12 +1,12 @@
 'use server';
 
 import Alert from '@mui/material/Alert';
-import { auth } from '@src/server/auth';
+import { auth } from '@/server/auth';
 import {
   SelectUserMetadataToClubsWithClub,
   SelectUserMetadataWithClubs,
-} from '@src/server/db/models';
-import { api } from '@src/trpc/server';
+} from '@/server/db/models';
+import { api } from '@/trpc/server';
 import DeleteAccount from './forms/DeleteAccount';
 import JoinedClubs from './forms/JoinedClubs';
 import UserInfo from './forms/UserInfo';

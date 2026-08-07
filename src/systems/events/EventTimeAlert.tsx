@@ -6,7 +6,7 @@ import {
   differenceInMinutes,
 } from 'date-fns';
 import { useEffect, useState, type ReactNode } from 'react';
-import { type SelectEvent } from '@src/server/db/models';
+import { type SelectEvent } from '@/server/db/models';
 
 type EventTimeAlertProps = {
   event: SelectEvent;

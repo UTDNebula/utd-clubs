@@ -2,8 +2,8 @@
 
 import { TZDateMini } from '@date-fns/tz';
 import NotFollowingOrRegistered from './NotFollowingOrRegistered';
-import EventCard from '@src/systems/events/EventCard';
-import { api } from '@src/trpc/server';
+import EventCard from '@/systems/events/EventCard';
+import { api } from '@/trpc/server';
 
 export default async function RegisteredEvents() {
   const events = await api.userMetadata.getEvents({

@@ -1,8 +1,8 @@
 import { differenceInMinutes } from 'date-fns';
 import { and, eq } from 'drizzle-orm';
-import { auth } from '@src/server/auth';
-import { db } from '@src/server/db';
-import { account } from '@src/server/db/schema/auth';
+import { auth } from '@/server/auth';
+import { db } from '@/server/db';
+import { account } from '@/server/db/schema/auth';
 
 export async function getGoogleAccessToken(
   userId: string,

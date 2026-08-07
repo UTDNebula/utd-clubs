@@ -1,12 +1,12 @@
 import { GoogleGenAI } from '@google/genai';
 import { eq } from 'drizzle-orm';
-import { club } from '@src/server/db/schema/club';
+import { club } from '@/server/db/schema/club';
 import {
   userAiCache,
   userMetadata,
   type ClubMatchResults,
-} from '@src/server/db/schema/users';
-import { clubMatchFormSchema } from '@src/common/utils/formSchemas';
+} from '@/server/db/schema/users';
+import { clubMatchFormSchema } from '@/common/utils/formSchemas';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 const GEMINI_SERVICE_ACCOUNT = Boolean(process.env.GEMINI_SERVICE_ACCOUNT)

@@ -25,12 +25,12 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@nebula-library/components/Panel';
-import OfficerListItem from '@src/systems/manage/OfficerListItem';
-import type { SelectClub, SelectOfficer } from '@src/server/db/models';
-import { useTRPC } from '@src/trpc/react';
-import { useAppForm } from '@src/common/utils/form';
-import { editListedOfficerSchema } from '@src/common/utils/formSchemas';
-import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
+import OfficerListItem from '@/systems/manage/OfficerListItem';
+import type { SelectClub, SelectOfficer } from '@/server/db/models';
+import { useTRPC } from '@/trpc/react';
+import { useAppForm } from '@/common/utils/form';
+import { editListedOfficerSchema } from '@/common/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 
 type FormData = z.infer<typeof editListedOfficerSchema>;
 

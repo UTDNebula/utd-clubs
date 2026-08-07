@@ -1,6 +1,6 @@
 import { rankings, rankItem } from '@tanstack/match-sorter-utils';
 import { type FilterFn } from '@tanstack/react-table';
-import { RouterOutputs } from '@src/trpc/shared';
+import { RouterOutputs } from '@/trpc/shared';
 
 export const fuzzyFilter: FilterFn<
   RouterOutputs['admin']['allClubs'][number]

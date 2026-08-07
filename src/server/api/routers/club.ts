@@ -13,14 +13,14 @@ import {
 } from 'drizzle-orm';
 import { google } from 'googleapis';
 import { z } from 'zod';
-import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
-import { club, usedTags } from '@src/server/db/schema/club';
-import { membershipForms } from '@src/server/db/schema/membershipForms';
-import { officers as officersTable } from '@src/server/db/schema/officers';
-import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { syncCalendar, watchCalendar } from '@src/common/modules/googleCalendar/calendar';
-import { createClubSchema } from '@src/common/utils/formSchemas';
-import { getGoogleAccessToken } from '@src/common/modules/auth/googleAuth';
+import { SelectUserMetadataToClubsWithClub } from '@/server/db/models';
+import { club, usedTags } from '@/server/db/schema/club';
+import { membershipForms } from '@/server/db/schema/membershipForms';
+import { officers as officersTable } from '@/server/db/schema/officers';
+import { userMetadataToClubs } from '@/server/db/schema/users';
+import { syncCalendar, watchCalendar } from '@/common/modules/googleCalendar/calendar';
+import { createClubSchema } from '@/common/utils/formSchemas';
+import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { clubEditRouter } from './clubEdit';
 

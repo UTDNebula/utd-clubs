@@ -4,9 +4,9 @@ import { Autocomplete, TextField, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useTRPC } from '@src/trpc/react';
-import useDebounce from '@src/common/utils/useDebounce';
-import { useBaseHeaderContext } from '@src/common/modules/navigation/header/BaseHeader';
+import { useTRPC } from '@/trpc/react';
+import useDebounce from '@/common/utils/useDebounce';
+import { useBaseHeaderContext } from '@/common/modules/navigation/header/BaseHeader';
 
 export const EventSearchBar = () => {
   const [input, setInput] = useState('');

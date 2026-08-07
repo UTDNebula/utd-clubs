@@ -2,11 +2,11 @@
 
 import { TZDateMini } from '@date-fns/tz';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import NotFollowingOrRegistered from '@src/systems/dashboard/NotFollowingOrRegistered';
-import EventCard from '@src/systems/events/EventCard';
-import EventsPagination from '@src/systems/events/EventPagination';
-import { LinkButton } from '@src/common/components/LinkButton';
-import { api } from '@src/trpc/server';
+import NotFollowingOrRegistered from '@/systems/dashboard/NotFollowingOrRegistered';
+import EventCard from '@/systems/events/EventCard';
+import EventsPagination from '@/systems/events/EventPagination';
+import { LinkButton } from '@/common/components/LinkButton';
+import { api } from '@/trpc/server';
 
 export default async function ClubEvents({
   page,

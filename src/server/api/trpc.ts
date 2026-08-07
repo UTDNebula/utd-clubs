@@ -13,8 +13,8 @@ import { headers } from 'next/headers';
 import { cache } from 'react';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
-import { auth } from '@src/server/auth';
-import { db } from '@src/server/db';
+import { auth } from '@/server/auth';
+import { db } from '@/server/db';
 
 /**
  * 1. CONTEXT

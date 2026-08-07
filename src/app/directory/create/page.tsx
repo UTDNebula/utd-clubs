@@ -2,10 +2,10 @@ import Typography from '@mui/material/Typography';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Header from '@src/common/modules/navigation/header/Header';
-import { auth } from '@src/server/auth';
-import { signInRoute } from '@src/common/utils/redirect';
-import CreateClubForm from '@src/systems/clubs/CreateClubForm';
+import Header from '@/common/modules/navigation/header/Header';
+import { auth } from '@/server/auth';
+import { signInRoute } from '@/common/utils/redirect';
+import CreateClubForm from '@/systems/clubs/CreateClubForm';
 
 export const metadata: Metadata = {
   title: 'Create New Organization',

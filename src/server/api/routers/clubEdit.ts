@@ -1,15 +1,15 @@
 import { TRPCError } from '@trpc/server';
 import { and, asc, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
-import { db } from '@src/server/db';
-import { selectContact } from '@src/server/db/models';
-import { club } from '@src/server/db/schema/club';
-import { contacts } from '@src/server/db/schema/contacts';
-import { membershipForms } from '@src/server/db/schema/membershipForms';
-import { officers } from '@src/server/db/schema/officers';
-import { userMetadataToClubs } from '@src/server/db/schema/users';
-import { editClubDetailsSchema, editSlugSchema } from '@src/common/utils/formSchemas';
-import { callStorageAPI } from '@src/common/utils/storage';
+import { db } from '@/server/db';
+import { selectContact } from '@/server/db/models';
+import { club } from '@/server/db/schema/club';
+import { contacts } from '@/server/db/schema/contacts';
+import { membershipForms } from '@/server/db/schema/membershipForms';
+import { officers } from '@/server/db/schema/officers';
+import { userMetadataToClubs } from '@/server/db/schema/users';
+import { editClubDetailsSchema, editSlugSchema } from '@/common/utils/formSchemas';
+import { callStorageAPI } from '@/common/utils/storage';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 async function isUserOfficer(userId: string, clubId: string) {

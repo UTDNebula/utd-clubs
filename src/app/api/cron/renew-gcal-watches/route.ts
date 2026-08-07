@@ -1,9 +1,9 @@
 import { addHours } from 'date-fns';
 import { lte } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
-import { db } from '@src/server/db';
-import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
-import { stopWatching, watchCalendar } from '@src/common/modules/googleCalendar/calendar';
+import { db } from '@/server/db';
+import { calendarWebhooks } from '@/server/db/schema/calendarWebhooks';
+import { stopWatching, watchCalendar } from '@/common/modules/googleCalendar/calendar';
 
 export const dynamic = 'force-dynamic'; // do not cache response
 

@@ -4,7 +4,7 @@ import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
 import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import { lazy, useState } from 'react';
-import { type AppRouter } from '@src/server/api/root';
+import { type AppRouter } from '@/server/api/root';
 import { getUrl, makeQueryClient, transformer } from './shared';
 
 const Devtools =

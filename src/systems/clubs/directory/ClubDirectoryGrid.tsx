@@ -3,8 +3,8 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
-import { useTRPC } from '@src/trpc/react';
-import { useSearchStore } from '@src/systems/dashboard/SearchStoreProvider';
+import { useTRPC } from '@/trpc/react';
+import { useSearchStore } from '@/systems/dashboard/SearchStoreProvider';
 import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 import InfiniteScrollGrid from './InfiniteScrollGrid';
 

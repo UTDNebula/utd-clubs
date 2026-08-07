@@ -6,9 +6,9 @@ import { Button, Collapse } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import Confirmation from '@src/common/components/Confirmation';
-import { useTRPC } from '@src/trpc/react';
-import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
+import Confirmation from '@/common/components/Confirmation';
+import { useTRPC } from '@/trpc/react';
+import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 
 const LeadershipChange = ({ clubId }: { clubId: string }) => {
   const [openConfirmation, setOpenConfirmation] = useState(false);

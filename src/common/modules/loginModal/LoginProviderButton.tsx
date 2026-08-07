@@ -1,8 +1,8 @@
 'use client';
 
 import Button from '@mui/material/Button';
-import { authClient } from '@src/common/modules/auth/auth-client';
-import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
+import { authClient } from '@/common/modules/auth/auth-client';
+import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 import LoginProviderIcons from './icons';
 import { LoginProviders } from './types';
 

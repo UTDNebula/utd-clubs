@@ -1,9 +1,9 @@
 import { headers } from 'next/headers';
 import { ReactNode } from 'react';
-import CommunityHeader from '@src/systems/dashboard/CommunityHeader';
-import Header from '@src/common/modules/navigation/header/Header';
-import { UTDClubsLogoCombination } from '@src/common/icons/UTDClubsLogo';
-import { auth } from '@src/server/auth';
+import CommunityHeader from '@/systems/dashboard/CommunityHeader';
+import Header from '@/common/modules/navigation/header/Header';
+import { UTDClubsLogoCombination } from '@/common/icons/UTDClubsLogo';
+import { auth } from '@/server/auth';
 
 type CommunityLayoutProps = {
   children: ReactNode;

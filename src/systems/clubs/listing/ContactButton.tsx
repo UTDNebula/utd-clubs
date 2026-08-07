@@ -1,8 +1,8 @@
 import { Tooltip } from '@mui/material';
-import { LinkButton } from '@src/common/components/LinkButton';
-import { logo } from '@src/common/icons/ContactIcons';
-import type { SelectContact } from '@src/server/db/models';
-import { contactNames } from '@src/server/db/schema/contacts';
+import { LinkButton } from '@/common/components/LinkButton';
+import { logo } from '@/common/icons/ContactIcons';
+import type { SelectContact } from '@/server/db/models';
+import { contactNames } from '@/server/db/schema/contacts';
 
 function contactDisplay(contact: SelectContact) {
   switch (contact.platform) {

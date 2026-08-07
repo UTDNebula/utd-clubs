@@ -1,8 +1,8 @@
 import { and, eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
-import { auth } from '@src/server/auth';
-import { db } from '@src/server/db';
-import { account } from '@src/server/db/schema/auth';
+import { auth } from '@/server/auth';
+import { db } from '@/server/db';
+import { account } from '@/server/db/schema/auth';
 import { GoogleReauthHandler } from './GoogleReauthHandler';
 
 export const CheckRefreshToken = async () => {

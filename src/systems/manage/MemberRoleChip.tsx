@@ -4,7 +4,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { SvgIconOwnProps } from '@mui/material';
 import Chip, { ChipProps } from '@mui/material/Chip';
 import { cloneElement, isValidElement, ReactElement } from 'react';
-import { clubRoleEnum } from '@src/server/db/schema/users';
+import { clubRoleEnum } from '@/server/db/schema/users';
 
 export type MemberTypes = (typeof clubRoleEnum.enumValues)[number];
 

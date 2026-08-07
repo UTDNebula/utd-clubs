@@ -2,12 +2,12 @@ import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Header from '@src/common/modules/navigation/header/Header';
-import { auth } from '@src/server/auth';
-import { db } from '@src/server/db';
-import { api } from '@src/trpc/server';
-import { signInRoute } from '@src/common/utils/redirect';
-import ClubMatch from '@src/systems/clubs/ClubMatch';
+import Header from '@/common/modules/navigation/header/Header';
+import { auth } from '@/server/auth';
+import { db } from '@/server/db';
+import { api } from '@/trpc/server';
+import { signInRoute } from '@/common/utils/redirect';
+import ClubMatch from '@/systems/clubs/ClubMatch';
 
 export const metadata: Metadata = {
   title: 'Club Match',

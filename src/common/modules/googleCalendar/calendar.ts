@@ -22,10 +22,10 @@ import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
 import { nanoid } from 'nanoid';
 import z from 'zod';
-import { dbWithSessions } from '@src/server/db';
-import { calendarWebhooks } from '@src/server/db/schema/calendarWebhooks';
-import { club as clubTable } from '@src/server/db/schema/club';
-import { events as eventTable } from '@src/server/db/schema/events';
+import { dbWithSessions } from '@/server/db';
+import { calendarWebhooks } from '@/server/db/schema/calendarWebhooks';
+import { club as clubTable } from '@/server/db/schema/club';
+import { events as eventTable } from '@/server/db/schema/events';
 import { getGoogleAccessToken } from '../auth/googleAuth';
 
 const db = dbWithSessions;

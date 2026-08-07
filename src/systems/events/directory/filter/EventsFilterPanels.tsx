@@ -3,8 +3,8 @@
 import Divider from '@mui/material/Divider';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
-import { EventFiltersSchema } from '@src/common/utils/eventFilter';
-import useStable from '@src/common/utils/useStable';
+import { EventFiltersSchema } from '@/common/utils/eventFilter';
+import useStable from '@/common/utils/useStable';
 import DatePanel from './panels/Date';
 import FiltersPanel from './panels/Filters';
 // import LocationPanel from './panels/Location';

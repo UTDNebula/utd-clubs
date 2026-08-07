@@ -1,8 +1,8 @@
 import { TZDateMini } from '@date-fns/tz';
-import ClubContactCard from '@src/systems/clubs/listing/ClubContactCard';
-import ClubUpcomingEventsCard from '@src/systems/clubs/listing/ClubUpcomingEventsCard';
-import { api } from '@src/trpc/server';
-import { type RouterOutputs } from '@src/trpc/shared';
+import ClubContactCard from '@/systems/clubs/listing/ClubContactCard';
+import ClubUpcomingEventsCard from '@/systems/clubs/listing/ClubUpcomingEventsCard';
+import { api } from '@/trpc/server';
+import { type RouterOutputs } from '@/trpc/shared';
 import EventCountdownCard from './EventCountdownCard';
 import EventDescriptionCard from './EventDescriptionCard';
 import EventDetailsCard from './EventDetailsCard';

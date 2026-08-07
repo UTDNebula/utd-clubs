@@ -4,13 +4,13 @@ import Collapse from '@mui/material/Collapse';
 import Pagination from '@mui/material/Pagination';
 import { useSearchParams } from 'next/navigation';
 import { ChangeEvent, useEffect, useState } from 'react';
-import EventDirectorySearchBar from '@src/systems/events/EventDirectorySearchBar';
-import { RouterOutputs } from '@src/trpc/shared';
+import EventDirectorySearchBar from '@/systems/events/EventDirectorySearchBar';
+import { RouterOutputs } from '@/trpc/shared';
 import {
   eventParamsToFilters,
   listSelectedEventFilters,
-} from '@src/common/utils/eventFilter';
-import useStable from '@src/common/utils/useStable';
+} from '@/common/utils/eventFilter';
+import useStable from '@/common/utils/useStable';
 import { EventCardVariants } from '../EventCard';
 import EventDirectoryGrid from './filter/EventDirectoryGrid';
 import EventsFilterBar from './filter/EventsFilterBar';

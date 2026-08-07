@@ -1,8 +1,8 @@
 import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import BackButton from '@src/common/components/BackButton';
-import type { SelectClub } from '@src/server/db/models';
+import BackButton from '@/common/components/BackButton';
+import type { SelectClub } from '@/server/db/models';
 
 type PathItem =
   | {

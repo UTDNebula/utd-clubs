@@ -1,21 +1,21 @@
 import { and, count, eq, gt, gte, inArray, lt, or, sql } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { z } from 'zod';
-import { type personalCats } from '@src/common/modules/navigation/categories';
-import { auth } from '@src/server/auth';
+import { type personalCats } from '@/common/modules/navigation/categories';
+import { auth } from '@/server/auth';
 import {
   insertUserMetadata,
   SelectUserMetadataToClubs,
   SelectUserMetadataWithClubs,
-} from '@src/server/db/models';
-import { admin } from '@src/server/db/schema/admin';
-import { user as users } from '@src/server/db/schema/auth';
-import { events } from '@src/server/db/schema/events';
+} from '@/server/db/models';
+import { admin } from '@/server/db/schema/admin';
+import { user as users } from '@/server/db/schema/auth';
+import { events } from '@/server/db/schema/events';
 import {
   userMetadata,
   userMetadataToClubs,
   userMetadataToEvents,
-} from '@src/server/db/schema/users';
+} from '@/server/db/schema/users';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 const byIdSchema = z.object({ id: z.string() });

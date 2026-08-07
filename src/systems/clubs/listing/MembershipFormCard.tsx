@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { BaseCard } from '@nebula-library/components/BaseCard';
-import { type RouterOutputs } from '@src/trpc/shared';
+import { type RouterOutputs } from '@/trpc/shared';
 
 interface MembershipFormCardProps {
   form: RouterOutputs['club']['clubForms'][number];

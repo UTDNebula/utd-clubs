@@ -1,9 +1,9 @@
 import { Alert } from '@mui/material';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import EventCalendar from '@src/systems/dashboard/EventCalendar';
-import { auth } from '@src/server/auth';
-import { signInRoute } from '@src/common/utils/redirect';
+import EventCalendar from '@/systems/dashboard/EventCalendar';
+import { auth } from '@/server/auth';
+import { signInRoute } from '@/common/utils/redirect';
 
 export default async function CalendarPage() {
   const session = await auth.api.getSession({ headers: await headers() });

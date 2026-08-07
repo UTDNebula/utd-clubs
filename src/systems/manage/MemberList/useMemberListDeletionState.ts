@@ -1,6 +1,6 @@
 import { GridRowId, GridRowSelectionModel } from '@mui/x-data-grid';
 import { useCallback, useState } from 'react';
-import { SelectUserMetadataToClubsWithUserMetadata } from '@src/server/db/models';
+import { SelectUserMetadataToClubsWithUserMetadata } from '@/server/db/models';
 
 type deleteSourceModelSources = 'rowId' | 'selection' | undefined;
 

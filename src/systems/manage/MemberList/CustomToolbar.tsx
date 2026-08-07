@@ -32,7 +32,7 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import { useContext, useState } from 'react';
-import { SelectClub } from '@src/server/db/models';
+import { SelectClub } from '@/server/db/models';
 import { MemberListContext } from './MemberListContext';
 
 type OwnerState = {
