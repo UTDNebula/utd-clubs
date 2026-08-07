@@ -11,7 +11,7 @@ import EventCard, { EventCardVariants } from '@src/systems/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 import useDebounce from '@src/utils/useDebounce';
 import useStable from '@src/utils/useStable';
 import { useEventDirectoryStore } from './utils';

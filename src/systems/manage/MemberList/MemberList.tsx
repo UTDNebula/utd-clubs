@@ -21,7 +21,7 @@ import {
 } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { authClient } from '@src/utils/auth-client';
-import { useSnackbar } from '@src/utils/snackbar';
+import { useSnackbar } from '@src/common/modules/snackbar';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';
 import { MemberListContext, MemberListContextType } from './MemberListContext';

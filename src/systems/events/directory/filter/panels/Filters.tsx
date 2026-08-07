@@ -7,8 +7,8 @@ import { memo } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import { authClient } from '@src/utils/auth-client';
 import { EventFiltersSchema } from '@src/utils/eventFilter';
-import { openLoginModal } from '@src/utils/loginModal';
-import { closeSnackbar, setSnackbar } from '@src/utils/snackbar';
+import { openLoginModal } from '@src/common/modules/loginModal';
+import { closeSnackbar, setSnackbar } from '@src/common/modules/snackbar';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 const eventsFiltersSnackbarId = 'eventsFilters';

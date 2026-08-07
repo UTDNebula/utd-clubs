@@ -10,7 +10,7 @@ import {
   SnackbarPresets,
   SnackbarType,
   SSRSnackbarWrapper,
-} from '@src/utils/snackbar';
+} from '@src/common/modules/snackbar';
 
 export const metadata: Metadata = {
   title: 'Events',

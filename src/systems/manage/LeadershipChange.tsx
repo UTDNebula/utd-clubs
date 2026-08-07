@@ -8,7 +8,7 @@ import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { useTRPC } from '@src/trpc/react';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 
 const LeadershipChange = ({ clubId }: { clubId: string }) => {
   const [openConfirmation, setOpenConfirmation] = useState(false);

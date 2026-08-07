@@ -17,7 +17,7 @@ import {
   editEventFormSchema,
 } from '@src/utils/formSchemas';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 import { useUploadToUploadURL } from '@src/utils/uploadImage';
 import EventCard, { EventCardSkeleton } from './EventCard';
 

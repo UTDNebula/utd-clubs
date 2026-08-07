@@ -14,7 +14,7 @@ import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editClubFormSchema, schools } from '@src/utils/formSchemas';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 import { useUploadToUploadURL } from '@src/utils/uploadImage';
 
 type DetailsProps = {

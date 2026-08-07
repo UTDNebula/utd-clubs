@@ -7,8 +7,8 @@ import { Bai_Jamjuree, Inter } from 'next/font/google';
 import { CheckRefreshToken } from '@src/components/auth/CheckRefreshToken';
 import { TRPCReactProvider } from '@src/trpc/react';
 import ClientLocalizationProvider from '@src/utils/localization';
-import { LoginModalProvider } from '@src/utils/loginModal/provider';
-import { SnackbarProvider } from '@src/utils/snackbar';
+import { LoginModalProvider } from '@src/common/modules/loginModal/provider';
+import { SnackbarProvider } from '@src/common/modules/snackbar';
 import SyncfusionWrapper from '@src/utils/SyncfusionWrapper';
 import theme from '@src/utils/theme';
 

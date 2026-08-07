@@ -2,7 +2,7 @@
 
 import Button from '@mui/material/Button';
 import { authClient } from '@src/utils/auth-client';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 import LoginProviderIcons from './icons';
 import { LoginProviders } from './types';
 

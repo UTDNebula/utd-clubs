@@ -6,7 +6,7 @@ import Modal, { ModalProps } from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import { authClient } from '@src/utils/auth-client';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 import LoginProviderButton from './LoginProviderButton';
 import { LoginProviders } from './types';
 

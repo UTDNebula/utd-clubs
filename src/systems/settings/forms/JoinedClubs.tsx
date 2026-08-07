@@ -18,7 +18,7 @@ import MemberRoleChip from '@src/systems/manage/MemberRoleChip';
 import { SelectUserMetadataToClubsWithClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { addVersionToImage } from '@src/utils/imageCacheBust';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 
 type ClubsProps = {
   joinedClubs: SelectUserMetadataToClubsWithClub[];

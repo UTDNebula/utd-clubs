@@ -30,7 +30,7 @@ import type { SelectClub, SelectOfficer } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editListedOfficerSchema } from '@src/utils/formSchemas';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 
 type FormData = z.infer<typeof editListedOfficerSchema>;
 

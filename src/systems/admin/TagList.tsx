@@ -26,7 +26,7 @@ import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@src/components/Confirmation';
 import { useTRPC } from '@src/trpc/react';
 import { RouterOutputs } from '@src/trpc/shared';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 
 type TagListProps = {
   tags?: RouterOutputs['club']['distinctTags'];

@@ -17,7 +17,7 @@ import {
   AccountSettingsSchema,
   accountSettingsSchema,
 } from '@src/utils/formSchemas';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 
 type UserInfoProps = {
   user: SelectUserMetadataWithClubs;

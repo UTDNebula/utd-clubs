@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useEffect } from 'react';
-import { setParams } from '../searchParams';
+import { setParams } from '@src/utils/searchParams';
 import { useSnackbar } from './context';
 import { SnackbarType } from './types';
 

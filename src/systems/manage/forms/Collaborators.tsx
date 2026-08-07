@@ -13,7 +13,7 @@ import type {
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editOfficerSchema } from '@src/utils/formSchemas';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 
 type FormData = z.infer<typeof editOfficerSchema>;
 

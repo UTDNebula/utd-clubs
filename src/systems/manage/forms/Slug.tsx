@@ -14,7 +14,7 @@ import type { SelectClub } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
 import { editSlugSchema } from '@src/utils/formSchemas';
-import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
+import { setSnackbar, SnackbarPresets } from '@src/common/modules/snackbar';
 import useDebounce from '@src/utils/useDebounce';
 
 type DetailsProps = {

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
 import { auth } from '@src/server/auth';
-import { LoginModalContents } from '@src/utils/loginModal';
+import { LoginModalContents } from '@src/common/modules/loginModal';
 
 export default async function Auth(props: {
   searchParams: Promise<{ [key: string]: string }>;
