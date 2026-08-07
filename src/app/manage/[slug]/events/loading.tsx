@@ -1,5 +1,5 @@
 import Skeleton from '@mui/material/Skeleton';
-import { EventCardSkeleton } from '@src/components/events/EventCard';
+import { EventCardSkeleton } from '@src/systems/events/EventCard';
 import ManageHeader from '@src/components/manage/ManageHeader';
 
 export default function Loading() {

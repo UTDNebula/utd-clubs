@@ -1,8 +1,8 @@
 import AddIcon from '@mui/icons-material/Add';
 import { notFound } from 'next/navigation';
-import EventCard from '@src/components/events/EventCard';
-import EventsPagination from '@src/components/events/EventPagination';
-import IncludePastSwitch from '@src/components/events/IncludePastSwitch';
+import EventCard from '@src/systems/events/EventCard';
+import EventsPagination from '@src/systems/events/EventPagination';
+import IncludePastSwitch from '@src/systems/events/IncludePastSwitch';
 import { LinkButton } from '@src/components/LinkButton';
 import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';

@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import AdminHeader from '@src/systems/admin/AdminHeader';
-import EventCard from '@src/components/events/EventCard';
-import EventsPagination from '@src/components/events/EventPagination';
-import IncludePastSwitch from '@src/components/events/IncludePastSwitch';
+import EventCard from '@src/systems/events/EventCard';
+import EventsPagination from '@src/systems/events/EventPagination';
+import IncludePastSwitch from '@src/systems/events/IncludePastSwitch';
 import { api } from '@src/trpc/server';
 
 type SearchParams = {

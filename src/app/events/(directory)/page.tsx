@@ -1,6 +1,6 @@
 import { type Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import EventsBody from '@src/components/events/directory/EventsBody';
+import EventsBody from '@src/systems/events/directory/EventsBody';
 import { api } from '@src/trpc/server';
 import {
   EventParamsSchema,

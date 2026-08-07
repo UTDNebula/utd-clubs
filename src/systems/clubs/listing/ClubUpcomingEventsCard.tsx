@@ -1,5 +1,5 @@
 import Panel from '@nebula-library/components/Panel';
-import EventCard from '@src/components/events/EventCard';
+import EventCard from '@src/systems/events/EventCard';
 import { RouterOutputs } from '@src/trpc/shared';
 
 type ClubUpcomingEventsCardProps = {

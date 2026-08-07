@@ -10,7 +10,7 @@ import {
   isSameDay,
   type FormatDistanceToken,
 } from 'date-fns';
-import EventRegisterButton from '@src/components/events/EventRegisterButton';
+import EventRegisterButton from '@src/systems/events/EventRegisterButton';
 import { type RouterOutputs } from '@src/trpc/shared';
 
 const distanceTokenUnits: Partial<Record<FormatDistanceToken, string>> = {

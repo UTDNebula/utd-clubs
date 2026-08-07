@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import EventForm from '@src/components/events/EventForm';
+import EventForm from '@src/systems/events/EventForm';
 import ManageHeader from '@src/components/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 

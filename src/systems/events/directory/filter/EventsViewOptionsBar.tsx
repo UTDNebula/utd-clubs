@@ -2,7 +2,7 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SortIcon from '@mui/icons-material/Sort';
 import { memo } from 'react';
-import { EventCardVariants } from '@src/components/events/EventCard';
+import { EventCardVariants } from '@src/systems/events/EventCard';
 import { EventFiltersSchema, sortEnum } from '@src/utils/eventFilter';
 import CompactPagination from './base/CompactPagination';
 import ViewOption, { ViewOptionItem } from './base/ViewOptionItem';

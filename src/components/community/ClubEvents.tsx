@@ -3,8 +3,8 @@
 import { TZDateMini } from '@date-fns/tz';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NotFollowingOrRegistered from '@src/components/community/NotFollowingOrRegistered';
-import EventCard from '@src/components/events/EventCard';
-import EventsPagination from '@src/components/events/EventPagination';
+import EventCard from '@src/systems/events/EventCard';
+import EventsPagination from '@src/systems/events/EventPagination';
 import { LinkButton } from '@src/components/LinkButton';
 import { api } from '@src/trpc/server';
 

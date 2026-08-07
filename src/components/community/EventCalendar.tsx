@@ -24,7 +24,7 @@ import { isSameDay, startOfDay } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import EventCard from '@src/components/events/EventCard';
+import EventCard from '@src/systems/events/EventCard';
 import { useTRPC } from '@src/trpc/react';
 import { type RouterOutputs } from '@src/trpc/shared';
 import { getRangeForView, type CalendarRange } from '@src/utils/calendarRange';

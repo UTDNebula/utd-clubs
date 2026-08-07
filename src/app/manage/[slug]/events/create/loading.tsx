@@ -1,4 +1,4 @@
-import { EventFormSkeleton } from '@src/components/events/EventForm';
+import { EventFormSkeleton } from '@src/systems/events/EventForm';
 import ManageHeader from '@src/components/manage/ManageHeader';
 
 export default function Loading() {
