@@ -17,12 +17,14 @@ const ClientEventTime = ({ startTime, endTime }: ClientEventTimeProps) => {
     return null;
   }
 
-  const tzStartTime = new TZDateMini(startTime, 'America/Chicago');
-  const tzEndTime = new TZDateMini(endTime, 'America/Chicago');
+  const timeZone =
+    Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Chicago';
+  const tzStartTime = new TZDateMini(startTime, timeZone);
+  const tzEndTime = new TZDateMini(endTime, timeZone);
 
   return (
     <>
-      {isSameYear(tzStartTime, TZDateMini.tz('America/Chicago'))
+      {isSameYear(tzStartTime, TZDateMini.tz(timeZone))
         ? null
         : format(tzStartTime, 'yyyy ')}
       {format(tzStartTime, 'E, MMM d, p')}
