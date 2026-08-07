@@ -10,8 +10,8 @@ import Details from './forms/Details';
 import MembershipForms from './forms/MembershipForms';
 import Officers from './forms/Officers';
 import Slug from './forms/Slug';
-import LeadershipChange from './LeadershipChange';
-import NotApproved from './NotApproved';
+import LeadershipChange from './banners/LeadershipChange';
+import NotApproved from './banners/NotApproved';
 import Resources from './Resources';
 
 const ClubManageForm = async ({

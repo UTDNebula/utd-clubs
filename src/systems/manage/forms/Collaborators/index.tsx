@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
 import Panel from '@nebula-library/components/Panel';
-import CollaboratorListItem from '@/systems/manage/CollaboratorListItem';
+import CollaboratorListItem from './CollaboratorListItem';
 import { UserSearchBar } from '@/systems/manage/UserSearchBar';
 import type {
   SelectClub,

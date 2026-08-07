@@ -24,7 +24,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@nebula-library/components/Panel';
-import ContactListItem from '@/systems/manage/ContactListItem';
+import ContactListItem from './ContactListItem';
 import type { SelectClub, SelectContact } from '@/server/db/models';
 import { contactNames, startContacts } from '@/server/db/schema/contacts';
 import { useTRPC } from '@/trpc/react';

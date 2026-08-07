@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import Panel, { PanelSkeleton } from '@nebula-library/components/Panel';
-import FormImage from '@/systems/manage/form/FormImage';
+import FormImage from '@/common/components/form/FormImage';
 import { type SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { type RouterOutputs } from '@/trpc/shared';

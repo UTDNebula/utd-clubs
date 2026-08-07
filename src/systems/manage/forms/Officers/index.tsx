@@ -25,7 +25,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@nebula-library/components/Panel';
-import OfficerListItem from '@/systems/manage/OfficerListItem';
+import OfficerListItem from './OfficerListItem';
 import type { SelectClub, SelectOfficer } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { useAppForm } from '@/common/utils/form';
