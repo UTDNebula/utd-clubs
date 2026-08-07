@@ -4,7 +4,7 @@ import EventCard from '@src/systems/events/EventCard';
 import EventsPagination from '@src/systems/events/EventPagination';
 import IncludePastSwitch from '@src/systems/events/IncludePastSwitch';
 import { LinkButton } from '@src/components/LinkButton';
-import ManageHeader from '@src/components/manage/ManageHeader';
+import ManageHeader from '@src/systems/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 
 type SearchParams = {

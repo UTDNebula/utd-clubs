@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import EventForm from '@src/systems/events/EventForm';
-import ManageHeader from '@src/components/manage/ManageHeader';
+import ManageHeader from '@src/systems/manage/ManageHeader';
 import { api } from '@src/trpc/server';
 
 const Page = async (props: { params: Promise<{ slug: string }> }) => {

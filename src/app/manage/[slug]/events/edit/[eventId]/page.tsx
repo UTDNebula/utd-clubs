@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import EventForm from '@src/systems/events/EventForm';
-import ManageHeader from '@src/components/manage/ManageHeader';
+import ManageHeader from '@src/systems/manage/ManageHeader';
 import { getGcalEventLink } from '@src/modules/googleCalendar';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';

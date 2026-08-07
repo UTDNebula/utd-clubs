@@ -25,91 +25,87 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@nebula-library/components/Panel';
-import MembershipFormListItem from '@src/components/manage/MembershipFormListItem';
-import type { SelectClub, SelectMembershipForm } from '@src/server/db/models';
+import OfficerListItem from '@src/systems/manage/OfficerListItem';
+import type { SelectClub, SelectOfficer } from '@src/server/db/models';
 import { useTRPC } from '@src/trpc/react';
 import { useAppForm } from '@src/utils/form';
-import { editListedMembershipFormSchema } from '@src/utils/formSchemas';
+import { editListedOfficerSchema } from '@src/utils/formSchemas';
+import { setSnackbar, SnackbarPresets } from '@src/utils/snackbar';
 
-type FormData = z.infer<typeof editListedMembershipFormSchema>;
+type FormData = z.infer<typeof editListedOfficerSchema>;
 
 function typedDefaultValues(
-  listedForms: SelectMembershipForm[],
-): FormData['membershipForms'] {
-  return listedForms.map((form) => ({
-    id: form.id,
-    name: form.name,
-    url: form.url,
+  listedOfficers: SelectOfficer[],
+): FormData['officers'] {
+  return listedOfficers.map((officer) => ({
+    id: officer.id,
+    name: officer.name,
+    position: officer.position,
   }));
 }
 
-type MembershipFormWithId = FormData['membershipForms'][number] & {
-  id: string;
-};
+type OfficerWithId = FormData['officers'][number] & { id: string };
 
 function hasId(
-  membershipForm: FormData['membershipForms'][number],
-): membershipForm is MembershipFormWithId {
-  return (
-    typeof membershipForm.id === 'string' &&
-    !membershipForm.id.startsWith('new')
-  );
+  officer: FormData['officers'][number],
+): officer is OfficerWithId {
+  return typeof officer.id === 'string' && !officer.id.startsWith('new');
 }
 
-type MembershipFormProps = {
+type OfficersProps = {
   club: SelectClub;
-  listedMembershipForms: SelectMembershipForm[];
+  listedOfficers: SelectOfficer[];
 };
 
-const MembershipForms = ({
-  club,
-  listedMembershipForms,
-}: MembershipFormProps) => {
+const Officers = ({ club, listedOfficers }: OfficersProps) => {
   const api = useTRPC();
-  const editForms = useMutation(
-    api.club.edit.membershipForms.mutationOptions({}),
+  const editOfficers = useMutation(
+    api.club.edit.listedOfficers.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club listed officer'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
+      },
+    }),
   );
 
   const [defaultValues, setDefaultValues] = useState({
-    membershipForms: typedDefaultValues(listedMembershipForms),
+    officers: typedDefaultValues(listedOfficers),
   });
 
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
       // Separate created vs modified
-      const created: FormData['membershipForms'] = [];
-      const modified: MembershipFormWithId[] = [];
-      const order: NonNullable<FormData['membershipForms'][number]['id']>[] =
-        [];
+      const created: FormData['officers'] = [];
+      const modified: OfficerWithId[] = [];
+      const order: NonNullable<FormData['officers'][number]['id']>[] = [];
 
       let hasReorder = false;
 
-      value.membershipForms.forEach((form, index) => {
+      value.officers.forEach((officer, index) => {
         // Extra check for if user reorders, makes a change, then undoes reorder
-        if (
-          isReordered &&
-          form.id !== defaultValues.membershipForms[index]?.id
-        ) {
+        if (isReordered && officer.id !== defaultValues.officers[index]?.id) {
           hasReorder = true;
         }
 
-        if (form.id) order.push(form.id);
+        if (officer.id) order.push(officer.id);
 
         // If it has no ID or the ID starts with "new", it's created
-        if (!hasId(form)) {
-          created.push(form);
+        if (!hasId(officer)) {
+          created.push(officer);
           return;
         }
         // If it has an ID, check if it was actually changed
         const isDirty =
-          formApi.getFieldMeta(`membershipForms[${index}].name`)?.isDirty ||
-          formApi.getFieldMeta(`membershipForms[${index}].url`)?.isDirty;
+          formApi.getFieldMeta(`officers[${index}].name`)?.isDirty ||
+          formApi.getFieldMeta(`officers[${index}].position`)?.isDirty;
         if (isDirty) {
-          modified.push(form);
+          modified.push(officer);
         }
       });
-      const updated = await editForms.mutateAsync({
+      const updated = await editOfficers.mutateAsync({
         clubId: club.id,
         deleted: deletedIds,
         modified: modified,
@@ -118,27 +114,27 @@ const MembershipForms = ({
       });
       setDeletedIds([]);
       setIsReordered(false);
-      const newMembershipForms = typedDefaultValues(updated);
-      setDefaultValues({ membershipForms: newMembershipForms });
-      formApi.reset({ membershipForms: newMembershipForms });
+      const newOfficers = typedDefaultValues(updated);
+      setDefaultValues({ officers: newOfficers });
+      formApi.reset({ officers: newOfficers });
     },
     validators: {
-      onChange: editListedMembershipFormSchema,
+      onChange: editListedOfficerSchema,
     },
   });
 
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
 
   const removeItem = (index: number) => {
-    const current = form.getFieldValue('membershipForms')[index];
+    const current = form.getFieldValue('officers')[index];
     const id = current?.id;
     if (current && id && !id.startsWith('new')) {
       setDeletedIds((prev) => [...prev, id]);
     }
   };
 
-  const currentMembershipForms =
-    useStore(form.store, (state) => state.values.membershipForms) || [];
+  const currentOfficers =
+    useStore(form.store, (state) => state.values.officers) || [];
 
   // Flag for if user presses a reorder button
   const [isReordered, setIsReordered] = useState(false);
@@ -156,12 +152,16 @@ const MembershipForms = ({
 
     // Reorder only if moved to a new location
     if (active.id !== over?.id) {
-      form.setFieldValue('membershipForms', (forms) => {
-        const oldIndex = forms.findIndex((form) => form.id === active.id);
-        const newIndex = forms.findIndex((form) => form.id === over?.id);
+      form.setFieldValue('officers', (officers) => {
+        const oldIndex = officers.findIndex(
+          (officer) => officer.id === active.id,
+        );
+        const newIndex = officers.findIndex(
+          (officer) => officer.id === over?.id,
+        );
 
         setIsReordered(true);
-        return arrayMove(forms, oldIndex, newIndex);
+        return arrayMove(officers, oldIndex, newIndex);
       });
     }
     setActiveReorderId(null);
@@ -185,11 +185,12 @@ const MembershipForms = ({
       }}
     >
       <Panel
-        heading="Forms"
+        heading="Listed Officers"
         description={
           <>
             <p>
-              Link forms that students can fill out to join your organization.
+              People&apos;s names on this list will appear on your public
+              organization listing.
             </p>
           </>
         }
@@ -201,17 +202,17 @@ const MembershipForms = ({
           onDragEnd={handleReorderDragEnd}
         >
           <SortableContext
-            // `membershipForms.id` is non-null asserted because items will always have an ID:
+            // `officer.id` is non-null asserted because items will always have an ID:
             //   - Items from the server will have a Nano ID
             //   - New items created by the client will have a temporary ID, as seen on line 221
-            items={currentMembershipForms.map((form) => form.id!)}
+            items={currentOfficers.map((officer) => officer.id!)}
             strategy={verticalListSortingStrategy}
           >
-            <form.Field name="membershipForms">
+            <form.Field name="officers">
               {(field) => (
                 <div className="flex flex-col gap-2">
                   {field.state.value.map((value, index) => (
-                    <MembershipFormListItem
+                    <OfficerListItem
                       key={value.id}
                       index={index}
                       form={form}
@@ -225,15 +226,15 @@ const MembershipForms = ({
                     onClick={() => {
                       field.pushValue({
                         name: '',
-                        url: '',
+                        position: 'Officer',
                         // Temporary ID used for drag-and-drop sorting purposes.
                         // Will be replaced with a Nano ID by the server.
                         // This temporary ID must be detectable by `hasId()` on line 48.
-                        id: `new-${currentMembershipForms.length}`,
+                        id: `new-${currentOfficers.length}`,
                       });
                     }}
                   >
-                    Add Form
+                    Add Listed Officer
                   </Button>
                 </div>
               )}
@@ -242,18 +243,14 @@ const MembershipForms = ({
           {/* List item that sticks to the cursor */}
           <DragOverlay className="opacity-80">
             {activeReorderId ? (
-              <MembershipFormListItem
+              <OfficerListItem
                 key={activeReorderId}
                 overlayData={form
-                  .getFieldValue('membershipForms')
-                  .find(
-                    (membershipForm) => membershipForm.id === activeReorderId,
-                  )}
+                  .getFieldValue('officers')
+                  .find((officer) => officer.id === activeReorderId)}
                 index={form
-                  .getFieldValue('membershipForms')
-                  .findIndex(
-                    (membershipForm) => membershipForm.id === activeReorderId,
-                  )}
+                  .getFieldValue('officers')
+                  .findIndex((officer) => officer.id === activeReorderId)}
                 form={form}
                 removeItem={removeItem}
               />
@@ -279,4 +276,4 @@ const MembershipForms = ({
   );
 };
 
-export default MembershipForms;
+export default Officers;
