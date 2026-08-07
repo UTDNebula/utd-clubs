@@ -1,7 +1,7 @@
 import { type Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Header from '@/common/modules/navigation/header/Header';
+import Header from '@/common/modules/navigation/header';
 import SettingsForm from '@/systems/settings/SettingsForm';
 import { auth } from '@/server/auth';
 import { signInRoute } from '@/common/utils/redirect';

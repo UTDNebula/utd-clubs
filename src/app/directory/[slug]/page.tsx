@@ -4,7 +4,7 @@ import ClubBody from '@/systems/clubs/listing/ClubBody';
 import ClubEventHeader from '@/systems/clubs/listing/ClubEventHeader';
 import { ClubNotClaimed } from '@/systems/clubs/listing/ClubNotClaimed';
 import ClubTitle from '@/systems/clubs/listing/ClubTitle';
-import Header from '@/common/modules/navigation/header/Header';
+import Header from '@/common/modules/navigation/header';
 import { api } from '@/trpc/server';
 import { convertMarkdownToPlaintext } from '@/common/utils/markdown';
 

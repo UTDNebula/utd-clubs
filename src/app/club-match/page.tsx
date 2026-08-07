@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Header from '@/common/modules/navigation/header/Header';
+import Header from '@/common/modules/navigation/header';
 import { auth } from '@/server/auth';
 import { db } from '@/server/db';
 import { api } from '@/trpc/server';

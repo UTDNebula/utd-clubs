@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Badge, Drawer, IconButton } from '@mui/material';
 import { useState } from 'react';
-import type { ContentComponentColor } from '@/common/modules/navigation/header/BaseHeader';
+import type { ContentComponentColor } from '@/common/components/BaseHeader';
 import { type personalCats } from '@/common/modules/navigation/categories';
 import NavMenu from './NavMenu';
 

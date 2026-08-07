@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import OnboardingForm from '@/systems/settings/OnboardingForm';
-import Header from '@/common/modules/navigation/header/Header';
+import Header from '@/common/modules/navigation/header';
 import { auth } from '@/server/auth';
 import { api } from '@/trpc/server';
 import { signInRoute } from '@/common/utils/redirect';
