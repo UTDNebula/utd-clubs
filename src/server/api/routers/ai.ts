@@ -6,7 +6,7 @@ import {
   userMetadata,
   type ClubMatchResults,
 } from '@/server/db/schema/users';
-import { clubMatchFormSchema } from '@/common/utils/formSchemas';
+import { clubMatchFormSchema } from '@/systems/clubs/match/schema';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 const GEMINI_SERVICE_ACCOUNT = Boolean(process.env.GEMINI_SERVICE_ACCOUNT)

@@ -11,7 +11,7 @@ import { WizardRef } from '@/common/components/form/FormWizard';
 import { AppRouter } from '@/server/api/root';
 import { useTRPC } from '@/trpc/react';
 import { useAppForm } from '@/common/utils/form';
-import { createClubSchema, CreateClubSchema } from '@/common/utils/formSchemas';
+import { createClubSchema, CreateClubSchema } from './schema';
 
 const CreateClubForm = () => {
   const api = useTRPC();

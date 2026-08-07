@@ -20,7 +20,7 @@ import { SelectUserMetadata } from '@/server/db/models';
 import { ClubMatchResponses } from '@/server/db/schema/users';
 import { useTRPC } from '@/trpc/react';
 import { useAppForm } from '@/common/utils/form';
-import { clubMatchFormSchema } from '@/common/utils/formSchemas';
+import { clubMatchFormSchema } from './schema';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;
 

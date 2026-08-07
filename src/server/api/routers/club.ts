@@ -19,7 +19,7 @@ import { membershipForms } from '@/server/db/schema/membershipForms';
 import { officers as officersTable } from '@/server/db/schema/officers';
 import { userMetadataToClubs } from '@/server/db/schema/users';
 import { syncCalendar, watchCalendar } from '@/common/modules/googleCalendar/calendar';
-import { createClubSchema } from '@/common/utils/formSchemas';
+import { createClubSchema } from '@/systems/clubs/create/schema';
 import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { clubEditRouter } from './clubEdit';

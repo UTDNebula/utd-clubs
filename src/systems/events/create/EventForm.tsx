@@ -12,14 +12,11 @@ import { type SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { type RouterOutputs } from '@/trpc/shared';
 import { useAppForm } from '@/common/utils/form';
-import {
-  createEventFormSchema,
-  editEventFormSchema,
-} from '@/common/utils/formSchemas';
+import { createEventFormSchema, editEventFormSchema } from './schema';
 import { addVersionToImage } from '@/common/utils/imageCacheBust';
 import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 import { useUploadToUploadURL } from '@/common/utils/uploadImage';
-import EventCard, { EventCardSkeleton } from './EventCard';
+import EventCard, { EventCardSkeleton } from '../EventCard';
 
 type EventFormProps =
   | {
