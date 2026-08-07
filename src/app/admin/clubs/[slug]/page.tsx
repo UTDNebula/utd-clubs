@@ -6,7 +6,7 @@ import DeleteClub from '@/systems/manage/forms/DeleteClub';
 import AdminHeader from '@/systems/admin/AdminHeader';
 import ChangeClubStatus from '@/systems/admin/ChangeClubStatus';
 import ClubBody from '@/systems/clubs/listing/ClubBody';
-import ClubHeader from '@/systems/clubs/listing/ClubHeader';
+import ClubBanner from '@/systems/clubs/listing/ClubBanner';
 import ClubTitle from '@/systems/clubs/listing/ClubTitle';
 import { LinkButton } from '@/common/components/LinkButton';
 import { api } from '@/trpc/server';
@@ -62,7 +62,7 @@ export default async function Page(props: Props) {
           <DeleteClub view="admin" club={club} />
           {club.approved !== 'approved' && (
             <div className="mx-auto mb-5 flex max-w-6xl flex-col gap-y-6 p-4">
-              <ClubHeader club={club} />
+              <ClubBanner club={club} />
               <ClubTitle club={club} />
               <ClubBody club={club} />
             </div>

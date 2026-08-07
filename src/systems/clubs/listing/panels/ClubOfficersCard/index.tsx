@@ -5,7 +5,7 @@ import Panel from '@nebula-library/components/Panel';
 import { SelectOfficer } from '@/server/db/models';
 import ClubOfficer from './ClubOfficer';
 
-export default function OfficerList({
+export default function ClubOfficersCard({
   officers,
   id,
 }: {

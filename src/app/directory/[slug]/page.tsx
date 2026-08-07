@@ -1,7 +1,7 @@
 import { type Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import ClubBody from '@/systems/clubs/listing/ClubBody';
-import ClubHeader from '@/systems/clubs/listing/ClubHeader';
+import ClubBanner from '@/systems/clubs/listing/ClubBanner';
 import { ClubNotClaimed } from '@/systems/clubs/listing/ClubNotClaimed';
 import ClubTitle from '@/systems/clubs/listing/ClubTitle';
 import Header from '@/common/modules/navigation/header';
@@ -28,7 +28,7 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
     <>
       <Header />
       <main className="mx-auto mb-5 flex max-w-6xl flex-col gap-y-8 p-4">
-        <ClubHeader club={club} />
+        <ClubBanner club={club} />
         <ClubTitle club={club} />
         <ClubBody club={club} />
         {(club.updatedAt == null || club.updatedAt < oneYearAgo) && (

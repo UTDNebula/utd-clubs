@@ -6,7 +6,7 @@ import ClubDescriptionCard from './panels/ClubDescriptionCard';
 import ClubDetailsCard from './panels/ClubDetailsCard';
 import ClubMembershipFormsCard from './panels/ClubMembershipFormsCard';
 import ClubUpcomingEventsCard from './panels/ClubUpcomingEventsCard';
-import OfficerList from './panels/ClubOfficerListCard';
+import ClubOfficersCard from './panels/ClubOfficersCard';
 
 const ClubBody = async ({
   club,
@@ -42,7 +42,7 @@ const ClubBody = async ({
           lastEventDate={club.lastEventDate}
         />
         <ClubContactCard id="contact" club={club} />
-        <OfficerList id="officers" officers={club.officers} />
+        <ClubOfficersCard id="officers" officers={club.officers} />
       </div>
       <div
         id="club-content-right"

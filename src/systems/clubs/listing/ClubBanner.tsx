@@ -1,16 +1,13 @@
 import Image from 'next/image';
 import { BaseCard } from '@nebula-library/components/BaseCard';
-import type {
-  SelectContact as Contacts,
-  SelectClub,
-} from '@/server/db/models';
+import type { SelectClub } from '@/server/db/models';
 import { addVersionToImage } from '@/common/utils/imageCacheBust';
 
-type Club = SelectClub & {
-  contacts?: Contacts[];
-  tags: string[];
+type ClubBannerProps = {
+  club: Pick<SelectClub, 'bannerImage' | 'updatedAt'>;
 };
-const ClubHeader = async ({ club }: { club: Club }) => {
+
+const ClubBanner = async ({ club }: ClubBannerProps) => {
   if (!club.bannerImage) {
     return null;
   }
@@ -27,4 +24,4 @@ const ClubHeader = async ({ club }: { club: Club }) => {
   );
 };
 
-export default ClubHeader;
+export default ClubBanner;
