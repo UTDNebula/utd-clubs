@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { insertUserMetadata } from '@/server/db/models';
 import { studentClassificationEnum } from '@/server/db/schema/users';
-import { contactSchema } from '@/common/utils/contact';
 
 export const accountNameSchema = z.object({
   firstName: z.string().min(1, 'Name is required'),
@@ -98,7 +97,7 @@ export const userMetadataToAccountOnboardingSchema = z.codec(
   },
 );
 
-const tagsSchema = z
+export const tagsSchema = z
   .array(z.string())
   .min(2, 'Select at least 2 tags')
   .refine(
@@ -135,10 +134,6 @@ export const createClubSchema = z.object({
 
 export type CreateClubSchema = z.infer<typeof createClubSchema>;
 
-export const editClubContactSchema = z.object({
-  contacts: contactSchema.array(),
-});
-
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
@@ -146,7 +141,7 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/png',
   'image/svg+xml',
 ];
-const fileSchema = z
+export const fileSchema = z
   .file()
   .nullable()
   .refine(
@@ -169,120 +164,6 @@ export const schools = z
     'School of Natural Sciences and Mathematics',
   ])
   .array();
-
-export const editClubFormSchema = z.object({
-  id: z.string(),
-  name: z
-    .string()
-    .min(3, 'Name must be at least 3 characters')
-    .max(100, 'Character limit reached'),
-  alias: z
-    .string()
-    .max(100, 'Character limit reached')
-    .nullable()
-    .refine((val) => val === null || val.length === 0 || val.length >= 2, {
-      message: 'Alias must be at least 2 characters',
-    }),
-  description: z
-    .string()
-    .min(1, 'Description is required')
-    .max(5000, 'Character limit reached'),
-  tags: tagsSchema,
-  profileImage: fileSchema,
-  bannerImage: fileSchema,
-  foundingDate: z.date().nullable(),
-  clubSize: z.string(),
-  schools: schools,
-});
-
-export const editClubDetailsSchema = z.object({
-  id: z.string(),
-  name: z
-    .string()
-    .min(3, 'Name must be at least 3 characters')
-    .max(100, 'Character limit reached'),
-  alias: z
-    .string()
-    .max(100, 'Character limit reached')
-    .nullable()
-    .refine((val) => val === null || val.length === 0 || val.length >= 2, {
-      message: 'Alias must be at least 2 characters',
-    }),
-  description: z
-    .string()
-    .min(1, 'Description is required')
-    .max(5000, 'Character limit reached'),
-  tags: tagsSchema,
-  profileImage: z.url().optional(),
-  bannerImage: z.url().optional(),
-  foundingDate: z.date().nullable(),
-  clubSize: z.enum(['1-10', '10-50', '50-200', '200+']).nullable(),
-  schools: schools,
-});
-
-export const editOfficerSchema = z.object({
-  officers: z
-    .object({
-      userId: z.string(),
-      name: z.string(),
-      email: z.string(),
-      canRemove: z.boolean(),
-      canTogglePresident: z.boolean(),
-      position: z.enum(['President', 'Officer']),
-      new: z.boolean().optional(),
-    })
-    .array(),
-});
-
-export const editListedOfficerSchema = z.object({
-  officers: z
-    .object({
-      id: z.string().optional(),
-      name: z
-        .string()
-        .min(1, 'Name is required')
-        .max(100, 'Character limit reached'),
-      position: z
-        .string()
-        .min(1, 'Position is required')
-        .max(100, 'Character limit reached'),
-    })
-    .array(),
-});
-
-export const editListedMembershipFormSchema = z.object({
-  membershipForms: z
-    .object({
-      id: z.string().optional(),
-      name: z
-        .string()
-        .min(1, 'Name is required')
-        .max(100, 'Character limit reached'),
-      url: z
-        .url({
-          message:
-            'Please enter a valid URL (must start with http:// or https://)',
-        })
-        .min(1, 'URL is required'),
-    })
-    .array(),
-});
-
-export const editSlugSchema = z.object({
-  id: z.string(),
-  slug: z
-    .string()
-    .min(3, 'URL must be at least 3 characters')
-    .max(100, 'URL may be at most 100 characters')
-    .regex(
-      /^[a-z0-9].*[a-z0-9]$/,
-      'URL must begin and end with a lowercase letter or number',
-    )
-    .regex(
-      /^[a-z0-9][a-z0-9-]+[a-z0-9]$/,
-      'URL may only use lowercase letters, numbers, and dashes',
-    ),
-});
 
 const baseEventFormSchema = z.object({
   clubId: z.string(),

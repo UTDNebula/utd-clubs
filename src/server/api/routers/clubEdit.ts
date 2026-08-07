@@ -8,7 +8,8 @@ import { contacts } from '@/server/db/schema/contacts';
 import { membershipForms } from '@/server/db/schema/membershipForms';
 import { officers } from '@/server/db/schema/officers';
 import { userMetadataToClubs } from '@/server/db/schema/users';
-import { editClubDetailsSchema, editSlugSchema } from '@/common/utils/formSchemas';
+import { editClubDetailsSchema } from '@/systems/manage/forms/Details/schema';
+import { editSlugSchema } from '@/systems/manage/forms/Slug/schema';
 import { callStorageAPI } from '@/common/utils/storage';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 

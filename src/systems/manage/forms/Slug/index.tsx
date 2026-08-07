@@ -13,7 +13,7 @@ import Confirmation from '@/common/components/Confirmation';
 import type { SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { useAppForm } from '@/common/utils/form';
-import { editSlugSchema } from '@/common/utils/formSchemas';
+import { editSlugSchema } from './schema';
 import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 import useDebounce from '@/common/utils/useDebounce';
 

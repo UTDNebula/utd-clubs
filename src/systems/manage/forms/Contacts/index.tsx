@@ -29,7 +29,7 @@ import type { SelectClub, SelectContact } from '@/server/db/models';
 import { contactNames, startContacts } from '@/server/db/schema/contacts';
 import { useTRPC } from '@/trpc/react';
 import { useAppForm } from '@/common/utils/form';
-import { editClubContactSchema } from '@/common/utils/formSchemas';
+import { editClubContactSchema } from './schema';
 import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 
 type FormData = z.infer<typeof editClubContactSchema>;

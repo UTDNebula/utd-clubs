@@ -29,7 +29,7 @@ import MembershipFormListItem from './MembershipFormListItem';
 import type { SelectClub, SelectMembershipForm } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { useAppForm } from '@/common/utils/form';
-import { editListedMembershipFormSchema } from '@/common/utils/formSchemas';
+import { editListedMembershipFormSchema } from './schema';
 
 type FormData = z.infer<typeof editListedMembershipFormSchema>;
 

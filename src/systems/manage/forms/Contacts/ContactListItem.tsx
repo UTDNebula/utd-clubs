@@ -6,7 +6,7 @@ import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import type z from 'zod';
 import { contactNames } from '@/server/db/schema/contacts';
 import { withForm } from '@/common/utils/form';
-import { type editClubContactSchema } from '@/common/utils/formSchemas';
+import { type editClubContactSchema } from './schema';
 
 type FormData = z.infer<typeof editClubContactSchema>;
 

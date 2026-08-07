@@ -29,7 +29,7 @@ import OfficerListItem from './OfficerListItem';
 import type { SelectClub, SelectOfficer } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { useAppForm } from '@/common/utils/form';
-import { editListedOfficerSchema } from '@/common/utils/formSchemas';
+import { editListedOfficerSchema } from './schema';
 import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 
 type FormData = z.infer<typeof editListedOfficerSchema>;
