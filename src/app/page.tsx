@@ -3,7 +3,7 @@ import planetsDoodle from '@public/images/PlanetsDoodle.png';
 import Image from 'next/image';
 import { AllTags } from '@src/components/AllTags';
 import ClubDirectoryGrid from '@src/components/club/directory/ClubDirectoryGrid';
-import Header from '@src/components/header/Header';
+import Header from '@src/common/modules/navigation/header/Header';
 import { HomePageSearchBar } from '@src/components/searchBar/HomePageSearch';
 import { TagPill } from '@src/components/TagPill';
 import NebulaLogo from '@src/icons/NebulaLogo';

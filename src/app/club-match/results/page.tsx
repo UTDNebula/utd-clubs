@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { BaseCard } from '@nebula-library/components/BaseCard';
 import JoinButton from '@src/components/club/JoinButton';
-import Header from '@src/components/header/Header';
+import Header from '@src/common/modules/navigation/header/Header';
 import { auth } from '@src/server/auth';
 import { db } from '@src/server/db';
 import { signInRoute } from '@src/utils/redirect';

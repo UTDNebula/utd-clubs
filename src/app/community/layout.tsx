@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { ReactNode } from 'react';
 import CommunityHeader from '@src/components/community/CommunityHeader';
-import Header from '@src/components/header/Header';
+import Header from '@src/common/modules/navigation/header/Header';
 import { UTDClubsLogoCombination } from '@src/icons/UTDClubsLogo';
 import { auth } from '@src/server/auth';
 

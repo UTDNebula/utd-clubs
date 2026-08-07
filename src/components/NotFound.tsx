@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '@src/components/header/Header';
+import Header from '@src/common/modules/navigation/header/Header';
 
 const NotFound = ({ elementType }: { elementType: string }) => {
   return (

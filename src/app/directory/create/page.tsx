@@ -2,7 +2,7 @@ import Typography from '@mui/material/Typography';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Header from '@src/components/header/Header';
+import Header from '@src/common/modules/navigation/header/Header';
 import { auth } from '@src/server/auth';
 import { signInRoute } from '@src/utils/redirect';
 import CreateClubForm from './CreateClubForm';

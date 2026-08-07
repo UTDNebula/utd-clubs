@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { type ReactNode } from 'react';
-import Header from '@src/components/header/Header';
+import Header from '@src/common/modules/navigation/header/Header';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';
 import { signInRoute } from '@src/utils/redirect';

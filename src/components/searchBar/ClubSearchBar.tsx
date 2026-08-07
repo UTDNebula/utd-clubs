@@ -11,7 +11,7 @@ import {
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useBaseHeaderContext } from '@src/components/header/BaseHeader';
+import { useBaseHeaderContext } from '@src/common/modules/navigation/header/BaseHeader';
 import { useTRPC } from '@src/trpc/react';
 import useDebounce from '@src/utils/useDebounce';
 

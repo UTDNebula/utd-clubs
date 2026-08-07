@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import ClubCard from '@src/components/club/ClubCard';
-import Header from '@src/components/header/Header';
+import Header from '@src/common/modules/navigation/header/Header';
 import { LinkButton } from '@src/components/LinkButton';
 import { auth } from '@src/server/auth';
 import { api } from '@src/trpc/server';

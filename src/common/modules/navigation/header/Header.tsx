@@ -1,7 +1,7 @@
 'use server';
 
-import ClubMatchButton from '@src/components/header/ClubMatchButton';
-import Sidebar from '@src/components/nav/Sidebar';
+import ClubMatchButton from '@src/common/modules/navigation/header/ClubMatchButton';
+import Sidebar from '@src/common/modules/navigation/drawer/Sidebar';
 import { ClubSearchBar } from '@src/components/searchBar/ClubSearchBar';
 import { EventSearchBar } from '@src/components/searchBar/EventSearchBar';
 import UTDClubsLogoStandalone from '@src/icons/UTDClubsLogo';

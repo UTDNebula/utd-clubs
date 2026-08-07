@@ -9,7 +9,7 @@ import { type Metadata } from 'next';
 import ClubEventHeader from '@src/components/club/listing/ClubEventHeader';
 import EventBody from '@src/components/events/listing/EventBody';
 import EventTitle from '@src/components/events/listing/EventTitle';
-import { EventHeader } from '@src/components/header/Header';
+import { EventHeader } from '@src/common/modules/navigation/header/Header';
 import { api } from '@src/trpc/server';
 import { convertMarkdownToPlaintext } from '@src/utils/markdown';
 

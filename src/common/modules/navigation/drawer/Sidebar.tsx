@@ -1,6 +1,6 @@
 'use server';
 
-import type { ContentComponentColor } from '@src/components/header/BaseHeader';
+import type { ContentComponentColor } from '@src/common/modules/navigation/header/BaseHeader';
 import { api } from '@src/trpc/server';
 import NewSidebar from './Slide';
 
