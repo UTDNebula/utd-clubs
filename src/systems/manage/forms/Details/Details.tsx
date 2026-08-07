@@ -12,7 +12,7 @@ import FormImage from '@/common/components/form/FormImage';
 import { SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { useAppForm } from '@/common/utils/form';
-import { editClubFormSchema } from './schema';
+import { editClubDetailsFormSchema } from './schema';
 import { schools } from '@/common/utils/schemas';
 import { addVersionToImage } from '@/common/utils/imageCacheBust';
 import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
@@ -130,7 +130,7 @@ const Details = ({ club }: DetailsProps) => {
       }
     },
     validators: {
-      onChange: editClubFormSchema,
+      onChange: editClubDetailsFormSchema,
     },
   });
 

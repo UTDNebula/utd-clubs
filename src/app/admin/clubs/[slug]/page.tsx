@@ -1,8 +1,8 @@
 import EventIcon from '@mui/icons-material/Event';
 import PreviewIcon from '@mui/icons-material/Preview';
 import { notFound } from 'next/navigation';
-import Collaborators from '@/systems/manage/forms/Collaborators';
-import DeleteClub from '@/systems/manage/forms/DeleteClub';
+import Collaborators from '@/systems/manage/forms/Collaborators/Collaborators';
+import DeleteClub from '@/systems/manage/forms/DeleteClub/DeleteClub';
 import AdminHeader from '@/systems/admin/AdminHeader';
 import ChangeClubStatus from '@/systems/admin/ChangeClubStatus';
 import ClubBody from '@/systems/clubs/listing/ClubBody';
