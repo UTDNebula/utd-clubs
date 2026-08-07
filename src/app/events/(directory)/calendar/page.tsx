@@ -1,7 +1,7 @@
 import { Alert } from '@mui/material';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import EventCalendar from '@src/components/community/EventCalendar';
+import EventCalendar from '@src/systems/dashboard/EventCalendar';
 import { auth } from '@src/server/auth';
 import { signInRoute } from '@src/utils/redirect';
 

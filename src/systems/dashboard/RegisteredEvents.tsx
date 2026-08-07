@@ -1,7 +1,7 @@
 'use server';
 
 import { TZDateMini } from '@date-fns/tz';
-import NotFollowingOrRegistered from '@src/components/community/NotFollowingOrRegistered';
+import NotFollowingOrRegistered from './NotFollowingOrRegistered';
 import EventCard from '@src/systems/events/EventCard';
 import { api } from '@src/trpc/server';
 

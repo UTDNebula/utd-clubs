@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import EventCalendar from '@src/components/community/EventCalendar';
+import EventCalendar from '@src/systems/dashboard/EventCalendar';
 
 export const metadata: Metadata = {
   title: 'My Event Calendar | My Community',
