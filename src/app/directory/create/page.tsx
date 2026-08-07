@@ -1,3 +1,4 @@
+import Typography from '@mui/material/Typography';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -28,7 +29,15 @@ export default async function Page() {
     <>
       <Header />
       <main className="flex w-full flex-col items-center p-4">
-        <CreateClubForm />
+        <div className="flex w-full max-w-4xl flex-col items-center gap-4">
+          <Typography
+            variant="h1"
+            className="font-display text-center text-3xl font-bold"
+          >
+            Create New Organization
+          </Typography>
+          <CreateClubForm />
+        </div>
       </main>
     </>
   );

@@ -281,7 +281,7 @@ export const clubRouter = createTRPCRouter({
     .input(createClubSchema)
     .mutation(async ({ input, ctx }) => {
       //Create unique slug based on name
-      const baseSlug = input.name
+      const baseSlug = input.name.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
@@ -299,9 +299,10 @@ export const clubRouter = createTRPCRouter({
       const res = await ctx.db
         .insert(club)
         .values({
-          name: input.name,
-          description: input.description,
-          tags: input.tags,
+          name: input.name.name,
+          alias: input.name.alias,
+          description: input.meta.description,
+          tags: input.meta.tags,
           updatedAt: new Date(),
           slug,
         })

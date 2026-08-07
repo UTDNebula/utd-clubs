@@ -5,6 +5,7 @@ import PersonIconOutlined from '@mui/icons-material/PersonOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useMutation } from '@tanstack/react-query';
+import { add } from 'date-fns';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import { majors, minors } from '@src/constants/utdDegrees';
@@ -95,12 +96,21 @@ export default function UserInfo({ user }: UserInfoProps) {
             <div className="flex flex-wrap gap-6">
               <form.AppField name="firstName">
                 {(field) => (
-                  <field.TextField label="First Name" className="grow" />
+                  <field.TextField
+                    label="First Name"
+                    className="grow"
+                    required
+                    autoComplete="given-name"
+                  />
                 )}
               </form.AppField>
               <form.AppField name="lastName">
                 {(field) => (
-                  <field.TextField label="Last Name" className="grow" />
+                  <field.TextField
+                    label="Last Name"
+                    className="grow"
+                    autoComplete="family-name"
+                  />
                 )}
               </form.AppField>
             </div>
@@ -118,6 +128,7 @@ export default function UserInfo({ user }: UserInfoProps) {
                       label="Major"
                       options={majors}
                       className="grow"
+                      required
                     />
                   )}
                 </form.AppField>
@@ -138,40 +149,76 @@ export default function UserInfo({ user }: UserInfoProps) {
                       label="Classification"
                       options={studentClassificationEnum.enumValues}
                       className="grow"
+                      required
                     />
                   )}
                 </form.AppField>
-                <form.AppField name="graduationDate">
-                  {(field) => {
+                <form.Subscribe
+                  selector={(state) => state.values.studentClassification}
+                >
+                  {(studentClassification) => {
+                    if (
+                      studentClassification &&
+                      ['Faculty', 'Staff'].includes(studentClassification)
+                    )
+                      return <div className="w-64 grow-1" />;
                     return (
-                      <DatePicker
-                        onChange={(value) => {
-                          field.handleChange(value);
+                      <form.AppField name="graduationDate">
+                        {(field) => {
+                          return (
+                            <DatePicker
+                              onChange={(value) => {
+                                const selectedValue = value as Date;
+
+                                field.handleChange(selectedValue);
+                                if (selectedValue < new Date()) {
+                                  form.setFieldValue(
+                                    'studentClassification',
+                                    'Alum',
+                                  );
+                                } else if (
+                                  selectedValue > new Date() &&
+                                  form.getFieldValue(
+                                    'studentClassification',
+                                  ) === 'Alum'
+                                ) {
+                                  form.setFieldValue(
+                                    'studentClassification',
+                                    'Student',
+                                  );
+                                }
+                              }}
+                              value={field.state.value ?? null}
+                              label="Graduation Date"
+                              className="w-64 grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-800"
+                              slotProps={{
+                                actionBar: {
+                                  actions: ['accept'],
+                                },
+                                textField: {
+                                  size: 'small',
+                                  error: !field.state.meta.isValid,
+                                  helperText: !field.state.meta.isValid
+                                    ? field.state.meta.errors
+                                        .map((err) => err?.message)
+                                        .join('. ') + '.'
+                                    : undefined,
+                                  required: true,
+                                },
+                              }}
+                              timezone="UTC"
+                              views={['year', 'month']}
+                              minDate={new Date(1973, 0, 1)} // Earliest UTD graduating class
+                              maxDate={add(new Date(), { years: 9 })} // Divisible by the 3 years per row
+                              yearsPerRow={3}
+                              openTo="year"
+                            />
+                          );
                         }}
-                        value={field.state.value}
-                        label="Graduation Date"
-                        className="w-64 grow"
-                        slotProps={{
-                          actionBar: {
-                            actions: ['accept'],
-                          },
-                          textField: {
-                            size: 'small',
-                            error: !field.state.meta.isValid,
-                            helperText: !field.state.meta.isValid
-                              ? field.state.meta.errors
-                                  .map((err) => err?.message)
-                                  .join('. ') + '.'
-                              : undefined,
-                          },
-                        }}
-                        timezone="UTC"
-                        views={['year', 'month']}
-                        openTo="year"
-                      />
+                      </form.AppField>
                     );
                   }}
-                </form.AppField>
+                </form.Subscribe>
               </div>
             </div>
           </form.FieldSet>
@@ -188,6 +235,8 @@ export default function UserInfo({ user }: UserInfoProps) {
                       label="UTD Email"
                       placeholder="abc123456@utdallas.edu"
                       className="w-full"
+                      required
+                      autoComplete="email"
                     />
                   </div>
                 )}

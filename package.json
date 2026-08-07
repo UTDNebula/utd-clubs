@@ -38,8 +38,8 @@
     "@syncfusion/ej2-react-schedule": "^33.2.4",
     "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/react-devtools": "^0.10.5",
-    "@tanstack/react-form": "^1.32.0",
-    "@tanstack/react-form-devtools": "^0.2.27",
+    "@tanstack/react-form": "^1.33.2",
+    "@tanstack/react-form-devtools": "^0.2.31",
     "@tanstack/react-query": "^5.100.13",
     "@tanstack/react-query-devtools": "^5.100.13",
     "@tanstack/react-table": "^8.21.3",
@@ -56,7 +56,8 @@
     "framer-motion": "^12.40.0",
     "google-auth-library": "^10.6.2",
     "googleapis": "^173.0.0",
-    "next": "^16.2.6",
+    "nebula-library": "file:src/nebula-library",
+    "next": "^16.2.7",
     "postgres": "^3.4.9",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
@@ -70,8 +71,7 @@
     "superjson": "^2.2.6",
     "ws": "^8.21.0",
     "zod": "^4.4.3",
-    "zustand": "^5.0.13",
-    "nebula-library": "file:src/nebula-library"
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",

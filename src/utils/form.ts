@@ -8,6 +8,7 @@ import FormFieldSet from '@src/components/form/FormFieldSet';
 import FormQuestion from '@src/components/form/FormQuestion';
 import FormSelect from '@src/components/form/FormSelect';
 import FormTextField from '@src/components/form/FormTextField';
+import { FormWizard, FormWizardStep } from '@src/components/form/FormWizard';
 
 // export useFieldContext for use in your custom components
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
@@ -16,7 +17,6 @@ export const { fieldContext, useFieldContext, formContext, useFormContext } =
 export const { useAppForm, withForm } = createFormHook({
   fieldContext,
   formContext,
-  // We'll learn more about these options later
   fieldComponents: {
     TextField: FormTextField,
     Select: FormSelect,
@@ -27,5 +27,7 @@ export const { useAppForm, withForm } = createFormHook({
     SubmitButton: FormSubmitButton,
     FieldSet: FormFieldSet,
     Question: FormQuestion,
+    Wizard: FormWizard,
+    WizardStep: FormWizardStep,
   },
 });
