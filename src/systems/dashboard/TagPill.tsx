@@ -2,7 +2,7 @@
 
 import { Tooltip } from '@mui/material';
 import { useSearchStore } from '@src/systems/dashboard/SearchStoreProvider';
-import { TagChip } from '@src/common/components/common/TagChip';
+import { TagChip } from '@src/common/components/TagChip';
 
 export const TagPill = ({
   name,

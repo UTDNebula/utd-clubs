@@ -3,7 +3,7 @@
 import SchoolIcon from '@mui/icons-material/School';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { TagChip } from '@src/common/components/common/TagChip';
+import { TagChip } from '@src/common/components/TagChip';
 
 const UTD_SCHOOLS = [
   'Harry W. Bass Jr. School of Arts, Humanities, and Technology',

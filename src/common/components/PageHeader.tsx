@@ -10,7 +10,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ReactElement, ReactNode, SyntheticEvent, useState } from 'react';
-import BackButton from '../BackButton';
+import BackButton from './BackButton';
 
 export type PageHeaderTab = {
   label: string;
