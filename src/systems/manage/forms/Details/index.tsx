@@ -13,7 +13,7 @@ import { SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { useAppForm } from '@/common/utils/form';
 import { editClubFormSchema } from './schema';
-import { schools } from '@/common/utils/formSchemas';
+import { schools } from '@/common/utils/schemas';
 import { addVersionToImage } from '@/common/utils/imageCacheBust';
 import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 import { useUploadToUploadURL } from '@/common/utils/uploadImage';

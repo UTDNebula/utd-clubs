@@ -1,4 +1,4 @@
-import { tagsSchema, fileSchema, schools } from '@/common/utils/formSchemas';
+import { tagsSchema, fileSchema, schools } from '@/common/utils/schemas';
 import { z } from 'zod';
 
 export const editClubFormSchema = z.object({

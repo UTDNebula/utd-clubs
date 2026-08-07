@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { insertUserMetadata } from '@/server/db/models';
 import { studentClassificationEnum } from '@/server/db/schema/users';
+import { fileSchema, tagsSchema } from './schemas';
 
 export const accountNameSchema = z.object({
   firstName: z.string().min(1, 'Name is required'),
@@ -97,18 +98,6 @@ export const userMetadataToAccountOnboardingSchema = z.codec(
   },
 );
 
-export const tagsSchema = z
-  .array(z.string())
-  .min(2, 'Select at least 2 tags')
-  .refine(
-    (tags) => tags.every((tag) => tag.length <= 100),
-    'Character limit reached',
-  )
-  .refine(
-    (tags) => tags.every((tag) => !tag.includes(',')),
-    'Tags cannot contain commas',
-  );
-
 export const createClubSchema = z.object({
   name: z.object({
     name: z
@@ -133,37 +122,6 @@ export const createClubSchema = z.object({
 });
 
 export type CreateClubSchema = z.infer<typeof createClubSchema>;
-
-export const MAX_FILE_SIZE = 5 * 1024 * 1024;
-export const ACCEPTED_IMAGE_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/svg+xml',
-];
-export const fileSchema = z
-  .file()
-  .nullable()
-  .refine(
-    (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
-    'Only JPEG, PNG, and SVG formats are supported',
-  )
-  .refine(
-    (file) => !file || file.size <= MAX_FILE_SIZE,
-    'Max image size is 5MB',
-  );
-
-export const schools = z
-  .enum([
-    'Harry W. Bass Jr. School of Arts, Humanities, and Technology',
-    'School of Behavioral and Brain Sciences',
-    'School of Economic, Political and Policy Sciences',
-    'Erik Jonsson School of Engineering and Computer Science',
-    'School of Interdisciplinary Studies',
-    'Naveen Jindal School of Management',
-    'School of Natural Sciences and Mathematics',
-  ])
-  .array();
 
 const baseEventFormSchema = z.object({
   clubId: z.string(),
