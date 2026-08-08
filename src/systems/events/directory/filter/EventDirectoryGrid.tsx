@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import EventCard, { EventCardVariants } from '@/systems/events/EventCard';
 import { useTRPC } from '@/trpc/react';
 import { RouterOutputs } from '@/trpc/shared';
-import { EventFiltersSchema } from '@/systems/events/directory/filter/schema';
+import { EventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
 import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 import useDebounce from '@/common/utils/useDebounce';
 import useStable from '@/common/utils/useStable';

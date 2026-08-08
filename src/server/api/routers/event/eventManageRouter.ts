@@ -6,7 +6,7 @@ import { stopWatching } from '@/common/modules/googleCalendar/calendar';
 import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
 import { eventIdSchema } from '../baseSchemas';
-import { createSchema, disableSyncSchema, editSchema } from './schemas';
+import { createSchema, disableSyncSchema, editSchema } from './inputSchemas';
 
 const eventManageRouter = createTRPCRouter({
   create: authedProcedure

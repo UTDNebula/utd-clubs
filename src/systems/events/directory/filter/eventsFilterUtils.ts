@@ -5,7 +5,7 @@ import {
   splitArrayFields,
   eventParamsDefaults,
   SplitArrayFields,
-} from './schema';
+} from './eventsFilterSchema';
 import { createParamSetter } from '@/common/utils/searchParams';
 import { PanelProps } from '@nebula-library/components/Panel';
 

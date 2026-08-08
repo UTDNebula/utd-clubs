@@ -32,7 +32,7 @@ import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@/server/db/schema/users';
-import { temporalDeixisCustomDateSentinelValue } from '@/systems/events/directory/filter/schema';
+import { temporalDeixisCustomDateSentinelValue } from '@/systems/events/directory/filter/eventsFilterSchema';
 import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
 import {
   byClubIdSchema,
@@ -42,7 +42,7 @@ import {
   countSchema,
   findByDateSchema,
   findByFilterSchema,
-} from './schemas';
+} from './inputSchemas';
 import { eventIdSchema } from '../baseSchemas';
 
 const eventPublicRouter = createTRPCRouter({

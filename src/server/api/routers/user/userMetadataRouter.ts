@@ -14,7 +14,7 @@ import {
   authedProcedure,
   publicProcedure,
 } from '@/server/api/trpc';
-import { updateByIdSchema } from './schemas';
+import { updateByIdSchema } from './inputSchemas';
 import { userIdSchema } from '../baseSchemas';
 
 const userMetadataRouter = createTRPCRouter({

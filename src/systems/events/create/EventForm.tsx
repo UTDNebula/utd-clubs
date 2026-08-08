@@ -12,7 +12,7 @@ import { type SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { type RouterOutputs } from '@/trpc/shared';
 import { useAppForm } from '@/common/utils/form';
-import { createEventFormSchema, editEventFormSchema } from './schema';
+import { createEventFormSchema, editEventFormSchema } from './createEventSchema';
 import { addVersionToImage } from '@/common/utils/imageCacheBust';
 import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 import { useUploadToUploadURL } from '@/common/utils/uploadImage';

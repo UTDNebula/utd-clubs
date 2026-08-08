@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { eventFiltersSchema } from '@/systems/events/directory/filter/schema';
+import { eventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
 import { clubIdSchema } from '../baseSchemas';
 import {
   createEventSchema,
   editEventSchema,
-} from '@/systems/events/create/schema';
+} from '@/systems/events/create/createEventSchema';
 import { dateSchema } from '@/common/utils/schemas';
 
 ////////////////////////////////////////////////////////////////////////////////

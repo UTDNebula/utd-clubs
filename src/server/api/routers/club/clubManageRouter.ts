@@ -18,7 +18,7 @@ import {
   createSchema,
   editDataSchema,
   editSlugSchema,
-} from './schemas';
+} from './inputSchemas';
 import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
 import {
   syncCalendar,

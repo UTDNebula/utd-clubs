@@ -17,7 +17,7 @@ import {
   getByRangeSchema,
   eventsSortSchema,
   joinedClubEventsSchema,
-} from './schemas';
+} from './inputSchemas';
 
 const userEventsRouter = createTRPCRouter({
   getRegisteredEventsByRange: authedProcedure

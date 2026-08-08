@@ -7,7 +7,7 @@ import {
 } from '@/server/db/schema/users';
 import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
 import { ai } from '@/common/utils/ai';
-import { clubMatchSchema } from './schemas';
+import { clubMatchSchema } from './inputSchemas';
 
 const aiRouter = createTRPCRouter({
   clubMatch: authedProcedure

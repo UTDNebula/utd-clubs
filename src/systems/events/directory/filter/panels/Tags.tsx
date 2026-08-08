@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import ClubTagAutocomplete from '@/systems/clubs/ClubTagAutocomplete';
-import { EventFiltersSchema } from '@/systems/events/directory/filter/schema';
-import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
+import { EventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
+import { FilterPanelProps, panelProps, setEventsParams } from '../eventsFilterUtils';
 
 export type TagsPanelFields = Pick<EventFiltersSchema, 'tags'>;
 

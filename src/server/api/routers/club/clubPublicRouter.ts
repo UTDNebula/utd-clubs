@@ -8,7 +8,7 @@ import {
   authedProcedure,
   publicProcedure,
 } from '@/server/api/trpc';
-import { byNameSchema, searchTagSchema, searchSchema } from './schemas';
+import { byNameSchema, searchTagSchema, searchSchema } from './inputSchemas';
 import { clubIdSchema, clubSlugSchema } from '../baseSchemas';
 
 const clubPublicRouter = createTRPCRouter({

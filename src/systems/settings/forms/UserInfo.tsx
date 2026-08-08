@@ -13,7 +13,7 @@ import { SelectUserMetadataWithClubs } from '@/server/db/models';
 import { studentClassificationEnum } from '@/server/db/schema/users';
 import { useTRPC } from '@/trpc/react';
 import { useAppForm } from '@/common/utils/form';
-import { AccountSettingsSchema, accountSettingsSchema } from '../schema';
+import { AccountSettingsSchema, accountSettingsSchema } from '../settingsSchema';
 import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 
 type UserInfoProps = {

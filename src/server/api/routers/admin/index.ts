@@ -8,8 +8,8 @@ import {
 } from '@/server/db/schema/users';
 import { callStorageAPI } from '@/common/utils/storage';
 import { adminProcedure, createTRPCRouter } from '@/server/api/trpc';
-import { editCollaboratorSchema } from '../club/schemas';
-import { tagReplaceSchema, changeClubStatusSchema } from './schemas';
+import { editCollaboratorSchema } from '../club/inputSchemas';
+import { tagReplaceSchema, changeClubStatusSchema } from './inputSchemas';
 import { clubIdSchema, clubSlugSchema, eventIdSchema } from '../baseSchemas';
 
 const adminRouter = createTRPCRouter({

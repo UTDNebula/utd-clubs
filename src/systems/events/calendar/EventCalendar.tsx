@@ -31,7 +31,7 @@ import {
   getRangeForView,
   type CalendarRange,
 } from '@/common/utils/calendarRange';
-import { calendarParamsSchema, type CalendarParamsSchema } from './schema';
+import { calendarParamsSchema, type CalendarParamsSchema } from './eventCalendarSchema';
 import { createParamSetter } from '@/common/utils/searchParams';
 
 type RegisteredEvent =

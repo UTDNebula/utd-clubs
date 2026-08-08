@@ -16,7 +16,7 @@ import {
   accountOnboardingSchema,
   AccountOnboardingSchema,
   userMetadataToAccountOnboardingSchema,
-} from './schema';
+} from './settingsSchema';
 
 type OnboardingFormProps = {
   userMetadata?: SelectUserMetadataWithClubs;
