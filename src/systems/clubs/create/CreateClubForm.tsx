@@ -15,7 +15,7 @@ import { createClubSchema, CreateClubSchema } from './schema';
 
 const CreateClubForm = () => {
   const api = useTRPC();
-  const createClub = useMutation(api.club.create.mutationOptions({}));
+  const createClub = useMutation(api.club.edit.create.mutationOptions({}));
   const router = useRouter();
 
   const [slug, setSlug] = useState('');

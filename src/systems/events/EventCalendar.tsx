@@ -35,7 +35,7 @@ import {
 import { createParamSetter } from '@/common/utils/searchParams';
 
 type RegisteredEvent =
-  RouterOutputs['userMetadata']['getRegisteredEventsByRange'][number];
+  RouterOutputs['event']['getRegisteredEventsByRange'][number];
 
 const SCHEDULE_FIELDS = {
   id: 'Id',
@@ -75,7 +75,7 @@ const EventCalendar = () => {
   const router = useRouter();
 
   const { data: events = [], isFetching } = useQuery(
-    api.userMetadata.getRegisteredEventsByRange.queryOptions(range, {
+    api.event.getRegisteredEventsByRange.queryOptions(range, {
       staleTime: 30_000,
       refetchOnWindowFocus: false,
     }),

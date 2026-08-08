@@ -44,7 +44,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const syncEvents = useMutation(
-    trpc.club.eventSync.mutationOptions({
+    trpc.club.edit.eventSync.mutationOptions({
       onSuccess: (result) => {
         setIsRefreshing(false);
         // Check for the partial success flag
