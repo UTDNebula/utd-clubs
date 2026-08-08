@@ -4,7 +4,7 @@ import Collapse from '@mui/material/Collapse';
 import Pagination from '@mui/material/Pagination';
 import { useSearchParams } from 'next/navigation';
 import { ChangeEvent, useEffect, useState } from 'react';
-import EventDirectorySearchBar from '@/systems/events/EventDirectorySearchBar';
+import EventDirectorySearchBar from '@/systems/events/directory/filter/EventDirectorySearchBar';
 import { RouterOutputs } from '@/trpc/shared';
 import { eventParamsToFilters } from './filter/schema';
 import { listSelectedEventFilters, setEventsParams } from './filter/utils';
@@ -14,7 +14,7 @@ import EventDirectoryGrid from './filter/EventDirectoryGrid';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
 import EventsViewOptionsBar from './filter/EventsViewOptionsBar';
-import { useEventDirectoryStore } from './store';
+import { useEventDirectoryStore } from './eventDirectoryStore';
 
 type EventsBodyProps = {
   initialQueryData?: RouterOutputs['event']['findByFilters'];

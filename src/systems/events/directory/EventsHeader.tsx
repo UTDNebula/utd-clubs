@@ -10,7 +10,7 @@
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import SearchIcon from '@mui/icons-material/Search';
 import PageHeader from '@/common/components/PageHeader';
-import { useEventDirectoryStore } from './store';
+import { useEventDirectoryStore } from './eventDirectoryStore';
 
 type EventsTitleProps = {
   selectedCount?: number;

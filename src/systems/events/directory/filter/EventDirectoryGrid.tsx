@@ -14,7 +14,7 @@ import { EventFiltersSchema } from '@/systems/events/directory/filter/schema';
 import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
 import useDebounce from '@/common/utils/useDebounce';
 import useStable from '@/common/utils/useStable';
-import { useEventDirectoryStore } from '../store';
+import { useEventDirectoryStore } from '../eventDirectoryStore';
 
 type EventDirectoryGridProps = {
   filters: EventFiltersSchema;
