@@ -3,10 +3,10 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import SortIcon from '@mui/icons-material/Sort';
 import { memo } from 'react';
 import { EventCardVariants } from '@/systems/events/EventCard';
-import { EventFiltersSchema, sortEnum } from '@/systems/events/directory/schema';
+import { EventFiltersSchema, sortEnum } from '@/systems/events/directory/filter/schema';
 import CompactPagination from '@/common/components/filter/CompactPagination';
 import ViewOption, { ViewOptionItem } from '@/common/components/filter/ViewOptionItem';
-import { setEventsParams } from './utils';
+import { setEventsParams } from '../store';
 
 type EventsViewOptionsBarProps = {
   filters: EventFiltersSchema;

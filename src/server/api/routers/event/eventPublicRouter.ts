@@ -32,7 +32,7 @@ import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@/server/db/schema/users';
-import { temporalDeixisCustomDateSentinelValue } from '@/systems/events/directory/schema';
+import { temporalDeixisCustomDateSentinelValue } from '@/systems/events/directory/filter/schema';
 import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
 import {
   byClubIdSchema,

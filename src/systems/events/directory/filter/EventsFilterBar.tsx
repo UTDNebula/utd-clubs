@@ -16,15 +16,15 @@ import {
   eventLocationFilterEnum,
   eventLocationStrings,
   temporalDeixisStrings,
-} from '@/systems/events/directory/schema';
+} from '@/systems/events/directory/filter/schema';
 import {
   filterFieldToParam,
   SelectedEventFiltersList,
   splitArrayField,
-} from '@/systems/events/directory/utils';
+} from '@/systems/events/directory/filter/utilsTemp';
 import FilterChip from '@/common/components/filter/FilterChip';
 import EventsFilterPanels from './EventsFilterPanels';
-import { setEventsParams } from './utils';
+import { setEventsParams } from '../store';
 
 const hiddenFields: (keyof EventFiltersSchema)[] = [
   'dateStart',

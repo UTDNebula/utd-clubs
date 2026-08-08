@@ -6,10 +6,10 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import { authClient } from '@/common/modules/auth/auth-client';
-import { EventFiltersSchema } from '@/systems/events/directory/schema';
+import { EventFiltersSchema } from '@/systems/events/directory/filter/schema';
 import { openLoginModal } from '@/common/modules/loginModal';
 import { closeSnackbar, setSnackbar } from '@/common/modules/snackbar';
-import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
+import { FilterPanelProps, panelProps, setEventsParams } from '../../store';
 
 const eventsFiltersSnackbarId = 'eventsFilters';
 

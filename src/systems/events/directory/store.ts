@@ -1,7 +1,7 @@
 import { FetchStatus } from '@tanstack/react-query';
 import { create } from 'zustand';
 import { PanelProps } from '@nebula-library/components/Panel';
-import { EventParamsSchema } from '@/systems/events/directory/schema';
+import { EventParamsSchema } from '@/systems/events/directory/filter/schema';
 import { createParamSetter } from '@/common/utils/searchParams';
 
 type EventDirectoryStoreState = {

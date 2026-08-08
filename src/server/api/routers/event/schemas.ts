@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { eventFiltersSchema } from '@/systems/events/directory/schema';
+import { eventFiltersSchema } from '@/systems/events/directory/filter/schema';
 import { clubIdSchema } from '../baseSchemas';
 import {
   createEventSchema,
