@@ -21,8 +21,8 @@ import { userMetadataToClubs } from '@/server/db/schema/users';
 import { syncCalendar, watchCalendar } from '@/common/modules/googleCalendar/calendar';
 import { createClubSchema } from '@/systems/clubs/create/schema';
 import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '../trpc';
-import { clubEditRouter } from './clubEdit';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
+import { clubEditRouter } from './manage';
 
 const byNameSchema = z.object({
   name: z.string().default(''),

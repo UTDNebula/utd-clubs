@@ -47,8 +47,8 @@ import {
   editEventSchema,
 } from '@/systems/events/create/schema';
 import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '../trpc';
-import { requireMemberRole } from '../utils';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
+import { requireMemberRole } from '../../utils';
 
 const byClubIdSchema = z.object({
   clubId: z.string().default(''),

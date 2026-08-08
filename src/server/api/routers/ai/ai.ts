@@ -7,7 +7,7 @@ import {
   type ClubMatchResults,
 } from '@/server/db/schema/users';
 import { clubMatchFormSchema } from '@/systems/clubs/match/schema';
-import { createTRPCRouter, authedProcedure } from '../trpc';
+import { createTRPCRouter, authedProcedure } from '../../trpc';
 
 const GEMINI_SERVICE_ACCOUNT = Boolean(process.env.GEMINI_SERVICE_ACCOUNT)
   ? (JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT ?? '') as {

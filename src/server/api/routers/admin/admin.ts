@@ -8,8 +8,8 @@ import {
   userMetadataToEvents,
 } from '@/server/db/schema/users';
 import { callStorageAPI } from '@/common/utils/storage';
-import { adminProcedure, createTRPCRouter } from '../trpc';
-import { editCollaboratorSchema } from './clubEdit';
+import { adminProcedure, createTRPCRouter } from '../../trpc';
+import { editCollaboratorSchema } from '../club/manage';
 
 const tagReplaceSchema = z.object({
   oldTag: z.string(),

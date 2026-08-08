@@ -4,7 +4,7 @@ import { TRPCClientErrorLike } from '@trpc/client';
 import { createContext } from 'react';
 import z from 'zod';
 import { AppRouter } from '@/server/api/root';
-import { removeMembersSchema } from '@/server/api/routers/clubEdit';
+import { removeMembersSchema } from '@/server/api/routers/club/manage';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@/server/db/models';
 import useMemberListDeletionState from './useMemberListDeletionState';
 import { MemberListAbilities } from './utils';

@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { callStorageAPI, getUploadURL } from '@/common/utils/storage';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
 
 const getDeleteSchema = z.object({
   objectId: z.string(),

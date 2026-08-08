@@ -4,7 +4,7 @@ import { aiRouter } from './routers/ai';
 import { clubRouter } from './routers/club';
 import { eventRouter } from './routers/event';
 import { storageRouter } from './routers/storage';
-import { userMetadataRouter } from './routers/userMetadata';
+import { userMetadataRouter } from './routers/user';
 
 /**
  * This is the primary router for your server.

@@ -14,7 +14,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import z from 'zod';
 import Confirmation from '@/common/components/Confirmation';
 import { AppRouter } from '@/server/api/root';
-import { removeMembersSchema } from '@/server/api/routers/clubEdit';
+import { removeMembersSchema } from '@/server/api/routers/club/manage';
 import {
   SelectClub,
   SelectUserMetadataToClubsWithUserMetadataWithUser,

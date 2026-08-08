@@ -16,7 +16,7 @@ import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@/server/db/schema/users';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
 
 const byIdSchema = z.object({ id: z.string() });
 
