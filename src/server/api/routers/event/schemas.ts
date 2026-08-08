@@ -44,20 +44,3 @@ export const byNameSchema = z.object({
   name: z.string().default(''),
   sortByDate: z.boolean().default(false),
 });
-
-export const eventsSortSchema = z.object({
-  currentTime: z.optional(z.date()),
-  sortByDate: z.boolean().default(false),
-});
-
-export const joinedClubEventsSchema = z.object({
-  currentTime: z.optional(z.date()),
-  sortByDate: z.boolean().default(false),
-  page: z.number().int().positive().optional(),
-  pageSize: z.number().int().positive().optional(),
-});
-
-export const getByRangeSchema = z.object({
-  startDate: z.string(),
-  endDate: z.string(),
-});

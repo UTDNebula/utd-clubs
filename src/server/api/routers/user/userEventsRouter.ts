@@ -11,13 +11,13 @@ import {
   authedProcedure,
   publicProcedure,
 } from '@/server/api/trpc';
-import {
-  eventsSortSchema,
-  getByRangeSchema,
-  joinedClubEventsSchema,
-} from '../event/schemas';
 import { events } from '@/server/db/schema/events';
 import { eventIdSchema } from '../baseSchemas';
+import {
+  getByRangeSchema,
+  eventsSortSchema,
+  joinedClubEventsSchema,
+} from './schemas';
 
 const userEventsRouter = createTRPCRouter({
   getRegisteredEventsByRange: authedProcedure
