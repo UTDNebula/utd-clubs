@@ -6,10 +6,8 @@ import { useSearchParams } from 'next/navigation';
 import { ChangeEvent, useEffect, useState } from 'react';
 import EventDirectorySearchBar from '@/systems/events/EventDirectorySearchBar';
 import { RouterOutputs } from '@/trpc/shared';
-import {
-  eventParamsToFilters,
-  listSelectedEventFilters,
-} from '@/systems/events/directory/schema';
+import { eventParamsToFilters } from '@/systems/events/directory/schema';
+import { listSelectedEventFilters } from '@/systems/events/directory/utils';
 import useStable from '@/common/utils/useStable';
 import { EventCardVariants } from '../EventCard';
 import EventDirectoryGrid from './filter/EventDirectoryGrid';

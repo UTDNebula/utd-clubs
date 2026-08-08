@@ -15,11 +15,13 @@ import {
   EventFiltersSchema,
   eventLocationFilterEnum,
   eventLocationStrings,
+  temporalDeixisStrings,
+} from '@/systems/events/directory/schema';
+import {
   filterFieldToParam,
   SelectedEventFiltersList,
   splitArrayField,
-  temporalDeixisStrings,
-} from '@/systems/events/directory/schema';
+} from '@/systems/events/directory/utils';
 import FilterChip from '@/common/components/filter/FilterChip';
 import EventsFilterPanels from './EventsFilterPanels';
 import { setEventsParams } from './utils';
