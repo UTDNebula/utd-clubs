@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { and, asc, eq, inArray } from 'drizzle-orm';
+import { and, asc, eq, inArray, not } from 'drizzle-orm';
 import { club } from '@/server/db/schema/club';
 import { contacts } from '@/server/db/schema/contacts';
 import { membershipForms } from '@/server/db/schema/membershipForms';
@@ -18,9 +18,58 @@ import {
   editFormSchema,
   deleteSchema,
   removeMembersSchema,
+  eventSyncSchema,
 } from './schemas';
+import { createClubSchema } from '@/systems/clubs/create/schema';
+import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
+import {
+  syncCalendar,
+  watchCalendar,
+} from '@/common/modules/googleCalendar/calendar';
+import { google } from 'googleapis';
 
 const clubManageRouter = createTRPCRouter({
+  create: authedProcedure
+    .input(createClubSchema)
+    .mutation(async ({ input, ctx }) => {
+      //Create unique slug based on name
+      const baseSlug = input.name.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      const existing = await ctx.db.query.club.findMany({
+        where: (club, { like }) => like(club.slug, `${baseSlug}%`),
+        columns: { slug: true },
+      });
+      const existingSlugs = new Set(existing.map((c) => c.slug));
+      let slug = baseSlug;
+      let counter = 2;
+      while (existingSlugs.has(slug)) {
+        slug = `${baseSlug}-${counter++}`;
+      }
+
+      const res = await ctx.db
+        .insert(club)
+        .values({
+          name: input.name.name,
+          alias: input.name.alias,
+          description: input.meta.description,
+          tags: input.meta.tags,
+          updatedAt: new Date(),
+          slug,
+        })
+        .returning();
+
+      const clubId = res[0]!.id;
+
+      await ctx.db.insert(userMetadataToClubs).values({
+        userId: ctx.session.user.id,
+        clubId: clubId,
+        memberType: 'President' as const,
+      });
+
+      return slug;
+    }),
   data: authedProcedure
     .input(editClubDetailsSchema)
     .mutation(async ({ input, ctx }) => {
@@ -438,6 +487,107 @@ const clubManageRouter = createTRPCRouter({
       });
 
       return newForms;
+    }),
+  eventSync: authedProcedure
+    .input(eventSyncSchema)
+    .mutation(async ({ ctx, input }) => {
+      const calendarAlreadyUsed = await ctx.db
+        .select()
+        .from(club)
+        .where(
+          and(
+            eq(club.calendarId, input.calendarId ?? ''),
+            not(eq(club.id, input.clubId)),
+          ),
+        );
+      if (calendarAlreadyUsed && calendarAlreadyUsed.length > 0) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Calendar already selected by a different club',
+        });
+      }
+      const selectedClub = await ctx.db.query.club.findFirst({
+        where: eq(club.id, input.clubId),
+      });
+      if (!selectedClub) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'no club found',
+        });
+      }
+
+      // this should only happen on resyncs
+      if (selectedClub.calendarId && !selectedClub.calendarGoogleAccountId) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'no connected google account',
+        });
+      }
+      await ctx.db
+        .update(club)
+        .set({
+          calendarId: input.calendarId,
+          calendarGoogleAccountId: ctx.session.user.id,
+          calendarName: input.calendarName,
+          calendarSyncToken: null,
+        })
+        .where(eq(club.id, input.clubId));
+      const oauth2Client = new google.auth.OAuth2();
+      oauth2Client.setCredentials({
+        access_token: await getGoogleAccessToken(
+          selectedClub.calendarGoogleAccountId ?? ctx.session.user.id,
+        ),
+      });
+      try {
+        const sync = await syncCalendar(input.clubId, false, oauth2Client); // one-time sync
+        try {
+          await watchCalendar(input.clubId); // create the webhook to sync updates in the future
+          return sync;
+        } catch (error) {
+          // if webhook wasn't established, it's okay because events have synced
+          if (
+            error &&
+            typeof error === 'object' &&
+            'message' in error &&
+            error.message ===
+              'Push notifications are not supported by this resource.'
+          ) {
+            return { status: 'ONE_TIME_SYNC', data: sync };
+          }
+          throw error; // if it's not a webhook subscription issue
+        }
+      } catch (error) {
+        console.error(
+          'Sync failed, reverting DB changes:',
+          (error as { message: string }).message,
+        );
+        await ctx.db
+          .update(club)
+          .set({
+            calendarId: null,
+            calendarGoogleAccountId: null,
+            calendarName: null,
+            calendarSyncToken: null,
+          })
+          .where(eq(club.id, input.clubId));
+
+        if (
+          error &&
+          typeof error === 'object' &&
+          'status' in error &&
+          error.status === 404
+        ) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: `Could not find calendar: ${(error as { message?: string }).message || 'Unknown error'}`,
+          });
+        } else {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: `Could not connect calendar: ${(error as { message?: string }).message || 'Unknown error'}`,
+          });
+        }
+      }
     }),
   slug: authedProcedure
     .input(editSlugSchema)
