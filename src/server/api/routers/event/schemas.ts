@@ -2,6 +2,10 @@ import { z } from 'zod';
 import { dateSchema, eventFiltersSchema } from '@/common/utils/eventFilter';
 import { clubIdSchema } from '../baseSchemas';
 
+////////////////////////////////////////////////////////////////////////////////
+// Public Router
+////////////////////////////////////////////////////////////////////////////////
+
 export const byClubIdSchema = clubIdSchema.extend({
   currentTime: z.optional(z.date()),
   sortByDate: z.boolean().default(false),
@@ -43,4 +47,12 @@ export const findByDateSchema = z.object({
 export const byNameSchema = z.object({
   name: z.string().default(''),
   sortByDate: z.boolean().default(false),
+});
+
+////////////////////////////////////////////////////////////////////////////////
+// Manage Router
+////////////////////////////////////////////////////////////////////////////////
+
+export const disableSyncSchema = clubIdSchema.extend({
+  keepPastEvents: z.boolean().default(true).optional(),
 });

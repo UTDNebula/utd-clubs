@@ -2,6 +2,10 @@ import { z } from 'zod';
 import { selectContact } from '@/server/db/models';
 import { clubIdSchema } from '../baseSchemas';
 
+////////////////////////////////////////////////////////////////////////////////
+// Public Router
+////////////////////////////////////////////////////////////////////////////////
+
 export const byNameSchema = z.object({
   name: z.string().default(''),
   limit: z.number().min(1).max(20).default(5),
@@ -18,6 +22,10 @@ export const searchSchema = z.object({
 export const searchTagSchema = z.object({
   search: z.string(),
 });
+
+////////////////////////////////////////////////////////////////////////////////
+// Manage Router
+////////////////////////////////////////////////////////////////////////////////
 
 export const eventSyncSchema = clubIdSchema.extend({
   calendarName: z.string().optional(),

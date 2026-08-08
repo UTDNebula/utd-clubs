@@ -1,6 +1,5 @@
 import { TRPCError } from '@trpc/server';
 import { and, eq, gt, isNull, lte, or } from 'drizzle-orm';
-import { z } from 'zod';
 import { club } from '@/server/db/schema/club';
 import { events } from '@/server/db/schema/events';
 import { stopWatching } from '@/common/modules/googleCalendar/calendar';
@@ -10,6 +9,8 @@ import {
 } from '@/systems/events/create/schema';
 import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
+import { eventIdSchema } from '../baseSchemas';
+import { disableSyncSchema } from './schemas';
 
 const eventManageRouter = createTRPCRouter({
   create: authedProcedure
@@ -85,10 +86,10 @@ const eventManageRouter = createTRPCRouter({
       return res[0]?.id;
     }),
   delete: authedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(eventIdSchema)
     .mutation(async ({ input, ctx }) => {
       const event = await ctx.db.query.events.findFirst({
-        where: (e) => eq(e.id, input.id),
+        where: (e) => eq(e.id, input.eventId),
       });
 
       if (!event) {
@@ -104,17 +105,12 @@ const eventManageRouter = createTRPCRouter({
       await ctx.db
         .update(events)
         .set({ status: 'deleted' })
-        .where(eq(events.id, input.id));
+        .where(eq(events.id, input.eventId));
 
       return { success: true };
     }),
   disableSync: authedProcedure
-    .input(
-      z.object({
-        clubId: z.string(),
-        keepPastEvents: z.boolean().default(true).optional(),
-      }),
-    )
+    .input(disableSyncSchema)
     .mutation(async ({ input, ctx }) => {
       const clubRecord = await ctx.db.query.club.findFirst({
         where: eq(club.id, input.clubId),

@@ -1,6 +1,5 @@
 import { TRPCError } from '@trpc/server';
 import { and, count, desc, eq, inArray, lte, sql } from 'drizzle-orm';
-import { z } from 'zod';
 import { club, usedTags } from '@/server/db/schema/club';
 import { events } from '@/server/db/schema/events';
 import {
@@ -11,7 +10,7 @@ import { callStorageAPI } from '@/common/utils/storage';
 import { adminProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { editCollaboratorSchema } from '../club/schemas';
 import { tagReplaceSchema, changeClubStatusSchema } from './schemas';
-import { clubIdSchema, clubSlugSchema } from '../baseSchemas';
+import { clubIdSchema, clubSlugSchema, eventIdSchema } from '../baseSchemas';
 
 const adminRouter = createTRPCRouter({
   allClubs: adminProcedure.query(async ({ ctx }) => {
@@ -204,10 +203,10 @@ const adminRouter = createTRPCRouter({
       }
     }),
   deleteEvent: adminProcedure
-    .input(z.object({ id: z.string() }))
+    .input(eventIdSchema)
     .mutation(async ({ input, ctx }) => {
       const event = await ctx.db.query.events.findFirst({
-        where: (e) => eq(e.id, input.id),
+        where: (e) => eq(e.id, input.eventId),
       });
 
       if (!event) {
@@ -218,8 +217,8 @@ const adminRouter = createTRPCRouter({
         callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`),
         ctx.db
           .delete(userMetadataToEvents)
-          .where(eq(userMetadataToEvents.eventId, input.id)),
-        ctx.db.delete(events).where(eq(events.id, input.id)), // only place where event is fully deleted from DB
+          .where(eq(userMetadataToEvents.eventId, input.eventId)),
+        ctx.db.delete(events).where(eq(events.id, input.eventId)), // only place where event is fully deleted from DB
       ]);
 
       return { success: true };

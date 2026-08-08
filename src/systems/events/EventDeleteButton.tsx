@@ -81,7 +81,7 @@ export default function EventDeleteButton({
           </>
         }
         onConfirm={() => {
-          deleteEvent.mutate({ id: event.id });
+          deleteEvent.mutate({ eventId: event.id });
         }}
         loading={deleteEvent.isPending}
       />
