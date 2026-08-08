@@ -1,3 +1,9 @@
+import compare from '@/common/utils/compare';
+import {
+  preprocessParamNum,
+  preprocessParamBoolean,
+  preprocessParamArray,
+} from '@/common/utils/preprocessors';
 import { dateSchema } from '@/common/utils/schemas';
 import { parseISO } from 'date-fns';
 import { z } from 'zod';
@@ -5,8 +11,6 @@ import { z } from 'zod';
 ///////////////////////////////////////////////////////////////////////////////
 // Types
 ///////////////////////////////////////////////////////////////////////////////
-
-type searchParamValue = string | string[] | undefined;
 
 /**
  * Maps EventFiltersSchema to the result of Object.entries()
@@ -25,41 +29,6 @@ type ArrayKeys<T> = {
 type FieldAndValue<K, V> = {
   field: K;
   value: V;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// Param Preprocessors
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Defers to default value if input is not a valid number
- */
-const preprocessParamNum = (input: searchParamValue) => {
-  const num = Number(input);
-  return isNaN(num) ? undefined : num;
-};
-
-/**
- * Defers to default value (by returning undefined) if input is not provided.
- * Only returns false if input is explicitly "false". Therefore,this  will
- * return true if input is an empty string (i.e. not including a value for
- * the search param)
- */
-const preprocessParamBoolean = (input: searchParamValue) => {
-  return input === undefined ? undefined : !(input === 'false');
-};
-
-/**
- * @param input Either a string of items delimited with commas, or an array of
- *              strings delimited with commas
- * @returns An array of all the items
- */
-const preprocessParamArray = (input: searchParamValue) => {
-  if (typeof input === 'string') {
-    return input.split(',');
-  } else {
-    return input?.flatMap((ele) => ele.split(','));
-  }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -294,33 +263,3 @@ export function listSelectedEventFilters(filters: EventFiltersSchema) {
 export type SelectedEventFiltersList = ReturnType<
   typeof listSelectedEventFilters
 >;
-
-function compare<T>(val1: T, val2: T) {
-  if (val1 === val2) return true;
-
-  // Null or non-object types
-  if (
-    val1 === null ||
-    typeof val1 !== 'object' ||
-    val2 === null ||
-    typeof val2 !== 'object'
-  ) {
-    return false;
-  }
-
-  // Dates
-  if (val1 instanceof Date && val2 instanceof Date) {
-    return val1.getTime() === val2.getTime();
-  }
-
-  // Arrays
-  if (Array.isArray(val1) && Array.isArray(val2)) {
-    if (val1.length !== val2.length) return false;
-    for (let i = 0; i < val1.length; i++) {
-      if (!compare(val1, val2)) return false;
-    }
-    return true;
-  }
-
-  return false;
-}
