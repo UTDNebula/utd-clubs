@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { and, asc, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
-import { db } from '@/server/db';
 import { selectContact } from '@/server/db/models';
 import { club } from '@/server/db/schema/club';
 import { contacts } from '@/server/db/schema/contacts';
@@ -12,29 +11,7 @@ import { editClubDetailsSchema } from '@/systems/manage/forms/Details';
 import { editSlugSchema } from '@/systems/manage/forms/Slug';
 import { callStorageAPI } from '@/common/utils/storage';
 import { createTRPCRouter, authedProcedure } from '../trpc';
-
-async function isUserOfficer(userId: string, clubId: string) {
-  const officer = await db.query.userMetadataToClubs.findFirst({
-    where: (userMetadataToClubs) =>
-      and(
-        eq(userMetadataToClubs.userId, userId),
-        eq(userMetadataToClubs.clubId, clubId),
-      ),
-  });
-  if (!officer || !officer.memberType) return false;
-  return officer.memberType !== 'Member';
-}
-
-async function isUserPresident(userId: string, clubId: string) {
-  const officer = await db.query.userMetadataToClubs.findFirst({
-    where: (userMetadataToClubs) =>
-      and(
-        eq(userMetadataToClubs.userId, userId),
-        eq(userMetadataToClubs.clubId, clubId),
-      ),
-  });
-  return officer?.memberType == 'President';
-}
+import { requireMemberRole } from '../utils';
 
 const byIdSchema = z.object({
   id: z.string().default(''),
@@ -116,8 +93,9 @@ export const clubEditRouter = createTRPCRouter({
   data: authedProcedure
     .input(editClubDetailsSchema)
     .mutation(async ({ input, ctx }) => {
-      const isOfficer = await isUserOfficer(ctx.session.user.id, input.id);
-      if (!isOfficer) throw new TRPCError({ code: 'UNAUTHORIZED' });
+      await requireMemberRole(ctx.session.user.id, input.id, {
+        Officer: { errorMessage: 'Must be an officer to modify this club' },
+      });
 
       const updatedClub = await ctx.db
         .update(club)
@@ -141,8 +119,7 @@ export const clubEditRouter = createTRPCRouter({
   setUpdatedAt: authedProcedure
     .input(byIdSchema)
     .mutation(async ({ input, ctx }) => {
-      const isOfficer = await isUserOfficer(ctx.session.user.id, input.id);
-      if (!isOfficer) throw new TRPCError({ code: 'UNAUTHORIZED' });
+      await requireMemberRole(ctx.session.user.id, input.id, { Officer: true });
 
       await ctx.db
         .update(club)
@@ -156,12 +133,9 @@ export const clubEditRouter = createTRPCRouter({
   contacts: authedProcedure
     .input(editContactSchema)
     .mutation(async ({ input, ctx }) => {
-      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
-      if (!isOfficer)
-        throw new TRPCError({
-          message: 'must be an officer to modify this club',
-          code: 'UNAUTHORIZED',
-        });
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
+        Officer: { errorMessage: 'Must be an officer to modify this club' },
+      });
 
       // Deleted
       if (input.deleted.length) {
@@ -252,23 +226,17 @@ export const clubEditRouter = createTRPCRouter({
   officers: authedProcedure
     .input(editCollaboratorSchema)
     .mutation(async ({ input, ctx }) => {
-      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
-      if (!isOfficer) {
-        throw new TRPCError({
-          message: 'You must be an officer to modify this club',
-          code: 'UNAUTHORIZED',
-        });
-      }
-      const isPresident = await isUserPresident(
-        ctx.session.user.id,
-        input.clubId,
-      );
-      if (!isPresident && (input.deleted.length || input.modified.length)) {
-        throw new TRPCError({
-          message: 'Only an admin can remove or modify people',
-          code: 'UNAUTHORIZED',
-        });
-      }
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
+        Officer: { errorMessage: 'You must be an officer to modify this club' },
+        President: {
+          errorMessage: 'Only an admin can remove or modify people',
+          throwError: (missingRole) =>
+            Boolean(
+              missingRole && (input.deleted.length || input.modified.length),
+            ),
+        },
+      });
+
       if (input.deleted.includes(ctx.session.user.id)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
@@ -360,13 +328,9 @@ export const clubEditRouter = createTRPCRouter({
   listedOfficers: authedProcedure
     .input(editOfficerSchema)
     .mutation(async ({ input, ctx }) => {
-      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
-      if (!isOfficer) {
-        throw new TRPCError({
-          message: 'must be an officer to modify this club',
-          code: 'UNAUTHORIZED',
-        });
-      }
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
+        Officer: { errorMessage: 'Must be an officer to modify this club' },
+      });
 
       // Deleted
       if (input.deleted.length) {
@@ -451,13 +415,9 @@ export const clubEditRouter = createTRPCRouter({
   membershipForms: authedProcedure
     .input(editFormSchema)
     .mutation(async ({ input, ctx }) => {
-      const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
-      if (!isOfficer) {
-        throw new TRPCError({
-          message: 'Must be an officer to modify this club',
-          code: 'UNAUTHORIZED',
-        });
-      }
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
+        Officer: { errorMessage: 'Must be an officer to modify this club' },
+      });
 
       // deletions
       if (input.deleted.length) {
@@ -551,13 +511,11 @@ export const clubEditRouter = createTRPCRouter({
   slug: authedProcedure
     .input(editSlugSchema)
     .mutation(async ({ input, ctx }) => {
-      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
-      if (!isPresident) {
-        throw new TRPCError({
-          message: 'only a president can remove or modify people',
-          code: 'UNAUTHORIZED',
-        });
-      }
+      await requireMemberRole(ctx.session.user.id, input.id, {
+        President: {
+          errorMessage: "Only a club admin can update the club's slug",
+        },
+      });
 
       const bySlug = await ctx.db.query.club.findFirst({
         where: (club) => eq(club.slug, input.slug),
@@ -578,8 +536,11 @@ export const clubEditRouter = createTRPCRouter({
   delete: authedProcedure
     .input(deleteSchema)
     .mutation(async ({ input, ctx }) => {
-      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
-      if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
+      await requireMemberRole(ctx.session.user.id, input.id, {
+        President: {
+          errorMessage: 'Only a club admin can delete the club',
+        },
+      });
 
       await Promise.all([
         callStorageAPI('DELETE', `${input.id}-profile`),
@@ -590,8 +551,11 @@ export const clubEditRouter = createTRPCRouter({
   markDeleted: authedProcedure
     .input(deleteSchema)
     .mutation(async ({ input, ctx }) => {
-      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
-      if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
+      await requireMemberRole(ctx.session.user.id, input.id, {
+        President: {
+          errorMessage: 'Only a club admin can mark the club as deleted',
+        },
+      });
 
       await ctx.db
         .update(club)
@@ -603,8 +567,11 @@ export const clubEditRouter = createTRPCRouter({
   restore: authedProcedure
     .input(deleteSchema)
     .mutation(async ({ input, ctx }) => {
-      const isPresident = await isUserPresident(ctx.session.user.id, input.id);
-      if (!isPresident) throw new TRPCError({ code: 'UNAUTHORIZED' });
+      await requireMemberRole(ctx.session.user.id, input.id, {
+        President: {
+          errorMessage: 'Only a club admin can restore the club',
+        },
+      });
 
       await ctx.db
         .update(club)
@@ -616,15 +583,11 @@ export const clubEditRouter = createTRPCRouter({
   removeMembers: authedProcedure
     .input(removeMembersSchema)
     .mutation(async ({ input, ctx }) => {
-      const isPresident = await isUserPresident(
-        ctx.session.user.id,
-        input.clubId,
-      );
-      if (!isPresident)
-        throw new TRPCError({
-          code: 'UNAUTHORIZED',
-          message: 'Must be a club admin to remove members',
-        });
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
+        President: {
+          errorMessage: 'Must be a club admin to remove members',
+        },
+      });
 
       if (
         Array.isArray(input.ids)
