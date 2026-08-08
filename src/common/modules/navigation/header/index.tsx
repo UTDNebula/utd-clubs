@@ -5,7 +5,7 @@ import Sidebar from '../drawer/Sidebar';
 import { ClubSearchBar } from '@/systems/clubs/ClubSearchBar';
 import { EventSearchBar } from '@/systems/events/EventSearchBar';
 import UTDClubsLogoStandalone from '@/common/icons/UTDClubsLogo';
-import { BaseHeader, BaseHeaderProps } from '../../../components/BaseHeader';
+import { BaseHeader, BaseHeaderProps } from '@/common/components/BaseHeader';
 import { ProfileDropDown } from './ProfileDropDown';
 
 const DefaultHeaderItems = () => (
