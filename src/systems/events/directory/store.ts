@@ -1,8 +1,5 @@
 import { FetchStatus } from '@tanstack/react-query';
 import { create } from 'zustand';
-import { PanelProps } from '@nebula-library/components/Panel';
-import { EventParamsSchema } from '@/systems/events/directory/filter/schema';
-import { createParamSetter } from '@/common/utils/searchParams';
 
 type EventDirectoryStoreState = {
   selectedCount: number | undefined;
@@ -31,38 +28,3 @@ export const useEventDirectoryStore = create<
   setFetchStatus: (fetchStatus: FetchStatus) => set({ fetchStatus }),
   setPageCount: (pageCount: number) => set({ pageCount }),
 }));
-
-export type FilterPanelBaseProps = {
-  backgroundHover: boolean;
-  pathname: string;
-};
-
-export type FilterPanelProps<T> = FilterPanelBaseProps & {
-  filters: T;
-};
-
-/**
- * Factory to create the default panel props for event filter panels
- */
-export const panelProps = (backgroundHover: boolean): PanelProps => ({
-  smallPadding: true,
-  enableCollapsing: { toggleOnHeadingClick: true },
-  transparent: backgroundHover ? 'falseOnHover' : true,
-});
-
-function unsetPage(params: URLSearchParams, name: string) {
-  if (name !== 'page' && params.get('page') !== String(1))
-    params.delete('page');
-}
-
-export const setEventsParams = createParamSetter<EventParamsSchema>({
-  onAppend(name, value, rawParams) {
-    unsetPage(rawParams, name);
-  },
-  onDelete(name, value, rawParams) {
-    unsetPage(rawParams, name);
-  },
-  onSet(name, value, rawParams) {
-    unsetPage(rawParams, name);
-  },
-});

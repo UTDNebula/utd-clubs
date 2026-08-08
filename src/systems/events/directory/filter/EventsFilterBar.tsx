@@ -21,10 +21,10 @@ import {
   filterFieldToParam,
   SelectedEventFiltersList,
   splitArrayField,
-} from '@/systems/events/directory/filter/utilsTemp';
+} from '@/systems/events/directory/filter/utils';
 import FilterChip from '@/common/components/filter/FilterChip';
 import EventsFilterPanels from './EventsFilterPanels';
-import { setEventsParams } from '../store';
+import { setEventsParams } from './utils';
 
 const hiddenFields: (keyof EventFiltersSchema)[] = [
   'dateStart',

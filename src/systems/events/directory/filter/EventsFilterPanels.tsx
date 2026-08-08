@@ -9,7 +9,7 @@ import DatePanel from './panels/Date';
 import FiltersPanel from './panels/Filters';
 // import LocationPanel from './panels/Location';
 import TagsPanel from './panels/Tags';
-import { FilterPanelBaseProps } from '../store';
+import { FilterPanelBaseProps } from './utils';
 
 type EventsFilterPanelsProps = {
   backgroundHover?: boolean;

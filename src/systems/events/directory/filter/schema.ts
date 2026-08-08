@@ -23,9 +23,7 @@ export const temporalDeixisFilterEnum = z.enum([
   'this month',
 ]);
 
-/**
- * Sentinel value to indicate a custom date
- */
+/** Sentinel value to indicate a custom date */
 export const temporalDeixisCustomDateSentinelValue = 'custom';
 
 export const temporalDeixisWithCustomFilterEnum = z.enum([

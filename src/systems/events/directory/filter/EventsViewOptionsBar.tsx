@@ -6,7 +6,7 @@ import { EventCardVariants } from '@/systems/events/EventCard';
 import { EventFiltersSchema, sortEnum } from '@/systems/events/directory/filter/schema';
 import CompactPagination from '@/common/components/filter/CompactPagination';
 import ViewOption, { ViewOptionItem } from '@/common/components/filter/ViewOptionItem';
-import { setEventsParams } from '../store';
+import { setEventsParams } from './utils';
 
 type EventsViewOptionsBarProps = {
   filters: EventFiltersSchema;

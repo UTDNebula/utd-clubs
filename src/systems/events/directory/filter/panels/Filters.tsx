@@ -9,7 +9,7 @@ import { authClient } from '@/common/modules/auth/auth-client';
 import { EventFiltersSchema } from '@/systems/events/directory/filter/schema';
 import { openLoginModal } from '@/common/modules/loginModal';
 import { closeSnackbar, setSnackbar } from '@/common/modules/snackbar';
-import { FilterPanelProps, panelProps, setEventsParams } from '../../store';
+import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 const eventsFiltersSnackbarId = 'eventsFilters';
 

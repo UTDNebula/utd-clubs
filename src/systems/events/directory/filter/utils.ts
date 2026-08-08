@@ -6,10 +6,8 @@ import {
   eventParamsDefaults,
   SplitArrayFields,
 } from './schema';
-
-///////////////////////////////////////////////////////////////////////////////
-// Types
-///////////////////////////////////////////////////////////////////////////////
+import { createParamSetter } from '@/common/utils/searchParams';
+import { PanelProps } from '@nebula-library/components/Panel';
 
 /**
  * Maps EventFiltersSchema to the result of Object.entries()
@@ -89,3 +87,38 @@ export function listSelectedEventFilters(filters: EventFiltersSchema) {
 export type SelectedEventFiltersList = ReturnType<
   typeof listSelectedEventFilters
 >;
+
+export type FilterPanelBaseProps = {
+  backgroundHover: boolean;
+  pathname: string;
+};
+
+export type FilterPanelProps<T> = FilterPanelBaseProps & {
+  filters: T;
+};
+
+/**
+ * Factory to create the default panel props for event filter panels
+ */
+export const panelProps = (backgroundHover: boolean): PanelProps => ({
+  smallPadding: true,
+  enableCollapsing: { toggleOnHeadingClick: true },
+  transparent: backgroundHover ? 'falseOnHover' : true,
+});
+
+function unsetPage(params: URLSearchParams, name: string) {
+  if (name !== 'page' && params.get('page') !== String(1))
+    params.delete('page');
+}
+
+export const setEventsParams = createParamSetter<EventParamsSchema>({
+  onAppend(name, value, rawParams) {
+    unsetPage(rawParams, name);
+  },
+  onDelete(name, value, rawParams) {
+    unsetPage(rawParams, name);
+  },
+  onSet(name, value, rawParams) {
+    unsetPage(rawParams, name);
+  },
+});

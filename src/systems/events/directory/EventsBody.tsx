@@ -6,15 +6,15 @@ import { useSearchParams } from 'next/navigation';
 import { ChangeEvent, useEffect, useState } from 'react';
 import EventDirectorySearchBar from '@/systems/events/EventDirectorySearchBar';
 import { RouterOutputs } from '@/trpc/shared';
-import { eventParamsToFilters } from '@/systems/events/directory/filter/schema';
-import { listSelectedEventFilters } from '@/systems/events/directory/filter/utilsTemp';
+import { eventParamsToFilters } from './filter/schema';
+import { listSelectedEventFilters, setEventsParams } from './filter/utils';
 import useStable from '@/common/utils/useStable';
-import { EventCardVariants } from '../EventCard';
+import { EventCardVariants } from '@/systems/events/EventCard';
 import EventDirectoryGrid from './filter/EventDirectoryGrid';
 import EventsFilterBar from './filter/EventsFilterBar';
 import EventsFilterPanels from './filter/EventsFilterPanels';
 import EventsViewOptionsBar from './filter/EventsViewOptionsBar';
-import { setEventsParams, useEventDirectoryStore } from './store';
+import { useEventDirectoryStore } from './store';
 
 type EventsBodyProps = {
   initialQueryData?: RouterOutputs['event']['findByFilters'];

@@ -9,7 +9,7 @@ import {
   temporalDeixisWithCustomFilterEnum,
 } from '@/systems/events/directory/filter/schema';
 import FilterList, { FilterListItem } from '@/common/components/filter/FilterList';
-import { FilterPanelProps, panelProps, setEventsParams } from '../../store';
+import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 
 export type DatePanelFields = Pick<
   EventFiltersSchema,
