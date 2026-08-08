@@ -5,7 +5,7 @@ import { api } from '@/trpc/server';
 import {
   EventParamsSchema,
   eventParamsToFilters,
-} from '@/common/utils/eventFilter';
+} from '@/systems/events/eventFilter';
 import {
   SnackbarPresets,
   SnackbarType,

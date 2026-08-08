@@ -7,7 +7,7 @@ import {
   EventFiltersSchema,
   temporalDeixisCustomDateSentinelValue,
   temporalDeixisWithCustomFilterEnum,
-} from '@/common/utils/eventFilter';
+} from '@/systems/events/eventFilter';
 import FilterList, { FilterListItem } from '@/common/components/filter/FilterList';
 import { FilterPanelProps, panelProps, setEventsParams } from '../utils';
 

@@ -1,3 +1,4 @@
+import { dateSchema } from '@/common/utils/schemas';
 import { parseISO } from 'date-fns';
 import { z } from 'zod';
 
@@ -98,10 +99,6 @@ export const temporalDeixisStrings: Record<
   'this month': 'This month',
   custom: 'Custom date',
 };
-
-export const dateSchema = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format');
 
 export const eventLocationFilterEnum = z.enum([
   'on-campus',

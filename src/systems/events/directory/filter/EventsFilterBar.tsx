@@ -19,7 +19,7 @@ import {
   SelectedEventFiltersList,
   splitArrayField,
   temporalDeixisStrings,
-} from '@/common/utils/eventFilter';
+} from '@/systems/events/eventFilter';
 import FilterChip from '@/common/components/filter/FilterChip';
 import EventsFilterPanels from './EventsFilterPanels';
 import { setEventsParams } from './utils';

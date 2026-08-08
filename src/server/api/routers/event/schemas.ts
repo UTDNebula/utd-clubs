@@ -1,10 +1,11 @@
 import { z } from 'zod';
-import { dateSchema, eventFiltersSchema } from '@/common/utils/eventFilter';
+import { eventFiltersSchema } from '@/systems/events/eventFilter';
 import { clubIdSchema } from '../baseSchemas';
 import {
   createEventSchema,
   editEventSchema,
 } from '@/systems/events/create/schema';
+import { dateSchema } from '@/common/utils/schemas';
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public Router
