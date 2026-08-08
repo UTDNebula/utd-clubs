@@ -58,7 +58,7 @@ type ContactsProps = {
 const Contacts = ({ club }: ContactsProps) => {
   const api = useTRPC();
   const editContacts = useMutation(
-    api.club.edit.contacts.mutationOptions({
+    api.club.manage.contacts.mutationOptions({
       onSuccess: () => {
         setSnackbar(SnackbarPresets.savedName('club contacts'));
       },

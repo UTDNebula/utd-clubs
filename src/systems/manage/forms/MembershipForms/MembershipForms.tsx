@@ -67,7 +67,7 @@ const MembershipForms = ({
 }: MembershipFormProps) => {
   const api = useTRPC();
   const editForms = useMutation(
-    api.club.edit.membershipForms.mutationOptions({}),
+    api.club.manage.membershipForms.mutationOptions({}),
   );
 
   const [defaultValues, setDefaultValues] = useState({

@@ -41,7 +41,7 @@ const Details = ({ club }: DetailsProps) => {
     api.club.details.queryOptions({ id: club.id }, { initialData: club }),
   );
   const editData = useMutation(
-    api.club.edit.data.mutationOptions({
+    api.club.manage.data.mutationOptions({
       onSuccess: () => {
         setSnackbar(SnackbarPresets.savedName('club details'));
       },

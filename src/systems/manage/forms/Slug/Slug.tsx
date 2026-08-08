@@ -25,7 +25,7 @@ type DetailsProps = {
 const Slug = ({ club, role }: DetailsProps) => {
   const api = useTRPC();
   const editSlug = useMutation(
-    api.club.edit.slug.mutationOptions({
+    api.club.manage.slug.mutationOptions({
       onSuccess: () => {
         setSnackbar(SnackbarPresets.savedName('club listing URL'));
       },

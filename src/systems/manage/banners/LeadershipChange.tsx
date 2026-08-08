@@ -16,7 +16,7 @@ const LeadershipChange = ({ clubId }: { clubId: string }) => {
 
   const api = useTRPC();
   const setUpdatedAt = useMutation(
-    api.club.edit.setUpdatedAt.mutationOptions({
+    api.club.manage.setUpdatedAt.mutationOptions({
       onSuccess: () => {
         setSnackbar(SnackbarPresets.saved);
         setOpenConfirmation(false);

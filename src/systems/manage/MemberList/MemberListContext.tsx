@@ -21,7 +21,7 @@ export interface MemberListContextType {
     | UseMutationResult<
         SelectUserMetadataToClubsWithUserMetadata[],
         TRPCClientErrorLike<AppRouter>,
-        RouterInputs['club']['edit']['removeMembers']
+        RouterInputs['club']['manage']['removeMembers']
       >
     | undefined;
   getMembers:

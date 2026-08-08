@@ -3,7 +3,7 @@ import clubManageRouter from './clubManageRouter';
 import clubPublicRouter from './clubPublicRouter';
 
 const clubBaseRouter = createTRPCRouter({
-  edit: clubManageRouter,
+  manage: clubManageRouter,
 });
 
 const clubRouter = mergeRouters(clubBaseRouter, clubPublicRouter);

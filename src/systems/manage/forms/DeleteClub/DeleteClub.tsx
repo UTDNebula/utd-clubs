@@ -25,14 +25,14 @@ export default function DeleteClub({ view, club }: Props) {
     case 'manage':
       switch (club.approved) {
         case 'approved':
-          apiProcedure = api.club.edit.markDeleted;
+          apiProcedure = api.club.manage.markDeleted;
           break;
         case 'pending':
         case 'rejected':
-          apiProcedure = api.club.edit.delete;
+          apiProcedure = api.club.manage.delete;
           break;
         case 'deleted':
-          apiProcedure = api.club.edit.restore;
+          apiProcedure = api.club.manage.restore;
           break;
       }
       break;

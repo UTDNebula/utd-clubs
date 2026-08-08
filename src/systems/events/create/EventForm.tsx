@@ -43,7 +43,7 @@ interface EventDetails {
 const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const api = useTRPC();
   const createMutation = useMutation(
-    api.event.create.mutationOptions({
+    api.event.manage.create.mutationOptions({
       onSuccess: () => {
         setSnackbar(SnackbarPresets.success('Created event!'));
       },
@@ -53,7 +53,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     }),
   );
   const updateMutation = useMutation(
-    api.event.update.mutationOptions({
+    api.event.manage.update.mutationOptions({
       onSuccess: () => {
         setSnackbar(SnackbarPresets.savedName('event'));
       },

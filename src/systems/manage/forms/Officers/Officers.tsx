@@ -60,7 +60,7 @@ type OfficersProps = {
 const Officers = ({ club, listedOfficers }: OfficersProps) => {
   const api = useTRPC();
   const editOfficers = useMutation(
-    api.club.edit.listedOfficers.mutationOptions({
+    api.club.manage.listedOfficers.mutationOptions({
       onSuccess: () => {
         setSnackbar(SnackbarPresets.savedName('club listed officer'));
       },

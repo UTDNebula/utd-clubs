@@ -44,7 +44,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const syncEvents = useMutation(
-    trpc.club.edit.eventSync.mutationOptions({
+    trpc.club.manage.eventSync.mutationOptions({
       onSuccess: (result) => {
         setIsRefreshing(false);
         // Check for the partial success flag
@@ -68,7 +68,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
       },
     }),
   );
-  const disableSync = useMutation(trpc.event.disableSync.mutationOptions());
+  const disableSync = useMutation(trpc.event.manage.disableSync.mutationOptions());
   const [privateCalendarOpen, setPrivateCalendarOpen] = useState(false);
   const [onetimeSyncOpen, setOnetimeSyncOpen] = useState(false);
   const [disableSyncConfirmationOpen, setDisableSyncConfirmationOpen] =

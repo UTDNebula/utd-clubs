@@ -24,7 +24,7 @@ export default function EventDeleteButton({
   const api = useTRPC();
   const deleteEvent = useMutation(
     (view === 'manage'
-      ? api.event.delete
+      ? api.event.manage.delete
       : api.admin.deleteEvent
     ).mutationOptions({
       onSuccess: () => {

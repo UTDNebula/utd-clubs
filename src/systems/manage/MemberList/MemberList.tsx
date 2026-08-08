@@ -56,8 +56,8 @@ const MemberList = ({ members, club }: MemberListProps) => {
   const removeMembers = useMutation<
     SelectUserMetadataToClubsWithUserMetadataWithUser[],
     TRPCClientErrorLike<AppRouter>,
-    RouterInputs['club']['edit']['removeMembers']
-  >(api.club.edit.removeMembers.mutationOptions({}));
+    RouterInputs['club']['manage']['removeMembers']
+  >(api.club.manage.removeMembers.mutationOptions({}));
 
   // For refresh button
   const getMembers = useQuery(

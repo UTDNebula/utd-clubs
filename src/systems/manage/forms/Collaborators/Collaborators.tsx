@@ -52,7 +52,7 @@ const Collaborators = ({
   const editOfficers = useMutation(
     (role === 'Admin'
       ? api.admin.updateOfficers
-      : api.club.edit.officers
+      : api.club.manage.officers
     ).mutationOptions({
       onSuccess: () => {
         setSnackbar(SnackbarPresets.savedName('club collaborators'));
