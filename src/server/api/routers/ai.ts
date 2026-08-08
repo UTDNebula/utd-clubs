@@ -7,7 +7,7 @@ import {
   type ClubMatchResults,
 } from '@/server/db/schema/users';
 import { clubMatchFormSchema } from '@/systems/clubs/match/schema';
-import { createTRPCRouter, protectedProcedure } from '../trpc';
+import { createTRPCRouter, authedProcedure } from '../trpc';
 
 const GEMINI_SERVICE_ACCOUNT = Boolean(process.env.GEMINI_SERVICE_ACCOUNT)
   ? (JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT ?? '') as {
@@ -31,7 +31,7 @@ const ai = new GoogleGenAI({
 });
 
 export const aiRouter = createTRPCRouter({
-  clubMatch: protectedProcedure
+  clubMatch: authedProcedure
     .input(clubMatchFormSchema)
     .mutation(async ({ ctx, input }) => {
       // Limit to 100 calls to avoid spam

@@ -16,7 +16,7 @@ import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@/server/db/schema/users';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '../trpc';
 
 const byIdSchema = z.object({ id: z.string() });
 
@@ -46,7 +46,7 @@ const getByRangeSchema = z.object({
 });
 
 export const userMetadataRouter = createTRPCRouter({
-  byId: protectedProcedure
+  byId: authedProcedure
     .input(byIdSchema)
     .query(
       async ({
@@ -62,7 +62,7 @@ export const userMetadataRouter = createTRPCRouter({
         return userMetadata;
       },
     ),
-  updateById: protectedProcedure
+  updateById: authedProcedure
     .input(updateByIdSchema)
     .mutation(
       async ({
@@ -120,12 +120,12 @@ export const userMetadataRouter = createTRPCRouter({
         return { ...updatedUser!, clubs: updatedClubs };
       },
     ),
-  deleteById: protectedProcedure.mutation(async ({ ctx }) => {
+  deleteById: authedProcedure.mutation(async ({ ctx }) => {
     const { user } = ctx.session;
     await ctx.db.delete(users).where(eq(users.id, user.id));
     await ctx.db.delete(userMetadata).where(eq(userMetadata.id, user.id));
   }),
-  getRegisteredEventsByRange: protectedProcedure
+  getRegisteredEventsByRange: authedProcedure
     .input(getByRangeSchema)
     .query(async ({ input, ctx }) => {
       const start = new Date(input.startDate);
@@ -148,7 +148,7 @@ export const userMetadataRouter = createTRPCRouter({
         with: { club: true },
       });
     }),
-  getEvents: protectedProcedure
+  getEvents: authedProcedure
     .input(eventsSortSchema)
     .query(async ({ input, ctx }) => {
       const { currentTime, sortByDate } = input;
@@ -182,7 +182,7 @@ export const userMetadataRouter = createTRPCRouter({
 
       return events;
     }),
-  getEventsFromJoinedClubs: protectedProcedure
+  getEventsFromJoinedClubs: authedProcedure
     .input(joinedClubEventsSchema)
     .query(async ({ input, ctx }) => {
       const { currentTime, sortByDate } = input;
@@ -225,7 +225,7 @@ export const userMetadataRouter = createTRPCRouter({
 
       return rows;
     }),
-  countEventsFromJoinedClubs: protectedProcedure
+  countEventsFromJoinedClubs: authedProcedure
     .input(joinedClubEventsSchema)
     .query(async ({ input, ctx }) => {
       const clubRows = await ctx.db

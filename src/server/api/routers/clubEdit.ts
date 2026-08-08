@@ -11,7 +11,7 @@ import { userMetadataToClubs } from '@/server/db/schema/users';
 import { editClubDetailsSchema } from '@/systems/manage/forms/Details';
 import { editSlugSchema } from '@/systems/manage/forms/Slug';
 import { callStorageAPI } from '@/common/utils/storage';
-import { createTRPCRouter, protectedProcedure } from '../trpc';
+import { createTRPCRouter, authedProcedure } from '../trpc';
 
 async function isUserOfficer(userId: string, clubId: string) {
   const officer = await db.query.userMetadataToClubs.findFirst({
@@ -113,7 +113,7 @@ export const removeMembersSchema = z.object({
 });
 
 export const clubEditRouter = createTRPCRouter({
-  data: protectedProcedure
+  data: authedProcedure
     .input(editClubDetailsSchema)
     .mutation(async ({ input, ctx }) => {
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.id);
@@ -138,7 +138,7 @@ export const clubEditRouter = createTRPCRouter({
 
       return updatedClub[0];
     }),
-  setUpdatedAt: protectedProcedure
+  setUpdatedAt: authedProcedure
     .input(byIdSchema)
     .mutation(async ({ input, ctx }) => {
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.id);
@@ -153,7 +153,7 @@ export const clubEditRouter = createTRPCRouter({
 
       return { success: true };
     }),
-  contacts: protectedProcedure
+  contacts: authedProcedure
     .input(editContactSchema)
     .mutation(async ({ input, ctx }) => {
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
@@ -249,7 +249,7 @@ export const clubEditRouter = createTRPCRouter({
       });
       return newContacts;
     }),
-  officers: protectedProcedure
+  officers: authedProcedure
     .input(editCollaboratorSchema)
     .mutation(async ({ input, ctx }) => {
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
@@ -357,7 +357,7 @@ export const clubEditRouter = createTRPCRouter({
       });
       return newOfficers;
     }),
-  listedOfficers: protectedProcedure
+  listedOfficers: authedProcedure
     .input(editOfficerSchema)
     .mutation(async ({ input, ctx }) => {
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
@@ -448,7 +448,7 @@ export const clubEditRouter = createTRPCRouter({
       return newListedOfficers;
     }),
 
-  membershipForms: protectedProcedure
+  membershipForms: authedProcedure
     .input(editFormSchema)
     .mutation(async ({ input, ctx }) => {
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
@@ -548,7 +548,7 @@ export const clubEditRouter = createTRPCRouter({
 
       return newForms;
     }),
-  slug: protectedProcedure
+  slug: authedProcedure
     .input(editSlugSchema)
     .mutation(async ({ input, ctx }) => {
       const isPresident = await isUserPresident(ctx.session.user.id, input.id);
@@ -575,7 +575,7 @@ export const clubEditRouter = createTRPCRouter({
 
       return input.slug;
     }),
-  delete: protectedProcedure
+  delete: authedProcedure
     .input(deleteSchema)
     .mutation(async ({ input, ctx }) => {
       const isPresident = await isUserPresident(ctx.session.user.id, input.id);
@@ -587,7 +587,7 @@ export const clubEditRouter = createTRPCRouter({
         ctx.db.delete(club).where(eq(club.id, input.id)),
       ]);
     }),
-  markDeleted: protectedProcedure
+  markDeleted: authedProcedure
     .input(deleteSchema)
     .mutation(async ({ input, ctx }) => {
       const isPresident = await isUserPresident(ctx.session.user.id, input.id);
@@ -600,7 +600,7 @@ export const clubEditRouter = createTRPCRouter({
         })
         .where(and(eq(club.id, input.id), eq(club.approved, 'approved')));
     }),
-  restore: protectedProcedure
+  restore: authedProcedure
     .input(deleteSchema)
     .mutation(async ({ input, ctx }) => {
       const isPresident = await isUserPresident(ctx.session.user.id, input.id);
@@ -613,7 +613,7 @@ export const clubEditRouter = createTRPCRouter({
         })
         .where(eq(club.id, input.id));
     }),
-  removeMembers: protectedProcedure
+  removeMembers: authedProcedure
     .input(removeMembersSchema)
     .mutation(async ({ input, ctx }) => {
       const isPresident = await isUserPresident(

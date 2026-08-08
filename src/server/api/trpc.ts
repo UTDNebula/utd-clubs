@@ -112,14 +112,13 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const authedProcedure = t.procedure.use(enforceUserIsAuthed);
 
 /**
  * Admin procedures
  * Make sure the user invoking the procedure is an admin
  */
-
-export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+export const adminProcedure = authedProcedure.use(async ({ ctx, next }) => {
   const isAdmin = await ctx.db.query.admin.findFirst({
     where: (admin) => eq(admin.userId, ctx.session.user.id),
   });

@@ -21,7 +21,7 @@ import { userMetadataToClubs } from '@/server/db/schema/users';
 import { syncCalendar, watchCalendar } from '@/common/modules/googleCalendar/calendar';
 import { createClubSchema } from '@/systems/clubs/create/schema';
 import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '../trpc';
 import { clubEditRouter } from './clubEdit';
 
 const byNameSchema = z.object({
@@ -147,7 +147,7 @@ export const clubRouter = createTRPCRouter({
       return [];
     }
   }),
-  getMemberClubsMetadata: protectedProcedure.query(
+  getMemberClubsMetadata: authedProcedure.query(
     async ({
       ctx,
     }): Promise<SelectUserMetadataToClubsWithClub[] | undefined> => {
@@ -165,7 +165,7 @@ export const clubRouter = createTRPCRouter({
       return results;
     },
   ),
-  getMemberClubs: protectedProcedure.query(async ({ ctx }) => {
+  getMemberClubs: authedProcedure.query(async ({ ctx }) => {
     const results = await ctx.db.query.userMetadataToClubs.findMany({
       where: and(
         eq(userMetadataToClubs.userId, ctx.session.user.id),
@@ -179,7 +179,7 @@ export const clubRouter = createTRPCRouter({
     });
     return results.map((ele) => ele.club);
   }),
-  getOfficerClubs: protectedProcedure.query(async ({ ctx }) => {
+  getOfficerClubs: authedProcedure.query(async ({ ctx }) => {
     const results = await ctx.db.query.userMetadataToClubs.findMany({
       where: and(
         eq(userMetadataToClubs.userId, ctx.session.user.id),
@@ -189,7 +189,7 @@ export const clubRouter = createTRPCRouter({
     });
     return results.map((ele) => ele.club);
   }),
-  isOfficer: protectedProcedure
+  isOfficer: authedProcedure
     .input(byIdSchema)
     .query(async ({ input, ctx }) => {
       const found = await ctx.db.query.userMetadataToClubs.findFirst({
@@ -242,7 +242,7 @@ export const clubRouter = createTRPCRouter({
         joinedAt: result?.joinedAt ?? null,
       };
     }),
-  joinLeave: protectedProcedure
+  joinLeave: authedProcedure
     .input(joinLeaveSchema)
     .mutation(async ({ ctx, input }) => {
       const joinUserId = ctx.session.user.id;
@@ -277,7 +277,7 @@ export const clubRouter = createTRPCRouter({
       }
       return dataExists;
     }),
-  create: protectedProcedure
+  create: authedProcedure
     .input(createClubSchema)
     .mutation(async ({ input, ctx }) => {
       //Create unique slug based on name
@@ -318,7 +318,7 @@ export const clubRouter = createTRPCRouter({
 
       return slug;
     }),
-  getOfficers: protectedProcedure
+  getOfficers: authedProcedure
     .input(byIdSchema)
     .query(async ({ input, ctx }) => {
       const officers = await ctx.db.query.userMetadataToClubs.findMany({
@@ -521,7 +521,7 @@ export const clubRouter = createTRPCRouter({
       };
     }
   }),
-  eventSync: protectedProcedure
+  eventSync: authedProcedure
     .input(eventSyncSchema)
     .mutation(async ({ ctx, input }) => {
       const calendarAlreadyUsed = await ctx.db

@@ -45,7 +45,7 @@ import {
 } from '@/common/utils/eventFilter';
 import { createEventSchema, editEventSchema } from '@/systems/events/create/schema';
 import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '../trpc';
 
 async function isUserOfficer(userId: string, clubId: string) {
   const officer = await db.query.userMetadataToClubs.findFirst({
@@ -609,7 +609,7 @@ export const eventRouter = createTRPCRouter({
         registeredAt: result?.registeredAt ?? null,
       };
     }),
-  toggleRegistration: protectedProcedure
+  toggleRegistration: authedProcedure
     .input(joinLeaveSchema)
     .mutation(async ({ ctx, input }) => {
       const eventId = input.id;
@@ -637,7 +637,7 @@ export const eventRouter = createTRPCRouter({
       }
       return dataExists;
     }),
-  create: protectedProcedure
+  create: authedProcedure
     .input(createEventSchema)
     .mutation(async ({ input, ctx }) => {
       const isOfficer = await isUserOfficer(ctx.session.user.id, input.clubId);
@@ -660,7 +660,7 @@ export const eventRouter = createTRPCRouter({
         });
       return newEvent.id;
     }),
-  update: protectedProcedure
+  update: authedProcedure
     .input(editEventSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, ...data } = input;
@@ -713,7 +713,7 @@ export const eventRouter = createTRPCRouter({
       }
       return res[0]?.id;
     }),
-  delete: protectedProcedure
+  delete: authedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const event = await ctx.db.query.events.findFirst({
@@ -763,7 +763,7 @@ export const eventRouter = createTRPCRouter({
       throw e;
     }
   }),
-  getUserCalendars: protectedProcedure.query(async ({ ctx }) => {
+  getUserCalendars: authedProcedure.query(async ({ ctx }) => {
     const accessToken = await getGoogleAccessToken(ctx.session.user.id, true);
     const googleOauthClient = new OAuth2Client();
     googleOauthClient.setCredentials({ access_token: accessToken });
@@ -788,7 +788,7 @@ export const eventRouter = createTRPCRouter({
       return [];
     }
   }),
-  disableSync: protectedProcedure
+  disableSync: authedProcedure
     .input(
       z.object({
         clubId: z.string(),

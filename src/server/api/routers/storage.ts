@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { callStorageAPI, getUploadURL } from '@/common/utils/storage';
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '../trpc';
 
 const getDeleteSchema = z.object({
   objectId: z.string(),
@@ -23,7 +23,7 @@ export const storageRouter = createTRPCRouter({
     }
     return data;
   }),
-  delete: protectedProcedure.input(getDeleteSchema).query(async ({ input }) => {
+  delete: authedProcedure.input(getDeleteSchema).query(async ({ input }) => {
     const data = await callStorageAPI('DELETE', input.objectId);
     if (data.message !== 'success') {
       throw new TRPCError({
@@ -34,7 +34,7 @@ export const storageRouter = createTRPCRouter({
     }
     return data;
   }),
-  createUpload: protectedProcedure
+  createUpload: authedProcedure
     .input(createUploadSchema)
     .query(async ({ input }) => {
       const data = await getUploadURL(input.objectId, input.mime);
