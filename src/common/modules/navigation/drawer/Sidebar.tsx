@@ -13,7 +13,7 @@ const Sidebar = async ({
   hamburgerColor?: ContentComponentColor;
 }) => {
   const userSidebarCapabilities =
-    await api.userMetadata.getUserSidebarCapabilities();
+    await api.user.metadata.getUserSidebarCapabilities();
   let pendingClubsCount = null;
   if (userSidebarCapabilities.includes('Admin')) {
     pendingClubsCount = await api.admin.pendingClubsCount();

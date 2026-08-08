@@ -6,7 +6,7 @@ import EventCard from '@/systems/events/EventCard';
 import { api } from '@/trpc/server';
 
 export default async function RegisteredEvents() {
-  const events = await api.event.getEvents({
+  const events = await api.user.events.getEvents({
     currentTime: TZDateMini.tz('America/Chicago'),
     sortByDate: true,
   });

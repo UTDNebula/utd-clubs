@@ -27,7 +27,7 @@ type ClubsProps = {
 export default function JoinedClubs({ joinedClubs }: ClubsProps) {
   const api = useTRPC();
 
-  const joinLeaveMutation = useMutation(api.club.joinLeave.mutationOptions({}));
+  const joinLeaveMutation = useMutation(api.user.clubs.joinLeave.mutationOptions({}));
 
   const [leaveClub, setLeaveClub] =
     useState<SelectUserMetadataToClubsWithClub | null>(null);

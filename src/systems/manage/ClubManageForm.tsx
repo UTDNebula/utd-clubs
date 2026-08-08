@@ -32,7 +32,7 @@ const ClubManageForm = async ({
   ] = await Promise.all([
     api.club.getListedOfficers({ id: clubId }),
     api.club.clubForms({ id: clubId }),
-    api.club.memberType({ id: clubId }),
+    api.user.clubs.memberType({ id: clubId }),
     api.club.getOfficers({ id: clubId }),
     auth.api.listUserAccounts({
       headers: awaitedHeaders,

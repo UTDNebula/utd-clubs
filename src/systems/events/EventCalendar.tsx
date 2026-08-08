@@ -27,7 +27,10 @@ import { createPortal } from 'react-dom';
 import EventCard from '@/systems/events/EventCard';
 import { useTRPC } from '@/trpc/react';
 import { type RouterOutputs } from '@/trpc/shared';
-import { getRangeForView, type CalendarRange } from '@/common/utils/calendarRange';
+import {
+  getRangeForView,
+  type CalendarRange,
+} from '@/common/utils/calendarRange';
 import {
   calendarParamsSchema,
   type CalendarParamsSchema,
@@ -35,7 +38,7 @@ import {
 import { createParamSetter } from '@/common/utils/searchParams';
 
 type RegisteredEvent =
-  RouterOutputs['event']['getRegisteredEventsByRange'][number];
+  RouterOutputs['user']['events']['getRegisteredEventsByRange'][number];
 
 const SCHEDULE_FIELDS = {
   id: 'Id',
@@ -75,7 +78,7 @@ const EventCalendar = () => {
   const router = useRouter();
 
   const { data: events = [], isFetching } = useQuery(
-    api.event.getRegisteredEventsByRange.queryOptions(range, {
+    api.user.events.getRegisteredEventsByRange.queryOptions(range, {
       staleTime: 30_000,
       refetchOnWindowFocus: false,
     }),

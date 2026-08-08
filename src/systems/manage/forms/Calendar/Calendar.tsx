@@ -29,7 +29,7 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
   const isSyncing = !!club.calendarId && !!club.calendarName;
   const trpc = useTRPC();
   const { data, isSuccess, isLoading } = useQuery({
-    ...trpc.event.getUserCalendars.queryOptions(),
+    ...trpc.user.events.getUserCalendars.queryOptions(),
     enabled: hasScopes,
   });
   const [isRefreshing, setIsRefreshing] = useState(false);

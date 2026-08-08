@@ -24,7 +24,7 @@ export default function UserInfo({ user }: UserInfoProps) {
   const api = useTRPC();
 
   const editAccountMutation = useMutation(
-    api.userMetadata.updateById.mutationOptions({
+    api.user.metadata.updateById.mutationOptions({
       onSuccess: () => {
         setSnackbar(SnackbarPresets.savedName('user info'));
       },

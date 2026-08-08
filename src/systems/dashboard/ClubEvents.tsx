@@ -17,8 +17,8 @@ export default async function ClubEvents({
 }) {
   const now = TZDateMini.tz('America/Chicago');
   const [clubs, events] = await Promise.all([
-    api.club.getMemberClubs(),
-    api.event.getEventsFromJoinedClubs({
+    api.user.clubs.getMemberClubs(),
+    api.user.events.getEventsFromJoinedClubs({
       currentTime: now,
       sortByDate: true,
       page,
@@ -49,7 +49,7 @@ export default async function ClubEvents({
     );
   }
 
-  const totalCount = await api.event.countEventsFromJoinedClubs({
+  const totalCount = await api.user.events.countEventsFromJoinedClubs({
     currentTime: now,
   });
 

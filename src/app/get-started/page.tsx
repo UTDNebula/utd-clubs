@@ -14,7 +14,7 @@ export default async function Page() {
     redirect(await signInRoute('get-started'));
   }
 
-  const userMetadata = await api.userMetadata.byId({ id: session.user.id });
+  const userMetadata = await api.user.metadata.byId({ id: session.user.id });
 
   return (
     <main className="relative min-h-screen pb-24">

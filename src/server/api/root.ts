@@ -14,7 +14,7 @@ import userRouter from './routers/user';
 export const appRouter = createTRPCRouter({
   club: clubRouter,
   event: eventRouter,
-  userMetadata: userRouter,
+  user: userRouter,
   admin: adminRouter,
   storage: storageRouter,
   ai: aiRouter,

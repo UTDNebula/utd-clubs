@@ -16,10 +16,10 @@ import {
   getByRangeSchema,
   joinedClubEventsSchema,
   joinLeaveSchema,
-} from './schemas';
+} from '../event/schemas';
 import { events } from '@/server/db/schema/events';
 
-const eventUserRouter = createTRPCRouter({
+const userEventsRouter = createTRPCRouter({
   getRegisteredEventsByRange: authedProcedure
     .input(getByRangeSchema)
     .query(async ({ input, ctx }) => {
@@ -248,4 +248,4 @@ const eventUserRouter = createTRPCRouter({
   }),
 });
 
-export default eventUserRouter;
+export default userEventsRouter;

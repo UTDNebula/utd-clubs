@@ -29,7 +29,7 @@ const Layout = async ({
     notFound();
   }
 
-  const canAccess = await api.club.isOfficer({ id: club.id });
+  const canAccess = await api.user.clubs.isOfficer({ id: club.id });
   if (!canAccess) {
     return <div className="">You can&apos;t access this 😢</div>;
   }

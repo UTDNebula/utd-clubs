@@ -3,9 +3,9 @@ import { and, eq, inArray } from 'drizzle-orm';
 import { SelectUserMetadataToClubsWithClub } from '@/server/db/models';
 import { userMetadataToClubs } from '@/server/db/schema/users';
 import { createTRPCRouter, authedProcedure, publicProcedure } from '@/server/api/trpc';
-import { byIdSchema, joinLeaveSchema } from './schemas';
+import { byIdSchema, joinLeaveSchema } from '../club/schemas';
 
-const clubUserRouter = createTRPCRouter({
+const userClubsRouter = createTRPCRouter({
   getMemberClubsMetadata: authedProcedure.query(
     async ({
       ctx,
@@ -136,4 +136,4 @@ const clubUserRouter = createTRPCRouter({
     }),
 });
 
-export default clubUserRouter;
+export default userClubsRouter;

@@ -24,11 +24,11 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   const api = useTRPC();
   const queryClient = useQueryClient();
   const { data: memberState, isPending } = useQuery(
-    api.club.memberState.queryOptions({ id: clubId }),
+    api.user.clubs.memberState.queryOptions({ id: clubId }),
   );
 
   const joinLeave = useMutation(
-    api.club.joinLeave.mutationOptions({
+    api.user.clubs.joinLeave.mutationOptions({
       onMutate: async ({ clubId }) => {
         const queryKey = [
           ['club', 'memberState'],

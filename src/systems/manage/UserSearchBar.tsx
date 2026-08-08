@@ -34,7 +34,7 @@ export const UserSearchBar = ({
   const debouncedSearch = useDebounce(input, 300);
   const api = useTRPC();
   const { data, isLoading } = useQuery(
-    api.userMetadata.searchByNameOrEmail.queryOptions(
+    api.user.searchByNameOrEmail.queryOptions(
       { search: debouncedSearch },
       { enabled: !!debouncedSearch },
     ),

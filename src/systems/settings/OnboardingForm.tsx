@@ -31,7 +31,7 @@ export default function OnboardingForm({
   const api = useTRPC();
 
   const editAccountMutation = useMutation(
-    api.userMetadata.updateById.mutationOptions({}),
+    api.user.metadata.updateById.mutationOptions({}),
   );
 
   // Don't use userMetadataToAccountOnboardingSchema.decode(userMetadata)
