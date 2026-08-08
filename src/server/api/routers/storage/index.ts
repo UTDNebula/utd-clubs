@@ -1,16 +1,8 @@
 import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
 import { callStorageAPI, getUploadURL } from '@/common/utils/storage';
 import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
+import { getDeleteSchema, createUploadSchema } from './schemas';
 
-const getDeleteSchema = z.object({
-  objectId: z.string(),
-});
-
-const createUploadSchema = z.object({
-  objectId: z.string(),
-  mime: z.string(),
-});
 export const storageRouter = createTRPCRouter({
   get: publicProcedure.input(getDeleteSchema).query(async ({ input }) => {
     const data = await callStorageAPI('GET', input.objectId);

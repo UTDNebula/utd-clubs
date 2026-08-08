@@ -4,7 +4,7 @@ import { aiRouter } from './routers/ai';
 import { clubRouter } from './routers/club';
 import { eventRouter } from './routers/event';
 import { storageRouter } from './routers/storage';
-import { userMetadataRouter } from './routers/user';
+import { userRouter } from './routers/user';
 
 /**
  * This is the primary router for your server.
@@ -14,7 +14,7 @@ import { userMetadataRouter } from './routers/user';
 export const appRouter = createTRPCRouter({
   club: clubRouter,
   event: eventRouter,
-  userMetadata: userMetadataRouter,
+  userMetadata: userRouter,
   admin: adminRouter,
   storage: storageRouter,
   ai: aiRouter,

@@ -17,88 +17,35 @@ import {
   desc,
   eq,
   exists,
-  gt,
   gte,
   ilike,
   inArray,
-  isNull,
   lte,
   notExists,
   or,
   sql,
   type SQL,
 } from 'drizzle-orm';
-import { OAuth2Client } from 'google-auth-library';
-import { z } from 'zod';
 import { club } from '@/server/db/schema/club';
 import { events } from '@/server/db/schema/events';
 import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@/server/db/schema/users';
-import { stopWatching } from '@/common/modules/googleCalendar/calendar';
+import { temporalDeixisCustomDateSentinelValue } from '@/common/utils/eventFilter';
+import { createTRPCRouter, publicProcedure } from '../../trpc';
 import {
-  dateSchema,
-  eventFiltersSchema,
-  temporalDeixisCustomDateSentinelValue,
-} from '@/common/utils/eventFilter';
-import {
-  createEventSchema,
-  editEventSchema,
-} from '@/systems/events/create/schema';
-import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
-import { requireMemberRole } from '../../utils';
+  byClubIdSchema,
+  byDateRangeSchema,
+  byIdSchema,
+  byNameSchema,
+  clubUpcomingEventsSchema,
+  countSchema,
+  findByDateSchema,
+  findByFilterSchema,
+} from './schemas';
 
-const byClubIdSchema = z.object({
-  clubId: z.string().default(''),
-  currentTime: z.optional(z.date()),
-  sortByDate: z.boolean().default(false),
-  page: z.number().int().positive().optional(),
-  pageSize: z.number().int().positive().optional(),
-  includePast: z.boolean().optional().default(false),
-});
-
-const countSchema = z.object({
-  clubId: z.string().optional(),
-  /**
-   * Whether to include past events.
-   */
-  includePast: z.boolean().default(false),
-  /**
-   * Whether to include events farther than a year out.
-   */
-  includeAll: z.boolean().default(false),
-  currentTime: z.date().optional(),
-});
-const clubUpcomingEventsSchema = z.object({
-  clubId: z.string(),
-  currentTime: z.date().optional(),
-});
-const byDateRangeSchema = z.object({
-  startTime: z.date().optional(),
-  endTime: z.date().optional(),
-});
-export const findByFilterSchema = z.object({
-  filters: eventFiltersSchema,
-});
-export const findByDateSchema = z.object({
-  date: dateSchema,
-});
-
-const byIdSchema = z.object({
-  id: z.string().default(''),
-});
-
-const byNameSchema = z.object({
-  name: z.string().default(''),
-  sortByDate: z.boolean().default(false),
-});
-const joinLeaveSchema = z.object({
-  id: z.string(),
-});
-
-export const eventRouter = createTRPCRouter({
+export const eventPublicRouter = createTRPCRouter({
   byClubId: publicProcedure
     .input(byClubIdSchema)
     .query(async ({ input, ctx }) => {
@@ -565,165 +512,6 @@ export const eventRouter = createTRPCRouter({
         throw e;
       }
     }),
-  joinedEvent: publicProcedure
-    .input(joinLeaveSchema)
-    .query(async ({ input, ctx }) => {
-      if (!ctx.session) return null;
-      const eventId = input.id;
-      const userId = ctx.session.user.id;
-      return Boolean(
-        await ctx.db.query.userMetadataToEvents.findFirst({
-          where: (userMetadataToEvents) =>
-            and(
-              eq(userMetadataToEvents.userId, userId),
-              eq(userMetadataToEvents.eventId, eventId),
-            ),
-        }),
-      );
-    }),
-  registerState: publicProcedure
-    .input(joinLeaveSchema)
-    .query(async ({ input, ctx }) => {
-      if (!ctx.session) return null;
-
-      const eventId = input.id;
-      const userId = ctx.session.user.id;
-      const result = await ctx.db.query.userMetadataToEvents.findFirst({
-        where: (userMetadataToEvents) =>
-          and(
-            eq(userMetadataToEvents.userId, userId),
-            eq(userMetadataToEvents.eventId, eventId),
-          ),
-      });
-      return {
-        registered: Boolean(result),
-        registeredAt: result?.registeredAt ?? null,
-      };
-    }),
-  toggleRegistration: authedProcedure
-    .input(joinLeaveSchema)
-    .mutation(async ({ ctx, input }) => {
-      const eventId = input.id;
-      const userId = ctx.session.user.id;
-      const dataExists = await ctx.db.query.userMetadataToEvents.findFirst({
-        where: (userMetadataToEvents) =>
-          and(
-            eq(userMetadataToEvents.userId, userId),
-            eq(userMetadataToEvents.eventId, eventId),
-          ),
-      });
-      if (dataExists) {
-        await ctx.db
-          .delete(userMetadataToEvents)
-          .where(
-            and(
-              eq(userMetadataToEvents.userId, userId),
-              eq(userMetadataToEvents.eventId, eventId),
-            ),
-          );
-      } else {
-        await ctx.db
-          .insert(userMetadataToEvents)
-          .values({ userId, eventId, registeredAt: new Date() });
-      }
-      return dataExists;
-    }),
-  create: authedProcedure
-    .input(createEventSchema)
-    .mutation(async ({ input, ctx }) => {
-      await requireMemberRole(ctx.session.user.id, input.clubId, {
-        President: {
-          errorMessage: 'Must be an officer of this club to add an event to it',
-        },
-      });
-
-      const res = await ctx.db
-        .insert(events)
-        .values({ ...input })
-        .returning({ id: events.id });
-      const newEvent = res[0];
-      if (!newEvent)
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to add event',
-        });
-      return newEvent.id;
-    }),
-  update: authedProcedure
-    .input(editEventSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { id, ...data } = input;
-
-      await requireMemberRole(ctx.session.user.id, input.clubId, {
-        President: {
-          errorMessage: "Must be an officer of this event's clubs to modify it",
-        },
-      });
-
-      const res = await ctx.db
-        .update(events)
-        .set({
-          name: data.name,
-          location: data.location,
-          description: data.description,
-          startTime: data.startTime,
-          endTime: data.endTime,
-          image: data.image,
-          updatedAt: new Date(),
-        })
-        .where(and(eq(events.id, id), eq(events.google, false)))
-        .returning({ id: events.id });
-
-      if (res.length === 0) {
-        const existing = await ctx.db.query.events.findFirst({
-          where: (e) => eq(e.id, id),
-        });
-
-        if (!existing) {
-          throw new TRPCError({
-            code: 'NOT_FOUND',
-            message: 'Event not found.',
-          });
-        }
-
-        if (existing.google) {
-          throw new TRPCError({
-            code: 'FORBIDDEN',
-            message: 'Cannot edit a Google Calendar event directly.',
-          });
-        }
-
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to update event.',
-        });
-      }
-      return res[0]?.id;
-    }),
-  delete: authedProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const event = await ctx.db.query.events.findFirst({
-        where: (e) => eq(e.id, input.id),
-      });
-
-      if (!event) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Event not found' });
-      }
-
-      await requireMemberRole(ctx.session.user.id, event.clubId, {
-        President: {
-          errorMessage: "Must be an officer of this event's clubs to delete it",
-        },
-      });
-
-      await ctx.db
-        .update(events)
-        .set({ status: 'deleted' })
-        .where(eq(events.id, input.id));
-
-      return { success: true };
-    }),
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
     const { name, sortByDate } = input;
     try {
@@ -748,104 +536,4 @@ export const eventRouter = createTRPCRouter({
       throw e;
     }
   }),
-  getUserCalendars: authedProcedure.query(async ({ ctx }) => {
-    const accessToken = await getGoogleAccessToken(ctx.session.user.id, true);
-    const googleOauthClient = new OAuth2Client();
-    googleOauthClient.setCredentials({ access_token: accessToken });
-    try {
-      const res = await googleOauthClient.fetch(
-        'https://www.googleapis.com/calendar/v3/users/me/calendarList',
-      );
-      if (res.ok) {
-        return (
-          res.data as {
-            items: { id: string; summary: string; description: string }[];
-          }
-        ).items;
-      } else {
-        throw new TRPCError({
-          message: JSON.stringify(res.data),
-          code: 'INTERNAL_SERVER_ERROR',
-        });
-      }
-    } catch (e) {
-      console.log(e);
-      return [];
-    }
-  }),
-  disableSync: authedProcedure
-    .input(
-      z.object({
-        clubId: z.string(),
-        keepPastEvents: z.boolean().default(true).optional(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const clubRecord = await ctx.db.query.club.findFirst({
-        where: eq(club.id, input.clubId),
-        columns: { calendarId: true },
-      });
-
-      if (!clubRecord) throw new TRPCError({ code: 'NOT_FOUND' });
-
-      await requireMemberRole(ctx.session.user.id, input.clubId, {
-        President: {
-          errorMessage: "Must be an officer of this event's clubs to modify it",
-        },
-      });
-
-      // close webhook
-      await stopWatching(input.clubId);
-
-      // delete all synced events
-      await ctx.db
-        .update(events)
-        .set({ status: 'deleted' })
-        .where(
-          and(
-            eq(events.clubId, input.clubId),
-            eq(events.google, true),
-            clubRecord.calendarId
-              ? or(
-                  eq(events.calendarId, clubRecord.calendarId),
-                  isNull(events.calendarId),
-                )
-              : undefined,
-            input.keepPastEvents ? gt(events.startTime, new Date()) : undefined, // IF indicated, delete only events that have not yet started
-          ),
-        );
-
-      // Mark kept past events as non-google so they become editable
-      if (input.keepPastEvents) {
-        await ctx.db
-          .update(events)
-          .set({ google: false })
-          .where(
-            and(
-              eq(events.clubId, input.clubId),
-              eq(events.google, true),
-              lte(events.startTime, new Date()),
-              clubRecord.calendarId
-                ? or(
-                    eq(events.calendarId, clubRecord.calendarId),
-                    isNull(events.calendarId),
-                  )
-                : undefined,
-            ),
-          );
-      }
-
-      // remove google calendar info from the club
-      await ctx.db
-        .update(club)
-        .set({
-          calendarSyncToken: null,
-          calendarId: null,
-          calendarName: null,
-          calendarGoogleAccountId: null,
-        })
-        .where(eq(club.id, input.clubId));
-
-      return { success: true };
-    }),
 });

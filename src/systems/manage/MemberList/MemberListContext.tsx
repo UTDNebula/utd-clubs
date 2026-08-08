@@ -4,10 +4,10 @@ import { TRPCClientErrorLike } from '@trpc/client';
 import { createContext } from 'react';
 import z from 'zod';
 import { AppRouter } from '@/server/api/root';
-import { removeMembersSchema } from '@/server/api/routers/club/manage';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@/server/db/models';
 import useMemberListDeletionState from './useMemberListDeletionState';
 import { MemberListAbilities } from './utils';
+import { RouterInputs } from '@/trpc/shared';
 
 export interface MemberListContextType {
   memberListDeletionState:
@@ -21,7 +21,7 @@ export interface MemberListContextType {
     | UseMutationResult<
         SelectUserMetadataToClubsWithUserMetadata[],
         TRPCClientErrorLike<AppRouter>,
-        z.infer<typeof removeMembersSchema>
+        RouterInputs['club']['edit']['removeMembers']
       >
     | undefined;
   getMembers:

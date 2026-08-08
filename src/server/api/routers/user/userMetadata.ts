@@ -1,10 +1,8 @@
 import { and, count, eq, gt, gte, inArray, lt, or, sql } from 'drizzle-orm';
 import { headers } from 'next/headers';
-import { z } from 'zod';
 import { type personalCats } from '@/common/modules/navigation/categories';
 import { auth } from '@/server/auth';
 import {
-  insertUserMetadata,
   SelectUserMetadataToClubs,
   SelectUserMetadataWithClubs,
 } from '@/server/db/models';
@@ -17,33 +15,13 @@ import {
   userMetadataToEvents,
 } from '@/server/db/schema/users';
 import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
-
-const byIdSchema = z.object({ id: z.string() });
-
-const updateByIdSchema = z.object({
-  updateUser: insertUserMetadata.partial().omit({ id: true }),
-  clubs: z.string().array().optional(),
-});
-const nameOrEmailSchema = z.object({
-  search: z.string().default(''),
-});
-
-const eventsSortSchema = z.object({
-  currentTime: z.optional(z.date()),
-  sortByDate: z.boolean().default(false),
-});
-
-const joinedClubEventsSchema = z.object({
-  currentTime: z.optional(z.date()),
-  sortByDate: z.boolean().default(false),
-  page: z.number().int().positive().optional(),
-  pageSize: z.number().int().positive().optional(),
-});
-
-const getByRangeSchema = z.object({
-  startDate: z.string(),
-  endDate: z.string(),
-});
+import {
+  byIdSchema,
+  eventsSortSchema,
+  getByRangeSchema,
+  joinedClubEventsSchema,
+  updateByIdSchema,
+} from './schemas';
 
 export const userMetadataRouter = createTRPCRouter({
   byId: authedProcedure
@@ -262,30 +240,6 @@ export const userMetadataRouter = createTRPCRouter({
       const value = result[0]?.value ?? 0;
 
       return value;
-    }),
-  searchByNameOrEmail: publicProcedure
-    .input(nameOrEmailSchema)
-    .query(async ({ input, ctx }) => {
-      const q = `%${input.search}%`;
-
-      const result = await ctx.db
-        .select({
-          id: users.id,
-          email: users.email,
-          firstName: userMetadata.firstName,
-          lastName: userMetadata.lastName,
-        })
-        .from(users)
-        .leftJoin(userMetadata, eq(userMetadata.id, users.id))
-        .where(
-          sql`
-            CONCAT(${userMetadata.firstName}, ' ', ${userMetadata.lastName}) ILIKE ${q}
-            OR ${users.email} ILIKE ${q}
-            OR ${userMetadata.contactEmail} ILIKE ${q}
-          `,
-        );
-
-      return result;
     }),
   getUserSidebarCapabilities: publicProcedure.query(async ({ ctx }) => {
     const session = ctx.session;

@@ -1,7 +1,5 @@
 import { TRPCError } from '@trpc/server';
 import { and, asc, eq, inArray } from 'drizzle-orm';
-import { z } from 'zod';
-import { selectContact } from '@/server/db/models';
 import { club } from '@/server/db/schema/club';
 import { contacts } from '@/server/db/schema/contacts';
 import { membershipForms } from '@/server/db/schema/membershipForms';
@@ -12,84 +10,17 @@ import { editSlugSchema } from '@/systems/manage/forms/Slug';
 import { callStorageAPI } from '@/common/utils/storage';
 import { createTRPCRouter, authedProcedure } from '../../trpc';
 import { requireMemberRole } from '../../utils';
+import {
+  byIdSchema,
+  editContactSchema,
+  editCollaboratorSchema,
+  editOfficerSchema,
+  editFormSchema,
+  deleteSchema,
+  removeMembersSchema,
+} from './schemas';
 
-const byIdSchema = z.object({
-  id: z.string().default(''),
-});
-
-const editContactSchema = z.object({
-  clubId: z.string(),
-  deleted: selectContact.shape.platform.array(),
-  modified: selectContact.omit({ displayOrder: true }).array(),
-  created: selectContact.omit({ clubId: true, displayOrder: true }).array(),
-  order: selectContact.shape.platform.array().optional(),
-});
-
-export const editCollaboratorSchema = z.object({
-  clubId: z.string(),
-  deleted: z.string().array(),
-  modified: z
-    .object({
-      userId: z.string(),
-      position: z.enum(['President', 'Officer']),
-    })
-    .array(),
-  created: z
-    .object({
-      userId: z.string(),
-      position: z.enum(['President', 'Officer']),
-    })
-    .array(),
-});
-
-const editOfficerSchema = z.object({
-  clubId: z.string(),
-  deleted: z.string().array(),
-  modified: z
-    .object({
-      id: z.string(),
-      name: z.string(),
-      position: z.string(),
-    })
-    .array(),
-  created: z
-    .object({
-      id: z.string().optional(),
-      name: z.string(),
-      position: z.string(),
-    })
-    .array(),
-  order: z.string().array().optional(),
-});
-
-const editFormSchema = z.object({
-  clubId: z.string(),
-  deleted: z.string().array(),
-  modified: z
-    .object({
-      id: z.string(),
-      name: z.string(),
-      url: z.url(),
-    })
-    .array(),
-  created: z
-    .object({
-      id: z.string().optional(),
-      name: z.string(),
-      url: z.url(),
-    })
-    .array(),
-  order: z.string().array().optional(),
-});
-
-const deleteSchema = z.object({ id: z.string() });
-
-export const removeMembersSchema = z.object({
-  clubId: z.string(),
-  ids: z.union([z.string().default(''), z.string().default('').array()]),
-});
-
-export const clubEditRouter = createTRPCRouter({
+export const clubManageRouter = createTRPCRouter({
   data: authedProcedure
     .input(editClubDetailsSchema)
     .mutation(async ({ input, ctx }) => {

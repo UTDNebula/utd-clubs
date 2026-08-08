@@ -11,10 +11,8 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import z from 'zod';
 import Confirmation from '@/common/components/Confirmation';
 import { AppRouter } from '@/server/api/root';
-import { removeMembersSchema } from '@/server/api/routers/club/manage';
 import {
   SelectClub,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
@@ -33,6 +31,7 @@ import {
   formatUserListString,
   MemberListAbilities,
 } from './utils';
+import { RouterInputs } from '@/trpc/shared';
 
 type MemberListProps = {
   members: SelectUserMetadataToClubsWithUserMetadataWithUser[];
@@ -57,7 +56,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
   const removeMembers = useMutation<
     SelectUserMetadataToClubsWithUserMetadataWithUser[],
     TRPCClientErrorLike<AppRouter>,
-    z.infer<typeof removeMembersSchema>
+    RouterInputs['club']['edit']['removeMembers']
   >(api.club.edit.removeMembers.mutationOptions({}));
 
   // For refresh button

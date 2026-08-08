@@ -77,6 +77,8 @@ const t = initTRPC.context<Context>().create({
  */
 export const createTRPCRouter = t.router;
 
+export const mergeRouters = t.mergeRouters;
+
 /**
  * backend calls instead of proxy
  */

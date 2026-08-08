@@ -12,55 +12,29 @@ import {
   sql,
 } from 'drizzle-orm';
 import { google } from 'googleapis';
-import { z } from 'zod';
 import { SelectUserMetadataToClubsWithClub } from '@/server/db/models';
 import { club, usedTags } from '@/server/db/schema/club';
 import { membershipForms } from '@/server/db/schema/membershipForms';
 import { officers as officersTable } from '@/server/db/schema/officers';
 import { userMetadataToClubs } from '@/server/db/schema/users';
-import { syncCalendar, watchCalendar } from '@/common/modules/googleCalendar/calendar';
+import {
+  syncCalendar,
+  watchCalendar,
+} from '@/common/modules/googleCalendar/calendar';
 import { createClubSchema } from '@/systems/clubs/create/schema';
 import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
 import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
-import { clubEditRouter } from './manage';
+import {
+  byNameSchema,
+  byIdSchema,
+  bySlugSchema,
+  joinLeaveSchema,
+  searchTagSchema,
+  searchSchema,
+  eventSyncSchema,
+} from './schemas';
 
-const byNameSchema = z.object({
-  name: z.string().default(''),
-  limit: z.number().min(1).max(20).default(5),
-});
-
-const byIdSchema = z.object({
-  id: z.string().default(''),
-});
-
-const bySlugSchema = z.object({
-  slug: z.string().default(''),
-});
-
-const joinLeaveSchema = z.object({
-  clubId: z.string().default(''),
-});
-
-const searchSchema = z.object({
-  tags: z.string().array().nullish(),
-  search: z.string().nullish(),
-  cursor: z.number().min(0).default(0),
-  limit: z.number().min(1).max(50).default(10),
-  initialCursor: z.number().min(0).default(0),
-});
-
-const searchTagSchema = z.object({
-  search: z.string(),
-});
-
-const eventSyncSchema = z.object({
-  clubId: z.string(),
-  calendarName: z.string().optional(),
-  calendarId: z.string().optional(),
-});
-
-export const clubRouter = createTRPCRouter({
-  edit: clubEditRouter,
+export const clubPublicRouter = createTRPCRouter({
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
     const { name, limit } = input;
     const clubs = await ctx.db.query.club.findMany({
@@ -147,136 +121,6 @@ export const clubRouter = createTRPCRouter({
       return [];
     }
   }),
-  getMemberClubsMetadata: authedProcedure.query(
-    async ({
-      ctx,
-    }): Promise<SelectUserMetadataToClubsWithClub[] | undefined> => {
-      const results = await ctx.db.query.userMetadataToClubs.findMany({
-        where: and(
-          eq(userMetadataToClubs.userId, ctx.session.user.id),
-          inArray(userMetadataToClubs.memberType, [
-            'Member',
-            'Officer',
-            'President',
-          ]),
-        ),
-        with: { club: true },
-      });
-      return results;
-    },
-  ),
-  getMemberClubs: authedProcedure.query(async ({ ctx }) => {
-    const results = await ctx.db.query.userMetadataToClubs.findMany({
-      where: and(
-        eq(userMetadataToClubs.userId, ctx.session.user.id),
-        inArray(userMetadataToClubs.memberType, [
-          'Member',
-          'Officer',
-          'President',
-        ]),
-      ),
-      with: { club: true },
-    });
-    return results.map((ele) => ele.club);
-  }),
-  getOfficerClubs: authedProcedure.query(async ({ ctx }) => {
-    const results = await ctx.db.query.userMetadataToClubs.findMany({
-      where: and(
-        eq(userMetadataToClubs.userId, ctx.session.user.id),
-        inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
-      ),
-      with: { club: true },
-    });
-    return results.map((ele) => ele.club);
-  }),
-  isOfficer: authedProcedure
-    .input(byIdSchema)
-    .query(async ({ input, ctx }) => {
-      const found = await ctx.db.query.userMetadataToClubs.findFirst({
-        where: and(
-          eq(userMetadataToClubs.clubId, input.id),
-          eq(userMetadataToClubs.userId, ctx.session.user.id),
-          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
-        ),
-      });
-      return !!found;
-    }),
-  memberType: publicProcedure
-    .input(byIdSchema)
-    .query(async ({ input, ctx }) => {
-      if (!ctx.session) return null;
-      return (
-        (
-          await ctx.db.query.userMetadataToClubs.findFirst({
-            where: and(
-              eq(userMetadataToClubs.clubId, input.id),
-              eq(userMetadataToClubs.userId, ctx.session.user.id),
-              inArray(userMetadataToClubs.memberType, [
-                'Member',
-                'Officer',
-                'President',
-              ]),
-            ),
-          })
-        )?.memberType ?? null
-      );
-    }),
-  memberState: publicProcedure
-    .input(byIdSchema)
-    .query(async ({ input, ctx }) => {
-      if (!ctx.session) return null;
-
-      const result = await ctx.db.query.userMetadataToClubs.findFirst({
-        where: and(
-          eq(userMetadataToClubs.clubId, input.id),
-          eq(userMetadataToClubs.userId, ctx.session.user.id),
-          inArray(userMetadataToClubs.memberType, [
-            'Member',
-            'Officer',
-            'President',
-          ]),
-        ),
-      });
-      return {
-        memberType: result?.memberType ?? null,
-        joinedAt: result?.joinedAt ?? null,
-      };
-    }),
-  joinLeave: authedProcedure
-    .input(joinLeaveSchema)
-    .mutation(async ({ ctx, input }) => {
-      const joinUserId = ctx.session.user.id;
-      const { clubId } = input;
-      const dataExists = await ctx.db.query.userMetadataToClubs.findFirst({
-        where: (userMetadataToClubs) =>
-          and(
-            eq(userMetadataToClubs.userId, joinUserId),
-            eq(userMetadataToClubs.clubId, clubId),
-          ),
-      });
-      if (dataExists) {
-        if (dataExists.memberType !== 'President') {
-          await ctx.db
-            .delete(userMetadataToClubs)
-            .where(
-              and(
-                eq(userMetadataToClubs.userId, joinUserId),
-                eq(userMetadataToClubs.clubId, clubId),
-              ),
-            );
-        } else {
-          throw new TRPCError({
-            code: 'FORBIDDEN',
-            message: 'Cannot remove yourself because you are an admin',
-          });
-        }
-      } else {
-        await ctx.db
-          .insert(userMetadataToClubs)
-          .values({ userId: joinUserId, clubId, joinedAt: new Date() });
-      }
-      return dataExists;
-    }),
   create: authedProcedure
     .input(createClubSchema)
     .mutation(async ({ input, ctx }) => {

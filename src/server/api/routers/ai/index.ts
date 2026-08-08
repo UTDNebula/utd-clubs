@@ -1,4 +1,3 @@
-import { GoogleGenAI } from '@google/genai';
 import { eq } from 'drizzle-orm';
 import { club } from '@/server/db/schema/club';
 import {
@@ -8,27 +7,7 @@ import {
 } from '@/server/db/schema/users';
 import { clubMatchFormSchema } from '@/systems/clubs/match/schema';
 import { createTRPCRouter, authedProcedure } from '../../trpc';
-
-const GEMINI_SERVICE_ACCOUNT = Boolean(process.env.GEMINI_SERVICE_ACCOUNT)
-  ? (JSON.parse(process.env.GEMINI_SERVICE_ACCOUNT ?? '') as {
-      client_email: string;
-      private_key: string;
-    })
-  : { client_email: '', private_key: '' };
-
-const ai = new GoogleGenAI({
-  vertexai: true,
-  project: 'jupiter-459023',
-  location: 'us-central1',
-  googleAuthOptions: {
-    credentials: Boolean(process.env.GEMINI_SERVICE_ACCOUNT)
-      ? {
-          client_email: GEMINI_SERVICE_ACCOUNT.client_email,
-          private_key: GEMINI_SERVICE_ACCOUNT.private_key,
-        }
-      : undefined,
-  },
-});
+import { ai } from './ai';
 
 export const aiRouter = createTRPCRouter({
   clubMatch: authedProcedure

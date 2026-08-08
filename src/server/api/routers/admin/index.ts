@@ -10,24 +10,12 @@ import {
 import { callStorageAPI } from '@/common/utils/storage';
 import { adminProcedure, createTRPCRouter } from '../../trpc';
 import { editCollaboratorSchema } from '../club/schemas';
-
-const tagReplaceSchema = z.object({
-  oldTag: z.string(),
-  newTag: z.string(),
-});
-
-const bySlugSchema = z.object({
-  slug: z.string().default(''),
-});
-
-const deleteSchema = z.object({
-  id: z.string(),
-});
-
-const changeClubStatusSchema = z.object({
-  clubId: z.string(),
-  status: z.enum(club.approved.enumValues),
-});
+import {
+  tagReplaceSchema,
+  deleteSchema,
+  changeClubStatusSchema,
+  bySlugSchema,
+} from './schemas';
 
 export const adminRouter = createTRPCRouter({
   allClubs: adminProcedure.query(async ({ ctx }) => {
