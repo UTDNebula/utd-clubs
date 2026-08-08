@@ -34,7 +34,7 @@ import {
 import {
   calendarParamsSchema,
   type CalendarParamsSchema,
-} from '@/systems/events/eventFilter';
+} from '@/systems/events/directory/schema';
 import { createParamSetter } from '@/common/utils/searchParams';
 
 type RegisteredEvent =

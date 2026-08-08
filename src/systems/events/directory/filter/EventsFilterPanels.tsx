@@ -3,7 +3,7 @@
 import Divider from '@mui/material/Divider';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
-import { EventFiltersSchema } from '@/systems/events/eventFilter';
+import { EventFiltersSchema } from '@/systems/events/directory/schema';
 import useStable from '@/common/utils/useStable';
 import DatePanel from './panels/Date';
 import FiltersPanel from './panels/Filters';
