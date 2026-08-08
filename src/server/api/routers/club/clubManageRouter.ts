@@ -8,8 +8,8 @@ import { userMetadataToClubs } from '@/server/db/schema/users';
 import { editClubDetailsSchema } from '@/systems/manage/forms/Details';
 import { editSlugSchema } from '@/systems/manage/forms/Slug';
 import { callStorageAPI } from '@/common/utils/storage';
-import { createTRPCRouter, authedProcedure } from '../../trpc';
-import { requireMemberRole } from '../../utils';
+import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
+import { requireMemberRole } from '@/server/api/utils';
 import {
   byIdSchema,
   editContactSchema,
@@ -20,7 +20,7 @@ import {
   removeMembersSchema,
 } from './schemas';
 
-export const clubManageRouter = createTRPCRouter({
+const clubManageRouter = createTRPCRouter({
   data: authedProcedure
     .input(editClubDetailsSchema)
     .mutation(async ({ input, ctx }) => {
@@ -557,3 +557,5 @@ export const clubManageRouter = createTRPCRouter({
       return newMembers;
     }),
 });
+
+export default clubManageRouter;

@@ -8,10 +8,10 @@ import {
   createEventSchema,
   editEventSchema,
 } from '@/systems/events/create/schema';
-import { createTRPCRouter, authedProcedure } from '../../trpc';
-import { requireMemberRole } from '../../utils';
+import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
+import { requireMemberRole } from '@/server/api/utils';
 
-export const eventManageRouter = createTRPCRouter({
+const eventManageRouter = createTRPCRouter({
   create: authedProcedure
     .input(createEventSchema)
     .mutation(async ({ input, ctx }) => {
@@ -184,3 +184,5 @@ export const eventManageRouter = createTRPCRouter({
       return { success: true };
     }),
 });
+
+export default eventManageRouter;

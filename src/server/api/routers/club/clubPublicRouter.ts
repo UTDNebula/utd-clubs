@@ -12,7 +12,6 @@ import {
   sql,
 } from 'drizzle-orm';
 import { google } from 'googleapis';
-import { SelectUserMetadataToClubsWithClub } from '@/server/db/models';
 import { club, usedTags } from '@/server/db/schema/club';
 import { membershipForms } from '@/server/db/schema/membershipForms';
 import { officers as officersTable } from '@/server/db/schema/officers';
@@ -23,18 +22,17 @@ import {
 } from '@/common/modules/googleCalendar/calendar';
 import { createClubSchema } from '@/systems/clubs/create/schema';
 import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '@/server/api/trpc';
 import {
   byNameSchema,
   byIdSchema,
   bySlugSchema,
-  joinLeaveSchema,
   searchTagSchema,
   searchSchema,
   eventSyncSchema,
 } from './schemas';
 
-export const clubPublicRouter = createTRPCRouter({
+const clubPublicRouter = createTRPCRouter({
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
     const { name, limit } = input;
     const clubs = await ctx.db.query.club.findMany({
@@ -510,3 +508,5 @@ export const clubPublicRouter = createTRPCRouter({
     }
   }),
 });
+
+export default clubPublicRouter;

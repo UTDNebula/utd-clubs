@@ -1,14 +1,16 @@
-import { createTRPCRouter, mergeRouters } from '../../trpc';
-import { clubManageRouter } from './manage';
-import { clubPublicRouter } from './public';
-import { userMetadataToClubsRouter } from './userMetadataToClubs';
+import { createTRPCRouter, mergeRouters } from '@/server/api/trpc';
+import clubManageRouter from './clubManageRouter';
+import clubPublicRouter from './clubPublicRouter';
+import clubUserRouter from './clubUserRouter';
 
 const clubBaseRouter = createTRPCRouter({
   edit: clubManageRouter,
 });
 
-export const clubRouter = mergeRouters(
+const clubRouter = mergeRouters(
   clubBaseRouter,
   clubPublicRouter,
-  userMetadataToClubsRouter,
+  clubUserRouter,
 );
+
+export default clubRouter;

@@ -3,10 +3,10 @@ import { and, eq } from 'drizzle-orm';
 import { OAuth2Client } from 'google-auth-library';
 import { userMetadataToEvents } from '@/server/db/schema/users';
 import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '@/server/api/trpc';
 import { joinLeaveSchema } from './schemas';
 
-export const userMetadataToEventsRouter = createTRPCRouter({
+const eventUserRouter = createTRPCRouter({
   joinedEvent: publicProcedure
     .input(joinLeaveSchema)
     .query(async ({ input, ctx }) => {
@@ -96,3 +96,5 @@ export const userMetadataToEventsRouter = createTRPCRouter({
     }
   }),
 });
+
+export default eventUserRouter;

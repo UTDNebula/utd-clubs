@@ -1,10 +1,10 @@
 import { eq, sql } from 'drizzle-orm';
 import { user as users } from '@/server/db/schema/auth';
 import { userMetadata } from '@/server/db/schema/users';
-import { createTRPCRouter, publicProcedure } from '../../trpc';
+import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
 import { nameOrEmailSchema } from './schemas';
 
-export const userPublicRouter = createTRPCRouter({
+const userPublicRouter = createTRPCRouter({
   searchByNameOrEmail: publicProcedure
     .input(nameOrEmailSchema)
     .query(async ({ input, ctx }) => {
@@ -30,3 +30,5 @@ export const userPublicRouter = createTRPCRouter({
       return result;
     }),
 });
+
+export default userPublicRouter;

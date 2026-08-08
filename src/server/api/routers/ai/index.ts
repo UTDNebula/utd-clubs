@@ -6,10 +6,10 @@ import {
   type ClubMatchResults,
 } from '@/server/db/schema/users';
 import { clubMatchFormSchema } from '@/systems/clubs/match/schema';
-import { createTRPCRouter, authedProcedure } from '../../trpc';
+import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
 import { ai } from './ai';
 
-export const aiRouter = createTRPCRouter({
+const aiRouter = createTRPCRouter({
   clubMatch: authedProcedure
     .input(clubMatchFormSchema)
     .mutation(async ({ ctx, input }) => {
@@ -152,3 +152,5 @@ Maintain strict formatting:
       ]);
     }),
 });
+
+export default aiRouter;

@@ -1,10 +1,12 @@
-import { mergeRouters } from '../../trpc';
-import { eventManageRouter } from './manage';
-import { eventPublicRouter } from './public';
-import { userMetadataToEventsRouter } from './userMetadataToEvents';
+import { mergeRouters } from '@/server/api/trpc';
+import eventManageRouter from './eventManageRouter';
+import eventPublicRouter from './eventPublicRouter';
+import eventUserRouter from './eventUserRouter';
 
-export const eventRouter = mergeRouters(
+const eventRouter = mergeRouters(
   eventPublicRouter,
-  userMetadataToEventsRouter,
+  eventUserRouter,
   eventManageRouter,
 );
+
+export default eventRouter;

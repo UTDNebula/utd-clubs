@@ -2,10 +2,10 @@ import { TRPCError } from '@trpc/server';
 import { and, eq, inArray } from 'drizzle-orm';
 import { SelectUserMetadataToClubsWithClub } from '@/server/db/models';
 import { userMetadataToClubs } from '@/server/db/schema/users';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '@/server/api/trpc';
 import { byIdSchema, joinLeaveSchema } from './schemas';
 
-export const userMetadataToClubsRouter = createTRPCRouter({
+const clubUserRouter = createTRPCRouter({
   getMemberClubsMetadata: authedProcedure.query(
     async ({
       ctx,
@@ -135,3 +135,5 @@ export const userMetadataToClubsRouter = createTRPCRouter({
       return dataExists;
     }),
 });
+
+export default clubUserRouter;

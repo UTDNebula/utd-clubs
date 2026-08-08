@@ -1,5 +1,7 @@
-import { mergeRouters } from '../../trpc';
-import { userPublicRouter } from './public';
-import { userMetadataRouter } from './userMetadata';
+import { mergeRouters } from '@/server/api/trpc';
+import userPublicRouter from './userPublicRouter';
+import userMetadataRouter from './userMetadataRouter';
 
-export const userRouter = mergeRouters(userMetadataRouter, userPublicRouter);
+const userRouter = mergeRouters(userPublicRouter, userMetadataRouter);
+
+export default userRouter;

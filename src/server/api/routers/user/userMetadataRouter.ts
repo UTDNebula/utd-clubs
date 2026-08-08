@@ -14,7 +14,7 @@ import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@/server/db/schema/users';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '../../trpc';
+import { createTRPCRouter, authedProcedure, publicProcedure } from '@/server/api/trpc';
 import {
   byIdSchema,
   eventsSortSchema,
@@ -23,7 +23,7 @@ import {
   updateByIdSchema,
 } from './schemas';
 
-export const userMetadataRouter = createTRPCRouter({
+const userMetadataRouter = createTRPCRouter({
   byId: authedProcedure
     .input(byIdSchema)
     .query(
@@ -269,3 +269,5 @@ export const userMetadataRouter = createTRPCRouter({
     return capabilites;
   }),
 });
+
+export default userMetadataRouter;

@@ -8,7 +8,7 @@ import {
   userMetadataToEvents,
 } from '@/server/db/schema/users';
 import { callStorageAPI } from '@/common/utils/storage';
-import { adminProcedure, createTRPCRouter } from '../../trpc';
+import { adminProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { editCollaboratorSchema } from '../club/schemas';
 import {
   tagReplaceSchema,
@@ -17,7 +17,7 @@ import {
   bySlugSchema,
 } from './schemas';
 
-export const adminRouter = createTRPCRouter({
+const adminRouter = createTRPCRouter({
   allClubs: adminProcedure.query(async ({ ctx }) => {
     const orgs = await ctx.db.query.club.findMany({
       columns: {
@@ -229,3 +229,5 @@ export const adminRouter = createTRPCRouter({
       return { success: true };
     }),
 });
+
+export default adminRouter;

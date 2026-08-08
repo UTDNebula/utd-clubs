@@ -33,7 +33,7 @@ import {
   userMetadataToEvents,
 } from '@/server/db/schema/users';
 import { temporalDeixisCustomDateSentinelValue } from '@/common/utils/eventFilter';
-import { createTRPCRouter, publicProcedure } from '../../trpc';
+import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
 import {
   byClubIdSchema,
   byDateRangeSchema,
@@ -45,7 +45,7 @@ import {
   findByFilterSchema,
 } from './schemas';
 
-export const eventPublicRouter = createTRPCRouter({
+const eventPublicRouter = createTRPCRouter({
   byClubId: publicProcedure
     .input(byClubIdSchema)
     .query(async ({ input, ctx }) => {
@@ -537,3 +537,5 @@ export const eventPublicRouter = createTRPCRouter({
     }
   }),
 });
+
+export default eventPublicRouter;
