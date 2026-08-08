@@ -3,18 +3,14 @@ import { and, eq, gt, isNull, lte, or } from 'drizzle-orm';
 import { club } from '@/server/db/schema/club';
 import { events } from '@/server/db/schema/events';
 import { stopWatching } from '@/common/modules/googleCalendar/calendar';
-import {
-  createEventSchema,
-  editEventSchema,
-} from '@/systems/events/create/schema';
 import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
 import { eventIdSchema } from '../baseSchemas';
-import { disableSyncSchema } from './schemas';
+import { createSchema, disableSyncSchema, editSchema } from './schemas';
 
 const eventManageRouter = createTRPCRouter({
   create: authedProcedure
-    .input(createEventSchema)
+    .input(createSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
         President: {
@@ -34,57 +30,55 @@ const eventManageRouter = createTRPCRouter({
         });
       return newEvent.id;
     }),
-  update: authedProcedure
-    .input(editEventSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { id, ...data } = input;
+  update: authedProcedure.input(editSchema).mutation(async ({ input, ctx }) => {
+    const { id, ...data } = input;
 
-      await requireMemberRole(ctx.session.user.id, input.clubId, {
-        President: {
-          errorMessage: "Must be an officer of this event's clubs to modify it",
-        },
+    await requireMemberRole(ctx.session.user.id, input.clubId, {
+      President: {
+        errorMessage: "Must be an officer of this event's clubs to modify it",
+      },
+    });
+
+    const res = await ctx.db
+      .update(events)
+      .set({
+        name: data.name,
+        location: data.location,
+        description: data.description,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        image: data.image,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(events.id, id), eq(events.google, false)))
+      .returning({ id: events.id });
+
+    if (res.length === 0) {
+      const existing = await ctx.db.query.events.findFirst({
+        where: (e) => eq(e.id, id),
       });
 
-      const res = await ctx.db
-        .update(events)
-        .set({
-          name: data.name,
-          location: data.location,
-          description: data.description,
-          startTime: data.startTime,
-          endTime: data.endTime,
-          image: data.image,
-          updatedAt: new Date(),
-        })
-        .where(and(eq(events.id, id), eq(events.google, false)))
-        .returning({ id: events.id });
-
-      if (res.length === 0) {
-        const existing = await ctx.db.query.events.findFirst({
-          where: (e) => eq(e.id, id),
-        });
-
-        if (!existing) {
-          throw new TRPCError({
-            code: 'NOT_FOUND',
-            message: 'Event not found.',
-          });
-        }
-
-        if (existing.google) {
-          throw new TRPCError({
-            code: 'FORBIDDEN',
-            message: 'Cannot edit a Google Calendar event directly.',
-          });
-        }
-
+      if (!existing) {
         throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to update event.',
+          code: 'NOT_FOUND',
+          message: 'Event not found.',
         });
       }
-      return res[0]?.id;
-    }),
+
+      if (existing.google) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Cannot edit a Google Calendar event directly.',
+        });
+      }
+
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to update event.',
+      });
+    }
+    return res[0]?.id;
+  }),
   delete: authedProcedure
     .input(eventIdSchema)
     .mutation(async ({ input, ctx }) => {

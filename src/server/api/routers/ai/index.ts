@@ -5,13 +5,13 @@ import {
   userMetadata,
   type ClubMatchResults,
 } from '@/server/db/schema/users';
-import { clubMatchFormSchema } from '@/systems/clubs/match/schema';
 import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
 import { ai } from '@/common/utils/ai';
+import { clubMatchSchema } from './schemas';
 
 const aiRouter = createTRPCRouter({
   clubMatch: authedProcedure
-    .input(clubMatchFormSchema)
+    .input(clubMatchSchema)
     .mutation(async ({ ctx, input }) => {
       // Limit to 100 calls to avoid spam
       if (process.env.NODE_ENV !== 'development') {

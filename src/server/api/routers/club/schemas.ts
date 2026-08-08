@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import { selectContact } from '@/server/db/models';
 import { clubIdSchema } from '../baseSchemas';
+import { createClubSchema } from '@/systems/clubs/create/schema';
+import { editSlugSchema as editClubSlugSchema } from '@/systems/manage/forms/Slug';
+import { editClubDetailsSchema } from '@/systems/manage/forms/Details';
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public Router
@@ -26,6 +29,12 @@ export const searchTagSchema = z.object({
 ////////////////////////////////////////////////////////////////////////////////
 // Manage Router
 ////////////////////////////////////////////////////////////////////////////////
+
+export const createSchema = createClubSchema;
+
+export const editDataSchema = editClubDetailsSchema;
+
+export const editSlugSchema = editClubSlugSchema;
 
 export const eventSyncSchema = clubIdSchema.extend({
   calendarName: z.string().optional(),

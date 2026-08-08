@@ -5,8 +5,6 @@ import { contacts } from '@/server/db/schema/contacts';
 import { membershipForms } from '@/server/db/schema/membershipForms';
 import { officers } from '@/server/db/schema/officers';
 import { userMetadataToClubs } from '@/server/db/schema/users';
-import { editClubDetailsSchema } from '@/systems/manage/forms/Details';
-import { editSlugSchema } from '@/systems/manage/forms/Slug';
 import { callStorageAPI } from '@/common/utils/storage';
 import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
@@ -17,8 +15,10 @@ import {
   editFormSchema,
   removeMembersSchema,
   eventSyncSchema,
+  createSchema,
+  editDataSchema,
+  editSlugSchema,
 } from './schemas';
-import { createClubSchema } from '@/systems/clubs/create/schema';
 import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
 import {
   syncCalendar,
@@ -29,7 +29,7 @@ import { clubIdSchema } from '../baseSchemas';
 
 const clubManageRouter = createTRPCRouter({
   create: authedProcedure
-    .input(createClubSchema)
+    .input(createSchema)
     .mutation(async ({ input, ctx }) => {
       //Create unique slug based on name
       const baseSlug = input.name.name
@@ -70,7 +70,7 @@ const clubManageRouter = createTRPCRouter({
       return slug;
     }),
   data: authedProcedure
-    .input(editClubDetailsSchema)
+    .input(editDataSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.id, {
         Officer: { errorMessage: 'Must be an officer to modify this club' },
