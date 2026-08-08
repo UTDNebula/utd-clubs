@@ -61,7 +61,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
 
   // For refresh button
   const getMembers = useQuery(
-    api.club.getMembers.queryOptions({ id: club.id }, { enabled: false }),
+    api.club.getMembers.queryOptions({ clubId: club.id }, { enabled: false }),
   );
 
   const { setSnackbar } = useSnackbar();

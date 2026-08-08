@@ -23,7 +23,7 @@ const ClubBody = async ({
       currentTime: now,
     }),
     api.club.clubForms({
-      id: club.id,
+      clubId: club.id,
     }),
   ]);
 

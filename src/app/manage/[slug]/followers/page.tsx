@@ -15,7 +15,7 @@ export default async function Page({
     notFound();
   }
 
-  const members = await api.club.getMembers({ id: club.id });
+  const members = await api.club.getMembers({ clubId: club.id });
 
   return (
     <main>

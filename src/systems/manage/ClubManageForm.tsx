@@ -30,10 +30,10 @@ const ClubManageForm = async ({
     officers,
     awaitedGoogleAccount,
   ] = await Promise.all([
-    api.club.getListedOfficers({ id: clubId }),
-    api.club.clubForms({ id: clubId }),
-    api.user.clubs.memberType({ id: clubId }),
-    api.club.getOfficers({ id: clubId }),
+    api.club.getListedOfficers({ clubId }),
+    api.club.clubForms({ clubId }),
+    api.user.clubs.memberType({ clubId }),
+    api.club.getOfficers({ clubId }),
     auth.api.listUserAccounts({
       headers: awaitedHeaders,
       query: { user: { id: session!.user.id } },

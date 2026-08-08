@@ -21,7 +21,7 @@ export default async function Page(props: Props) {
     notFound();
   }
 
-  const officers = await api.club.getOfficers({ id: club.id });
+  const officers = await api.club.getOfficers({ clubId: club.id });
 
   return (
     <>

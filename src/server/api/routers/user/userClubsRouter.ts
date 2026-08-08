@@ -2,8 +2,12 @@ import { TRPCError } from '@trpc/server';
 import { and, eq, inArray } from 'drizzle-orm';
 import { SelectUserMetadataToClubsWithClub } from '@/server/db/models';
 import { userMetadataToClubs } from '@/server/db/schema/users';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '@/server/api/trpc';
-import { byIdSchema, joinLeaveSchema } from '../club/schemas';
+import {
+  createTRPCRouter,
+  authedProcedure,
+  publicProcedure,
+} from '@/server/api/trpc';
+import { clubIdSchema } from '../baseSchemas';
 
 const userClubsRouter = createTRPCRouter({
   getMemberClubsMetadata: authedProcedure.query(
@@ -48,25 +52,27 @@ const userClubsRouter = createTRPCRouter({
     });
     return results.map((ele) => ele.club);
   }),
-  isOfficer: authedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    const found = await ctx.db.query.userMetadataToClubs.findFirst({
-      where: and(
-        eq(userMetadataToClubs.clubId, input.id),
-        eq(userMetadataToClubs.userId, ctx.session.user.id),
-        inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
-      ),
-    });
-    return !!found;
-  }),
+  isOfficer: authedProcedure
+    .input(clubIdSchema)
+    .query(async ({ input, ctx }) => {
+      const found = await ctx.db.query.userMetadataToClubs.findFirst({
+        where: and(
+          eq(userMetadataToClubs.clubId, input.clubId),
+          eq(userMetadataToClubs.userId, ctx.session.user.id),
+          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+        ),
+      });
+      return !!found;
+    }),
   memberType: publicProcedure
-    .input(byIdSchema)
+    .input(clubIdSchema)
     .query(async ({ input, ctx }) => {
       if (!ctx.session) return null;
       return (
         (
           await ctx.db.query.userMetadataToClubs.findFirst({
             where: and(
-              eq(userMetadataToClubs.clubId, input.id),
+              eq(userMetadataToClubs.clubId, input.clubId),
               eq(userMetadataToClubs.userId, ctx.session.user.id),
               inArray(userMetadataToClubs.memberType, [
                 'Member',
@@ -79,13 +85,13 @@ const userClubsRouter = createTRPCRouter({
       );
     }),
   memberState: publicProcedure
-    .input(byIdSchema)
+    .input(clubIdSchema)
     .query(async ({ input, ctx }) => {
       if (!ctx.session) return null;
 
       const result = await ctx.db.query.userMetadataToClubs.findFirst({
         where: and(
-          eq(userMetadataToClubs.clubId, input.id),
+          eq(userMetadataToClubs.clubId, input.clubId),
           eq(userMetadataToClubs.userId, ctx.session.user.id),
           inArray(userMetadataToClubs.memberType, [
             'Member',
@@ -100,7 +106,7 @@ const userClubsRouter = createTRPCRouter({
       };
     }),
   joinLeave: authedProcedure
-    .input(joinLeaveSchema)
+    .input(clubIdSchema)
     .mutation(async ({ ctx, input }) => {
       const joinUserId = ctx.session.user.id;
       const { clubId } = input;

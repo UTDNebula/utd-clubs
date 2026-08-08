@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { dateSchema, eventFiltersSchema } from '@/common/utils/eventFilter';
+import { clubIdSchema } from '../baseSchemas';
 
-export const byClubIdSchema = z.object({
-  clubId: z.string().default(''),
+export const byClubIdSchema = clubIdSchema.extend({
   currentTime: z.optional(z.date()),
   sortByDate: z.boolean().default(false),
   page: z.number().int().positive().optional(),
@@ -11,7 +11,7 @@ export const byClubIdSchema = z.object({
 });
 
 export const countSchema = z.object({
-  clubId: z.string().optional(),
+  clubId: clubIdSchema.shape.clubId.optional(),
   /**
    * Whether to include past events.
    */
@@ -23,8 +23,7 @@ export const countSchema = z.object({
   currentTime: z.date().optional(),
 });
 
-export const clubUpcomingEventsSchema = z.object({
-  clubId: z.string(),
+export const clubUpcomingEventsSchema = clubIdSchema.extend({
   currentTime: z.date().optional(),
 });
 
@@ -41,16 +40,9 @@ export const findByDateSchema = z.object({
   date: dateSchema,
 });
 
-export const byIdSchema = z.object({
-  id: z.string().default(''),
-});
-
 export const byNameSchema = z.object({
   name: z.string().default(''),
   sortByDate: z.boolean().default(false),
-});
-export const joinLeaveSchema = z.object({
-  id: z.string(),
 });
 
 export const eventsSortSchema = z.object({

@@ -11,12 +11,10 @@ import { callStorageAPI } from '@/common/utils/storage';
 import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
 import {
-  byIdSchema,
   editContactSchema,
   editCollaboratorSchema,
   editOfficerSchema,
   editFormSchema,
-  deleteSchema,
   removeMembersSchema,
   eventSyncSchema,
 } from './schemas';
@@ -27,6 +25,7 @@ import {
   watchCalendar,
 } from '@/common/modules/googleCalendar/calendar';
 import { google } from 'googleapis';
+import { clubIdSchema } from '../baseSchemas';
 
 const clubManageRouter = createTRPCRouter({
   create: authedProcedure
@@ -97,16 +96,18 @@ const clubManageRouter = createTRPCRouter({
       return updatedClub[0];
     }),
   setUpdatedAt: authedProcedure
-    .input(byIdSchema)
+    .input(clubIdSchema)
     .mutation(async ({ input, ctx }) => {
-      await requireMemberRole(ctx.session.user.id, input.id, { Officer: true });
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
+        Officer: true,
+      });
 
       await ctx.db
         .update(club)
         .set({
           updatedAt: new Date(),
         })
-        .where(eq(club.id, input.id));
+        .where(eq(club.id, input.clubId));
 
       return { success: true };
     }),
@@ -615,24 +616,24 @@ const clubManageRouter = createTRPCRouter({
       return input.slug;
     }),
   delete: authedProcedure
-    .input(deleteSchema)
+    .input(clubIdSchema)
     .mutation(async ({ input, ctx }) => {
-      await requireMemberRole(ctx.session.user.id, input.id, {
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
         President: {
           errorMessage: 'Only a club admin can delete the club',
         },
       });
 
       await Promise.all([
-        callStorageAPI('DELETE', `${input.id}-profile`),
-        callStorageAPI('DELETE', `${input.id}-banner`),
-        ctx.db.delete(club).where(eq(club.id, input.id)),
+        callStorageAPI('DELETE', `${input.clubId}-profile`),
+        callStorageAPI('DELETE', `${input.clubId}-banner`),
+        ctx.db.delete(club).where(eq(club.id, input.clubId)),
       ]);
     }),
   markDeleted: authedProcedure
-    .input(deleteSchema)
+    .input(clubIdSchema)
     .mutation(async ({ input, ctx }) => {
-      await requireMemberRole(ctx.session.user.id, input.id, {
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
         President: {
           errorMessage: 'Only a club admin can mark the club as deleted',
         },
@@ -643,12 +644,12 @@ const clubManageRouter = createTRPCRouter({
         .set({
           approved: 'deleted',
         })
-        .where(and(eq(club.id, input.id), eq(club.approved, 'approved')));
+        .where(and(eq(club.id, input.clubId), eq(club.approved, 'approved')));
     }),
   restore: authedProcedure
-    .input(deleteSchema)
+    .input(clubIdSchema)
     .mutation(async ({ input, ctx }) => {
-      await requireMemberRole(ctx.session.user.id, input.id, {
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
         President: {
           errorMessage: 'Only a club admin can restore the club',
         },
@@ -659,7 +660,7 @@ const clubManageRouter = createTRPCRouter({
         .set({
           approved: 'approved',
         })
-        .where(eq(club.id, input.id));
+        .where(eq(club.id, input.clubId));
     }),
   removeMembers: authedProcedure
     .input(removeMembersSchema)

@@ -111,7 +111,7 @@ export default function DeleteClub({ view, club }: Props) {
             onClick={() => {
               if (view === 'manage' && club.approved === 'deleted') {
                 // No confirmation to restore
-                mutateClub.mutate({ id: club.id });
+                mutateClub.mutate({ clubId: club.id });
               } else {
                 setOpen(true);
               }
@@ -138,7 +138,7 @@ export default function DeleteClub({ view, club }: Props) {
           )
         }
         onConfirm={() => {
-          mutateClub.mutate({ id: club.id });
+          mutateClub.mutate({ clubId: club.id });
         }}
         loading={mutateClub.isPending}
       />

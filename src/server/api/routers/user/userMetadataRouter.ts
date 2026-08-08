@@ -14,19 +14,20 @@ import {
   authedProcedure,
   publicProcedure,
 } from '@/server/api/trpc';
-import { byIdSchema, updateByIdSchema } from './schemas';
+import { updateByIdSchema } from './schemas';
+import { userIdSchema } from '../baseSchemas';
 
 const userMetadataRouter = createTRPCRouter({
   byId: authedProcedure
-    .input(byIdSchema)
+    .input(userIdSchema)
     .query(
       async ({
         input,
         ctx,
       }): Promise<SelectUserMetadataWithClubs | undefined> => {
-        const { id } = input;
+        const { userId } = input;
         const userMetadata = await ctx.db.query.userMetadata.findFirst({
-          where: (userMetadata) => eq(userMetadata.id, id),
+          where: (userMetadata) => eq(userMetadata.id, userId),
           with: { clubs: true },
         });
 

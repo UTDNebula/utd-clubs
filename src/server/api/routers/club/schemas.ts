@@ -1,21 +1,10 @@
 import { z } from 'zod';
 import { selectContact } from '@/server/db/models';
+import { clubIdSchema } from '../baseSchemas';
 
 export const byNameSchema = z.object({
   name: z.string().default(''),
   limit: z.number().min(1).max(20).default(5),
-});
-
-export const byIdSchema = z.object({
-  id: z.string().default(''),
-});
-
-export const bySlugSchema = z.object({
-  slug: z.string().default(''),
-});
-
-export const joinLeaveSchema = z.object({
-  clubId: z.string().default(''),
 });
 
 export const searchSchema = z.object({
@@ -30,22 +19,19 @@ export const searchTagSchema = z.object({
   search: z.string(),
 });
 
-export const eventSyncSchema = z.object({
-  clubId: z.string(),
+export const eventSyncSchema = clubIdSchema.extend({
   calendarName: z.string().optional(),
   calendarId: z.string().optional(),
 });
 
-export const editContactSchema = z.object({
-  clubId: z.string(),
+export const editContactSchema = clubIdSchema.extend({
   deleted: selectContact.shape.platform.array(),
   modified: selectContact.omit({ displayOrder: true }).array(),
   created: selectContact.omit({ clubId: true, displayOrder: true }).array(),
   order: selectContact.shape.platform.array().optional(),
 });
 
-export const editCollaboratorSchema = z.object({
-  clubId: z.string(),
+export const editCollaboratorSchema = clubIdSchema.extend({
   deleted: z.string().array(),
   modified: z
     .object({
@@ -61,8 +47,7 @@ export const editCollaboratorSchema = z.object({
     .array(),
 });
 
-export const editOfficerSchema = z.object({
-  clubId: z.string(),
+export const editOfficerSchema = clubIdSchema.extend({
   deleted: z.string().array(),
   modified: z
     .object({
@@ -81,8 +66,7 @@ export const editOfficerSchema = z.object({
   order: z.string().array().optional(),
 });
 
-export const editFormSchema = z.object({
-  clubId: z.string(),
+export const editFormSchema = clubIdSchema.extend({
   deleted: z.string().array(),
   modified: z
     .object({
@@ -101,9 +85,6 @@ export const editFormSchema = z.object({
   order: z.string().array().optional(),
 });
 
-export const deleteSchema = z.object({ id: z.string() });
-
-export const removeMembersSchema = z.object({
-  clubId: z.string(),
+export const removeMembersSchema = clubIdSchema.extend({
   ids: z.union([z.string().default(''), z.string().default('').array()]),
 });

@@ -24,7 +24,7 @@ async function SettingsForm({
 
   // Concurrently run both procedures
   await Promise.allSettled([
-    api.user.metadata.byId({ id: user.id }),
+    api.user.metadata.byId({ userId: user.id }),
     api.user.clubs.getMemberClubsMetadata(),
   ]).then(([userDataResult, joinedClubsResult]) => {
     if (userDataResult.status === 'fulfilled' && userDataResult.value) {

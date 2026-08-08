@@ -10,12 +10,8 @@ import {
 import { callStorageAPI } from '@/common/utils/storage';
 import { adminProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { editCollaboratorSchema } from '../club/schemas';
-import {
-  tagReplaceSchema,
-  deleteSchema,
-  changeClubStatusSchema,
-  bySlugSchema,
-} from './schemas';
+import { tagReplaceSchema, changeClubStatusSchema } from './schemas';
+import { clubIdSchema, clubSlugSchema } from '../baseSchemas';
 
 const adminRouter = createTRPCRouter({
   allClubs: adminProcedure.query(async ({ ctx }) => {
@@ -72,12 +68,12 @@ const adminRouter = createTRPCRouter({
       return { affected: clubsToChange.length };
     }),
   deleteClub: adminProcedure
-    .input(deleteSchema)
+    .input(clubIdSchema)
     .mutation(async ({ ctx, input }) => {
       await Promise.all([
-        callStorageAPI('DELETE', `${input.id}-profile`),
-        callStorageAPI('DELETE', `${input.id}-banner`),
-        ctx.db.delete(club).where(eq(club.id, input.id)),
+        callStorageAPI('DELETE', `${input.clubId}-profile`),
+        callStorageAPI('DELETE', `${input.clubId}-banner`),
+        ctx.db.delete(club).where(eq(club.id, input.clubId)),
       ]);
     }),
   updateOfficers: adminProcedure
@@ -159,7 +155,7 @@ const adminRouter = createTRPCRouter({
         .where(eq(club.id, input.clubId));
     }),
   getDirectoryInfo: adminProcedure
-    .input(bySlugSchema)
+    .input(clubSlugSchema)
     .query(async ({ input: { slug }, ctx }) => {
       try {
         // Fetch club by slug

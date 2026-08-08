@@ -89,7 +89,7 @@ const LeadershipChange = ({ clubId }: { clubId: string }) => {
         }
         confirmText="Confirm"
         confirmColor="primary"
-        onConfirm={() => setUpdatedAt.mutate({ id: clubId })}
+        onConfirm={() => setUpdatedAt.mutate({ clubId })}
         loading={setUpdatedAt.isPending}
       />
     </>

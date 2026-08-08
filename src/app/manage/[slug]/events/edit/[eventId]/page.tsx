@@ -16,7 +16,7 @@ const EditEventPage = async (props: {
     notFound();
   }
 
-  const event = await api.event.byId({ id: eventId });
+  const event = await api.event.byId({ eventId });
   if (!event) {
     return notFound();
   }

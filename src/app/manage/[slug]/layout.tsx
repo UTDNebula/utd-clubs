@@ -22,14 +22,14 @@ const Layout = async ({
   const club = await api.club.bySlug({ slug });
   if (!club) {
     // Backup: If using ID, redirect
-    const clubSlugById = await api.club.getSlug({ id: slug });
+    const clubSlugById = await api.club.getSlug({ clubId: slug });
     if (clubSlugById) {
       redirect(`/manage/${clubSlugById}`);
     }
     notFound();
   }
 
-  const canAccess = await api.user.clubs.isOfficer({ id: club.id });
+  const canAccess = await api.user.clubs.isOfficer({ clubId: club.id });
   if (!canAccess) {
     return <div className="">You can&apos;t access this 😢</div>;
   }

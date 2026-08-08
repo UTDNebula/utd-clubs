@@ -8,13 +8,8 @@ import {
   authedProcedure,
   publicProcedure,
 } from '@/server/api/trpc';
-import {
-  byNameSchema,
-  byIdSchema,
-  bySlugSchema,
-  searchTagSchema,
-  searchSchema,
-} from './schemas';
+import { byNameSchema, searchTagSchema, searchSchema } from './schemas';
+import { clubIdSchema, clubSlugSchema } from '../baseSchemas';
 
 const clubPublicRouter = createTRPCRouter({
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
@@ -30,11 +25,11 @@ const clubPublicRouter = createTRPCRouter({
 
     return clubs;
   }),
-  byId: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    const { id } = input;
+  byId: publicProcedure.input(clubIdSchema).query(async ({ input, ctx }) => {
+    const { clubId } = input;
     try {
       const byId = await ctx.db.query.club.findFirst({
-        where: (club) => eq(club.id, id),
+        where: (club) => eq(club.id, clubId),
         with: {
           contacts: {
             orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
@@ -48,24 +43,26 @@ const clubPublicRouter = createTRPCRouter({
       throw e;
     }
   }),
-  bySlug: publicProcedure.input(bySlugSchema).query(async ({ input, ctx }) => {
-    const { slug } = input;
-    try {
-      const byId = await ctx.db.query.club.findFirst({
-        where: (club) => eq(club.slug, slug),
-        with: {
-          contacts: {
-            orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+  bySlug: publicProcedure
+    .input(clubSlugSchema)
+    .query(async ({ input, ctx }) => {
+      const { slug } = input;
+      try {
+        const byId = await ctx.db.query.club.findFirst({
+          where: (club) => eq(club.slug, slug),
+          with: {
+            contacts: {
+              orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+            },
           },
-        },
-      });
+        });
 
-      return byId;
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  }),
+        return byId;
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    }),
   all: publicProcedure.query(async ({ ctx }) => {
     try {
       const result = await ctx.db
@@ -104,11 +101,11 @@ const clubPublicRouter = createTRPCRouter({
     }
   }),
   getOfficers: authedProcedure
-    .input(byIdSchema)
+    .input(clubIdSchema)
     .query(async ({ input, ctx }) => {
       const officers = await ctx.db.query.userMetadataToClubs.findMany({
         where: and(
-          eq(userMetadataToClubs.clubId, input.id),
+          eq(userMetadataToClubs.clubId, input.clubId),
           inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
         ),
         with: { userMetadata: { with: { user: true } } },
@@ -116,10 +113,10 @@ const clubPublicRouter = createTRPCRouter({
       return officers;
     }),
   getListedOfficers: publicProcedure
-    .input(byIdSchema)
+    .input(clubIdSchema)
     .query(async ({ input, ctx }) => {
       const officers = await ctx.db.query.officers.findMany({
-        where: eq(officersTable.clubId, input.id),
+        where: eq(officersTable.clubId, input.clubId),
       });
       return officers.sort(
         // Infinity makes items without a `displayOrder` go to the end
@@ -127,25 +124,27 @@ const clubPublicRouter = createTRPCRouter({
       );
     }),
   getMembers: publicProcedure
-    .input(byIdSchema)
+    .input(clubIdSchema)
     .query(async ({ input, ctx }) => {
       const members = await ctx.db.query.userMetadataToClubs.findMany({
-        where: eq(userMetadataToClubs.clubId, input.id),
+        where: eq(userMetadataToClubs.clubId, input.clubId),
         with: { userMetadata: { with: { user: true } } },
       });
       return members;
     }),
-  isActive: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    const hasPresident = await ctx.db.query.userMetadataToClubs.findFirst({
-      where: and(
-        eq(userMetadataToClubs.clubId, input.id),
-        eq(userMetadataToClubs.memberType, 'President'),
-      ),
-    });
-    return !!hasPresident;
-  }),
+  isActive: publicProcedure
+    .input(clubIdSchema)
+    .query(async ({ input, ctx }) => {
+      const hasPresident = await ctx.db.query.userMetadataToClubs.findFirst({
+        where: and(
+          eq(userMetadataToClubs.clubId, input.clubId),
+          eq(userMetadataToClubs.memberType, 'President'),
+        ),
+      });
+      return !!hasPresident;
+    }),
   getDirectoryInfo: publicProcedure
-    .input(bySlugSchema)
+    .input(clubSlugSchema)
     .query(async ({ input: { slug }, ctx }) => {
       try {
         // Fetch club by slug
@@ -198,7 +197,7 @@ const clubPublicRouter = createTRPCRouter({
       }
     }),
   slugExists: publicProcedure
-    .input(bySlugSchema)
+    .input(clubSlugSchema)
     .query(async ({ input: { slug }, ctx }) => {
       try {
         if (slug === 'create') {
@@ -214,11 +213,11 @@ const clubPublicRouter = createTRPCRouter({
       }
     }),
   getSlug: publicProcedure
-    .input(byIdSchema)
-    .query(async ({ input: { id }, ctx }) => {
+    .input(clubIdSchema)
+    .query(async ({ input: { clubId }, ctx }) => {
       try {
         const byId = await ctx.db.query.club.findFirst({
-          where: (club) => eq(club.id, id),
+          where: (club) => eq(club.id, clubId),
         });
         return byId?.slug;
       } catch (e) {
@@ -306,11 +305,11 @@ const clubPublicRouter = createTRPCRouter({
       };
     }
   }),
-  details: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    const { id } = input;
+  details: publicProcedure.input(clubIdSchema).query(async ({ input, ctx }) => {
+    const { clubId } = input;
     try {
       const byId = await ctx.db.query.club.findFirst({
-        where: (club) => eq(club.id, id),
+        where: (club) => eq(club.id, clubId),
         columns: {
           id: true,
           name: true,
@@ -332,22 +331,24 @@ const clubPublicRouter = createTRPCRouter({
       throw e;
     }
   }),
-  clubForms: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    try {
-      const forms = await ctx.db
-        .select()
-        .from(membershipForms)
-        .where(eq(membershipForms.clubId, input.id));
-      forms.sort(
-        // Infinity makes items without a `displayOrder` go to the end
-        (a, b) => (a.displayOrder ?? Infinity) - (b.displayOrder ?? Infinity),
-      );
-      return forms;
-    } catch (e) {
-      console.error(e);
-      return [];
-    }
-  }),
+  clubForms: publicProcedure
+    .input(clubIdSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const forms = await ctx.db
+          .select()
+          .from(membershipForms)
+          .where(eq(membershipForms.clubId, input.clubId));
+        forms.sort(
+          // Infinity makes items without a `displayOrder` go to the end
+          (a, b) => (a.displayOrder ?? Infinity) - (b.displayOrder ?? Infinity),
+        );
+        return forms;
+      } catch (e) {
+        console.error(e);
+        return [];
+      }
+    }),
 });
 
 export default clubPublicRouter;

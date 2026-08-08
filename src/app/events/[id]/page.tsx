@@ -26,7 +26,7 @@ type Params = { params: Promise<{ id: string }> };
 
 export default async function EventsPage(props: Params) {
   const params = await props.params;
-  const event = await api.event.getListingInfo({ id: params.id });
+  const event = await api.event.getListingInfo({ eventId: params.id });
 
   if (!event) return <div>Event Not Found.</div>;
 
@@ -47,7 +47,7 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params;
 
-  const event = await api.event.byId({ id: params.id });
+  const event = await api.event.byId({ eventId: params.id });
   if (!event)
     return {
       title: 'Event not found',

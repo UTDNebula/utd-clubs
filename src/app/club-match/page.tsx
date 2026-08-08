@@ -34,7 +34,7 @@ const Page = async () => {
     db.query.userAiCache.findFirst({
       where: (userAiCache) => eq(userAiCache.id, session.user.id),
     }),
-    api.user.metadata.byId({ id: session.user.id }),
+    api.user.metadata.byId({ userId: session.user.id }),
   ]);
 
   if (data?.clubMatchLimit != null && data.clubMatchLimit <= 0) {

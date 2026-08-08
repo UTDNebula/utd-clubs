@@ -13,7 +13,7 @@ const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
   const club = await api.club.getDirectoryInfo({ slug: slug });
   if (!club) {
     // Backup: If using ID, redirect
-    const clubSlugById = await api.club.getSlug({ id: slug });
+    const clubSlugById = await api.club.getSlug({ clubId: slug });
     if (clubSlugById) {
       redirect(`/directory/${clubSlugById}`);
     }

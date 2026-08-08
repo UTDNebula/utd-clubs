@@ -27,7 +27,9 @@ type ClubsProps = {
 export default function JoinedClubs({ joinedClubs }: ClubsProps) {
   const api = useTRPC();
 
-  const joinLeaveMutation = useMutation(api.user.clubs.joinLeave.mutationOptions({}));
+  const joinLeaveMutation = useMutation(
+    api.user.clubs.joinLeave.mutationOptions({}),
+  );
 
   const [leaveClub, setLeaveClub] =
     useState<SelectUserMetadataToClubsWithClub | null>(null);
@@ -70,6 +72,7 @@ export default function JoinedClubs({ joinedClubs }: ClubsProps) {
         }
         confirmText="Unfollow"
         onConfirm={async () => {
+          if (!leaveClub) return;
           void joinLeaveMutation.mutateAsync(
             {
               clubId: leaveClub?.club.id,

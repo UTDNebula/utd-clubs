@@ -37,13 +37,13 @@ import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
 import {
   byClubIdSchema,
   byDateRangeSchema,
-  byIdSchema,
   byNameSchema,
   clubUpcomingEventsSchema,
   countSchema,
   findByDateSchema,
   findByFilterSchema,
 } from './schemas';
+import { eventIdSchema } from '../baseSchemas';
 
 const eventPublicRouter = createTRPCRouter({
   byClubId: publicProcedure
@@ -461,12 +461,12 @@ const eventPublicRouter = createTRPCRouter({
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       }
     }),
-  byId: publicProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    const { id } = input;
+  byId: publicProcedure.input(eventIdSchema).query(async ({ input, ctx }) => {
+    const { eventId } = input;
 
     try {
       const byId = await ctx.db.query.events.findFirst({
-        where: (event) => and(eq(event.id, id), eq(event.status, 'approved')),
+        where: (event) => and(eq(event.id, eventId), eq(event.status, 'approved')),
         with: { club: true },
       });
 
@@ -478,12 +478,12 @@ const eventPublicRouter = createTRPCRouter({
     }
   }),
   getListingInfo: publicProcedure
-    .input(byIdSchema)
-    .query(async ({ input: { id }, ctx }) => {
+    .input(eventIdSchema)
+    .query(async ({ input: { eventId }, ctx }) => {
       try {
         // Fetch event by id
         const byId = await ctx.db.query.events.findFirst({
-          where: (event) => and(eq(event.id, id), eq(event.status, 'approved')),
+          where: (event) => and(eq(event.id, eventId), eq(event.status, 'approved')),
           with: {
             club: {
               with: {

@@ -38,7 +38,7 @@ interface ClubDetails {
 const Details = ({ club }: DetailsProps) => {
   const api = useTRPC();
   const clubQuery = useQuery(
-    api.club.details.queryOptions({ id: club.id }, { initialData: club }),
+    api.club.details.queryOptions({ clubId: club.id }, { initialData: club }),
   );
   const editData = useMutation(
     api.club.manage.data.mutationOptions({
@@ -124,7 +124,7 @@ const Details = ({ club }: DetailsProps) => {
         }
 
         queryClient.invalidateQueries(
-          api.club.details.queryOptions({ id: club.id }),
+          api.club.details.queryOptions({ clubId: club.id }),
         );
         formApi.reset();
       }

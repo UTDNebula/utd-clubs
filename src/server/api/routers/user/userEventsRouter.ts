@@ -15,9 +15,9 @@ import {
   eventsSortSchema,
   getByRangeSchema,
   joinedClubEventsSchema,
-  joinLeaveSchema,
 } from '../event/schemas';
 import { events } from '@/server/db/schema/events';
+import { eventIdSchema } from '../baseSchemas';
 
 const userEventsRouter = createTRPCRouter({
   getRegisteredEventsByRange: authedProcedure
@@ -159,10 +159,10 @@ const userEventsRouter = createTRPCRouter({
       return value;
     }),
   joinedEvent: publicProcedure
-    .input(joinLeaveSchema)
+    .input(eventIdSchema)
     .query(async ({ input, ctx }) => {
       if (!ctx.session) return null;
-      const eventId = input.id;
+      const eventId = input.eventId;
       const userId = ctx.session.user.id;
       return Boolean(
         await ctx.db.query.userMetadataToEvents.findFirst({
@@ -175,11 +175,11 @@ const userEventsRouter = createTRPCRouter({
       );
     }),
   registerState: publicProcedure
-    .input(joinLeaveSchema)
+    .input(eventIdSchema)
     .query(async ({ input, ctx }) => {
       if (!ctx.session) return null;
 
-      const eventId = input.id;
+      const eventId = input.eventId;
       const userId = ctx.session.user.id;
       const result = await ctx.db.query.userMetadataToEvents.findFirst({
         where: (userMetadataToEvents) =>
@@ -194,9 +194,9 @@ const userEventsRouter = createTRPCRouter({
       };
     }),
   toggleRegistration: authedProcedure
-    .input(joinLeaveSchema)
+    .input(eventIdSchema)
     .mutation(async ({ ctx, input }) => {
-      const eventId = input.id;
+      const eventId = input.eventId;
       const userId = ctx.session.user.id;
       const dataExists = await ctx.db.query.userMetadataToEvents.findFirst({
         where: (userMetadataToEvents) =>
