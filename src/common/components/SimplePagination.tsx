@@ -3,7 +3,7 @@
 import Pagination from '@mui/material/Pagination';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-export default function EventsPagination({
+export default function SimplePagination({
   page,
   totalPages,
   pageSize,

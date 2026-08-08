@@ -4,7 +4,7 @@ import { TZDateMini } from '@date-fns/tz';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NotFollowingOrRegistered from '@/systems/dashboard/NotFollowingOrRegistered';
 import EventCard from '@/systems/events/EventCard';
-import EventsPagination from '@/systems/events/EventPagination';
+import SimplePagination from '@/common/components/SimplePagination';
 import { LinkButton } from '@/common/components/LinkButton';
 import { api } from '@/trpc/server';
 
@@ -64,7 +64,7 @@ export default async function ClubEvents({
       </div>
 
       <div className="flex justify-center py-10">
-        <EventsPagination
+        <SimplePagination
           page={page}
           totalPages={totalPages}
           pageSize={pageSize}

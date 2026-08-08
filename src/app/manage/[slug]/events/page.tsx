@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import { notFound } from 'next/navigation';
 import EventCard from '@/systems/events/EventCard';
-import EventsPagination from '@/systems/events/EventPagination';
+import SimplePagination from '@/common/components/SimplePagination';
 import IncludePastSwitch from '@/systems/events/IncludePastSwitch';
 import { LinkButton } from '@/common/components/LinkButton';
 import ManageHeader from '@/systems/manage/ManageHeader';
@@ -76,7 +76,7 @@ export default async function Page({
         ))}
       </div>
       <div className="flex justify-center py-10">
-        <EventsPagination
+        <SimplePagination
           page={page}
           totalPages={totalPages}
           pageSize={pageSize}

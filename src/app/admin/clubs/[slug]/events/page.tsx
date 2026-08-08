@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import AdminHeader from '@/systems/admin/AdminHeader';
 import EventCard from '@/systems/events/EventCard';
-import EventsPagination from '@/systems/events/EventPagination';
+import SimplePagination from '@/common/components/SimplePagination';
 import IncludePastSwitch from '@/systems/events/IncludePastSwitch';
 import { api } from '@/trpc/server';
 
@@ -66,7 +66,7 @@ export default async function Page({ params, searchParams }: Props) {
         ))}
       </div>
       <div className="flex justify-center py-10">
-        <EventsPagination
+        <SimplePagination
           page={page}
           totalPages={totalPages}
           pageSize={pageSize}
