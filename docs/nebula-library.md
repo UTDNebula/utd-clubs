@@ -1,0 +1,128 @@
+# UTD Clubs
+
+_A tool to find ways to get involved on campus._
+
+## Contributing
+
+We are always open to contributions to the project. If you would like to contribute and want some guidance on where to start,
+please join our [Discord](http://discord.utdnebula.com/) and ask for drop a message in the `#clubs-general` channel or
+DM Braedon for more details.
+
+Currently, we're tracking all issues via GitHub Issues. If you would like to work on an issue, please comment on the issue and we will assign it to you.
+If you see anything that you think could be improved, please create an issue and we will look into it.
+
+### Getting Started
+
+Please make sure you have at least [NodeJS v22](https://nodejs.org/en) or greater installed before continuing.
+
+Start by cloning the repository to your local machine.
+
+```bash
+git clone https://github.com/UTDNebula/utd-clubs.git --recurse-submodules
+```
+
+> [!NOTE]
+> If you already cloned the repository but don't have the `src/nebula-library` folder, run the following command:
+>
+> ```bash
+> git submodule update --init --recursive
+> ```
+
+Next, navigate to the project directory and install the dependencies.
+
+```bash
+cd utd-clubs
+npm install
+```
+
+Make sure you have a `.env` file in the root of the project. If you do not, copy the `.env.example` file and rename it to `.env`
+
+#### Environment Variables
+
+This project uses [Better Auth](https://www.better-auth.com/) for authentication. Better Auth, with their built-in [providers](https://www.better-auth.com/docs/authentication/google), makes it easy for users to use preexisting logins. Currently, we are using Discord and Google as OAuth Providers, so you will need to create a Client ID and Client Secret for [Google](https://www.better-auth.com/docs/authentication/google) and [Discord](https://www.better-auth.com/docs/authentication/discord) respectively (or remove the providers if you'd like).
+
+Once you have your Client ID and Client Secrets, add them to your `.env` file.
+
+The `BETTER_AUTH_URL` variable should be set to `http://localhost:3000` for local development.
+The `BETTER_AUTH_SECRET` variable should be set to a random string of characters. You can generate one [using this website](https://randomkeygen.com/).
+or by running the following command in your terminal.
+
+```bash
+openssl rand -hex 32
+```
+
+Clubs uses an ORM called [Drizzle](https://orm.drizzle.team/) to interact with the database. In order to connect to the database, you will need to add the `DATABASE_URL` variable to your `.env` file. Your project lead will give this to you upon request.
+
+The Nebula API is used for image storage. The `NEBULA_API_URL` variable should be set to `https://api.utdnebula.com/` and the `NEBULA_API_STORAGE_BUCKET` variable to `jupiter`. An API key and storage key should be requested from the project lead for the `NEBULA_API_KEY` and `NEBULA_API_STORAGE_KEY` variables.
+
+We use Google Gemini for our club recommendations. Ask the project lead for the `GEMINI_SERVICE_ACCOUNT` env variable if you want to work on club recommendations.
+
+Finally, start the development server.
+
+```bash
+npm run dev
+```
+
+### Branching
+
+When working on a new feature, please create a new branch with the following naming convention:
+
+```bash
+git checkout -b feature/<feature-name>
+```
+
+If your changes involve any changes to the database schema please read `/docs/db_migrations.md`
+
+When you are ready to merge your branch into the `develop` branch, please create a pull request and request a review from the Clubs Dev Team.
+Please include details about what issue you are addressing with the pull request, what changes you made, and any other relevant information.
+
+### Nebula Library
+
+When working in the `src/nebula-library` folder, you are working in a shared component library that is part of a nested Git repository. Follow these steps to create a secondary **pull request** (PR) for your library changes:
+
+#### 1. Checkout a branch
+
+```bash
+cd src/nebula-library
+# Replace <feature-name> with a branch name
+git checkout -b feature/<feature-name>
+```
+
+#### 2. Make your changes in the `src/nebula-library` folder
+
+#### 3. Push your changes
+
+```bash
+git push
+cd ../..
+```
+
+#### 4. Make a pull request in the `nebula-library` repository
+
+Make a PR from your branch into `main` at [github.com/UTDNebula/nebula-library](https://github.com/UTDNebula/nebula-library) and request your project lead as a reviewer.
+
+Wait for your PR to be approved.
+
+> [!TIP]
+> In the meantime, you can make a regular PR on the [UTD Clubs repository](https://github.com/UTDNebula/utd-clubs). Its checks and build may not pass without your changes in `src/nebula-library`, so you can switch the branch and push with the following commands:
+>
+> ```bash
+> # Replace <feature-name> with the feature name you used in step 1
+> git submodule set-branch --branch feature/<feature-name> src/nebula-library
+> git push
+> ```
+>
+> If you do this, just make sure to run the following command before the next step:
+>
+> ```bash
+> git submodule set-branch --default src/nebula-library
+> ```
+
+#### 5. After your `nebula-library` pull request is merged…
+
+Pull your changes from the library and push them to Clubs. Then make a regular PR on Clubs.
+
+```bash
+git submodule update --recursive --remote
+git push
+```
