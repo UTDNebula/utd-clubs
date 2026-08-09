@@ -6,7 +6,7 @@ import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@/server/db/schema/users';
-import { callStorageAPI } from '@/common/utils/storage';
+import { callStorageAPI } from '@/lib/utils/storage';
 import { adminProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { editCollaboratorSchema } from '../club/inputSchemas';
 import { tagReplaceSchema, changeClubStatusSchema } from './inputSchemas';

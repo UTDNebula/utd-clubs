@@ -2,11 +2,11 @@ import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Header from '@/common/modules/navigation/header';
+import Header from '@/lib/modules/navigation/header';
 import { auth } from '@/server/auth';
 import { db } from '@/server/db';
 import { api } from '@/trpc/server';
-import { signInRoute } from '@/common/utils/redirect';
+import { signInRoute } from '@/lib/utils/redirect';
 import ClubMatch from '@/systems/clubs/match/ClubMatch';
 
 export const metadata: Metadata = {

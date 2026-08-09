@@ -28,9 +28,9 @@ import ContactListItem from './ContactListItem';
 import type { SelectClub, SelectContact } from '@/server/db/models';
 import { contactNames, startContacts } from '@/server/db/schema/contacts';
 import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/common/utils/form';
+import { useAppForm } from '@/lib/utils/form';
 import { editClubContactSchema } from './schema';
-import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 
 type FormData = z.infer<typeof editClubContactSchema>;
 type ContactPlatform = keyof typeof contactNames;

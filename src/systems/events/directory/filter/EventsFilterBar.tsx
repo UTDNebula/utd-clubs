@@ -10,7 +10,7 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Tooltip from '@mui/material/Tooltip';
 import { AnimatePresence, motion } from 'framer-motion';
 import { memo, ReactNode, useState } from 'react';
-import { TagChip } from '@/common/components/TagChip';
+import { TagChip } from '@/lib/components/TagChip';
 import {
   EventFiltersSchema,
   eventLocationFilterEnum,
@@ -22,7 +22,7 @@ import {
   SelectedEventFiltersList,
   splitArrayField,
 } from '@/systems/events/directory/filter/eventsFilterUtils';
-import FilterChip from '@/common/components/filter/FilterChip';
+import FilterChip from '@/lib/components/filter/FilterChip';
 import EventsFilterPanels from './EventsFilterPanels';
 import { setEventsParams } from './eventsFilterUtils';
 

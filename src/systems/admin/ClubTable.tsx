@@ -25,7 +25,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import Link from 'next/link';
 import { useMemo, useRef, useState } from 'react';
 import { RouterOutputs } from '@/trpc/shared';
-import { fuzzyFilter } from '@/common/utils/table';
+import { fuzzyFilter } from '@/lib/utils/table';
 import { ClubTags } from '@/systems/clubs/ClubTags';
 import Filter from './Filter';
 import StatusFilter from './StatusFilter';

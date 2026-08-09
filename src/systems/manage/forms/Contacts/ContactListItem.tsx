@@ -5,7 +5,7 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import type z from 'zod';
 import { contactNames } from '@/server/db/schema/contacts';
-import { withForm } from '@/common/utils/form';
+import { withForm } from '@/lib/utils/form';
 import { type editClubContactSchema } from './schema';
 
 type FormData = z.infer<typeof editClubContactSchema>;

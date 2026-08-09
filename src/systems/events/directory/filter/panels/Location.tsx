@@ -5,7 +5,7 @@ import {
   EventFiltersSchema,
   eventLocationFilterEnum,
 } from '@/systems/events/directory/filter/eventsFilterSchema';
-import FilterList, { FilterListItem } from '@/common/components/filter/FilterList';
+import FilterList, { FilterListItem } from '@/lib/components/filter/FilterList';
 import { FilterPanelProps, panelProps, setEventsParams } from '../eventsFilterUtils';
 
 export type LocationPanelFields = Pick<

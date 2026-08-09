@@ -8,7 +8,7 @@ import EventDirectorySearchBar from '@/systems/events/directory/filter/EventDire
 import { RouterOutputs } from '@/trpc/shared';
 import { eventParamsToFilters } from './filter/eventsFilterSchema';
 import { listSelectedEventFilters, setEventsParams } from './filter/eventsFilterUtils';
-import useStable from '@/common/utils/useStable';
+import useStable from '@/lib/utils/useStable';
 import { EventCardVariants } from '@/systems/events/EventCard';
 import EventDirectoryGrid from './filter/EventDirectoryGrid';
 import EventsFilterBar from './filter/EventsFilterBar';

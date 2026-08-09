@@ -2,8 +2,8 @@ import {
   preprocessParamNum,
   preprocessParamBoolean,
   preprocessParamArray,
-} from '@/common/utils/preprocessors';
-import { dateSchema } from '@/common/utils/schemas';
+} from '@/lib/utils/preprocessors';
+import { dateSchema } from '@/lib/utils/schemas';
 import { parseISO } from 'date-fns';
 import { z } from 'zod';
 

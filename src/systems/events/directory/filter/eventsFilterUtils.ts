@@ -1,4 +1,4 @@
-import compare from '@/common/utils/compare';
+import compare from '@/lib/utils/compare';
 import {
   EventFiltersSchema,
   EventParamsSchema,
@@ -6,7 +6,7 @@ import {
   eventParamsDefaults,
   SplitArrayFields,
 } from './eventsFilterSchema';
-import { createParamSetter } from '@/common/utils/searchParams';
+import { createParamSetter } from '@/lib/utils/searchParams';
 import { PanelProps } from '@nebula-library/components/Panel';
 
 /**

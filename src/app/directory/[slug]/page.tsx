@@ -4,9 +4,9 @@ import ClubBody from '@/systems/clubs/listing/ClubBody';
 import ClubBanner from '@/systems/clubs/listing/ClubBanner';
 import { ClubNotClaimed } from '@/systems/clubs/listing/ClubNotClaimed';
 import ClubTitle from '@/systems/clubs/listing/ClubTitle';
-import Header from '@/common/modules/navigation/header';
+import Header from '@/lib/modules/navigation/header';
 import { api } from '@/trpc/server';
-import { convertMarkdownToPlaintext } from '@/common/utils/markdown';
+import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
 
 const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params;

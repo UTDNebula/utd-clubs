@@ -1,5 +1,5 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { LinkButton } from '@/common/components/LinkButton';
+import { LinkButton } from '@/lib/components/LinkButton';
 
 interface Props {
   type: 'clubs' | 'events';

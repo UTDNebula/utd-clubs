@@ -8,7 +8,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
-import theme from '@/common/utils/theme';
+import theme from '@/lib/utils/theme';
 import { useEventDirectoryStore } from '../eventDirectoryStore';
 
 type EventDirectorySearchBarProps = {

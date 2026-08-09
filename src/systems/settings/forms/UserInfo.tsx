@@ -8,13 +8,13 @@ import { useMutation } from '@tanstack/react-query';
 import { add } from 'date-fns';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import { majors, minors } from '@/common/utils/utdDegrees';
+import { majors, minors } from '@/lib/utils/utdDegrees';
 import { SelectUserMetadataWithClubs } from '@/server/db/models';
 import { studentClassificationEnum } from '@/server/db/schema/users';
 import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/common/utils/form';
+import { useAppForm } from '@/lib/utils/form';
 import { AccountSettingsSchema, accountSettingsSchema } from '../settingsSchema';
-import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 
 type UserInfoProps = {
   user: SelectUserMetadataWithClubs;

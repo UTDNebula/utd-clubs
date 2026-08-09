@@ -9,13 +9,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import Confirmation from '@/common/components/Confirmation';
+import Confirmation from '@/lib/components/Confirmation';
 import type { SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/common/utils/form';
+import { useAppForm } from '@/lib/utils/form';
 import { editSlugSchema } from './schema';
-import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
-import useDebounce from '@/common/utils/useDebounce';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import useDebounce from '@/lib/utils/useDebounce';
 
 type DetailsProps = {
   club: SelectClub;

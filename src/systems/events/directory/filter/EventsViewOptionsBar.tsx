@@ -4,8 +4,8 @@ import SortIcon from '@mui/icons-material/Sort';
 import { memo } from 'react';
 import { EventCardVariants } from '@/systems/events/EventCard';
 import { EventFiltersSchema, sortEnum } from '@/systems/events/directory/filter/eventsFilterSchema';
-import CompactPagination from '@/common/components/filter/CompactPagination';
-import ViewOption, { ViewOptionItem } from '@/common/components/filter/ViewOptionItem';
+import CompactPagination from '@/lib/components/filter/CompactPagination';
+import ViewOption, { ViewOptionItem } from '@/lib/components/filter/ViewOptionItem';
 import { setEventsParams } from './eventsFilterUtils';
 
 type EventsViewOptionsBarProps = {

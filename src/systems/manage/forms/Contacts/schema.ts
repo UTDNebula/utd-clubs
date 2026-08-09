@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { contactSchema } from '@/common/utils/schemas';
+import { contactSchema } from '@/lib/utils/schemas';
 
 export const editClubContactSchema = z.object({
   contacts: contactSchema.array(),

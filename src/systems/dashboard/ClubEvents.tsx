@@ -4,8 +4,8 @@ import { TZDateMini } from '@date-fns/tz';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NotFollowingOrRegistered from '@/systems/dashboard/NotFollowingOrRegistered';
 import EventCard from '@/systems/events/EventCard';
-import SimplePagination from '@/common/components/SimplePagination';
-import { LinkButton } from '@/common/components/LinkButton';
+import SimplePagination from '@/lib/components/SimplePagination';
+import { LinkButton } from '@/lib/components/LinkButton';
 import { api } from '@/trpc/server';
 
 export default async function ClubEvents({

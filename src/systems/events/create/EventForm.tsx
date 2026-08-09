@@ -7,15 +7,15 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import Panel, { PanelSkeleton } from '@nebula-library/components/Panel';
-import FormImage from '@/common/components/form/FormImage';
+import FormImage from '@/lib/components/form/FormImage';
 import { type SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { type RouterOutputs } from '@/trpc/shared';
-import { useAppForm } from '@/common/utils/form';
+import { useAppForm } from '@/lib/utils/form';
 import { createEventFormSchema, editEventFormSchema } from './createEventSchema';
-import { addVersionToImage } from '@/common/utils/imageCacheBust';
-import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
-import { useUploadToUploadURL } from '@/common/utils/uploadImage';
+import { addVersionToImage } from '@/lib/utils/imageCacheBust';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import { useUploadToUploadURL } from '@/lib/utils/uploadImage';
 import EventCard, { EventCardSkeleton } from '../EventCard';
 
 type EventFormProps =

@@ -3,11 +3,11 @@ import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import ClubCard from '@/systems/clubs/ClubCard';
-import Header from '@/common/modules/navigation/header';
-import { LinkButton } from '@/common/components/LinkButton';
+import Header from '@/lib/modules/navigation/header';
+import { LinkButton } from '@/lib/components/LinkButton';
 import { auth } from '@/server/auth';
 import { api } from '@/trpc/server';
-import { signInRoute } from '@/common/utils/redirect';
+import { signInRoute } from '@/lib/utils/redirect';
 
 export const metadata: Metadata = {
   title: 'Manage Clubs',

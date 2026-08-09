@@ -2,9 +2,9 @@ import Typography from '@mui/material/Typography';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Header from '@/common/modules/navigation/header';
+import Header from '@/lib/modules/navigation/header';
 import { auth } from '@/server/auth';
-import { signInRoute } from '@/common/utils/redirect';
+import { signInRoute } from '@/lib/utils/redirect';
 import CreateClubForm from '@/systems/clubs/create/CreateClubForm';
 
 export const metadata: Metadata = {

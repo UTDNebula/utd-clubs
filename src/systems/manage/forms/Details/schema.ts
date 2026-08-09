@@ -1,4 +1,4 @@
-import { tagsSchema, fileSchema, schools } from '@/common/utils/schemas';
+import { tagsSchema, fileSchema, schools } from '@/lib/utils/schemas';
 import { z } from 'zod';
 
 export const editClubDetailsSchema = z.object({

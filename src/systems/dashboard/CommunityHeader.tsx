@@ -3,7 +3,7 @@
 
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import EventIcon from '@mui/icons-material/Event';
-import PageHeader from '@/common/components/PageHeader';
+import PageHeader from '@/lib/components/PageHeader';
 
 export default function CommunityHeader() {
   return (

@@ -3,7 +3,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import PreviewIcon from '@mui/icons-material/Preview';
 import Tooltip from '@mui/material/Tooltip';
 import { notFound } from 'next/navigation';
-import { LinkButton } from '@/common/components/LinkButton';
+import { LinkButton } from '@/lib/components/LinkButton';
 import ManageHeader from '@/systems/manage/ManageHeader';
 import { api } from '@/trpc/server';
 import ClubManageForm from '@/systems/manage/ClubManageForm';

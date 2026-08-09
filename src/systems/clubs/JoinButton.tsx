@@ -9,9 +9,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import { useTRPC } from '@/trpc/react';
-import { authClient } from '@/common/utils/auth-client';
-import { useLoginModal } from '@/common/modules/loginModal';
-import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
+import { authClient } from '@/lib/utils/auth-client';
+import { useLoginModal } from '@/lib/modules/loginModal';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 
 type JoinButtonProps = {
   isHeader?: boolean;

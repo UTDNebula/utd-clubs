@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Panel from '@nebula-library/components/Panel';
 import { RouterOutputs } from '@/trpc/shared';
-import { addVersionToImage } from '@/common/utils/imageCacheBust';
+import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 
 type EventHostClubCardProps = {
   club: NonNullable<RouterOutputs['event']['getListingInfo']>['club'];

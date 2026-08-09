@@ -5,7 +5,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type z from 'zod';
-import { withForm } from '@/common/utils/form';
+import { withForm } from '@/lib/utils/form';
 import { editOfficerSchema } from './schema';
 import MemberRoleChip, { MemberTypes } from '@/systems/manage/MemberRoleChip';
 

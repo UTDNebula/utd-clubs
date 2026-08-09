@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import EventCalendar from '@/systems/events/calendar/EventCalendar';
 import { auth } from '@/server/auth';
-import { signInRoute } from '@/common/utils/redirect';
+import { signInRoute } from '@/lib/utils/redirect';
 
 export default async function CalendarPage() {
   const session = await auth.api.getSession({ headers: await headers() });

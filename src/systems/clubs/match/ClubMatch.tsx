@@ -15,11 +15,11 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import Panel from '@nebula-library/components/Panel';
-import { Binoculars } from '@/common/icons/OtherIcons';
+import { Binoculars } from '@/lib/icons/OtherIcons';
 import { SelectUserMetadata } from '@/server/db/models';
 import { ClubMatchResponses } from '@/server/db/schema/users';
 import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/common/utils/form';
+import { useAppForm } from '@/lib/utils/form';
 import { clubMatchFormSchema } from './clubMatchSchema';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;

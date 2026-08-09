@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import z from 'zod';
-import { withForm } from '@/common/utils/form';
+import { withForm } from '@/lib/utils/form';
 import { type editListedOfficerSchema } from './schema';
 
 type FormData = z.infer<typeof editListedOfficerSchema>;

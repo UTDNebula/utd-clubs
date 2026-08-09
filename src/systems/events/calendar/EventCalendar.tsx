@@ -30,9 +30,9 @@ import { type RouterOutputs } from '@/trpc/shared';
 import {
   getRangeForView,
   type CalendarRange,
-} from '@/common/utils/calendarRange';
+} from '@/lib/utils/calendarRange';
 import { calendarParamsSchema, type CalendarParamsSchema } from './eventCalendarSchema';
-import { createParamSetter } from '@/common/utils/searchParams';
+import { createParamSetter } from '@/lib/utils/searchParams';
 
 type RegisteredEvent =
   RouterOutputs['user']['events']['getRegisteredEventsByRange'][number];

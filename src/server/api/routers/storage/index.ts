@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { callStorageAPI, getUploadURL } from '@/common/utils/storage';
+import { callStorageAPI, getUploadURL } from '@/lib/utils/storage';
 import { createTRPCRouter, authedProcedure, publicProcedure } from '@/server/api/trpc';
 import { getDeleteSchema, createUploadSchema } from './inputSchemas';
 

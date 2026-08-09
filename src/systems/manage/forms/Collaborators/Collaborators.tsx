@@ -11,9 +11,9 @@ import type {
   SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/common/utils/form';
+import { useAppForm } from '@/lib/utils/form';
 import { editOfficerSchema } from './schema';
-import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 
 type FormData = z.infer<typeof editOfficerSchema>;
 

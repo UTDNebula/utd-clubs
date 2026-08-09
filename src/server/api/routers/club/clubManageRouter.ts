@@ -5,7 +5,7 @@ import { contacts } from '@/server/db/schema/contacts';
 import { membershipForms } from '@/server/db/schema/membershipForms';
 import { officers } from '@/server/db/schema/officers';
 import { userMetadataToClubs } from '@/server/db/schema/users';
-import { callStorageAPI } from '@/common/utils/storage';
+import { callStorageAPI } from '@/lib/utils/storage';
 import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
 import {
@@ -19,11 +19,11 @@ import {
   editDataSchema,
   editSlugSchema,
 } from './inputSchemas';
-import { getGoogleAccessToken } from '@/common/modules/googleOAuth';
+import { getGoogleAccessToken } from '@/lib/modules/googleOAuth';
 import {
   syncCalendar,
   watchCalendar,
-} from '@/common/modules/googleCalendar';
+} from '@/lib/modules/googleCalendar';
 import { google } from 'googleapis';
 import { clubIdSchema } from '../baseSchemas';
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { fileSchema } from '@/common/utils/schemas';
+import { fileSchema } from '@/lib/utils/schemas';
 
 const baseEventFormSchema = z.object({
   clubId: z.string(),

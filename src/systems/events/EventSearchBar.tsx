@@ -5,8 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTRPC } from '@/trpc/react';
-import useDebounce from '@/common/utils/useDebounce';
-import { useBaseHeaderContext } from '@/common/components/BaseHeader';
+import useDebounce from '@/lib/utils/useDebounce';
+import { useBaseHeaderContext } from '@/lib/components/BaseHeader';
 
 export const EventSearchBar = () => {
   const [input, setInput] = useState('');

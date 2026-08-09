@@ -1,6 +1,6 @@
 import { and, eq, or, sql } from 'drizzle-orm';
 import { headers } from 'next/headers';
-import { type personalCats } from '@/common/modules/navigation/categories';
+import { type personalCats } from '@/lib/modules/navigation/categories';
 import { auth } from '@/server/auth';
 import {
   SelectUserMetadataToClubs,

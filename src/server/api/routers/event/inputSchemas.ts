@@ -5,7 +5,7 @@ import {
   createEventSchema,
   editEventSchema,
 } from '@/systems/events/create/createEventSchema';
-import { dateSchema } from '@/common/utils/schemas';
+import { dateSchema } from '@/lib/utils/schemas';
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public Router

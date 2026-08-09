@@ -11,7 +11,7 @@ import {
   SelectUserMetadataToClubsWithUserMetadata,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@/server/db/models';
-import formatListString from '@/common/utils/formatListString';
+import formatListString from '@/lib/utils/formatListString';
 import {
   ActionsCell,
   ContactEmailCell,

@@ -9,9 +9,9 @@ import { type Metadata } from 'next';
 import ClubBanner from '@/systems/clubs/listing/ClubBanner';
 import EventBody from '@/systems/events/listing/EventBody';
 import EventTitle from '@/systems/events/listing/EventTitle';
-import { EventHeader } from '@/common/modules/navigation/header';
+import { EventHeader } from '@/lib/modules/navigation/header';
 import { api } from '@/trpc/server';
-import { convertMarkdownToPlaintext } from '@/common/utils/markdown';
+import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
 
 const distanceTokenUnits: Partial<Record<FormatDistanceToken, string>> = {
   xSeconds: 's',

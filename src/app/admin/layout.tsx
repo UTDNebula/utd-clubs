@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { type ReactNode } from 'react';
-import Header from '@/common/modules/navigation/header';
+import Header from '@/lib/modules/navigation/header';
 import { auth } from '@/server/auth';
 import { db } from '@/server/db';
 

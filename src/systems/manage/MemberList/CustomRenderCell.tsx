@@ -9,7 +9,7 @@ import { GridRenderCellParams } from '@mui/x-data-grid';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import { useContext } from 'react';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@/server/db/models';
-import { authClient } from '@/common/utils/auth-client';
+import { authClient } from '@/lib/utils/auth-client';
 import MemberRoleChip, { MemberTypes } from '../MemberRoleChip';
 import { MemberListContext } from './MemberListContext';
 

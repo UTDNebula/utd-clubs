@@ -9,7 +9,7 @@
 // import Tooltip from '@mui/material/Tooltip';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import SearchIcon from '@mui/icons-material/Search';
-import PageHeader from '@/common/components/PageHeader';
+import PageHeader from '@/lib/components/PageHeader';
 import { useEventDirectoryStore } from './eventDirectoryStore';
 
 type EventsTitleProps = {

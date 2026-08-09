@@ -11,9 +11,9 @@ import EventCard, { EventCardVariants } from '@/systems/events/EventCard';
 import { useTRPC } from '@/trpc/react';
 import { RouterOutputs } from '@/trpc/shared';
 import { EventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
-import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
-import useDebounce from '@/common/utils/useDebounce';
-import useStable from '@/common/utils/useStable';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import useDebounce from '@/lib/utils/useDebounce';
+import useStable from '@/lib/utils/useStable';
 import { useEventDirectoryStore } from '../eventDirectoryStore';
 
 type EventDirectoryGridProps = {

@@ -5,9 +5,9 @@ import { Dialog, IconButton } from '@mui/material';
 import Image from 'next/image';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import ExpandableMarkdownText from '@/common/components/ExpandableMarkdownText';
+import ExpandableMarkdownText from '@/lib/components/ExpandableMarkdownText';
 import { RouterOutputs } from '@/trpc/shared';
-import { addVersionToImage } from '@/common/utils/imageCacheBust';
+import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 
 type EventDescriptionCardProps = {
   event: NonNullable<RouterOutputs['event']['getListingInfo']>;

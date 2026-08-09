@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import AdminHeader from '@/systems/admin/AdminHeader';
 import EventCard from '@/systems/events/EventCard';
-import SimplePagination from '@/common/components/SimplePagination';
+import SimplePagination from '@/lib/components/SimplePagination';
 import IncludePastSwitch from '@/systems/events/IncludePastSwitch';
 import { api } from '@/trpc/server';
 

@@ -28,7 +28,7 @@ import Panel from '@nebula-library/components/Panel';
 import MembershipFormListItem from './MembershipFormListItem';
 import type { SelectClub, SelectMembershipForm } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/common/utils/form';
+import { useAppForm } from '@/lib/utils/form';
 import { editListedMembershipFormSchema } from './schema';
 
 type FormData = z.infer<typeof editListedMembershipFormSchema>;

@@ -11,15 +11,15 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import Confirmation from '@/common/components/Confirmation';
+import Confirmation from '@/lib/components/Confirmation';
 import { AppRouter } from '@/server/api/root';
 import {
   SelectClub,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
-import { authClient } from '@/common/utils/auth-client';
-import { useSnackbar } from '@/common/modules/snackbar';
+import { authClient } from '@/lib/utils/auth-client';
+import { useSnackbar } from '@/lib/modules/snackbar';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';
 import { MemberListContext, MemberListContextType } from './MemberListContext';

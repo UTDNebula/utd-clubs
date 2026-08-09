@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import Confirmation from '@/common/components/Confirmation';
+import Confirmation from '@/lib/components/Confirmation';
 import { SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 

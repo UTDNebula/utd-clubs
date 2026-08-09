@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { BaseCard } from '@nebula-library/components/BaseCard';
 import JoinButton from '@/systems/clubs/JoinButton';
-import Header from '@/common/modules/navigation/header';
+import Header from '@/lib/modules/navigation/header';
 import { auth } from '@/server/auth';
 import { db } from '@/server/db';
-import { signInRoute } from '@/common/utils/redirect';
+import { signInRoute } from '@/lib/utils/redirect';
 import RedoClubMatchButton from '@/systems/clubs/match/RedoClubMatchButton';
 
 export const metadata: Metadata = {

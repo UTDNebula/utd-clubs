@@ -2,7 +2,7 @@
 
 import { ListItemText, Menu, MenuItem } from '@mui/material';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { TagChip } from '@/common/components/TagChip';
+import { TagChip } from '@/lib/components/TagChip';
 
 // Constants for layout calculation
 const GAP = 4;

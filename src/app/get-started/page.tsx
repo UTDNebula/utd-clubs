@@ -2,10 +2,10 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import OnboardingForm from '@/systems/settings/OnboardingForm';
-import Header from '@/common/modules/navigation/header';
+import Header from '@/lib/modules/navigation/header';
 import { auth } from '@/server/auth';
 import { api } from '@/trpc/server';
-import { signInRoute } from '@/common/utils/redirect';
+import { signInRoute } from '@/lib/utils/redirect';
 
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });

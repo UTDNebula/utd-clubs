@@ -14,10 +14,10 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import Confirmation from '@/common/components/Confirmation';
+import Confirmation from '@/lib/components/Confirmation';
 import type { SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
-import { authClient } from '@/common/utils/auth-client';
+import { authClient } from '@/lib/utils/auth-client';
 
 type CalendarProps = {
   club: SelectClub;

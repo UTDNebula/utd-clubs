@@ -23,10 +23,10 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import Confirmation from '@/common/components/Confirmation';
+import Confirmation from '@/lib/components/Confirmation';
 import { useTRPC } from '@/trpc/react';
 import { RouterOutputs } from '@/trpc/shared';
-import { setSnackbar, SnackbarPresets } from '@/common/modules/snackbar';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 
 type TagListProps = {
   tags?: RouterOutputs['club']['distinctTags'];

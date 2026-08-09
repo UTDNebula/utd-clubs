@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tagsSchema } from '@/common/utils/schemas';
+import { tagsSchema } from '@/lib/utils/schemas';
 
 export const createClubSchema = z.object({
   name: z.object({
