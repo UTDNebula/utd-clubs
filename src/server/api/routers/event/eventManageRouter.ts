@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { and, eq, gt, isNull, lte, or } from 'drizzle-orm';
 import { club } from '@/server/db/schema/club';
 import { events } from '@/server/db/schema/events';
-import { stopWatching } from '@/common/modules/googleCalendar/calendar';
+import { stopWatching } from '@/common/modules/googleCalendar';
 import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
 import { eventIdSchema } from '../baseSchemas';

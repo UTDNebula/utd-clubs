@@ -1,16 +1,14 @@
 import { TZDateMini } from '@date-fns/tz';
 import { DatabaseError } from '@neondatabase/serverless';
-import { addDays, subMinutes } from 'date-fns';
+import { subMinutes } from 'date-fns';
 import {
   and,
   DrizzleError,
   eq,
   getTableColumns,
   getTableName,
-  gt,
   inArray,
   isNull,
-  not,
   or,
   SQL,
   sql,
@@ -20,13 +18,11 @@ import { PgTable } from 'drizzle-orm/pg-core';
 import { GaxiosError } from 'gaxios';
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
-import { nanoid } from 'nanoid';
 import z from 'zod';
 import { dbWithSessions } from '@/server/db';
-import { calendarWebhooks } from '@/server/db/schema/calendarWebhooks';
 import { club as clubTable } from '@/server/db/schema/club';
 import { events as eventTable } from '@/server/db/schema/events';
-import { getGoogleAccessToken } from '@/common/modules/googleOAuth';
+import { gCalEventSchema } from './gCalEventSchema';
 
 const db = dbWithSessions;
 
@@ -119,7 +115,7 @@ export async function syncCalendar(
         const newOrUpdated = (
           loopEvents.items?.filter((ev) => ev.status !== 'cancelled') ?? []
         )
-          .map((e) => eventSchema.safeParse(e))
+          .map((e) => gCalEventSchema.safeParse(e))
           .filter((e) => e.success == true)
           .map((e) => e.data);
         if (!reset) {
@@ -210,7 +206,7 @@ export async function syncCalendar(
 }
 function generateEvent(
   clubId: string,
-  event: z.infer<typeof eventSchema>,
+  event: z.infer<typeof gCalEventSchema>,
 ): InferInsertModel<typeof eventTable> {
   let imageUrl: string | null = null;
 
@@ -255,146 +251,6 @@ function generateEvent(
   };
 }
 
-export async function getAuthForClub(clubId: string): Promise<OAuth2Client> {
-  const clubData = await db.query.club.findFirst({
-    where: eq(clubTable.id, clubId),
-    columns: { calendarGoogleAccountId: true },
-  });
-
-  if (!clubData?.calendarGoogleAccountId) {
-    throw new Error('Club has no linked Google Calendar');
-  }
-
-  const accessToken = await getGoogleAccessToken(
-    clubData.calendarGoogleAccountId,
-  );
-
-  // create new auth client for creating and deleting a calendar watch
-  const auth = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    `${process.env.GOOGLE_WEBHOOK_URL || process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback/google`, // BetterAuth handles this
-  );
-
-  auth.setCredentials({ access_token: accessToken });
-  return auth;
-}
-
-export async function watchCalendar(clubId: string, refresh: boolean = false) {
-  // check if webhook exists
-  const existingWebhook = await db.query.calendarWebhooks.findFirst({
-    where: and(
-      eq(calendarWebhooks.clubId, clubId),
-      gt(calendarWebhooks.expiration, new Date()), // Check if expiration is in the future
-    ),
-  });
-
-  if (existingWebhook && !refresh) {
-    console.log(`GCal for clubId ${clubId} is already being watched.`);
-    return {
-      channelId: existingWebhook.id,
-      expires: existingWebhook.expiration,
-    };
-  }
-  if (!refresh)
-    console.log(`GCal for clubId ${clubId} is not being watched yet`);
-  else console.log(`refreshing clubId ${clubId}`);
-
-  // get auth & club data
-  const [auth, clubData] = await Promise.all([
-    getAuthForClub(clubId),
-    db.query.club.findFirst({
-      where: eq(clubTable.id, clubId),
-    }),
-  ]);
-
-  if (!clubData || !clubData.calendarId || !clubData.calendarGoogleAccountId)
-    throw new Error(`clubId ${clubId} has no Calendar to sync`);
-
-  // randomized id for new channel and token for verification
-  const channelId = nanoid();
-  const token = nanoid();
-
-  // create webhook
-  try {
-    const response = await google.calendar('v3').events.watch({
-      auth,
-      calendarId: clubData.calendarId,
-      requestBody: {
-        id: channelId,
-        type: 'web_hook',
-        address: `${process.env.GOOGLE_WEBHOOK_URL || process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/calendar`,
-        token: token,
-      },
-    });
-
-    // insert the new webhook connection for the club
-    const expires = response.data.expiration
-      ? new Date(parseInt(response.data.expiration))
-      : addDays(new Date(), 7); // default to 7 days
-    await db.insert(calendarWebhooks).values({
-      id: channelId,
-      resourceId: response.data.resourceId!, // it will work, because I don't know what I'll do if it doesn't
-      clubId: clubId,
-      token: token,
-      expiration: expires,
-    });
-
-    console.log(`GCal for clubId ${clubId} is now being watched`);
-
-    return { channelId, expires };
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function stopWatching(clubId: string, channelIdToKeep?: string) {
-  let webhooks = [];
-  if (channelIdToKeep) {
-    webhooks = await db.query.calendarWebhooks.findMany({
-      where: and(
-        eq(calendarWebhooks.clubId, clubId),
-        not(eq(calendarWebhooks.id, channelIdToKeep)),
-      ),
-    });
-  } else {
-    webhooks = await db.query.calendarWebhooks.findMany({
-      where: eq(calendarWebhooks.clubId, clubId),
-    });
-  }
-
-  if (!webhooks || webhooks.length == 0) {
-    console.error(`Could not find webhook to delete for clubID: ${clubId}`);
-    return;
-  }
-
-  const auth = await getAuthForClub(clubId);
-
-  await Promise.all(
-    webhooks.map(async (webhook) => {
-      try {
-        await google.calendar('v3').channels.stop({
-          auth,
-          requestBody: {
-            id: webhook.id,
-            resourceId: webhook.resourceId,
-          },
-        });
-        console.log('Stopped channel');
-      } catch (e) {
-        console.error('Could not stop channel', e);
-      }
-    }),
-  );
-
-  const webhookIds = webhooks.map((w) => w.id);
-  // Delete webhook from data
-  await db
-    .delete(calendarWebhooks)
-    .where(inArray(calendarWebhooks.id, webhookIds));
-  console.log('deleted webhook from db');
-}
-
 const buildConflictUpdateColumns = <
   T extends PgTable,
   Q extends keyof T['_']['columns'],
@@ -416,42 +272,3 @@ const buildConflictUpdateColumns = <
     {} as Record<Q, SQL>,
   );
 };
-
-const eventSchema = z.object({
-  id: z.string(),
-  summary: z.string(),
-  description: z.string().optional(),
-  recurrence: z.string().array().optional(),
-  recurringEventId: z.string().optional(),
-  etag: z.string(),
-  location: z.string().optional(),
-  start: z.object({
-    date: z.iso.date().optional(),
-    dateTime: z.iso.datetime({ offset: true }).optional(),
-    timeZone: z.string().optional(),
-  }),
-  end: z.object({
-    date: z.iso.date().optional(),
-    dateTime: z.iso.datetime({ offset: true }).optional(),
-    timeZone: z.string().optional(),
-  }),
-  created: z.iso.datetime(),
-  updated: z.iso.datetime(),
-  organizer: z
-    .object({
-      email: z.string(),
-      displayName: z.string().optional(),
-      self: z.boolean().optional(),
-    })
-    .optional(),
-  attachments: z
-    .array(
-      z.object({
-        fileUrl: z.string(),
-        title: z.string(),
-        mimeType: z.string(),
-        fileId: z.string(),
-      }),
-    )
-    .optional(),
-});

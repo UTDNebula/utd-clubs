@@ -23,7 +23,7 @@ import { getGoogleAccessToken } from '@/common/modules/googleOAuth';
 import {
   syncCalendar,
   watchCalendar,
-} from '@/common/modules/googleCalendar/calendar';
+} from '@/common/modules/googleCalendar';
 import { google } from 'googleapis';
 import { clubIdSchema } from '../baseSchemas';
 
