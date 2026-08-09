@@ -3,8 +3,8 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Header from '@/lib/modules/navigation/header';
-import { auth } from '@/server/auth';
 import { signInRoute } from '@/lib/utils/redirect';
+import { auth } from '@/server/auth';
 import CreateClubForm from '@/systems/clubs/create/CreateClubForm';
 
 export const metadata: Metadata = {

@@ -1,13 +1,13 @@
+import { PanelProps } from '@nebula-library/components/Panel';
 import compare from '@/lib/utils/compare';
+import { createParamSetter } from '@/lib/utils/searchParams';
 import {
   EventFiltersSchema,
+  eventParamsDefaults,
   EventParamsSchema,
   splitArrayFields,
-  eventParamsDefaults,
   SplitArrayFields,
 } from './eventsFilterSchema';
-import { createParamSetter } from '@/lib/utils/searchParams';
-import { PanelProps } from '@nebula-library/components/Panel';
 
 /**
  * Maps EventFiltersSchema to the result of Object.entries()

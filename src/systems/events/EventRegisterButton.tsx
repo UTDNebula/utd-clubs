@@ -6,10 +6,10 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { useTRPC } from '@/trpc/react';
-import { authClient } from '@/lib/utils/auth-client';
 import { useLoginModal } from '@/lib/modules/loginModal';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import { authClient } from '@/lib/utils/auth-client';
+import { useTRPC } from '@/trpc/react';
 import EventEditButton from './EventEditButton';
 
 type EventRegisterButtonProps = {

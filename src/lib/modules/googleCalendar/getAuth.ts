@@ -1,9 +1,9 @@
 import { eq } from 'drizzle-orm';
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
+import { getGoogleAccessToken } from '@/lib/modules/googleOAuth';
 import { dbWithSessions } from '@/server/db';
 import { club as clubTable } from '@/server/db/schema/club';
-import { getGoogleAccessToken } from '@/lib/modules/googleOAuth';
 
 const db = dbWithSessions;
 

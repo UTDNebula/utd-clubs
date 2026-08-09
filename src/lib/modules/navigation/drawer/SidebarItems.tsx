@@ -3,7 +3,11 @@
 import { Badge } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { IconMap, routeMap, type allCats } from '@/lib/modules/navigation/categories';
+import {
+  IconMap,
+  routeMap,
+  type allCats,
+} from '@/lib/modules/navigation/categories';
 
 const SidebarItems = ({
   cat,

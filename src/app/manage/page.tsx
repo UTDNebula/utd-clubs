@@ -2,12 +2,12 @@ import AddIcon from '@mui/icons-material/Add';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import ClubCard from '@/systems/clubs/ClubCard';
-import Header from '@/lib/modules/navigation/header';
 import { LinkButton } from '@/lib/components/LinkButton';
-import { auth } from '@/server/auth';
-import { api } from '@/trpc/server';
+import Header from '@/lib/modules/navigation/header';
 import { signInRoute } from '@/lib/utils/redirect';
+import { auth } from '@/server/auth';
+import ClubCard from '@/systems/clubs/ClubCard';
+import { api } from '@/trpc/server';
 
 export const metadata: Metadata = {
   title: 'Manage Clubs',

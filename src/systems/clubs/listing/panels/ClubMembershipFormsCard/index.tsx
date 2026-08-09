@@ -1,6 +1,6 @@
 import Panel from '@nebula-library/components/Panel';
-import MembershipFormCard from './MembershipFormCard';
 import { RouterOutputs } from '@/trpc/shared';
+import MembershipFormCard from './MembershipFormCard';
 
 type ClubUpcomingEventsCardProps = {
   emptyText: string;

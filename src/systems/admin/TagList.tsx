@@ -24,9 +24,9 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@/lib/components/Confirmation';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { useTRPC } from '@/trpc/react';
 import { RouterOutputs } from '@/trpc/shared';
-import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 
 type TagListProps = {
   tags?: RouterOutputs['club']['distinctTags'];

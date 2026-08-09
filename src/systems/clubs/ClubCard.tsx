@@ -4,9 +4,9 @@ import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BaseCard } from '@nebula-library/components/BaseCard';
-import type { SelectClub as Club } from '@/server/db/models';
 import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
+import type { SelectClub as Club } from '@/server/db/models';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
 
 type Props = { club: Club; priority?: boolean; manageView?: boolean };

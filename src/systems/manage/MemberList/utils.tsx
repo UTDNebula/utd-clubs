@@ -7,11 +7,11 @@ import Chip from '@mui/material/Chip';
 import { GridColDef } from '@mui/x-data-grid';
 import Image, { ImageProps } from 'next/image';
 import { ReactNode, useState } from 'react';
+import formatListString from '@/lib/utils/formatListString';
 import {
   SelectUserMetadataToClubsWithUserMetadata,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@/server/db/models';
-import formatListString from '@/lib/utils/formatListString';
 import {
   ActionsCell,
   ContactEmailCell,

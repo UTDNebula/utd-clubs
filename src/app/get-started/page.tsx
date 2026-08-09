@@ -1,11 +1,11 @@
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
-import OnboardingForm from '@/systems/settings/OnboardingForm';
 import Header from '@/lib/modules/navigation/header';
-import { auth } from '@/server/auth';
-import { api } from '@/trpc/server';
 import { signInRoute } from '@/lib/utils/redirect';
+import { auth } from '@/server/auth';
+import OnboardingForm from '@/systems/settings/OnboardingForm';
+import { api } from '@/trpc/server';
 
 export default async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -14,7 +14,9 @@ export default async function Page() {
     redirect(await signInRoute('get-started'));
   }
 
-  const userMetadata = await api.user.metadata.byId({ userId: session.user.id });
+  const userMetadata = await api.user.metadata.byId({
+    userId: session.user.id,
+  });
 
   return (
     <main className="relative min-h-screen pb-24">

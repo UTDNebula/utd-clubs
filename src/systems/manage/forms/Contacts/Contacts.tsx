@@ -24,13 +24,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import z from 'zod';
 import Panel from '@nebula-library/components/Panel';
-import ContactListItem from './ContactListItem';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import { useAppForm } from '@/lib/utils/form';
 import type { SelectClub, SelectContact } from '@/server/db/models';
 import { contactNames, startContacts } from '@/server/db/schema/contacts';
 import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/lib/utils/form';
+import ContactListItem from './ContactListItem';
 import { editClubContactSchema } from './schema';
-import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 
 type FormData = z.infer<typeof editClubContactSchema>;
 type ContactPlatform = keyof typeof contactNames;

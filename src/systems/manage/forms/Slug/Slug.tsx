@@ -10,12 +10,12 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@/lib/components/Confirmation';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import { useAppForm } from '@/lib/utils/form';
+import useDebounce from '@/lib/utils/useDebounce';
 import type { SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/lib/utils/form';
 import { editSlugSchema } from './schema';
-import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
-import useDebounce from '@/lib/utils/useDebounce';
 
 type DetailsProps = {
   club: SelectClub;

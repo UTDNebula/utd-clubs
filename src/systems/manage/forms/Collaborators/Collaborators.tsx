@@ -4,16 +4,16 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
 import Panel from '@nebula-library/components/Panel';
-import CollaboratorListItem from './CollaboratorListItem';
-import { UserSearchBar } from '@/systems/manage/UserSearchBar';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import { useAppForm } from '@/lib/utils/form';
 import type {
   SelectClub,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@/server/db/models';
+import { UserSearchBar } from '@/systems/manage/UserSearchBar';
 import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/lib/utils/form';
+import CollaboratorListItem from './CollaboratorListItem';
 import { editOfficerSchema } from './schema';
-import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 
 type FormData = z.infer<typeof editOfficerSchema>;
 

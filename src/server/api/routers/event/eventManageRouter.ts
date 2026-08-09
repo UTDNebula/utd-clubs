@@ -1,10 +1,10 @@
 import { TRPCError } from '@trpc/server';
 import { and, eq, gt, isNull, lte, or } from 'drizzle-orm';
+import { stopWatching } from '@/lib/modules/googleCalendar';
+import { authedProcedure, createTRPCRouter } from '@/server/api/trpc';
+import { requireMemberRole } from '@/server/api/utils';
 import { club } from '@/server/db/schema/club';
 import { events } from '@/server/db/schema/events';
-import { stopWatching } from '@/lib/modules/googleCalendar';
-import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
-import { requireMemberRole } from '@/server/api/utils';
 import { eventIdSchema } from '../baseSchemas';
 import { createSchema, disableSyncSchema, editSchema } from './inputSchemas';
 

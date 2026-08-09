@@ -1,15 +1,15 @@
 import gradientBG from '@public/images/landingGradient.png';
 import planetsDoodle from '@public/images/PlanetsDoodle.png';
 import Image from 'next/image';
-import { AllTags } from '@/systems/dashboard/AllTags';
-import ClubDirectoryGrid from '@/systems/clubs/directory/ClubDirectoryGrid';
-import Header from '@/lib/modules/navigation/header';
-import { HomePageSearchBar } from '@/systems/dashboard/HomePageSearch';
-import { TagPill } from '@/systems/dashboard/TagPill';
 import NebulaLogo from '@/lib/icons/NebulaLogo';
 import StarDoodle from '@/lib/icons/StarDoodle';
-import { api } from '@/trpc/server';
+import Header from '@/lib/modules/navigation/header';
+import ClubDirectoryGrid from '@/systems/clubs/directory/ClubDirectoryGrid';
+import { AllTags } from '@/systems/dashboard/AllTags';
+import { HomePageSearchBar } from '@/systems/dashboard/HomePageSearch';
 import { SearchStoreProvider } from '@/systems/dashboard/SearchStoreProvider';
+import { TagPill } from '@/systems/dashboard/TagPill';
+import { api } from '@/trpc/server';
 
 const Home = async () => {
   const [tags, allTags] = await Promise.all([

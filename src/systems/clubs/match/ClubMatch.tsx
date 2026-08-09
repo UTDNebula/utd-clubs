@@ -16,10 +16,10 @@ import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import Panel from '@nebula-library/components/Panel';
 import { Binoculars } from '@/lib/icons/OtherIcons';
+import { useAppForm } from '@/lib/utils/form';
 import { SelectUserMetadata } from '@/server/db/models';
 import { ClubMatchResponses } from '@/server/db/schema/users';
 import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/lib/utils/form';
 import { clubMatchFormSchema } from './clubMatchSchema';
 
 type ClubMatchFormSchema = z.infer<typeof clubMatchFormSchema>;

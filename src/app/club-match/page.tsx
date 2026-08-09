@@ -3,11 +3,11 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Header from '@/lib/modules/navigation/header';
+import { signInRoute } from '@/lib/utils/redirect';
 import { auth } from '@/server/auth';
 import { db } from '@/server/db';
-import { api } from '@/trpc/server';
-import { signInRoute } from '@/lib/utils/redirect';
 import ClubMatch from '@/systems/clubs/match/ClubMatch';
+import { api } from '@/trpc/server';
 
 export const metadata: Metadata = {
   title: 'Club Match',

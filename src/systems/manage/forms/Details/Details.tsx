@@ -5,18 +5,18 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import type z from 'zod';
 import Panel, { PanelSkeleton } from '@nebula-library/components/Panel';
-import ClubTagAutocomplete from '@/systems/clubs/ClubTagAutocomplete';
 import Confirmation from '@/lib/components/Confirmation';
-import { ClubSchoolEdit } from '@/systems/clubs/ClubSchoolEdit';
 import FormImage from '@/lib/components/form/FormImage';
-import { SelectClub } from '@/server/db/models';
-import { useTRPC } from '@/trpc/react';
-import { useAppForm } from '@/lib/utils/form';
-import { editClubDetailsFormSchema } from './schema';
-import { schools } from '@/lib/utils/schemas';
-import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import { useAppForm } from '@/lib/utils/form';
+import { addVersionToImage } from '@/lib/utils/imageCacheBust';
+import { schools } from '@/lib/utils/schemas';
 import { useUploadToUploadURL } from '@/lib/utils/uploadImage';
+import { SelectClub } from '@/server/db/models';
+import { ClubSchoolEdit } from '@/systems/clubs/ClubSchoolEdit';
+import ClubTagAutocomplete from '@/systems/clubs/ClubTagAutocomplete';
+import { useTRPC } from '@/trpc/react';
+import { editClubDetailsFormSchema } from './schema';
 
 type DetailsProps = {
   club: SelectClub;

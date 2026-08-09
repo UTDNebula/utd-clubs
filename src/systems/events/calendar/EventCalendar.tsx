@@ -24,15 +24,15 @@ import { isSameDay, startOfDay } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { getRangeForView, type CalendarRange } from '@/lib/utils/calendarRange';
+import { createParamSetter } from '@/lib/utils/searchParams';
 import EventCard from '@/systems/events/EventCard';
 import { useTRPC } from '@/trpc/react';
 import { type RouterOutputs } from '@/trpc/shared';
 import {
-  getRangeForView,
-  type CalendarRange,
-} from '@/lib/utils/calendarRange';
-import { calendarParamsSchema, type CalendarParamsSchema } from './eventCalendarSchema';
-import { createParamSetter } from '@/lib/utils/searchParams';
+  calendarParamsSchema,
+  type CalendarParamsSchema,
+} from './eventCalendarSchema';
 
 type RegisteredEvent =
   RouterOutputs['user']['events']['getRegisteredEventsByRange'][number];

@@ -4,9 +4,9 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import Tooltip from '@mui/material/Tooltip';
 import { notFound } from 'next/navigation';
 import { LinkButton } from '@/lib/components/LinkButton';
+import ClubManageForm from '@/systems/manage/ClubManageForm';
 import ManageHeader from '@/systems/manage/ManageHeader';
 import { api } from '@/trpc/server';
-import ClubManageForm from '@/systems/manage/ClubManageForm';
 
 const Page = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params;

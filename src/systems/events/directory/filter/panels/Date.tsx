@@ -3,13 +3,17 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { memo, useState } from 'react';
 import z from 'zod';
 import Panel from '@nebula-library/components/Panel';
+import FilterList, { FilterListItem } from '@/lib/components/filter/FilterList';
 import {
   EventFiltersSchema,
   temporalDeixisCustomDateSentinelValue,
   temporalDeixisWithCustomFilterEnum,
 } from '@/systems/events/directory/filter/eventsFilterSchema';
-import FilterList, { FilterListItem } from '@/lib/components/filter/FilterList';
-import { FilterPanelProps, panelProps, setEventsParams } from '../eventsFilterUtils';
+import {
+  FilterPanelProps,
+  panelProps,
+  setEventsParams,
+} from '../eventsFilterUtils';
 
 export type DatePanelFields = Pick<
   EventFiltersSchema,

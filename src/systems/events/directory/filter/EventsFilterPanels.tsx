@@ -3,13 +3,13 @@
 import Divider from '@mui/material/Divider';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
-import { EventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
 import useStable from '@/lib/utils/useStable';
+import { EventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
+import { FilterPanelBaseProps } from './eventsFilterUtils';
 import DatePanel from './panels/Date';
 import FiltersPanel from './panels/Filters';
 // import LocationPanel from './panels/Location';
 import TagsPanel from './panels/Tags';
-import { FilterPanelBaseProps } from './eventsFilterUtils';
 
 type EventsFilterPanelsProps = {
   backgroundHover?: boolean;

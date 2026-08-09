@@ -1,8 +1,8 @@
 import { createTRPCRouter, mergeRouters } from '@/server/api/trpc';
-import userPublicRouter from './userPublicRouter';
-import userMetadataRouter from './userMetadataRouter';
 import userClubsRouter from './userClubsRouter';
 import userEventsRouter from './userEventsRouter';
+import userMetadataRouter from './userMetadataRouter';
+import userPublicRouter from './userPublicRouter';
 
 const userBaseRouter = createTRPCRouter({
   metadata: userMetadataRouter,

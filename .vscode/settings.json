@@ -5,5 +5,5 @@
   },
   "tailwindCSS.experimental.classRegex": [
     ["className\\s*:\\s*['\"]([^'\"]*)['\"]"]
-  ],
+  ]
 }

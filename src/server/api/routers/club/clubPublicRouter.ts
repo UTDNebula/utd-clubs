@@ -1,15 +1,15 @@
 import { and, asc, desc, eq, ilike, inArray, lte, or, sql } from 'drizzle-orm';
+import {
+  authedProcedure,
+  createTRPCRouter,
+  publicProcedure,
+} from '@/server/api/trpc';
 import { club, usedTags } from '@/server/db/schema/club';
 import { membershipForms } from '@/server/db/schema/membershipForms';
 import { officers as officersTable } from '@/server/db/schema/officers';
 import { userMetadataToClubs } from '@/server/db/schema/users';
-import {
-  createTRPCRouter,
-  authedProcedure,
-  publicProcedure,
-} from '@/server/api/trpc';
-import { byNameSchema, searchTagSchema, searchSchema } from './inputSchemas';
 import { clubIdSchema, clubSlugSchema } from '../baseSchemas';
+import { byNameSchema, searchSchema, searchTagSchema } from './inputSchemas';
 
 const clubPublicRouter = createTRPCRouter({
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {

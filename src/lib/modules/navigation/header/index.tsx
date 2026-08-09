@@ -1,11 +1,11 @@
 'use server';
 
-import ClubMatchButton from './ClubMatchButton';
-import Sidebar from '../drawer/Sidebar';
+import { BaseHeader, BaseHeaderProps } from '@/lib/components/BaseHeader';
+import UTDClubsLogoStandalone from '@/lib/icons/UTDClubsLogo';
 import { ClubSearchBar } from '@/systems/clubs/ClubSearchBar';
 import { EventSearchBar } from '@/systems/events/EventSearchBar';
-import UTDClubsLogoStandalone from '@/lib/icons/UTDClubsLogo';
-import { BaseHeader, BaseHeaderProps } from '@/lib/components/BaseHeader';
+import Sidebar from '../drawer/Sidebar';
+import ClubMatchButton from './ClubMatchButton';
 import { ProfileDropDown } from './ProfileDropDown';
 
 const DefaultHeaderItems = () => (

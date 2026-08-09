@@ -8,8 +8,8 @@ import Typography from '@mui/material/Typography';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import { formatDistanceStrict } from 'date-fns/formatDistanceStrict';
 import { useContext } from 'react';
-import { SelectUserMetadataToClubsWithUserMetadata } from '@/server/db/models';
 import { authClient } from '@/lib/utils/auth-client';
+import { SelectUserMetadataToClubsWithUserMetadata } from '@/server/db/models';
 import MemberRoleChip, { MemberTypes } from '../MemberRoleChip';
 import { MemberListContext } from './MemberListContext';
 

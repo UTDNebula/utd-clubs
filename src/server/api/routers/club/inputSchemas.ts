@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { selectContact } from '@/server/db/models';
-import { clubIdSchema } from '../baseSchemas';
 import { createClubSchema } from '@/systems/clubs/create/createClubSchema';
-import { editSlugSchema as editClubSlugSchema } from '@/systems/manage/forms/Slug';
 import { editClubDetailsSchema } from '@/systems/manage/forms/Details';
+import { editSlugSchema as editClubSlugSchema } from '@/systems/manage/forms/Slug';
+import { clubIdSchema } from '../baseSchemas';
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public Router

@@ -1,9 +1,9 @@
 'use server';
 
 import { TZDateMini } from '@date-fns/tz';
-import NotFollowingOrRegistered from './NotFollowingOrRegistered';
 import EventCard from '@/systems/events/EventCard';
 import { api } from '@/trpc/server';
+import NotFollowingOrRegistered from './NotFollowingOrRegistered';
 
 export default async function RegisteredEvents() {
   const events = await api.user.events.getEvents({

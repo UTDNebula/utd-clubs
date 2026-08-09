@@ -2,10 +2,15 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SortIcon from '@mui/icons-material/Sort';
 import { memo } from 'react';
-import { EventCardVariants } from '@/systems/events/EventCard';
-import { EventFiltersSchema, sortEnum } from '@/systems/events/directory/filter/eventsFilterSchema';
 import CompactPagination from '@/lib/components/filter/CompactPagination';
-import ViewOption, { ViewOptionItem } from '@/lib/components/filter/ViewOptionItem';
+import ViewOption, {
+  ViewOptionItem,
+} from '@/lib/components/filter/ViewOptionItem';
+import {
+  EventFiltersSchema,
+  sortEnum,
+} from '@/systems/events/directory/filter/eventsFilterSchema';
+import { EventCardVariants } from '@/systems/events/EventCard';
 import { setEventsParams } from './eventsFilterUtils';
 
 type EventsViewOptionsBarProps = {

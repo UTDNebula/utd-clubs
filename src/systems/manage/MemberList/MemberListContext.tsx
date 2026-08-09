@@ -5,9 +5,9 @@ import { createContext } from 'react';
 import z from 'zod';
 import { AppRouter } from '@/server/api/root';
 import { SelectUserMetadataToClubsWithUserMetadata } from '@/server/db/models';
+import { RouterInputs } from '@/trpc/shared';
 import useMemberListDeletionState from './useMemberListDeletionState';
 import { MemberListAbilities } from './utils';
-import { RouterInputs } from '@/trpc/shared';
 
 export interface MemberListContextType {
   memberListDeletionState:

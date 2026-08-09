@@ -1,7 +1,7 @@
 import { eq, sql } from 'drizzle-orm';
+import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
 import { user as users } from '@/server/db/schema/auth';
 import { userMetadata } from '@/server/db/schema/users';
-import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
 import { nameOrEmailSchema } from './inputSchemas';
 
 const userPublicRouter = createTRPCRouter({

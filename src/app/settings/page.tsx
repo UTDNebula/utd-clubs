@@ -2,9 +2,9 @@ import { type Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Header from '@/lib/modules/navigation/header';
-import SettingsForm from '@/systems/settings/SettingsForm';
-import { auth } from '@/server/auth';
 import { signInRoute } from '@/lib/utils/redirect';
+import { auth } from '@/server/auth';
+import SettingsForm from '@/systems/settings/SettingsForm';
 
 export const metadata: Metadata = {
   title: 'Settings',

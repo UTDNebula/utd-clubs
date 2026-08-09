@@ -1,16 +1,16 @@
 import { TRPCError } from '@trpc/server';
 import { and, count, desc, eq, inArray, lte, sql } from 'drizzle-orm';
+import { callStorageAPI } from '@/lib/utils/storage';
+import { adminProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { club, usedTags } from '@/server/db/schema/club';
 import { events } from '@/server/db/schema/events';
 import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@/server/db/schema/users';
-import { callStorageAPI } from '@/lib/utils/storage';
-import { adminProcedure, createTRPCRouter } from '@/server/api/trpc';
-import { editCollaboratorSchema } from '../club/inputSchemas';
-import { tagReplaceSchema, changeClubStatusSchema } from './inputSchemas';
 import { clubIdSchema, clubSlugSchema, eventIdSchema } from '../baseSchemas';
+import { editCollaboratorSchema } from '../club/inputSchemas';
+import { changeClubStatusSchema, tagReplaceSchema } from './inputSchemas';
 
 const adminRouter = createTRPCRouter({
   allClubs: adminProcedure.query(async ({ ctx }) => {

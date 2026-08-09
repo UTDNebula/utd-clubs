@@ -12,14 +12,15 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Confirmation from '@/lib/components/Confirmation';
+import { useSnackbar } from '@/lib/modules/snackbar';
+import { authClient } from '@/lib/utils/auth-client';
 import { AppRouter } from '@/server/api/root';
 import {
   SelectClub,
   SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
-import { authClient } from '@/lib/utils/auth-client';
-import { useSnackbar } from '@/lib/modules/snackbar';
+import { RouterInputs } from '@/trpc/shared';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';
 import { MemberListContext, MemberListContextType } from './MemberListContext';
@@ -31,7 +32,6 @@ import {
   formatUserListString,
   MemberListAbilities,
 } from './utils';
-import { RouterInputs } from '@/trpc/shared';
 
 type MemberListProps = {
   members: SelectUserMetadataToClubsWithUserMetadataWithUser[];

@@ -7,8 +7,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@/lib/components/Confirmation';
-import { useTRPC } from '@/trpc/react';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import { useTRPC } from '@/trpc/react';
 
 const LeadershipChange = ({ clubId }: { clubId: string }) => {
   const [openConfirmation, setOpenConfirmation] = useState(false);

@@ -1,7 +1,11 @@
 import { TRPCError } from '@trpc/server';
 import { callStorageAPI, getUploadURL } from '@/lib/utils/storage';
-import { createTRPCRouter, authedProcedure, publicProcedure } from '@/server/api/trpc';
-import { getDeleteSchema, createUploadSchema } from './inputSchemas';
+import {
+  authedProcedure,
+  createTRPCRouter,
+  publicProcedure,
+} from '@/server/api/trpc';
+import { createUploadSchema, getDeleteSchema } from './inputSchemas';
 
 const storageRouter = createTRPCRouter({
   get: publicProcedure.input(getDeleteSchema).query(async ({ input }) => {

@@ -1,31 +1,28 @@
 import { TRPCError } from '@trpc/server';
 import { and, asc, eq, inArray, not } from 'drizzle-orm';
+import { google } from 'googleapis';
+import { syncCalendar, watchCalendar } from '@/lib/modules/googleCalendar';
+import { getGoogleAccessToken } from '@/lib/modules/googleOAuth';
+import { callStorageAPI } from '@/lib/utils/storage';
+import { authedProcedure, createTRPCRouter } from '@/server/api/trpc';
+import { requireMemberRole } from '@/server/api/utils';
 import { club } from '@/server/db/schema/club';
 import { contacts } from '@/server/db/schema/contacts';
 import { membershipForms } from '@/server/db/schema/membershipForms';
 import { officers } from '@/server/db/schema/officers';
 import { userMetadataToClubs } from '@/server/db/schema/users';
-import { callStorageAPI } from '@/lib/utils/storage';
-import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
-import { requireMemberRole } from '@/server/api/utils';
-import {
-  editContactSchema,
-  editCollaboratorSchema,
-  editOfficerSchema,
-  editFormSchema,
-  removeMembersSchema,
-  eventSyncSchema,
-  createSchema,
-  editDataSchema,
-  editSlugSchema,
-} from './inputSchemas';
-import { getGoogleAccessToken } from '@/lib/modules/googleOAuth';
-import {
-  syncCalendar,
-  watchCalendar,
-} from '@/lib/modules/googleCalendar';
-import { google } from 'googleapis';
 import { clubIdSchema } from '../baseSchemas';
+import {
+  createSchema,
+  editCollaboratorSchema,
+  editContactSchema,
+  editDataSchema,
+  editFormSchema,
+  editOfficerSchema,
+  editSlugSchema,
+  eventSyncSchema,
+  removeMembersSchema,
+} from './inputSchemas';
 
 const clubManageRouter = createTRPCRouter({
   create: authedProcedure

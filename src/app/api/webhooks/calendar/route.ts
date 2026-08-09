@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
+import { getAuthForClub, syncCalendar } from '@/lib/modules/googleCalendar';
 import { db } from '@/server/db';
 import { calendarWebhooks } from '@/server/db/schema/calendarWebhooks';
-import { getAuthForClub, syncCalendar } from '@/lib/modules/googleCalendar';
 
 export async function POST(req: NextRequest) {
   // get headers

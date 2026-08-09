@@ -1,21 +1,21 @@
 import { TRPCError } from '@trpc/server';
 import { and, count, eq, gt, gte, inArray, lt } from 'drizzle-orm';
 import { OAuth2Client } from 'google-auth-library';
+import { getGoogleAccessToken } from '@/lib/modules/googleOAuth';
+import {
+  authedProcedure,
+  createTRPCRouter,
+  publicProcedure,
+} from '@/server/api/trpc';
+import { events } from '@/server/db/schema/events';
 import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@/server/db/schema/users';
-import { getGoogleAccessToken } from '@/lib/modules/googleOAuth';
-import {
-  createTRPCRouter,
-  authedProcedure,
-  publicProcedure,
-} from '@/server/api/trpc';
-import { events } from '@/server/db/schema/events';
 import { eventIdSchema } from '../baseSchemas';
 import {
-  getByRangeSchema,
   eventsSortSchema,
+  getByRangeSchema,
   joinedClubEventsSchema,
 } from './inputSchemas';
 

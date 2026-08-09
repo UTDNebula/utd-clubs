@@ -5,11 +5,15 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { memo } from 'react';
 import Panel from '@nebula-library/components/Panel';
-import { authClient } from '@/lib/utils/auth-client';
-import { EventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
 import { openLoginModal } from '@/lib/modules/loginModal';
 import { closeSnackbar, setSnackbar } from '@/lib/modules/snackbar';
-import { FilterPanelProps, panelProps, setEventsParams } from '../eventsFilterUtils';
+import { authClient } from '@/lib/utils/auth-client';
+import { EventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
+import {
+  FilterPanelProps,
+  panelProps,
+  setEventsParams,
+} from '../eventsFilterUtils';
 
 const eventsFiltersSnackbarId = 'eventsFilters';
 

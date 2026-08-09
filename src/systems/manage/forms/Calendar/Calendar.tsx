@@ -15,9 +15,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import Confirmation from '@/lib/components/Confirmation';
+import { authClient } from '@/lib/utils/auth-client';
 import type { SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
-import { authClient } from '@/lib/utils/auth-client';
 
 type CalendarProps = {
   club: SelectClub;
@@ -68,7 +68,9 @@ const Calendar = ({ club, hasScopes, userEmail }: CalendarProps) => {
       },
     }),
   );
-  const disableSync = useMutation(trpc.event.manage.disableSync.mutationOptions());
+  const disableSync = useMutation(
+    trpc.event.manage.disableSync.mutationOptions(),
+  );
   const [privateCalendarOpen, setPrivateCalendarOpen] = useState(false);
   const [onetimeSyncOpen, setOnetimeSyncOpen] = useState(false);
   const [disableSyncConfirmationOpen, setDisableSyncConfirmationOpen] =

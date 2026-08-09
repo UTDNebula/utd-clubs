@@ -1,12 +1,12 @@
 import { eq } from 'drizzle-orm';
+import { ai } from '@/lib/utils/ai';
+import { authedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { club } from '@/server/db/schema/club';
 import {
   userAiCache,
   userMetadata,
   type ClubMatchResults,
 } from '@/server/db/schema/users';
-import { createTRPCRouter, authedProcedure } from '@/server/api/trpc';
-import { ai } from '@/lib/utils/ai';
 import { clubMatchSchema } from './inputSchemas';
 
 const aiRouter = createTRPCRouter({

@@ -1,8 +1,8 @@
 import { and, eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
 import { UTDClubsLogoStandalone } from '@/lib/icons/UTDClubsLogo';
-import { db } from '@/server/db';
 import { addVersionToImage } from '@/lib/utils/imageCacheBust';
+import { db } from '@/server/db';
 
 export const runtime = 'edge';
 export const alt = 'Club Details';

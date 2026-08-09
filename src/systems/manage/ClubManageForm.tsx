@@ -2,6 +2,8 @@ import { headers } from 'next/headers';
 import { auth } from '@/server/auth';
 import type { SelectClub, SelectContact } from '@/server/db/models';
 import { api } from '@/trpc/server';
+import LeadershipChange from './banners/LeadershipChange';
+import NotApproved from './banners/NotApproved';
 import Calendar from './forms/Calendar';
 import Collaborators from './forms/Collaborators';
 import Contacts from './forms/Contacts';
@@ -10,8 +12,6 @@ import Details from './forms/Details';
 import MembershipForms from './forms/MembershipForms';
 import Officers from './forms/Officers';
 import Slug from './forms/Slug';
-import LeadershipChange from './banners/LeadershipChange';
-import NotApproved from './banners/NotApproved';
 import Resources from './Resources';
 
 const ClubManageForm = async ({

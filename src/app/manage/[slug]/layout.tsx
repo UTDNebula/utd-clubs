@@ -2,9 +2,9 @@ import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { type ReactNode } from 'react';
 import Header from '@/lib/modules/navigation/header';
+import { signInRoute } from '@/lib/utils/redirect';
 import { auth } from '@/server/auth';
 import { api } from '@/trpc/server';
-import { signInRoute } from '@/lib/utils/redirect';
 
 const Layout = async ({
   params,

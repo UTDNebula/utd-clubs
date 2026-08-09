@@ -1,12 +1,12 @@
 import { TRPCError } from '@trpc/server';
 import { and, eq, inArray } from 'drizzle-orm';
-import { SelectUserMetadataToClubsWithClub } from '@/server/db/models';
-import { userMetadataToClubs } from '@/server/db/schema/users';
 import {
-  createTRPCRouter,
   authedProcedure,
+  createTRPCRouter,
   publicProcedure,
 } from '@/server/api/trpc';
+import { SelectUserMetadataToClubsWithClub } from '@/server/db/models';
+import { userMetadataToClubs } from '@/server/db/schema/users';
 import { clubIdSchema } from '../baseSchemas';
 
 const userClubsRouter = createTRPCRouter({

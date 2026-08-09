@@ -1,6 +1,11 @@
 import { and, eq, or, sql } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { type personalCats } from '@/lib/modules/navigation/categories';
+import {
+  authedProcedure,
+  createTRPCRouter,
+  publicProcedure,
+} from '@/server/api/trpc';
 import { auth } from '@/server/auth';
 import {
   SelectUserMetadataToClubs,
@@ -9,13 +14,8 @@ import {
 import { admin } from '@/server/db/schema/admin';
 import { user as users } from '@/server/db/schema/auth';
 import { userMetadata, userMetadataToClubs } from '@/server/db/schema/users';
-import {
-  createTRPCRouter,
-  authedProcedure,
-  publicProcedure,
-} from '@/server/api/trpc';
-import { updateByIdSchema } from './inputSchemas';
 import { userIdSchema } from '../baseSchemas';
+import { updateByIdSchema } from './inputSchemas';
 
 const userMetadataRouter = createTRPCRouter({
   byId: authedProcedure

@@ -1,12 +1,12 @@
 import { type Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
-import ClubBody from '@/systems/clubs/listing/ClubBody';
+import Header from '@/lib/modules/navigation/header';
+import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
 import ClubBanner from '@/systems/clubs/listing/ClubBanner';
+import ClubBody from '@/systems/clubs/listing/ClubBody';
 import { ClubNotClaimed } from '@/systems/clubs/listing/ClubNotClaimed';
 import ClubTitle from '@/systems/clubs/listing/ClubTitle';
-import Header from '@/lib/modules/navigation/header';
 import { api } from '@/trpc/server';
-import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
 
 const ClubPage = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params;

@@ -26,6 +26,7 @@ import {
   sql,
   type SQL,
 } from 'drizzle-orm';
+import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
 import { club } from '@/server/db/schema/club';
 import { events } from '@/server/db/schema/events';
 import {
@@ -33,7 +34,7 @@ import {
   userMetadataToEvents,
 } from '@/server/db/schema/users';
 import { temporalDeixisCustomDateSentinelValue } from '@/systems/events/directory/filter/eventsFilterSchema';
-import { createTRPCRouter, publicProcedure } from '@/server/api/trpc';
+import { eventIdSchema } from '../baseSchemas';
 import {
   byClubIdSchema,
   byDateRangeSchema,
@@ -43,7 +44,6 @@ import {
   findByDateSchema,
   findByFilterSchema,
 } from './inputSchemas';
-import { eventIdSchema } from '../baseSchemas';
 
 const eventPublicRouter = createTRPCRouter({
   byClubId: publicProcedure
@@ -466,7 +466,8 @@ const eventPublicRouter = createTRPCRouter({
 
     try {
       const byId = await ctx.db.query.events.findFirst({
-        where: (event) => and(eq(event.id, eventId), eq(event.status, 'approved')),
+        where: (event) =>
+          and(eq(event.id, eventId), eq(event.status, 'approved')),
         with: { club: true },
       });
 
@@ -483,7 +484,8 @@ const eventPublicRouter = createTRPCRouter({
       try {
         // Fetch event by id
         const byId = await ctx.db.query.events.findFirst({
-          where: (event) => and(eq(event.id, eventId), eq(event.status, 'approved')),
+          where: (event) =>
+            and(eq(event.id, eventId), eq(event.status, 'approved')),
           with: {
             club: {
               with: {

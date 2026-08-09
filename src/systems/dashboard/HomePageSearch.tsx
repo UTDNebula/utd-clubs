@@ -10,11 +10,11 @@ import {
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
-import { useTRPC } from '@/trpc/react';
-import { useSearchStore } from '@/systems/dashboard/SearchStoreProvider';
+import { TagChip } from '@/lib/components/TagChip';
 import theme from '@/lib/utils/theme';
 import useDebounce from '@/lib/utils/useDebounce';
-import { TagChip } from '@/lib/components/TagChip';
+import { useSearchStore } from '@/systems/dashboard/SearchStoreProvider';
+import { useTRPC } from '@/trpc/react';
 
 export const HomePageSearchBar = () => {
   const {

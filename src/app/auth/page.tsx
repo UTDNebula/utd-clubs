@@ -3,8 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { UTDClubsLogoStandalone } from '@/lib/icons/UTDClubsLogo';
-import { auth } from '@/server/auth';
 import { LoginModalContents } from '@/lib/modules/loginModal';
+import { auth } from '@/server/auth';
 
 export default async function Auth(props: {
   searchParams: Promise<{ [key: string]: string }>;

@@ -1,6 +1,6 @@
+import { TRPCError } from '@trpc/server';
 import { and, eq } from 'drizzle-orm';
 import { db } from '@/server/db';
-import { TRPCError } from '@trpc/server';
 import { clubRoleEnum } from '../db/schema/users';
 
 type ClubRole = (typeof clubRoleEnum.enumValues)[number];

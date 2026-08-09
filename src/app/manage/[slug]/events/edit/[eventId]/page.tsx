@@ -1,9 +1,9 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import EventForm from '@/systems/events/create/EventForm';
-import ManageHeader from '@/systems/manage/ManageHeader';
 import { getGcalEventLink } from '@/lib/modules/googleCalendar/getGcalEventLink';
 import { auth } from '@/server/auth';
+import EventForm from '@/systems/events/create/EventForm';
+import ManageHeader from '@/systems/manage/ManageHeader';
 import { api } from '@/trpc/server';
 
 const EditEventPage = async (props: {

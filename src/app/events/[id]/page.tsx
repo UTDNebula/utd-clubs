@@ -6,12 +6,12 @@ import {
   type FormatDistanceToken,
 } from 'date-fns';
 import { type Metadata } from 'next';
+import { EventHeader } from '@/lib/modules/navigation/header';
+import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
 import ClubBanner from '@/systems/clubs/listing/ClubBanner';
 import EventBody from '@/systems/events/listing/EventBody';
 import EventTitle from '@/systems/events/listing/EventTitle';
-import { EventHeader } from '@/lib/modules/navigation/header';
 import { api } from '@/trpc/server';
-import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
 
 const distanceTokenUnits: Partial<Record<FormatDistanceToken, string>> = {
   xSeconds: 's',

@@ -12,8 +12,8 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useBaseHeaderContext } from '@/lib/components/BaseHeader';
-import { useTRPC } from '@/trpc/react';
 import useDebounce from '@/lib/utils/useDebounce';
+import { useTRPC } from '@/trpc/react';
 
 export const ClubSearchBar = () => {
   const [input, setInput] = useState('');

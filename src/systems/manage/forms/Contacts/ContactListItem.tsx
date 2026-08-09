@@ -4,8 +4,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import type z from 'zod';
-import { contactNames } from '@/server/db/schema/contacts';
 import { withForm } from '@/lib/utils/form';
+import { contactNames } from '@/server/db/schema/contacts';
 import { type editClubContactSchema } from './schema';
 
 type FormData = z.infer<typeof editClubContactSchema>;

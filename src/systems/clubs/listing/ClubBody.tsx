@@ -5,8 +5,8 @@ import ClubContactCard from './panels/ClubContactCard';
 import ClubDescriptionCard from './panels/ClubDescriptionCard';
 import ClubDetailsCard from './panels/ClubDetailsCard';
 import ClubMembershipFormsCard from './panels/ClubMembershipFormsCard';
-import ClubUpcomingEventsCard from './panels/ClubUpcomingEventsCard';
 import ClubOfficersCard from './panels/ClubOfficersCard';
+import ClubUpcomingEventsCard from './panels/ClubUpcomingEventsCard';
 
 const ClubBody = async ({
   club,

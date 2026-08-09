@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { UTDClubsLogoCombination } from '@/lib/icons/UTDClubsLogo';
 import {
   mainCats,
   moreCats,
   type personalCats,
 } from '@/lib/modules/navigation/categories';
-import { UTDClubsLogoCombination } from '@/lib/icons/UTDClubsLogo';
 import SidebarItems from './SidebarItems';
 
 type NavMenuProps = {

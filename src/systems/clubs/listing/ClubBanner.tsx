@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { BaseCard } from '@nebula-library/components/BaseCard';
-import type { SelectClub } from '@/server/db/models';
 import { addVersionToImage } from '@/lib/utils/imageCacheBust';
+import type { SelectClub } from '@/server/db/models';
 
 type ClubBannerProps = {
   club: Pick<SelectClub, 'bannerImage' | 'updatedAt'>;

@@ -1,14 +1,14 @@
 import EventIcon from '@mui/icons-material/Event';
 import PreviewIcon from '@mui/icons-material/Preview';
 import { notFound } from 'next/navigation';
-import Collaborators from '@/systems/manage/forms/Collaborators';
-import DeleteClub from '@/systems/manage/forms/DeleteClub';
+import { LinkButton } from '@/lib/components/LinkButton';
 import AdminHeader from '@/systems/admin/AdminHeader';
 import ChangeClubStatus from '@/systems/admin/ChangeClubStatus';
-import ClubBody from '@/systems/clubs/listing/ClubBody';
 import ClubBanner from '@/systems/clubs/listing/ClubBanner';
+import ClubBody from '@/systems/clubs/listing/ClubBody';
 import ClubTitle from '@/systems/clubs/listing/ClubTitle';
-import { LinkButton } from '@/lib/components/LinkButton';
+import Collaborators from '@/systems/manage/forms/Collaborators';
+import DeleteClub from '@/systems/manage/forms/DeleteClub';
 import { api } from '@/trpc/server';
 
 type Props = { params: Promise<{ slug: string }> };
