@@ -4,7 +4,7 @@ import { auth } from '@/server/auth';
 import { db } from '@/server/db';
 import { account } from '@/server/db/schema/auth';
 
-export async function getGoogleAccessToken(
+export default async function getGoogleAccessToken(
   userId: string,
   useRefreshToken: boolean = false,
 ) {

@@ -5,7 +5,7 @@ import {
   userMetadataToClubs,
   userMetadataToEvents,
 } from '@/server/db/schema/users';
-import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
+import { getGoogleAccessToken } from '@/common/modules/googleOAuth';
 import {
   createTRPCRouter,
   authedProcedure,

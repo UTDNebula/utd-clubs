@@ -19,7 +19,7 @@ import {
   editDataSchema,
   editSlugSchema,
 } from './inputSchemas';
-import { getGoogleAccessToken } from '@/common/modules/auth/googleAuth';
+import { getGoogleAccessToken } from '@/common/modules/googleOAuth';
 import {
   syncCalendar,
   watchCalendar,

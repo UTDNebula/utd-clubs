@@ -18,7 +18,7 @@ import {
   SelectUserMetadataToClubsWithUserMetadataWithUser,
 } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
-import { authClient } from '@/common/modules/auth/auth-client';
+import { authClient } from '@/common/utils/auth-client';
 import { useSnackbar } from '@/common/modules/snackbar';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';

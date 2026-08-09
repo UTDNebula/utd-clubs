@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { authClient } from '@/common/modules/auth/auth-client';
+import { authClient } from '@/common/utils/auth-client';
 
 export const GoogleReauthHandler = () => {
   const shouldRedirect = useRef(false);

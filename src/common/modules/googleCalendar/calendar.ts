@@ -26,7 +26,7 @@ import { dbWithSessions } from '@/server/db';
 import { calendarWebhooks } from '@/server/db/schema/calendarWebhooks';
 import { club as clubTable } from '@/server/db/schema/club';
 import { events as eventTable } from '@/server/db/schema/events';
-import { getGoogleAccessToken } from '../auth/googleAuth';
+import { getGoogleAccessToken } from '@/common/modules/googleOAuth';
 
 const db = dbWithSessions;
 
