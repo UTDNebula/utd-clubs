@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import EventForm from '@/systems/events/create/EventForm';
 import ManageHeader from '@/systems/manage/ManageHeader';
-import { getGcalEventLink } from '@/common/modules/googleCalendar/googleCalendar';
+import { getGcalEventLink } from '@/common/modules/googleCalendar/getGcalEventLink';
 import { auth } from '@/server/auth';
 import { api } from '@/trpc/server';
 
