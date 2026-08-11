@@ -1,4 +1,10 @@
-export default function compare<T>(val1: T, val2: T) {
+/**
+ * Compares two items and returns whether their actual values are equivalent.
+ * Has better support than the equality operator.
+ * - Supports: primitives, null, non-object types, Dates, arrays, nested arrays
+ * - Does NOT support: objects, nested objects, functions
+ */
+export default function intermediateEqual<T>(val1: T, val2: T): boolean {
   if (val1 === val2) return true;
 
   // Null or non-object types
@@ -20,7 +26,7 @@ export default function compare<T>(val1: T, val2: T) {
   if (Array.isArray(val1) && Array.isArray(val2)) {
     if (val1.length !== val2.length) return false;
     for (let i = 0; i < val1.length; i++) {
-      if (!compare(val1, val2)) return false;
+      if (!intermediateEqual(val1, val2)) return false;
     }
     return true;
   }

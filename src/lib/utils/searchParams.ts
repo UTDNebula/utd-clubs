@@ -91,7 +91,7 @@ export function setParams<
  */
 export function createParamSetter<Schema extends FilterSearchParamsSchema>(
   options?: FilterSearchParamsOptionsWithSchema<Schema>,
-) {
+): typeof setParams<Schema> {
   const factoryOptions = options;
 
   /**

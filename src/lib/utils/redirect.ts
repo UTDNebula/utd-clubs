@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 
-export async function signInRoute(route: string) {
+export async function signInRoute(route: string): Promise<string> {
   const awaitedHeaders = await headers();
   const host = awaitedHeaders.get('X-Forwarded-Host');
   const proto = awaitedHeaders.get('X-Forwarded-Proto');

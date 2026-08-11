@@ -1,5 +1,5 @@
 import { PanelProps } from '@nebula-library/components/Panel';
-import compare from '@/lib/utils/compare';
+import intermediateEqual from '@/lib/utils/intermediateEqual';
 import { createParamSetter } from '@/lib/utils/searchParams';
 import {
   EventFiltersSchema,
@@ -60,7 +60,7 @@ export function listSelectedEventFilters(filters: EventFiltersSchema) {
     }
 
     // Return item if it isn't the default value
-    if (!compare(value, eventParamsDefaults[field])) {
+    if (!intermediateEqual(value, eventParamsDefaults[field])) {
       return { field, value };
     }
 
