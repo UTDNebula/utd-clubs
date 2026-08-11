@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { dateSchema } from '@/lib/utils/schemas';
+import { dateSchema } from '@/lib/utils/commonSchemas';
 import {
   createEventSchema,
   editEventSchema,

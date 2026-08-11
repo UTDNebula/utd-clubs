@@ -5,7 +5,7 @@ import {
   preprocessParamBoolean,
   preprocessParamNum,
 } from '@/lib/utils/preprocessors';
-import { dateSchema } from '@/lib/utils/schemas';
+import { dateSchema } from '@/lib/utils/commonSchemas';
 
 ///////////////////////////////////////////////////////////////////////////////
 // Enums

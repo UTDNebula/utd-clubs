@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { fileSchema, schools, tagsSchema } from '@/lib/utils/schemas';
+import { imageSchema, schools, tagsSchema } from '@/lib/utils/commonSchemas';
 
 export const editClubDetailsSchema = z.object({
   id: z.string(),
@@ -27,7 +27,7 @@ export const editClubDetailsSchema = z.object({
 });
 
 export const editClubDetailsFormSchema = editClubDetailsSchema.extend({
-  profileImage: fileSchema,
-  bannerImage: fileSchema,
+  profileImage: imageSchema,
+  bannerImage: imageSchema,
   clubSize: z.string(),
 });

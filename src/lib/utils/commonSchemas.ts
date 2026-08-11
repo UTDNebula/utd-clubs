@@ -23,7 +23,7 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/png',
   'image/svg+xml',
 ];
-export const fileSchema = z
+export const imageSchema = z
   .file()
   .nullable()
   .refine(

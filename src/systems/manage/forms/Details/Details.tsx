@@ -10,7 +10,7 @@ import FormImage from '@/lib/components/form/FormImage';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { useAppForm } from '@/lib/utils/form';
 import { addVersionToImage } from '@/lib/utils/imageCacheBust';
-import { schools } from '@/lib/utils/schemas';
+import { schools } from '@/lib/utils/commonSchemas';
 import { useUploadToUploadURL } from '@/lib/utils/uploadImage';
 import { SelectClub } from '@/server/db/models';
 import { ClubSchoolEdit } from '@/systems/clubs/ClubSchoolEdit';

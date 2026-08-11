@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { fileSchema } from '@/lib/utils/schemas';
+import { imageSchema } from '@/lib/utils/commonSchemas';
 
 const baseEventFormSchema = z.object({
   clubId: z.string(),
@@ -14,7 +14,7 @@ const baseEventFormSchema = z.object({
   description: z.string().max(1000, 'Character limit reached'),
   startTime: z.date('Invalid date'),
   endTime: z.date('Invalid date'),
-  image: fileSchema,
+  image: imageSchema,
 });
 
 export const createEventFormSchema = baseEventFormSchema.refine(
