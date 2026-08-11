@@ -38,13 +38,13 @@ Contains all the source code of the website.
 
 Common library files for UTD Clubs
 
-| Folder        | Description                                                                                                                                                                                                                   |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `components/` | One-off reusable component files. Ideally, everything should be a `.tsx` file (`.ts` files belong in `src/lib/utils/`)                                                                                                        |
-| `icons/`      | Icon component files                                                                                                                                                                                                          |
-| `modules/`    | Small reusable systems, grouped into folders. Ideally, each module should have an `index.ts` barrel file that re-exports everything in the module so that imports look like `import { ... } from '@/lib/modules/module-name'` |
-| `styles/`     | Global CSS files. `global.css` should import every other file in this folder because `global.css` itself is imported into `src/app/layout.tsx`                                                                                |
-| `utils/`      | Collection of one-off reusable utility files. Ideally, everything should be a `.ts` file (`.tsx` files belong in `src/lib/components/`)                                                                                       |
+| Folder        | Description                                                                                                                                                                                                                                                                       |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `components/` | One-off reusable component files. Every file should have the `.tsx` extension (`.ts` files belong in `src/lib/utils/`)                                                                                                                                                            |
+| `icons/`      | Icon component files                                                                                                                                                                                                                                                              |
+| `modules/`    | Small reusable systems, grouped into folders. Files can have a mixture of the `.ts` and `.tsx` extensions. Each module should have an `index.ts` barrel file that re-exports everything in the module so that imports look like `import { ... } from '@/lib/modules/module-name'` |
+| `styles/`     | Global CSS files. `global.css` should import every other file in this folder because `global.css` itself is imported into `src/app/layout.tsx`                                                                                                                                    |
+| `utils/`      | Collection of one-off reusable utility files. Every file should have the `.ts` extension (`.tsx` files belong in `src/lib/components/`)                                                                                                                                           |
 
 ### `@/server` folder
 
