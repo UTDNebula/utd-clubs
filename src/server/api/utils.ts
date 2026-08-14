@@ -56,9 +56,10 @@ export async function requireMemberRole(
 
   const handleRole = (
     role: ClubRole,
-    missingRole: boolean,
+    hasRole: boolean,
     defaultErrorMessage: string,
   ) => {
+    // If the role is not specified in roles, skip
     const roleRequired = roles[role];
     if (!roleRequired) return;
 
@@ -66,20 +67,20 @@ export async function requireMemberRole(
 
     const throwError = roleOptions.throwError ?? true;
 
-    if (missingRole && throwError) {
+    if (!hasRole && throwError) {
       return throwTRPCError(roleOptions.errorMessage ?? defaultErrorMessage);
     }
   };
 
-  handleRole('Member', !member, 'Must be a club member');
+  handleRole('Member', Boolean(member), 'Must be a club member');
   handleRole(
     'Officer',
-    member?.memberType !== 'Officer' && member?.memberType !== 'President',
+    member?.memberType === 'Officer' || member?.memberType === 'President',
     'Must be a club officer',
   );
   handleRole(
     'President',
-    member?.memberType !== 'President',
+    member?.memberType === 'President',
     'Must be a club admin',
   );
 }
