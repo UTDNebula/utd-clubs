@@ -27,13 +27,9 @@ export async function requireMemberRole(
           errorMessage?: string;
           /**
            * Whether or not to throw an error if the user is missing this role.
-           * @param missingRole Whether the user has a role lower than this role.
-           * @returns Whether to throw the error.
-           *
-           * @default
-           * (missingRole: boolean) => missingRole
+           * @default true
            */
-          throwError?: (missingRole: boolean) => boolean;
+          throwError?: boolean;
         }
     >
   >,
@@ -63,10 +59,9 @@ export async function requireMemberRole(
 
     const roleOptions = typeof roleRequired === 'boolean' ? {} : roleRequired;
 
-    const throwError =
-      roleOptions.throwError ?? ((missingRole: boolean) => missingRole);
+    const throwError = roleOptions.throwError ?? true;
 
-    if (throwError(missingRole)) {
+    if (missingRole && throwError) {
       return throwTRPCError(roleOptions.errorMessage ?? defaultErrorMessage);
     }
   };
@@ -74,7 +69,7 @@ export async function requireMemberRole(
   handleRole('Member', !member, 'Must be a club member');
   handleRole(
     'Officer',
-    member?.memberType !== 'Officer' &&  member?.memberType !== 'President',
+    member?.memberType !== 'Officer' && member?.memberType !== 'President',
     'Must be a club officer',
   );
   handleRole(

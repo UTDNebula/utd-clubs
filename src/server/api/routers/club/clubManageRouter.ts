@@ -208,10 +208,7 @@ const clubManageRouter = createTRPCRouter({
         Officer: { errorMessage: 'You must be an officer to modify this club' },
         President: {
           errorMessage: 'Only an admin can remove or modify people',
-          throwError: (missingRole) =>
-            Boolean(
-              missingRole && (input.deleted.length || input.modified.length),
-            ),
+          throwError: Boolean(input.deleted.length || input.modified.length),
         },
       });
 
