@@ -2,9 +2,9 @@
 
 Although not required to work in this codebase when using [Visual Studio Code](https://code.visualstudio.com/), we have configured workspace settings and added recommended extensions that make coding a lot easier by adding IntelliSense code completion, inline linter warnings, and native formatter support.
 
-## Recommendeded extensions
+## Recommended extensions
 
-To get started, install the recommend extensions by heading over to the **Extensions** panel on the left (or press `F1` and enter `view extensions`). Under the Recommended section, install the first three:
+To get started, install the recommended extensions by heading over to the **Extensions** panel on the left (or press `F1` and enter `view extensions`). Under the Recommended section, install the first three:
 
 - [Tailwind CSS IntelliSense](vscode:extension/bradlc.vscode-tailwindcss) - Adds code completion for Tailwind's classes when adding `className` to React components.
 - [ESLint](vscode:extension/dbaeumer.vscode-eslint) - Adds inline warnings and errors for immediate feedback on linting issues, rather than having to use `npm run lint`

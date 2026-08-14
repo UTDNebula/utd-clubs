@@ -13,7 +13,7 @@ const eventManageRouter = createTRPCRouter({
     .input(createSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        President: {
+        Officer: {
           errorMessage: 'Must be an officer of this club to add an event to it',
         },
       });
@@ -34,7 +34,7 @@ const eventManageRouter = createTRPCRouter({
     const { id, ...data } = input;
 
     await requireMemberRole(ctx.session.user.id, input.clubId, {
-      President: {
+      Officer: {
         errorMessage: "Must be an officer of this event's clubs to modify it",
       },
     });
@@ -91,7 +91,7 @@ const eventManageRouter = createTRPCRouter({
       }
 
       await requireMemberRole(ctx.session.user.id, event.clubId, {
-        President: {
+        Officer: {
           errorMessage: "Must be an officer of this event's clubs to delete it",
         },
       });
@@ -114,7 +114,7 @@ const eventManageRouter = createTRPCRouter({
       if (!clubRecord) throw new TRPCError({ code: 'NOT_FOUND' });
 
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        President: {
+        Officer: {
           errorMessage: "Must be an officer of this event's clubs to modify it",
         },
       });

@@ -74,7 +74,7 @@ export async function requireMemberRole(
   handleRole('Member', !member, 'Must be a club member');
   handleRole(
     'Officer',
-    member?.memberType === 'Member',
+    member?.memberType !== 'Officer' &&  member?.memberType !== 'President',
     'Must be a club officer',
   );
   handleRole(

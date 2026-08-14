@@ -12,8 +12,8 @@ Create a branch in the Nebula Library nested Git repository.:
 
 ```bash
 cd src/nebula-library
-# Replace <feature-name> with a branch name
-git checkout -b feature/<feature-name>
+# Replace <branch-name> with a branch name that follows our branch naming conventions
+git checkout -b <branch-name>
 ```
 
 ### 2. Make your changes in the `src/nebula-library` folder
