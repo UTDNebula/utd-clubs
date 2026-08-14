@@ -31,8 +31,8 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
     api.user.clubs.joinLeave.mutationOptions({
       onMutate: async ({ clubId }) => {
         const queryKey = [
-          ['club', 'memberState'],
-          { input: { id: clubId }, type: 'query' },
+          ['user', 'clubs', 'memberState'],
+          { input: { clubId }, type: 'query' },
         ];
 
         // Cancel outgoing refetches
@@ -83,8 +83,8 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       onSettled: (_data, _error, { clubId }) => {
         queryClient.invalidateQueries({
           queryKey: [
-            ['club', 'memberState'],
-            { input: { id: clubId }, type: 'query' },
+            ['user', 'clubs', 'memberState'],
+            { input: { clubId }, type: 'query' },
           ],
         });
       },

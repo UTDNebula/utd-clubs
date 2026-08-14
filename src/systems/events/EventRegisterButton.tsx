@@ -39,7 +39,7 @@ const EventRegisterButton = ({
     api.user.events.toggleRegistration.mutationOptions({
       onMutate: async ({ eventId }) => {
         const queryKey = [
-          ['event', 'registerState'],
+          ['user', 'events', 'registerState'],
           { input: { eventId }, type: 'query' },
         ];
 
@@ -89,7 +89,7 @@ const EventRegisterButton = ({
       onSettled: (_data, _error, { eventId }) => {
         queryClient.invalidateQueries({
           queryKey: [
-            ['event', 'registerState'],
+            ['user', 'events', 'registerState'],
             { input: { eventId }, type: 'query' },
           ],
         });
