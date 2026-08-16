@@ -1,5 +1,6 @@
 import Markdown from 'react-markdown';
 import rehypeExternalLinks from 'rehype-external-links';
+import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import remarkGfm from 'remark-gfm';
 
@@ -21,6 +22,7 @@ const MarkdownText = ({
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[
           [rehypeExternalLinks, { rel: ['noreferrer'], target: ['_blank'] }],
+          rehypeRaw,
           rehypeSanitize,
         ]}
       >
