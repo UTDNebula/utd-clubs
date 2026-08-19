@@ -32,7 +32,8 @@ body:
       label: Version
       description: Where did you find this bug?
       options:
-        - dev.engineering-sandbox.utdnebula.com
+        - clubs.utdnebula.com
+        - dev.clubs.utdnebula.com
         - a local development branch
     validations:
       required: true
