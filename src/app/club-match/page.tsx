@@ -8,6 +8,8 @@ import { auth } from '@/server/auth';
 import { db } from '@/server/db';
 import ClubMatch from '@/systems/clubs/match/ClubMatch';
 import { api } from '@/trpc/server';
+import { ClubMatchForm } from '@/systems/clubs/match/ClubMatchForm';
+import Typography from '@mui/material/Typography';
 
 export const metadata: Metadata = {
   title: 'Club Match',
@@ -48,6 +50,18 @@ const Page = async () => {
         response={data?.responses ?? null}
         userMetadata={userMetadata ?? null}
       />
+      {/* <main className="flex w-full flex-col items-center p-4">
+        <div className="flex w-full max-w-4xl flex-col items-center gap-4">
+          <Typography
+            variant="h1"
+            className="font-display text-center text-3xl font-bold"
+          >
+            Find the perfect club for you
+          </Typography>
+
+          <ClubMatchForm />
+        </div>
+      </main> */}
     </>
   );
 };
