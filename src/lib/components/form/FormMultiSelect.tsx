@@ -1,95 +1,140 @@
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Select, { SelectProps } from '@mui/material/Select';
+import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
+import Checkbox from '@mui/material/Checkbox';
+import { ReactNode, useMemo } from 'react';
 import { TagChip } from '@/lib/components/TagChip';
 import { useFieldContext } from '@/lib/utils/form';
 import { SelectOption } from './FormSelect';
+import { StyledTextField } from './FormTextField';
 
-type FormMultiSelectProps = Omit<
-  SelectProps<string[]>,
-  'value' | 'onChange' | 'multiple' | 'options' | 'label'
+export type NormalizedMultiSelectOption = {
+  label: string;
+  value: string;
+  disabled?: boolean;
+};
+
+export type FormMultiSelectProps = Omit<
+  AutocompleteProps<NormalizedMultiSelectOption, true, false, false>,
+  'value' | 'onChange' | 'options' | 'renderInput' | 'multiple'
 > & {
   label?: string;
-  options?: SelectOption[];
+  placeholder?: string;
+  options?: (SelectOption | string)[];
+  helperText?: ReactNode;
+  required?: boolean;
   className?: string;
+  size?: 'small' | 'medium';
 };
 
 export default function FormMultiSelect({
   label,
-  options,
+  placeholder,
+  options = [],
+  helperText,
+  required,
   className,
+  size = 'small',
+  disabled,
+  readOnly,
+  disableCloseOnSelect = true,
   ...props
 }: FormMultiSelectProps) {
   const field = useFieldContext<string[]>();
-  const value = Array.isArray(field.state.value) ? field.state.value : [];
-  const normalizedOptions = options?.map((option) => {
-    if (typeof option === 'string') {
-      return { label: option, value: option };
-    } else {
+
+  const normalizedOptions = useMemo<NormalizedMultiSelectOption[]>(() => {
+    return options.map((option) => {
+      if (typeof option === 'string') {
+        return { label: option, value: option, disabled: false };
+      }
       return {
-        label: option.label ?? (option.value as string),
+        label: option.label ?? (option.value as string) ?? '',
         value: (option.value ?? option.label) as string,
-        disabled: option.disabled,
+        disabled: option.disabled ?? false,
       };
-    }
-  });
+    });
+  }, [options]);
+
+  const selectedOptions = useMemo(() => {
+    const rawValues = Array.isArray(field.state.value) ? field.state.value : [];
+    return rawValues.map((val) => {
+      const match = normalizedOptions.find((opt) => opt.value === val);
+      return match ?? { label: val, value: val, disabled: false };
+    });
+  }, [field.state.value, normalizedOptions]);
+
+  const errorMessage = !field.state.meta.isValid
+    ? (field.state.meta.errors as unknown as (string | { message?: string })[])
+        .map((err) => (typeof err === 'string' ? err : err?.message))
+        .filter(Boolean)
+        .join('. ') + '.'
+    : undefined;
 
   return (
-    <FormControl className={`w-64 ${className}`} size="small">
-      {label ? (
-        <InputLabel error={!field.state.meta.isValid} required={props.required}>
-          {label}
-        </InputLabel>
-      ) : null}
-      <Select
-        multiple
-        value={value}
-        onBlur={field.handleBlur}
-        onChange={(event) => {
-          const val = event.target.value;
-          field.handleChange(
-            typeof val === 'string' ? val.split(',') : (val as string[]),
-          );
-        }}
-        input={<OutlinedInput label={label} />}
-        renderValue={(selected) => (
-          <div className="flex flex-wrap gap-1">
-            {(selected as string[]).map((selectedVal) => (
-              <TagChip key={selectedVal} tag={selectedVal} size="small" />
-            ))}
-          </div>
-        )}
-        MenuProps={{
-          slotProps: {
-            paper: {
-              className: 'max-h-60',
-            },
-          },
-        }}
-        className="bg-white dark:bg-neutral-800"
-        size="small"
-        error={!field.state.meta.isValid}
-        label={label}
-        {...props}
-      >
-        {normalizedOptions?.map((option) => (
-          <MenuItem
-            key={option.value}
-            value={option.value}
-            disabled={option.disabled}
+    <Autocomplete
+      multiple
+      disableCloseOnSelect={disableCloseOnSelect}
+      options={normalizedOptions}
+      value={selectedOptions}
+      size={size}
+      disabled={disabled}
+      readOnly={readOnly}
+      className={`w-64 ${className ?? ''}`}
+      isOptionEqualToValue={(option, val) => option.value === val.value}
+      getOptionLabel={(option) =>
+        typeof option === 'string' ? option : option.label
+      }
+      getOptionDisabled={(option) =>
+        typeof option === 'string' ? false : (option.disabled ?? false)
+      }
+      onBlur={field.handleBlur}
+      onChange={(_event, newValue) => {
+        const newValues = newValue.map((item) =>
+          typeof item === 'string' ? item : item.value,
+        );
+        field.handleChange(newValues);
+      }}
+      renderOption={(props, option, { selected }) => {
+        const { key, ...otherProps } = props;
+        return (
+          <li
+            key={key}
+            {...otherProps}
+            className={`flex items-center gap-2 ${otherProps.className ?? ''}`}
           >
-            {option.label}
-          </MenuItem>
-        ))}
-      </Select>
-      <FormHelperText error={!field.state.meta.isValid}>
-        {!field.state.meta.isValid
-          ? field.state.meta.errors.map((err) => err?.message).join('. ') + '.'
-          : undefined}
-      </FormHelperText>
-    </FormControl>
+            <Checkbox
+              size="small"
+              checked={selected}
+              className="p-0 text-neutral-500 dark:text-neutral-400"
+            />
+            <span className="text-sm">
+              {typeof option === 'string' ? option : option.label}
+            </span>
+          </li>
+        );
+      }}
+      renderValue={(value, getItemProps) =>
+        value.map((option, index) => {
+          const { key, ...itemProps } = getItemProps({ index });
+          const itemLabel = typeof option === 'string' ? option : option.label;
+          return (
+            <TagChip key={key} tag={itemLabel} size={size} {...itemProps} />
+          );
+        })
+      }
+      renderInput={(params) => (
+        <StyledTextField
+          {...params}
+          label={label}
+          placeholder={placeholder}
+          required={required}
+          error={!field.state.meta.isValid}
+          helperText={errorMessage ?? helperText}
+          size={size}
+          className="w-full"
+        />
+      )}
+      {...props}
+    />
   );
 }
+
+export { FormMultiSelect };
