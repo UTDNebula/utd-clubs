@@ -1,62 +1,92 @@
 'use client';
 
-import { useAppForm } from "@/lib/utils/form";
-import { clubMatchFormSchema } from "./clubMatchSchema";
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useAppForm } from '@/lib/utils/form';
+import { SelectUserMetadata } from '@/server/db/models';
+import { ClubMatchResponses } from '@/server/db/schema/users';
+import { useTRPC } from '@/trpc/react';
+import {
+  clubMatchWizardSchema,
+  ClubMatchWizardSchema,
+  decodeClubMatchWizard,
+  encodeClubMatchWizard,
+} from './clubMatchSchema';
+import CollegeInfoStep from './steps/CollegeInfoStep';
+import InterestsStep from './steps/InterestsStep';
+import InvolvementStep from './steps/InvolvementStep';
 
-export const ClubMatchForm = () => {
+export type ClubMatchFormProps = {
+  response?: ClubMatchResponses | null;
+  userMetadata?: SelectUserMetadata | null;
+};
+
+export const ClubMatchForm = ({
+  response,
+  userMetadata,
+}: ClubMatchFormProps) => {
+  const api = useTRPC();
+  const router = useRouter();
+
+  const editData = useMutation(api.ai.clubMatch.mutationOptions({}));
+
   const form = useAppForm({
+    defaultValues: decodeClubMatchWizard(
+      response,
+      userMetadata?.major,
+    ) as ClubMatchWizardSchema,
+    onSubmit: async ({ value }) => {
+      if (!editData.isPending) {
+        await editData.mutateAsync(encodeClubMatchWizard(value));
+        router.push('/club-match/results');
+      }
+    },
     validators: {
-      onChange: clubMatchFormSchema,
-    }
-  })
+      onChange: clubMatchWizardSchema,
+    },
+  });
+
+  //////// div????
   return (
     <form.AppForm>
-      <form.Wizard>
-        <form.WizardStep
-          name="college-info"
+      <form.Wizard
+        onComplete={() => {
+          router.push('/club-match/results');
+        }}
+      >
+        <form.WizardStep<ClubMatchWizardSchema>
+          name="collegeInfo"
           label="College Info"
+          backButtonConfig={{
+            label: 'Cancel',
+            onClick: () => {
+              router.back();
+            },
+          }}
         >
-          <form.Question
-            question="What is your current or intended major?"
-            className="w-full items-center text-center"
-          >
-            <div className="flex w-full flex-row flex-wrap justify-center gap-4">
-              <form.AppField name="name.name">
-                {(field) => (
-                  <field.TextField
-                    label="Major"
-                    className="w-full max-w-md"
-                    size="medium"
-                    required
-                  />
-                )}
-              </form.AppField>
-            </div>
-          </form.Question>
+          <CollegeInfoStep form={form} />
         </form.WizardStep>
-        <form.WizardStep
-          name="asdfjkl;"
+
+        <form.WizardStep<ClubMatchWizardSchema>
+          name="interests"
+          label="Interests"
         >
-          <form.Question
-            question="What is your major?"
-            className="w-full items-center text-center"
-          >
-            <div className="flex w-full flex-row flex-wrap justify-center gap-4">
-              <form.AppField name="name.name">
-                {(field) => (
-                  <field.TextField
-                    label="Organization Name"
-                    className="w-full max-w-md"
-                    size="medium"
-                    required
-                  />
-                )}
-              </form.AppField>
-            </div>
-          </form.Question>
+          <InterestsStep form={form} />
+        </form.WizardStep>
+
+        <form.WizardStep<ClubMatchWizardSchema>
+          name="involvement"
+          label="Involvement"
+          nextButtonConfig={{
+            label: 'Find Clubs',
+            type: 'submitAndNext',
+          }}
+        >
+          <InvolvementStep form={form} />
         </form.WizardStep>
       </form.Wizard>
     </form.AppForm>
   );
 };
-  
+
+export default ClubMatchForm;

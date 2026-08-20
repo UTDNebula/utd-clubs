@@ -1,15 +1,15 @@
+import Typography from '@mui/material/Typography';
 import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import Panel from '@nebula-library/components/Panel';
 import Header from '@/lib/modules/navigation/header';
 import { signInRoute } from '@/lib/utils/redirect';
 import { auth } from '@/server/auth';
 import { db } from '@/server/db';
-import ClubMatch from '@/systems/clubs/match/ClubMatch';
+import ClubMatchForm from '@/systems/clubs/match/ClubMatchForm';
 import { api } from '@/trpc/server';
-import { ClubMatchForm } from '@/systems/clubs/match/ClubMatchForm';
-import Typography from '@mui/material/Typography';
 
 export const metadata: Metadata = {
   title: 'Club Match',
@@ -46,11 +46,7 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <ClubMatch
-        response={data?.responses ?? null}
-        userMetadata={userMetadata ?? null}
-      />
-      {/* <main className="flex w-full flex-col items-center p-4">
+      <main className="flex w-full flex-col items-center p-4">
         <div className="flex w-full max-w-4xl flex-col items-center gap-4">
           <Typography
             variant="h1"
@@ -59,9 +55,22 @@ const Page = async () => {
             Find the perfect club for you
           </Typography>
 
-          <ClubMatchForm />
+          <ClubMatchForm
+            response={data?.responses ?? null}
+            userMetadata={userMetadata ?? null}
+          />
+
+          <Panel smallPadding className="dark:bg-neutral-700">
+            <p className="text-sm text-slate-800 dark:text-slate-200">
+              <span className="font-semibold">Disclaimer: </span>Club
+              recommendations are generated using Google&apos;s Gemini AI. While
+              we strive for accuracy, AI recommendations may not perfectly match
+              your preferences. We recommend reviewing the suggested clubs to
+              find the best fit for you.
+            </p>
+          </Panel>
         </div>
-      </main> */}
+      </main>
     </>
   );
 };
