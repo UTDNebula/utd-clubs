@@ -9,8 +9,6 @@ import { useTRPC } from '@/trpc/react';
 import {
   clubMatchWizardSchema,
   ClubMatchWizardSchema,
-  decodeClubMatchWizard,
-  encodeClubMatchWizard,
 } from './clubMatchSchema';
 import CollegeInfoStep from './steps/CollegeInfoStep';
 import InterestsStep from './steps/InterestsStep';
@@ -31,13 +29,25 @@ export const ClubMatchForm = ({
   const editData = useMutation(api.ai.clubMatch.mutationOptions({}));
 
   const form = useAppForm({
-    defaultValues: decodeClubMatchWizard(
-      response,
-      userMetadata?.major,
-    ) as ClubMatchWizardSchema,
+    defaultValues: {
+      collegeInfo: {
+        major: userMetadata?.major,
+        ...response,
+      },
+      interests: {
+        ...response,
+      },
+      involvement: {
+        ...response,
+      },
+    } as ClubMatchWizardSchema,
     onSubmit: async ({ value }) => {
       if (!editData.isPending) {
-        await editData.mutateAsync(encodeClubMatchWizard(value));
+        await editData.mutateAsync({
+          ...value.collegeInfo,
+          ...value.interests,
+          ...value.involvement,
+        });
         router.push('/club-match/results');
       }
     },
@@ -46,7 +56,6 @@ export const ClubMatchForm = ({
     },
   });
 
-  //////// div????
   return (
     <form.AppForm>
       <form.Wizard
