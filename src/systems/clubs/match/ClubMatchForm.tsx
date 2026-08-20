@@ -14,15 +14,13 @@ import CollegeInfoStep from './steps/CollegeInfoStep';
 import InterestsStep from './steps/InterestsStep';
 import InvolvementStep from './steps/InvolvementStep';
 
-export type ClubMatchFormProps = {
-  response?: ClubMatchResponses | null;
-  userMetadata?: SelectUserMetadata | null;
-};
-
 export const ClubMatchForm = ({
   response,
   userMetadata,
-}: ClubMatchFormProps) => {
+}: {
+  response?: ClubMatchResponses | null;
+  userMetadata?: SelectUserMetadata | null;
+}) => {
   const api = useTRPC();
   const router = useRouter();
 
