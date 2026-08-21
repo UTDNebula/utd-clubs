@@ -29,14 +29,24 @@ export const ClubMatchForm = ({
   const form = useAppForm({
     defaultValues: {
       collegeInfo: {
-        major: userMetadata?.major,
-        ...response,
+        major: userMetadata?.major ?? response?.major ?? '',
+        year: response?.year ?? '',
+        proximity: response?.proximity ?? '',
       },
       interests: {
-        ...response,
+        categories: response?.categories ?? [],
+        specificCultures: response?.specificCultures ?? '',
+        hobbies: response?.hobbies ?? [],
+        hobbyDetails: response?.hobbyDetails ?? '',
+        otherAcademicInterests: response?.otherAcademicInterests ?? '',
+        newExperiences: response?.newExperiences ?? '',
       },
       involvement: {
-        ...response,
+        involvementGoals: response?.involvementGoals ?? [],
+        skills: response?.skills ?? [],
+        gender: response?.gender ?? '',
+        genderOther: response?.genderOther ?? '',
+        timeCommitment: response?.timeCommitment ?? '',
       },
     } as ClubMatchWizardSchema,
     onSubmit: async ({ value }) => {
@@ -46,7 +56,6 @@ export const ClubMatchForm = ({
           ...value.interests,
           ...value.involvement,
         });
-        router.push('/club-match/results');
       }
     },
     validators: {
