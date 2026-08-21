@@ -67,6 +67,10 @@ export const ClubMatchForm = ({
           ...value.collegeInfo,
           ...value.interests,
           ...value.involvement,
+          genderOther:
+            value.involvement.gender === 'Other'
+              ? value.involvement.genderOther
+              : undefined, // Remove old "genderOther" value when gender is not "Other"
         });
       }
     },
