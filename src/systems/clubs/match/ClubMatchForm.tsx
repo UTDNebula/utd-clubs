@@ -2,6 +2,7 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { useAppForm } from '@/lib/utils/form';
 import { SelectUserMetadata } from '@/server/db/models';
 import { ClubMatchResponses } from '@/server/db/schema/users';
@@ -24,7 +25,18 @@ export const ClubMatchForm = ({
   const api = useTRPC();
   const router = useRouter();
 
-  const editData = useMutation(api.ai.clubMatch.mutationOptions({}));
+  const editData = useMutation(
+    api.ai.clubMatch.mutationOptions({
+      onError: (error) => {
+        setSnackbar(
+          SnackbarPresets.errorWithMessage(
+            error.message ||
+              'Failed to generate club recommendations. Please try again.',
+          ),
+        );
+      },
+    }),
+  );
 
   const form = useAppForm({
     defaultValues: {
