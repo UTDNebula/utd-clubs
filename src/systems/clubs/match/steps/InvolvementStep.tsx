@@ -87,7 +87,7 @@ const InvolvementStep = withForm({
                     {(field) => (
                       <field.TextField
                         placeholder="Please specify"
-                        className="mt-2 w-full"
+                        className="w-full"
                       />
                     )}
                   </form.AppField>
