@@ -30,7 +30,7 @@ const CollegeInfoStep = withForm({
           <form.AppField name="collegeInfo.major">
             {(field) => (
               <field.AutocompleteFreeSolo
-                label="Major"
+                placeholder="Select or enter your major"
                 options={majors}
                 className="w-full"
                 required
@@ -43,7 +43,6 @@ const CollegeInfoStep = withForm({
           <form.AppField name="collegeInfo.year">
             {(field) => (
               <field.Select
-                label="Year"
                 className="w-full"
                 required
                 options={YEAR_OPTIONS}
@@ -59,7 +58,6 @@ const CollegeInfoStep = withForm({
           <form.AppField name="collegeInfo.proximity">
             {(field) => (
               <field.Select
-                label="Proximity"
                 className="w-full"
                 required
                 options={PROXIMITY_OPTIONS}
