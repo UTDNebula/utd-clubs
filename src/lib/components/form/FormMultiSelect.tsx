@@ -77,20 +77,13 @@ export default function FormMultiSelect({
       size={size}
       disabled={disabled}
       readOnly={readOnly}
-      className={`w-64 ${className ?? ''}`}
+      className={className ?? 'w-64'}
       isOptionEqualToValue={(option, val) => option.value === val.value}
-      getOptionLabel={(option) =>
-        typeof option === 'string' ? option : option.label
-      }
-      getOptionDisabled={(option) =>
-        typeof option === 'string' ? false : (option.disabled ?? false)
-      }
+      getOptionLabel={(option) => option.label}
+      getOptionDisabled={(option) => !!option.disabled}
       onBlur={field.handleBlur}
       onChange={(_event, newValue) => {
-        const newValues = newValue.map((item) =>
-          typeof item === 'string' ? item : item.value,
-        );
-        field.handleChange(newValues);
+        field.handleChange(newValue.map((item) => item.value));
       }}
       renderOption={(props, option, { selected }) => {
         const { key, ...otherProps } = props;
@@ -105,18 +98,15 @@ export default function FormMultiSelect({
               checked={selected}
               className="p-0 text-neutral-500 dark:text-neutral-400"
             />
-            <span className="text-sm">
-              {typeof option === 'string' ? option : option.label}
-            </span>
+            <span className="text-sm">{option.label}</span>
           </li>
         );
       }}
       renderValue={(value, getItemProps) =>
         value.map((option, index) => {
           const { key, ...itemProps } = getItemProps({ index });
-          const itemLabel = typeof option === 'string' ? option : option.label;
           return (
-            <TagChip key={key} tag={itemLabel} size={size} {...itemProps} />
+            <TagChip key={key} tag={option.label} size={size} {...itemProps} />
           );
         })
       }
