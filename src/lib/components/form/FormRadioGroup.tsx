@@ -35,7 +35,7 @@ export default function FormRadioGroup({
   helperText,
   required,
   disabled,
-  allowDeselect = true,
+  allowDeselect,
   row = false,
   size = 'small',
   className,
@@ -43,6 +43,7 @@ export default function FormRadioGroup({
 }: FormRadioGroupProps) {
   const field = useFieldContext<string>();
   const value = field.state.value ?? '';
+  const shouldAllowDeselect = allowDeselect ?? !required;
 
   const normalizedOptions = useMemo<FormRadioGroupOption[]>(() => {
     return options.map((option) => {
@@ -90,7 +91,7 @@ export default function FormRadioGroup({
         onBlur={field.handleBlur}
         {...props}
       >
-        {normalizedOptions.map((option) => {
+        {normalizedOptions.map((option, index) => {
           const isSelected = value === option.value;
           return (
             <FormControlLabel
@@ -99,14 +100,14 @@ export default function FormRadioGroup({
               disabled={disabled || option.disabled}
               control={
                 <Radio
-                  id={`${field.name}-${option.value}`}
+                  id={`${field.name}-${index}`}
                   size={size}
                   disabled={disabled || option.disabled}
                 />
               }
               label={option.label}
               onClick={(e) => {
-                if (allowDeselect && isSelected) {
+                if (shouldAllowDeselect && isSelected) {
                   e.preventDefault();
                   field.handleChange('');
                 }
