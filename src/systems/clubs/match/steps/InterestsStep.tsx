@@ -41,7 +41,10 @@ const InterestsStep = withForm({
   render: function Render({ form }) {
     return (
       <div className="flex flex-col gap-4">
-        <form.Question question="What types of organizations are you interested in?">
+        <form.Question
+          question="What types of organizations are you interested in?"
+          density="compact"
+        >
           <form.AppField name="interests.categories">
             {(field) => (
               <field.MultiSelect
@@ -74,7 +77,10 @@ const InterestsStep = withForm({
           }}
         </form.Subscribe>
 
-        <form.Question question="What are your hobbies or areas of interest?">
+        <form.Question
+          question="What are your hobbies or areas of interest?"
+          density="compact"
+        >
           <form.AppField name="interests.hobbies">
             {(field) => (
               <field.MultiSelect
@@ -86,19 +92,28 @@ const InterestsStep = withForm({
           </form.AppField>
         </form.Question>
 
-        <form.Question question="Please be specific about your selected hobbies.">
+        <form.Question
+          question="Please be specific about your selected hobbies."
+          density="compact"
+        >
           <form.AppField name="interests.hobbyDetails">
             {(field) => <field.TextField className="w-full" />}
           </form.AppField>
         </form.Question>
 
-        <form.Question question="Beyond your major, are there other academic topics or tracks you're interested in?">
+        <form.Question
+          question="Beyond your major, are there other academic topics or tracks you're interested in?"
+          density="compact"
+        >
           <form.AppField name="interests.otherAcademicInterests">
             {(field) => <field.TextField className="w-full" />}
           </form.AppField>
         </form.Question>
 
-        <form.Question question="What new experiences, hobbies, or activities would you be interested in?">
+        <form.Question
+          question="What new experiences, hobbies, or activities would you be interested in?"
+          density="compact"
+        >
           <form.AppField name="interests.newExperiences">
             {(field) => <field.TextField className="w-full" />}
           </form.AppField>

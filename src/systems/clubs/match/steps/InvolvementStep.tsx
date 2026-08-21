@@ -49,7 +49,7 @@ const InvolvementStep = withForm({
   render: function Render({ form }) {
     return (
       <div className="flex flex-col gap-4">
-        <form.Question question="Goals for Getting Involved">
+        <form.Question question="Goals for Getting Involved" density="compact">
           <form.AppField name="involvement.involvementGoals">
             {(field) => (
               <field.MultiSelect
@@ -60,7 +60,10 @@ const InvolvementStep = withForm({
           </form.AppField>
         </form.Question>
 
-        <form.Question question="Skills & Activities Interest">
+        <form.Question
+          question="Skills & Activities Interest"
+          density="compact"
+        >
           <form.AppField name="involvement.skills">
             {(field) => (
               <field.MultiSelect className="w-full" options={SKILL_OPTIONS} />
@@ -69,7 +72,7 @@ const InvolvementStep = withForm({
         </form.Question>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <form.Question question="Gender Identity">
+          <form.Question question="Gender Identity" density="compact">
             <form.AppField name="involvement.gender">
               {(field) => (
                 <field.RadioGroup className="w-full" options={GENDER_OPTIONS} />
@@ -93,7 +96,7 @@ const InvolvementStep = withForm({
             </form.Subscribe>
           </form.Question>
 
-          <form.Question question="Preferred Time Commitment">
+          <form.Question question="Preferred Time Commitment" density="compact">
             <form.AppField name="involvement.timeCommitment">
               {(field) => (
                 <field.RadioGroup

@@ -23,7 +23,10 @@ const CollegeInfoStep = withForm({
   render: function Render({ form }) {
     return (
       <div className="flex flex-col gap-4">
-        <form.Question question="What is your current or intended major?">
+        <form.Question
+          question="What is your current or intended major?"
+          density="compact"
+        >
           <form.AppField name="collegeInfo.major">
             {(field) => (
               <field.AutocompleteFreeSolo
@@ -36,7 +39,7 @@ const CollegeInfoStep = withForm({
           </form.AppField>
         </form.Question>
 
-        <form.Question question="What year are you?">
+        <form.Question question="What year are you?" density="compact">
           <form.AppField name="collegeInfo.year">
             {(field) => (
               <field.Select
@@ -49,7 +52,10 @@ const CollegeInfoStep = withForm({
           </form.AppField>
         </form.Question>
 
-        <form.Question question="How close do you live to campus?">
+        <form.Question
+          question="How close do you live to campus?"
+          density="compact"
+        >
           <form.AppField name="collegeInfo.proximity">
             {(field) => (
               <field.Select
