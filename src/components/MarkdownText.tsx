@@ -21,9 +21,12 @@ const MarkdownText = ({
       <Markdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[
-          [rehypeExternalLinks, { rel: ['noreferrer'], target: ['_blank'] }],
           rehypeRaw,
           rehypeSanitize,
+          [
+            rehypeExternalLinks,
+            { rel: ['noopener', 'noreferrer'], target: '_blank' },
+          ],
         ]}
       >
         {text}
