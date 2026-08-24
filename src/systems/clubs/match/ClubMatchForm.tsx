@@ -2,6 +2,7 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { Binoculars } from '@/lib/icons/OtherIcons';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { useAppForm } from '@/lib/utils/form';
 import { SelectUserMetadata } from '@/server/db/models';
@@ -14,7 +15,6 @@ import {
 import CollegeInfoStep from './steps/CollegeInfoStep';
 import InterestsStep from './steps/InterestsStep';
 import InvolvementStep from './steps/InvolvementStep';
-import { Binoculars } from '@/lib/icons/OtherIcons';
 
 export const ClubMatchForm = ({
   response,
