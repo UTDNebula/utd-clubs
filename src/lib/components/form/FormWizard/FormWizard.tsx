@@ -207,9 +207,12 @@ const FormWizard = forwardRef<WizardRef, FormWizardProps>(function FormWizard(
    */
   const earliestInvalidStepIndex = form.state.isValid
     ? Infinity
-    : steps.findIndex(
-        (step) => !(form.getFormGroupMeta(step.name)?.isValid ?? true),
-      );
+    : (() => {
+        const index = steps.findIndex(
+          (step) => !(form.getFormGroupMeta(step.name)?.isValid ?? true),
+        );
+        return index === -1 ? Infinity : index;
+      })();
 
   /**
    * Whether currently on the first step that isn't disabled or fake.
@@ -599,6 +602,7 @@ const FormWizard = forwardRef<WizardRef, FormWizardProps>(function FormWizard(
                         );
                       })()}
                       color="primary"
+                      startIcon={currentStep?.backButtonConfig?.icon}
                       onClick={handleBackClick}
                     >
                       {currentStep?.backButtonConfig?.label ?? 'Back'}
@@ -624,6 +628,7 @@ const FormWizard = forwardRef<WizardRef, FormWizardProps>(function FormWizard(
                       loading={isSubmitting}
                       loadingPosition="start"
                       color="primary"
+                      startIcon={currentStep?.nextButtonConfig?.icon}
                       onClick={handleNextClick}
                     >
                       {currentStep?.nextButtonConfig?.label ??

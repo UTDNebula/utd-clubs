@@ -14,6 +14,7 @@ import {
 import CollegeInfoStep from './steps/CollegeInfoStep';
 import InterestsStep from './steps/InterestsStep';
 import InvolvementStep from './steps/InvolvementStep';
+import { Binoculars } from '@/lib/icons/OtherIcons';
 
 export const ClubMatchForm = ({
   response,
@@ -111,6 +112,7 @@ export const ClubMatchForm = ({
           label="Involvement"
           nextButtonConfig={{
             label: 'Find Clubs',
+            icon: <Binoculars />,
             type: 'submitAndNext',
           }}
         >

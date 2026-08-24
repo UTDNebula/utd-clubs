@@ -42,6 +42,8 @@ export type WizardAction =
 export type WizardStepButtonConfig = {
   /** Label on button. */
   label?: string;
+  /** Optional icon on button. */
+  icon?: ReactNode;
   /** Action that takes place when interacting with the button. */
   type?: WizardAction;
   /**
