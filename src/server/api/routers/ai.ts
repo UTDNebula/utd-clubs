@@ -19,7 +19,7 @@ const GEMINI_SERVICE_ACCOUNT = Boolean(process.env.GEMINI_SERVICE_ACCOUNT)
 const ai = new GoogleGenAI({
   vertexai: true,
   project: 'jupiter-459023',
-  location: 'us-central1',
+  location: 'us',
   googleAuthOptions: {
     credentials: Boolean(process.env.GEMINI_SERVICE_ACCOUNT)
       ? {
@@ -135,7 +135,7 @@ Maintain strict formatting:
 `;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-lite',
+        model: 'gemini-3.1-flash-lite',
         contents: prompt,
       });
 
