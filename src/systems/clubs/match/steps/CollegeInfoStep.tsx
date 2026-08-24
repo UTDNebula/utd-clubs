@@ -1,5 +1,6 @@
 'use client';
 
+import Typography from '@mui/material/Typography';
 import { withForm } from '@/lib/utils/form';
 import { majors } from '@/lib/utils/utdDegrees';
 import { ClubMatchWizardSchema } from '../clubMatchSchema';
@@ -23,48 +24,53 @@ const CollegeInfoStep = withForm({
   render: function Render({ form }) {
     return (
       <div className="flex flex-col gap-4">
-        <form.Question
-          question="What is your current or intended major?"
-          density="compact"
-        >
-          <form.AppField name="collegeInfo.major">
-            {(field) => (
-              <field.AutocompleteFreeSolo
-                placeholder="Select or enter your major"
-                options={majors}
-                className="w-full"
-                required
-              />
-            )}
-          </form.AppField>
-        </form.Question>
+        <Typography variant="h2" className="font-display text-2xl font-bold">
+          College Info
+        </Typography>
+        <div className="flex flex-col gap-12">
+          <form.Question
+            question="What is your current or intended major?"
+            density="compact"
+          >
+            <form.AppField name="collegeInfo.major">
+              {(field) => (
+                <field.AutocompleteFreeSolo
+                  placeholder="Select or enter your major"
+                  options={majors}
+                  className="w-full max-w-md"
+                  required
+                />
+              )}
+            </form.AppField>
+          </form.Question>
 
-        <form.Question question="What year are you?" density="compact">
-          <form.AppField name="collegeInfo.year">
-            {(field) => (
-              <field.Select
-                className="w-full"
-                required
-                options={YEAR_OPTIONS}
-              />
-            )}
-          </form.AppField>
-        </form.Question>
+          <form.Question question="What year are you?" density="compact">
+            <form.AppField name="collegeInfo.year">
+              {(field) => (
+                <field.Select
+                  className="w-full max-w-md"
+                  required
+                  options={YEAR_OPTIONS}
+                />
+              )}
+            </form.AppField>
+          </form.Question>
 
-        <form.Question
-          question="How close do you live to campus?"
-          density="compact"
-        >
-          <form.AppField name="collegeInfo.proximity">
-            {(field) => (
-              <field.Select
-                className="w-full"
-                required
-                options={PROXIMITY_OPTIONS}
-              />
-            )}
-          </form.AppField>
-        </form.Question>
+          <form.Question
+            question="How close do you live to campus?"
+            density="compact"
+          >
+            <form.AppField name="collegeInfo.proximity">
+              {(field) => (
+                <field.Select
+                  className="w-full max-w-md"
+                  required
+                  options={PROXIMITY_OPTIONS}
+                />
+              )}
+            </form.AppField>
+          </form.Question>
+        </div>
       </div>
     );
   },

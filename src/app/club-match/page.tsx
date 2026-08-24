@@ -46,12 +46,11 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <main className="flex w-full flex-col items-center p-4">
-        <div className="flex w-full max-w-4xl flex-col items-center gap-4">
+      <main className="flex w-full flex-col items-center p-8">
+        <div className="flex w-full max-w-4xl flex-col items-center gap-8">
           <Typography
             variant="h1"
-            className="font-display mx-4 text-center text-3xl font-bold"
-            sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+            className="font-display mx-4 flex items-center gap-2 text-center text-3xl font-bold"
           >
             Find the perfect club for you
             <ClubMatchDisclaimer />

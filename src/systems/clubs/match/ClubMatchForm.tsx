@@ -116,6 +116,8 @@ export const ClubMatchForm = ({
         >
           <InvolvementStep form={form} />
         </form.WizardStep>
+
+        <form.WizardStep name="results" label="Results" fake />
       </form.Wizard>
     </form.AppForm>
   );

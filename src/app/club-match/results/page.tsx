@@ -45,11 +45,10 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <main className="mb-5 flex flex-col items-center gap-8 p-4">
+      <main className="mb-5 flex flex-col items-center gap-8 p-4 pt-8">
         <Typography
           variant="h1"
-          className="font-display mx-4 text-center text-4xl font-bold"
-          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+          className="font-display mx-4 flex items-center gap-2 text-center text-4xl font-bold"
         >
           Your Top Club Matches
           <ClubMatchDisclaimer />

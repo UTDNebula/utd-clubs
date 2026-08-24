@@ -32,7 +32,7 @@ export default function FormMultiSelect({
   helperText,
   required,
   className,
-  size = 'small',
+  size = 'medium',
   disabled,
   readOnly,
   disableCloseOnSelect = true,
@@ -94,11 +94,10 @@ export default function FormMultiSelect({
             className={`flex items-center gap-2 ${otherProps.className ?? ''}`}
           >
             <Checkbox
-              size="small"
               checked={selected}
               className="p-0 text-neutral-500 dark:text-neutral-400"
             />
-            <span className="text-sm">{option.label}</span>
+            {option.label}
           </li>
         );
       }}
