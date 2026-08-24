@@ -1,5 +1,3 @@
-import { InfoOutlined } from '@mui/icons-material';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
@@ -9,6 +7,7 @@ import Header from '@/lib/modules/navigation/header';
 import { signInRoute } from '@/lib/utils/redirect';
 import { auth } from '@/server/auth';
 import { db } from '@/server/db';
+import ClubMatchDisclaimer from '@/systems/clubs/match/ClubMatchDisclaimer';
 import ClubMatchForm from '@/systems/clubs/match/ClubMatchForm';
 import { api } from '@/trpc/server';
 
@@ -55,17 +54,7 @@ const Page = async () => {
             sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
           >
             Find the perfect club for you
-            <Tooltip
-              title="Club
-              recommendations are generated using Google's Gemini AI. While
-              we strive for accuracy, AI recommendations may not perfectly match
-              your preferences. We recommend reviewing the suggested clubs to
-              find the best fit for you."
-              enterTouchDelay={0}
-              leaveTouchDelay={10000}
-            >
-              <InfoOutlined />
-            </Tooltip>
+            <ClubMatchDisclaimer />
           </Typography>
 
           <ClubMatchForm

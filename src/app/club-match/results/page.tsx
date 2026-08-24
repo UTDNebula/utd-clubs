@@ -1,3 +1,4 @@
+import Typography from '@mui/material/Typography';
 import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
@@ -9,6 +10,7 @@ import { signInRoute } from '@/lib/utils/redirect';
 import { auth } from '@/server/auth';
 import { db } from '@/server/db';
 import JoinButton from '@/systems/clubs/JoinButton';
+import ClubMatchDisclaimer from '@/systems/clubs/match/ClubMatchDisclaimer';
 import RedoClubMatchButton from '@/systems/clubs/match/RedoClubMatchButton';
 
 export const metadata: Metadata = {
@@ -43,10 +45,15 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <main className="mb-5 flex flex-col gap-8 p-4">
-        <h1 className="font-display text-center text-4xl font-bold">
+      <main className="mb-5 flex flex-col items-center gap-8 p-4">
+        <Typography
+          variant="h1"
+          className="font-display mx-4 text-center text-4xl font-bold"
+          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+        >
           Your Top Club Matches
-        </h1>
+          <ClubMatchDisclaimer />
+        </Typography>
         <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">
           {data.clubMatch.map((club) => (
             <BaseCard
