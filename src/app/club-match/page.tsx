@@ -14,14 +14,14 @@ import ClubMatchDisclaimer from '@/systems/clubs/match/ClubMatchDisclaimer';
 import RedoClubMatchButton from '@/systems/clubs/match/RedoClubMatchButton';
 
 export const metadata: Metadata = {
-  title: 'Club Match Results',
+  title: 'Club Match',
   description:
     'Find the perfect club for you! UTD Clubs recommends orgs tailored to your preferences.',
   alternates: {
-    canonical: 'https://clubs.utdnebula.com/club-match/results',
+    canonical: 'https://clubs.utdnebula.com/club-match',
   },
   openGraph: {
-    url: 'https://clubs.utdnebula.com/club-match/results',
+    url: 'https://clubs.utdnebula.com/club-match',
     description:
       'Find the perfect club for you! UTD Clubs recommends orgs tailored to your preferences.',
   },
@@ -31,7 +31,7 @@ const Page = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect(await signInRoute('club-match/results'));
+    redirect(await signInRoute('club-match'));
   }
 
   const data = await db.query.userAiCache.findFirst({
@@ -39,7 +39,7 @@ const Page = async () => {
   });
 
   if (data?.clubMatch == null) {
-    redirect('/club-match');
+    redirect('/club-match/form');
   }
 
   return (

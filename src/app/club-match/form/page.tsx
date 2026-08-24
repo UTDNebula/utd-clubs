@@ -12,14 +12,14 @@ import ClubMatchForm from '@/systems/clubs/match/ClubMatchForm';
 import { api } from '@/trpc/server';
 
 export const metadata: Metadata = {
-  title: 'Club Match',
+  title: 'Club Match Form',
   description:
     'Find the perfect club for you! UTD Clubs recommends orgs tailored to your preferences.',
   alternates: {
-    canonical: 'https://clubs.utdnebula.com/club-match',
+    canonical: 'https://clubs.utdnebula.com/club-match/form',
   },
   openGraph: {
-    url: 'https://clubs.utdnebula.com/club-match',
+    url: 'https://clubs.utdnebula.com/club-match/form',
     description:
       'Find the perfect club for you! UTD Clubs recommends orgs tailored to your preferences.',
   },
@@ -40,7 +40,7 @@ const Page = async () => {
   ]);
 
   if (data?.clubMatchLimit != null && data.clubMatchLimit <= 0) {
-    redirect('/club-match/results');
+    redirect('/club-match');
   }
 
   return (

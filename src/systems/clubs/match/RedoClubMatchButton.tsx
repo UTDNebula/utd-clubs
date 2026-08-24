@@ -13,7 +13,7 @@ const RedoClubMatchButton = () => {
       variant="contained"
       onClick={() => setLoading(true)}
       LinkComponent={Link}
-      href="/club-match"
+      href="/club-match/form"
       loading={loading}
       loadingPosition="start"
       className="w-fit self-center rounded-full normal-case"

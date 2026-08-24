@@ -46,7 +46,7 @@ export default function ClubMatchButton({
     <IconButton
       LinkComponent={Link}
       onClick={handleButtonClick}
-      href="/club-match/results"
+      href="/club-match"
       size="large"
       className={`dark:text-haiti h-10 w-10 rounded-full bg-[var(--mui-palette-primary-main)] text-white hover:bg-[var(--mui-palette-primary-dark)] ${shadow ? shadowStyle : ''}`}
       aria-label="Club Match"
@@ -57,7 +57,7 @@ export default function ClubMatchButton({
     <Button
       LinkComponent={Link}
       onClick={handleButtonClick}
-      href="/club-match/results"
+      href="/club-match"
       variant="contained"
       className={`h-10 px-5 py-2 whitespace-nowrap normal-case ${shadow ? shadowStyle : ''}`}
       startIcon={icon}

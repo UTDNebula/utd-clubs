@@ -88,7 +88,7 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
                   </Typography>
                 </div>
               </MenuItem>
-              <MenuItem component={Link} href="/club-match/results">
+              <MenuItem component={Link} href="/club-match">
                 <ListItemIcon>
                   <Diversity3Icon fontSize="small" />
                 </ListItemIcon>

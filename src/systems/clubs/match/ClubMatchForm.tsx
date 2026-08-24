@@ -83,7 +83,7 @@ export const ClubMatchForm = ({
     <form.AppForm>
       <form.Wizard
         onComplete={() => {
-          router.push('/club-match/results');
+          router.push('/club-match');
         }}
       >
         <form.WizardStep<ClubMatchWizardSchema>
