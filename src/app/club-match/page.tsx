@@ -1,3 +1,4 @@
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import Divider from '@mui/material/Divider';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
@@ -5,17 +6,13 @@ import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { BaseCard } from '@nebula-library/components/BaseCard';
-import { LinkButton } from '@/lib/components/LinkButton';
-import { Binoculars } from '@/lib/icons/OtherIcons';
 import Header from '@/lib/modules/navigation/header';
-import { signInRoute } from '@/lib/utils/redirect';
 import { auth } from '@/server/auth';
 import { db } from '@/server/db';
 import JoinButton from '@/systems/clubs/JoinButton';
 import ClubMatchDisclaimer from '@/systems/clubs/match/ClubMatchDisclaimer';
-import RedoClubMatchButton from '@/systems/clubs/match/RedoClubMatchButton';
+import StartClubMatchButton from '@/systems/clubs/match/StartClubMatchButton';
 
 export const metadata: Metadata = {
   title: 'Club Match',
@@ -40,15 +37,13 @@ const dummyClubNames = [
 const Page = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
 
-  if (!session) {
-    redirect(await signInRoute('club-match'));
-  }
+  const data = session
+    ? await db.query.userAiCache.findFirst({
+        where: (userAiCache) => eq(userAiCache.id, session.user.id),
+      })
+    : undefined;
 
-  const data = await db.query.userAiCache.findFirst({
-    where: (userAiCache) => eq(userAiCache.id, session.user.id),
-  });
-
-  if (data?.clubMatch == null) {
+  if (!session || data?.clubMatch == null) {
     return (
       <>
         <Header />
@@ -68,15 +63,7 @@ const Page = async () => {
                 interests? Take this quiz and get intelligently matched with
                 student organizations at UTD that you may find interesting!
               </p>
-              <LinkButton
-                href="/club-match/form"
-                size="large"
-                color="primary"
-                variant="contained"
-                startIcon={<Binoculars />}
-              >
-                Start now!
-              </LinkButton>
+              <StartClubMatchButton />
             </BaseCard>
 
             <Divider variant="middle" />
@@ -156,7 +143,13 @@ const Page = async () => {
             ))}
           </div>
           {(data.clubMatchLimit == null || data.clubMatchLimit > 0) && (
-            <RedoClubMatchButton />
+            <StartClubMatchButton
+              label="Redo Club Match"
+              startIcon={<RestartAltIcon />}
+              enableLoading
+              loadingLabel="Loading..."
+              className="w-fit self-center normal-case"
+            />
           )}
         </div>
       </main>

@@ -3,8 +3,8 @@
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { BaseCard } from '@nebula-library/components/BaseCard';
-import { LinkButton } from '@/lib/components/LinkButton';
 import { Binoculars } from '@/lib/icons/OtherIcons';
+import StartClubMatchButton from '@/systems/clubs/match/StartClubMatchButton';
 
 export const ClubMatchAdDismissedOnStorageKey = 'ClubMatchAdDismissedOn';
 
@@ -19,7 +19,7 @@ export default function ClubMatchAdCard({
       className="bg-cornflower-100 dark:bg-cornflower-900 relative flex h-full min-h-[400px] max-w-xs min-w-[300px] flex-col justify-between p-6 md:min-h-[600px]"
     >
       <Link
-        href={`/club-match/form`}
+        href={`/club-match`}
         className="ClubMatchAdCardLink absolute inset-0 z-10"
       />
 
@@ -35,16 +35,7 @@ export default function ClubMatchAdCard({
           this quiz and get intelligently matched with student organizations at
           UTD that you may find interesting!
         </p>
-        <LinkButton
-          href="/club-match/form"
-          size="large"
-          color="primary"
-          variant="contained"
-          startIcon={<Binoculars />}
-          className="z-20"
-        >
-          Start now!
-        </LinkButton>
+        <StartClubMatchButton className="z-20" />
         {setDismissed && (
           <Button
             size="large"

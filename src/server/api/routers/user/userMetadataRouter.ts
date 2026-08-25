@@ -128,8 +128,9 @@ const userMetadataRouter = createTRPCRouter({
     if (isAdmin) capabilites.push('Admin');
     return capabilites;
   }),
-  didClubMatch: authedProcedure.query(async ({ ctx }): Promise<boolean> => {
-    const userId = ctx.session.user.id;
+  didClubMatch: publicProcedure.query(async ({ ctx }): Promise<boolean> => {
+    const userId = ctx.session?.user.id;
+    if (!userId) return false;
     const aiCache = await ctx.db.query.userAiCache.findFirst({
       where: eq(userAiCache.id, userId),
     });
