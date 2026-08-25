@@ -6,7 +6,9 @@ import {
 } from '@/lib/components/form/FormButtons';
 import FormFieldSet from '@/lib/components/form/FormFieldSet';
 import FormMultiSelect from '@/lib/components/form/FormMultiSelect';
-import FormQuestion from '@/lib/components/form/FormQuestion';
+import FormQuestion, {
+  FieldQuestion,
+} from '@/lib/components/form/FormQuestion';
 import FormRadioGroup from '@/lib/components/form/FormRadioGroup';
 import FormSelect from '@/lib/components/form/FormSelect';
 import FormTextField from '@/lib/components/form/FormTextField';
@@ -25,6 +27,7 @@ export const { useAppForm, withForm } = createFormHook({
     AutocompleteFreeSolo: FormAutocompleteFreeSolo,
     MultiSelect: FormMultiSelect,
     RadioGroup: FormRadioGroup,
+    Question: FieldQuestion,
   },
   formComponents: {
     ResetButton: FormResetButton,

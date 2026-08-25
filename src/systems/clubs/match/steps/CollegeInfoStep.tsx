@@ -28,48 +28,54 @@ const CollegeInfoStep = withForm({
           College Info
         </Typography>
         <div className="flex flex-col gap-12">
-          <form.Question
-            question="What is your current or intended major?"
-            density="compact"
-          >
-            <form.AppField name="collegeInfo.major">
-              {(field) => (
+          <form.AppField name="collegeInfo.major">
+            {(field) => (
+              <field.Question
+                question="What is your current or intended major?"
+                density="compact"
+                required
+              >
                 <field.AutocompleteFreeSolo
                   placeholder="Select or enter your major"
                   options={majors}
                   className="w-full max-w-md"
                   required
                 />
-              )}
-            </form.AppField>
-          </form.Question>
+              </field.Question>
+            )}
+          </form.AppField>
 
-          <form.Question question="What year are you?" density="compact">
-            <form.AppField name="collegeInfo.year">
-              {(field) => (
+          <form.AppField name="collegeInfo.year">
+            {(field) => (
+              <field.Question
+                question="What year are you?"
+                density="compact"
+                required
+              >
                 <field.Select
                   className="w-full max-w-md"
                   required
                   options={YEAR_OPTIONS}
                 />
-              )}
-            </form.AppField>
-          </form.Question>
+              </field.Question>
+            )}
+          </form.AppField>
 
-          <form.Question
-            question="How close do you live to campus?"
-            density="compact"
-          >
-            <form.AppField name="collegeInfo.proximity">
-              {(field) => (
+          <form.AppField name="collegeInfo.proximity">
+            {(field) => (
+              <field.Question
+                question="How close do you live to campus?"
+                density="compact"
+                required
+              >
                 <field.Select
                   className="w-full max-w-md"
                   required
                   options={PROXIMITY_OPTIONS}
                 />
-              )}
-            </form.AppField>
-          </form.Question>
+              </field.Question>
+            )}
+          </form.AppField>
         </div>
       </div>
     );

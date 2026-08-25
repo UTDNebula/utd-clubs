@@ -12,6 +12,7 @@ const CATEGORY_OPTIONS = [
   'Educational/Departmental',
   'Fraternity & Sorority Life',
   'Honor Society',
+  'LGBTQ+',
   'Political',
   'Recreation',
   'Religious',
@@ -46,20 +47,21 @@ const InterestsStep = withForm({
           Interests
         </Typography>
         <div className="flex flex-col gap-12">
-          <form.Question
-            question="What types of organizations are you interested in?"
-            density="compact"
-          >
-            <form.AppField name="interests.categories">
-              {(field) => (
+          <form.AppField name="interests.categories">
+            {(field) => (
+              <field.Question
+                question="What types of organizations are you interested in?"
+                density="compact"
+                required
+              >
                 <field.MultiSelect
                   className="w-full"
                   required
                   options={CATEGORY_OPTIONS}
                 />
-              )}
-            </form.AppField>
-          </form.Question>
+              </field.Question>
+            )}
+          </form.AppField>
 
           <form.Subscribe
             selector={(state) => state.values.interests?.categories}
@@ -70,65 +72,68 @@ const InterestsStep = withForm({
                 categories?.includes('Religious');
 
               return showSpecificCultures ? (
-                <form.Question
-                  question="Please list the specific cultures or religions you are interested in."
-                  density="compact"
-                >
-                  <form.AppField name="interests.specificCultures">
-                    {(field) => <field.TextField className="w-full" />}
-                  </form.AppField>
-                </form.Question>
+                <form.AppField name="interests.specificCultures">
+                  {(field) => (
+                    <field.Question
+                      question="Please list the specific cultures or religions you are interested in."
+                      density="compact"
+                    >
+                      <field.TextField className="w-full" />
+                    </field.Question>
+                  )}
+                </form.AppField>
               ) : null;
             }}
           </form.Subscribe>
 
-          <form.Question
-            question="What are your hobbies or areas of interest?"
-            density="compact"
-          >
-            <form.AppField name="interests.hobbies">
-              {(field) => (
+          <form.AppField name="interests.hobbies">
+            {(field) => (
+              <field.Question
+                question="What are your hobbies or areas of interest?"
+                density="compact"
+                required
+              >
                 <field.MultiSelect
                   className="w-full"
                   required
                   options={HOBBY_OPTIONS}
                 />
-              )}
-            </form.AppField>
-          </form.Question>
+              </field.Question>
+            )}
+          </form.AppField>
 
-          <form.Question
-            question="Please be specific about your selected hobbies."
-            density="compact"
-          >
-            <form.AppField name="interests.hobbyDetails">
-              {(field) => (
+          <form.AppField name="interests.hobbyDetails">
+            {(field) => (
+              <field.Question
+                question="Please be specific about your selected hobbies."
+                density="compact"
+              >
                 <field.TextField multiline minRows={2} className="w-full" />
-              )}
-            </form.AppField>
-          </form.Question>
+              </field.Question>
+            )}
+          </form.AppField>
 
-          <form.Question
-            question="Beyond your major, are there other academic topics or tracks you're interested in?"
-            density="compact"
-          >
-            <form.AppField name="interests.otherAcademicInterests">
-              {(field) => (
+          <form.AppField name="interests.otherAcademicInterests">
+            {(field) => (
+              <field.Question
+                question="Beyond your major, are there other academic topics or tracks you're interested in?"
+                density="compact"
+              >
                 <field.TextField multiline minRows={2} className="w-full" />
-              )}
-            </form.AppField>
-          </form.Question>
+              </field.Question>
+            )}
+          </form.AppField>
 
-          <form.Question
-            question="What new experiences, hobbies, or activities would you be interested in?"
-            density="compact"
-          >
-            <form.AppField name="interests.newExperiences">
-              {(field) => (
+          <form.AppField name="interests.newExperiences">
+            {(field) => (
+              <field.Question
+                question="What new experiences, hobbies, or activities would you be interested in?"
+                density="compact"
+              >
                 <field.TextField multiline minRows={2} className="w-full" />
-              )}
-            </form.AppField>
-          </form.Question>
+              </field.Question>
+            )}
+          </form.AppField>
         </div>
       </div>
     );

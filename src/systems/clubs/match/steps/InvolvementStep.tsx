@@ -46,41 +46,47 @@ const InvolvementStep = withForm({
           Involvement
         </Typography>
         <div className="flex flex-col gap-12">
-          <form.Question
-            question="Goals for Getting Involved"
-            density="compact"
-          >
-            <form.AppField name="involvement.involvementGoals">
-              {(field) => (
+          <form.AppField name="involvement.involvementGoals">
+            {(field) => (
+              <field.Question
+                question="Goals for Getting Involved"
+                density="compact"
+              >
                 <field.MultiSelect
                   className="w-full"
                   options={INVOLVEMENT_GOAL_OPTIONS}
                 />
-              )}
-            </form.AppField>
-          </form.Question>
+              </field.Question>
+            )}
+          </form.AppField>
 
-          <form.Question
-            question="Skills & Activities Interest"
-            density="compact"
-          >
-            <form.AppField name="involvement.skills">
-              {(field) => (
+          <form.AppField name="involvement.skills">
+            {(field) => (
+              <field.Question
+                question="Skills & Activities Interest"
+                density="compact"
+              >
                 <field.MultiSelect className="w-full" options={SKILL_OPTIONS} />
-              )}
-            </form.AppField>
-          </form.Question>
+              </field.Question>
+            )}
+          </form.AppField>
+
+          <form.AppField name="involvement.underrepresentedGroups">
+            {(field) => (
+              <field.Question
+                question="Which under-represented groups would you like to connect with?"
+                density="compact"
+              >
+                <field.TextField className="w-full" />
+              </field.Question>
+            )}
+          </form.AppField>
 
           <form.Question
-            question="Which under-represented groups would you like to connect with"
+            question="Preferred Time Commitment"
             density="compact"
+            required
           >
-            <form.AppField name="involvement.underrepresentedGroups">
-              {(field) => <field.TextField className="w-full" />}
-            </form.AppField>
-          </form.Question>
-
-          <form.Question question="Preferred Time Commitment" density="compact">
             <form.AppField name="involvement.timeCommitment">
               {(field) => (
                 <field.RadioGroup
