@@ -1,16 +1,16 @@
 'use client';
 
-import Diversity3Icon from '@mui/icons-material/Diversity3';
 import { Button, IconButton } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { MouseEventHandler, useRef } from 'react';
 import { useLoginModal } from '@/lib/modules/loginModal';
 import { authClient } from '@/lib/utils/auth-client';
+import { Binoculars } from '@/lib/icons/OtherIcons';
 
 const shadowStyle = 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]';
 
-const icon = <Diversity3Icon fontSize="small" />;
+const icon = <Binoculars />;
 
 export default function ClubMatchButton({
   shadow,
