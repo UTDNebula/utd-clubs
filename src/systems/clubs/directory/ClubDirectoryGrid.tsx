@@ -1,17 +1,17 @@
 'use client';
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { subDays } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode, useEffect, useState } from 'react';
 import { useSearchStore } from '@/systems/dashboard/SearchStoreProvider';
 import { useTRPC } from '@/trpc/react';
+import { RouterOutputs } from '@/trpc/shared';
 import ClubCard, { ClubCardSkeleton } from '../ClubCard';
-import InfiniteScrollGrid from './InfiniteScrollGrid';
 import ClubMatchAdCard, {
   ClubMatchAdDismissedOnStorageKey,
 } from './ads/ClubMatchAdCard';
-import { RouterOutputs } from '@/trpc/shared';
-import { subDays } from 'date-fns';
+import InfiniteScrollGrid from './InfiniteScrollGrid';
 
 type Cards = (
   | {

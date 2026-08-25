@@ -15,9 +15,9 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Binoculars } from '@/lib/icons/OtherIcons';
 import { openLoginModal } from '@/lib/modules/loginModal';
 import { authClient } from '@/lib/utils/auth-client';
-import { Binoculars } from '@/lib/icons/OtherIcons';
 
 type Props = {
   shadow?: boolean;

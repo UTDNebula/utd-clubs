@@ -4,9 +4,9 @@ import { Button, IconButton } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { MouseEventHandler, useRef } from 'react';
+import { Binoculars } from '@/lib/icons/OtherIcons';
 import { useLoginModal } from '@/lib/modules/loginModal';
 import { authClient } from '@/lib/utils/auth-client';
-import { Binoculars } from '@/lib/icons/OtherIcons';
 
 const shadowStyle = 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]';
 
