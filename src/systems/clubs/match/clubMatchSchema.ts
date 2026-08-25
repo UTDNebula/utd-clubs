@@ -26,8 +26,7 @@ export const interestsSchema = z.object({
 export const involvementSchema = z.object({
   involvementGoals: z.array(z.string().min(1).max(100)).max(50).optional(),
   skills: z.array(z.string().min(1).max(100)).max(50).optional(),
-  gender: z.string().max(100).optional(),
-  genderOther: z.string().max(500, characterLimitError).optional(),
+  underrepresentedGroups: z.string().max(500, characterLimitError).optional(),
   timeCommitment: z.string().min(1, 'Time commitment is required').max(100),
 });
 

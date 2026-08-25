@@ -2,7 +2,6 @@
 
 import Typography from '@mui/material/Typography';
 import { withForm } from '@/lib/utils/form';
-import ClubMatchFormGenderDisclaimer from '../ClubMatchFormGenderDisclaimer';
 import { ClubMatchWizardSchema } from '../clubMatchSchema';
 
 const INVOLVEMENT_GOAL_OPTIONS = [
@@ -29,14 +28,6 @@ const SKILL_OPTIONS = [
   'Tutoring/Mentoring',
   'Website/App Development',
   'Writing/Editing',
-];
-
-const GENDER_OPTIONS = [
-  'Female',
-  'Male',
-  'Non-binary',
-  'Prefer not to say',
-  'Other',
 ];
 
 const TIME_COMMITMENT_OPTIONS = [
@@ -80,57 +71,26 @@ const InvolvementStep = withForm({
             </form.AppField>
           </form.Question>
 
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-            <form.Question
-              question={
-                <Typography variant="body1">
-                  Gender Identity
-                  <ClubMatchFormGenderDisclaimer />
-                </Typography>
-              }
-              density="compact"
-            >
-              <form.AppField name="involvement.gender">
-                {(field) => (
-                  <field.RadioGroup
-                    className="w-full"
-                    options={GENDER_OPTIONS}
-                  />
-                )}
-              </form.AppField>
-              <form.Subscribe
-                selector={(state) => state.values.involvement?.gender}
-              >
-                {(gender) =>
-                  gender === 'Other' ? (
-                    <form.AppField name="involvement.genderOther">
-                      {(field) => (
-                        <field.TextField
-                          placeholder="Please specify"
-                          className="w-full"
-                        />
-                      )}
-                    </form.AppField>
-                  ) : null
-                }
-              </form.Subscribe>
-            </form.Question>
+          <form.Question
+            question="Which under-represented groups would you like to connect with"
+            density="compact"
+          >
+            <form.AppField name="involvement.underrepresentedGroups">
+              {(field) => <field.TextField className="w-full" />}
+            </form.AppField>
+          </form.Question>
 
-            <form.Question
-              question="Preferred Time Commitment"
-              density="compact"
-            >
-              <form.AppField name="involvement.timeCommitment">
-                {(field) => (
-                  <field.RadioGroup
-                    className="w-full"
-                    required
-                    options={TIME_COMMITMENT_OPTIONS}
-                  />
-                )}
-              </form.AppField>
-            </form.Question>
-          </div>
+          <form.Question question="Preferred Time Commitment" density="compact">
+            <form.AppField name="involvement.timeCommitment">
+              {(field) => (
+                <field.RadioGroup
+                  className="w-full"
+                  required
+                  options={TIME_COMMITMENT_OPTIONS}
+                />
+              )}
+            </form.AppField>
+          </form.Question>
         </div>
       </div>
     );
