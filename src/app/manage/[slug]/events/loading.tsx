@@ -1,12 +1,12 @@
 import Skeleton from '@mui/material/Skeleton';
-import { EventCardSkeleton } from '@src/components/events/EventCard';
-import ManageHeader from '@src/components/manage/ManageHeader';
+import { EventCardSkeleton } from '@/systems/events/EventCard';
+import ManageHeader from '@/systems/manage/ManageHeader';
 
 export default function Loading() {
   return (
     <>
       <ManageHeader loading path={['Events']}>
-        <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
+        <div className="flex flex-wrap items-center gap-x-10 gap-y-2 max-sm:gap-x-4">
           <Skeleton
             variant="rounded"
             width={128}
@@ -15,7 +15,7 @@ export default function Loading() {
           />
         </div>
       </ManageHeader>
-      <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
+      <div className="flex w-full flex-wrap items-center justify-evenly gap-4 pt-10">
         {Array.from({ length: 9 }, (_, index) => (
           <EventCardSkeleton key={index} manageView />
         ))}

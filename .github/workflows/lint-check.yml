@@ -4,12 +4,14 @@ on: push
 
 jobs:
   main:
-    name: Run ESLint + Prettier
+    name: Run ESLint + Prettier + TypeScript
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -25,3 +27,6 @@ jobs:
 
       - name: Run Prettier
         run: npm run format:check
+
+      - name: Run TypeScript
+        run: npm run type:check

@@ -1,0 +1,228 @@
+import { TRPCError } from '@trpc/server';
+import { and, count, desc, eq, inArray, lte, sql } from 'drizzle-orm';
+import { callStorageAPI } from '@/lib/utils/storage';
+import { adminProcedure, createTRPCRouter } from '@/server/api/trpc';
+import { club, usedTags } from '@/server/db/schema/club';
+import { events } from '@/server/db/schema/events';
+import {
+  userMetadataToClubs,
+  userMetadataToEvents,
+} from '@/server/db/schema/users';
+import { clubIdSchema, clubSlugSchema, eventIdSchema } from '../baseSchemas';
+import { editCollaboratorSchema } from '../club/inputSchemas';
+import { changeClubStatusSchema, tagReplaceSchema } from './inputSchemas';
+
+const adminRouter = createTRPCRouter({
+  allClubs: adminProcedure.query(async ({ ctx }) => {
+    const orgs = await ctx.db.query.club.findMany({
+      columns: {
+        id: true,
+        slug: true,
+        name: true,
+        alias: true,
+        foundingDate: false,
+        tags: true,
+        approved: true,
+        profileImage: false,
+        soc: true,
+      },
+    });
+    return orgs;
+  }),
+  pendingClubsCount: adminProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db
+      .select({ value: count() })
+      .from(club)
+      .where(eq(club.approved, 'pending'));
+    return result[0]?.value ?? null;
+  }),
+  refreshTags: adminProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.refreshMaterializedView(usedTags);
+  }),
+  changeTag: adminProcedure
+    .input(tagReplaceSchema)
+    .mutation(async ({ input, ctx }) => {
+      const clubsToChange = await ctx.db.query.club.findMany({
+        where: sql`${input.oldTag} = ANY(tags)`,
+      });
+      const deleteTag = input.newTag === '';
+      clubsToChange.map((club) => {
+        club.tags = club.tags.flatMap((tag) => {
+          if (deleteTag) return [];
+          return [tag == input.oldTag ? input.newTag : tag];
+        });
+        return club;
+      });
+      const clubPromise: Promise<unknown>[] = [];
+      for (const clu of clubsToChange) {
+        clubPromise.push(
+          ctx.db
+            .update(club)
+            .set({ tags: clu.tags })
+            .where(eq(club.id, clu.id)),
+        );
+      }
+      await Promise.all(clubPromise);
+      await ctx.db.refreshMaterializedView(usedTags);
+      return { affected: clubsToChange.length };
+    }),
+  deleteClub: adminProcedure
+    .input(clubIdSchema)
+    .mutation(async ({ ctx, input }) => {
+      await Promise.all([
+        callStorageAPI('DELETE', `${input.clubId}-profile`),
+        callStorageAPI('DELETE', `${input.clubId}-banner`),
+        ctx.db.delete(club).where(eq(club.id, input.clubId)),
+      ]);
+    }),
+  updateOfficers: adminProcedure
+    .input(editCollaboratorSchema)
+    .mutation(async ({ ctx, input }) => {
+      // Deleted
+      if (input.deleted.length) {
+        await ctx.db
+          .insert(userMetadataToClubs)
+          .values(
+            input.deleted.map((officer) => ({
+              userId: officer,
+              clubId: input.clubId,
+              memberType: 'Member' as const,
+            })),
+          )
+          .onConflictDoUpdate({
+            target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
+            set: { memberType: 'Member' as const },
+            where: inArray(userMetadataToClubs.memberType, [
+              'Officer',
+              'President',
+            ]),
+          });
+      }
+
+      // Modified
+      const promises: Promise<unknown>[] = [];
+      for (const modded of input.modified) {
+        const prom = ctx.db
+          .update(userMetadataToClubs)
+          .set({
+            memberType: modded.position,
+          })
+          .where(
+            and(
+              eq(userMetadataToClubs.userId, modded.userId),
+              eq(userMetadataToClubs.clubId, input.clubId),
+            ),
+          );
+        promises.push(prom);
+      }
+      await Promise.allSettled(promises);
+
+      // Created
+      if (input.created.length) {
+        await ctx.db
+          .insert(userMetadataToClubs)
+          .values(
+            input.created.map((officer) => ({
+              userId: officer.userId,
+              clubId: input.clubId,
+              memberType: officer.position,
+            })),
+          )
+          .onConflictDoUpdate({
+            target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
+            set: { memberType: 'Officer' as const },
+            where: eq(userMetadataToClubs.memberType, 'Member'),
+          });
+      }
+
+      // Return new officers
+      const newOfficers = await ctx.db.query.userMetadataToClubs.findMany({
+        where: and(
+          eq(userMetadataToClubs.clubId, input.clubId),
+          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+        ),
+        with: { userMetadata: { with: { user: true } } },
+      });
+      return newOfficers;
+    }),
+  changeClubStatus: adminProcedure
+    .input(changeClubStatusSchema)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(club)
+        .set({ approved: input.status })
+        .where(eq(club.id, input.clubId));
+    }),
+  getDirectoryInfo: adminProcedure
+    .input(clubSlugSchema)
+    .query(async ({ input: { slug }, ctx }) => {
+      try {
+        // Fetch club by slug
+        const bySlug = await ctx.db.query.club.findFirst({
+          where: (club) => eq(club.slug, slug),
+          with: {
+            userMetadataToClubs: {
+              columns: {
+                userId: true, // Only fetch the ID to keep the payload small
+              },
+            },
+            contacts: {
+              orderBy: (contacts, { asc }) => asc(contacts.displayOrder),
+            },
+            officers: {
+              orderBy: (officers, { asc }) => asc(officers.displayOrder),
+            },
+          },
+        });
+
+        if (!bySlug) return null;
+
+        // Fetch latest event date
+        const lastEvent = await ctx.db.query.events.findFirst({
+          where: (events) =>
+            and(
+              eq(events.clubId, bySlug.id),
+              eq(events.status, 'approved'),
+              lte(events.startTime, new Date()),
+            ), // find the time range of events that have started before now
+          orderBy: (events) => [desc(events.endTime)],
+          columns: {
+            endTime: true,
+          },
+        });
+
+        const { userMetadataToClubs, ...clubData } = bySlug; // clubData doesn't have userMetadataToClubs field
+        return {
+          ...clubData,
+          numMembers: userMetadataToClubs.length,
+          lastEventDate: lastEvent ? lastEvent.endTime : null,
+        };
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    }),
+  deleteEvent: adminProcedure
+    .input(eventIdSchema)
+    .mutation(async ({ input, ctx }) => {
+      const event = await ctx.db.query.events.findFirst({
+        where: (e) => eq(e.id, input.eventId),
+      });
+
+      if (!event) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Event not found' });
+      }
+
+      await Promise.all([
+        callStorageAPI('DELETE', `${event.clubId}-event-${event.id}`),
+        ctx.db
+          .delete(userMetadataToEvents)
+          .where(eq(userMetadataToEvents.eventId, input.eventId)),
+        ctx.db.delete(events).where(eq(events.id, input.eventId)), // only place where event is fully deleted from DB
+      ]);
+
+      return { success: true };
+    }),
+});
+
+export default adminRouter;

@@ -1,0 +1,59 @@
+import { FormControl, MenuItem, Select } from '@mui/material';
+import { type Column, type Table } from '@tanstack/react-table';
+import { useState } from 'react';
+
+type Props<T> = {
+  column: Column<T, unknown>;
+  table: Table<T>;
+};
+
+export default function StatusFilter<T>({ column }: Props<T>) {
+  const columnFilterValue = column.getFilterValue() as
+    | 'approved'
+    | 'rejected'
+    | 'pending'
+    | 'deleted'
+    | null;
+
+  const [value, setValue] = useState(columnFilterValue ?? 'All');
+
+  function updateFilterValue(value: string) {
+    switch (value) {
+      case 'approved':
+        setValue('approved');
+        column.setFilterValue('approved');
+        break;
+      case 'rejected':
+        setValue('rejected');
+        column.setFilterValue('rejected');
+        break;
+      case 'pending':
+        setValue('pending');
+        column.setFilterValue('pending');
+        break;
+      case 'deleted':
+        setValue('deleted');
+        column.setFilterValue('deleted');
+        break;
+      default:
+        setValue('All');
+        column.setFilterValue(null);
+    }
+  }
+
+  return (
+    <FormControl size="small">
+      <Select
+        value={value}
+        onChange={(e) => updateFilterValue(e.target.value)}
+        className="max-h-8 min-w-24 text-xs normal-case"
+      >
+        <MenuItem value="All">All</MenuItem>
+        <MenuItem value="approved">Approved</MenuItem>
+        <MenuItem value="pending">Pending</MenuItem>
+        <MenuItem value="rejected">Rejected</MenuItem>
+        <MenuItem value="deleted">Pending Deletion</MenuItem>
+      </Select>
+    </FormControl>
+  );
+}

@@ -12,10 +12,11 @@ const config: JestConfigWithTsJest = {
     ],
   },
   moduleNameMapper: {
-    '^@src/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
   detectOpenHandles: true,
   forceExit: true,
+  testPathIgnorePatterns: ['<rootDir>/src/nebula-library'],
 };
 
 export default config;

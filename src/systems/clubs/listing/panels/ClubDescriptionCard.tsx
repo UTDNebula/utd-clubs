@@ -1,0 +1,26 @@
+import Panel from '@nebula-library/components/Panel';
+import ExpandableMarkdownText from '@/lib/components/ExpandableMarkdownText';
+import { RouterOutputs } from '@/trpc/shared';
+
+type ClubDescriptionCardProps = {
+  club: NonNullable<RouterOutputs['club']['getDirectoryInfo']>;
+  id?: string;
+};
+
+export default function ClubDescriptionCard({
+  club,
+  id,
+}: ClubDescriptionCardProps) {
+  return (
+    <Panel className="!p-10" id={id}>
+      <ExpandableMarkdownText
+        text={
+          club.description.length > 0
+            ? club.description
+            : 'No description provided'
+        }
+        maxLines={10}
+      />
+    </Panel>
+  );
+}

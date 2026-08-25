@@ -1,10 +1,11 @@
+import Typography from '@mui/material/Typography';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Header from '@src/components/header/Header';
-import { auth } from '@src/server/auth';
-import { signInRoute } from '@src/utils/redirect';
-import CreateClubForm from './CreateClubForm';
+import Header from '@/lib/modules/navigation/header';
+import { signInRoute } from '@/lib/utils/redirect';
+import { auth } from '@/server/auth';
+import CreateClubForm from '@/systems/clubs/create/CreateClubForm';
 
 export const metadata: Metadata = {
   title: 'Create New Organization',
@@ -27,8 +28,16 @@ export default async function Page() {
   return (
     <>
       <Header />
-      <main className="p-4 flex w-full flex-col items-center">
-        <CreateClubForm />
+      <main className="flex w-full flex-col items-center p-4">
+        <div className="flex w-full max-w-4xl flex-col items-center gap-4">
+          <Typography
+            variant="h1"
+            className="font-display text-center text-3xl font-bold"
+          >
+            Create New Organization
+          </Typography>
+          <CreateClubForm />
+        </div>
       </main>
     </>
   );

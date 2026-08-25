@@ -1,15 +1,16 @@
-import '@src/styles/globals.css';
+import '@/lib/styles/global.css';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { type Metadata } from 'next';
 import { Bai_Jamjuree, Inter } from 'next/font/google';
-import { CheckRefreshToken } from '@src/components/auth/CheckRefreshToken';
-import { RegisterModalProvider } from '@src/components/global/RegisterModalProvider';
-import { SnackbarProvider } from '@src/components/global/Snackbar';
-import { TRPCReactProvider } from '@src/trpc/react';
-import ClientLocalizationProvider from '@src/utils/localization';
-import theme from '@src/utils/theme';
+import ClientLocalizationProvider from '@/lib/components/ClientLocalizationProvider';
+import SyncfusionWrapper from '@/lib/components/SyncfusionWrapper';
+import { CheckRefreshToken } from '@/lib/modules/googleOAuth';
+import { LoginModalProvider } from '@/lib/modules/loginModal/provider';
+import { SnackbarProvider } from '@/lib/modules/snackbar';
+import theme from '@/lib/utils/theme';
+import { TRPCReactProvider } from '@/trpc/react';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -63,23 +64,25 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body
         className={`bg-light dark:bg-dark ${inter.variable} font-main ${baiJamjuree.variable} text-haiti dark:text-white`}
       >
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <TRPCReactProvider>
-            <ThemeProvider theme={theme}>
-              <ClientLocalizationProvider>
-                <RegisterModalProvider>
-                  <SnackbarProvider>
-                    <CheckRefreshToken />
-                    {children}
-                  </SnackbarProvider>
-                </RegisterModalProvider>
-              </ClientLocalizationProvider>
-            </ThemeProvider>
-          </TRPCReactProvider>
+          <SyncfusionWrapper>
+            <TRPCReactProvider>
+              <ThemeProvider theme={theme}>
+                <ClientLocalizationProvider>
+                  <LoginModalProvider>
+                    <SnackbarProvider>
+                      <CheckRefreshToken />
+                      {children}
+                    </SnackbarProvider>
+                  </LoginModalProvider>
+                </ClientLocalizationProvider>
+              </ThemeProvider>
+            </TRPCReactProvider>
+          </SyncfusionWrapper>
           {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
             <GoogleAnalytics gaId="G-FYTBHVKNG6" />
           )}

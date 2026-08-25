@@ -1,0 +1,95 @@
+'use client';
+
+import {
+  Alert,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Panel from '@nebula-library/components/Panel';
+import { SelectClub } from '@/server/db/models';
+import { useTRPC } from '@/trpc/react';
+
+type Props = { club: SelectClub };
+
+export default function ChangeClubStatus({ club }: Props) {
+  const router = useRouter();
+  const [status, setStatus] = useState<SelectClub['approved']>(club.approved);
+  const api = useTRPC();
+  const changeClubStatus = useMutation(
+    api.admin.changeClubStatus.mutationOptions({
+      onSuccess: () => router.refresh(),
+    }),
+  );
+
+  function onChange(e: SelectChangeEvent) {
+    switch (e.target.value) {
+      case 'approved':
+        changeClubStatus.mutate({ clubId: club.id, status: 'approved' });
+        setStatus('approved');
+        break;
+      case 'pending':
+        changeClubStatus.mutate({ clubId: club.id, status: 'pending' });
+        setStatus('pending');
+        break;
+      case 'rejected':
+        changeClubStatus.mutate({ clubId: club.id, status: 'rejected' });
+        setStatus('rejected');
+        break;
+      case 'deleted':
+        changeClubStatus.mutate({ clubId: club.id, status: 'deleted' });
+        setStatus('deleted');
+        break;
+    }
+  }
+
+  const statusColor = () => {
+    switch (status) {
+      case 'approved':
+        return 'bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200';
+      case 'pending':
+        return 'bg-yellow-200 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200';
+      case 'rejected':
+        return 'bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200';
+      case 'deleted':
+        return 'bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200';
+      default:
+        return 'bg-neutral-200 dark:bg-neutral-800 text-slate-800 dark:text-slate-200';
+    }
+  };
+
+  return (
+    <Panel heading="Status">
+      <div className="mb-4 ml-2 text-sm text-slate-600 dark:text-slate-400">
+        <p>Only accepted organizations are shown on UTD Clubs.</p>
+      </div>
+      <div className="m-2 mt-0 flex flex-col gap-4">
+        <FormControl fullWidth>
+          <InputLabel id="change-club-status-label">Status</InputLabel>
+          <Select
+            labelId="change-club-status-label"
+            value={status}
+            label="Status"
+            onChange={onChange}
+            className={statusColor()}
+          >
+            <MenuItem value="approved">Approved</MenuItem>
+            <MenuItem value="pending">Pending</MenuItem>
+            <MenuItem value="rejected">Rejected</MenuItem>
+            <MenuItem value="deleted">Pending Deletion</MenuItem>
+          </Select>
+        </FormControl>
+        <Alert severity="info">
+          {club.soc
+            ? 'This organization is originally from SOC.'
+            : 'This organization was created on UTD Clubs.'}
+        </Alert>
+      </div>
+    </Panel>
+  );
+}

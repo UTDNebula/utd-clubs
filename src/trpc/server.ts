@@ -1,8 +1,8 @@
 import 'server-only';
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query';
 import { cache } from 'react';
-import { appRouter } from '@src/server/api/root';
-import { createTRPCContext } from '@src/server/api/trpc';
+import { appRouter } from '@/server/api/root';
+import { createTRPCContext } from '@/server/api/trpc';
 import { makeQueryClient } from './shared';
 
 export const getQueryClient = cache(makeQueryClient);

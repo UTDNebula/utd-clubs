@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
-import AdminHeader from '@src/components/admin/AdminHeader';
-import EventCard from '@src/components/events/EventCard';
-import EventsPagination from '@src/components/events/EventPagination';
-import IncludePastSwitch from '@src/components/events/IncludePastSwitch';
-import { api } from '@src/trpc/server';
+import SimplePagination from '@/lib/components/SimplePagination';
+import AdminHeader from '@/systems/admin/AdminHeader';
+import EventCard from '@/systems/events/EventCard';
+import IncludePastSwitch from '@/systems/events/IncludePastSwitch';
+import { api } from '@/trpc/server';
 
 type SearchParams = {
   page?: string;
@@ -60,13 +60,13 @@ export default async function Page({ params, searchParams }: Props) {
       >
         <IncludePastSwitch checked={includePast} />
       </AdminHeader>
-      <div className="flex flex-wrap w-full justify-evenly items-center pt-10 gap-4">
+      <div className="flex w-full flex-wrap items-center justify-evenly gap-4 pt-10">
         {events?.map((event) => (
           <EventCard key={event.id} event={event} view="admin" />
         ))}
       </div>
       <div className="flex justify-center py-10">
-        <EventsPagination
+        <SimplePagination
           page={page}
           totalPages={totalPages}
           pageSize={pageSize}

@@ -14,7 +14,38 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
+    'src/nebula-library/**',
   ]),
+  // Allow HTML <img> elements in Next.JS generated image metadata files
+  {
+    files: ['src/**/{opengraph,twitter}-image.{js,jsx,ts,tsx}'],
+    rules: {
+      '@next/next/no-img-element': 'off',
+    },
+  },
+  {
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            // Enforce shorter path alias '@nebula-library/*' instead of '@/nebula-library/*'
+            {
+              group: ['@/nebula-library', '@/nebula-library/*'],
+              message:
+                "Please use the shorter path alias '@nebula-library/*' instead of '@/nebula-library/*'.",
+            },
+            // Disallow relative paths that move up multiple levels
+            {
+              group: ['../../*'],
+              message:
+                'Please use an absolute path reference instead of a relative path that moves up multiple levels.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

@@ -1,0 +1,293 @@
+'use client';
+
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  UniqueIdentifier,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { Button, Typography } from '@mui/material';
+import { useStore } from '@tanstack/react-form';
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import z from 'zod';
+import Panel from '@nebula-library/components/Panel';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import { useAppForm } from '@/lib/utils/form';
+import type { SelectClub, SelectContact } from '@/server/db/models';
+import { contactNames, startContacts } from '@/server/db/schema/contacts';
+import { useTRPC } from '@/trpc/react';
+import ContactListItem from './ContactListItem';
+import { editClubContactSchema } from './schema';
+
+type FormData = z.infer<typeof editClubContactSchema>;
+type ContactPlatform = keyof typeof contactNames;
+
+function typedDefaultValues(contacts: SelectContact[]): FormData['contacts'] {
+  return contacts.map((contact) => ({
+    clubId: contact.clubId,
+    platform: contact.platform,
+    url: contact.url,
+  }));
+}
+
+type ContactWithId = FormData['contacts'][number] & { clubId: string };
+
+function hasId(
+  contact: FormData['contacts'][number],
+): contact is ContactWithId {
+  return typeof contact.clubId === 'string';
+}
+
+type ContactsProps = {
+  club: SelectClub & { contacts: SelectContact[] };
+};
+
+const Contacts = ({ club }: ContactsProps) => {
+  const api = useTRPC();
+  const editContacts = useMutation(
+    api.club.manage.contacts.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club contacts'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
+      },
+    }),
+  );
+
+  const [defaultValues, setDefaultValues] = useState({
+    contacts: typedDefaultValues(club.contacts),
+  });
+
+  const form = useAppForm({
+    defaultValues,
+    onSubmit: async ({ value, formApi }) => {
+      // Separate created vs modified
+      const created: FormData['contacts'] = [];
+      const modified: ContactWithId[] = [];
+      const order: FormData['contacts'][number]['platform'][] = [];
+
+      let hasReorder = false;
+
+      value.contacts.forEach((contact, index) => {
+        // Extra check for if user reorders, makes a change, then undoes reorder
+        if (
+          isReordered &&
+          contact.platform !== defaultValues.contacts[index]?.platform
+        ) {
+          hasReorder = true;
+        }
+
+        order.push(contact.platform);
+
+        // If it has no ID, it's created
+        if (!hasId(contact)) {
+          created.push(contact);
+          return;
+        }
+        // If it has an ID, check if it was actually changed
+        const isDirty =
+          formApi.getFieldMeta(`contacts[${index}].platform`)?.isDirty ||
+          formApi.getFieldMeta(`contacts[${index}].url`)?.isDirty;
+        if (isDirty) {
+          modified.push(contact);
+        }
+      });
+
+      const updated = await editContacts.mutateAsync({
+        clubId: club.id,
+        deleted: deletedIds,
+        modified: modified,
+        created: created,
+        order: hasReorder ? order : undefined,
+      });
+      setDeletedIds([]);
+      setIsReordered(false);
+      const newContacts = typedDefaultValues(updated);
+      setDefaultValues({ contacts: newContacts });
+      formApi.reset({ contacts: newContacts });
+    },
+    validators: {
+      onChange: editClubContactSchema,
+    },
+  });
+
+  const [deletedIds, setDeletedIds] = useState<
+    FormData['contacts'][number]['platform'][]
+  >([]);
+
+  const removeItem = (index: number) => {
+    const current = form.getFieldValue('contacts')[index];
+    if (current) {
+      setDeletedIds((prev) => [...prev, current.platform]);
+    }
+  };
+
+  const currentContacts =
+    useStore(form.store, (state) => state.values.contacts) || [];
+  const available = startContacts.filter(
+    (p) => !currentContacts.map((c) => c.platform).includes(p),
+  );
+
+  // Flag for if user presses a reorder button
+  const [isReordered, setIsReordered] = useState(false);
+
+  // Detectors for when user interacts with a grab handle
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const handleReorderDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    // Reorder only if moved to a new location
+    if (active.id !== over?.id) {
+      form.setFieldValue('contacts', (contacts) => {
+        const oldIndex = contacts.findIndex(
+          (contact) => contact.platform === active.id,
+        );
+        const newIndex = contacts.findIndex(
+          (contact) => contact.platform === over?.id,
+        );
+
+        setIsReordered(true);
+        return arrayMove(contacts, oldIndex, newIndex);
+      });
+    }
+    setActiveReorderPlatform(null);
+  };
+
+  const handleReorderDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setActiveReorderPlatform(active.id);
+  };
+
+  // Platform (ID) of the item currently being reordered
+  const [activeReorderPlatform, setActiveReorderPlatform] =
+    useState<UniqueIdentifier | null>(null);
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+    >
+      <Panel heading="Contact Information">
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleReorderDragStart}
+          onDragEnd={handleReorderDragEnd}
+        >
+          <SortableContext
+            items={currentContacts.map((contact) => contact.platform)}
+            strategy={verticalListSortingStrategy}
+          >
+            <form.Field name="contacts" mode="array">
+              {(field) => (
+                <div className="flex max-w-full flex-col gap-2">
+                  {field.state.value.map((value, index) => (
+                    <ContactListItem
+                      key={value.platform}
+                      index={index}
+                      platform={value.platform}
+                      form={form}
+                      removeItem={removeItem}
+                      onReorder={() => setIsReordered(true)}
+                    />
+                  ))}
+                  {available.length > 0 && (
+                    <div className="flex gap-2 rounded-lg transition-colors max-sm:flex-col max-sm:bg-neutral-100 sm:items-center sm:hover:bg-neutral-100 dark:max-sm:bg-neutral-800 dark:sm:hover:bg-neutral-800">
+                      <Typography
+                        variant="button"
+                        className="flex max-h-full min-w-32 shrink-0 items-center text-base whitespace-nowrap text-slate-600 normal-case max-sm:justify-center max-sm:pt-4 sm:h-14 sm:pl-4 dark:text-slate-400"
+                      >
+                        Add Contact...
+                      </Typography>
+                      <div className="relative flex flex-wrap gap-2 overflow-x-auto p-2">
+                        {available.map((platform) => (
+                          <Button
+                            key={platform}
+                            variant="contained"
+                            value={platform}
+                            className="min-w-fit normal-case"
+                            onClick={() =>
+                              field.pushValue({ platform, url: '' })
+                            }
+                          >
+                            {contactNames[platform]}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </form.Field>
+          </SortableContext>
+          {/* List item that sticks to the cursor */}
+          <DragOverlay className="opacity-80">
+            {activeReorderPlatform ? (
+              <ContactListItem
+                key={activeReorderPlatform}
+                overlayData={form
+                  .getFieldValue('contacts')
+                  .find(
+                    (contact) => contact.platform === activeReorderPlatform,
+                  )}
+                platform={
+                  typeof activeReorderPlatform === 'string' &&
+                  activeReorderPlatform in contactNames
+                    ? (activeReorderPlatform as ContactPlatform)
+                    : undefined
+                }
+                index={form
+                  .getFieldValue('contacts')
+                  .findIndex(
+                    (contact) => contact.platform === activeReorderPlatform,
+                  )}
+                form={form}
+                removeItem={removeItem}
+                onReorder={() => setIsReordered(true)}
+              />
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <form.AppForm>
+            <form.ResetButton
+              onClick={() => {
+                setDeletedIds([]);
+                setIsReordered(false);
+                form.reset();
+              }}
+            />
+          </form.AppForm>
+          <form.AppForm>
+            <form.SubmitButton />
+          </form.AppForm>
+        </div>
+      </Panel>
+    </form>
+  );
+};
+
+export default Contacts;

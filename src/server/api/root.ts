@@ -1,10 +1,10 @@
-import { createCallerFactory, createTRPCRouter } from '@src/server/api/trpc';
-import { adminRouter } from './routers/admin';
-import { aiRouter } from './routers/ai';
-import { clubRouter } from './routers/club';
-import { eventRouter } from './routers/event';
-import { storageRouter } from './routers/storage';
-import { userMetadataRouter } from './routers/userMetadata';
+import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
+import adminRouter from './routers/admin';
+import aiRouter from './routers/ai';
+import clubRouter from './routers/club';
+import eventRouter from './routers/event';
+import storageRouter from './routers/storage';
+import userRouter from './routers/user';
 
 /**
  * This is the primary router for your server.
@@ -14,7 +14,7 @@ import { userMetadataRouter } from './routers/userMetadata';
 export const appRouter = createTRPCRouter({
   club: clubRouter,
   event: eventRouter,
-  userMetadata: userMetadataRouter,
+  user: userRouter,
   admin: adminRouter,
   storage: storageRouter,
   ai: aiRouter,

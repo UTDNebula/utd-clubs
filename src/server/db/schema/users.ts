@@ -112,10 +112,10 @@ export const userMetadataToEventsRelations = relations(
 );
 
 export type ClubMatchResults = {
-  name: string;
-  id: string;
-  reasoning: string;
-  benefit: string;
+  name?: string;
+  id?: string;
+  reasoning?: string;
+  benefit?: string;
 }[];
 
 export type ClubMatchResponses = {
@@ -124,12 +124,11 @@ export type ClubMatchResponses = {
   proximity: string;
   categories: string[];
   hobbies: string[];
-  gender?: string | undefined;
   timeCommitment: string;
+  underrepresentedGroups?: string | undefined;
   specificCultures?: string | undefined;
   hobbyDetails?: string | undefined;
   otherAcademicInterests?: string | undefined;
-  genderOther?: string | undefined;
   newExperiences?: string | undefined;
   involvementGoals?: string[] | undefined;
   skills?: string[] | undefined;

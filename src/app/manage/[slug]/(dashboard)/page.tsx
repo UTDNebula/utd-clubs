@@ -3,10 +3,10 @@ import PeopleIcon from '@mui/icons-material/People';
 import PreviewIcon from '@mui/icons-material/Preview';
 import Tooltip from '@mui/material/Tooltip';
 import { notFound } from 'next/navigation';
-import { LinkButton } from '@src/components/LinkButton';
-import ManageHeader from '@src/components/manage/ManageHeader';
-import { api } from '@src/trpc/server';
-import ClubManageForm from './ClubManageForm';
+import { LinkButton } from '@/lib/components/LinkButton';
+import ClubManageForm from '@/systems/manage/ClubManageForm';
+import ManageHeader from '@/systems/manage/ManageHeader';
+import { api } from '@/trpc/server';
 
 const Page = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params;
@@ -19,11 +19,11 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
   return (
     <>
       <ManageHeader club={club} hrefBack="/manage">
-        <div className="flex flex-wrap items-center gap-x-10 max-sm:gap-x-4 gap-y-2">
+        <div className="flex flex-wrap items-center gap-x-10 gap-y-2 max-sm:gap-x-4">
           <LinkButton
             href={`/manage/${slug}/followers`}
             variant="contained"
-            className="normal-case whitespace-nowrap"
+            className="whitespace-nowrap normal-case"
             startIcon={<PeopleIcon />}
             size="large"
           >
@@ -32,7 +32,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
           <LinkButton
             href={`/manage/${slug}/events`}
             variant="contained"
-            className="normal-case whitespace-nowrap"
+            className="whitespace-nowrap normal-case"
             startIcon={<EventIcon />}
             size="large"
           >
@@ -42,7 +42,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
             <LinkButton
               href={`/directory/${slug}`}
               variant="contained"
-              className="normal-case whitespace-pre"
+              className="whitespace-pre normal-case"
               startIcon={<PreviewIcon />}
               size="large"
             >

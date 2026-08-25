@@ -1,10 +1,14 @@
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { betterAuth } from 'better-auth/minimal';
 import { eq } from 'drizzle-orm';
-import { env } from '@src/env.mjs';
+import { env } from '@/env.mjs';
 import { db } from './db';
 import { InsertUserMetadata } from './db/models';
 import { userMetadata } from './db/schema/users';
+
+const AUTH_TRUSTED_ORIGINS = Array.isArray(env.AUTH_TRUSTED_ORIGINS)
+  ? env.AUTH_TRUSTED_ORIGINS
+  : [env.AUTH_TRUSTED_ORIGINS ?? ''];
 
 /**
  * Options for Better Auth used to configure adapters, providers, callbacks, etc.
@@ -16,19 +20,28 @@ export const auth = betterAuth({
     provider: 'pg', // or "pg" or "mysql"
   }),
   socialProviders: {
-    google: {
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-      accessType: 'offline',
-    },
-    discord: {
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    },
-    microsoft: {
-      clientId: env.MICROSOFT_CLIENT_ID,
-      clientSecret: env.MICROSOFT_CLIENT_SECRET, // Prod and dev secrets expire 2028-02-11
-    },
+    google:
+      env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
+        ? {
+            clientId: env.GOOGLE_CLIENT_ID,
+            clientSecret: env.GOOGLE_CLIENT_SECRET,
+            accessType: 'offline',
+          }
+        : undefined,
+    discord:
+      env.DISCORD_CLIENT_ID && env.DISCORD_CLIENT_SECRET
+        ? {
+            clientId: env.DISCORD_CLIENT_ID,
+            clientSecret: env.DISCORD_CLIENT_SECRET,
+          }
+        : undefined,
+    microsoft:
+      env.MICROSOFT_CLIENT_ID && env.MICROSOFT_CLIENT_SECRET
+        ? {
+            clientId: env.MICROSOFT_CLIENT_ID,
+            clientSecret: env.MICROSOFT_CLIENT_SECRET, // Prod and dev secrets expire 2028-02-11
+          }
+        : undefined,
   },
   databaseHooks: {
     account: {
@@ -99,6 +112,6 @@ export const auth = betterAuth({
     'http://localhost:3000',
     'https://clubs.utdnebula.com',
     'https://clubs-*-utdnebula.vercel.app',
-    'http://192.168.137.1:3000',
+    ...AUTH_TRUSTED_ORIGINS,
   ],
 });

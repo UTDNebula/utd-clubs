@@ -1,14 +1,24 @@
-const Events = async () => {
-  return (
-    <main className="font-bold relative select-none h-72">
-      <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[200px] text-slate-200 dark:text-slate-800">
-        WIP
-      </h1>
-      <h2 className="absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-20 text-3xl text-slate-800 dark:text-slate-200">
-        Coming soon!
-      </h2>
-    </main>
-  );
-};
+import { Alert } from '@mui/material';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { signInRoute } from '@/lib/utils/redirect';
+import { auth } from '@/server/auth';
+import EventCalendar from '@/systems/events/calendar/EventCalendar';
 
-export default Events;
+export default async function CalendarPage() {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    redirect(await signInRoute('events/calendar'));
+  }
+
+  return (
+    <>
+      <Alert severity="info" className="mt-4">
+        This calendar only shows events you have registered for. This will be
+        resolved in the future.
+      </Alert>
+      <EventCalendar />
+    </>
+  );
+}

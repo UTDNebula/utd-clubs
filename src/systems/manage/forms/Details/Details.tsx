@@ -1,0 +1,375 @@
+'use client';
+
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import type z from 'zod';
+import Panel, { PanelSkeleton } from '@nebula-library/components/Panel';
+import Confirmation from '@/lib/components/Confirmation';
+import FormImage from '@/lib/components/form/FormImage';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import { schools } from '@/lib/utils/commonSchemas';
+import { useAppForm } from '@/lib/utils/form';
+import { addVersionToImage } from '@/lib/utils/imageCacheBust';
+import { useUploadToUploadURL } from '@/lib/utils/uploadImage';
+import { SelectClub } from '@/server/db/models';
+import { ClubSchoolEdit } from '@/systems/clubs/ClubSchoolEdit';
+import ClubTagAutocomplete from '@/systems/clubs/ClubTagAutocomplete';
+import { useTRPC } from '@/trpc/react';
+import { editClubDetailsFormSchema } from './schema';
+
+type DetailsProps = {
+  club: SelectClub;
+};
+
+interface ClubDetails {
+  id: string;
+  name: string;
+  alias: string | null;
+  description: string;
+  foundingDate: Date | null;
+  clubSize: string;
+  tags: string[];
+  profileImage: File | null;
+  bannerImage: File | null;
+  schools: z.infer<typeof schools>;
+}
+
+const Details = ({ club }: DetailsProps) => {
+  const api = useTRPC();
+  const clubQuery = useQuery(
+    api.club.details.queryOptions({ clubId: club.id }, { initialData: club }),
+  );
+  const editData = useMutation(
+    api.club.manage.data.mutationOptions({
+      onSuccess: () => {
+        setSnackbar(SnackbarPresets.savedName('club details'));
+      },
+      onError: (error) => {
+        setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
+      },
+    }),
+  );
+  const uploadImage = useUploadToUploadURL();
+  const queryClient = useQueryClient();
+
+  const clubDetails = clubQuery.data;
+  const defaultValues: ClubDetails = {
+    id: clubDetails?.id ?? '',
+    name: clubDetails?.name ?? '',
+    alias: clubDetails?.alias ?? '',
+    description: clubDetails?.description ?? '',
+    foundingDate: clubDetails?.foundingDate ?? null,
+    clubSize: clubDetails?.clubSize ?? '',
+    tags: clubDetails?.tags ?? [],
+    profileImage: null,
+    bannerImage: null,
+    schools: clubDetails?.schools ?? [],
+  };
+
+  const [aliasChangedPopupOpen, setAliasChangedPopupOpen] = useState(false);
+
+  const form = useAppForm({
+    defaultValues,
+    onSubmit: async ({ value, formApi }) => {
+      // Profile image
+
+      const { profileImage, bannerImage, clubSize, ...formValues } = value;
+      let profileImageUrl, bannerImageUrl;
+      const profileImageIsDirty =
+        !formApi.getFieldMeta('profileImage')?.isDefaultValue;
+      if (profileImageIsDirty) {
+        if (profileImage === null) {
+          value.profileImage = null;
+        } else {
+          const url = await uploadImage.mutateAsync({
+            file: profileImage,
+            fileName: `${club.id}-profile`,
+          });
+          profileImageUrl = url;
+        }
+      }
+      // Banner image
+      const bannerImageIsDirty =
+        !formApi.getFieldMeta('bannerImage')?.isDefaultValue;
+      if (bannerImageIsDirty) {
+        if (bannerImage === null) {
+          value.bannerImage = null;
+        } else {
+          const url = await uploadImage.mutateAsync({
+            file: bannerImage,
+            fileName: `${club.id}-banner`,
+          });
+          bannerImageUrl = url;
+        }
+      }
+
+      const updated = await editData.mutateAsync({
+        ...formValues,
+        clubSize: (clubSize || null) as
+          | '1-10'
+          | '10-50'
+          | '50-200'
+          | '200+'
+          | null,
+        bannerImage: bannerImageUrl,
+        profileImage: profileImageUrl,
+      });
+      if (updated) {
+        const aliasIsDirty = !formApi.getFieldMeta('alias')?.isDefaultValue;
+        // If alias changed and we haven't confirmed yet, show popup
+
+        if (aliasIsDirty) {
+          setAliasChangedPopupOpen(true);
+        }
+
+        queryClient.invalidateQueries(
+          api.club.details.queryOptions({ clubId: club.id }),
+        );
+        formApi.reset();
+      }
+    },
+    validators: {
+      onChange: editClubDetailsFormSchema,
+    },
+  });
+
+  if (!clubQuery.isSuccess) return <PanelSkeleton />;
+
+  return (
+    <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
+      >
+        <Panel heading="Details">
+          <div className="m-2 flex flex-col gap-4">
+            <div className="flex flex-wrap gap-4">
+              <form.Field name="profileImage">
+                {(field) => (
+                  <FormImage
+                    label="Profile Image"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    fallbackUrl={
+                      clubDetails!.profileImage
+                        ? addVersionToImage(
+                            clubDetails!.profileImage,
+                            clubDetails!.updatedAt?.getTime(),
+                          )
+                        : undefined
+                    }
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      field.handleChange(file);
+                    }}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
+                    className="w-48 grow"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="bannerImage">
+                {(field) => (
+                  <FormImage
+                    label="Banner Image"
+                    onBlur={field.handleBlur}
+                    value={field.state.value}
+                    fallbackUrl={
+                      clubDetails!.bannerImage
+                        ? addVersionToImage(
+                            clubDetails!.bannerImage,
+                            clubDetails!.updatedAt?.getTime(),
+                          )
+                        : undefined
+                    }
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      field.handleChange(file);
+                    }}
+                    helperText={
+                      !field.state.meta.isValid
+                        ? field.state.meta.errors
+                            .map((err) => err?.message)
+                            .join('. ') + '.'
+                        : undefined
+                    }
+                    className="w-48 grow"
+                  />
+                )}
+              </form.Field>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <form.AppField name="name">
+                {(field) => (
+                  <field.TextField label="Name" className="grow-100" required />
+                )}
+              </form.AppField>
+              <form.AppField name="alias">
+                {(field) => (
+                  <field.TextField label="Alias or Acronym" className="grow" />
+                )}
+              </form.AppField>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <form.Field name="foundingDate">
+                {(field) => (
+                  <DatePicker
+                    onChange={(value) => field.handleChange(value)}
+                    value={field.state.value}
+                    label="Date Founded"
+                    className="grow"
+                    slotProps={{
+                      actionBar: {
+                        actions: ['accept'],
+                      },
+                      textField: {
+                        size: 'small',
+                        error: !field.state.meta.isValid,
+                        helperText: !field.state.meta.isValid
+                          ? field.state.meta.errors
+                              .map((err) => err?.message)
+                              .join('. ') + '.'
+                          : undefined,
+                      },
+                    }}
+                  />
+                )}
+              </form.Field>
+              <form.AppField name="clubSize">
+                {(field) => (
+                  <field.Select
+                    label="Number of Members"
+                    className="grow"
+                    options={['1-10', '10-50', '50-200', '200+']}
+                  />
+                )}
+              </form.AppField>
+            </div>
+            <form.Field name="schools">
+              {(field) => (
+                <ClubSchoolEdit
+                  value={field.state.value}
+                  onChange={(value) => {
+                    field.handleChange(value as z.infer<typeof schools>);
+                  }}
+                  onBlur={field.handleBlur}
+                  error={!field.state.meta.isValid}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
+                />
+              )}
+            </form.Field>
+            <div className="flex flex-col gap-2">
+              <form.AppField name="description">
+                {(field) => (
+                  <field.TextField
+                    label="Description"
+                    className="w-full"
+                    required
+                    multiline
+                    minRows={4}
+                    helperText={
+                      <span>
+                        We support{' '}
+                        <a
+                          href="https://www.markdownguide.org/basic-syntax/"
+                          rel="noreferrer"
+                          target="_blank"
+                          className="text-royal dark:text-cornflower-300 underline"
+                        >
+                          Markdown
+                        </a>
+                        !
+                      </span>
+                    }
+                  />
+                )}
+              </form.AppField>
+            </div>
+            <form.Field name="tags">
+              {(field) => (
+                <ClubTagAutocomplete
+                  allowAddingOptions
+                  value={field.state.value}
+                  onChange={(value) => {
+                    field.handleChange(value);
+                  }}
+                  onBlur={field.handleBlur}
+                  error={!field.state.meta.isValid}
+                  helperText={
+                    !field.state.meta.isValid
+                      ? field.state.meta.errors
+                          .map((err) => err?.message)
+                          .join('. ') + '.'
+                      : undefined
+                  }
+                />
+              )}
+            </form.Field>
+          </div>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <form.AppForm>
+              <form.ResetButton />
+            </form.AppForm>
+            <form.AppForm>
+              <form.SubmitButton />
+            </form.AppForm>
+          </div>
+        </Panel>
+      </form>
+      <Confirmation
+        open={aliasChangedPopupOpen}
+        onClose={() => setAliasChangedPopupOpen(false)}
+        title={'Alias Changed'}
+        contentText={
+          <>Would you also like to also change your Listing URL to match?</>
+        }
+        confirmText="Change Listing URL"
+        confirmColor="primary"
+        onConfirm={async () => {
+          setAliasChangedPopupOpen(false);
+          // scroll to the Slug component
+
+          const element = document.getElementById('form-slug');
+
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // highlight the component
+
+            element.classList.add(
+              'ring-2',
+              'ring-royal',
+              'dark:ring-cornflower-300',
+              'rounded-lg',
+              'transition-all',
+            );
+            setTimeout(() => {
+              element.classList.remove(
+                'ring-2',
+                'ring-royal',
+                'dark:ring-cornflower-300',
+                'rounded-lg',
+              );
+            }, 2000);
+          }
+        }}
+      />
+    </>
+  );
+};
+
+export default Details;
