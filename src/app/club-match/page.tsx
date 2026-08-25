@@ -126,7 +126,7 @@ const Page = async () => {
                     {club.reasoning}
                   </p>
                   <ul>
-                    {club.benefit.split(', ').map((benefit) => (
+                    {club.benefit?.split(', ').map((benefit) => (
                       <li
                         key={benefit}
                         className="ml-6 list-disc text-base text-slate-600 md:text-sm dark:text-slate-400"
@@ -137,7 +137,11 @@ const Page = async () => {
                   </ul>
                 </Link>
                 <div className="mt-auto flex flex-row space-x-2">
-                  <JoinButton clubId={club.id} />
+                  {club.id ? (
+                    <JoinButton clubId={club.id} />
+                  ) : (
+                    <span>Unknown club</span>
+                  )}
                 </div>
               </BaseCard>
             ))}

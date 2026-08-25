@@ -112,10 +112,10 @@ export const userMetadataToEventsRelations = relations(
 );
 
 export type ClubMatchResults = {
-  name: string;
-  id: string;
-  reasoning: string;
-  benefit: string;
+  name?: string;
+  id?: string;
+  reasoning?: string;
+  benefit?: string;
 }[];
 
 export type ClubMatchResponses = {
