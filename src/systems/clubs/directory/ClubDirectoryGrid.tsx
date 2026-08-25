@@ -2,11 +2,28 @@
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useSearchStore } from '@/systems/dashboard/SearchStoreProvider';
 import { useTRPC } from '@/trpc/react';
 import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 import InfiniteScrollGrid from './InfiniteScrollGrid';
+import ClubMatchAdCard, {
+  ClubMatchAdDismissedOnStorageKey,
+} from './ads/ClubMatchAdCard';
+import { RouterOutputs } from '@/trpc/shared';
+import { subDays } from 'date-fns';
+
+type Cards = (
+  | {
+      type: 'club';
+      club: RouterOutputs['club']['search']['clubs'][number];
+    }
+  | {
+      type: 'ad';
+      key: string;
+      render: ReactNode;
+    }
+)[];
 
 const ClubDirectoryGrid = () => {
   const {
@@ -43,6 +60,37 @@ const ClubDirectoryGrid = () => {
     setSearchBarLoading,
   ]);
 
+  // ClubMatchAdCard stays dismissed for up to 7 days
+  const [dismissedClubMatchAd, setDismissedClubMatchAd] = useState<boolean>(
+    () => {
+      let storageValue: string | null = null;
+      if (typeof window !== 'undefined') {
+        storageValue = window.localStorage.getItem(
+          ClubMatchAdDismissedOnStorageKey,
+        );
+      }
+
+      if (!storageValue) return false;
+      const storageDate = new Date(storageValue);
+      const oneWeekAgo = subDays(new Date(), 7);
+      return storageDate.getTime() > oneWeekAgo.getTime();
+    },
+  );
+
+  const cards: Cards | undefined = data?.clubs.map((club) => ({
+    type: 'club',
+    club: club,
+  }));
+
+  if (cards && !dismissedClubMatchAd) {
+    const placeAtEnd = search !== '' || tags.length !== 0;
+    cards.splice(placeAtEnd ? cards.length : 1, 0, {
+      type: 'ad',
+      key: 'club-match-ad',
+      render: <ClubMatchAdCard setDismissed={setDismissedClubMatchAd} />,
+    });
+  }
+
   return (
     <div
       className={`grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4 transition-opacity duration-300 ${!showNoResults && 'pb-40'}`}
@@ -59,9 +107,9 @@ const ClubDirectoryGrid = () => {
         </div>
       ) : (
         <AnimatePresence mode="popLayout">
-          {data?.clubs.map((club) => (
+          {cards?.map((card) => (
             <motion.div
-              key={club.id}
+              key={card.type === 'club' ? card.club.id : card.key}
               layout="position"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -74,7 +122,11 @@ const ClubDirectoryGrid = () => {
               }}
               className="h-full w-full"
             >
-              <ClubCard club={club} priority />
+              {card.type === 'club' ? (
+                <ClubCard club={card.club} priority />
+              ) : (
+                card.render
+              )}
             </motion.div>
           ))}
           {/* Only show infinite scroll if not fetching */}
