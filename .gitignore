@@ -41,4 +41,12 @@ yarn-error.log*
 
 .idea
 .neon
-.vscode
+
+# If you wish to override the workspace settings in .vscode/settings.json,
+# put your settings overrides in a VS Code workspace instead.
+# More info in this file: .vscode/README.md
+.vscode/*
+!.vscode/README.md
+!.vscode/settings.json
+!.vscode/extensions.json
+*.code-workspace

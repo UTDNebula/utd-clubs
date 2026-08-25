@@ -1,0 +1,147 @@
+'use client';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
+import { Button } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Panel from '@nebula-library/components/Panel';
+import Confirmation from '@/lib/components/Confirmation';
+import { SelectClub } from '@/server/db/models';
+import { useTRPC } from '@/trpc/react';
+
+type Props = { view: 'manage' | 'admin'; club: SelectClub };
+
+export default function DeleteClub({ view, club }: Props) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const api = useTRPC();
+  let apiProcedure = null;
+  switch (view) {
+    case 'admin':
+      apiProcedure = api.admin.deleteClub;
+      break;
+    case 'manage':
+      switch (club.approved) {
+        case 'approved':
+          apiProcedure = api.club.manage.markDeleted;
+          break;
+        case 'pending':
+        case 'rejected':
+          apiProcedure = api.club.manage.delete;
+          break;
+        case 'deleted':
+          apiProcedure = api.club.manage.restore;
+          break;
+      }
+      break;
+  }
+  const mutateClub = useMutation(
+    apiProcedure.mutationOptions({
+      onSuccess: () => {
+        if (view === 'admin') {
+          router.push('/admin/clubs');
+        } else if (
+          club.approved === 'pending' ||
+          club.approved === 'rejected'
+        ) {
+          router.push('/manage');
+        } else {
+          setOpen(false);
+          router.refresh();
+        }
+      },
+    }),
+  );
+
+  return (
+    <>
+      <Panel
+        heading={
+          view === 'manage' && club.approved === 'deleted'
+            ? 'Restore'
+            : 'Delete'
+        }
+        className="border border-red-500 bg-red-100 dark:border-red-700 dark:bg-red-950"
+        description={
+          <div className="text-slate-800 dark:text-slate-200">
+            {view === 'admin' && (
+              <p>
+                This will permanently delete this organization from UTD Clubs.
+              </p>
+            )}
+            {view === 'manage' && club.approved === 'approved' && (
+              <>
+                <p>
+                  This will mark your organization as pending deletion from UTD
+                  Clubs.
+                </p>
+                <p>
+                  A UTD Clubs admin will review your request and delete it
+                  permanently.
+                </p>
+              </>
+            )}
+            {view === 'manage' &&
+              (club.approved === 'pending' || club.approved === 'rejected') && (
+                <p>
+                  This will permanently delete your organization from UTD Clubs.
+                </p>
+              )}
+            {view === 'manage' && club.approved === 'deleted' && (
+              <p>This will restore your organization from pending deletion.</p>
+            )}
+          </div>
+        }
+      >
+        <div className="m-2 mt-0">
+          <Button
+            variant="contained"
+            className="normal-case"
+            color="error"
+            startIcon={
+              view === 'manage' && club.approved === 'deleted' ? (
+                <RestoreFromTrashIcon />
+              ) : (
+                <DeleteIcon />
+              )
+            }
+            loading={mutateClub.isPending}
+            onClick={() => {
+              if (view === 'manage' && club.approved === 'deleted') {
+                // No confirmation to restore
+                mutateClub.mutate({ clubId: club.id });
+              } else {
+                setOpen(true);
+              }
+            }}
+          >
+            {view === 'manage' && club.approved === 'deleted'
+              ? 'Restore Club'
+              : 'Delete Club'}
+          </Button>
+        </div>
+      </Panel>
+      <Confirmation
+        open={open}
+        onClose={() => setOpen(false)}
+        contentText={
+          view === 'manage' && club.approved === 'approved' ? (
+            <>
+              This will mark <b>{club.name}</b> for permanent deletion.
+            </>
+          ) : (
+            <>
+              This will permanently delete <b>{club.name}</b>.
+            </>
+          )
+        }
+        onConfirm={() => {
+          mutateClub.mutate({ clubId: club.id });
+        }}
+        loading={mutateClub.isPending}
+      />
+    </>
+  );
+}

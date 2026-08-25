@@ -1,0 +1,48 @@
+import { memo } from 'react';
+import Panel from '@nebula-library/components/Panel';
+import ClubTagAutocomplete from '@/systems/clubs/ClubTagAutocomplete';
+import { EventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
+import {
+  FilterPanelProps,
+  panelProps,
+  setEventsParams,
+} from '../eventsFilterUtils';
+
+export type TagsPanelFields = Pick<EventFiltersSchema, 'tags'>;
+
+export default memo(function TagsPanel(
+  props: FilterPanelProps<TagsPanelFields>,
+) {
+  const tags = props.filters.tags;
+
+  return (
+    <Panel
+      heading={
+        <>
+          Tags
+          {tags.length > 0 && (
+            <span className="ml-2 text-base font-normal text-neutral-600 dark:text-neutral-400">
+              ({tags.length})
+            </span>
+          )}
+        </>
+      }
+      {...panelProps(props.backgroundHover)}
+    >
+      <ClubTagAutocomplete
+        value={tags}
+        onChange={(newValue) => {
+          setEventsParams((params) => {
+            if (newValue.length) {
+              params.set('tags', newValue.join(','));
+            } else {
+              params.delete('tags');
+            }
+          });
+        }}
+        label=""
+        vertical
+      />
+    </Panel>
+  );
+});

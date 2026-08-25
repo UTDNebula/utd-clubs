@@ -7,9 +7,9 @@ import {
 } from 'date-fns';
 import { and, eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
-import { UTDClubsLogoStandalone } from '@src/icons/UTDClubsLogo';
-import { db } from '@src/server/db';
-import { addVersionToImage } from '@src/utils/imageCacheBust';
+import { UTDClubsLogoStandalone } from '@/lib/icons/UTDClubsLogo';
+import { addVersionToImage } from '@/lib/utils/imageCacheBust';
+import { db } from '@/server/db';
 
 export const runtime = 'edge';
 export const alt = 'Event Details';

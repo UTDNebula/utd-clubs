@@ -1,0 +1,340 @@
+'use client';
+
+import Typography from '@mui/material/Typography';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useMutation } from '@tanstack/react-query';
+import { add } from 'date-fns';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ReactNode, useState } from 'react';
+import { useAppForm } from '@/lib/utils/form';
+import { majors, minors } from '@/lib/utils/utdDegrees';
+import { SelectUserMetadataWithClubs } from '@/server/db/models';
+import { studentClassificationEnum } from '@/server/db/schema/users';
+import { useTRPC } from '@/trpc/react';
+import {
+  accountOnboardingSchema,
+  AccountOnboardingSchema,
+  userMetadataToAccountOnboardingSchema,
+} from './settingsSchema';
+
+type OnboardingFormProps = {
+  userMetadata?: SelectUserMetadataWithClubs;
+  withLayout?: boolean;
+};
+
+export default function OnboardingForm({
+  userMetadata,
+  withLayout = false,
+}: OnboardingFormProps) {
+  const router = useRouter();
+  const api = useTRPC();
+
+  const editAccountMutation = useMutation(
+    api.user.metadata.updateById.mutationOptions({}),
+  );
+
+  // Don't use userMetadataToAccountOnboardingSchema.decode(userMetadata)
+  // because that causes an error for unset default values
+  const [defaultValues, setDefaultValues] = useState<
+    Partial<AccountOnboardingSchema>
+  >({
+    name: {
+      firstName: userMetadata?.firstName ?? '',
+      lastName: userMetadata?.lastName,
+    },
+    collegeInfo: {
+      major: userMetadata?.major ?? '',
+      minor: userMetadata?.minor,
+      studentClassification: userMetadata?.studentClassification ?? 'Student',
+      graduationDate: userMetadata?.graduationDate
+        ? new Date(
+            userMetadata?.graduationDate?.getTime() +
+              userMetadata?.graduationDate?.getTimezoneOffset() * 60 * 1000,
+          )
+        : null,
+    },
+    contactEmail: {
+      contactEmail: userMetadata?.contactEmail ?? '',
+    },
+  });
+
+  const form = useAppForm({
+    defaultValues,
+    onSubmit: async ({ value, formApi }) => {
+      try {
+        const encoded = userMetadataToAccountOnboardingSchema.encode(value);
+        const updatedUserMetadata = await editAccountMutation.mutateAsync({
+          updateUser: encoded,
+        });
+        if (updatedUserMetadata) {
+          const fixedUserMetadata: typeof updatedUserMetadata = {
+            ...updatedUserMetadata,
+            graduationDate: updatedUserMetadata.graduationDate
+              ? new Date(
+                  updatedUserMetadata.graduationDate.getTime() +
+                    updatedUserMetadata.graduationDate.getTimezoneOffset() *
+                      60 *
+                      1000,
+                )
+              : null,
+          };
+          const decodedFormData: Partial<AccountOnboardingSchema> =
+            userMetadataToAccountOnboardingSchema.decode(fixedUserMetadata);
+
+          setDefaultValues(decodedFormData);
+          formApi.reset(decodedFormData);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    validators: { onChange: accountOnboardingSchema },
+  });
+
+  const FormElement = (
+    <form.AppForm>
+      <form.Wizard onComplete={() => router.push('/')}>
+        <form.WizardStep name="create" label="Create Account" fake />
+
+        <form.WizardStep
+          name="welcome"
+          hidden
+          nextButtonConfig={{ label: 'Start' }}
+        >
+          <div className="flex flex-col gap-6">
+            <div className="ml-2 flex flex-col gap-2">
+              <Typography
+                variant="h1"
+                className="font-display text-4xl font-bold"
+              >
+                Get Started
+              </Typography>
+              <Typography variant="body1">
+                Welcome to UTD Clubs! Let&apos;s get you set up.
+              </Typography>
+            </div>
+          </div>
+        </form.WizardStep>
+
+        <form.WizardStep<AccountOnboardingSchema> name="name" label="Name">
+          <FormStepContent title="Name">
+            <form.Question question="Please check that your name is correct. This is how you will appear to fellow students on UTD Clubs.">
+              <form.AppField name="name.firstName">
+                {(field) => (
+                  <field.TextField
+                    label="First Name"
+                    className="grow"
+                    required
+                    autoComplete="given-name"
+                  />
+                )}
+              </form.AppField>
+              <form.AppField name="name.lastName">
+                {(field) => (
+                  <field.TextField
+                    label="Last Name"
+                    className="grow"
+                    autoComplete="family-name"
+                  />
+                )}
+              </form.AppField>
+            </form.Question>
+          </FormStepContent>
+        </form.WizardStep>
+
+        <form.WizardStep<AccountOnboardingSchema>
+          name="collegeInfo"
+          label="College Info"
+        >
+          <FormStepContent title="College Info">
+            <form.Question
+              question={
+                'Enter your college major or "Undecided". If applicable, add your college minor.'
+              }
+            >
+              <form.AppField name="collegeInfo.major">
+                {(field) => (
+                  <field.AutocompleteFreeSolo
+                    label="Major"
+                    options={majors}
+                    className="grow"
+                    required
+                  />
+                )}
+              </form.AppField>
+              <form.AppField name="collegeInfo.minor">
+                {(field) => (
+                  <field.AutocompleteFreeSolo
+                    label="Minor"
+                    options={minors}
+                    className="grow"
+                  />
+                )}
+              </form.AppField>
+            </form.Question>
+            <form.Question question="Are you a student? When do you graduate?">
+              <form.AppField name="collegeInfo.studentClassification">
+                {(field) => (
+                  <field.Select
+                    label="Classification"
+                    options={studentClassificationEnum.enumValues}
+                    className="grow"
+                    required
+                  />
+                )}
+              </form.AppField>
+              <form.Subscribe
+                selector={(state) =>
+                  state.values.collegeInfo?.studentClassification
+                }
+              >
+                {(studentClassification) => {
+                  if (
+                    studentClassification &&
+                    ['Faculty', 'Staff'].includes(studentClassification)
+                  )
+                    return <div className="w-64 grow-1" />;
+                  return (
+                    <form.AppField name="collegeInfo.graduationDate">
+                      {(field) => {
+                        return (
+                          <DatePicker
+                            onChange={(value) => {
+                              const selectedValue = value as Date;
+
+                              field.handleChange(selectedValue);
+                              if (selectedValue < new Date()) {
+                                form.setFieldValue(
+                                  'collegeInfo.studentClassification',
+                                  'Alum',
+                                );
+                              } else if (
+                                selectedValue > new Date() &&
+                                form.getFieldValue(
+                                  'collegeInfo.studentClassification',
+                                ) === 'Alum'
+                              ) {
+                                form.setFieldValue(
+                                  'collegeInfo.studentClassification',
+                                  'Student',
+                                );
+                              }
+                            }}
+                            value={field.state.value ?? null}
+                            label="Graduation Date"
+                            className="w-64 grow [&>.MuiPickersInputBase-root]:bg-white dark:[&>.MuiPickersInputBase-root]:bg-neutral-800"
+                            slotProps={{
+                              actionBar: {
+                                actions: ['accept'],
+                              },
+                              textField: {
+                                size: 'small',
+                                error: !field.state.meta.isValid,
+                                helperText: !field.state.meta.isValid
+                                  ? field.state.meta.errors
+                                      .map((err) => err?.message)
+                                      .join('. ') + '.'
+                                  : undefined,
+                                required: true,
+                              },
+                            }}
+                            timezone="UTC"
+                            views={['year', 'month']}
+                            minDate={new Date(1973, 0, 1)} // Earliest UTD graduating class
+                            maxDate={add(new Date(), { years: 9 })} // Divisible by the 3 years per row
+                            yearsPerRow={3}
+                            openTo="year"
+                          />
+                        );
+                      }}
+                    </form.AppField>
+                  );
+                }}
+              </form.Subscribe>
+            </form.Question>
+          </FormStepContent>
+        </form.WizardStep>
+
+        <form.WizardStep<AccountOnboardingSchema>
+          name="contactEmail"
+          label="Contact Email"
+          nextButtonConfig={{ label: 'Submit', type: 'submitAndNext' }}
+        >
+          <FormStepContent title="Contact Email">
+            <form.Question question="Please enter your UTD email so club and event organizers can contact you.">
+              <form.AppField name="contactEmail.contactEmail">
+                {(field) => (
+                  <div className="grow">
+                    <field.TextField
+                      label="UTD Email"
+                      placeholder="abc123456@utdallas.edu"
+                      className="w-full"
+                      required
+                      autoComplete="email"
+                    />
+                  </div>
+                )}
+              </form.AppField>
+            </form.Question>
+          </FormStepContent>
+        </form.WizardStep>
+
+        <form.WizardStep
+          name="finish"
+          hidden
+          noBacktrack
+          backButtonConfig={{ hidden: true }}
+          nextButtonConfig={{ label: 'Continue', type: 'next' }}
+        >
+          <div className="flex flex-col gap-6">
+            <div className="ml-3.5 flex flex-col gap-2">
+              <Typography
+                variant="h1"
+                className="font-display text-4xl font-bold"
+              >
+                Thank you!
+              </Typography>
+              <Typography variant="body1">
+                You are now ready to use UTD Clubs. You can always change
+                everything later in your{' '}
+                <Link
+                  href={'/settings'}
+                  className="text-royal dark:text-cornflower-300 underline"
+                >
+                  account settings
+                </Link>
+                .
+              </Typography>
+            </div>
+          </div>
+        </form.WizardStep>
+      </form.Wizard>
+    </form.AppForm>
+  );
+
+  return withLayout ? (
+    <div className="flex w-full flex-col items-center p-4">
+      <div className="w-full max-w-6xl">{FormElement}</div>
+    </div>
+  ) : (
+    <>{FormElement}</>
+  );
+}
+
+function FormStepContent({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex w-fit flex-col gap-2">
+      <Typography variant="h2" className="font-display text-2xl font-bold">
+        {title}
+      </Typography>
+      <div className="flex flex-col gap-12">{children}</div>
+    </div>
+  );
+}

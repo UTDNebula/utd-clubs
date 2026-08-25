@@ -1,11 +1,11 @@
 import AddIcon from '@mui/icons-material/Add';
 import { notFound } from 'next/navigation';
-import EventCard from '@src/components/events/EventCard';
-import EventsPagination from '@src/components/events/EventPagination';
-import IncludePastSwitch from '@src/components/events/IncludePastSwitch';
-import { LinkButton } from '@src/components/LinkButton';
-import ManageHeader from '@src/components/manage/ManageHeader';
-import { api } from '@src/trpc/server';
+import { LinkButton } from '@/lib/components/LinkButton';
+import SimplePagination from '@/lib/components/SimplePagination';
+import EventCard from '@/systems/events/EventCard';
+import IncludePastSwitch from '@/systems/events/IncludePastSwitch';
+import ManageHeader from '@/systems/manage/ManageHeader';
+import { api } from '@/trpc/server';
 
 type SearchParams = {
   page?: string;
@@ -76,7 +76,7 @@ export default async function Page({
         ))}
       </div>
       <div className="flex justify-center py-10">
-        <EventsPagination
+        <SimplePagination
           page={page}
           totalPages={totalPages}
           pageSize={pageSize}

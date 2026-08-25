@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import ManageHeader from '@src/components/manage/ManageHeader';
-import MemberList from '@src/components/manage/MemberList';
-import { api } from '@src/trpc/server';
+import ManageHeader from '@/systems/manage/ManageHeader';
+import MemberList from '@/systems/manage/MemberList';
+import { api } from '@/trpc/server';
 
 export default async function Page({
   params,
@@ -15,7 +15,7 @@ export default async function Page({
     notFound();
   }
 
-  const members = await api.club.getMembers({ id: club.id });
+  const members = await api.club.getMembers({ clubId: club.id });
 
   return (
     <main>

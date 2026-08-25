@@ -1,7 +1,7 @@
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { betterAuth } from 'better-auth/minimal';
 import { eq } from 'drizzle-orm';
-import { env } from '@src/env.mjs';
+import { env } from '@/env.mjs';
 import { db } from './db';
 import { InsertUserMetadata } from './db/models';
 import { userMetadata } from './db/schema/users';

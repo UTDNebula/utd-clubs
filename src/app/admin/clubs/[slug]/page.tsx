@@ -1,15 +1,15 @@
 import EventIcon from '@mui/icons-material/Event';
 import PreviewIcon from '@mui/icons-material/Preview';
 import { notFound } from 'next/navigation';
-import Collaborators from '@src/app/manage/[slug]/(dashboard)/(forms)/Collaborators';
-import DeleteClub from '@src/app/manage/[slug]/(dashboard)/(forms)/DeleteClub';
-import AdminHeader from '@src/components/admin/AdminHeader';
-import ChangeClubStatus from '@src/components/admin/ChangeClubStatus';
-import ClubBody from '@src/components/club/listing/ClubBody';
-import ClubEventHeader from '@src/components/club/listing/ClubEventHeader';
-import ClubTitle from '@src/components/club/listing/ClubTitle';
-import { LinkButton } from '@src/components/LinkButton';
-import { api } from '@src/trpc/server';
+import { LinkButton } from '@/lib/components/LinkButton';
+import AdminHeader from '@/systems/admin/AdminHeader';
+import ChangeClubStatus from '@/systems/admin/ChangeClubStatus';
+import ClubBanner from '@/systems/clubs/listing/ClubBanner';
+import ClubBody from '@/systems/clubs/listing/ClubBody';
+import ClubTitle from '@/systems/clubs/listing/ClubTitle';
+import Collaborators from '@/systems/manage/forms/Collaborators';
+import DeleteClub from '@/systems/manage/forms/DeleteClub';
+import { api } from '@/trpc/server';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -21,7 +21,7 @@ export default async function Page(props: Props) {
     notFound();
   }
 
-  const officers = await api.club.getOfficers({ id: club.id });
+  const officers = await api.club.getOfficers({ clubId: club.id });
 
   return (
     <>
@@ -62,7 +62,7 @@ export default async function Page(props: Props) {
           <DeleteClub view="admin" club={club} />
           {club.approved !== 'approved' && (
             <div className="mx-auto mb-5 flex max-w-6xl flex-col gap-y-6 p-4">
-              <ClubEventHeader club={club} />
+              <ClubBanner club={club} />
               <ClubTitle club={club} />
               <ClubBody club={club} />
             </div>

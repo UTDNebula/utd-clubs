@@ -4,7 +4,7 @@ import {
 } from '@tanstack/react-query';
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
 import superjson from 'superjson';
-import { type AppRouter } from '@src/server/api/root';
+import { type AppRouter } from '@/server/api/root';
 
 export const transformer = superjson;
 function getBaseUrl() {

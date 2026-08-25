@@ -2,8 +2,8 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import PersonIcon from '@mui/icons-material/Person';
 import TagIcon from '@mui/icons-material/Tag';
 import { Button, Tooltip } from '@mui/material';
-import AdminHeader from '@src/components/admin/AdminHeader';
-import { LinkButton } from '@src/components/LinkButton';
+import { LinkButton } from '@/lib/components/LinkButton';
+import AdminHeader from '@/systems/admin/AdminHeader';
 
 export default function Page() {
   return (

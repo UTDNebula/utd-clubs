@@ -2,12 +2,12 @@ import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Header from '@src/components/header/Header';
-import { auth } from '@src/server/auth';
-import { db } from '@src/server/db';
-import { api } from '@src/trpc/server';
-import { signInRoute } from '@src/utils/redirect';
-import ClubMatch from './ClubMatch';
+import Header from '@/lib/modules/navigation/header';
+import { signInRoute } from '@/lib/utils/redirect';
+import { auth } from '@/server/auth';
+import { db } from '@/server/db';
+import ClubMatch from '@/systems/clubs/match/ClubMatch';
+import { api } from '@/trpc/server';
 
 export const metadata: Metadata = {
   title: 'Club Match',
@@ -34,7 +34,7 @@ const Page = async () => {
     db.query.userAiCache.findFirst({
       where: (userAiCache) => eq(userAiCache.id, session.user.id),
     }),
-    api.userMetadata.byId({ id: session.user.id }),
+    api.user.metadata.byId({ userId: session.user.id }),
   ]);
 
   if (data?.clubMatchLimit != null && data.clubMatchLimit <= 0) {

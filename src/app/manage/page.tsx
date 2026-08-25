@@ -2,12 +2,12 @@ import AddIcon from '@mui/icons-material/Add';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import ClubCard from '@src/components/club/ClubCard';
-import Header from '@src/components/header/Header';
-import { LinkButton } from '@src/components/LinkButton';
-import { auth } from '@src/server/auth';
-import { api } from '@src/trpc/server';
-import { signInRoute } from '@src/utils/redirect';
+import { LinkButton } from '@/lib/components/LinkButton';
+import Header from '@/lib/modules/navigation/header';
+import { signInRoute } from '@/lib/utils/redirect';
+import { auth } from '@/server/auth';
+import ClubCard from '@/systems/clubs/ClubCard';
+import { api } from '@/trpc/server';
 
 export const metadata: Metadata = {
   title: 'Manage Clubs',
@@ -26,7 +26,7 @@ export default async function Page() {
   if (!session) {
     redirect(await signInRoute('manage'));
   }
-  const clubs = await api.club.getOfficerClubs();
+  const clubs = await api.user.clubs.getOfficerClubs();
   return (
     <>
       <Header />

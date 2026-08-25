@@ -1,0 +1,199 @@
+'use client';
+
+import AddIcon from '@mui/icons-material/Add';
+import CheckIcon from '@mui/icons-material/Check';
+import TuneIcon from '@mui/icons-material/Tune';
+import { Button, Skeleton, Tooltip } from '@mui/material';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useRef } from 'react';
+import { useLoginModal } from '@/lib/modules/loginModal';
+import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
+import { authClient } from '@/lib/utils/auth-client';
+import { useTRPC } from '@/trpc/react';
+
+type JoinButtonProps = {
+  isHeader?: boolean;
+  clubId: string;
+  clubSlug?: string;
+};
+
+const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
+  const { data: session } = authClient.useSession();
+  const api = useTRPC();
+  const queryClient = useQueryClient();
+  const { data: memberState, isPending } = useQuery(
+    api.user.clubs.memberState.queryOptions({ clubId }),
+  );
+
+  const joinLeave = useMutation(
+    api.user.clubs.joinLeave.mutationOptions({
+      onMutate: async ({ clubId }) => {
+        const queryKey = [
+          ['user', 'clubs', 'memberState'],
+          { input: { clubId }, type: 'query' },
+        ];
+
+        // Cancel outgoing refetches
+        await queryClient.cancelQueries({
+          queryKey,
+        });
+
+        // Remember previous value
+        const previousState =
+          queryClient.getQueryData<typeof memberState>(queryKey);
+
+        // Optimistically update the cache
+        queryClient.setQueryData(queryKey, (old: typeof memberState) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            memberType: old.memberType ? null : 'Member',
+            joinedAt: old.memberType ? null : new Date(),
+          };
+        });
+
+        // Return context for rollback
+        return { previousState, queryKey };
+      },
+      onSuccess: (context) => {
+        const joined = context?.memberType === undefined;
+
+        setSnackbar({
+          message: joined ? 'Followed club!' : 'Left club!',
+          type: joined ? 'success' : 'info',
+          autoHideDuration: true,
+          fitContent: true,
+          closeOn: {
+            clickaway: false,
+            dismiss: true,
+            escapeKeyDown: true,
+            timeout: true,
+          },
+        });
+      },
+      onError: (error, _vars, context) => {
+        setSnackbar(SnackbarPresets.errorWithMessage(error.message));
+        if (context?.previousState) {
+          queryClient.setQueryData(context.queryKey, context.previousState);
+        }
+      },
+      onSettled: (_data, _error, { clubId }) => {
+        queryClient.invalidateQueries({
+          queryKey: [
+            ['user', 'clubs', 'memberState'],
+            { input: { clubId }, type: 'query' },
+          ],
+        });
+      },
+    }),
+  );
+
+  const router = useRouter();
+
+  const useAuthPage = useRef(false);
+
+  const { openLoginModal } = useLoginModal({
+    onNoProvider: () => {
+      useAuthPage.current = true;
+    },
+  });
+
+  const memberType = memberState?.memberType ?? null;
+
+  if (memberType === 'Officer' || memberType === 'President') {
+    return (
+      <Button
+        LinkComponent={Link}
+        href={`/manage/${clubSlug ?? clubId}`}
+        variant="contained"
+        size={isHeader ? 'large' : 'small'}
+        className="normal-case"
+        startIcon={<TuneIcon />}
+      >
+        Manage
+      </Button>
+    );
+  }
+
+  return (
+    <Tooltip
+      title={
+        <div className="text-center">
+          <span className="font-bold">
+            {memberType ? 'Unfollow' : 'Follow'}
+          </span>
+          {memberType && memberState?.joinedAt && (
+            <>
+              <br />
+              Following since{' '}
+              {memberState?.joinedAt.toLocaleString('en-us', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true,
+              })}
+            </>
+          )}
+        </div>
+      }
+    >
+      <span>
+        <Button
+          variant="contained"
+          size={isHeader ? 'large' : 'small'}
+          startIcon={memberType ? <CheckIcon /> : <AddIcon />}
+          onClick={async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (isPending || joinLeave.isPending) return;
+
+            if (!session) {
+              // This will use auth page when this JoinButton and a LoginModal are not wrapped in a `<LoginModalProvider>`.
+              if (useAuthPage.current) {
+                router.push(
+                  `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
+                );
+              } else {
+                openLoginModal();
+              }
+              return;
+            }
+
+            void joinLeave.mutate({ clubId });
+          }}
+          className="normal-case"
+          loading={isPending || joinLeave.isPending}
+        >
+          {memberType ? 'Following' : 'Follow'}
+        </Button>
+      </span>
+    </Tooltip>
+  );
+};
+
+export default JoinButton;
+
+type JoinButtonSkeletonProps = {
+  isHeader?: boolean;
+};
+
+export const JoinButtonSkeleton = ({ isHeader }: JoinButtonSkeletonProps) => {
+  return (
+    <Skeleton variant="rounded" className="rounded-full">
+      <Button
+        variant="contained"
+        size={isHeader ? 'large' : 'small'}
+        className="normal-case"
+      >
+        Follow
+      </Button>
+    </Skeleton>
+  );
+};

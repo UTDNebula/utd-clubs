@@ -6,12 +6,12 @@ import {
   type FormatDistanceToken,
 } from 'date-fns';
 import { type Metadata } from 'next';
-import ClubEventHeader from '@src/components/club/listing/ClubEventHeader';
-import EventBody from '@src/components/events/listing/EventBody';
-import EventTitle from '@src/components/events/listing/EventTitle';
-import { EventHeader } from '@src/components/header/Header';
-import { api } from '@src/trpc/server';
-import { convertMarkdownToPlaintext } from '@src/utils/markdown';
+import { EventHeader } from '@/lib/modules/navigation/header';
+import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
+import ClubBanner from '@/systems/clubs/listing/ClubBanner';
+import EventBody from '@/systems/events/listing/EventBody';
+import EventTitle from '@/systems/events/listing/EventTitle';
+import { api } from '@/trpc/server';
 
 const distanceTokenUnits: Partial<Record<FormatDistanceToken, string>> = {
   xSeconds: 's',
@@ -26,7 +26,7 @@ type Params = { params: Promise<{ id: string }> };
 
 export default async function EventsPage(props: Params) {
   const params = await props.params;
-  const event = await api.event.getListingInfo({ id: params.id });
+  const event = await api.event.getListingInfo({ eventId: params.id });
 
   if (!event) return <div>Event Not Found.</div>;
 
@@ -34,7 +34,7 @@ export default async function EventsPage(props: Params) {
     <>
       <EventHeader />
       <main className="mx-auto mb-5 flex max-w-6xl flex-col gap-y-8 p-4">
-        <ClubEventHeader club={event.club} />
+        <ClubBanner club={event.club} />
         <EventTitle event={event} />
         <EventBody event={event} />
       </main>
@@ -47,7 +47,7 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params;
 
-  const event = await api.event.byId({ id: params.id });
+  const event = await api.event.byId({ eventId: params.id });
   if (!event)
     return {
       title: 'Event not found',

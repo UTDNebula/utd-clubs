@@ -1,6 +1,6 @@
-import AdminHeader from '@src/components/admin/AdminHeader';
-import ClubTable from '@src/components/admin/ClubTable';
-import { api } from '@src/trpc/server';
+import AdminHeader from '@/systems/admin/AdminHeader';
+import ClubTable from '@/systems/admin/ClubTable';
+import { api } from '@/trpc/server';
 
 export default async function Page() {
   const clubs = await api.admin.allClubs();

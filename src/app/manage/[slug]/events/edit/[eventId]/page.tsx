@@ -1,10 +1,10 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import EventForm from '@src/components/events/EventForm';
-import ManageHeader from '@src/components/manage/ManageHeader';
-import { getGcalEventLink } from '@src/modules/googleCalendar';
-import { auth } from '@src/server/auth';
-import { api } from '@src/trpc/server';
+import { getGcalEventLink } from '@/lib/modules/googleCalendar/getGcalEventLink';
+import { auth } from '@/server/auth';
+import EventForm from '@/systems/events/create/EventForm';
+import ManageHeader from '@/systems/manage/ManageHeader';
+import { api } from '@/trpc/server';
 
 const EditEventPage = async (props: {
   params: Promise<{ slug: string; eventId: string }>;
@@ -16,7 +16,7 @@ const EditEventPage = async (props: {
     notFound();
   }
 
-  const event = await api.event.byId({ id: eventId });
+  const event = await api.event.byId({ eventId });
   if (!event) {
     return notFound();
   }
