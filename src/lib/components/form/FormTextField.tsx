@@ -32,7 +32,7 @@ export default function FormTextField({
     : undefined;
   return (
     <StyledTextField
-      value={field.state.value}
+      value={field.state.value ?? ''}
       onBlur={field.handleBlur}
       onChange={(e) => field.handleChange(e.target.value)}
       error={!field.state.meta.isValid}

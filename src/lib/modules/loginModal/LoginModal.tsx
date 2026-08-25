@@ -21,6 +21,7 @@ type LoginModalProps = Omit<ModalProps, 'children'> & {
   closeButton?: boolean;
   className?: string;
   callbackURL?: string;
+  explanationText?: string;
 };
 
 export const LoginModalContents = ({
@@ -28,9 +29,10 @@ export const LoginModalContents = ({
   onClose,
   closeButton,
   callbackURL,
+  explanationText,
 }: Pick<
   LoginModalProps,
-  'className' | 'onClose' | 'closeButton' | 'callbackURL'
+  'className' | 'onClose' | 'closeButton' | 'callbackURL' | 'explanationText'
 >) => {
   const handleSignIn = () => {
     void authClient.signIn.social(
@@ -65,6 +67,14 @@ export const LoginModalContents = ({
         >
           Sign in or sign up
         </Typography>
+        {explanationText && (
+          <Typography
+            variant="body1"
+            className="mt-1 mb-2 grow-1 self-center px-4 text-center text-neutral-600 dark:text-neutral-400"
+          >
+            {explanationText}
+          </Typography>
+        )}
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-3 p-4 sm:flex-row">
         {loginProviders.map((loginProvider) => (
@@ -100,6 +110,7 @@ const LoginModal = ({
   closeButton,
   className,
   callbackURL,
+  explanationText,
   ...props
 }: LoginModalProps) => {
   if (!open) return null;
@@ -117,6 +128,7 @@ const LoginModal = ({
           onClose={onClose}
           closeButton={closeButton ?? true}
           callbackURL={callbackURL}
+          explanationText={explanationText}
         />
       </span>
     </Modal>

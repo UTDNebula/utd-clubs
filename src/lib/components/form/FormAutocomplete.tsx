@@ -3,7 +3,8 @@ import { useFieldContext } from '@/lib/utils/form';
 import { StyledTextField } from './FormTextField';
 
 type FormAutocompleteFreeSoloProps = {
-  label: string;
+  label?: string;
+  placeholder?: string;
   options: string[];
   className?: string;
   required?: boolean;
@@ -11,6 +12,7 @@ type FormAutocompleteFreeSoloProps = {
 
 export function FormAutocompleteFreeSolo({
   label,
+  placeholder,
   options,
   className,
   required,
@@ -22,7 +24,7 @@ export function FormAutocompleteFreeSolo({
       freeSolo
       autoSelect
       options={options}
-      className={`w-64 ${className}`}
+      className={className ?? 'w-64'}
       size="small"
       value={field.state.value}
       onBlur={field.handleBlur}
@@ -32,6 +34,7 @@ export function FormAutocompleteFreeSolo({
         <StyledTextField
           {...params}
           label={label}
+          placeholder={placeholder}
           error={!field.state.meta.isValid}
           required={required}
           helperText={

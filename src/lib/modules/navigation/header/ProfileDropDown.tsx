@@ -1,6 +1,5 @@
 'use client';
 
-import Diversity3Icon from '@mui/icons-material/Diversity3';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {
@@ -16,6 +15,7 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Binoculars } from '@/lib/icons/OtherIcons';
 import { openLoginModal } from '@/lib/modules/loginModal';
 import { authClient } from '@/lib/utils/auth-client';
 
@@ -88,9 +88,9 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
                   </Typography>
                 </div>
               </MenuItem>
-              <MenuItem component={Link} href="/club-match/results">
+              <MenuItem component={Link} href="/club-match">
                 <ListItemIcon>
-                  <Diversity3Icon fontSize="small" />
+                  <Binoculars className="text-[1.25rem]" />
                 </ListItemIcon>
                 <ListItemText>Club Match</ListItemText>
               </MenuItem>
