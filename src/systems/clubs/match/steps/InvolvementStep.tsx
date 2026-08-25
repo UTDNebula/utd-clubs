@@ -2,6 +2,7 @@
 
 import Typography from '@mui/material/Typography';
 import { withForm } from '@/lib/utils/form';
+import ClubMatchFormGenderDisclaimer from '../ClubMatchFormGenderDisclaimer';
 import { ClubMatchWizardSchema } from '../clubMatchSchema';
 
 const INVOLVEMENT_GOAL_OPTIONS = [
@@ -80,7 +81,15 @@ const InvolvementStep = withForm({
           </form.Question>
 
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-            <form.Question question="Gender Identity" density="compact">
+            <form.Question
+              question={
+                <Typography variant="body1">
+                  Gender Identity
+                  <ClubMatchFormGenderDisclaimer />
+                </Typography>
+              }
+              density="compact"
+            >
               <form.AppField name="involvement.gender">
                 {(field) => (
                   <field.RadioGroup
