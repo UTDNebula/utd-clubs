@@ -60,7 +60,7 @@ const ClubDirectoryGrid = () => {
     setSearchBarLoading,
   ]);
 
-  // ClubMatchAdCard stays dismissed for up to 7 days
+  // Club match ad stays dismissed for up to 7 days
   const [dismissedClubMatchAd, setDismissedClubMatchAd] = useState<boolean>(
     () => {
       let storageValue: string | null = null;
@@ -76,6 +76,12 @@ const ClubDirectoryGrid = () => {
       return storageDate.getTime() > oneWeekAgo.getTime();
     },
   );
+
+  // Don't show club match ad if user has done club match
+  const { data: didClubMatch } = useQuery(
+    api.user.metadata.didClubMatch.queryOptions(),
+  );
+  if (didClubMatch && !dismissedClubMatchAd) setDismissedClubMatchAd?.(true);
 
   const cards: Cards | undefined = data?.clubs.map((club) => ({
     type: 'club',

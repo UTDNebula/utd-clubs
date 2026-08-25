@@ -13,7 +13,11 @@ import {
 } from '@/server/db/models';
 import { admin } from '@/server/db/schema/admin';
 import { user as users } from '@/server/db/schema/auth';
-import { userMetadata, userMetadataToClubs } from '@/server/db/schema/users';
+import {
+  userAiCache,
+  userMetadata,
+  userMetadataToClubs,
+} from '@/server/db/schema/users';
 import { userIdSchema } from '../baseSchemas';
 import { updateByIdSchema } from './inputSchemas';
 
@@ -123,6 +127,13 @@ const userMetadataRouter = createTRPCRouter({
     }
     if (isAdmin) capabilites.push('Admin');
     return capabilites;
+  }),
+  didClubMatch: authedProcedure.query(async ({ ctx }): Promise<boolean> => {
+    const userId = ctx.session.user.id;
+    const aiCache = await ctx.db.query.userAiCache.findFirst({
+      where: eq(userAiCache.id, userId),
+    });
+    return Boolean(aiCache);
   }),
 });
 
