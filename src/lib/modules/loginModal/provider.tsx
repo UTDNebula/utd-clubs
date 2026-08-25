@@ -17,13 +17,17 @@ export const LoginModalProvider = ({ children }: LoginModalProviderProps) => {
   const [open, setOpen] = useState(false);
   const [callbackURL, setCallbackURL] = useState<string | undefined>(undefined);
   const [onClose, setOnClose] = useState<() => void>();
+  const [explanationText, setExplanationText] = useState<string | undefined>(
+    undefined,
+  );
 
   const openLoginModal: openLoginModalFn = (options) => {
     setOpen(true);
     if (options) {
-      const { callbackURL, onClose } = options;
+      const { callbackURL, onClose, explanationText } = options;
       if (callbackURL) setCallbackURL(callbackURL);
       if (onClose) setOnClose(() => onClose); // Function must be nested to avoid React confusion with setState
+      if (explanationText) setExplanationText(explanationText);
     }
   };
 
@@ -32,6 +36,7 @@ export const LoginModalProvider = ({ children }: LoginModalProviderProps) => {
     onClose?.();
     setCallbackURL(undefined);
     setOnClose(undefined);
+    setExplanationText(undefined);
   };
 
   useAttachGlobalLoginModalFunctions({ openLoginModal, closeLoginModal });
@@ -45,6 +50,7 @@ export const LoginModalProvider = ({ children }: LoginModalProviderProps) => {
         open={open}
         onClose={closeLoginModal}
         callbackURL={callbackURL}
+        explanationText={explanationText}
       />
     </LoginModalContext.Provider>
   );

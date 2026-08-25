@@ -23,6 +23,10 @@ export type openLoginModalOptions = {
    * Callback for when login modal is closed
    */
   onClose?: () => void;
+  /**
+   * Optional text shown to the user that explains why the login modal was opened
+   */
+  explanationText?: string;
 };
 
 export type openLoginModalFn = (options?: openLoginModalOptions) => void;

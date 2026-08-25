@@ -46,6 +46,7 @@ export default function StartClubMatchButton({
           onClose: () => {
             setLoading(false);
           },
+          explanationText: 'Account required for club match to combat spam',
         });
       }
     }
