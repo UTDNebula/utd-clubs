@@ -1,4 +1,6 @@
+import Skeleton from '@mui/material/Skeleton';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import AllEventsCalendar from '@/systems/events/calendar/calendars/AllEventsCalendar';
 
 export const metadata: Metadata = {
@@ -14,5 +16,9 @@ export const metadata: Metadata = {
 };
 
 export default async function CalendarPage() {
-  return <AllEventsCalendar />;
+  return (
+    <Suspense fallback={<Skeleton variant="rectangular" height={512} />}>
+      <AllEventsCalendar />
+    </Suspense>
+  );
 }
