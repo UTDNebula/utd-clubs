@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm';
-import { TRPCError } from '@trpc/server';
 import { Type, type Schema } from '@google/genai';
+import { TRPCError } from '@trpc/server';
+import { eq } from 'drizzle-orm';
 import { ai } from '@/lib/utils/ai';
 import { authedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { club } from '@/server/db/schema/club';
@@ -19,19 +19,23 @@ const recommendationResponseSchema: Schema = {
     properties: {
       slug: {
         type: Type.STRING,
-        description: 'The exact slug of the recommended club from the provided list.',
+        description:
+          'The exact slug of the recommended club from the provided list.',
       },
-      name: { 
-        type: Type.STRING, 
-        description: 'The exact name of the organization. MUST match the provided list.' 
+      name: {
+        type: Type.STRING,
+        description:
+          'The exact name of the organization. MUST match the provided list.',
       },
       originalDescription: {
         type: Type.STRING,
-        description: 'Copy the EXACT first sentence of the organization\'s description from the provided list to ground your reasoning.',
+        description:
+          "Copy the EXACT first sentence of the organization's description from the provided list to ground your reasoning.",
       },
       reasoning: {
         type: Type.STRING,
-        description: 'Match reasoning in concise 1-line explanation. Must be factually based on the originalDescription.',
+        description:
+          'Match reasoning in concise 1-line explanation. Must be factually based on the originalDescription.',
       },
       benefit: {
         type: Type.STRING,
@@ -39,10 +43,18 @@ const recommendationResponseSchema: Schema = {
       },
       weight: {
         type: Type.NUMBER,
-        description: 'Match score from 1 to 100 indicating how closely the club aligns with the student priorities.',
-      }
+        description:
+          'Match score from 1 to 100 indicating how closely the club aligns with the student priorities.',
+      },
     },
-    required: ['slug', 'name', 'originalDescription', 'reasoning', 'benefit', 'weight'],
+    required: [
+      'slug',
+      'name',
+      'originalDescription',
+      'reasoning',
+      'benefit',
+      'weight',
+    ],
   },
 };
 
@@ -120,7 +132,7 @@ const aiRouter = createTRPCRouter({
       const formattedClubsList = clubs
         .map(
           (c) =>
-            `Slug: ${c.slug}\nName: ${c.name}\nTags: ${c.tags?.join(', ') || 'None'}\nDescription: ${c.description.slice(0, 500)}`
+            `Slug: ${c.slug}\nName: ${c.name}\nTags: ${c.tags?.join(', ') || 'None'}\nDescription: ${c.description.slice(0, 500)}`,
         )
         .join('\n---\n');
 
@@ -164,7 +176,14 @@ Recommendation Requirements:
       }
 
       // Parse results using slugs
-      const rawMatches = JSON.parse(response.text) as { slug: string; name: string; originalDescription: string; reasoning: string; benefit: string; weight: number }[];
+      const rawMatches = JSON.parse(response.text) as {
+        slug: string;
+        name: string;
+        originalDescription: string;
+        reasoning: string;
+        benefit: string;
+        weight: number;
+      }[];
       rawMatches.sort((a, b) => b.weight - a.weight);
 
       const weightLogs = rawMatches
@@ -177,12 +196,15 @@ Recommendation Requirements:
         .slice(0, 9);
 
       console.log('input', JSON.stringify(input, null, 2));
-      console.log('Raw Club Matches:', rawMatches.map((match) => ({
-        name: match.name,
-        description: match.originalDescription,
-        reasoning: match.reasoning,
-        benefit: match.benefit,
-      })));
+      console.log(
+        'Raw Club Matches:',
+        rawMatches.map((match) => ({
+          name: match.name,
+          description: match.originalDescription,
+          reasoning: match.reasoning,
+          benefit: match.benefit,
+        })),
+      );
       console.log('Club Match Weights:', JSON.stringify(weightLogs, null, 2));
 
       // Hydrate validated records from database by slug, but map to id for output
