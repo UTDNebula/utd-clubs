@@ -5,8 +5,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch all clubs and events
   const [clubs, events] = await Promise.all([
     api.club.all(),
-    api.event.byDateRange({
-      endTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
+    api.event.findByDateRange({
+      dateEnd: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // 1 year later
     }),
   ]);
 

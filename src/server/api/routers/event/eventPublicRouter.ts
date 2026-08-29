@@ -37,10 +37,10 @@ import { temporalDeixisCustomDateSentinelValue } from '@/systems/events/director
 import { eventIdSchema } from '../baseSchemas';
 import {
   byClubIdSchema,
-  byDateRangeSchema,
   byNameSchema,
   clubUpcomingEventsSchema,
   countSchema,
+  findByDateRangeSchema,
   findByDateSchema,
   findByFilterSchema,
 } from './inputSchemas';
@@ -137,32 +137,57 @@ const eventPublicRouter = createTRPCRouter({
         throw e;
       }
     }),
-  byDateRange: publicProcedure
-    .input(byDateRangeSchema)
+  findByDateRange: publicProcedure
+    .input(findByDateRangeSchema)
     .query(async ({ input, ctx }) => {
-      const { startTime, endTime } = input;
+      const { dateStart, dateEnd, includeUserEvents } = input;
+      const userId = ctx.session?.user.id;
+
+      // Include events from clubs the user is a member of, even if the club isn't approved
+      const joinedClubsSubquery =
+        includeUserEvents && userId
+          ? ctx.db
+              .select()
+              .from(userMetadataToClubs)
+              .where(
+                and(
+                  eq(userMetadataToClubs.clubId, events.clubId),
+                  eq(userMetadataToClubs.userId, userId),
+                  inArray(userMetadataToClubs.memberType, [
+                    'Member',
+                    'Officer',
+                    'President',
+                  ]),
+                ),
+              )
+          : undefined;
 
       try {
-        const events = await ctx.db.query.events.findMany({
-          where: (event) => {
-            return and(
-              eq(event.status, 'approved'),
-              or(
-                startTime ? gte(event.startTime, startTime) : undefined,
-                endTime ? lte(event.endTime, endTime) : undefined,
-              ),
-            );
-          },
-          with: {
-            club: true,
-          },
-        });
+        const query = ctx.db
+          .select({
+            events,
+            club,
+            isClubMember: joinedClubsSubquery
+              ? exists(joinedClubsSubquery)
+              : sql<boolean>`false`,
+          })
+          .from(events)
+          .leftJoin(club, eq(events.clubId, club.id))
+          .where(({ events }) =>
+            and(
+              eq(events.status, 'approved'),
+              dateStart ? gte(events.startTime, dateStart) : undefined,
+              dateEnd ? lte(events.endTime, dateEnd) : undefined,
+            ),
+          );
 
-        const approvedEvents = events.filter(
-          (e) => e.club.approved === 'approved',
-        );
+        const results = await query;
 
-        return approvedEvents;
+        const foundEvents = results
+          .filter((r) => r.isClubMember || r.club?.approved === 'approved') // Approved clubs
+          .map((r) => ({ ...r.events, club: r.club! })); // Map to correct format
+
+        return foundEvents;
       } catch (e) {
         console.error(e);
 

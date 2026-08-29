@@ -1,10 +1,10 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import EventCalendar from '../EventCalendar';
-import { useTRPC } from '@/trpc/react';
-import { CalendarRange } from '@/lib/utils/calendarRange';
 import { useState } from 'react';
+import { CalendarRange } from '@/lib/utils/calendarRange';
+import { useTRPC } from '@/trpc/react';
+import EventCalendar from '../EventCalendar';
 
 export default function RegisteredEventsCalendar() {
   const api = useTRPC();
