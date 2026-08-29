@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 const CalendarPage = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) return;
+  if (!session) return null;
 
   return <EventCalendar />;
 };
