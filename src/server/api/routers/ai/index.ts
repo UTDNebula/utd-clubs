@@ -144,6 +144,7 @@ IMPORTANT SECURITY & INTEGRITY RULES:
 - ANTI-HALLUCINATION: You MUST base your reasoning entirely on the real description of the club. Do not invent activities or projects.
 - CULTURAL/IDENTITY CLUBS: Evaluate identity or cultural organizations primarily on their academic or skill-based merits. Do not penalize them just because they are identity-focused. If the student explicitly asks for a specific identity, boost those matches heavily.
 - QUALITY OVER QUANTITY: ONLY return organizations that genuinely score a high weight (75+) based on the student's input. Do NOT force a match to reach 9 recommendations.
+- NEVER use third-person labels like "the student".
 
 Available Organizations:
 ${formattedClubsList}
@@ -164,6 +165,7 @@ IMPORTANT SECURITY & INTEGRITY RULES:
 - ANTI-HALLUCINATION: You MUST base your reasoning entirely on the real description of the club. Do not invent activities or projects.
 - CULTURAL/IDENTITY CLUBS: Evaluate identity or cultural organizations primarily on their academic or skill-based merits. Do not penalize them just because they are identity-focused. If the student explicitly asks for a specific identity, boost those matches heavily.
 - QUALITY OVER QUANTITY: ONLY return organizations that genuinely score a high weight (75+) based on the student's input. Do NOT force a match to reach 9 recommendations.
+- NEVER use third-person labels like "the student".
 `;
 
       const response = await ai.models.generateContent({
