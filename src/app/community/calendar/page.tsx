@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import EventCalendar from '@/systems/events/calendar/EventCalendar';
+import RegisteredEventsCalendar from '@/systems/events/calendar/calendars/RegisteredEventsCalendar';
 
 export const metadata: Metadata = {
   title: 'My Event Calendar | My Community',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 const CalendarPage = () => {
-  return <EventCalendar />;
+  return <RegisteredEventsCalendar />;
 };
 
 export default CalendarPage;
