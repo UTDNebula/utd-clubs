@@ -1,14 +1,18 @@
-import { Alert } from '@mui/material';
+import { Metadata } from 'next';
 import AllEventsCalendar from '@/systems/events/calendar/calendars/AllEventsCalendar';
 
+export const metadata: Metadata = {
+  title: 'Events Calendar',
+  description: 'The calendar with every event at UTD.',
+  alternates: {
+    canonical: 'https://clubs.utdnebula.com/events/calendar',
+  },
+  openGraph: {
+    url: 'https://clubs.utdnebula.com/events/calendar',
+    description: 'The calendar with every event at UTD.',
+  },
+};
+
 export default async function CalendarPage() {
-  return (
-    <>
-      <Alert severity="info" className="mt-4">
-        This calendar only shows events you have registered for. This will be
-        resolved in the future.
-      </Alert>
-      <AllEventsCalendar />
-    </>
-  );
+  return <AllEventsCalendar />;
 }
