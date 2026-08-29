@@ -1,4 +1,4 @@
-import { z, ZodType } from 'zod';
+import { z } from 'zod';
 
 export const dateSchema = z
   .string()
@@ -63,7 +63,7 @@ export type Platforms = z.infer<typeof platformEnum>;
 
 function createContactSchema<T extends string>(
   platform: T,
-  urlSchema?: ZodType,
+  urlSchema: z.ZodURL | z.ZodEmail,
 ) {
   return z.object({
     platform: z.literal(platform),
@@ -71,13 +71,15 @@ function createContactSchema<T extends string>(
       .string()
       .max(500, { message: 'Character limit reached.' })
       .optional(),
-    url: urlSchema ?? z.url('Valid url required (starts with "https://")'),
+    url: urlSchema,
   });
 }
 export const contactSchemas = platformEnum.options.map((platform) =>
   createContactSchema(
     platform,
-    platform === 'email' ? z.email('Valid email required') : undefined,
+    platform === 'email'
+      ? z.email('Valid email required')
+      : z.url('Valid url required (starts with "https://")'),
   ),
 );
 
