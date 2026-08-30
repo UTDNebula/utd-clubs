@@ -110,7 +110,6 @@ Maintain strict formatting:
 - The ONLY output is the recommendations
 - No markdown or special characters
 - Organize recommendations with the JSON format
-- Double check that the organization ID is valid and corresponds to the correct organization
 - Keep tone encouraging but professional
 `;
 
