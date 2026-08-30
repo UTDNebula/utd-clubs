@@ -1,4 +1,6 @@
 import { type Metadata } from 'next';
+import { headers } from 'next/headers';
+import { auth } from '@/server/auth';
 import ClubEvents from '@/systems/dashboard/ClubEvents';
 import RegisteredEvents from '@/systems/dashboard/RegisteredEvents';
 
@@ -22,9 +24,14 @@ const Community = async ({
 }: {
   searchParams?: Promise<SearchParams>;
 }) => {
-  const sp = (await searchParams) ?? {};
-  const page = Number(sp.page) || 1;
-  const pageSize = Number(sp.pageSize) || 12;
+  const [session, sp] = await Promise.all([
+    auth.api.getSession({ headers: await headers() }),
+    searchParams,
+  ]);
+  if (!session) return;
+
+  const page = Number(sp?.page) || 1;
+  const pageSize = Number(sp?.pageSize) || 12;
 
   return (
     <div>
