@@ -36,9 +36,13 @@ export const clubUpcomingEventsSchema = clubIdSchema.extend({
   currentTime: z.date().optional(),
 });
 
-export const byDateRangeSchema = z.object({
-  startTime: z.date().optional(),
-  endTime: z.date().optional(),
+export const findByDateRangeSchema = z.object({
+  /** If omitted, includes all events from past */
+  dateStart: z.date().optional(),
+  /** If omitted, includes all events into future */
+  dateEnd: z.date().optional(),
+  /** Whether to include events from the user's clubs */
+  includeUserEvents: z.boolean().default(false).optional(),
 });
 
 export const findByFilterSchema = z.object({

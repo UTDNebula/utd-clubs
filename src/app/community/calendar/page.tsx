@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { auth } from '@/server/auth';
-import EventCalendar from '@/systems/events/calendar/EventCalendar';
+import RegisteredEventsCalendar from '@/systems/events/calendar/calendars/RegisteredEventsCalendar';
 
 export const metadata: Metadata = {
   title: 'My Event Calendar | My Community',
@@ -20,7 +20,7 @@ const CalendarPage = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return null;
 
-  return <EventCalendar />;
+  return <RegisteredEventsCalendar />;
 };
 
 export default CalendarPage;
