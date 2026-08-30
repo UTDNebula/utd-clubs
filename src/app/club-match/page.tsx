@@ -109,7 +109,7 @@ const Page = async () => {
             className="font-display mx-4 my-8 flex items-center justify-center gap-2 text-center text-4xl font-bold"
           >
             Your Top Club Matches
-            <ClubMatchDisclaimer hasSuggestions />
+            <ClubMatchDisclaimer />
           </Typography>
           <div className="grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4">
             {data.clubMatch.map((club) => (

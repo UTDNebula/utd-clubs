@@ -11,11 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 
-export default function Disclaimer({
-  hasSuggestions,
-}: {
-  hasSuggestions?: boolean;
-}) {
+export default function Disclaimer() {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -41,14 +37,11 @@ export default function Disclaimer({
             While we strive for accuracy, AI recommendations may not perfectly
             match your preferences. We recommend reviewing the suggested clubs
             to find the best fit for you.
-            {hasSuggestions && (
-              <>
-                <br />
-                <br />
-                If you experience issues with the suggestions not linking to the
-                correct club, try searching for it using the search bar above.
-              </>
-            )}
+            <br />
+            <br />
+            On the results page, if you experience issues with suggestions
+            not linking to the club, try searching for it using the search bar
+            above.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
