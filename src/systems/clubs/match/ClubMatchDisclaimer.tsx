@@ -37,6 +37,11 @@ export default function Disclaimer() {
             While we strive for accuracy, AI recommendations may not perfectly
             match your preferences. We recommend reviewing the suggested clubs
             to find the best fit for you.
+            <br />
+            <br />
+            On the results page, if you experience issues with suggestions not
+            linking to the club, try searching for it using the search bar
+            above.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
