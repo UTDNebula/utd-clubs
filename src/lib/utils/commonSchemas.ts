@@ -61,18 +61,26 @@ export const platformEnum = z.enum([
 ]);
 export type Platforms = z.infer<typeof platformEnum>;
 
-function createContactSchema<T extends string>(platform: T) {
+function createContactSchema<T extends string>(
+  platform: T,
+  urlSchema: z.ZodURL | z.ZodEmail,
+) {
   return z.object({
     platform: z.literal(platform),
     clubId: z
       .string()
       .max(500, { message: 'Character limit reached.' })
       .optional(),
-    url: z.url('Valid url required'),
+    url: urlSchema,
   });
 }
 export const contactSchemas = platformEnum.options.map((platform) =>
-  createContactSchema(platform),
+  createContactSchema(
+    platform,
+    platform === 'email'
+      ? z.email('Valid email required')
+      : z.url('Valid url required (starts with "https://")'),
+  ),
 );
 
 export const contactSchema = z.discriminatedUnion(
