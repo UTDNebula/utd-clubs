@@ -39,8 +39,8 @@ export default function Disclaimer() {
             to find the best fit for you.
             <br />
             <br />
-            On the results page, if you experience issues with suggestions
-            not linking to the club, try searching for it using the search bar
+            On the results page, if you experience issues with suggestions not
+            linking to the club, try searching for it using the search bar
             above.
           </DialogContentText>
         </DialogContent>
