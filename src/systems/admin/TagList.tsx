@@ -54,7 +54,7 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
       onSuccess: (data) => {
         setSnackbar(
           SnackbarPresets.success(
-            `Modified the tags for ${data.affected} clubs.`,
+            `Modified the tags for ${data.affected} ${data.affected === 1 ? 'club' : 'clubs'}.`,
           ),
         );
       },
