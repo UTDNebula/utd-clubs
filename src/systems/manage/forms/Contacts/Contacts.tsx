@@ -30,6 +30,7 @@ import type { SelectClub, SelectContact } from '@/server/db/models';
 import { contactNames, startContacts } from '@/server/db/schema/contacts';
 import { useTRPC } from '@/trpc/react';
 import ContactListItem from './ContactListItem';
+import { convertOtherContactPlatforms } from './contactPlatform';
 import { editClubContactSchema } from './schema';
 
 type FormData = z.infer<typeof editClubContactSchema>;
@@ -75,14 +76,20 @@ const Contacts = ({ club }: ContactsProps) => {
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
+      const contacts = convertOtherContactPlatforms(value.contacts);
+
       // Separate created vs modified
       const created: FormData['contacts'] = [];
       const modified: ContactWithId[] = [];
       const order: FormData['contacts'][number]['platform'][] = [];
+      const deleted = [...deletedIds];
 
       let hasReorder = false;
+      let hasPlatformConversion = false;
 
-      value.contacts.forEach((contact, index) => {
+      contacts.forEach((contact, index) => {
+        const submittedPlatform = value.contacts[index]?.platform;
+
         // Extra check for if user reorders, makes a change, then undoes reorder
         if (
           isReordered &&
@@ -92,6 +99,18 @@ const Contacts = ({ club }: ContactsProps) => {
         }
 
         order.push(contact.platform);
+
+        if (
+          submittedPlatform !== undefined &&
+          contact.platform !== submittedPlatform
+        ) {
+          hasPlatformConversion = true;
+          if (hasId(contact)) {
+            deleted.push(submittedPlatform);
+          }
+          created.push({ platform: contact.platform, url: contact.url });
+          return;
+        }
 
         // If it has no ID, it's created
         if (!hasId(contact)) {
@@ -109,10 +128,10 @@ const Contacts = ({ club }: ContactsProps) => {
 
       const updated = await editContacts.mutateAsync({
         clubId: club.id,
-        deleted: deletedIds,
+        deleted: [...new Set(deleted)],
         modified: modified,
         created: created,
-        order: hasReorder ? order : undefined,
+        order: hasReorder || hasPlatformConversion ? order : undefined,
       });
       setDeletedIds([]);
       setIsReordered(false);
