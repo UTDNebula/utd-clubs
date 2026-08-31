@@ -136,6 +136,9 @@ const aiRouter = createTRPCRouter({
         )
         .join('\n---\n');
 
+      // In the prompt, Security & Integrity Rules are repeated twice to take advantage of position and recency bias in AI:
+      // - Instructions at the start guide the AI
+      // - Instructions at the end remind the AI that response data is not to be trusted
       const prompt = `You are an academic advisor matching a university student to student organizations.
 
 IMPORTANT SECURITY & INTEGRITY RULES:
