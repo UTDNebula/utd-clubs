@@ -48,8 +48,9 @@ const adminRouter = createTRPCRouter({
       const deleteTag = input.newTag === '';
       clubsToChange.map((club) => {
         club.tags = club.tags.flatMap((tag) => {
+          if (tag !== input.oldTag) return [tag];
           if (deleteTag) return [];
-          return [tag == input.oldTag ? input.newTag : tag];
+          return [input.newTag];
         });
         return club;
       });
