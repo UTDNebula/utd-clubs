@@ -199,27 +199,6 @@ IMPORTANT SECURITY & INTEGRITY RULES:
       }[];
       rawMatches.sort((a, b) => b.weight - a.weight);
 
-      const weightLogs = rawMatches
-        .filter((match) => clubSlugLookup.has(match.slug))
-        .map((match) => ({
-          name: clubSlugLookup.get(match.slug)!.name,
-          weight: match.weight,
-          description: match.originalDescription,
-        }))
-        .slice(0, 9);
-
-      console.log('input', JSON.stringify(input, null, 2));
-      console.log(
-        'Raw Club Matches:',
-        rawMatches.map((match) => ({
-          name: match.name,
-          description: match.originalDescription,
-          reasoning: match.reasoning,
-          benefit: match.benefit,
-        })),
-      );
-      console.log('Club Match Weights:', JSON.stringify(weightLogs, null, 2));
-
       // Hydrate validated records from database by slug, but map to id for output
       const result: ClubMatchResults = rawMatches
         .filter((match) => clubSlugLookup.has(match.slug))
