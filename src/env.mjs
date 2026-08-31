@@ -19,6 +19,7 @@ const server = z.object({
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string().min(1) : z.url(),
   ),
+  OAUTH_PROXY_SECRET: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   DISCORD_CLIENT_ID: z.string().optional(),
@@ -73,6 +74,7 @@ const processEnv = {
   DATABASE_URL: clean(process.env.DATABASE_URL),
   BETTER_AUTH_SECRET: clean(process.env.BETTER_AUTH_SECRET),
   BETTER_AUTH_URL: clean(process.env.BETTER_AUTH_URL),
+  OAUTH_PROXY_SECRET: clean(process.env.OAUTH_PROXY_SECRET),
   GOOGLE_CLIENT_ID: clean(process.env.GOOGLE_CLIENT_ID),
   GOOGLE_CLIENT_SECRET: clean(process.env.GOOGLE_CLIENT_SECRET),
   DISCORD_CLIENT_ID: clean(process.env.DISCORD_CLIENT_ID),

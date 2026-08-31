@@ -124,7 +124,7 @@ export const auth = betterAuth({
           process.env.VERCEL_ENV !== 'production' && hostname !== 'localhost'
         );
       } catch (e) {
-        console.error(e);
+        console.log(e);
         return true;
       }
     })()
