@@ -1,4 +1,5 @@
 import { type Column, type Table } from '@tanstack/react-table';
+import { memo } from 'react';
 import DebouncedInput from './DebounceInput';
 
 type Props<T> = {
@@ -6,7 +7,11 @@ type Props<T> = {
   table: Table<T>;
 };
 
-export default function Filter<T>({ column, table }: Props<T>) {
+function genericMemo<T>(component: T): T {
+  return memo(component as React.FunctionComponent<object>) as unknown as T;
+}
+
+export default genericMemo(function Filter<T>({ column, table }: Props<T>) {
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
@@ -66,4 +71,4 @@ export default function Filter<T>({ column, table }: Props<T>) {
       />
     </>
   );
-}
+});

@@ -1,5 +1,6 @@
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { betterAuth } from 'better-auth/minimal';
+import { oAuthProxy } from 'better-auth/plugins';
 import { eq } from 'drizzle-orm';
 import { env } from '@/env.mjs';
 import { db } from './db';
@@ -113,5 +114,27 @@ export const auth = betterAuth({
     'https://clubs.utdnebula.com',
     'https://clubs-*-utdnebula.vercel.app',
     ...AUTH_TRUSTED_ORIGINS,
+  ],
+  plugins: [
+    ...((() => {
+      try {
+        const hostname = new URL(process.env.BETTER_AUTH_URL ?? '').hostname;
+        // Don't need proxy on production and localhost
+        return (
+          process.env.VERCEL_ENV !== 'production' && hostname !== 'localhost'
+        );
+      } catch (e) {
+        console.log(e);
+        return true;
+      }
+    })()
+      ? [
+          oAuthProxy({
+            // Use develop branch deployment as callback URL (for now)
+            productionURL: 'https://dev.clubs.utdnebula.com',
+            secret: process.env.OAUTH_PROXY_SECRET,
+          }),
+        ]
+      : []),
   ],
 });

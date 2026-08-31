@@ -19,15 +19,13 @@ import {
   type EventClickArgs,
   type PopupOpenEventArgs,
 } from '@syncfusion/ej2-schedule';
-import { useQuery } from '@tanstack/react-query';
 import { isSameDay, startOfDay } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { getRangeForView, type CalendarRange } from '@/lib/utils/calendarRange';
 import { createParamSetter } from '@/lib/utils/searchParams';
 import EventCard from '@/systems/events/EventCard';
-import { useTRPC } from '@/trpc/react';
 import { type RouterOutputs } from '@/trpc/shared';
 import {
   calendarParamsSchema,
@@ -48,7 +46,22 @@ const SCHEDULE_FIELDS = {
 
 export const setCalendarParams = createParamSetter<CalendarParamsSchema>();
 
-const EventCalendar = () => {
+type SelectEventWithClub =
+  RouterOutputs['user']['events']['getRegisteredEventsByRange'][number];
+
+type EventCalendarProps = {
+  events: SelectEventWithClub[];
+  onMount?: (range: CalendarRange) => void;
+  onChange?: (range: CalendarRange) => void;
+  isFetching?: boolean;
+};
+
+const EventCalendar = ({
+  events,
+  onMount,
+  onChange,
+  isFetching,
+}: EventCalendarProps) => {
   const searchParams = useSearchParams();
   const params = calendarParamsSchema.parse(Object.fromEntries(searchParams));
 
@@ -67,19 +80,12 @@ const EventCalendar = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [hoverAnchorEl, setHoverAnchorEl] = useState<Element | null>(null);
   const [hoverEvent, setHoverEvent] = useState<RegisteredEvent | null>(null);
-  const [range, setRange] = useState<CalendarRange>(() =>
-    getRangeForView(initialView, initialDate),
-  );
-
-  const api = useTRPC();
   const router = useRouter();
 
-  const { data: events = [], isFetching } = useQuery(
-    api.user.events.getRegisteredEventsByRange.queryOptions(range, {
-      staleTime: 30_000,
-      refetchOnWindowFocus: false,
-    }),
-  );
+  useEffect(() => {
+    onMount?.(getRangeForView(initialView, initialDate));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const eventMap = useMemo(
     () => new Map(events.map((e) => [e.id, e])),
@@ -146,7 +152,7 @@ const EventCalendar = () => {
         params.set('view', view);
       });
     }
-    setRange(getRangeForView(view, new Date(anchor)));
+    onChange?.(getRangeForView(view, new Date(anchor)));
   };
 
   const clearHover = () => {
