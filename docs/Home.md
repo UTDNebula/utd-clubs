@@ -1,18 +1,10 @@
-# API Tools Developer Documentation
+# UTD Clubs Developer Documentation
 
-Welcome to the **API Tools Developer Documentation**!
+Welcome to the **UTD Clubs Developer Documentation**!
 
-These docs are intended for developers of `utd-clubs` rather than users. For usage instructions, see [README.md](../README.md).
+These docs are intended for developers of UTD Clubs rather than users. For usage instructions, see [README.md](../README.md).
 
----
-
-If you are a new developer, we recommend checking out these pages in this order:
-
-1. [Getting-Started.md](Getting-Started.md)
-1. [Project-Architecture.md](Project-Architecture.md)
-1. [Project-Structure.md](Project-Structure.md)
-1. [How-to-Contribute.md](How-to-Contribute.md)
-1. [Guides.md](Guides.md)
+If you are a new developer, we recommend visiting each page under "Getting Started" in order.
 
 ## Need Help?
 
