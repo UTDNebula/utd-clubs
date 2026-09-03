@@ -20,16 +20,10 @@ Our branch naming convention is `<issue-number>-<short-description-of-issue>` fo
 
 It's time to code!
 
-Don't forget to format and check your code. We have helper scripts with **Make** and **build.bat**:
+Don't forget to format and check your code.
 
 ```bash
-make check
-```
-
-Run tests with
-
-```bash
-make test
+npm run format && npm run type:check && npm run lint
 ```
 
 Discuss your progress frequently, and push your commits to GitHub! If you get stuck anywhere we're here to help! Avoid using AI to write code for your first contribution.
