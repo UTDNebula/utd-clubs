@@ -15,11 +15,37 @@ Ensure you have the following installed:
 
 ### Clone the Repository
 
-Clone the repository with `git clone` and `cd` into the project directory or open it in your code editor
+Clone the repository to your local machine. Make sure to pass `--recurse-submodules` so that nested submodules such as `nebula-library` are also cloned:
+
+**HTTPS:**
+
+```bash
+git clone https://github.com/UTDNebula/utd-clubs.git --recurse-submodules
+```
+
+**SSH:**
+
+```bash
+git clone git@github.com:UTDNebula/utd-clubs.git --recurse-submodules
+```
+
+> [!NOTE]
+> If you already cloned the repository but don't have the `src/nebula-library` folder, run the following command:
+>
+> ```bash
+> git submodule update --init --recursive
+> ```
+
+Next, navigate to the project directory and install the dependencies:
+
+```bash
+cd utd-clubs
+npm install
+```
 
 ### Configure Environment Variables
 
-Make a file called `.env` at the root of the project, and copy the contents of `.env.template` into it. Some tools in `utd-clubs` require certain environment variables, which you can fill in `.env`. If you're not sure what to put, ask for help.
+Make a file called `.env` at the root of the project, and copy the contents of `.env.example` into it. Some parts of `utd-clubs` require certain environment variables, which you can fill in `.env`. If you're not sure what to put, ask for help.
 
 ### Start Developing
 
