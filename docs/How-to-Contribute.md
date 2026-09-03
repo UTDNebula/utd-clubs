@@ -32,7 +32,7 @@ Run tests with
 make test
 ```
 
-Discuss your progress frequently, and push your commits to GitHub! If you get stuck anywhere we're here to help! Avoid using AI to write code for your first issue.
+Discuss your progress frequently, and push your commits to GitHub! If you get stuck anywhere we're here to help! Avoid using AI to write code for your first contribution.
 
 We'd love to see you make a draft Pull Request, so we can see your progress and help you out!
 
