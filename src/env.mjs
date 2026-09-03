@@ -19,7 +19,6 @@ const server = z.object({
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string().min(1) : z.url(),
   ),
-  OAUTH_PROXY_SECRET: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   DISCORD_CLIENT_ID: z.string().optional(),
@@ -33,6 +32,7 @@ const server = z.object({
   NEBULA_API_EMAIL_KEY: z.string().optional(),
   GEMINI_SERVICE_ACCOUNT: z.string().optional(),
   SENTRY_AUTH_TOKEN: z.string().optional(),
+  OAUTH_PROXY_SECRET: z.string().optional(),
   AUTH_TRUSTED_ORIGINS: z.preprocess(
     (val) => {
       if (typeof val === 'string') {
@@ -58,10 +58,25 @@ const client = z.object({
     : z.string().optional(),
 });
 
-const clean = (/** @type {string | undefined} */ input) => {
+/**
+ * Returns `undefined` if {@linkcode input} string is only whitespace. Otherwise, returns {@linkcode input}
+ * @param {string | undefined} input
+ * @returns {string | undefined}
+ */
+const clean = (input) => {
   const trimmed = input?.trim();
   return trimmed !== '' ? trimmed : undefined;
 };
+
+/**
+ * Evaluates a string and evaluates whether it is truthy or not. Redefines "false" and "0" to be falsey
+ * @param {string | undefined} string
+ * @returns {boolean}
+ */
+const truthy = (string) =>
+  Boolean(string) &&
+  string !== 'false' &&
+  (string?.trim() === '' || Number(string) !== 0);
 
 /**
  * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
@@ -74,7 +89,6 @@ const processEnv = {
   DATABASE_URL: clean(process.env.DATABASE_URL),
   BETTER_AUTH_SECRET: clean(process.env.BETTER_AUTH_SECRET),
   BETTER_AUTH_URL: clean(process.env.BETTER_AUTH_URL),
-  OAUTH_PROXY_SECRET: clean(process.env.OAUTH_PROXY_SECRET),
   GOOGLE_CLIENT_ID: clean(process.env.GOOGLE_CLIENT_ID),
   GOOGLE_CLIENT_SECRET: clean(process.env.GOOGLE_CLIENT_SECRET),
   DISCORD_CLIENT_ID: clean(process.env.DISCORD_CLIENT_ID),
@@ -92,6 +106,7 @@ const processEnv = {
   ),
   SENTRY_AUTH_TOKEN: clean(process.env.SENTRY_AUTH_TOKEN),
   NEXT_PUBLIC_SENTRY_DSN: clean(process.env.NEXT_PUBLIC_SENTRY_DSN),
+  OAUTH_PROXY_SECRET: clean(process.env.OAUTH_PROXY_SECRET),
   AUTH_TRUSTED_ORIGINS: clean(process.env.AUTH_TRUSTED_ORIGINS),
 };
 
@@ -106,7 +121,7 @@ const merged = server.extend(client.shape);
 
 let env = /** @type {MergedOutput} */ (process.env);
 
-if (!!process.env.SKIP_ENV_VALIDATION == false) {
+if (!truthy(process.env.SKIP_ENV_VALIDATION)) {
   const isServer = typeof window === 'undefined';
 
   const parsed = /** @type {MergedSafeParseReturn} */ (
