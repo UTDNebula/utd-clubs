@@ -35,7 +35,3 @@ We'd love to see you make a draft Pull Request, so we can see your progress and 
 Open [our Pull Request Page](../pulls), and create a PR. If you're not finished, you can make your PR a draft.
 
 Maintainers will review your PR and provide suggestions or approval. Don't take suggestions personally, we just want to help!
-
-## Next Step
-
-See [Guides.md](Guides.md)
