@@ -6,15 +6,25 @@ This page assumes you have a basic understanding of what HTML, CSS, and JavaScri
 
 ## Overview
 
-_Use the links below to navigate to our documentation for that item!_
+_Use the links in this section to navigate to our documentation for that item!_
 
-UTD Clubs is a web application built using the [TypeScript](#typescript) (TS) programming language. For frontend development, we use the [React](#react) JavaScript library. The backend of the project runs on [Node.js](#nodejs). Libraries/packages are managed using [NPM](#npm).
+UTD Clubs is a web application built using the [TypeScript](#typescript) programming language. For frontend development, UTD Clubs uses the [React](#react) JavaScript library. The backend of the project runs on [Node.js](#nodejs). Libraries/packages are managed using [NPM](#npm).
 
-One notable library used in `utd-clubs` is Next.JS, which
+### Next.JS and SSR
+
+UTD Clubs utilizes the App Router from [Next.JS](#nextjs) library to handle the difficult tasks needed for building the UTD Clubs web application. Next.JS automates the processes of building and serving the website, as well as generating page routes via the folder structure in the `src/app/` directory.
+
+Next.JS utilizes a concept called server-side rendering (SSR). This means anytime a visitor opens a page on UTD Clubs, the backend server (using the Node.js runtime[^1]) will generate most of the content as HTML before sending it to the visitor's device, which then runs any code that must run on the client. SSR is done to improve loading times and the experience of users with older devices. Because of SSR plus the fact that UTD Clubs uses TypeScript for everything, many files might run on either the server or client.[^2]
+
+### Client and Server Communication
+
+Sometimes, code that runs on the client will need to communicate with the server.[^3] For example, when a visitor submits a form on the client, changes in the database must be run on the server. To allow this, UTD Clubs uses the [tRPC](#trpc) library, which abstracts away the creation of an internal API used only by UTD Clubs to communicate between the client and server.[^4]
+
+To call the API provided by tRPC, developers should use the [Tanstack Query](#tanstack-query) library. This entails using the `useQuery()` hook in client-side React components. Tanstack Query provides features such as caching, maintaining "out of date" data, and query state metadata that it easier to create loading states and error messages.
 
 ---
 
-## Languages and Core Technologies
+## List of Languages and Core Technologies
 
 Programming languages, libraries, and software that are foundational to how `utd-clubs` works.
 
@@ -23,7 +33,7 @@ Programming languages, libraries, and software that are foundational to how `utd
 - [Documentation](https://www.typescriptlang.org/docs) - Rather technical. We recommend learning as you go.
 - [W3Schools Tutorial](https://www.w3schools.com/typescript/index.php)
 
-TypeScript is the language we use for 99% of everything in `utd-clubs`. TypeScript looks nearly identical to JavaScript; in fact, all JS code is valid TS code! TypeScript code is compiled to JavaScript code when the project is built, which is handled automatically for `utd-clubs` by [Next.JS](#nextjs).
+TypeScript (TS) is the language we use for 99% of everything in `utd-clubs`. TypeScript looks nearly identical to JavaScript; in fact, all JS code is valid TS code! TypeScript code is compiled to JavaScript code when the project is built, which is handled automatically for `utd-clubs` by [Next.JS](#nextjs).
 
 What's different about TypeScript, however, is that it adds static typing and type safety. This helps avoid crashes while the website is running. You can add a **type annotation** to a variable to explicitly declare what values that variable is allowed to have. For instance, the following explicitly states that the variable `name` can only be a string:
 
@@ -67,13 +77,13 @@ Although Node.js also provides tons of APIs, we only really use it to run our co
 
 - [Package Directory](https://www.npmjs.com)
 
-The Node Package Manager (NPM) is installed automatically whenever you install [Node.js](#nodejs). It manages every library used in UTD Clubs via the `package.json` file and makes it easy to install everything you need using a single terminal command.
+The Node Package Manager (NPM) is installed automatically whenever you install [Node.js](#nodejs). It manages every library used in UTD Clubs via the `package.json` file and makes it easy to install everything you need using a single terminal command: `npm install`
 
 We also utilize NPM scripts, which makes it easy for you to run common tasks without memorizing a long and complicated terminal command. You may have seen terminal commands that look like `npm run ...` in [Getting Started](Getting-Started.md); these are scripts! For a full list of every NPM script in `utd-clubs`, check out [NPM Scripts](NPM-Scripts.md).
 
-## Libraries
+## List of Major Libraries
 
-List of the major libraries/packages that make `utd-clubs` work.
+All the major libraries/packages that make `utd-clubs` work.
 
 ### Next.JS
 
@@ -123,8 +133,22 @@ Material UI (MUI, pronounced letter-by-letter) provides pre-built React componen
 
 <!-- TODO -->
 
+### Tanstack Query
+
+- Documentation: [Getting Started](https://tanstack.com/query/latest/docs/framework/react/overview) | [Guides](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults) | [API Reference](https://tanstack.com/query/latest/docs/framework/react/reference/index)
+
+<!-- TODO -->
+
 ---
 
 ## Next Step
 
 See [Project-Structure.md](Project-Structure.md)
+
+[^1]: Next.JS runs server-side code using the Node.js runtime by default. However, a file can be configured to use the [Edge runtime](https://nextjs.org/docs/app/api-reference/edge) instead by including `export const runtime = 'edge';` in the file.
+
+[^2]: By default, Next.JS runs everything on the server as [React Server Components](https://react.dev/reference/rsc/server-components) (RSC). To create a React component that runs on the client, a file must have the [`'use client'`](https://react.dev/reference/rsc/use-client) directive at the very top. This also makes any code that file imports (e.g. utility functions, other React components) run on the client. It also enables interactivity with React via event handlers and most hooks, so you will see this directive used quite often in the UTD Clubs codebase.
+
+[^3]: React has a feature called [Server Functions](https://react.dev/reference/rsc/server-functions), in which adding the [`'use server'`](https://react.dev/reference/rsc/use-server) directive at the top of a file creates server-side utility code that can be called by client components. However, because UTD Clubs instead uses tRPC and Tanstack Query, **you should not use React Server Functions.**
+
+[^4]: Although UTD Clubs does have features that utilize the [Nebula API](https://www.utdnebula.com/projects/api), backend requests are handled using tRPC. The frontend and backend for UTD Clubs are located in the same codebase.
