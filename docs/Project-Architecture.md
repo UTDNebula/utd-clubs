@@ -28,7 +28,7 @@ To call the API provided by tRPC, developers should use the [**Tanstack Query**]
 
 ### Back-end Concepts
 
-The following are features that run primarily on the server.
+The following are concepts about features that run primarily on the server.
 
 #### Database
 
@@ -51,7 +51,19 @@ To connect to each social platform, Nebula Labs leadership must request oAuth2 c
 
 #### Nebula API
 
-Although UTD Clubs has its own backend, some features utilize the **Nebula API**, which is another project by Nebula Labs. Currently, UTD Clubs only uses the Nebula API's ability to provide file storage. This is used to allow club managers to upload logos and banner images for their clubs, as well as banner images for events. Whenever a user uploads an image, the Nebula API returns a URL corresponding to that image, which is stored in UTD Club's database.
+Although UTD Clubs has its own backend, some features utilize the [**Nebula API**](#nebula-api-1), which is another project by Nebula Labs. Currently, UTD Clubs only uses the Nebula API's ability to provide file storage. This is used to allow club managers to upload logos and banner images for their clubs, as well as banner images for events. Whenever a user uploads an image, the Nebula API returns a URL corresponding to that image, which is stored in UTD Club's database.
+
+### Front-end Concepts
+
+The following are concepts related to UI and interacting with users of UTD Clubs.
+
+#### Nebula Library
+
+As a project of Nebula Labs, UTD Clubs has a similar design language to other Nebula Labs projects. To facilite collaboration between projects, the [**Nebula Library**](#nebula-library-1) provides shared reusable React components. These components have been built in a way that makes them independent of any specific project.
+
+#### Material Design
+
+The UI design style of UTD Clubs loosely follows **Google's Material Design**. UTD Clubs combines concepts from both Material 2 and Material 3. [**MUI**](#material-ui-mui) is the library used to provide pre-built React components that follow Material Design. MUI also provides Google's older **Material Icons** as React components.
 
 ---
 
@@ -114,6 +126,21 @@ Although Node.js also provides tons of APIs, we only really use it to run our co
 The Node Package Manager (NPM) is installed automatically whenever you install [Node.js](#nodejs). It manages every library used in UTD Clubs via the `package.json` file and makes it easy to install everything you need using a single terminal command: `npm install`
 
 We also utilize NPM scripts, which makes it easy for you to run common tasks without memorizing a long and complicated terminal command. You may have seen terminal commands that look like `npm run ...` in [Getting Started](Getting-Started.md); these are scripts! For a full list of every NPM script in `utd-clubs`, check out [NPM Scripts](NPM-Scripts.md).
+
+### Nebula API
+
+- [Documentation](https://api.utdnebula.com/swagger/index.html)
+- [Website](https://www.utdnebula.com/projects/api)
+
+<!-- TODO -->
+
+### Nebula Library
+
+- [Repository](https://github.com/UTDNebula/nebula-library)
+
+<!-- TODO -->
+
+For more information, see [Nebula Library](Nebula-Library.md)
 
 ## List of Major Libraries
 
