@@ -6,9 +6,11 @@ All the major libraries/packages that make `utd-clubs` work.
 
 - [Repository](https://github.com/UTDNebula/nebula-library)
 
-<!-- TODO -->
+As a project of Nebula Labs, UTD Clubs has a similar design language to other Nebula Labs projects. To facilite collaboration between projects, the Nebula Library provides shared reusable React components. These components have been built in a way that makes them independent of any specific project.
 
 For more information, see [Nebula Library](Nebula-Library.md)
+
+<!-- TODO -->
 
 ## Tailwind CSS
 
@@ -40,8 +42,12 @@ Obviously, Tailwind is a lot more concise! To learn more about Tailwind, we reco
 
 Material UI (MUI, pronounced letter-by-letter) provides pre-built React components for such as buttons, icons, text fields, tooltips, dialogs, and a lot more. The design of MUI is based on [Material Design 2](https://m2.material.io), which is a design system by Google used for Android.
 
+The UI design style of UTD Clubs loosely follows **Google's Material Design**. UTD Clubs combines concepts from both Material 2 and Material 3. [**MUI**](Frontend-Libraries.md#material-ui-mui) is the library used to provide pre-built React components that follow Material Design. MUI also provides Google's older **Material Icons** as React components.
+
 ## Tanstack Query
 
 - Documentation: [Getting Started](https://tanstack.com/query/latest/docs/framework/react/overview) | [Guides](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults) | [API Reference](https://tanstack.com/query/latest/docs/framework/react/reference/index)
+
+To call the API provided by tRPC, developers should use the [**Tanstack Query**](Frontend-Libraries.md#tanstack-query) library. This entails using the `useQuery()` hook in client-side React components. Tanstack Query provides features such as caching, maintaining "out of date" data, and query state metadata that it easier to create loading states and error messages.
 
 <!-- TODO -->
