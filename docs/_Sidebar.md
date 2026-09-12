@@ -12,3 +12,10 @@
 - [Database Migrations](./Database-Migrations.md)
 - [NPM Scripts](./NPM-Scripts.md)
 - [For developers using VS Code](./VS-Code.md)
+
+## Learn
+
+- [Languages & Core Technologies](Languages-and-Core-Technologies.md)
+- [Fullstack Libraries](Fullstack-Libraries.md)
+- [Frontend Libraries](Frontend-Libraries.md)
+- [Backend Libraries](Backend-Libraries.md)
