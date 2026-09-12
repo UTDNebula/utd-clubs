@@ -8,7 +8,7 @@ This page assumes you have a basic understanding of what HTML, CSS, and JavaScri
 
 _Use the links in this section to navigate to our documentation for that item!_
 
-UTD Clubs is a web application built using the [**TypeScript**](#typescript) programming language. For frontend development, UTD Clubs uses the [**React**](#react) JavaScript library. The backend of the project runs on [**Node.js**](#nodejs). Libraries/packages are managed using [**NPM**](#npm).
+UTD Clubs is a web application built using the [**TypeScript**](Languages-and-Core-Technologies.md#typescript) programming language. For frontend development, UTD Clubs uses the [**React**](Languages-and-Core-Technologies.md#react) JavaScript library. The backend of the project runs on [**Node.js**](Languages-and-Core-Technologies.md#nodejs). Libraries/packages are managed using [**NPM**](Languages-and-Core-Technologies.md#npm).
 
 ### Full-stack Concepts
 
@@ -16,15 +16,15 @@ The following are concepts that are considered neither front-end nor back-end, a
 
 #### Next.JS and SSR
 
-UTD Clubs utilizes the App Router from [**Next.JS**](#nextjs) library to handle the difficult tasks needed for building the UTD Clubs web application. Next.JS automates the processes of building and serving the website, as well as generating page routes via the folder structure in the `src/app/` directory.
+UTD Clubs utilizes the App Router from [**Next.JS**](Fullstack-Libraries.md#nextjs) library to handle the difficult tasks needed for building the UTD Clubs web application. Next.JS automates the processes of building and serving the website, as well as generating page routes via the folder structure in the `src/app/` directory.
 
 Next.JS utilizes a concept called server-side rendering (SSR). This means anytime a visitor opens a page on UTD Clubs, the backend server (using the Node.js runtime[^1]) will generate most of the content as HTML before sending it to the visitor's device, which then runs any code that must run on the client. SSR is done to improve loading times and the experience of users with older devices. Because of SSR plus the fact that UTD Clubs uses TypeScript for everything, many files might run on either the server or client.[^2]
 
 #### Client and Server Communication
 
-Sometimes, code that runs on the client will need to communicate with the server.[^3] For example, when a visitor submits a form on the client, changes in the database must be run on the server. To allow this, UTD Clubs uses the [**tRPC**](#trpc) library, which abstracts away the creation of an internal API used only by UTD Clubs to communicate between the client and server.[^4]
+Sometimes, code that runs on the client will need to communicate with the server.[^3] For example, when a visitor submits a form on the client, changes in the database must be run on the server. To allow this, UTD Clubs uses the [**tRPC**](Backend-Libraries.md#trpc) library, which abstracts away the creation of an internal API used only by UTD Clubs to communicate between the client and server.[^4]
 
-To call the API provided by tRPC, developers should use the [**Tanstack Query**](#tanstack-query) library. This entails using the `useQuery()` hook in client-side React components. Tanstack Query provides features such as caching, maintaining "out of date" data, and query state metadata that it easier to create loading states and error messages.
+To call the API provided by tRPC, developers should use the [**Tanstack Query**](Frontend-Libraries.md#tanstack-query) library. This entails using the `useQuery()` hook in client-side React components. Tanstack Query provides features such as caching, maintaining "out of date" data, and query state metadata that it easier to create loading states and error messages.
 
 ### Back-end Concepts
 
@@ -32,7 +32,7 @@ The following are concepts about features that run primarily on the server.
 
 #### Database
 
-UTD Clubs uses a **PostgreSQL** database to store all data related to clubs, users, events, accounts, etc. To avoid requiring developers to write SQL, UTD Clubs uses [**Drizzle**](#drizzle). This is an ORM (Object-Relational Mapping) library that allows developers to write TypeScript to query the database as well as define type-safe database schemas and relations. The database can only be accessed from code that runs on the server; i.e. React Client Components cannot call APIs that access the database.
+UTD Clubs uses a **PostgreSQL** database to store all data related to clubs, users, events, accounts, etc. To avoid requiring developers to write SQL, UTD Clubs uses [**Drizzle**](Backend-Libraries.md#drizzle). This is an ORM (Object-Relational Mapping) library that allows developers to write TypeScript to query the database as well as define type-safe database schemas and relations. The database can only be accessed from code that runs on the server; i.e. React Client Components cannot call APIs that access the database.
 
 UTD Clubs uses a codebase-first workflow rather than a database-first workflow. This means that schemas are defined in the codebase, and databases must be "migrated" to match the codebase's schemas. Drizzle provides tools for automatically generating and applying migrations.[^5]
 
@@ -45,13 +45,13 @@ The database for UTD Clubs is provided by **Neon**, which is a managed serverles
 
 #### Account Authentication
 
-Several features in UTD Clubs require an account to use. The [**Better Auth**](#better-auth) framework handles account authentication by integrating with the following social providers: Google, Discord, and Microsoft. This means that visitors of UTD Clubs can log in using either their Google, Discord, and Microsoft account.[^6] Better Auth integrates with Drizzle to store account data in the database.
+Several features in UTD Clubs require an account to use. The [**Better Auth**](Fullstack-Libraries.md#better-auth) framework handles account authentication by integrating with the following social providers: Google, Discord, and Microsoft. This means that visitors of UTD Clubs can log in using either their Google, Discord, and Microsoft account.[^6] Better Auth integrates with Drizzle to store account data in the database.
 
 To connect to each social platform, Nebula Labs leadership must request oAuth2 client IDs and secrets from the corresponding social platform. These client IDs and secrets must be provided in the environment variables whenever UTD Clubs is deployed; otherwise, account authentication fails and visitors are unable to sign in.
 
 #### Nebula API
 
-Although UTD Clubs has its own backend, some features utilize the [**Nebula API**](#nebula-api-1), which is another project by Nebula Labs. Currently, UTD Clubs only uses the Nebula API's ability to provide file storage. This is used to allow club managers to upload logos and banner images for their clubs, as well as banner images for events. Whenever a user uploads an image, the Nebula API returns a URL corresponding to that image, which is stored in UTD Club's database.
+Although UTD Clubs has its own backend, some features utilize the [**Nebula API**](Languages-and-Core-Technologies.md#nebula-api), which is another project by Nebula Labs. Currently, UTD Clubs only uses the Nebula API's ability to provide file storage. This is used to allow club managers to upload logos and banner images for their clubs, as well as banner images for events. Whenever a user uploads an image, the Nebula API returns a URL corresponding to that image, which is stored in UTD Club's database.
 
 ### Front-end Concepts
 
@@ -59,162 +59,11 @@ The following are concepts related to UI and interacting with users of UTD Clubs
 
 #### Nebula Library
 
-As a project of Nebula Labs, UTD Clubs has a similar design language to other Nebula Labs projects. To facilite collaboration between projects, the [**Nebula Library**](#nebula-library-1) provides shared reusable React components. These components have been built in a way that makes them independent of any specific project.
+As a project of Nebula Labs, UTD Clubs has a similar design language to other Nebula Labs projects. To facilite collaboration between projects, the [**Nebula Library**](Languages-and-Core-Technologies.md#nebula-library) provides shared reusable React components. These components have been built in a way that makes them independent of any specific project.
 
 #### Material Design
 
-The UI design style of UTD Clubs loosely follows **Google's Material Design**. UTD Clubs combines concepts from both Material 2 and Material 3. [**MUI**](#material-ui-mui) is the library used to provide pre-built React components that follow Material Design. MUI also provides Google's older **Material Icons** as React components.
-
----
-
-> [!NOTE]
-> The following sections provide brief explanations for recruits about what each library/technology is and what it's used for. These sections won't provide any critical information about how to use each item, so feel free to skip ahead to the next page: [Project Structure](Project-Structure.md)
-
-## List of Languages and Core Technologies
-
-Programming languages, libraries, and software that are foundational to how `utd-clubs` works.
-
-### TypeScript
-
-- [Documentation](https://www.typescriptlang.org/docs) - Rather technical. We recommend learning as you go.
-- [W3Schools Tutorial](https://www.w3schools.com/typescript/index.php)
-
-TypeScript (TS) is the language we use for 99% of everything in `utd-clubs`. TypeScript looks nearly identical to JavaScript; in fact, all JS code is valid TS code! TypeScript code is compiled to JavaScript code when the project is built, which is handled automatically for `utd-clubs` by [Next.JS](#nextjs).
-
-What's different about TypeScript, however, is that it adds static typing and type safety. This helps avoid crashes while the website is running. You can add a **type annotation** to a variable to explicitly declare what values that variable is allowed to have. For instance, the following explicitly states that the variable `name` can only be a string:
-
-```ts
-let name: string = 'John Doe';
-```
-
-TypeScript also lets you write **custom types**. For instance, the following explicitly states that the variable `color` can only be "red", "green", or "blue":
-
-```ts
-type Color = 'red' | 'green' | 'blue';
-let color: Color = 'green';
-```
-
-Files written in TypeScript have the `.ts` file extension.
-
-### React
-
-- [Documentation](https://react.dev/reference/react) - Rather technical. We recommend learning as you go.
-- [Official React tutorial](https://react.dev/learn)
-
-For frontend development, we use the React JavaScript library. React uses **JSX**, which is a syntax extension that allows writing HTML-like code in JavaScript. It looks a lot like HTML, but there are a few small differences. React also makes creating user interfaces much easier with various other features:
-
-- React lets you create **components**, which are basically custom reusable HTML tags (for example, we have a reusable `<BackButton />` component). Components are basically just functions that return JSX. You can also define **props** for each component, which are input attributes/parameters for that component's functions.
-- React provides the ability to add **event handlers**, such as an `onClick` event that runs code anytime a button is clicked. Events will trigger a "render", in which all the code in your component will run again whenever it's refreshed on the user's screen.
-- As a user interacts with UTD Clubs, the website may need to change to respond to their actions. React lets you **manage state** by using the `useState` hook.
-
-React also has more advanced concepts such as `useEffect`, context, custom hooks, refs, memoization, and server components. You may come across these in the codebase, but you'll only need to know these concepts for more complex issues.
-
-Files using JSX have the `.jsx` file extension (or the `.tsx` file extension if using TypeScript).
-
-### Node.js
-
-- [Installation](https://nodejs.org/en/download)
-
-Normally, JavaScript is frontend code that runs on the client by the user's browser (whether that is Chrome, Firefox, Safari, etc.). Because UTD Clubs is a web application, we need to be able to run code on the server to handle account data, API fetching, and other sensitive stuff we don't want users to have access to. We use Node.js to run JavaScript (and TypeScript by extension) code on the server.
-
-Although Node.js also provides tons of APIs, we only really use it to run our code. Check out our guide on installing Node.js in [Getting Started](Getting-Started.md).
-
-### NPM
-
-- [Package Directory](https://www.npmjs.com)
-
-The Node Package Manager (NPM) is installed automatically whenever you install [Node.js](#nodejs). It manages every library used in UTD Clubs via the `package.json` file and makes it easy to install everything you need using a single terminal command: `npm install`
-
-We also utilize NPM scripts, which makes it easy for you to run common tasks without memorizing a long and complicated terminal command. You may have seen terminal commands that look like `npm run ...` in [Getting Started](Getting-Started.md); these are scripts! For a full list of every NPM script in `utd-clubs`, check out [NPM Scripts](NPM-Scripts.md).
-
-### Nebula API
-
-- [Documentation](https://api.utdnebula.com/swagger/index.html)
-- [Website](https://www.utdnebula.com/projects/api)
-
-<!-- TODO -->
-
-### Nebula Library
-
-- [Repository](https://github.com/UTDNebula/nebula-library)
-
-<!-- TODO -->
-
-For more information, see [Nebula Library](Nebula-Library.md)
-
-## List of Major Libraries
-
-All the major libraries/packages that make `utd-clubs` work.
-
-### Next.JS
-
-- [Documentation](https://nextjs.org/docs)
-
-A full-stack framework for React that makes building web applications much easier. UTD Clubs uses Next.JS's App Router, which handles page routing, faster page navigation loading, and much more.
-
-- The `src/app/` directory maps files and folders to the routes in the Clubs website. For example, `src/app/page.tsx` maps to the [homepage](https://clubs.utdnebula.com) and `src/app/club-match/page.tsx` maps to the [club match](https://clubs.utdnebula.com/club-match) page. [_...more info_](https://nextjs.org/docs/app/getting-started/project-structure)
-- Next.JS handles running files/components either on the client (the device of the user accessing the website) or the server (our backend). This is incredibly useful for caching and server-side rendering, which generally improves how fast the website loads. [_...more info_](https://nextjs.org/docs/app/getting-started/server-and-client-components)
-- The `public/` directory contains images and resources that are made available by Next.JS to the website. [_...more info_](https://nextjs.org/docs/app/api-reference/file-conventions/public-folder)
-
-We also use Next.JS for several other things, including: [SEO metadata](https://nextjs.org/docs/app/getting-started/metadata-and-og-images), [Open Graph preview images](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/opengraph-image), [prefetching](https://nextjs.org/docs/app/getting-started/linking-and-navigating#prefetching), [API route handling](https://nextjs.org/docs/app/getting-started/route-handlers), and [deployment](https://nextjs.org/docs/app/getting-started/deploying). These are features you generally don't need to worry about unless you're specifically working on an issue for one of them.
-
-### Tailwind CSS
-
-- [Documentation](https://tailwindcss.com/docs/styling-with-utility-classes)
-
-A frontend library that lets you write CSS using just [HTML classes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/class). Throughout the codebase, you may see stuff like:
-
-```html
-<div className="h-4 w-fit px-6 bg-white dark:bg-black"></div>
-```
-
-These are HTML classes automatically generated by Tailwind! In the above example, you are specifying a div with a height of 4 units (equivalent to `16px`), a width of `fit-content`, horizontal padding of 6 units (`24px`), and a default background color of `white` that changes to `black` in dark mode. This would be equivalent to the following CSS:
-
-```css
-height: 16px;
-width: fit-content;
-padding-inline: 24px;
-background-color: white;
-@media (prefers-color-scheme: dark) {
-  background-color: black;
-}
-```
-
-Obviously, Tailwind is a lot more concise! To learn more about Tailwind, we recommend checking out their [official documentation](https://tailwindcss.com/docs/styling-with-utility-classes).
-
-### Material UI (MUI)
-
-- [Documentation](https://mui.com/material-ui/all-components)
-
-Material UI (MUI, pronounced letter-by-letter) provides pre-built React components for such as buttons, icons, text fields, tooltips, dialogs, and a lot more. The design of MUI is based on [Material Design 2](https://m2.material.io), which is a design system by Google used for Android.
-
-### tRPC
-
-- [Documentation](https://trpc.io/docs)
-
-<!-- TODO -->
-
-### Tanstack Query
-
-- Documentation: [Getting Started](https://tanstack.com/query/latest/docs/framework/react/overview) | [Guides](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults) | [API Reference](https://tanstack.com/query/latest/docs/framework/react/reference/index)
-
-<!-- TODO -->
-
-### Drizzle
-
-- [Documentation](https://orm.drizzle.team/docs/overview)
-  - [Schema](https://orm.drizzle.team/docs/sql-schema-declaration) - See the "What's next?" section at the bottom of the page
-    - [Relations](https://orm.drizzle.team/docs/relations-schema-declaration)
-  - [Data Querying](https://orm.drizzle.team/docs/data-querying) - See the "What's next?" section at the bottom of the page
-  - [Migrations](https://orm.drizzle.team/docs/migrations) & [Drizzle Kit](https://orm.drizzle.team/docs/kit-overview) - See our documentation on [Database Migrations](Database-Migrations.md)
-
-<!-- TODO -->
-
-### Better Auth
-
-- [Documentation](https://better-auth.com/docs)
-
-<!-- TODO -->
+The UI design style of UTD Clubs loosely follows **Google's Material Design**. UTD Clubs combines concepts from both Material 2 and Material 3. [**MUI**](Frontend-Libraries.md#material-ui-mui) is the library used to provide pre-built React components that follow Material Design. MUI also provides Google's older **Material Icons** as React components.
 
 ---
 
