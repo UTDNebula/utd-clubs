@@ -44,10 +44,50 @@ Material UI (MUI, pronounced letter-by-letter) provides pre-built React componen
 
 The UI design style of UTD Clubs loosely follows **Google's Material Design**. UTD Clubs combines concepts from both Material 2 and Material 3. [**MUI**](Frontend-Libraries.md#material-ui-mui) is the library used to provide pre-built React components that follow Material Design. MUI also provides Google's older **Material Icons** as React components.
 
+### MUI X
+
+- [Documentation](https://mui.com/x/introduction)
+
+Although MUI offers numerous common UI components, there are often more advanced
+
+## Syncfusion
+
+- [Documentation](https://ej2.syncfusion.com/react/documentation/introduction)
+
+<!-- TODO -->
+
+## Tanstack Form
+
+- Documentation: [Getting Started](https://tanstack.com/form/latest/docs/overview) | [Guides](https://tanstack.com/form/latest/docs/framework/react/guides/basic-concepts) | [API Reference](https://tanstack.com/form/latest/docs/reference/index)
+
+<!-- TODO -->
+
+## Tanstack Table
+
+- Documentation: [Getting Started](https://tanstack.com/table/latest/docs/overview) | [Guides](https://tanstack.com/table/latest/docs/guide/features) | [API Reference](https://tanstack.com/table/latest/docs/reference/index)
+
+<!-- TODO -->
+
 ## Tanstack Query
 
 - Documentation: [Getting Started](https://tanstack.com/query/latest/docs/framework/react/overview) | [Guides](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults) | [API Reference](https://tanstack.com/query/latest/docs/framework/react/reference/index)
 
 To call the API provided by tRPC, developers should use the [**Tanstack Query**](Frontend-Libraries.md#tanstack-query) library. This entails using the `useQuery()` hook in client-side React components. Tanstack Query provides features such as caching, maintaining "out of date" data, and query state metadata that it easier to create loading states and error messages.
+
+<!-- TODO -->
+
+## Minor Libraries
+
+### Motion
+
+- [Documentation](https://motion.dev/docs/react)
+
+Formerly known as "Framer Motion"
+
+<!-- TODO -->
+
+### dnd kit
+
+- [Documentation](https://dndkit.com/react/quickstart/)
 
 <!-- TODO -->
