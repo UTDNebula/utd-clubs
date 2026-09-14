@@ -20,7 +20,21 @@ UTD Clubs is a web application built using the [**TypeScript**](Languages-and-Co
 
 - **UI Components** - UTD Clubs loosely follows the **Google's Material Design** guidelines for UI/UX. The [**MUI**](Frontend-Libraries.md#material-ui-mui) library provides reusable React components, utilities, and icons that follow these guidelines. For more specialized components shared across Nebula Labs' other projects, the [**Nebula Library**](Languages-and-Core-Technologies.md#nebula-library) also provides reusable React components.
 
-_TODO: Unfinished, still have a few libraries I need to mention_
+  Additionally, for special UI components where the foundational components of MUI are lacking, UTD Clubs also uses the following UI libraries:
+  - [**MUI X**](Frontend-Libraries.md#mui-x) for its date/time pickers and data grid table components
+  - [**Syncfusion**](Frontend-Libraries.md#syncfusion) for its calendar component
+  - [**Tanstack Form**](Frontend-Libraries.md#tanstack-form) for handling forms
+  - [**Tanstack Table**](Frontend-Libraries.md#tanstack-table) for additional table components
+  - [**Motion**](Frontend-Libraries.md#motion) for building animated user interfaces
+  - [**dnd kit**](Frontend-Libraries.md#dnd-kit) for utilities related to drag-and-drop interfaces
+
+- **Utilities** - UTD Clubs uses the **Zod** library to define schemas, parse, and validate inputted data into the tRPC API, form responses, and URL query parameters. The **date-fns** library provides useful function for working with date/time in JavaScript. The **Zustand** library provides state management tools that make passing state in React much easier.
+
+- **Code Quality** - To ensure the UTD Clubs codebase follows good practices and remains readable to future developers, the following libraries are used:
+  - **Prettier** formats code to maintain a consistent style
+  - **ESLint** catches problems with poorly written code
+  - **Jest** runs unit tests to ensure code works as expected
+  - **Sentry** detects errors in production and allows visitors to report bugs
 
 ---
 
