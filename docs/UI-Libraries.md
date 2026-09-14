@@ -1,6 +1,6 @@
-# List of Frontend Libraries
+# List of User Interface Libraries in UTD Clubs
 
-All the major libraries/packages that make `utd-clubs` work.
+Frontend libraries that make creating user interfaces easier in `utd-clubs`.
 
 ## Nebula Library
 
