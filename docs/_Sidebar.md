@@ -15,7 +15,7 @@
 
 ## Learn
 
-- [Languages & Core Technologies](Languages-and-Core-Technologies.md)
-- [Fullstack Libraries](Fullstack-Libraries.md)
-- [Frontend Libraries](Frontend-Libraries.md)
-- [Backend Libraries](Backend-Libraries.md)
+- [Languages & Fundamental Technologies](Languages-and-Fundamental-Technologies.md)
+- [Core Libraries](Core-Libraries.md)
+- [UI Libraries](UI-Libraries.md)
+- [Utility and Code Quality Libraries](Utility-and-Code-Quality-Libraries.md)

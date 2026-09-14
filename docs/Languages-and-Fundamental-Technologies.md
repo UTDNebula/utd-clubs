@@ -1,13 +1,13 @@
-# List of Languages and Core Technologies
+# List of Languages and Fundamental Technologies in UTD Clubs
 
-Programming languages, libraries, and software that are foundational to how `utd-clubs` works.
+Programming languages and software that are foundational to making `utd-clubs` work.
 
 ## TypeScript
 
 - [Documentation](https://www.typescriptlang.org/docs) - Rather technical. We recommend learning as you go.
 - [W3Schools Tutorial](https://www.w3schools.com/typescript/index.php)
 
-TypeScript (TS) is the language we use for 99% of everything in `utd-clubs`. TypeScript looks nearly identical to JavaScript; in fact, all JS code is valid TS code! TypeScript code is compiled to JavaScript code when the project is built, which is handled automatically for `utd-clubs` by [Next.JS](Fullstack-Libraries.md#nextjs).
+TypeScript (TS) is the language we use for 99% of everything in `utd-clubs`. TypeScript looks nearly identical to JavaScript; in fact, all JS code is valid TS code! TypeScript code is compiled to JavaScript code when the project is built, which is handled automatically for `utd-clubs` by [Next.JS](Core-Libraries.md#nextjs).
 
 What's different about TypeScript, however, is that it adds static typing and type safety. This helps avoid crashes while the website is running. You can add a **type annotation** to a variable to explicitly declare what values that variable is allowed to have. For instance, the following explicitly states that the variable `name` can only be a string:
 
