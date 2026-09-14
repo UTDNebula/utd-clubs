@@ -40,9 +40,9 @@ Obviously, Tailwind is a lot more concise! To learn more about Tailwind, we reco
 
 - [Documentation](https://mui.com/material-ui/all-components)
 
-Material UI (MUI, pronounced letter-by-letter) provides pre-built React components for such as buttons, icons, text fields, tooltips, dialogs, and a lot more. The design of MUI is based on [Material Design 2](https://m2.material.io), which is a design system by Google used for Android.
+Material UI (MUI, pronounced letter-by-letter) provides pre-built React components for such as buttons, icons, text fields, tooltips, dialogs, and a lot more. The design of MUI is based on [Material Design 2](https://m2.material.io), which is a design system by Google used for Android. UTD Clubs loosely follows UI design concepts from both Material Design 2 and Material Design 3.
 
-The UI design style of UTD Clubs loosely follows **Google's Material Design**. UTD Clubs combines concepts from both Material 2 and Material 3. [**MUI**](Frontend-Libraries.md#material-ui-mui) is the library used to provide pre-built React components that follow Material Design. MUI also provides Google's older **Material Icons** as React components.
+MUI also provides Google's older **Material Icons** as React components.
 
 ### MUI X
 
@@ -65,14 +65,6 @@ Although MUI offers numerous common UI components, there are often more advanced
 ## Tanstack Table
 
 - Documentation: [Getting Started](https://tanstack.com/table/latest/docs/overview) | [Guides](https://tanstack.com/table/latest/docs/guide/features) | [API Reference](https://tanstack.com/table/latest/docs/reference/index)
-
-<!-- TODO -->
-
-## Tanstack Query
-
-- Documentation: [Getting Started](https://tanstack.com/query/latest/docs/framework/react/overview) | [Guides](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults) | [API Reference](https://tanstack.com/query/latest/docs/framework/react/reference/index)
-
-To call the API provided by tRPC, developers should use the [**Tanstack Query**](Frontend-Libraries.md#tanstack-query) library. This entails using the `useQuery()` hook in client-side React components. Tanstack Query provides features such as caching, maintaining "out of date" data, and query state metadata that it easier to create loading states and error messages.
 
 <!-- TODO -->
 
