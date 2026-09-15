@@ -118,6 +118,14 @@ The Nebula API is actually another project by Nebula Labs! Although UTD Clubs ha
 - **File storage** - Club managers on UTD Clubs can upload a logo for their club. They can also upload a banner image for their clubs and events. The Nebula API handles storing this image on their servers and providing UTD Clubs a URL where we can access that image.
 - **Email sending** - (WIP) Nebula API provides tools that let us automatically send emails to users. We don't currently use this feature for anything.
 
+Nebula API requires several environment variables:
+
+- `NEBULA_API_URL` - Location of the Nebula API. Normally `https://api.utdnebula.com`
+- `NEBULA_API_KEY` - Nebula API key for accessing the Nebula API. Access your project lead for one
+- `NEBULA_API_STORAGE_BUCKET` - The name of UTD Club's container bucket in Nebula API's file storage feature. Normally `jupiter`
+- `NEBULA_API_STORAGE_KEY` - Key for accessing Nebula API's file storage feature
+- `NEBULA_API_EMAIL_KEY` - Key for accessing Nebula API's email sending feature
+
 ---
 
 ## Next Step
