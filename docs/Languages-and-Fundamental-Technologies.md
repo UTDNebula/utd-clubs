@@ -31,9 +31,60 @@ Files written in TypeScript have the `.ts` file extension.
 
 For frontend development, we use the React JavaScript library. React uses **JSX**, which is a syntax extension that allows writing HTML-like code in JavaScript. It looks a lot like HTML, but there are a few small differences. React also makes creating user interfaces much easier with various other features:
 
-- React lets you create **components**, which are basically custom reusable HTML tags (for example, we have a reusable `<BackButton />` component). Components are basically just functions that return JSX. You can also define **props** for each component, which are input attributes/parameters for that component's functions.
-- React provides the ability to add **event handlers**, such as an `onClick` event that runs code anytime a button is clicked. Events will trigger a "render", in which all the code in your component will run again whenever it's refreshed on the user's screen.
-- As a user interacts with UTD Clubs, the website may need to change to respond to their actions. React lets you **manage state** by using the `useState` hook.
+- **Components** - React lets you create components, which are basically custom reusable HTML tags (for example, we have a reusable `<BackButton />` component). Components are basically just functions that return JSX. You can also define **props** for each component, which are input attributes/parameters for that component's functions.
+
+  Here's an example of a button component that is gray by default, but you can make red or blue:
+
+  ```tsx
+  export function ColoredButton(props: { color?: 'red' | 'blue' }) {
+    return (
+      <button style={{ backgroundColor: color ?? 'gray' }}>Button!</button>
+    );
+  }
+  ```
+
+  Then, you can use this component like so:
+
+  ```html
+  <!-- First button is gray because color wasn't specified -->
+  <ColoredButton />
+  <ColoredButton color="red" />
+  <ColoredButton color="blue" />
+  ```
+
+- **Event handlers** - React provides the ability to add event handlers, such as an `onClick` event that runs code anytime a button is clicked. Events will trigger a "render", in which all the code in your component will run again whenever it's refreshed on the user's screen.
+
+  Here's a button that opens an alert:
+
+  ```tsx
+  export function AlertButton() {
+    const handleClick = () => {
+      window.alert('Hello world!');
+    };
+
+    return <button onClick={handleClick}>Click me!</button>;
+  }
+  ```
+
+- **Manage state** - As a user interacts with UTD Clubs, the website may need to change to respond to their actions. React lets you manage state by using the `useState` hook.
+
+  Here's a button that increases a counter:
+
+  ```tsx
+  export function CounterButton() {
+    const [count, setCount] = useState(0);
+
+    return (
+      <button
+        onClick={() => {
+          setCount((prev) => prev + 1);
+        }}
+      >
+        Clicked {count} times
+      </button>
+    );
+  }
+  ```
 
 React also has more advanced concepts such as `useEffect`, context, custom hooks, refs, memoization, and server components. You may come across these in the codebase, but you'll only need to know these concepts for more complex issues.
 
@@ -60,4 +111,13 @@ We also utilize NPM scripts, which makes it easy for you to run common tasks wit
 - [Documentation](https://api.utdnebula.com/swagger/index.html)
 - [Website](https://www.utdnebula.com/projects/api)
 
-<!-- TODO -->
+The Nebula API is actually another project by Nebula Labs! Although UTD Clubs has its own backend server and API that is used for almost everything, we do use a couple features from the Nebula API:
+
+- **File storage** - Club managers on UTD Clubs can upload a logo for their club. They can also upload a banner image for their clubs and events. The Nebula API handles storing this image on their servers and providing UTD Clubs a URL where we can access that image.
+- **Email sending** - (WIP) Nebula API provides tools that let us automatically send emails to users. We don't currently use this feature for anything.
+
+---
+
+## Next Step
+
+See [Core Libraries](Core-Libraries.md)

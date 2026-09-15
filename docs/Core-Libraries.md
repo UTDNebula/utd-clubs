@@ -68,6 +68,12 @@ The database for UTD Clubs is provided by **Neon**, which is a managed serverles
 
 <!-- TODO -->
 
+---
+
+## Next Step
+
+See [UI Libraries](UI-Libraries.md)
+
 [^1]: Next.JS runs server-side code using the Node.js runtime by default. However, a file can be configured to use the [Edge runtime](https://nextjs.org/docs/app/api-reference/edge) instead by including `export const runtime = 'edge';` in the file.
 
 [^2]: React has a feature called [Server Functions](https://react.dev/reference/rsc/server-functions), in which adding the [`'use server'`](https://react.dev/reference/rsc/use-server) directive at the top of a file creates server-side utility code that can be called by client components. However, because UTD Clubs instead uses tRPC and Tanstack Query, **you should not use React Server Functions.**
