@@ -29,7 +29,7 @@ Files written in TypeScript have the `.ts` file extension.
 - [Documentation](https://react.dev/reference/react) - Rather technical. We recommend learning as you go.
 - [Official React tutorial](https://react.dev/learn)
 
-For frontend development, we use the React JavaScript library. React uses **JSX**, which is a syntax extension that allows writing HTML-like code in JavaScript. It looks a lot like HTML, but there are a few small differences. React also makes creating user interfaces much easier with various other features:
+For frontend development, we use the React JavaScript library. React uses **JSX**, which is a syntax extension that allows writing HTML-like code in JavaScript. Although it looks a lot like HTML, there are a few small differences (`class` is `className`, you can pass JS variables to attributes/props, etc.) React makes creating user interfaces much easier with its numerous features:
 
 - **Components** - React lets you create components, which are basically custom reusable HTML tags (for example, we have a reusable `<BackButton />` component). Components are basically just functions that return JSX. You can also define **props** for each component, which are input attributes/parameters for that component's functions.
 
@@ -66,7 +66,7 @@ For frontend development, we use the React JavaScript library. React uses **JSX*
   }
   ```
 
-- **Manage state** - As a user interacts with UTD Clubs, the website may need to change to respond to their actions. React lets you manage state by using the `useState` hook.
+- **State management** - As a user interacts with UTD Clubs, the website may need to change to respond to their actions. React lets you manage state by using the `useState` hook.
 
   Here's a button that increases a counter:
 
@@ -85,6 +85,8 @@ For frontend development, we use the React JavaScript library. React uses **JSX*
     );
   }
   ```
+
+- **Hooks** - In React, "hooks" are special functions that interact directly with the React API. If you're starting out, you don't really need to know what they are. Just know that if you see a function whose name starts with "use", then that function is a hook! We may occasionally refer to functions as "hooks" in this documentation.
 
 React also has more advanced concepts such as `useEffect`, context, custom hooks, refs, memoization, and server components. You may come across these in the codebase, but you'll only need to know these concepts for more complex issues.
 
