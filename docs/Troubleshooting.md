@@ -1,105 +1,65 @@
-# Troubleshooting & FAQ
+# Troubleshooting
 
-This guide provides fast, actionable solutions to common issues encountered when running or developing `api-tools`.
+This guide provides fast, actionable solutions to common issues encountered when running or developing `utd-clubs`.
 
----
+## Potential issues
 
-## 1. Chromium & ChromeDP Issues
+### Error: `Invalid environment variables`
 
-### Issue: "exec: 'chromium': executable file not found in $PATH" or Chrome fails to launch
+![Next.JS error about invalid environment variables](assets/invalid-env-vars.png)
 
-- **Cause**: ChromeDP cannot find a Chromium or Google Chrome binary on your operating system.
-- **Solutions**:
-  - **Linux**: Install Chromium via your package manager:
-    ```bash
-    # Ubuntu / Debian
-    sudo apt update && sudo apt install -y chromium-browser
-    # Fedora / RHEL
-    sudo dnf install chromium
-    # Arch Linux
-    sudo pacman -S chromium
-    ```
-  - **macOS / Windows**: Ensure [Google Chrome](https://www.google.com/chrome/) is installed in the standard applications directory.
-  - **Environment Variables**: If Chrome is installed in a non-standard location, specify its path explicitly before running `api-tools`:
-    ```bash
-    export CHROMIUM_BIN="/path/to/custom/chrome"
-    export GOOGLE_CHROME_BIN="/path/to/custom/chrome"
-    ```
+**Cause:** You are missing the listed environment variables in `.env`, or the variable is set to an invalid value.
 
-### Issue: Chrome window opens during scraping and interferes with work
+**Solution:**
 
-- **Solution**: Pass the `-headless` flag to run ChromeDP invisibly in background headless mode:
+- Ensure you have copied `.env.example` to `.env`
+
   ```bash
-  ./api-tools -scrape -coursebook -term 24F -headless
+  cp .env.example .env
   ```
 
----
+  Then, fill in all the environment variables that are listed in the error message.
 
-## 2. Environment Variables & MongoDB Connection Issues
+### TypeScript types, CSS, Live reload, and/or the cache are not updating
 
-### Issue: Panic: `<KEY> is missing from .env!`
+**Cause:** Your cache is outdated but Next.JS isn't updating it correctly
 
-- **Cause**: An authenticated scraper or uploader attempted to read a required environment variable from `.env` via `utils.GetEnv`, but the key was either missing or empty.
-- **Solutions**:
-  1. Ensure you have copied `.env.template` to `.env`:
-     ```bash
-     cp .env.template .env
-     ```
-  2. For Coursebook, Astra, or Mazevo scrapers, populate the required credentials:
-     - `LOGIN_NETID` / `LOGIN_PASSWORD` (UTD NetID login)
-     - `LOGIN_ASTRA_USERNAME` / `LOGIN_ASTRA_PASSWORD`
-     - `MAZEVO_API_KEY`
-  3. If you only want to parse existing local data or run tests, you do **not** need these credentials; avoid calling authenticated scraping flags.
+**Solution:**
 
-### Issue: MongoDB connection timed out / "server selection error"
+- Try running the following command in your terminal:
 
-- **Cause**: The uploader could not establish a connection to the MongoDB instance specified in `MONGODB_URI`.
-- **Solutions**:
-  - **Verify Connection String**: Check that `MONGODB_URI` in `.env` is formatted correctly:
-    ```env
-    MONGODB_URI="mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/?retryWrites=true&w=majority"
-    ```
-  - **Check Network & IP Whitelist**: If using MongoDB Atlas, ensure your current IP address is whitelisted under Atlas Network Access.
-  - **Local Development**: If testing locally with a local MongoDB container or service, verify MongoDB is running:
-    ```bash
-    # Test local MongoDB connection
-    mongosh "mongodb://localhost:27017"
-    ```
+  ```bash
+  npm run clean
+  ```
 
----
+  This will delete the `.next/` folder and `next-env.d.ts` file that are generated whenever Next.JS is running, as well as the `tsconfig.tsbuildinfo` that is generated when TypeScript type checks are run. Don't worry, you won't lose any data doing this.
 
-## 3. Locating & Inspecting Log Files
+### There are red squiggles in my TypeScript imports
 
-### How Logging Works
+**Cause:** Some NPM packages are missing or couldn't be found
 
-When `api-tools` executes, `utils.NewSplitWriter` writes all log output to two destinations simultaneously:
+**Solutions:**
 
-1. **Console (`stdout`)**: Live output in your terminal window.
-2. **Log File (`logs/*.log`)**: A persistent log file saved to the `logs/` directory named with the execution timestamp:
-   ```
-   logs/8-31-2026T12-30-15.log
-   ```
+- Install your NPM packages. Try running the following command in your terminal:
 
-### Enabling Verbose Debug Logging
+  ```bash
+  npm install
+  ```
 
-If a scraper or parser is behaving unexpectedly, re-run the command with the `-verbose` flag:
+  We might have added or updated some packages recently, so you make sure you're all up to date.
 
-```bash
-./api-tools -verbose -scrape -coursebook -term 24F
-```
+- Try running the following command in your terminal:
 
-Verbose mode enables:
+  ```bash
+  npm run clean
+  ```
 
-- Microsecond timestamp precision (`log.Lmicroseconds`).
-- Source code filename and line number for every log statement (`log.Lshortfile`).
-- Additional internal debug logs (`utils.Lverbose`).
+  This will delete `.next/`, `next-env.d.ts`, and `tsconfig.tsbuildinfo`. Occasionally, these contain cached data that refuse to update and it's best to just start fresh.
+
+- Try deleting the entire `node_modules/` folder, then running `npm install` in your terminal again. This will take a while, but sometimes a fresh install is what you need.
 
 ---
 
 ## Still Stuck?
 
-Reach out to the team on [Discord](https://discord.utdnebula.com) with:
-
-1. The exact command you ran.
-2. The relevant lines from your latest log file in `logs/`.
-3. Your operating system and Go version (`go version`).
+Reach out to the team on [Discord](https://discord.utdnebula.com)!
