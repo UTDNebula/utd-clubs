@@ -8,15 +8,17 @@ Frontend libraries that make creating user interfaces easier in `utd-clubs`.
 
 As a project of Nebula Labs, UTD Clubs has a similar design language to other Nebula Labs projects. To facilite collaboration between projects, the Nebula Library provides shared reusable React components. These components have been built in a way that makes them independent of any specific project.
 
-For more information, see [Nebula Library](Nebula-Library.md)
+Nebula Library is a work-in-progress. We will be moving many components from `utd-clubs` over to Nebula Library so they may be used in Nebula Labs' other projects.
 
-<!-- TODO -->
+Unlike every other library, Nebula Library is a Git submodule rather than an NPM package. This means additional git commands need to be run when cloning and pulling the `utd-clubs` repository. For more information, please see our pages on [Getting Started](Getting-Started.md) and [Nebula Library](Nebula-Library.md).
 
 ## Tailwind CSS
 
 - [Documentation](https://tailwindcss.com/docs/styling-with-utility-classes)
 
-A frontend library that lets you write CSS using just [HTML classes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/class). Throughout the codebase, you may see stuff like:
+Tailwind is a frontend library that lets you write CSS using just [HTML classes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/class). This is a lot faster than hassling with CSS modules or inline styles.
+
+Throughout the codebase, you may see stuff like:
 
 ```html
 <div className="h-4 w-fit px-6 bg-white dark:bg-black"></div>
@@ -40,15 +42,23 @@ Obviously, Tailwind is a lot more concise! To learn more about Tailwind, we reco
 
 - [Documentation](https://mui.com/material-ui/all-components)
 
-Material UI (MUI, pronounced letter-by-letter) provides pre-built React components for such as buttons, icons, text fields, tooltips, dialogs, and a lot more. The design of MUI is based on [Material Design 2](https://m2.material.io), which is a design system by Google used for Android. UTD Clubs loosely follows UI design concepts from both Material Design 2 and Material Design 3.
+Material UI (MUI, pronounced letter-by-letter) is a library that provides numerous reusable React components. MUI has components for buttons, icons, text fields, tooltips, dialogs, and a lot more. The majority of the UTD Clubs' frontend uses MUI components.
 
-MUI also provides Google's older **Material Icons** as React components.
+- **Material Design** - The design of MUI is based on [Material Design 2](https://m2.material.io), which is a design system by Google used for Android. Material Design contains specifications for components and styling/theming guidelines. UTD Clubs loosely follows concepts from both Material Design 2 (M3) and Material Design 3 (M3). For instance, we use the button design and color tokens from M3, yet we still use switch design of M2.
+- **Components** - The main selling point of MUI is its [vast library of reusable components](https://mui.com/material-ui/all-components). These are used everywhere in our codebase. For instance, we use the [`<Button />`](https://mui.com/material-ui/react-button/) component as a replacement for HTML's default button tag.
+- **Icons** - MUI also provides Google's older **Material Icons** as React components. We normally use the filled and outlined styles. If you'd like to explore MUI's icons, you can search for what you're looking for on the [MUI Material Icons page](https://mui.com/material-ui/material-icons).
+- **Colors** - UTD Clubs uses [Material Design 3's color roles](https://m3.material.io/styles/color/roles). Because the MUI library's theming utilities don't natively support M3's color roles, we instead use our own system for managing colors based on M3.
 
 ### MUI X
 
 - [Documentation](https://mui.com/x/introduction)
 
-Although MUI offers numerous common UI components, there are often more advanced
+Although MUI offers numerous common UI components completely free, they also offer components with more advanced features that they've separated into a separate library called MUI X. This is a freemium library, meaning that while its components are freely available to use, more premium features require a premium plan. Fortunately, UTD Clubs doesn't need any of these premium features, and we are perfectly content with the features that exist in the free plan of MUI X.
+
+UTD Clubs uses the following components from MUI X:
+
+- [Date and Time Pickers](https://mui.com/x/react-date-pickers/)
+- [Data Grid](https://mui.com/x/react-data-grid/)
 
 ## Syncfusion
 
