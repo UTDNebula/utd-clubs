@@ -1,6 +1,6 @@
 # List of Utility and Code Quality Libraries in UTD Club
 
-Small libraries that provide useful tools to omake things easier in `utd-clubs`.
+Small libraries that provide useful tools to make things easier in `utd-clubs`.
 
 ## Zod
 
@@ -35,7 +35,7 @@ ESLint scans every file in the codebase and finds potential code issues that eit
 
 - [Documentation](https://jestjs.io/docs/getting-started)
 
-Jest is the library used to run unit tests that developers write fo React components, utility functions, and modules to ensure they continue to work as expected as the codebase grows. Jest is triggered when using the [`npm run test`](NPM-Scripts.md#npm-run-test) script, which is automatically called during CI/CD testing.
+Jest is the library used to run unit tests that developers write for React components, utility functions, and modules to ensure they continue to work as expected as the codebase grows. Jest is triggered when using the [`npm run test`](NPM-Scripts.md#npm-run-test) script, which is automatically called during CI/CD testing.
 
 ## Sentry
 

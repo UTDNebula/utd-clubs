@@ -202,7 +202,7 @@ Some important notes about how the database works in UTD Clubs:
   - **Production** - The `main` git branch, deployed on [`clubs.utdnebula.com`](https://clubs.utdnebula.com)
   - **Development** - The `develop` git branch, deployed on [`dev.clubs.utdnebula.com`](https://dev.clubs.utdnebula.com)
   - **Preview Deployments for PRs** - Each git branch (and by extension, pull requests) in the GitHub repository will automatically create a preview deployment and a database branch specifically for this branch. Example: [`clubs-7s68tk53e-utdnebula.vercel.app`](https://clubs-7s68tk53e-utdnebula.vercel.app) <!-- This example corresponds to the `develop` branch, so this URL shouldn't ever break -->
-  - **Local development branches** - Developers may request a database branch for testing schema changes from the Clubs Lead or Nebula Platform.
+  - **Local development branches** - Developers may request a database branch for testing schema changes from the Clubs Lead or Head of Engineering.
 
 ## Better Auth
 

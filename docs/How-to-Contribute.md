@@ -28,6 +28,12 @@ When creating a branch, please follow our naming convention:
 
 For example, `123-new-feature-name` is acceptable.
 
+You can create a branch using either [GitHub Desktop](https://github.com/apps/desktop) or the following terminal command:
+
+```bash
+git checkout -b '123-branch-name'
+```
+
 > [!TIP]
 >
 > GitHub can automatically create a branch for you that follows this naming convention. On the page for your issue, select "Create a branch" under the Development section in the right sidebar:
@@ -41,7 +47,9 @@ It's time to code!
 Don't forget to format and check your code periodically:
 
 ```bash
-npm run format && npm run lint && npm run type:check
+npm run format
+npm run lint
+npm run type:check
 ```
 
 Discuss your progress frequently, and push your commits to GitHub. You can use [GitHub Desktop](https://github.com/apps/desktop) to make this easier. Avoid using AI to write code for your first contribution.
