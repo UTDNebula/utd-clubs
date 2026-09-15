@@ -17,6 +17,7 @@
 
 - [Troubleshooting](./Troubleshooting.md)
 - [FAQ](./FAQ.md)
+- [Tests](./Tests.md)
 - [Nebula Library](./Nebula-Library.md)
 - [Database Migrations](./Database-Migrations.md)
 - [Admin Features](./Admin-Features.md)
