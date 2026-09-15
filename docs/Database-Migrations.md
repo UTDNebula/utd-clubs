@@ -10,7 +10,7 @@ UTD Clubs uses a **codebase-first workflow** rather than a database-first workfl
 
 When changing the database schemas (that is, any file in the `src/server/db/schema/` directory), it is almost guaranteed that you'll need to update the backend database to match the changes you made to the schema. To do this, you'll generate a migration using Drizzle, which integrates with our CI/CD pipeline to ensure changes are automatically applied when the PR with your schema changes is merged.
 
-The migrationi process consists of two steps:
+The migration process consists of two steps:
 
 1. [Generating a new migration](#generating-migrations)
 2. [Applying that migration](#applying-the-migration)

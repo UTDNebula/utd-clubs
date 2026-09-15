@@ -6,7 +6,7 @@ While working in `utd-clubs` (and any codebase for a web application, for that m
 - CSS handles the website's **presentation**. This means it controls how stuff should look by customizing things like color, fonts, layouts, and simple visual effects (such as hover states).
 - JavaScript (JS) handles the website's **behavior**. This defines complex behavior such as what happens when you press a button and fetching data from the server.
 
-You don't need to master these languages to contribute to the `utd-clubs` codebase—in fact, you don't even have to write any actual CSS! However, it's good to at least know simple concepts like how to display an image, or change the color text, or how to make a button that opens a popup alert.
+You don't need to master these languages to contribute to the `utd-clubs` codebase—in fact, you don't even have to write any actual CSS! However, it's good to at least know simple concepts like how to display an image, or change the color text, or how to make a button that opens a popup alert, and what an object in JavaScript is.
 
 Here are some excellent resources for learning about HTML, CSS, and JS:
 
@@ -19,4 +19,6 @@ Here are some excellent resources for learning about HTML, CSS, and JS:
 
 ## Next Step
 
-Continue reading [Project Architecture](Project-Architecture.md)
+Return to [Project Architecture](Project-Architecture.md)
+
+Or see [Languages and Fundamental Technologies](Languages-and-Fundamental-Technologies.md)
