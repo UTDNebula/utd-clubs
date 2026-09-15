@@ -2,7 +2,7 @@
 
 ## Background
 
-UTD Clubs uses a **PostgreSQL** database to store all our data related to clubs, users, events, etc. To avoid having to write SQL code, we use [Drizzle](Project-Architecture.md#drizzle), which is an ORM library that provides useful features such as TypeScript type safety and schema definitions.
+UTD Clubs uses a **PostgreSQL** database to store all our data related to clubs, users, events, etc. To avoid having to write SQL code, we use [Drizzle](Core-Libraries.md#drizzle), which is an ORM library that provides useful features such as TypeScript type safety and schema definitions.
 
 UTD Clubs uses a **codebase-first workflow** rather than a database-first workflow. This means that schemas are defined in the codebase, and databases must be "migrated" to match the codebase's schemas. Drizzle also provides tools for automatically generating and applying migrations, which is what this page discusses.
 
