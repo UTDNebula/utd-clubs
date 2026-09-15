@@ -64,19 +64,95 @@ UTD Clubs uses the following components from MUI X:
 
 - [Documentation](https://ej2.syncfusion.com/react/documentation/introduction)
 
-<!-- TODO -->
+Syncfusion is a paid collection of advanced UI components. We have a license for Syncfusion, which we use for UI components that are otherwise unreasonably complex for us to implement.
+
+For instance, we use the [Syncfusion Scheduler SDK](https://help.syncfusion.com/scheduler-sdk/overview), which provides a [Scheduler](https://help.syncfusion.com/scheduler-sdk/react/schedule/getting-started) and [Calendar](https://help.syncfusion.com/scheduler-sdk/react/calendar/getting-started) React component. We use this for displaying a calendar of events in several places.
+
+Syncfusion requires the `NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY` environment variable to remove the banner at the top of pages where Syncfusion components are used.
 
 ## Tanstack Form
 
 - Documentation: [Getting Started](https://tanstack.com/form/latest/docs/overview) | [Guides](https://tanstack.com/form/latest/docs/framework/react/guides/basic-concepts) | [API Reference](https://tanstack.com/form/latest/docs/reference/index)
 
-<!-- TODO -->
+Throughout the website, a visitor might need to fill out multiple input fields and send their responses to the server by "saving." For instance, a user might want to change their name in their account settings. For these workflows, you will need to create a **form** to collect user input. Working with HTML forms can be a pain, which is why you should use Tanstack Form to make things easier.
+
+- **Fields** - Tanstack Form allows you to programmatically store and manage the current state of forms. A **field** corresponds to a single input (e.g. a text field for name or a switch for enabling a feature). For each field, Tanstack Form provides special state variables. Some common booleans are:
+  - `isTouched` - whether user has interacted with the field
+  - `isDirty` - whether user has changed the field's value (persistent)
+  - `isDefaultValue` - whether user has changed the field's value (non-persistent)
+
+  These states let us easily create UI feedback for form components. For instance, we could use the `isDirty` flag to control whether a text field is highlighted to indicate it's been modified.
+
+- **Schema and Validation** - When creating a form, you'll probably want to define the form's schema using [Zod](Utility-and-Code-Quality-Libraries.md#zod). Tanstack Form supports defining the data type of form fields using Zod schemas as a mapped object, where each field has a key and a type. These types could just specify the data type (e.g. a string, number, boolean, array) but they can also specify whether a field is optional, a minimum character length, and lots more.
+
+  This schema is incredibly useful for validation. We want to inform the user if their input is invalid. As an example, what if we want to require a user's first name to have 3 to 100 characters? Here's whwat the Zod schema would look like:
+
+  ```ts
+  const formSchema = z.object({
+    firstName: z
+      .string()
+      .min(3, 'Name must be at least 3 characters')
+      .max(100, 'Character limit reached')
+      .required(),
+  });
+  ```
+
+  We can then pass this schema to Tanstack Form as a **validator**. Tanstack Form calls validators depending on whether an event happens:
+  - `onChange` - Validates whenever a field has changeed at all
+  - `onBlur` - Validates whenever the user finishes typing in a field
+  - `onSubmit` - Validates whenever the user tries submitting the form
+
+  For instance, here's how you'd use the above `formSchema` example for the `onChange` form-level validator:
+
+  ```tsx
+  import { useAppForm } from '@/lib/utils/form';
+
+  export default function FormComponent() {
+    const form = useAppForm({
+      validators: { onChange: formSchema },
+    });
+
+    // ...field components
+  }
+  ```
+
+  Now, we'll validate the form anytime any of the fields are updated. If anything fails, we'll show an error.
+
+- **App form and field components** - To reduce boilerplate, Tanstack Form allows us to create reusable field components such as text fields and dropdowns that automatically connect to the form's state (normally, you'd have to do this every time). These use an unconventional syntax for React:
+
+  ```tsx
+  import { useAppForm } from '@/lib/utils/form';
+
+  const formSchema = z.object({
+    firstName: z.string().required(),
+  });
+
+  export default function FormComponent() {
+    const form = useAppForm({
+      validators: { onChange: formSchema },
+    });
+
+    return (
+      <form.AppForm>
+        <form.Field name="firstName">
+          {(field) => <field.TextField label="First Name" required />}
+        </form.Field>
+      </form.AppForm>
+    );
+  }
+  ```
+
+  For more information on app form and field components, check out Tanstack Form's documentation page on [Form Composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition#custom-form-hooks).
+
+Tanstack Form has numerous other feaures, including: [array fields](https://tanstack.com/form/latest/docs/framework/react/guides/arrays), [form groups](https://tanstack.com/form/latest/docs/framework/react/guides/form-groups) (which we use for form wizards), [linked fields](https://tanstack.com/form/latest/docs/framework/react/guides/linked-fields), and [utilities for subscribing to form stores](https://tanstack.com/form/latest/docs/framework/react/guides/reactivity). These concepts may come up in issues with more advanced forms; we recommended checking out Tanstack Form's documentation to learn about them!
 
 ## Tanstack Table
 
 - Documentation: [Getting Started](https://tanstack.com/table/latest/docs/overview) | [Guides](https://tanstack.com/table/latest/docs/guide/features) | [API Reference](https://tanstack.com/table/latest/docs/reference/index)
 
-<!-- TODO -->
+Tanstack Table makes it easier to programmatically build custom HTML tables, which is useful for showing a table of data. with rows and columns. We currently use this library to show a list of clubs on the admin page.
+
+In UTD Clubs, you can either use this library or the [Data Grid component](https://mui.com/x/react-data-grid/) from [MUI X](#mui-x). However, Tanstack Table is headless, which means you'll have to design the UI components yourself; this can get complicated as you'll need to implement either pagination or virtualization, create filter components, and of course design the actual UI.
 
 ## Minor Libraries
 
@@ -84,15 +160,17 @@ UTD Clubs uses the following components from MUI X:
 
 - [Documentation](https://motion.dev/docs/react)
 
-Formerly known as "Framer Motion"
-
-<!-- TODO -->
+Motion for React (formerly known as "Framer Motion") lets us programmatically define animations without having to hassle with CSS. For example, we use Motion to create a growing hover effect on club cards. Motion is also used to add entrance/exit animations to the event cards on the [event directory](https://clubs.utdnebula.com/events) as you change your filters.
 
 ### dnd kit
 
 - [Documentation](https://dndkit.com/react/quickstart/)
 
-<!-- TODO -->
+How would you implement a user interfaces where you can reorder a list (such as a list of contacts or officers)? The easy solution is to add two buttons to every list item: one to move that item up, and another to move it down. However, this is a lot of buttons and it doesn't exactly look that pretty.
+
+Modern list UIs use "drag and drop", meaning the user grabs a handle on each item and drags it around to reorder. UTD Clubs uses the `dnd-kit` library to make components draggable and even provides keyboard accessibility support.
+
+Currently, UTD Clubs uses the [legacy version of dnd-kit](https://dndkit.com/legacy/introduction/installation).
 
 ---
 

@@ -6,14 +6,22 @@ Small libraries that provide useful tools to omake things easier in `utd-clubs`.
 
 - [Documentation](https://zod.dev)
 
+Zod is a schema validation library. Unlike TypeScript's types, in which types are only known as compile-time, Zod's schemas are known as runtime. This allows you to define a schema, parse data using that schema, and handle any errors that it may throw.
+
+_TODO: add more documentation here!_
+
 ## date-fns
 
 - [Documentation](https://date-fns.org/docs/Getting-Started)
+
+_TODO: add more documentation here!_
 
 ## Zustand
 
 - [Documentation](https://zustand.docs.pmnd.rs/reference)
 - [Official Tutorial](https://zustand.docs.pmnd.rs/learn)
+
+_TODO: add more documentation here!_
 
 ## Prettier
 
