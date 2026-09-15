@@ -6,16 +6,16 @@ This guide walks you through setting up your local development environment, conf
 
 Ensure you have the following installed:
 
-- Git
-  - If you've never used git, need a refresher, or need help setting it up, check out [Nebula's Git Workshop](https://github.com/UTDNebula/git-workshop).
-- Node.js
-  - Install following instructions from the [Node.js website](https://nodejs.org/en/)
+- [Git](https://git-scm.com/install)
+  - If you've never used Git, need a refresher, or need help setting it up—check out [Nebula's Git Workshop](https://github.com/UTDNebula/git-workshop).
+- [Node.js](https://nodejs.org/en/download)
+  - If you're unsure what to do on this page, scroll down and click the green button that says "Windows Installer (.msi)" or "macOS Installer (.pkg)" then open that file.
 
 ## Local Setup
 
-### Clone the Repository
+### 1) Clone the repository
 
-Clone the repository to your local machine. Make sure to pass `--recurse-submodules` so that nested submodules such as `nebula-library` are also cloned:
+Clone the repository to your local machine. Make sure to include the `--recurse-submodules` flag so that nested submodules such as `nebula-library` are also cloned:
 
 **HTTPS:**
 
@@ -30,24 +30,37 @@ git clone git@github.com:UTDNebula/utd-clubs.git --recurse-submodules
 ```
 
 > [!NOTE]
-> If you already cloned the repository but don't have the `src/nebula-library` folder, run the following command:
+> If you already cloned the repository but your `src/nebula-library/` folder is empty, run the following command:
 >
 > ```bash
 > git submodule update --init --recursive
 > ```
 
-Next, navigate to the project directory and install the dependencies:
+### 2) Install dependencies
+
+Next, navigate to the project directory and install the libraries used in `utd-clubs`:
 
 ```bash
 cd utd-clubs
 npm install
 ```
 
-### Configure Environment Variables
+> [!IMPORTANT]
+> From now on, if there's an update in the Nebula Library, you'll need to remember to run `git pull --recurse-submodules` instead of running `git pull`.
+>
+> If you want to avoid this hassle (and to also fix VS Code's sync button), just run the following once:
+>
+> ```bash
+> git config submodule.recurse true
+> ```
+>
+> Now, running `git pull` will work as expected.
 
-Make a file called `.env` at the root of the project, and copy the contents of `.env.example` into it. Some parts of `utd-clubs` require certain environment variables, which you can fill in `.env`. If you're not sure what to put, ask for help.
+### 3) Configure environment variables
 
-### Start Developing
+Create a file called `.env` in the root of the project folder, then copy the contents of `.env.example` into it. Some environment variables are required, which you should fill in `.env`. If you're not sure what to put, please ask your project lead.
+
+### 4) Run development server
 
 Start a dev server with
 
@@ -55,35 +68,41 @@ Start a dev server with
 npm run dev
 ```
 
-Then, open a browser, and visit [http://localhost:3000](http://localhost:3000).
+Then, open a browser and visit [http://localhost:3000](http://localhost:3000).
 
-Congratulations! You're developing UTD Clubs!
+Congratulations! You're running UTD Clubs on your machine, and you're now ready to code!
 
-### Run Code Verification & Formatting
+## While developing
 
-Format your code with:
+### Check code quality
 
-```bash
-npm run format
-```
+To maintain good code quality, you should periodically run the following commands while developing.
 
-Lint your code with:
+- Format your code with:
 
-```bash
-npm run lint
-```
+  ```bash
+  npm run format
+  ```
 
-Type check your code with:
+- Lint your code with:
 
-```bash
-npm run type:check
-```
+  ```bash
+  npm run lint
+  ```
 
-You'll want to run these frequently while developing.
+- Type check your code with:
+
+  ```bash
+  npm run type:check
+  ```
 
 ### Run tests
 
 As of right now, `utd-clubs` doesn't use tests. This will be changed in the future, and this section should be updated when that happens
+
+### Ask questions
+
+Confused about anything? Feel free to ask on the [Nebula Labs Discord server](https://discord.utdnebula.com)!
 
 ## Next Step
 

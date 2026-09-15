@@ -1,5 +1,7 @@
 # Project Architecture
 
+It's good to be familiar with how UTD Clubs works and what third-party libraries we use. This page gives a brief overview on the various components of UTD Clubs.
+
 ## Prerequisites
 
 This page assumes you have a basic understanding of what HTML, CSS, and JavaScript are. If you haven't worked with these before, we highly recommend you read this page first before continuing: [HTML, CSS, and JavaScript](HTML,-CSS,-and-JavaScript.md)
@@ -16,11 +18,13 @@ UTD Clubs is a web application built using the [**TypeScript**](Languages-and-Fu
 
 - **Database and Nebula API** - Server-side procedures often access the **PostgreSQL** database that UTD Clubs uses. To avoid requiring developers to write SQL, developers use the [**Drizzle**](Core-Libraries.md#drizzle) ORM library to interact with the database. Server-side procedures may occasionally utilize the [**Nebula API**](Languages-and-Fundamental-Technologies.md#nebula-api) for file storage and email sending.
 
-- **Account authentication** - Several features in UTD Clubs require an account to use. The [**Better Auth**](Core-Libraries.md#better-auth) framework handles account authentication, allowing users to sign in using Google, Discord, or Microsoft.[^6]
+- **Account authentication** - Several features in UTD Clubs require an account to use. The [**Better Auth**](Core-Libraries.md#better-auth) framework handles account authentication, allowing users to sign in using Google, Discord, or Microsoft.
+
+- **Artificial Intelligence** - The club match page on UTD Clubs uses the **Google Gemini** AI to match users to clubs based on their quiz responses. The [**Google Gen AI**](Core-Libraries.md#google-gen-ai) SDK enables UTD Clubs to interact with Gemini.
 
 - **UI Components** - UTD Clubs loosely follows the **Google's Material Design** guidelines for UI/UX. The [**MUI**](UI-Libraries.md#material-ui-mui) library provides reusable React components, utilities, and icons that follow these guidelines. For more specialized components shared across Nebula Labs' other projects, the [**Nebula Library**](UI-Libraries.md#nebula-library) also provides reusable React components.
 
-  Additionally, for special UI components where the foundational components of MUI are lacking, UTD Clubs also uses the following UI libraries:
+  For specialized UI components where the foundational components of MUI are lacking, UTD Clubs uses the following UI libraries:
   - [**MUI X**](UI-Libraries.md#mui-x) for its date/time pickers and data grid table components
   - [**Syncfusion**](UI-Libraries.md#syncfusion) for its calendar component
   - [**Tanstack Form**](UI-Libraries.md#tanstack-form) for handling forms
