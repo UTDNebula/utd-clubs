@@ -8,9 +8,9 @@ Libraries that are foundational to how `utd-clubs` works.
 
 This is arguably the most important framework for UTD Clubs. Next.JS is a full-stack framework for React that makes building web applications much easier because it handles page routing, faster page navigation loading, and much more.
 
-- **App Router** - This version of Next.JS means the `src/app/` directory maps its files and folders to the routes of the Clubs website. For example, `src/app/page.tsx` maps to the [homepage](https://clubs.utdnebula.com) and `src/app/club-match/page.tsx` maps to the [club match](https://clubs.utdnebula.com/club-match) page.[^7]
+- **App Router** - This version of Next.JS means the `src/app/` directory maps its files and folders to the routes of the Clubs website. For example, `src/app/page.tsx` maps to the [homepage](https://clubs.utdnebula.com) and `src/app/club-match/page.tsx` maps to the [club match](https://clubs.utdnebula.com/club-match) page.[^1]
 
-- **Server-side rendering** (SSR) - Next.JS is built around this concept, which improves loading times and the experience of visitors with older devices! What this feature means is that anytime a visitor opens a page on UTD Clubs, the backend server[^1] will first render the React code responsible for the page content (i.e. "server-side rendering!) Then, Next.JS will send this pre-rendered content to the visitor's device, which then runs any code that absolutely must run on the client.
+- **Server-side rendering** (SSR) - Next.JS is built around this concept, which improves loading times and the experience of visitors with older devices! What this feature means is that anytime a visitor opens a page on UTD Clubs, the backend server[^2] will first render the React code responsible for the page content (i.e. "server-side rendering!) Then, Next.JS will send this pre-rendered content to the visitor's device, which then runs any code that absolutely must run on the client.
 
   Because Next.JS runs everything on the server as [React Server Components](https://react.dev/reference/rsc/server-components) (RSC) by default, you have to explicitly specify that you want code to run on the client. Therefore, to create a React component that runs on the client, you must include the [`'use client'`](https://react.dev/reference/rsc/use-client) directive at the very top of the file. Example:
 
@@ -50,7 +50,7 @@ We also use Next.JS for several other things, including: [SEO metadata](https://
 
 - [Documentation](https://trpc.io/docs)
 
-Sometimes, code that runs on the client will need to communicate with the server.[^2] For example, when a visitor submits a form on the client, changes to the database must be run on the server. This means we need to create an API between the client and the server! To make this task easier, UTD Clubs uses the tRPC library, which abstracts away the creation of Club's internal API.[^3]
+Sometimes, code that runs on the client will need to communicate with the server.[^3] For example, when a visitor submits a form on the client, changes to the database must be run on the server. This means we need to create an API between the client and the server! To make this task easier, UTD Clubs uses the tRPC library, which abstracts away the creation of Club's internal API.[^4]
 
 How does this API work? Well, think of it as though the client is literally just running a function that runs code on the server. This function does a single thing; it could fetch a list of a user's clubs, a club's events, or even mutate (AKA modify) the description of a club! tRPC calls these functions "**procedures**". A procedure can accept an input, perform a task on the server, then return something.
 
@@ -87,11 +87,94 @@ const club = await api.club.getDirectoryInfo({ slug: 'nebula-labs' });
 
 - Documentation: [Getting Started](https://tanstack.com/query/latest/docs/framework/react/overview) | [Guides](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults) | [API Reference](https://tanstack.com/query/latest/docs/framework/react/reference/index)
 
-This library makes it much easier for developers to fetch data from asyncronous code (which in a nutshell means it takes some time to fetch that data). In UTD Clubs, this is almost always used to call upon API procedures provided by tRPC.
+Tanstack Query adds features that make it much easier for you to fetch data from asyncronous functions (which in a nutshell are functions that might take some time to fetch that data). In UTD Clubs, the most prominent example of asyncronous functions are the API procedures provided by tRPC! Tanstack Query is how you should use this API in client-side code.
 
-Tanstack Query provides a `useQuery()` hook for use in client-side React components. Tanstack Query provides features such as caching, maintaining "out of date" data, and query state metadata that it easier to create loading states and error messages.
+Tanstack Query includes features such as caching, maintaining "out of date" data (i.e. refetching data when it's outdated), and provides metadata about the query such as whether a query is currently fetching. This latter feature makes it very easy to create loading states and even add user-facing error messages!
 
-<!-- TODO -->
+Tanstack Query is always used in React Client Components, as it provides two useful functions/hooks that must run on the client: `useQuery()` and `useMutation()`. Both serve two useful, yet slightly different purposes:
+
+- `useQuery()` - For getting (or "querying") data from the server. If you're familiar with the concept of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete), this hook represents "reading" data.
+- `useMutation()` - For modifying (or "mutating") in the server. In CRUD, this hook represents "creating", "updating", and "deleting" data.
+
+As an example, let's actually look at `<JoinButton />`, which is a real React component we have that's located in `src/systems/clubs/JoinButton.tsx`. What does the join button need to do? Well:
+
+- The button should show whether or not the user has joined this club. In this case, we are "reading" data; this means we also need the `useQuery()` hook.
+- Perhaps more obviously, clicking the button needs to inform the server that the user needs to join this club. In this case, we are "updating" data; this means we need the `useMutation()` hook.
+
+The `<JoinButton />` component is a unique example where we use both `useQuery()` and `useMutation()`! For clarity's sake, let's look at how we'd use the `useQuery()` hook first. Assume we have an API procedure called `memberState` that returns whether the user has joined the club or not.
+
+```tsx
+import { useQuery } from '@tanstack/react-query';
+import { useTRPC } from '@/trpc/react';
+
+export default function JoinButton({ clubId }: { clubId: string }) {
+  const api = useTRPC(); // Access the tRPC API
+
+  const memberState = useQuery(
+    // We are passing clubId as input for this particular API procedure
+    api.user.clubs.memberState.queryOptions({ clubId }),
+  );
+
+  // The button's label changes depending on if the user has joined the club
+  // memberState.data is true if the user has joined the club
+  return <button>{memberState.data ? 'Joined!' : 'Join'}</button>;
+}
+```
+
+Now let's look at the `useMutation()` hook in isolation, which will make the button actually functional. Assume we have an API procedure called `joinLeave` that toggles whether the user has joined the club.
+
+```tsx
+import { useMutation } from '@tanstack/react-query';
+import { useTRPC } from '@/trpc/react';
+
+export default function JoinButton({ clubId }: { clubId: string }) {
+  const api = useTRPC(); // Access the tRPC API
+
+  // Initial setup. Note that we don't pass input data here
+  const joinLeave = useMutation(api.user.clubs.joinLeave.mutationOptions());
+
+  const handleClick = () => {
+    // This is where we actually run the mutation and pass clubId as input
+    joinLeave.mutate({ clubId });
+  };
+
+  return <button onClick={handleClick}>Join</button>;
+}
+```
+
+Nice! Now let's combine the two. In fact, I'll also demonstrate how you can use Tanstack Query (and the `<Button />` component from [MUI](UI-Libraries.md#material-ui-mui)) to easily add a loading state to the button!
+
+```tsx
+import Button from '@mui/material/Button';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useTRPC } from '@/trpc/react';
+
+export default function JoinButton({ clubId }: { clubId: string }) {
+  const api = useTRPC();
+
+  const memberState = useQuery(
+    api.user.clubs.memberState.queryOptions({ clubId }),
+  );
+  const joinLeave = useMutation(api.user.clubs.joinLeave.mutationOptions());
+
+  return (
+    // Button will show a loading spinner if it is either
+    // reading or updating whether the user has joined the club
+    <Button
+      loading={memberState.isPending || joinLeave.isPending}
+      onClick={() => {
+        joinLeave.mutate({ clubId });
+      }}
+    >
+      {memberState.data ? 'Joined!' : 'Join'}
+    </Button>
+  );
+}
+```
+
+Now we have a functional `<JoinButton />`! Of course, the actual implementation is much more elaborate, but the above are the fundamentals that you can find in the actual implementation. Additionally, Tanstack Query will cache the results of the `memberState` query, meaning multiple requests with the same `clubId` input that happen at the same time will only result in one network call.
+
+Tanstack Query includes other concepts such as the query client, query invalidation, and prefetching; however, these are topics that will only come up in more advanced issues.
 
 ## Drizzle
 
@@ -103,11 +186,13 @@ Tanstack Query provides a `useQuery()` hook for use in client-side React compone
 
 UTD Clubs uses a **PostgreSQL** (Postgres) database to store all data related to clubs, users, events, accounts, etc. To avoid requiring you to learn and write SQL, we use Drizzle! This is an ORM (Object-Relational Mapping) library, which just allows you to access the database using TypeScript code instead of SQL. Because it's TypeScript, we also get access to tools that let us define type-safe database schemas and relations!
 
-Okay, but how even is a database structured?
+Okay, but how is the UTD Clubs database even structured? In a nutshell, a relational database is a collection of tables. These are almost exactly like a spreadsheet table: rows correspond to an item/record, and columns correspond to fields for that item. One of these columns is known as the "primary key", which means that the value for that column must be unique for every item/record; in most cases, this is an ID.
 
-_TODO: insert brief explanation of tables, columns, records, primary keys_
+For example, we have a `club` table which lists every club that is on UTD Clubs. Each row corresponds to a single club, and the columns corresponds to that club's fields such as the club's name, its logo, its tags, etc. The primary key is the `club_id` column, which is unique for every club. Some other tables we have include: `events`, `contacts`, `account`, `user`, and `user_metadata`.
 
-Some other notes:
+Drizzle makes it easy to define "relations" between tables. It could be a **one-to-one relationship**; for example, for each item in the `user` table, there is a corresponding entry in the `user_metadata` table. It could be a **one-to-many relationship**; for example, for each club in the `club` table, there are multiple events that correspond to that club in the `events` table. In Drizzle, you simply attach a relation to a table's schema.
+
+Some important notes about how the database works in UTD Clubs:
 
 - The database can only be accessed from code that runs on the server (i.e. React Client Components cannot call APIs that access the database). Allowing clients to directly access the database is the absolute antithesis to data security.
 
@@ -123,7 +208,7 @@ Some other notes:
 
 - [Documentation](https://better-auth.com/docs)
 
-Several features in UTD Clubs require an account to use. The Better Auth framework handles account authentication for UTD Clubs. It allows visitors of UTD Clubs to log in using either their Google, Discord, and Microsoft account.[^4] Better Auth then integrates with [Drizzle](#drizzle) to store account data in the database.
+Several features in UTD Clubs require an account to use. The Better Auth framework handles account authentication for UTD Clubs. It allows visitors of UTD Clubs to log in using either their Google, Discord, and Microsoft account.[^5] Better Auth then integrates with [Drizzle](#drizzle) to store account data in the database.
 
 To connect to Google and Discord and Microsoft, we have to request oAuth2 client IDs and secrets from each social platform. These client IDs and secrets must be provided in the environment variables whenever UTD Clubs is deployed. Otherwise, account authentication fails, and visitors are unable to sign in! Nebula Labs' leadership handles this and will provide you with the necessary environment variables.
 
@@ -133,12 +218,12 @@ To connect to Google and Discord and Microsoft, we have to request oAuth2 client
 
 See [UI Libraries](UI-Libraries.md)
 
-[^7]: Check out the documentation on [Next.JS's project structure](https://nextjs.org/docs/app/getting-started/project-structure).
+[^1]: Check out the documentation on [Next.JS's project structure](https://nextjs.org/docs/app/getting-started/project-structure).
 
-[^1]: Next.JS runs server-side code using the Node.js runtime by default, which has all the regular APIs and bundler features you're used to. However, a file can be configured to use the [Edge runtime](https://nextjs.org/docs/app/api-reference/edge) instead by including `export const runtime = 'edge';` in the file.
+[^2]: Next.JS runs server-side code using the Node.js runtime by default, which has all the regular APIs and bundler features you're used to. However, a file can be configured to use the [Edge runtime](https://nextjs.org/docs/app/api-reference/edge) instead by including `export const runtime = 'edge';` in the file.
 
-[^2]: React has a feature called [Server Functions](https://react.dev/reference/rsc/server-functions), in which adding the [`'use server'`](https://react.dev/reference/rsc/use-server) directive at the top of a file creates server-side utility code that can be called by client components. However, because UTD Clubs instead uses tRPC and Tanstack Query, **you should not use React Server Functions.**
+[^3]: React has a feature called [Server Functions](https://react.dev/reference/rsc/server-functions), in which adding the [`'use server'`](https://react.dev/reference/rsc/use-server) directive at the top of a file creates server-side utility code that can be called by client components. However, because UTD Clubs instead uses tRPC and Tanstack Query, **you should not use React Server Functions.**
 
-[^3]: Although UTD Clubs does have features that utilize the [Nebula API](https://www.utdnebula.com/projects/api), backend requests are handled using tRPC. UTD Clubs has its own backend, which is located in the same codebase.
+[^4]: Although UTD Clubs does have features that utilize the [Nebula API](https://www.utdnebula.com/projects/api), backend requests are handled using tRPC. UTD Clubs has its own backend, which is located in the same codebase.
 
-[^4]: Logging in with Microsoft is intended for UTD Faculty/Staff. Additionally, visitors currently cannot create an account using an email and password; this is because UTD Clubs currently lacks a system to send emails, which makes email verification and password reset requests rather impossible to implement!
+[^5]: Logging in with Microsoft is intended for UTD Faculty/Staff. Additionally, visitors currently cannot create an account using an email and password; this is because UTD Clubs currently lacks a system to send emails, which makes email verification and password reset requests rather impossible to implement!
