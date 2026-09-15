@@ -212,6 +212,14 @@ Several features in UTD Clubs require an account to use. The Better Auth framewo
 
 To connect to Google and Discord and Microsoft, we have to request oAuth2 client IDs and secrets from each social platform. These client IDs and secrets must be provided in the environment variables whenever UTD Clubs is deployed. Otherwise, account authentication fails, and visitors are unable to sign in! Nebula Labs' leadership handles this and will provide you with the necessary environment variables.
 
+## Google Gen AI
+
+- [Documentation](https://googleapis.github.io/js-genai/release_docs/index.html)
+
+Some features in UTD Clubs utilize the Google Gemini AI. The Google Gen AI SDK allows the codebase to easily connect to the Gemini Developer API. Currently, UTD Clubs uses the `gemini-3.1-flash-lite` model due to its relatively low cost and simplicity.
+
+UTD Clubs uses Google Gemini on our club match page to intelligently match visitors to clubs based on their hobbies and interests. We prompt the AI by providing it with a JSON list of every club on UTD Clubs, as well as the user's form response on the club match quiz. We prompt the AI with important security and integrity rules twice: once in the beginning to structure its response, and again at the end to reduce prompt injection.
+
 ---
 
 ## Next Step
