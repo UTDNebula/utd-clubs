@@ -78,6 +78,15 @@ export const EventSearchBar = () => {
         }
         return option.id;
       }}
+      //if user presses enter it returns to events page with search bar ready for input
+      onKeyDown={(event) => {
+        if(event.key=='Enter') {
+          event.preventDefault();
+
+          const paramaters=new URLSearchParams({q: input});
+          window.location.assign('https://clubs.utdnebula.com/events?' + paramaters.toString());
+        }
+      }}
     />
   );
 };
