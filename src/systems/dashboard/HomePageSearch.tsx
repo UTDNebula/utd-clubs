@@ -125,6 +125,7 @@ export const HomePageSearchBar = () => {
         }`}
       >
         <Autocomplete
+          className="[&_.MuiInputBase-input]:min-w-56"
           freeSolo
           multiple
           disableClearable
@@ -155,8 +156,8 @@ export const HomePageSearchBar = () => {
                 input: {
                   ...params.slotProps.input,
                   endAdornment: (
-                    <div className="flex items-center gap-2">
-                      <InputAdornment position="start">
+                    <div className="absolute right-3 bottom-4 flex items-center gap-2">
+                      <InputAdornment position="end">
                         {params.slotProps.input.endAdornment}
                         {isFetching ? (
                           <CircularProgress color="inherit" size={24} />
@@ -171,6 +172,7 @@ export const HomePageSearchBar = () => {
                     params.slotProps.input.className,
                   sx: {
                     borderRadius: theme.shape.borderRadius,
+                    paddingRight: '48px !important',
                   },
                 },
               }}
