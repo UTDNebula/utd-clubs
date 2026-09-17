@@ -9,6 +9,11 @@ import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
 import LoginProviderButton from './LoginProviderButton';
 import { LoginProviders } from './types';
+import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
+import { useState } from 'react';
+import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 
 const loginProviders = [
   'google',
@@ -34,6 +39,10 @@ export const LoginModalContents = ({
   LoginModalProps,
   'className' | 'onClose' | 'closeButton' | 'callbackURL' | 'explanationText'
 >) => {
+  const disableEmailAuth = process.env.NODE_ENV !== 'development';
+
+  const [signUp, setSignUp] = useState(false);
+
   const handleSignIn = () => {
     void authClient.signIn.social(
       {
@@ -65,17 +74,145 @@ export const LoginModalContents = ({
           variant="h1"
           className="font-display mt-1 mb-2 grow-1 self-center text-center text-2xl font-bold text-balance text-neutral-700 dark:text-neutral-300"
         >
-          Sign in or sign up
+          {signUp ? 'Sign up for UTD Clubs' : 'Sign in to UTD Clubs'}
         </Typography>
         {explanationText && (
+          <Alert
+            severity="info"
+            className="mx-4 mt-1 mb-2 max-w-sm self-center px-4 sm:max-w-md"
+          >
+            {explanationText}
+          </Alert>
+        )}
+        {!disableEmailAuth && (
           <Typography
             variant="body1"
             className="mt-1 mb-2 grow-1 self-center px-4 text-center text-neutral-600 dark:text-neutral-400"
           >
-            {explanationText}
+            {signUp ? (
+              <a
+                href="#"
+                className="text-royal dark:text-cornflower-300 font-bold whitespace-nowrap underline underline-offset-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSignUp(false);
+                }}
+              >
+                Back to sign in
+              </a>
+            ) : (
+              <>
+                Need an account?{' '}
+                <a
+                  href="#"
+                  className="text-royal dark:text-cornflower-300 font-bold whitespace-nowrap underline underline-offset-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSignUp(true);
+                  }}
+                >
+                  Sign up now!
+                </a>
+              </>
+            )}
           </Typography>
         )}
       </div>
+      {!disableEmailAuth && (
+        <>
+          {signUp ? (
+            <div className="my-4 flex w-full flex-col items-center gap-3 px-4">
+              <div className="flex w-full max-w-sm flex-col gap-3">
+                <TextField label="Email" size="small" className="w-full" />
+                <TextField
+                  label="Password"
+                  size="small"
+                  className="w-full"
+                  type="password"
+                  helperText="Alphanumeric, a symbol, at least 8 characters"
+                />
+                <TextField
+                  label="Confirm Password"
+                  size="small"
+                  className="w-full"
+                  type="password"
+                />
+                {/* <FormControlLabel
+                  control={<Checkbox />}
+                  className="select-none"
+                  label={
+                    <>
+                      I agree to the{' '}
+                      <a
+                        href="#"
+                        target="_blank"
+                        className="font-bold whitespace-nowrap text-slate-600 underline underline-offset-2 dark:text-slate-400"
+                      >
+                        Terms of Service
+                      </a>
+                    </>
+                  }
+                /> */}
+                <div className="flex w-full flex-wrap items-center justify-end gap-2">
+                  <Button
+                    variant="text"
+                    className="text-neutral-500 normal-case dark:text-neutral-400"
+                    color="inherit"
+                    onClick={() => {
+                      setSignUp(false);
+                    }}
+                  >
+                    Back
+                  </Button>
+                  <Button variant="contained" className="normal-case">
+                    Sign up
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="my-4 flex w-full flex-col items-center gap-3 px-4">
+              <TextField
+                label="Email"
+                size="small"
+                className="w-full max-w-sm"
+              />
+              <TextField
+                label="Password"
+                size="small"
+                className="w-full max-w-sm"
+                type="password"
+              />
+              <div className="flex w-full max-w-sm flex-wrap items-center justify-end gap-2">
+                <Button
+                  variant="text"
+                  className="text-neutral-500 normal-case dark:text-neutral-400"
+                  color="inherit"
+                  onClick={() => {
+                    setSnackbar({
+                      message: 'Tough luck ¯\\_(ツ)_/¯',
+                      closeOn: { dismiss: true },
+                    });
+                  }}
+                >
+                  Forgot password
+                </Button>
+                <Button variant="contained" className="normal-case">
+                  Sign in
+                </Button>
+              </div>
+            </div>
+          )}
+          <Alert severity="info" className="mx-4 max-w-sm">
+            For now, email login is only available for local development
+          </Alert>
+          <Divider className="mt-4 w-full px-4">
+            <Typography variant="body2" color="textDisabled">
+              Or use an existing account
+            </Typography>
+          </Divider>
+        </>
+      )}
       <div className="flex w-full flex-col items-center justify-center gap-3 p-4 sm:flex-row">
         {loginProviders.map((loginProvider) => (
           <LoginProviderButton
@@ -97,7 +234,7 @@ export const LoginModalContents = ({
             handleSignIn();
           }}
         >
-          Sign In Here
+          Sign in here
         </Link>
       </Typography>
     </div>
@@ -119,11 +256,11 @@ const LoginModal = ({
     <Modal
       open={open}
       onClose={onClose}
-      className={`flex h-screen items-center justify-center p-4 ${className}`}
+      className={`flex overflow-scroll pt-4 sm:p-4 ${className}`}
       {...props}
     >
       {/* This span is required to receive the tabIndex prop, which will let the user quickly navigate the modal using the keyboard */}
-      <span>
+      <span className="m-auto">
         <LoginModalContents
           onClose={onClose}
           closeButton={closeButton ?? true}
