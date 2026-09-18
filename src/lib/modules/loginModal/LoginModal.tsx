@@ -2,12 +2,12 @@
 
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import IconButton from '@mui/material/IconButton';
-import Modal, { ModalProps } from '@mui/material/Modal';
+import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
 import LoginProviderButton from './LoginProviderButton';
-import { LoginProviders } from './types';
+import { LoginModalProps, LoginProviders } from './types';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
 import Alert from '@mui/material/Alert';
@@ -20,15 +20,6 @@ const loginProviderButtons = [
   'google',
   'discord',
 ] as const satisfies LoginProviders[];
-
-type LoginModalProps = Omit<ModalProps, 'children'> & {
-  open: boolean;
-  onClose?: () => void;
-  closeButton?: boolean;
-  className?: string;
-  callbackURL?: string;
-  explanationText?: string;
-};
 
 export const LoginModalContents = ({
   className,
@@ -130,13 +121,18 @@ export const LoginModalContents = ({
       </div>
       {!disableEmailAuth && (
         <>
-          <LoginForm signUp={signUp} setSignUp={setSignUp} />
+          <LoginForm
+            signUp={signUp}
+            setSignUp={setSignUp}
+            onClose={onClose}
+            callbackURL={callbackURL}
+          />
           <Alert severity="info" className="mx-4 max-w-sm">
             For now, email login is only available for local development
           </Alert>
           <Divider className="mt-4 w-full px-4">
             <Typography variant="body2" color="textDisabled">
-              Or use an existing account
+              Or use a third-party account
             </Typography>
           </Divider>
         </>

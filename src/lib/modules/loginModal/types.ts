@@ -1,3 +1,14 @@
+import { ModalProps } from '@mui/material/Modal';
+
+export type LoginModalProps = Omit<ModalProps, 'children'> & {
+  open: boolean;
+  onClose?: () => void;
+  closeButton?: boolean;
+  className?: string;
+  callbackURL?: string;
+  explanationText?: string;
+};
+
 /**
  * Catchable error for when {@linkcode useLoginModalContext()} isn't used in a child component of a {@linkcode LoginModalProvider}.
  */

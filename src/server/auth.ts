@@ -18,8 +18,12 @@ const AUTH_TRUSTED_ORIGINS = Array.isArray(env.AUTH_TRUSTED_ORIGINS)
  */
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: 'pg', // or "pg" or "mysql"
+    provider: 'pg',
   }),
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: false,
+  },
   socialProviders: {
     google:
       env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
