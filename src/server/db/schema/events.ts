@@ -38,6 +38,7 @@ export const events = pgTable(
     etag: text(),
     location: text('location').default('').notNull(),
     image: text('image'),
+    coHostIds: text('co_host_ids').array(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
     pageViews: integer('page_views').notNull().default(0),
