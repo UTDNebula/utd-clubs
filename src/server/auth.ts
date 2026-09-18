@@ -22,7 +22,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: false,
+    requireEmailVerification: false, // TODO: add email verification for prod
   },
   socialProviders: {
     google:
@@ -109,6 +109,10 @@ export const auth = betterAuth({
     },
   },
   user: {
+    changeEmail: {
+      enabled: true,
+      updateEmailWithoutVerification: true, // TODO: add email verification for prod
+    },
     deleteUser: {
       enabled: true,
     },

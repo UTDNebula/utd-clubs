@@ -11,6 +11,7 @@ import DeleteAccount from './forms/DeleteAccount';
 import JoinedClubs from './forms/JoinedClubs';
 import UserInfo from './forms/UserInfo';
 import SettingsHeader from './SettingsHeader';
+import ManageAccount from './forms/ManageAccount';
 
 async function SettingsForm({
   session,
@@ -54,6 +55,7 @@ async function SettingsForm({
       <SettingsHeader user={user} />
       {userData && <UserInfo user={userData} />}
       {joinedClubs && <JoinedClubs joinedClubs={joinedClubs} />}
+      {userData && <ManageAccount />}
       <DeleteAccount />
     </div>
   );
