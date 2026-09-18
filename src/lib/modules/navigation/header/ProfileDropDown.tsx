@@ -18,6 +18,8 @@ import { useEffect, useState } from 'react';
 import { Binoculars } from '@/lib/icons/OtherIcons';
 import { openLoginModal } from '@/lib/modules/loginModal';
 import { authClient } from '@/lib/utils/auth-client';
+import { useQueryClient } from '@tanstack/react-query';
+import { getAvailableSocialProviders } from '@/lib/utils/socialProviders';
 
 type Props = {
   shadow?: boolean;
@@ -29,6 +31,15 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
   const open = Boolean(anchorEl);
 
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const handlePrefetchAvailableSocialProviders = () => {
+    queryClient.prefetchQuery({
+      queryKey: ['loginModal', 'getAvailableSocialProviders'],
+      queryFn: () => getAvailableSocialProviders(),
+      staleTime: Infinity,
+    });
+  };
 
   // Close on scroll
   useEffect(() => {
@@ -55,6 +66,8 @@ export const ProfileDropDown = ({ shadow = false }: Props) => {
             openLoginModal();
           }
         }}
+        onMouseEnter={handlePrefetchAvailableSocialProviders}
+        onFocus={handlePrefetchAvailableSocialProviders}
         component="button"
         className={`cursor-pointer ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
       />

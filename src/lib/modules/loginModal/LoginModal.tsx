@@ -4,7 +4,6 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import IconButton from '@mui/material/IconButton';
 import Modal, { ModalProps } from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-import Link from 'next/link';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
 import LoginProviderButton from './LoginProviderButton';
@@ -14,8 +13,11 @@ import Divider from '@mui/material/Divider';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import { getAvailableSocialProviders } from '@/lib/utils/socialProviders';
+import { useQuery } from '@tanstack/react-query';
+import Tooltip from '@mui/material/Tooltip';
 
-const loginProviders = [
+const loginProviderButtons = [
   'google',
   'discord',
 ] as const satisfies LoginProviders[];
@@ -40,6 +42,15 @@ export const LoginModalContents = ({
   'className' | 'onClose' | 'closeButton' | 'callbackURL' | 'explanationText'
 >) => {
   const disableEmailAuth = process.env.NODE_ENV !== 'development';
+
+  const { data: availableSocialProviders } = useQuery({
+    queryKey: ['loginModal', 'getAvailableSocialProviders'],
+    queryFn: () => getAvailableSocialProviders(),
+    placeholderData: ['google', 'discord', 'microsoft'],
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
+  const microsoftDisabled = !availableSocialProviders?.includes('microsoft');
 
   const [signUp, setSignUp] = useState(false);
 
@@ -214,11 +225,12 @@ export const LoginModalContents = ({
         </>
       )}
       <div className="flex w-full flex-col items-center justify-center gap-3 p-4 sm:flex-row">
-        {loginProviders.map((loginProvider) => (
+        {loginProviderButtons.map((loginProvider) => (
           <LoginProviderButton
             key={loginProvider}
             provider={loginProvider}
             callbackURL={callbackURL}
+            disabled={!availableSocialProviders?.includes(loginProvider)}
           />
         ))}
       </div>
@@ -227,15 +239,35 @@ export const LoginModalContents = ({
         className="mt-1 mb-2 grow-1 self-center px-4 text-center text-neutral-600 dark:text-neutral-400"
       >
         Are you UTD Faculty/Staff?{' '}
-        <Link
-          href="#"
-          className="font-bold whitespace-nowrap text-slate-600 underline underline-offset-2 dark:text-slate-400"
-          onClick={() => {
-            handleSignIn();
-          }}
+        <Tooltip
+          title={
+            <>
+              Microsoft oAuth is unavailable
+              <br />
+              Missing environment variables?
+            </>
+          }
+          disableFocusListener={!microsoftDisabled}
+          disableHoverListener={!microsoftDisabled}
+          disableTouchListener={!microsoftDisabled}
+          disableInteractive
         >
-          Sign in here
-        </Link>
+          <span>
+            <a
+              href={microsoftDisabled ? undefined : '#'}
+              className={`font-bold whitespace-nowrap underline underline-offset-2 transition-[color] select-none ${microsoftDisabled ? 'text-neutral-600 dark:text-neutral-400' : 'text-slate-600 dark:text-slate-400'}`}
+              onClick={
+                microsoftDisabled
+                  ? undefined
+                  : () => {
+                      handleSignIn();
+                    }
+              }
+            >
+              Sign in here
+            </a>
+          </span>
+        </Tooltip>
       </Typography>
     </div>
   );
