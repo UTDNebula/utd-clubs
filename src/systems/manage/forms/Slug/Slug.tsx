@@ -19,7 +19,7 @@ import { editSlugSchema } from './schema';
 
 type DetailsProps = {
   club: SelectClub;
-  role: 'Officer' | 'President';
+  role: 'Collaborator' | 'Admin';
 };
 
 const Slug = ({ club, role }: DetailsProps) => {
@@ -223,7 +223,7 @@ const Slug = ({ club, role }: DetailsProps) => {
               {(field) => (
                 <Tooltip
                   title={
-                    role !== 'President'
+                    role !== 'Admin'
                       ? 'Only an admin can change the club URL'
                       : undefined
                   }
@@ -231,7 +231,7 @@ const Slug = ({ club, role }: DetailsProps) => {
                   <field.TextField
                     label="URL"
                     className="w-full"
-                    disabled={role !== 'President'}
+                    disabled={role !== 'Admin'}
                     error={
                       !field.state.meta.isValid &&
                       !field.state.meta.isValidating
