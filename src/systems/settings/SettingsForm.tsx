@@ -7,7 +7,6 @@ import {
   SelectUserMetadataWithClubs,
 } from '@/server/db/models';
 import { api } from '@/trpc/server';
-import DeleteAccount from './forms/DeleteAccount';
 import JoinedClubs from './forms/JoinedClubs';
 import UserInfo from './forms/UserInfo';
 import SettingsHeader from './SettingsHeader';
@@ -45,7 +44,7 @@ async function SettingsForm({
   });
 
   return (
-    <div className="flex w-full max-w-6xl flex-col gap-8">
+    <div className="flex w-full max-w-6xl flex-col gap-8 mb-24">
       {(!userData || !joinedClubs) && (
         <Alert severity="error" variant="filled" className="rounded-lg">
           One or more panels were hidden because their associated data could not
@@ -55,8 +54,7 @@ async function SettingsForm({
       <SettingsHeader user={user} />
       {userData && <UserInfo user={userData} />}
       {joinedClubs && <JoinedClubs joinedClubs={joinedClubs} />}
-      {userData && <ManageAccount />}
-      <DeleteAccount />
+      {session && <ManageAccount />}
     </div>
   );
 }

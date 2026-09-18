@@ -138,3 +138,13 @@ export const changePasswordSchema = z
   });
 
 export type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
+
+export const deleteAccountSchema = z.object({
+  confirmation: z
+    .string()
+    .refine((val) => /yes,? I would like to delete my account.?/i.test(val), {
+      error: 'Type out the entire sentence',
+    }),
+});
+
+export type DeleteAccountSchema = z.infer<typeof deleteAccountSchema>;

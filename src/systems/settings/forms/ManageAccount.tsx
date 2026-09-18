@@ -1,5 +1,6 @@
 'use client';
 
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
 import { setSnackbarWithPreset } from '@/lib/modules/snackbar';
@@ -9,16 +10,23 @@ import {
   ChangeEmailSchema,
   changePasswordSchema,
   ChangePasswordSchema,
+  deleteAccountSchema,
+  DeleteAccountSchema,
 } from '../settingsSchema';
 import { authClient } from '@/lib/utils/auth-client';
 import TextField from '@mui/material/TextField';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Confirmation from '@/lib/components/Confirmation';
+import { useRouter } from 'next/navigation';
 
-type ManageAccountTab = 'email' | 'password';
+type ManageAccountTab = 'email' | 'password' | 'delete';
 
 export default function ManageAccount() {
   const session = authClient.useSession();
+  const router = useRouter();
 
   const [tab, setTab] = useState<ManageAccountTab>('email');
   const handleChangeTab = (
@@ -84,7 +92,19 @@ export default function ManageAccount() {
     validators: { onSubmit: changePasswordSchema },
   });
 
-  const toggleButtons = [
+  const deleteAccountForm = useAppForm({
+    defaultValues: {
+      confirmation: '',
+    } as DeleteAccountSchema,
+    onSubmit: () => {
+      setOpenDeleteAccountConfirmation(true);
+    },
+    validators: { onChange: deleteAccountSchema },
+  });
+  const [openDeleteAccountConfirmation, setOpenDeleteAccountConfirmation] =
+    useState(false);
+
+  const tabs = [
     <Tab
       key="email"
       value="email"
@@ -99,6 +119,13 @@ export default function ManageAccount() {
       aria-label="change password"
       className="text-nowrap normal-case sm:px-8"
     />,
+    <Tab
+      key="delete"
+      value="delete"
+      label="Delete Account"
+      aria-label="delete account"
+      className="text-nowrap normal-case sm:px-8"
+    />,
   ];
 
   return (
@@ -108,22 +135,23 @@ export default function ManageAccount() {
           orientation="horizontal"
           variant="scrollable"
           scrollButtons="auto"
-          className="sm:hidden"
+          allowScrollButtonsMobile
+          className="sm:hidden [&:has(.MuiTabScrollButton-root)]:-m-4"
           value={tab}
           onChange={handleChangeTab}
           sx={{ borderBottom: 1, borderColor: 'divider' }}
         >
-          {toggleButtons}
+          {tabs}
         </Tabs>
 
         <Tabs
           orientation="vertical"
-          className="max-sm:hidden"
+          className="shrink-0 max-sm:hidden"
           value={tab}
           onChange={handleChangeTab}
           sx={{ borderRight: 1, borderColor: 'divider' }}
         >
-          {toggleButtons}
+          {tabs}
         </Tabs>
 
         {tab === 'email' && (
@@ -229,6 +257,94 @@ export default function ManageAccount() {
             </form>
           </changePasswordForm.AppForm>
         )}
+        {tab === 'delete' && (
+          <deleteAccountForm.AppForm>
+            <form
+              className="flex w-full flex-col gap-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                deleteAccountForm.handleSubmit();
+              }}
+            >
+              <div className="flex max-w-lg flex-col gap-6 select-none">
+                <Typography variant="body2">
+                  This will permanently delete your account from UTD Clubs.
+                </Typography>
+                <Typography variant="body2">
+                  To confirm you really want to delete your account, please
+                  fully type: <br /> &quot;Yes, I would like to delete my
+                  account&quot;
+                </Typography>
+                <deleteAccountForm.AppField name="confirmation">
+                  {(field) => (
+                    <field.TextField
+                      placeholder="Yes, I would like to delete my account"
+                      className="w-full"
+                    />
+                  )}
+                </deleteAccountForm.AppField>
+
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                  <deleteAccountForm.Subscribe
+                    selector={(state) => ({
+                      disabled: state.isDefaultValue || state.isSubmitting,
+                      isValid: state.isValid,
+                    })}
+                  >
+                    {({ disabled, isValid }) => (
+                      <Button
+                        variant="text"
+                        className="normal-case"
+                        disabled={disabled}
+                        color={isValid ? 'inherit' : 'primary'}
+                        onClick={() => {
+                          deleteAccountForm.reset();
+                        }}
+                      >
+                        Never mind!
+                      </Button>
+                    )}
+                  </deleteAccountForm.Subscribe>
+                  <deleteAccountForm.Subscribe
+                    selector={(state) => state.isDefaultValue || !state.isValid}
+                  >
+                    {(disabled) => (
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        className="normal-case"
+                        startIcon={<DeleteIcon />}
+                        disabled={disabled}
+                        color={disabled ? 'inherit' : 'error'}
+                      >
+                        Delete Account
+                      </Button>
+                    )}
+                  </deleteAccountForm.Subscribe>
+                </div>
+              </div>
+            </form>
+          </deleteAccountForm.AppForm>
+        )}
+        <Confirmation
+          open={openDeleteAccountConfirmation}
+          onClose={() => setOpenDeleteAccountConfirmation(false)}
+          contentText={
+            <>
+              This will permanently delete your account. <br />
+              All your account data will be immediately removed from the
+              platform.
+            </>
+          }
+          onConfirm={async () => {
+            await authClient.deleteUser();
+            router.push('/');
+            setSnackbarWithPreset(
+              'success',
+              'Account deleted! Sorry to see you go 😔',
+            );
+          }}
+        />
       </div>
     </Panel>
   );
