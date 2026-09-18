@@ -8,14 +8,13 @@ import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
 import LoginProviderButton from './LoginProviderButton';
 import { LoginProviders } from './types';
-import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
-import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import { getAvailableSocialProviders } from '@/lib/utils/socialProviders';
 import { useQuery } from '@tanstack/react-query';
 import Tooltip from '@mui/material/Tooltip';
+import LoginForm from './LoginForm';
 
 const loginProviderButtons = [
   'google',
@@ -131,89 +130,7 @@ export const LoginModalContents = ({
       </div>
       {!disableEmailAuth && (
         <>
-          {signUp ? (
-            <div className="my-4 flex w-full flex-col items-center gap-3 px-4">
-              <div className="flex w-full max-w-sm flex-col gap-3">
-                <TextField label="Email" size="small" className="w-full" />
-                <TextField
-                  label="Password"
-                  size="small"
-                  className="w-full"
-                  type="password"
-                  helperText="Alphanumeric, a symbol, at least 8 characters"
-                />
-                <TextField
-                  label="Confirm Password"
-                  size="small"
-                  className="w-full"
-                  type="password"
-                />
-                {/* <FormControlLabel
-                  control={<Checkbox />}
-                  className="select-none"
-                  label={
-                    <>
-                      I agree to the{' '}
-                      <a
-                        href="#"
-                        target="_blank"
-                        className="font-bold whitespace-nowrap text-slate-600 underline underline-offset-2 dark:text-slate-400"
-                      >
-                        Terms of Service
-                      </a>
-                    </>
-                  }
-                /> */}
-                <div className="flex w-full flex-wrap items-center justify-end gap-2">
-                  <Button
-                    variant="text"
-                    className="text-neutral-500 normal-case dark:text-neutral-400"
-                    color="inherit"
-                    onClick={() => {
-                      setSignUp(false);
-                    }}
-                  >
-                    Back
-                  </Button>
-                  <Button variant="contained" className="normal-case">
-                    Sign up
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="my-4 flex w-full flex-col items-center gap-3 px-4">
-              <TextField
-                label="Email"
-                size="small"
-                className="w-full max-w-sm"
-              />
-              <TextField
-                label="Password"
-                size="small"
-                className="w-full max-w-sm"
-                type="password"
-              />
-              <div className="flex w-full max-w-sm flex-wrap items-center justify-end gap-2">
-                <Button
-                  variant="text"
-                  className="text-neutral-500 normal-case dark:text-neutral-400"
-                  color="inherit"
-                  onClick={() => {
-                    setSnackbar({
-                      message: 'Tough luck ¯\\_(ツ)_/¯',
-                      closeOn: { dismiss: true },
-                    });
-                  }}
-                >
-                  Forgot password
-                </Button>
-                <Button variant="contained" className="normal-case">
-                  Sign in
-                </Button>
-              </div>
-            </div>
-          )}
+          <LoginForm signUp={signUp} setSignUp={setSignUp} />
           <Alert severity="info" className="mx-4 max-w-sm">
             For now, email login is only available for local development
           </Alert>
