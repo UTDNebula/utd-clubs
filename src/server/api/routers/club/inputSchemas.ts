@@ -53,13 +53,13 @@ export const editCollaboratorSchema = clubIdSchema.extend({
   modified: z
     .object({
       userId: z.string(),
-      position: z.enum(['President', 'Officer']),
+      position: z.enum(['Admin', 'Collaborator']),
     })
     .array(),
   created: z
     .object({
       userId: z.string(),
-      position: z.enum(['President', 'Officer']),
+      position: z.enum(['Admin', 'Collaborator']),
     })
     .array(),
 });

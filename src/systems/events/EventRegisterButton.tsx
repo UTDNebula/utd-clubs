@@ -136,7 +136,7 @@ const EventRegisterButton = ({
 
   return (
     <>
-      {isHeader && (memberType === 'President' || memberType === 'Officer') && (
+      {isHeader && (memberType === 'Admin' || memberType === 'Collaborator') && (
         <EventEditButton
           isHeader={isHeader}
           clubSlug={clubSlug}
@@ -198,7 +198,7 @@ const EventRegisterButton = ({
       />
 
       {!isHeader &&
-        (memberType === 'President' || memberType === 'Officer') && (
+        (memberType === 'Admin' || memberType === 'Collaborator') && (
           <EventEditButton
             isHeader={isHeader}
             clubSlug={clubSlug}

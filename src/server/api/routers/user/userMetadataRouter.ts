@@ -111,8 +111,8 @@ const userMetadataRouter = createTRPCRouter({
         where: and(
           eq(userMetadataToClubs.userId, session.user.id),
           or(
-            eq(userMetadataToClubs.memberType, 'Officer'),
-            eq(userMetadataToClubs.memberType, 'President'),
+            eq(userMetadataToClubs.memberType, 'Collaborator'),
+            eq(userMetadataToClubs.memberType, 'Admin'),
           ),
         ),
       }),

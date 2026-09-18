@@ -23,12 +23,12 @@ export const chipStyles: ChipStyles = {
     colorClass: undefined,
     icon: <PersonIcon fontSize="small" />,
   },
-  Officer: {
+  Collaborator: {
     label: 'Collaborator',
     colorClass: 'bg-royal/30 dark:bg-cornflower-300/30',
     icon: <HandymanIcon fontSize="small" />,
   },
-  President: {
+  Admin: {
     label: 'Admin',
     colorClass: 'bg-rose-200 dark:bg-rose-600/40',
     icon: <GavelIcon fontSize="small" />,

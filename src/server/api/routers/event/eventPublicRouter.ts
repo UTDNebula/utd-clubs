@@ -155,8 +155,8 @@ const eventPublicRouter = createTRPCRouter({
                   eq(userMetadataToClubs.userId, userId),
                   inArray(userMetadataToClubs.memberType, [
                     'Member',
-                    'Officer',
-                    'President',
+                    'Collaborator',
+                    'Admin',
                   ]),
                 ),
               )
@@ -270,8 +270,8 @@ const eventPublicRouter = createTRPCRouter({
                 eq(userMetadataToClubs.userId, userId),
                 inArray(userMetadataToClubs.memberType, [
                   'Member',
-                  'Officer',
-                  'President',
+                  'Collaborator',
+                  'Admin',
                 ]),
               ),
             )
