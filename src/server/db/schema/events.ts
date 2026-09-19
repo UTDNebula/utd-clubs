@@ -5,6 +5,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
 } from 'drizzle-orm/pg-core';
@@ -17,6 +18,11 @@ export const statusEnum = pgEnum('status_enum', [
   'pending',
   'deleted',
 ]);
+
+export const eventCollabInviteStatusEnum = pgEnum(
+  'event_collab_invite_status',
+  ['accepted', 'pending', 'rejected'],
+);
 
 export const events = pgTable(
   'events',
@@ -59,6 +65,23 @@ export const events = pgTable(
       )
       .with({ key_field: 'id' }),
   ],
+);
+
+export const eventCollabInvites = pgTable(
+  'event_collab_invites',
+  {
+    eventId: text('event_id')
+      .notNull()
+      .references(() => events.id, { onDelete: 'cascade' }),
+    inviterClubId: text('inviter_club_id')
+      .notNull()
+      .references(() => club.id, { onDelete: 'cascade' }),
+    inviteeClubId: text('invitee_club_id')
+      .notNull()
+      .references(() => club.id, { onDelete: 'cascade' }),
+    status: eventCollabInviteStatusEnum('status').notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.eventId, table.inviteeClubId] })],
 );
 
 export const eventsRelation = relations(events, ({ one, many }) => ({
