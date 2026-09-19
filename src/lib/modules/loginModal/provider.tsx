@@ -9,7 +9,7 @@ import { closeLoginModalFn, openLoginModalFn } from './types';
 
 type LoginModalProviderProps = {
   children: ReactNode;
-  flagPromises?: FlagPromises<'emailAuth' | 'passwordRequirements'>;
+  flagPromises?: Partial<FlagPromises>;
 };
 
 /**

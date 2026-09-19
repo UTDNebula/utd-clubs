@@ -4,19 +4,29 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { UTDClubsLogoStandalone } from '@/lib/icons/UTDClubsLogo';
 import { LoginModalContents } from '@/lib/modules/loginModal';
-import { emailAuth, passwordRequirements } from '@/lib/utils/flags';
+import {
+  emailAuth,
+  loginBannerText,
+  passwordRequirements,
+} from '@/lib/utils/flags';
 import { auth } from '@/server/auth';
 
 export default async function Auth(props: {
   searchParams: Promise<{ [key: string]: string }>;
 }) {
-  const [searchParams, session, enableEmailAuth, enablePasswordRequirements] =
-    await Promise.all([
-      props.searchParams,
-      auth.api.getSession({ headers: await headers() }),
-      emailAuth(),
-      passwordRequirements(),
-    ]);
+  const [
+    searchParams,
+    session,
+    enableEmailAuth,
+    enablePasswordRequirements,
+    loginBannerString,
+  ] = await Promise.all([
+    props.searchParams,
+    auth.api.getSession({ headers: await headers() }),
+    emailAuth(),
+    passwordRequirements(),
+    loginBannerText(),
+  ]);
   if (session) {
     return redirect(searchParams['callbackUrl'] ?? '/');
   }
@@ -55,6 +65,7 @@ export default async function Auth(props: {
           <LoginModalContents
             disableEmailAuth={!enableEmailAuth}
             disablePasswordRequirements={!enablePasswordRequirements}
+            loginBannerText={loginBannerString}
           />
         </div>
       </div>

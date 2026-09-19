@@ -29,6 +29,7 @@ export const LoginModalContents = ({
   explanationText,
   disableEmailAuth,
   disablePasswordRequirements,
+  loginBannerText,
 }: Pick<
   LoginModalProps,
   | 'className'
@@ -38,6 +39,7 @@ export const LoginModalContents = ({
   | 'explanationText'
   | 'disableEmailAuth'
   | 'disablePasswordRequirements'
+  | 'loginBannerText'
 >) => {
   const { data: availableSocialProviders } = useQuery({
     queryKey: ['loginModal', 'getAvailableSocialProviders'],
@@ -134,12 +136,14 @@ export const LoginModalContents = ({
             callbackURL={callbackURL}
             disablePasswordRequirements={disablePasswordRequirements}
           />
-          <Alert severity="info" className="mx-4 max-w-sm">
-            For now, email login is only available for local development
-          </Alert>
-          <Divider className="mt-4 w-full px-4">
+          {loginBannerText && (
+            <Alert severity="info" className="mx-4 mb-4 max-w-sm">
+              {loginBannerText}
+            </Alert>
+          )}
+          <Divider className="w-full px-4">
             <Typography variant="body2" color="textDisabled">
-              Or use a third-party account
+              Or
             </Typography>
           </Divider>
         </>
@@ -202,12 +206,14 @@ const LoginModal = ({
   explanationText,
   disableEmailAuth: disableEmailAuthProp,
   disablePasswordRequirements: disablePasswordRequirementsProp,
+  loginBannerText: loginBannerTextProp,
   flagPromises,
   ...props
 }: LoginModalProps) => {
   const {
     emailAuth: emailAuthPromise,
     passwordRequirements: passwordRequirementsPromise,
+    loginBannerText: loginBannerTextPromise,
   } = flagPromises ?? {};
 
   const enableEmailAuth = disableEmailAuthProp
@@ -219,6 +225,11 @@ const LoginModal = ({
     ? !disablePasswordRequirementsProp
     : passwordRequirementsPromise
       ? use(passwordRequirementsPromise)
+      : undefined;
+  const loginBannerText = loginBannerTextProp
+    ? loginBannerTextProp
+    : loginBannerTextPromise
+      ? use(loginBannerTextPromise)
       : undefined;
 
   if (!open) return null;
@@ -239,6 +250,7 @@ const LoginModal = ({
           explanationText={explanationText}
           disableEmailAuth={!enableEmailAuth}
           disablePasswordRequirements={!enablePasswordRequirements}
+          loginBannerText={loginBannerText}
         />
       </span>
     </Modal>

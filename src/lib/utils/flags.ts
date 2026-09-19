@@ -6,28 +6,51 @@ import { isDevelopment, isProduction, truthy } from '@/env.mjs';
 // Flags - Modify this section
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Controls whether visitors can sign in or sign up to accounts that use an email and password.
+ */
 export const emailAuth = createFlag({
   key: 'email-auth',
-  type: 'boolean',
   defaultValue: isDevelopment, // Only enabled on development
 });
 
+/**
+ * Controls whether account passwords should have at least 3 of the following:
+ * lowercase, uppercase, number, symbol. Passwords must always have at least 8
+ * characters regardless of this flag
+ */
 export const passwordRequirements = createFlag({
   key: 'password-requirements',
-  type: 'boolean',
   defaultValue: isProduction, // Only enabled on producution
 });
 
-export const flags = { emailAuth, passwordRequirements };
+/**
+ * Defines text to show in a banner on the login modal. Hides the banner if an empty string
+ */
+export const loginBannerText = createFlag({
+  key: 'login-banner-text',
+  defaultValue: 'For now, email login is only available for local development',
+});
+
+/**
+ * Object containing every feature flags for this project
+ */
+export const flags = {
+  emailAuth,
+  passwordRequirements,
+  loginBannerText,
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Flag Utilities
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Constructs the type for the flagPromises props when picking specific {@linkcode FlagKeys}
+ * Constructs an object of flags returning their promised value. Intended for a {@code flagPromises} props. When used as a generic, can pick specific {@linkcode FlagKeys}
  */
-export type FlagPromises<FlagKeys extends keyof typeof flags> = {
+export type FlagPromises<
+  FlagKeys extends keyof typeof flags = keyof typeof flags,
+> = {
   [K in FlagKeys]: Promise<FlagValueType<(typeof flags)[K]>>;
 };
 
@@ -57,7 +80,11 @@ function toScreamingSnakeCase(string: string) {
  * For example, if the flag is named `enable-feature`, will search for environment variable `FLAG_ENABLE_FEATURE`. You can customize the environment variable's key using {@linkcode envKey}
  */
 function createFlag<
-  ValueType = boolean | string | number,
+  ValueType extends string | number | boolean | object =
+    | boolean
+    | string
+    | number
+    | object,
   EntitiesType = unknown,
 >(
   options: Omit<
@@ -65,16 +92,24 @@ function createFlag<
     'decide'
   > & {
     envKey?: string;
-    type: 'boolean' | 'number' | 'string' | 'object';
+    envType?: 'boolean' | 'number' | 'string' | 'object';
     deciderOptions?: DeciderFactoryOptions;
   },
 ): Flag<ValueType, EntitiesType> {
-  const { key, envKey, type, deciderOptions } = options;
+  const { key, envKey, envType, deciderOptions, defaultValue } = options;
 
-  const decider = createDecider(
+  const parsableTypes = ['boolean', 'number', 'string', 'object'] as const;
+  const typeOfDefaultValue = typeof defaultValue;
+  const parsableEnvType = (parsableTypes as readonly string[]).includes(
+    typeOfDefaultValue,
+  )
+    ? (typeOfDefaultValue as (typeof parsableTypes)[number])
+    : undefined;
+
+  const decider = createDecider<ValueType>(
     key,
     envKey ?? `FLAG_${toScreamingSnakeCase(key)}`,
-    type,
+    envType ?? parsableEnvType,
     deciderOptions,
   );
 
@@ -106,43 +141,57 @@ type DeciderFactoryOptions = {
  *
  * @param flagKey The key/slug of the flag
  * @param envKey The key of the environment value that will trigger the flag
- * @param type Data type of the flag. Can be `"boolean"`, `"number"`, `"string"`, or `"object"`
- * @returns Value of the flag if loading from environment variable (typed as {@linkcode type}). Otherwise, returns `undefined` to defer to adapter or the hardcoded default.
+ * @param envType Parse the flag as this data type when reading from environment variables. Can be `"boolean"`, `"number"`, `"string"`, or `"object"`. Defaults to `"string"`
+ * @returns Value of the flag if loading from environment variable (typed as {@linkcode envType}). Otherwise, returns `undefined` to defer to adapter or the hardcoded default.
  */
+function createDecider<
+  ValueType extends boolean | string | number | object = boolean,
+>(
+  flagKey: string,
+  envKey: string,
+  envType?: 'boolean',
+  options?: DeciderFactoryOptions,
+): () => Promise<ValueType | undefined>;
+function createDecider<
+  ValueType extends boolean | string | number | object = number,
+>(
+  flagKey: string,
+  envKey: string,
+  envType?: 'number',
+  options?: DeciderFactoryOptions,
+): () => Promise<ValueType | undefined>;
+function createDecider<
+  ValueType extends boolean | string | number | object = string,
+>(
+  flagKey: string,
+  envKey: string,
+  envType?: 'string',
+  options?: DeciderFactoryOptions,
+): () => Promise<ValueType | undefined>;
+function createDecider<
+  ValueType extends boolean | string | number | object = object,
+>(
+  flagKey: string,
+  envKey: string,
+  envType?: 'object',
+  options?: DeciderFactoryOptions,
+): () => Promise<ValueType | undefined>;
+function createDecider<
+  ValueType extends boolean | string | number | object =
+    | boolean
+    | string
+    | number
+    | object,
+>(
+  flagKey: string,
+  envKey: string,
+  envType?: 'boolean' | 'number' | 'string' | 'object',
+  options?: DeciderFactoryOptions,
+): () => Promise<ValueType | undefined>;
 function createDecider(
   flagKey: string,
   envKey: string,
-  type: 'boolean',
-  options?: DeciderFactoryOptions,
-): () => Promise<boolean | undefined>;
-function createDecider(
-  flagKey: string,
-  envKey: string,
-  type: 'number',
-  options?: DeciderFactoryOptions,
-): () => Promise<number | undefined>;
-function createDecider(
-  flagKey: string,
-  envKey: string,
-  type: 'string',
-  options?: DeciderFactoryOptions,
-): () => Promise<string | undefined>;
-function createDecider<TObject extends object>(
-  flagKey: string,
-  envKey: string,
-  type: 'object',
-  options?: DeciderFactoryOptions,
-): () => Promise<TObject | undefined>;
-function createDecider(
-  flagKey: string,
-  envKey: string,
-  type: 'boolean' | 'number' | 'string' | 'object',
-  options?: DeciderFactoryOptions,
-): () => Promise<boolean | number | string | object | undefined>;
-function createDecider(
-  flagKey: string,
-  envKey: string,
-  type: 'boolean' | 'number' | 'string' | 'object',
+  envType: 'boolean' | 'number' | 'string' | 'object' = 'string',
   options?: DeciderFactoryOptions,
 ) {
   return async () => {
@@ -155,11 +204,15 @@ function createDecider(
       ? !hasVercelCredentials
       : true;
 
-    if (prioritizeEnvVars && envValue !== undefined && envValue.trim() !== '') {
+    if (
+      prioritizeEnvVars &&
+      envValue !== undefined &&
+      (envType === 'string' || envValue.trim() !== '')
+    ) {
       let resolvedValue;
 
       try {
-        switch (type) {
+        switch (envType) {
           case 'boolean':
             resolvedValue = truthy(envValue);
             break;
@@ -174,17 +227,17 @@ function createDecider(
             break;
           default:
             console.error(
-              `Unknown type ${type} for environment flag ${envKey}`,
+              `Unknown type ${envType} for environment flag ${envKey}`,
             );
         }
         if (logFlagOrigins)
           console.log(
-            `Getting flag \`${flagKey}\` from environment variable \`${envKey}\``,
+            `Getting flag \`${flagKey}\` as ${envType} from environment variable \`${envKey}\``,
           );
         return resolvedValue;
       } catch (e) {
         console.error(
-          `Couldn't parse environment flag ${envKey} as ${type}. Error:`,
+          `Couldn't parse environment flag ${envKey} as ${envType}. Error:`,
           e,
         );
       }

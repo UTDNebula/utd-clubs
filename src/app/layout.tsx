@@ -9,7 +9,11 @@ import SyncfusionWrapper from '@/lib/components/SyncfusionWrapper';
 import { CheckRefreshToken } from '@/lib/modules/googleOAuth';
 import { LoginModalProvider } from '@/lib/modules/loginModal/provider';
 import { SnackbarProvider } from '@/lib/modules/snackbar';
-import { emailAuth, passwordRequirements } from '@/lib/utils/flags';
+import {
+  emailAuth,
+  loginBannerText,
+  passwordRequirements,
+} from '@/lib/utils/flags';
 import theme from '@/lib/utils/theme';
 import { TRPCReactProvider } from '@/trpc/react';
 
@@ -78,6 +82,7 @@ export default async function RootLayout({
                     flagPromises={{
                       emailAuth: emailAuth(),
                       passwordRequirements: passwordRequirements(),
+                      loginBannerText: loginBannerText(),
                     }}
                   >
                     <SnackbarProvider>
