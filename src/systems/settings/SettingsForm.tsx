@@ -1,14 +1,13 @@
-'use server';
-
 import Alert from '@mui/material/Alert';
+import { emailAuth } from '@/lib/utils/flags';
 import { auth } from '@/server/auth';
 import {
   SelectUserMetadataToClubsWithClub,
   SelectUserMetadataWithClubs,
 } from '@/server/db/models';
 import { api } from '@/trpc/server';
-import DeleteAccount from './forms/DeleteAccount';
 import JoinedClubs from './forms/JoinedClubs';
+import ManageAccount from './forms/ManageAccount';
 import UserInfo from './forms/UserInfo';
 import SettingsHeader from './SettingsHeader';
 
@@ -21,12 +20,19 @@ async function SettingsForm({
 
   let userData: SelectUserMetadataWithClubs | undefined = undefined;
   let joinedClubs: SelectUserMetadataToClubsWithClub[] | undefined = undefined;
+  let disableEmailAuth = false;
 
   // Concurrently run both procedures
   await Promise.allSettled([
     api.user.metadata.byId({ userId: user.id }),
     api.user.clubs.getMemberClubsMetadata(),
-  ]).then(([userDataResult, joinedClubsResult]) => {
+    emailAuth(),
+  ]).then(([userDataResult, joinedClubsResult, emailAuth]) => {
+    if (emailAuth.status === 'fulfilled') {
+      disableEmailAuth = !(emailAuth.value as boolean);
+    } else if (emailAuth.status === 'rejected') {
+      throw new Error('Failed to fetch email-auth flag in SettingsForm');
+    }
     if (userDataResult.status === 'fulfilled' && userDataResult.value) {
       userData = userDataResult.value;
     } else if (userDataResult.status === 'rejected') {
@@ -44,7 +50,7 @@ async function SettingsForm({
   });
 
   return (
-    <div className="flex w-full max-w-6xl flex-col gap-8">
+    <div className="mb-24 flex w-full max-w-6xl flex-col gap-8">
       {(!userData || !joinedClubs) && (
         <Alert severity="error" variant="filled" className="rounded-lg">
           One or more panels were hidden because their associated data could not
@@ -54,7 +60,7 @@ async function SettingsForm({
       <SettingsHeader user={user} />
       {userData && <UserInfo user={userData} />}
       {joinedClubs && <JoinedClubs joinedClubs={joinedClubs} />}
-      <DeleteAccount />
+      {session && <ManageAccount disableEmailAuth={disableEmailAuth} />}
     </div>
   );
 }

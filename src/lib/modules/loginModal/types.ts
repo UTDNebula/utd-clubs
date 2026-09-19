@@ -1,3 +1,19 @@
+import { ModalProps } from '@mui/material/Modal';
+import { FlagPromises } from '@/lib/utils/flags';
+
+export type LoginModalProps = Omit<ModalProps, 'children'> & {
+  open: boolean;
+  onClose?: () => void;
+  closeButton?: boolean;
+  className?: string;
+  callbackURL?: string;
+  explanationText?: string;
+  flagPromises?: Partial<FlagPromises>;
+  disableEmailAuth?: boolean;
+  disablePasswordRequirements?: boolean;
+  loginBannerText?: string;
+};
+
 /**
  * Catchable error for when {@linkcode useLoginModalContext()} isn't used in a child component of a {@linkcode LoginModalProvider}.
  */

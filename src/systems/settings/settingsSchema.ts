@@ -96,3 +96,55 @@ export const userMetadataToAccountOnboardingSchema = z.codec(
     }),
   },
 );
+
+export const changeEmailSchema = z.object({
+  newEmail: z.email('Valid email required'),
+});
+
+export type ChangeEmailSchema = z.infer<typeof changeEmailSchema>;
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Current password required'),
+    newPassword: z
+      .string()
+      .min(8, { error: 'Must be at least 8 characters' })
+      .superRefine((val, ctx) => {
+        const fulfilledRequirements = {
+          lowercase: /[a-z]/.test(val),
+          uppercase: /[A-Z]/.test(val),
+          number: /[0-9]/.test(val),
+          symbol: /[`~!@#$%^&*()\-_=+\[{\]}|;:'",<.>/?]/.test(val),
+        };
+
+        const sum = Object.values(fulfilledRequirements).reduce(
+          (acc, val) => acc + Number(val),
+          0,
+        );
+
+        if (sum < 3) {
+          ctx.addIssue({
+            code: 'custom',
+            message:
+              'Must have at least 3 of the following: lowercase, uppercase, number, symbol',
+          });
+        }
+      }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    error: 'Passwords must match',
+    path: ['confirmPassword'],
+  });
+
+export type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
+
+export const deleteAccountSchema = z.object({
+  confirmation: z
+    .string()
+    .refine((val) => /yes,? I would like to delete my account.?/i.test(val), {
+      error: 'Type out the entire sentence',
+    }),
+});
+
+export type DeleteAccountSchema = z.infer<typeof deleteAccountSchema>;
