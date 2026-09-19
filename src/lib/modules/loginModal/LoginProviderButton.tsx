@@ -1,11 +1,11 @@
 'use client';
 
 import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
 import LoginProviderIcons from './icons';
 import { LoginProviders } from './types';
-import Tooltip from '@mui/material/Tooltip';
 
 const loginProviderNames = {
   google: 'Google',

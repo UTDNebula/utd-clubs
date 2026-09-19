@@ -1,20 +1,20 @@
 'use client';
 
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import Alert from '@mui/material/Alert';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
+import { getAvailableSocialProviders } from '@/lib/utils/socialProviders';
+import LoginForm from './LoginForm';
 import LoginProviderButton from './LoginProviderButton';
 import { LoginModalProps, LoginProviders } from './types';
-import Divider from '@mui/material/Divider';
-import { useState } from 'react';
-import Alert from '@mui/material/Alert';
-import { getAvailableSocialProviders } from '@/lib/utils/socialProviders';
-import { useQuery } from '@tanstack/react-query';
-import Tooltip from '@mui/material/Tooltip';
-import LoginForm from './LoginForm';
 
 const loginProviderButtons = [
   'google',

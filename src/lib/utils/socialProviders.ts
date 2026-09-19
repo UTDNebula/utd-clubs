@@ -1,8 +1,8 @@
 // React Server Function that checks what social providers are available on the server
 'use server';
 
-import { env } from '@/env.mjs';
 import { BetterAuthOptions } from 'better-auth/minimal';
+import { env } from '@/env.mjs';
 
 const socialProviders = {
   google: Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),

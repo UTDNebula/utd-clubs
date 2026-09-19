@@ -1,4 +1,5 @@
 import Alert from '@mui/material/Alert';
+import { emailAuth } from '@/lib/utils/flags';
 import { auth } from '@/server/auth';
 import {
   SelectUserMetadataToClubsWithClub,
@@ -6,10 +7,9 @@ import {
 } from '@/server/db/models';
 import { api } from '@/trpc/server';
 import JoinedClubs from './forms/JoinedClubs';
+import ManageAccount from './forms/ManageAccount';
 import UserInfo from './forms/UserInfo';
 import SettingsHeader from './SettingsHeader';
-import ManageAccount from './forms/ManageAccount';
-import { emailAuth } from '@/lib/utils/flags';
 
 async function SettingsForm({
   session,

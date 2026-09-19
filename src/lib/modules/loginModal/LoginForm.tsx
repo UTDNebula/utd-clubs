@@ -1,5 +1,8 @@
-import { setSnackbar, setSnackbarWithPreset } from '@/lib/modules/snackbar';
 import Button from '@mui/material/Button';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { setSnackbar, setSnackbarWithPreset } from '@/lib/modules/snackbar';
+import { authClient } from '@/lib/utils/auth-client';
 import { useAppForm } from '@/lib/utils/form';
 import {
   SignInSchema,
@@ -7,10 +10,7 @@ import {
   SignUpSchema,
   signUpSchema,
 } from './schema';
-import { useEffect } from 'react';
-import { authClient } from '@/lib/utils/auth-client';
 import { LoginModalProps } from './types';
-import { useRouter } from 'next/navigation';
 
 type LoginFormProps = Pick<LoginModalProps, 'onClose' | 'callbackURL'> & {
   signUp: boolean;

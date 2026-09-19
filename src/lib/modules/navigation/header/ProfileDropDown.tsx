@@ -12,13 +12,13 @@ import {
   Popover,
   Typography,
 } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Binoculars } from '@/lib/icons/OtherIcons';
 import { openLoginModal } from '@/lib/modules/loginModal';
 import { authClient } from '@/lib/utils/auth-client';
-import { useQueryClient } from '@tanstack/react-query';
 import { getAvailableSocialProviders } from '@/lib/utils/socialProviders';
 
 type Props = {

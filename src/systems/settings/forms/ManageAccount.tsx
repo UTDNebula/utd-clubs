@@ -1,9 +1,17 @@
 'use client';
 
 import DeleteIcon from '@mui/icons-material/Delete';
+import Button from '@mui/material/Button';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Panel from '@nebula-library/components/Panel';
+import Confirmation from '@/lib/components/Confirmation';
 import { setSnackbarWithPreset } from '@/lib/modules/snackbar';
+import { authClient } from '@/lib/utils/auth-client';
 import { useAppForm } from '@/lib/utils/form';
 import {
   changeEmailSchema,
@@ -13,14 +21,6 @@ import {
   deleteAccountSchema,
   DeleteAccountSchema,
 } from '../settingsSchema';
-import { authClient } from '@/lib/utils/auth-client';
-import TextField from '@mui/material/TextField';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Confirmation from '@/lib/components/Confirmation';
-import { useRouter } from 'next/navigation';
 
 type ManageAccountTab = 'email' | 'password' | 'delete';
 
