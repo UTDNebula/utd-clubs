@@ -33,10 +33,11 @@ export default function ClubOfficersCard({
       const rightBottom = rightSide.getBoundingClientRect().bottom;
       const officerTop = officerContainer.getBoundingClientRect().top;
 
-      // The height of the officer card at start should be the distance between officer's top and the right side's bottom
-      const targetHeight = rightBottom - officerTop; // will be negative in mobile -> sets truncation to true, but maxHeight is default 300px
+      // Use the same minimum height for the collapsed size and overflow check,
+      // including when the right column ends above the officers card on mobile.
+      const targetHeight = Math.max(rightBottom - officerTop, 230);
       const contentHeight = contentRef.current.scrollHeight + 80; // height of the full officer card + padding/header space
-      setMaxHeight(Math.max(targetHeight, 230)); // at least 230px to show 2 officers
+      setMaxHeight(targetHeight);
       setNeedsTruncation(contentHeight > targetHeight && officers.length > 0); // if no officers, no truncation -- just show error text
     };
 
