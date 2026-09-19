@@ -9,6 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
 import { use, useState } from 'react';
+import MarkdownText from '@/lib/components/MarkdownText';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
 import { getAvailableSocialProviders } from '@/lib/utils/socialProviders';
@@ -138,7 +139,7 @@ export const LoginModalContents = ({
           />
           {loginBannerText && (
             <Alert severity="info" className="mx-4 mb-4 max-w-sm">
-              {loginBannerText}
+              <MarkdownText text={loginBannerText} fontSize="small" expanded />
             </Alert>
           )}
           <Divider className="w-full px-4">
