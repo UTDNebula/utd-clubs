@@ -28,6 +28,7 @@ export const LoginModalContents = ({
   callbackURL,
   explanationText,
   disableEmailAuth,
+  disablePasswordRequirements,
 }: Pick<
   LoginModalProps,
   | 'className'
@@ -36,6 +37,7 @@ export const LoginModalContents = ({
   | 'callbackURL'
   | 'explanationText'
   | 'disableEmailAuth'
+  | 'disablePasswordRequirements'
 >) => {
   const { data: availableSocialProviders } = useQuery({
     queryKey: ['loginModal', 'getAvailableSocialProviders'],
@@ -130,6 +132,7 @@ export const LoginModalContents = ({
             setSignUp={setSignUp}
             onClose={onClose}
             callbackURL={callbackURL}
+            disablePasswordRequirements={disablePasswordRequirements}
           />
           <Alert severity="info" className="mx-4 max-w-sm">
             For now, email login is only available for local development
@@ -198,13 +201,24 @@ const LoginModal = ({
   callbackURL,
   explanationText,
   disableEmailAuth: disableEmailAuthProp,
-  enableEmailAuthPromise,
+  disablePasswordRequirements: disablePasswordRequirementsProp,
+  flagPromises,
   ...props
 }: LoginModalProps) => {
+  const {
+    emailAuth: emailAuthPromise,
+    passwordRequirements: passwordRequirementsPromise,
+  } = flagPromises ?? {};
+
   const enableEmailAuth = disableEmailAuthProp
     ? !disableEmailAuthProp
-    : enableEmailAuthPromise
-      ? use(enableEmailAuthPromise)
+    : emailAuthPromise
+      ? use(emailAuthPromise)
+      : undefined;
+  const enablePasswordRequirements = disablePasswordRequirementsProp
+    ? !disablePasswordRequirementsProp
+    : passwordRequirementsPromise
+      ? use(passwordRequirementsPromise)
       : undefined;
 
   if (!open) return null;
@@ -224,6 +238,7 @@ const LoginModal = ({
           callbackURL={callbackURL}
           explanationText={explanationText}
           disableEmailAuth={!enableEmailAuth}
+          disablePasswordRequirements={!enablePasswordRequirements}
         />
       </span>
     </Modal>

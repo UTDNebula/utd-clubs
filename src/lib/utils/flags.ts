@@ -2,6 +2,10 @@ import { Flag, flag } from 'flags/next';
 import SuperJSON from 'superjson';
 import { isDevelopment, isProduction, truthy } from '@/env.mjs';
 
+////////////////////////////////////////////////////////////////////////////////
+// Flags - Modify this section
+////////////////////////////////////////////////////////////////////////////////
+
 export const emailAuth = createFlag({
   key: 'email-auth',
   type: 'boolean',
@@ -13,6 +17,24 @@ export const passwordRequirements = createFlag({
   type: 'boolean',
   defaultValue: isProduction, // Only enabled on producution
 });
+
+export const flags = { emailAuth, passwordRequirements };
+
+////////////////////////////////////////////////////////////////////////////////
+// Flag Utilities
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Constructs the type for the flagPromises props when picking specific {@linkcode FlagKeys}
+ */
+export type FlagPromises<FlagKeys extends keyof typeof flags> = {
+  [K in FlagKeys]: Promise<FlagValueType<(typeof flags)[K]>>;
+};
+
+/**
+ * Gets the data type of a flag
+ */
+export type FlagValueType<T> = T extends Flag<infer V, unknown> ? V : never;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Factory Functions - Don't touch stuff below

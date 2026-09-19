@@ -4,24 +4,26 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { UTDClubsLogoStandalone } from '@/lib/icons/UTDClubsLogo';
 import { LoginModalContents } from '@/lib/modules/loginModal';
+import { emailAuth, passwordRequirements } from '@/lib/utils/flags';
 import { auth } from '@/server/auth';
-import { emailAuth } from '@/lib/utils/flags';
 
 export default async function Auth(props: {
   searchParams: Promise<{ [key: string]: string }>;
 }) {
-  const [searchParams, session, enableEmailAuth] = await Promise.all([
-    props.searchParams,
-    auth.api.getSession({ headers: await headers() }),
-    emailAuth(),
-  ]);
+  const [searchParams, session, enableEmailAuth, enablePasswordRequirements] =
+    await Promise.all([
+      props.searchParams,
+      auth.api.getSession({ headers: await headers() }),
+      emailAuth(),
+      passwordRequirements(),
+    ]);
   if (session) {
     return redirect(searchParams['callbackUrl'] ?? '/');
   }
 
   return (
     <main className="h-screen">
-      <div className="relative flex h-screen basis-full flex-col items-center justify-center gap-8">
+      <div className="relative flex h-screen p-4">
         <div className="fixed inset-0 h-full w-full overflow-hidden">
           <Image
             src={'/banner.png'}
@@ -31,25 +33,30 @@ export default async function Auth(props: {
           />
         </div>
         <div className="dark:bg-slightly-darken fixed inset-0" />
-        <div className="z-10">
-          <Link
-            href="/"
-            className="font-display flex items-center gap-2 text-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] select-none"
-          >
-            <div className="flex flex-row items-center">
-              <UTDClubsLogoStandalone className="h-10 w-auto fill-white" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg leading-5 font-bold whitespace-nowrap md:text-xl">
-                UTD CLUBS
-              </span>
-              <span className="text-xs font-medium whitespace-nowrap md:text-sm">
-                by Nebula Labs
-              </span>
-            </div>
-          </Link>
+        <div className="m-auto flex flex-col items-center gap-8">
+          <div className="z-10">
+            <Link
+              href="/"
+              className="font-display flex items-center gap-2 text-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] select-none"
+            >
+              <div className="flex flex-row items-center">
+                <UTDClubsLogoStandalone className="h-10 w-auto fill-white" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg leading-5 font-bold whitespace-nowrap md:text-xl">
+                  UTD CLUBS
+                </span>
+                <span className="text-xs font-medium whitespace-nowrap md:text-sm">
+                  by Nebula Labs
+                </span>
+              </div>
+            </Link>
+          </div>
+          <LoginModalContents
+            disableEmailAuth={!enableEmailAuth}
+            disablePasswordRequirements={!enablePasswordRequirements}
+          />
         </div>
-        <LoginModalContents disableEmailAuth={!enableEmailAuth} />
       </div>
     </main>
   );

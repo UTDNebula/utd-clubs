@@ -9,9 +9,9 @@ import SyncfusionWrapper from '@/lib/components/SyncfusionWrapper';
 import { CheckRefreshToken } from '@/lib/modules/googleOAuth';
 import { LoginModalProvider } from '@/lib/modules/loginModal/provider';
 import { SnackbarProvider } from '@/lib/modules/snackbar';
+import { emailAuth, passwordRequirements } from '@/lib/utils/flags';
 import theme from '@/lib/utils/theme';
 import { TRPCReactProvider } from '@/trpc/react';
-import { emailAuth } from '@/lib/utils/flags';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -74,7 +74,12 @@ export default async function RootLayout({
             <TRPCReactProvider>
               <ThemeProvider theme={theme}>
                 <ClientLocalizationProvider>
-                  <LoginModalProvider enableEmailAuthPromise={emailAuth()}>
+                  <LoginModalProvider
+                    flagPromises={{
+                      emailAuth: emailAuth(),
+                      passwordRequirements: passwordRequirements(),
+                    }}
+                  >
                     <SnackbarProvider>
                       <CheckRefreshToken />
                       {children}

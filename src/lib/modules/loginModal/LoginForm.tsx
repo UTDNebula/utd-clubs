@@ -5,14 +5,17 @@ import { setSnackbar, setSnackbarWithPreset } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
 import { useAppForm } from '@/lib/utils/form';
 import {
+  createSignUpSchema,
   SignInSchema,
   signInSchema,
   SignUpSchema,
-  signUpSchema,
 } from './schema';
 import { LoginModalProps } from './types';
 
-type LoginFormProps = Pick<LoginModalProps, 'onClose' | 'callbackURL'> & {
+type LoginFormProps = Pick<
+  LoginModalProps,
+  'onClose' | 'callbackURL' | 'disablePasswordRequirements'
+> & {
   signUp: boolean;
   setSignUp: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -22,6 +25,7 @@ export default function LoginForm({
   setSignUp,
   onClose,
   callbackURL,
+  disablePasswordRequirements,
 }: LoginFormProps) {
   const router = useRouter();
 
@@ -58,6 +62,7 @@ export default function LoginForm({
     },
   });
 
+  const signUpSchema = createSignUpSchema({ disablePasswordRequirements });
   const signUpForm = useAppForm({
     defaultValues: {
       name: '',

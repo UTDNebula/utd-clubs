@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode, Suspense, useState } from 'react';
+import { FlagPromises } from '@/lib/utils/flags';
 import { LoginModalContext } from './context';
 import { useAttachGlobalLoginModalFunctions } from './global';
 import LoginModal from './LoginModal';
@@ -8,7 +9,7 @@ import { closeLoginModalFn, openLoginModalFn } from './types';
 
 type LoginModalProviderProps = {
   children: ReactNode;
-  enableEmailAuthPromise?: Promise<boolean>;
+  flagPromises?: FlagPromises<'emailAuth' | 'passwordRequirements'>;
 };
 
 /**
@@ -16,7 +17,7 @@ type LoginModalProviderProps = {
  */
 export const LoginModalProvider = ({
   children,
-  enableEmailAuthPromise,
+  flagPromises,
 }: LoginModalProviderProps) => {
   const [open, setOpen] = useState(false);
   const [callbackURL, setCallbackURL] = useState<string | undefined>(undefined);
@@ -57,7 +58,7 @@ export const LoginModalProvider = ({
           onClose={closeLoginModal}
           callbackURL={callbackURL}
           explanationText={explanationText}
-          enableEmailAuthPromise={enableEmailAuthPromise}
+          flagPromises={flagPromises}
         />
       </Suspense>
     </LoginModalContext.Provider>

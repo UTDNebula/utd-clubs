@@ -1,4 +1,5 @@
 import { ModalProps } from '@mui/material/Modal';
+import { FlagPromises } from '@/lib/utils/flags';
 
 export type LoginModalProps = Omit<ModalProps, 'children'> & {
   open: boolean;
@@ -7,8 +8,9 @@ export type LoginModalProps = Omit<ModalProps, 'children'> & {
   className?: string;
   callbackURL?: string;
   explanationText?: string;
-  enableEmailAuthPromise?: Promise<boolean>;
+  flagPromises?: FlagPromises<'emailAuth' | 'passwordRequirements'>;
   disableEmailAuth?: boolean;
+  disablePasswordRequirements?: boolean;
 };
 
 /**
