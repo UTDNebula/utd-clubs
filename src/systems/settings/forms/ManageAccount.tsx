@@ -24,11 +24,17 @@ import { useRouter } from 'next/navigation';
 
 type ManageAccountTab = 'email' | 'password' | 'delete';
 
-export default function ManageAccount() {
+type ManageAccountProps = { disableEmailAuth?: boolean };
+
+export default function ManageAccount({
+  disableEmailAuth,
+}: ManageAccountProps) {
   const session = authClient.useSession();
   const router = useRouter();
 
-  const [tab, setTab] = useState<ManageAccountTab>('email');
+  const [tab, setTab] = useState<ManageAccountTab>(
+    disableEmailAuth ? 'delete' : 'email',
+  );
   const handleChangeTab = (
     e: React.SyntheticEvent,
     newTab: ManageAccountTab,
@@ -105,20 +111,28 @@ export default function ManageAccount() {
     useState(false);
 
   const tabs = [
-    <Tab
-      key="email"
-      value="email"
-      label="Change Email"
-      aria-label="change email"
-      className="text-nowrap normal-case sm:px-8"
-    />,
-    <Tab
-      key="password"
-      value="password"
-      label="Change Password"
-      aria-label="change password"
-      className="text-nowrap normal-case sm:px-8"
-    />,
+    ...(disableEmailAuth
+      ? []
+      : [
+          <Tab
+            key="email"
+            value="email"
+            label="Change Email"
+            aria-label="change email"
+            className="text-nowrap normal-case sm:px-8"
+          />,
+        ]),
+    ...(disableEmailAuth
+      ? []
+      : [
+          <Tab
+            key="password"
+            value="password"
+            label="Change Password"
+            aria-label="change password"
+            className="text-nowrap normal-case sm:px-8"
+          />,
+        ]),
     <Tab
       key="delete"
       value="delete"

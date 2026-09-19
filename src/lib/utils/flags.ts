@@ -1,0 +1,124 @@
+import { vercelAdapter } from '@flags-sdk/vercel';
+import { flag } from 'flags/next';
+import SuperJSON from 'superjson';
+import { truthy } from '@/env.mjs';
+
+export const emailAuth = flag({
+  key: 'email-auth',
+  adapter: vercelAdapter(),
+  decide: createDecider('email-auth', 'FLAG_EMAIL_AUTH', 'boolean'),
+  defaultValue: process.env.NODE_ENV === 'development', // Only enabled on development
+});
+
+////////////////////////////////////////////////////////////////////////////////
+// Decider Factory - Don't touch stuff below
+////////////////////////////////////////////////////////////////////////////////
+
+const logFlagOrigins = truthy(process.env.LOG_FLAG_ORIGINS ?? false);
+
+type DeciderFactoryOptions = {
+  /**
+   * Rather than obtaining the flag's value from environment variables first, prioritize obtaining the flag's value from Vercel
+   * @default false
+   */
+  prioritizeVercel?: boolean;
+};
+
+/**
+ * Create a decider that will obtain the flag's value from the following sources, in order:
+ * 1. Local environment variables
+ *    - Requires environment variable with key of {@linkcode envKey}
+ * 2. Vercel flags
+ *    - Requires `VERCEL_OIDC_TOKEN` or `FLAGS_SECRET` environment varisbles
+ * 3. Hardcoded defaultValue
+ *
+ * @param flagKey The key/slug of the flag
+ * @param envKey The key of the environment value that will trigger the flag
+ * @param type Data type of the flag. Can be `"boolean"`, `"number"`, `"string"`, or `"object"`
+ * @returns Value of the flag if loading from environment variable (typed as {@linkcode type}). Otherwise, returns `undefined` to defer to Vercel or the hardcoded default.
+ */
+function createDecider(
+  flagKey: string,
+  envKey: string,
+  type: 'boolean',
+  options?: DeciderFactoryOptions,
+): () => Promise<boolean | undefined>;
+function createDecider(
+  flagKey: string,
+  envKey: string,
+  type: 'number',
+  options?: DeciderFactoryOptions,
+): () => Promise<number | undefined>;
+function createDecider(
+  flagKey: string,
+  envKey: string,
+  type: 'string',
+  options?: DeciderFactoryOptions,
+): () => Promise<string | undefined>;
+function createDecider<TObject extends object>(
+  flagKey: string,
+  envKey: string,
+  type: 'object',
+  options?: DeciderFactoryOptions,
+): () => Promise<TObject | undefined>;
+function createDecider(
+  flagKey: string,
+  envKey: string,
+  type: 'boolean' | 'number' | 'string' | 'object',
+  options?: DeciderFactoryOptions,
+) {
+  return async () => {
+    const hasVercelCredentials =
+      process.env.VERCEL_OIDC_TOKEN?.trim() || process.env.FLAGS_SECRET?.trim();
+
+    const envValue = process.env[envKey];
+
+    const prioritizeEnvVars = options?.prioritizeVercel
+      ? !hasVercelCredentials
+      : true;
+
+    if (prioritizeEnvVars && envValue !== undefined && envValue.trim() !== '') {
+      let resolvedValue;
+
+      try {
+        switch (type) {
+          case 'boolean':
+            resolvedValue = truthy(envValue);
+            break;
+          case 'number':
+            resolvedValue = Number(envValue);
+            break;
+          case 'object':
+            resolvedValue = SuperJSON.parse(envValue);
+            break;
+          case 'string':
+            resolvedValue = envValue;
+            break;
+          default:
+            console.error(
+              `Unknown type ${type} for environment flag ${envKey}`,
+            );
+        }
+        if (logFlagOrigins)
+          console.log(
+            `Getting flag \`${flagKey}\` from environment variable \`${envKey}\``,
+          );
+        return resolvedValue;
+      } catch (e) {
+        console.error(
+          `Couldn't parse environment flag ${envKey} as ${type}. Error:`,
+          e,
+        );
+      }
+    }
+
+    if (logFlagOrigins) {
+      if (hasVercelCredentials)
+        console.log(
+          `Getting flag \`${flagKey}\` from Vercel (assuming OIDC token is valid and not expired)`,
+        );
+      else console.log(`Getting flag \`${flagKey}\` from default value`);
+    }
+    return undefined;
+  };
+}
