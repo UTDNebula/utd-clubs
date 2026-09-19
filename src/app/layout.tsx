@@ -11,6 +11,7 @@ import { LoginModalProvider } from '@/lib/modules/loginModal/provider';
 import { SnackbarProvider } from '@/lib/modules/snackbar';
 import theme from '@/lib/utils/theme';
 import { TRPCReactProvider } from '@/trpc/react';
+import { emailAuth } from '@/lib/utils/flags';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -73,7 +74,7 @@ export default async function RootLayout({
             <TRPCReactProvider>
               <ThemeProvider theme={theme}>
                 <ClientLocalizationProvider>
-                  <LoginModalProvider>
+                  <LoginModalProvider enableEmailAuthPromise={emailAuth()}>
                     <SnackbarProvider>
                       <CheckRefreshToken />
                       {children}

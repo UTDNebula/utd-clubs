@@ -5,13 +5,15 @@ import { redirect } from 'next/navigation';
 import { UTDClubsLogoStandalone } from '@/lib/icons/UTDClubsLogo';
 import { LoginModalContents } from '@/lib/modules/loginModal';
 import { auth } from '@/server/auth';
+import { emailAuth } from '@/lib/utils/flags';
 
 export default async function Auth(props: {
   searchParams: Promise<{ [key: string]: string }>;
 }) {
-  const [searchParams, session] = await Promise.all([
+  const [searchParams, session, enableEmailAuth] = await Promise.all([
     props.searchParams,
     auth.api.getSession({ headers: await headers() }),
+    emailAuth(),
   ]);
   if (session) {
     return redirect(searchParams['callbackUrl'] ?? '/');
@@ -47,7 +49,7 @@ export default async function Auth(props: {
             </div>
           </Link>
         </div>
-        <LoginModalContents />
+        <LoginModalContents disableEmailAuth={!enableEmailAuth} />
       </div>
     </main>
   );

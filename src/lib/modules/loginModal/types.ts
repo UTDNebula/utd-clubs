@@ -7,6 +7,8 @@ export type LoginModalProps = Omit<ModalProps, 'children'> & {
   className?: string;
   callbackURL?: string;
   explanationText?: string;
+  enableEmailAuthPromise?: Promise<boolean>;
+  disableEmailAuth?: boolean;
 };
 
 /**

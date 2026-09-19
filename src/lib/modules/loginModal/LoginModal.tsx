@@ -8,7 +8,7 @@ import Modal from '@mui/material/Modal';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
 import { getAvailableSocialProviders } from '@/lib/utils/socialProviders';
@@ -27,12 +27,16 @@ export const LoginModalContents = ({
   closeButton,
   callbackURL,
   explanationText,
+  disableEmailAuth,
 }: Pick<
   LoginModalProps,
-  'className' | 'onClose' | 'closeButton' | 'callbackURL' | 'explanationText'
+  | 'className'
+  | 'onClose'
+  | 'closeButton'
+  | 'callbackURL'
+  | 'explanationText'
+  | 'disableEmailAuth'
 >) => {
-  const disableEmailAuth = process.env.NODE_ENV !== 'development';
-
   const { data: availableSocialProviders } = useQuery({
     queryKey: ['loginModal', 'getAvailableSocialProviders'],
     queryFn: () => getAvailableSocialProviders(),
@@ -193,8 +197,16 @@ const LoginModal = ({
   className,
   callbackURL,
   explanationText,
+  disableEmailAuth: disableEmailAuthProp,
+  enableEmailAuthPromise,
   ...props
 }: LoginModalProps) => {
+  const enableEmailAuth = disableEmailAuthProp
+    ? !disableEmailAuthProp
+    : enableEmailAuthPromise
+      ? use(enableEmailAuthPromise)
+      : undefined;
+
   if (!open) return null;
 
   return (
@@ -211,6 +223,7 @@ const LoginModal = ({
           closeButton={closeButton ?? true}
           callbackURL={callbackURL}
           explanationText={explanationText}
+          disableEmailAuth={!enableEmailAuth}
         />
       </span>
     </Modal>

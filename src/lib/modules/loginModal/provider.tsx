@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import { ReactNode, Suspense, useState } from 'react';
 import { LoginModalContext } from './context';
 import { useAttachGlobalLoginModalFunctions } from './global';
 import LoginModal from './LoginModal';
@@ -8,12 +8,16 @@ import { closeLoginModalFn, openLoginModalFn } from './types';
 
 type LoginModalProviderProps = {
   children: ReactNode;
+  enableEmailAuthPromise?: Promise<boolean>;
 };
 
 /**
  * Wrapper component that provides context for {@link LoginModalContext} and adds a {@link LoginModal} component.
  */
-export const LoginModalProvider = ({ children }: LoginModalProviderProps) => {
+export const LoginModalProvider = ({
+  children,
+  enableEmailAuthPromise,
+}: LoginModalProviderProps) => {
   const [open, setOpen] = useState(false);
   const [callbackURL, setCallbackURL] = useState<string | undefined>(undefined);
   const [onClose, setOnClose] = useState<() => void>();
@@ -46,12 +50,16 @@ export const LoginModalProvider = ({ children }: LoginModalProviderProps) => {
       value={{ inProvider: true, open, openLoginModal, closeLoginModal }}
     >
       {children}
-      <LoginModal
-        open={open}
-        onClose={closeLoginModal}
-        callbackURL={callbackURL}
-        explanationText={explanationText}
-      />
+      {/* LoginModal is closed by default, so it's fine to omit fallback from Suspense */}
+      <Suspense>
+        <LoginModal
+          open={open}
+          onClose={closeLoginModal}
+          callbackURL={callbackURL}
+          explanationText={explanationText}
+          enableEmailAuthPromise={enableEmailAuthPromise}
+        />
+      </Suspense>
     </LoginModalContext.Provider>
   );
 };
