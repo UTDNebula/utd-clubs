@@ -1,4 +1,4 @@
-import { relations, sql } from 'drizzle-orm';
+import { relations, sql, type SQL } from 'drizzle-orm';
 import {
   boolean,
   index,
@@ -12,6 +12,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { user } from './auth';
 import { contacts } from './contacts';
+import { tsvector } from './customTypes';
 import { events } from './events';
 import { membershipForms } from './membershipForms';
 import { officers } from './officers';
@@ -79,18 +80,13 @@ export const club = pgTable(
       .array()
       .default(sql`'{}'::school_enum[]`)
       .notNull(),
+    searchTsv: tsvector('search_tsv').generatedAlwaysAs(
+      (): SQL =>
+        sql`setweight(to_tsvector('english', coalesce(alias, '')), 'A') || setweight(to_tsvector('english', coalesce(name, '')), 'A') || setweight(to_tsvector('english', coalesce(immutable_array_to_string(tags, ' '), '')), 'B') || setweight(to_tsvector('english', coalesce(description, '')), 'C')`,
+    ),
   },
   (t) => [
-    index('club_search_idx')
-      .using('bm25', t.id, t.name, t.alias, t.description, t.tags, t.approved)
-      .with({
-        key_field: 'id',
-        text_fields: `'${JSON.stringify({
-          tags: { tokenizer: { type: 'keyword' } },
-          name: { tokenizer: { type: 'default', stemmer: 'English' } },
-        })}'`,
-        numeric_fields: `'{"approved":{"fast":true}}'`,
-      }),
+    index('club_search_idx').using('lakebase_bm25', t.searchTsv),
     index('club_name').on(t.name),
     uniqueIndex('club_slug_unique').on(t.slug),
   ],

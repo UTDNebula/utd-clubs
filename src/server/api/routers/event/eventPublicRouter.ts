@@ -402,15 +402,9 @@ const eventPublicRouter = createTRPCRouter({
             }
 
             // filters.query
-            if (filters.query) {
+            if (filters.query?.trim()) {
               conditions.push(
-                sql`${events.id} @@@
-              paradedb.boolean(
-                should => ARRAY[
-                  paradedb.boost(10.0,paradedb.match(field=>'name',value=>${filters.query},distance=>2)),
-                  paradedb.boost(1.0,paradedb.match(field=>'description',value=>${filters.query},distance=>1)),
-                  paradedb.boost(5.0,paradedb.match(field=>'location',value=>${filters.query},distance=>1))
-                ])`,
+                sql`${events.searchTsv} @@ websearch_to_tsquery('english', ${filters.query.trim()})`,
               );
             }
 

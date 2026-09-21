@@ -1,4 +1,15 @@
-import { and, asc, desc, eq, ilike, inArray, lte, or, sql } from 'drizzle-orm';
+import {
+  and,
+  arrayContains,
+  asc,
+  desc,
+  eq,
+  ilike,
+  inArray,
+  lte,
+  or,
+  sql,
+} from 'drizzle-orm';
 import {
   authedProcedure,
   createTRPCRouter,
@@ -228,32 +239,23 @@ const clubPublicRouter = createTRPCRouter({
   tagSearch: publicProcedure
     .input(searchTagSchema)
     .query(async ({ input, ctx }) => {
-      if (!input.search.trim()) {
+      const searchTerm = input.search.trim();
+      if (!searchTerm) {
         return { tags: [], clubs: [] };
       }
 
-      // Try ParadeDB full-text search first (@@@ operator for fuzzy/similarity matching)
-      // Falls back to basic case-insensitive LIKE search if ParadeDB is unavailable (e.g., in dev)
-      try {
-        const tags = await ctx.db
-          .select({ tag: usedTags.tag })
-          .from(usedTags)
-          .where(sql`${usedTags.tag} @@@ ${input.search}`)
-          .orderBy(sql`paradedb.score(${usedTags.id})`)
-          .limit(5);
-        return { tags: tags, clubs: [] };
-      } catch {
-        const tags = await ctx.db
-          .select({ tag: usedTags.tag })
-          .from(usedTags)
-          .where(ilike(usedTags.tag, `%${input.search}%`))
-          .orderBy(asc(usedTags.tag))
-          .limit(5);
-        return { tags: tags, clubs: [] };
-      }
+      const tags = await ctx.db
+        .select({ tag: usedTags.tag })
+        .from(usedTags)
+        .where(ilike(usedTags.tag, `%${searchTerm}%`))
+        .orderBy(asc(usedTags.tag))
+        .limit(5);
+      return { tags: tags, clubs: [] };
     }),
   search: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
     try {
+      const searchTerm = input.search?.trim();
+      const hasSearch = Boolean(searchTerm);
       const query = ctx.db
         .select()
         .from(club)
@@ -261,32 +263,20 @@ const clubPublicRouter = createTRPCRouter({
         .offset(input.cursor)
         .where(
           and(
-            input.search !== ''
-              ? sql`id @@@ 
-                paradedb.boolean(
-                  should =>ARRAY[
-                    paradedb.boost(20,paradedb.match('alias',${input.search},distance=>2)),
-                    paradedb.boost(10,paradedb.match('name',${input.search},distance=>2)),
-                    paradedb.boost(1,paradedb.match('description',${input.search},distance=>1)),
-                    paradedb.boost(5,paradedb.match('tags',${input.search},distance=>1))
-                  ])`
+            hasSearch
+              ? sql`${club.searchTsv} @@ websearch_to_tsquery('english', ${searchTerm})`
               : undefined,
-            sql`
-              id @@@ paradedb.const_score(0.0,
-                paradedb.term('approved','approved'::approved_enum))
-            `,
-            input.tags && input.tags.length != 0
-              ? sql.raw(`
-                id @@@ paradedb.const_score(0.0,paradedb.boolean(
-                  must => ARRAY[
-                    ${input.tags.map((tag) => `paradedb.term('tags','${tag}')`).join(',')}
-                  ]))`)
+            eq(club.approved, 'approved'),
+            input.tags && input.tags.length > 0
+              ? arrayContains(club.tags, input.tags)
               : undefined,
           ),
         )
         .orderBy(
-          ...(input.search !== ''
-            ? [sql`paradedb.score(id) DESC`]
+          ...(hasSearch
+            ? [
+                sql`${club.searchTsv} <@> to_bm25query(to_tsvector('english', ${searchTerm}), 'club_search_idx') ASC`,
+              ]
             : [desc(club.pageViews), asc(club.name)]),
         );
 
