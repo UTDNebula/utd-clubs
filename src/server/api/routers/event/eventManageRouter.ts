@@ -14,7 +14,8 @@ const eventManageRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
         Collaborator: {
-          errorMessage: 'Must be a collaborator of this club to add an event to it',
+          errorMessage:
+            'Must be a collaborator of this club to add an event to it',
         },
       });
 
@@ -35,7 +36,8 @@ const eventManageRouter = createTRPCRouter({
 
     await requireMemberRole(ctx.session.user.id, input.clubId, {
       Collaborator: {
-        errorMessage: "Must be a collaborator of this event's clubs to modify it",
+        errorMessage:
+          "Must be a collaborator of this event's clubs to modify it",
       },
     });
 
@@ -92,7 +94,8 @@ const eventManageRouter = createTRPCRouter({
 
       await requireMemberRole(ctx.session.user.id, event.clubId, {
         Collaborator: {
-          errorMessage: "Must be a collaborator of this event's clubs to delete it",
+          errorMessage:
+            "Must be a collaborator of this event's clubs to delete it",
         },
       });
 
@@ -115,7 +118,8 @@ const eventManageRouter = createTRPCRouter({
 
       await requireMemberRole(ctx.session.user.id, input.clubId, {
         Collaborator: {
-          errorMessage: "Must be a collaborator of this event's clubs to modify it",
+          errorMessage:
+            "Must be a collaborator of this event's clubs to modify it",
         },
       });
 

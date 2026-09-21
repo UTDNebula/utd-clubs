@@ -135,16 +135,17 @@ const EventRegisterButton = ({
 
   return (
     <>
-      {isHeader && (memberType === 'Admin' || memberType === 'Collaborator') && (
-        <EventEditButton
-          isHeader={isHeader}
-          clubSlug={clubSlug}
-          eventId={eventId}
-          calendarId={calendarId ?? null}
-          userEmail={session?.user.email as string}
-          fromGoogle={fromGoogle}
-        />
-      )}
+      {isHeader &&
+        (memberType === 'Admin' || memberType === 'Collaborator') && (
+          <EventEditButton
+            isHeader={isHeader}
+            clubSlug={clubSlug}
+            eventId={eventId}
+            calendarId={calendarId ?? null}
+            userEmail={session?.user.email as string}
+            fromGoogle={fromGoogle}
+          />
+        )}
       <Tooltip
         title={
           <div className="text-center">

@@ -36,15 +36,7 @@ export const imageSchema = z
   );
 
 export const schools = z
-  .enum([
-    'bass',
-    'bbs',
-    'epps',
-    'ecs',
-    'is',
-    'jsom',
-    'nsm',
-  ])
+  .enum(['bass', 'bbs', 'epps', 'ecs', 'is', 'jsom', 'nsm'])
   .array();
 
 export const platformEnum = z.enum([
