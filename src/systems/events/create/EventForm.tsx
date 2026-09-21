@@ -339,7 +339,6 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             google: false,
             etag: '',
             calendarId: null,
-            coHostIds: null,
           }}
           view="preview"
         />
