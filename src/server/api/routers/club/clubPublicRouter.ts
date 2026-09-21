@@ -247,8 +247,17 @@ const clubPublicRouter = createTRPCRouter({
       const tags = await ctx.db
         .select({ tag: usedTags.tag })
         .from(usedTags)
-        .where(ilike(usedTags.tag, `%${searchTerm}%`))
-        .orderBy(asc(usedTags.tag))
+        .where(
+          or(
+            ilike(usedTags.tag, `%${searchTerm}%`),
+            sql`word_similarity(${searchTerm}, ${usedTags.tag}) >= 0.2`,
+          ),
+        )
+        .orderBy(
+          sql`similarity(${usedTags.tag}, ${searchTerm}) DESC`,
+          desc(usedTags.count),
+          asc(usedTags.tag),
+        )
         .limit(5);
       return { tags: tags, clubs: [] };
     }),
@@ -256,6 +265,7 @@ const clubPublicRouter = createTRPCRouter({
     try {
       const searchTerm = input.search?.trim();
       const hasSearch = Boolean(searchTerm);
+
       const query = ctx.db
         .select()
         .from(club)
@@ -264,7 +274,13 @@ const clubPublicRouter = createTRPCRouter({
         .where(
           and(
             hasSearch
-              ? sql`${club.searchTsv} @@ websearch_to_tsquery('english', ${searchTerm})`
+              ? or(
+                  sql`${club.searchTsv} @@ websearch_to_tsquery('english', ${searchTerm})`,
+                  sql`word_similarity(${searchTerm}, ${club.name}) >= 0.2`,
+                  sql`word_similarity(${searchTerm}, coalesce(${club.alias}, '')) >= 0.2`,
+                  ilike(club.name, `%${searchTerm}%`),
+                  ilike(club.alias, `%${searchTerm}%`),
+                )
               : undefined,
             eq(club.approved, 'approved'),
             input.tags && input.tags.length > 0
@@ -275,7 +291,14 @@ const clubPublicRouter = createTRPCRouter({
         .orderBy(
           ...(hasSearch
             ? [
-                sql`${club.searchTsv} <@> to_bm25query(to_tsvector('english', ${searchTerm}), 'club_search_idx') ASC`,
+                sql`(
+                  (20.0 * word_similarity(${searchTerm}, coalesce(${club.alias}, '')))
+                  + (10.0 * word_similarity(${searchTerm}, ${club.name}))
+                  + (5.0 * word_similarity(${searchTerm}, coalesce(array_to_string(${club.tags}, ' '), '')))
+                  + (coalesce(-1.0 * (${club.searchTsv} <@> to_bm25query(to_tsvector('english', ${searchTerm}), 'club_search_idx')), 0.0))
+                ) DESC`,
+                desc(club.pageViews),
+                asc(club.name),
               ]
             : [desc(club.pageViews), asc(club.name)]),
         );

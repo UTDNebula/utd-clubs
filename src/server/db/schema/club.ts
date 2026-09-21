@@ -87,6 +87,8 @@ export const club = pgTable(
   },
   (t) => [
     index('club_search_idx').using('lakebase_bm25', t.searchTsv),
+    index('club_name_trgm_idx').using('gin', t.name.op('gin_trgm_ops')),
+    index('club_alias_trgm_idx').using('gin', t.alias.op('gin_trgm_ops')),
     index('club_name').on(t.name),
     uniqueIndex('club_slug_unique').on(t.slug),
   ],
