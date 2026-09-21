@@ -25,13 +25,13 @@ export const approvedEnum = pgEnum('approved_enum', [
 ]);
 
 export const schoolEnum = pgEnum('school_enum', [
-  'Harry W. Bass Jr. School of Arts, Humanities, and Technology',
-  'School of Behavioral and Brain Sciences',
-  'School of Economic, Political and Policy Sciences',
-  'Erik Jonsson School of Engineering and Computer Science',
-  'School of Interdisciplinary Studies',
-  'Naveen Jindal School of Management',
-  'School of Natural Sciences and Mathematics',
+  'bass',
+  'bbs',
+  'epps',
+  'ecs',
+  'is',
+  'jsom',
+  'nsm',
 ]);
 
 export const clubSizeEnum = pgEnum('club_size', [

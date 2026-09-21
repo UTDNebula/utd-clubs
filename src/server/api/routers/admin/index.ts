@@ -94,8 +94,8 @@ const adminRouter = createTRPCRouter({
             target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
             set: { memberType: 'Member' as const },
             where: inArray(userMetadataToClubs.memberType, [
-              'Officer',
-              'President',
+              'Collaborator',
+              'Admin',
             ]),
           });
       }
@@ -131,7 +131,7 @@ const adminRouter = createTRPCRouter({
           )
           .onConflictDoUpdate({
             target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
-            set: { memberType: 'Officer' as const },
+            set: { memberType: 'Collaborator' as const },
             where: eq(userMetadataToClubs.memberType, 'Member'),
           });
       }
@@ -140,7 +140,7 @@ const adminRouter = createTRPCRouter({
       const newOfficers = await ctx.db.query.userMetadataToClubs.findMany({
         where: and(
           eq(userMetadataToClubs.clubId, input.clubId),
-          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+          inArray(userMetadataToClubs.memberType, ['Collaborator', 'Admin']),
         ),
         with: { userMetadata: { with: { user: true } } },
       });

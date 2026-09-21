@@ -116,10 +116,10 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
   const clubApproved = club.approved === 'approved';
 
   const canManage =
-    joinedClub?.memberType === 'Officer' ||
-    joinedClub?.memberType === 'President';
+    joinedClub?.memberType === 'Collaborator' ||
+    joinedClub?.memberType === 'Admin';
 
-  const isAdmin = joinedClub?.memberType === 'President';
+  const isAdmin = joinedClub?.memberType === 'Admin';
 
   return (
     <div className="flex min-h-16 flex-wrap items-center gap-2 rounded-lg p-2 transition-colors max-sm:bg-neutral-100 sm:hover:bg-neutral-100 dark:max-sm:bg-neutral-800 dark:sm:hover:bg-neutral-800">

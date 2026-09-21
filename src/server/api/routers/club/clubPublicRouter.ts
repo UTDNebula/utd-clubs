@@ -106,7 +106,7 @@ const clubPublicRouter = createTRPCRouter({
       const officers = await ctx.db.query.userMetadataToClubs.findMany({
         where: and(
           eq(userMetadataToClubs.clubId, input.clubId),
-          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+          inArray(userMetadataToClubs.memberType, ['Collaborator', 'Admin']),
         ),
         with: { userMetadata: { with: { user: true } } },
       });
@@ -138,7 +138,7 @@ const clubPublicRouter = createTRPCRouter({
       const hasPresident = await ctx.db.query.userMetadataToClubs.findFirst({
         where: and(
           eq(userMetadataToClubs.clubId, input.clubId),
-          eq(userMetadataToClubs.memberType, 'President'),
+          eq(userMetadataToClubs.memberType, 'Admin'),
         ),
       });
       return !!hasPresident;
