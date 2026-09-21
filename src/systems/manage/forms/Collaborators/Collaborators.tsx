@@ -34,7 +34,7 @@ function typedDefaultValues(
     position: officer.memberType as 'Admin' | 'Collaborator',
   }));
 }
-  
+
 type CollaboratorsProps = {
   club: SelectClub;
   officers: SelectUserMetadataToClubsWithUserMetadataWithUser[];
@@ -167,8 +167,7 @@ const Collaborators = ({
                     email: user.email,
                     position: 'Collaborator',
                     canRemove: role === 'Admin',
-                    canTogglePresident:
-                      role === 'Admin',
+                    canTogglePresident: role === 'Admin',
                     new: true,
                   });
                 }}

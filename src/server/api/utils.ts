@@ -78,9 +78,5 @@ export async function requireMemberRole(
     member?.memberType === 'Collaborator' || member?.memberType === 'Admin',
     'Must be a club collaborator',
   );
-  handleRole(
-    'Admin',
-    member?.memberType === 'Admin',
-    'Must be a club admin',
-  );
+  handleRole('Admin', member?.memberType === 'Admin', 'Must be a club admin');
 }
