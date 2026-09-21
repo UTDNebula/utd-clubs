@@ -7,6 +7,7 @@ import {
   Avatar,
   Button,
   Card,
+  IconButton,
   ListItemIcon,
   ListItemText,
   MenuItem,
@@ -108,18 +109,31 @@ export default function ProfileDropDown({
           {session.user.name.charAt(0)}
         </Avatar>
       ) : (
-        <Button
-          variant="contained"
-          color="inherit"
-          disableElevation
-          onClick={handleClick}
-          startIcon={
+        <>
+          <IconButton
+            size="large"
+            className={`h-10 w-10 bg-slate-100 text-slate-950 normal-case hover:bg-slate-200 sm:hidden dark:bg-slate-300 dark:hover:bg-slate-400 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+            aria-label="Log in"
+            onClick={handleClick}
+          >
             <AccountCircleOutlinedIcon fontSize="large" className="text-2xl" />
-          }
-          className={`h-10 bg-slate-100 px-5 py-2 whitespace-nowrap text-slate-950 normal-case hover:bg-slate-200 dark:bg-slate-300 dark:hover:bg-slate-400 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
-        >
-          Sign in
-        </Button>
+          </IconButton>
+          <Button
+            variant="contained"
+            color="inherit"
+            disableElevation
+            onClick={handleClick}
+            startIcon={
+              <AccountCircleOutlinedIcon
+                fontSize="large"
+                className="text-2xl"
+              />
+            }
+            className={`h-10 bg-slate-100 px-5 py-2 whitespace-nowrap text-slate-950 normal-case hover:bg-slate-200 max-sm:hidden dark:bg-slate-300 dark:hover:bg-slate-400 ${shadow ? 'drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]' : ''}`}
+          >
+            Sign in
+          </Button>
+        </>
       )}
       {!isPending && session && (
         <Popover
