@@ -403,8 +403,12 @@ const eventPublicRouter = createTRPCRouter({
 
             // filters.query
             if (filters.query?.trim()) {
+              const words = filters.query.trim().split(/\s+/);
+              const lastWord = words.pop();
+              const baseQuery = words.length > 0 ? words.join(' ') : '';
+
               conditions.push(
-                sql`${events.searchTsv} @@ websearch_to_tsquery('english', ${filters.query.trim()})`,
+                sql`${events.searchTsv} @@ (websearch_to_tsquery('english', ${baseQuery}) && to_tsquery('english', ${lastWord + ':*'}))`,
               );
             }
 
