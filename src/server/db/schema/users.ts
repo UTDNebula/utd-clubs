@@ -116,6 +116,8 @@ export type ClubMatchResults = {
   id?: string;
   reasoning?: string;
   benefit?: string;
+  // Older cached results were saved without a match score.
+  weight?: number;
 }[];
 
 export type ClubMatchResponses = {

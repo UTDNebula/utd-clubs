@@ -1,4 +1,5 @@
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
@@ -118,6 +119,14 @@ const Page = async () => {
                 variant="interactive"
                 className="flex flex-col gap-2 p-6"
               >
+                {club.weight != null && (
+                  <Chip
+                    label={`${club.weight}% match`}
+                    color="primary"
+                    size="small"
+                    className="self-end"
+                  />
+                )}
                 <Link href={'/directory/' + club.id}>
                   <p className="line-clamp-2 text-2xl font-medium text-slate-800 md:text-xl dark:text-slate-200">
                     {club.name}
