@@ -10,29 +10,55 @@ const server = z.object({
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
-  DATABASE_URL: z.string().min(1),
-  BETTER_AUTH_SECRET: isProduction ? z.string().min(1) : z.string().optional(),
+  DATABASE_URL: z
+    .string({ error: 'Missing URL! Ask your project lead for one' })
+    .min(1),
+  BETTER_AUTH_SECRET: isProduction
+    ? z
+        .string({
+          error:
+            'Missing secret! Generate one with this terminal command: `openssl rand -base64 32`',
+        })
+        .min(32, {
+          error:
+            'Too short! Better Auth requires this to have at least 32 characters',
+        })
+    : z.string().optional(),
   BETTER_AUTH_URL: z.preprocess(
     // This makes Vercel deployments not fail if you don't set BETTER_AUTH_URL
     // Since Better Auth automatically uses the VERCEL_URL if present.
     (str) => process.env.VERCEL_URL ?? str,
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    process.env.VERCEL ? z.string().min(1) : z.url(),
+    process.env.VERCEL
+      ? z.string().min(1)
+      : z.url({
+          error:
+            'Missing URL! Set to "http://localhost:3000" for local development',
+        }),
   ),
-  OAUTH_PROXY_SECRET: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   DISCORD_CLIENT_ID: z.string().optional(),
   DISCORD_CLIENT_SECRET: z.string().optional(),
   MICROSOFT_CLIENT_ID: z.string().optional(),
   MICROSOFT_CLIENT_SECRET: z.string().optional(),
-  NEBULA_API_URL: z.string().min(1),
-  NEBULA_API_STORAGE_BUCKET: z.string().min(1),
-  NEBULA_API_KEY: z.string().min(1),
-  NEBULA_API_STORAGE_KEY: z.string().min(1),
+  NEBULA_API_URL: z
+    .string({ error: 'Missing URL! Set to "https://api.utdnebula.com"' })
+    .min(1),
+  NEBULA_API_STORAGE_BUCKET: z
+    .string({ error: 'Missing string! Set to "jupiter"' })
+    .min(1),
+  NEBULA_API_KEY: z
+    .string({
+      error:
+        'Missing string! Ask your project lead for one, or request a key from Nebula Platform',
+    })
+    .min(1),
+  NEBULA_API_STORAGE_KEY: z.string().optional(),
   NEBULA_API_EMAIL_KEY: z.string().optional(),
   GEMINI_SERVICE_ACCOUNT: z.string().optional(),
   SENTRY_AUTH_TOKEN: z.string().optional(),
+  OAUTH_PROXY_SECRET: z.string().optional(),
   AUTH_TRUSTED_ORIGINS: z.preprocess(
     (val) => {
       if (typeof val === 'string') {
@@ -58,10 +84,25 @@ const client = z.object({
     : z.string().optional(),
 });
 
-const clean = (/** @type {string | undefined} */ input) => {
+/**
+ * Returns `undefined` if {@linkcode input} string is only whitespace. Otherwise, returns {@linkcode input}
+ * @param {string | undefined} input
+ * @returns {string | undefined}
+ */
+const clean = (input) => {
   const trimmed = input?.trim();
   return trimmed !== '' ? trimmed : undefined;
 };
+
+/**
+ * Evaluates a string and evaluates whether it is truthy or not. Redefines "false" and "0" to be falsey
+ * @param {string | undefined} string
+ * @returns {boolean}
+ */
+const truthy = (string) =>
+  Boolean(string) &&
+  string !== 'false' &&
+  (string?.trim() === '' || Number(string) !== 0);
 
 /**
  * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
@@ -74,7 +115,6 @@ const processEnv = {
   DATABASE_URL: clean(process.env.DATABASE_URL),
   BETTER_AUTH_SECRET: clean(process.env.BETTER_AUTH_SECRET),
   BETTER_AUTH_URL: clean(process.env.BETTER_AUTH_URL),
-  OAUTH_PROXY_SECRET: clean(process.env.OAUTH_PROXY_SECRET),
   GOOGLE_CLIENT_ID: clean(process.env.GOOGLE_CLIENT_ID),
   GOOGLE_CLIENT_SECRET: clean(process.env.GOOGLE_CLIENT_SECRET),
   DISCORD_CLIENT_ID: clean(process.env.DISCORD_CLIENT_ID),
@@ -82,7 +122,7 @@ const processEnv = {
   MICROSOFT_CLIENT_ID: clean(process.env.MICROSOFT_CLIENT_ID),
   MICROSOFT_CLIENT_SECRET: clean(process.env.MICROSOFT_CLIENT_SECRET),
   NEBULA_API_URL: clean(process.env.NEBULA_API_URL),
-  NEBULA_API_STORAGE_BUCKET: clean(process.env.NEBULA_API_KEY),
+  NEBULA_API_STORAGE_BUCKET: clean(process.env.NEBULA_API_STORAGE_BUCKET),
   NEBULA_API_KEY: clean(process.env.NEBULA_API_KEY),
   NEBULA_API_STORAGE_KEY: clean(process.env.NEBULA_API_KEY),
   NEBULA_API_EMAIL_KEY: clean(process.env.NEBULA_API_EMAIL_KEY),
@@ -92,6 +132,7 @@ const processEnv = {
   ),
   SENTRY_AUTH_TOKEN: clean(process.env.SENTRY_AUTH_TOKEN),
   NEXT_PUBLIC_SENTRY_DSN: clean(process.env.NEXT_PUBLIC_SENTRY_DSN),
+  OAUTH_PROXY_SECRET: clean(process.env.OAUTH_PROXY_SECRET),
   AUTH_TRUSTED_ORIGINS: clean(process.env.AUTH_TRUSTED_ORIGINS),
 };
 
@@ -106,7 +147,7 @@ const merged = server.extend(client.shape);
 
 let env = /** @type {MergedOutput} */ (process.env);
 
-if (!!process.env.SKIP_ENV_VALIDATION == false) {
+if (!truthy(process.env.SKIP_ENV_VALIDATION)) {
   const isServer = typeof window === 'undefined';
 
   const parsed = /** @type {MergedSafeParseReturn} */ (

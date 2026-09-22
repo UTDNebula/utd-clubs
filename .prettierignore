@@ -1,3 +1,4 @@
 src/server/db/migrations/*
 next-env.d.ts
 src/nebula-library/*
+.github/pull_request_template.md
