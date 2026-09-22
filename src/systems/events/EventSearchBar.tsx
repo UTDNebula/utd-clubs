@@ -13,6 +13,7 @@ import { useTRPC } from '@/trpc/react';
 export const EventSearchBar = () => {
   const [input, setInput] = useState('');
   const debouncedSearch = useDebounce(input, 300);
+  const router = useRouter();
   const api = useTRPC();
   const { data } = useQuery(
     api.event.byName.queryOptions(
@@ -86,7 +87,7 @@ export const EventSearchBar = () => {
           event.preventDefault();
 
           const paramaters = new URLSearchParams({ q: input });
-          router.push('/events?' + paramaters.toString());
+          router.push(`/events?${paramaters.toString()}`);
           //window.location.assign('https://clubs.utdnebula.com/events?' + paramaters.toString());
         }
       }}
