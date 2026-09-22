@@ -1,6 +1,6 @@
 # UTD Clubs
 
-_A tool to find ways to get involved on campus._
+_Discover clubs and events on campus._
 
 ## Contributing
 
