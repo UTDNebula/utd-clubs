@@ -3,6 +3,8 @@
 import { Autocomplete, TextField, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import router from 'next/router';
 import { useState } from 'react';
 import { useBaseHeaderContext } from '@/lib/components/BaseHeader';
 import useDebounce from '@/lib/utils/useDebounce';
@@ -80,11 +82,12 @@ export const EventSearchBar = () => {
       }}
       //if user presses enter it returns to events page with search bar ready for input
       onKeyDown={(event) => {
-        if(event.key=='Enter') {
+        if (event.key == 'Enter') {
           event.preventDefault();
 
-          const paramaters=new URLSearchParams({q: input});
-          window.location.assign('https://clubs.utdnebula.com/events?' + paramaters.toString());
+          const paramaters = new URLSearchParams({ q: input });
+          router.push('/events?' + paramaters.toString());
+          //window.location.assign('https://clubs.utdnebula.com/events?' + paramaters.toString());
         }
       }}
     />
