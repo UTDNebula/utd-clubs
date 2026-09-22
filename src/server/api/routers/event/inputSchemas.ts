@@ -56,6 +56,7 @@ export const findByDateSchema = z.object({
 export const byNameSchema = z.object({
   name: z.string().default(''),
   sortByDate: z.boolean().default(false),
+  size: z.number().int().min(1).max(100).default(10),
 });
 
 ////////////////////////////////////////////////////////////////////////////////

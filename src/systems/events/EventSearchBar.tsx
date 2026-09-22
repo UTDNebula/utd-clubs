@@ -14,7 +14,7 @@ export const EventSearchBar = () => {
   const api = useTRPC();
   const { data } = useQuery(
     api.event.byName.queryOptions(
-      { name: debouncedSearch, sortByDate: true },
+      { name: debouncedSearch, size: 10, sortByDate: true },
       { enabled: !!input },
     ),
   );
