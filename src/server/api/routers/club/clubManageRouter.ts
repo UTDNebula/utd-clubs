@@ -235,9 +235,9 @@ const clubManageRouter = createTRPCRouter({
             inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
           ),
         });
-        if (existingOfficers) {
+        if (existingOfficers.length) {
           throw new TRPCError({
-            code: 'CONFLICT',
+            code: 'BAD_REQUEST',
             message: 'Cannot promote someone who is already an officer or president',
           });
         }
