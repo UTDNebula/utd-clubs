@@ -1,4 +1,4 @@
-import { relations, sql } from 'drizzle-orm';
+import { relations, sql, type SQL } from 'drizzle-orm';
 import {
   boolean,
   index,
@@ -10,6 +10,7 @@ import {
   timestamp,
 } from 'drizzle-orm/pg-core';
 import { club } from './club';
+import { tsvector } from './customTypes';
 import { userMetadataToEvents } from './users';
 
 export const statusEnum = pgEnum('status_enum', [
@@ -48,22 +49,12 @@ export const events = pgTable(
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
     pageViews: integer('page_views').notNull().default(0),
     calendarId: text('calendar_id'),
+    searchTsv: tsvector('search_tsv').generatedAlwaysAs(
+      (): SQL =>
+        sql`setweight(to_tsvector('english', coalesce(name, '')), 'A') || setweight(to_tsvector('english', coalesce(location, '')), 'B') || setweight(to_tsvector('english', coalesce(description, '')), 'C')`,
+    ),
   },
-  (t) => [
-    index('event_search_idx')
-      .using(
-        'bm25',
-        t.id,
-        t.name,
-        t.description,
-        t.location,
-        t.startTime,
-        t.endTime,
-        t.clubId,
-        t.updatedAt,
-      )
-      .with({ key_field: 'id' }),
-  ],
+  (t) => [index('event_search_idx').using('lakebase_bm25', t.searchTsv)],
 );
 
 export const eventCollaborations = pgTable(

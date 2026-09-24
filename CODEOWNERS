@@ -5,29 +5,29 @@
 # They may also be requested to review PRs for subfolders not covered by code owners
 
 ## Both senior engineers should review PRs that modify the database or shared parts of codebase
-/src/server/db/ @ilutara @sy-pk
-/src/server/api/routers/user/ @ilutara @sy-pk
+/src/server/db/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara @sy-pk
+/src/server/api/routers/user/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara @sy-pk
 
 ## Public Features Team covers these systems: Clubs, Dashboard, Events
-/src/app/page.tsx @sy-pk
-/src/app/club-match/ @sy-pk
-/src/app/community/ @sy-pk
-/src/app/directory/ @sy-pk
-/src/app/events/ @sy-pk
-/src/server/api/routers/club/clubPublicRouter.ts @sy-pk
-/src/server/api/routers/event/eventPublicRouter.ts @sy-pk
-/src/systems/clubs/ @sy-pk
-/src/systems/dashboard/ @sy-pk
-/src/systems/events/ @sy-pk
+/src/app/page.tsx @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @sy-pk
+/src/app/club-match/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @sy-pk
+/src/app/community/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @sy-pk
+/src/app/directory/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @sy-pk
+/src/app/events/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @sy-pk
+/src/server/api/routers/club/clubPublicRouter.ts @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @sy-pk
+/src/server/api/routers/event/eventPublicRouter.ts @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @sy-pk
+/src/systems/clubs/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @sy-pk
+/src/systems/dashboard/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @sy-pk
+/src/systems/events/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @sy-pk
 
 ## Management Features Team covers these systems: Admin, Manage, Settings
-/src/app/admin/ @ilutara
-/src/app/get-started/ @ilutara
-/src/app/manage/ @ilutara
-/src/app/settings/ @ilutara
-/src/server/api/routers/admin/ @ilutara
-/src/server/api/routers/club/clubManageRouter.ts @ilutara
-/src/server/api/routers/event/eventManageRouter.ts @ilutara
-/src/systems/admin/ @ilutara
-/src/systems/manage/ @ilutara
-/src/systems/settings/ @ilutara
+/src/app/admin/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara
+/src/app/get-started/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara
+/src/app/manage/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara
+/src/app/settings/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara
+/src/server/api/routers/admin/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara
+/src/server/api/routers/club/clubManageRouter.ts @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara
+/src/server/api/routers/event/eventManageRouter.ts @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara
+/src/systems/admin/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara
+/src/systems/manage/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara
+/src/systems/settings/ @UTDNebula/clubs-lead @UTDNebula/head-of-engineering @ilutara
