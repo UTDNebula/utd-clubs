@@ -44,7 +44,6 @@ export const events = pgTable(
     etag: text(),
     location: text('location').default('').notNull(),
     image: text('image'),
-    coHostIds: text('co_host_ids').array(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
     pageViews: integer('page_views').notNull().default(0),
@@ -67,8 +66,8 @@ export const events = pgTable(
   ],
 );
 
-export const eventCollabInvites = pgTable(
-  'event_collab_invites',
+export const eventCollaborations = pgTable(
+  'event_collaborations',
   {
     eventId: text('event_id')
       .notNull()
@@ -79,6 +78,7 @@ export const eventCollabInvites = pgTable(
     inviteeClubId: text('invitee_club_id')
       .notNull()
       .references(() => club.id, { onDelete: 'cascade' }),
+    role: text('role').notNull(),
     status: eventCollabInviteStatusEnum('status').notNull(),
   },
   (table) => [primaryKey({ columns: [table.eventId, table.inviteeClubId] })],
@@ -87,4 +87,5 @@ export const eventCollabInvites = pgTable(
 export const eventsRelation = relations(events, ({ one, many }) => ({
   club: one(club, { fields: [events.clubId], references: [club.id] }),
   userMetadataToEvents: many(userMetadataToEvents),
+  eventCollaborations: many(eventCollaborations),
 }));
