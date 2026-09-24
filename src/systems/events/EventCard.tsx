@@ -54,15 +54,24 @@ const EventCard = ({
   const showEventImage = !!event.image && !imgError;
 
   const EventImage = (
-    <div className="aspect-[1.6]">
+    <div className="mx-5 my-5 flex aspect-[1.6]">
       {/* shows fallback if event image is loading, error, or no link */}
       {event.club.profileImage && (!showEventImage || !imgLoaded) && (
         <Image
-          fill
           src={addVersionToImage(
             event.club.profileImage,
             event.club.updatedAt?.getTime(),
           )}
+          width={0}
+          height={0}
+          style={{
+            height: 'auto',
+            width: 'auto',
+            maxHeight: '100%',
+            maxWidth: '100%',
+            margin: 'auto',
+            borderRadius: '10px',
+          }}
           alt="Club Profile"
           className="object-cover object-center"
         />
