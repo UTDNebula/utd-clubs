@@ -1,0 +1,52 @@
+name: Decline PR
+on:
+  pull_request:
+    types:
+      - labeled
+jobs:
+  unlink-issue:
+    if: "github.event.label.name == 'status: declined'"
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Remove closing keywords
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const prBody = context.payload.pull_request?.body ?? ''
+            const regex = /(?<!(` *))(close(s|d)?|fix(es|ed)?|resolve(s|d)?) ?(.+\/.+)?#\d+(?!( *`))/gi
+
+            if (regex.test(prBody)) {
+              const newBody = prBody.replace(regex, `\`$&\``)
+
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request?.number ?? 0,
+                body: newBody
+              })
+              core.info('Successfully removed closing keywords from PR description')
+            } else {
+              core.info("Couldn't find closing keywords to remove")
+            }
+  close-pr:
+    if: "github.event.label.name == 'status: declined'"
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Close PR
+        run: gh pr close "$NUMBER" --comment "$COMMENT --delete-branch"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          COMMENT: |
+            Thank you for your contribution! However, we've closed this PR for at least one of these reasons:
+
+            - The issue this PR resolves is reserved for new recruits. You should instead find issues to work on using [these search filters](${{ github.server_url }}/${{ github.repository }}/issues?q=is%3Aissue%20state%3Aopen%20-label%3A%22Recommended%20for%20Recruits%22).
+            - This PR uses AI in a way that breaks the [Nebula Labs AI Policy](https://nebula-labs.atlassian.net/wiki/x/AgCwQw). Please make a new PR with less AI usage.
+            - We plan to approach this issue in another way.
+
+            Please let us know if you have any questions!
