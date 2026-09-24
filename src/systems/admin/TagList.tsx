@@ -287,7 +287,7 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
                   <IconButton
                     edge="end"
                     aria-label="show clubs with tag"
-                    href={`/?tags=${tag.tag}`}
+                    href={`/?tags=${encodeURIComponent(tag.tag)}`}
                     target="_blank"
                   >
                     <OpenInNewIcon fontSize="small" />
