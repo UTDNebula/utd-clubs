@@ -84,7 +84,7 @@ export const EventSearchBar = () => {
       onKeyDown={(event) => {
         if (event.key == 'Enter') {
           event.preventDefault();
-          
+
           const paramaters = new URLSearchParams({ q: input });
           router.push(`/events?${paramaters.toString()}`);
         }
