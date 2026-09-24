@@ -19,8 +19,8 @@ export const emailAuth = createFlag({
  * lowercase, uppercase, number, symbol. Passwords must always have at least 8
  * characters regardless of this flag
  */
-export const passwordRequirements = createFlag({
-  key: 'password-requirements',
+export const strictPasswordRequirements = createFlag({
+  key: 'strict-password-requirements',
   defaultValue: isProduction, // Only enabled on producution
 });
 
@@ -37,7 +37,7 @@ export const loginBannerText = createFlag({
  */
 export const flags = {
   emailAuth,
-  passwordRequirements,
+  strictPasswordRequirements,
   loginBannerText,
 };
 

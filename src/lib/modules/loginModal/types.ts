@@ -10,7 +10,7 @@ export type LoginModalProps = Omit<ModalProps, 'children'> & {
   explanationText?: string;
   flagPromises?: Partial<FlagPromises>;
   disableEmailAuth?: boolean;
-  disablePasswordRequirements?: boolean;
+  disableStrictPasswordRequirements?: boolean;
   loginBannerText?: string;
 };
 

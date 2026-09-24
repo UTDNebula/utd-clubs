@@ -14,7 +14,7 @@ import { LoginModalProps } from './types';
 
 type LoginFormProps = Pick<
   LoginModalProps,
-  'onClose' | 'callbackURL' | 'disablePasswordRequirements'
+  'onClose' | 'callbackURL' | 'disableStrictPasswordRequirements'
 > & {
   signUp: boolean;
   setSignUp: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,7 +25,7 @@ export default function LoginForm({
   setSignUp,
   onClose,
   callbackURL,
-  disablePasswordRequirements,
+  disableStrictPasswordRequirements,
 }: LoginFormProps) {
   const router = useRouter();
 
@@ -62,7 +62,9 @@ export default function LoginForm({
     },
   });
 
-  const signUpSchema = createSignUpSchema({ disablePasswordRequirements });
+  const signUpSchema = createSignUpSchema({
+    disableStrictPasswordRequirements: disableStrictPasswordRequirements,
+  });
   const signUpForm = useAppForm({
     defaultValues: {
       name: '',

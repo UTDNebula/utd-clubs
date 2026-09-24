@@ -8,7 +8,7 @@ export const signInSchema = z.object({
 export type SignInSchema = z.infer<typeof signInSchema>;
 
 export const createSignUpSchema = (
-  options: { disablePasswordRequirements?: boolean } = {},
+  options: { disableStrictPasswordRequirements?: boolean } = {},
 ) =>
   z
     .object({
@@ -18,7 +18,7 @@ export const createSignUpSchema = (
         .string()
         .min(8, { error: 'Must be at least 8 characters' })
         .superRefine((val, ctx) => {
-          if (options.disablePasswordRequirements) return;
+          if (options.disableStrictPasswordRequirements) return;
 
           const fulfilledRequirements = {
             lowercase: /[a-z]/.test(val),

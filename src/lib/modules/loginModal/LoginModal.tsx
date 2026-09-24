@@ -29,7 +29,7 @@ export const LoginModalContents = ({
   callbackURL,
   explanationText,
   disableEmailAuth,
-  disablePasswordRequirements,
+  disableStrictPasswordRequirements,
   loginBannerText,
 }: Pick<
   LoginModalProps,
@@ -39,7 +39,7 @@ export const LoginModalContents = ({
   | 'callbackURL'
   | 'explanationText'
   | 'disableEmailAuth'
-  | 'disablePasswordRequirements'
+  | 'disableStrictPasswordRequirements'
   | 'loginBannerText'
 >) => {
   const { data: availableSocialProviders } = useQuery({
@@ -135,7 +135,9 @@ export const LoginModalContents = ({
             setSignUp={setSignUp}
             onClose={onClose}
             callbackURL={callbackURL}
-            disablePasswordRequirements={disablePasswordRequirements}
+            disableStrictPasswordRequirements={
+              disableStrictPasswordRequirements
+            }
           />
           {loginBannerText && (
             <Alert severity="info" className="mx-4 mb-4 max-w-sm">
@@ -206,14 +208,14 @@ const LoginModal = ({
   callbackURL,
   explanationText,
   disableEmailAuth: disableEmailAuthProp,
-  disablePasswordRequirements: disablePasswordRequirementsProp,
+  disableStrictPasswordRequirements: disableStrictPasswordRequirementsProp,
   loginBannerText: loginBannerTextProp,
   flagPromises,
   ...props
 }: LoginModalProps) => {
   const {
     emailAuth: emailAuthPromise,
-    passwordRequirements: passwordRequirementsPromise,
+    strictPasswordRequirements: strictPasswordRequirementsPromise,
     loginBannerText: loginBannerTextPromise,
   } = flagPromises ?? {};
 
@@ -222,10 +224,10 @@ const LoginModal = ({
     : emailAuthPromise
       ? use(emailAuthPromise)
       : undefined;
-  const enablePasswordRequirements = disablePasswordRequirementsProp
-    ? !disablePasswordRequirementsProp
-    : passwordRequirementsPromise
-      ? use(passwordRequirementsPromise)
+  const enableStrictPasswordRequirements = disableStrictPasswordRequirementsProp
+    ? !disableStrictPasswordRequirementsProp
+    : strictPasswordRequirementsPromise
+      ? use(strictPasswordRequirementsPromise)
       : undefined;
   const loginBannerText = loginBannerTextProp
     ? loginBannerTextProp
@@ -250,7 +252,7 @@ const LoginModal = ({
           callbackURL={callbackURL}
           explanationText={explanationText}
           disableEmailAuth={!enableEmailAuth}
-          disablePasswordRequirements={!enablePasswordRequirements}
+          disableStrictPasswordRequirements={!enableStrictPasswordRequirements}
           loginBannerText={loginBannerText}
         />
       </span>

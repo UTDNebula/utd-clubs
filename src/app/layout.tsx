@@ -12,7 +12,7 @@ import { SnackbarProvider } from '@/lib/modules/snackbar';
 import {
   emailAuth,
   loginBannerText,
-  passwordRequirements,
+  strictPasswordRequirements,
 } from '@/lib/utils/flags';
 import theme from '@/lib/utils/theme';
 import { TRPCReactProvider } from '@/trpc/react';
@@ -81,7 +81,7 @@ export default async function RootLayout({
                   <LoginModalProvider
                     flagPromises={{
                       emailAuth: emailAuth(),
-                      passwordRequirements: passwordRequirements(),
+                      strictPasswordRequirements: strictPasswordRequirements(),
                       loginBannerText: loginBannerText(),
                     }}
                   >

@@ -7,7 +7,7 @@ import { LoginModalContents } from '@/lib/modules/loginModal';
 import {
   emailAuth,
   loginBannerText,
-  passwordRequirements,
+  strictPasswordRequirements,
 } from '@/lib/utils/flags';
 import { auth } from '@/server/auth';
 
@@ -24,7 +24,7 @@ export default async function Auth(props: {
     props.searchParams,
     auth.api.getSession({ headers: await headers() }),
     emailAuth(),
-    passwordRequirements(),
+    strictPasswordRequirements(),
     loginBannerText(),
   ]);
   if (session) {
@@ -64,7 +64,7 @@ export default async function Auth(props: {
           </div>
           <LoginModalContents
             disableEmailAuth={!enableEmailAuth}
-            disablePasswordRequirements={!enablePasswordRequirements}
+            disableStrictPasswordRequirements={!enablePasswordRequirements}
             loginBannerText={loginBannerString}
           />
         </div>
