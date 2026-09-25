@@ -1,12 +1,13 @@
-'use server';
-
+import { headers } from 'next/headers';
+import { Suspense } from 'react';
 import { BaseHeader, BaseHeaderProps } from '@/lib/components/BaseHeader';
 import UTDClubsLogoStandalone from '@/lib/icons/UTDClubsLogo';
+import { auth } from '@/server/auth';
 import { ClubSearchBar } from '@/systems/clubs/ClubSearchBar';
 import { EventSearchBar } from '@/systems/events/EventSearchBar';
 import Sidebar from '../drawer/Sidebar';
 import ClubMatchButton from './ClubMatchButton';
-import { ProfileDropDown } from './ProfileDropDown';
+import ProfileDropDown, { ProfileDropDownFallback } from './ProfileDropDown';
 
 const DefaultHeaderItems = () => (
   <>
@@ -20,13 +21,21 @@ const DefaultHeaderItems = () => (
 );
 
 const Header = async (props: BaseHeaderProps) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return (
     <BaseHeader
       menu={<Sidebar homepage={props.shadow} hamburgerColor={props.color} />}
       logoIcon={<UTDClubsLogoStandalone />}
       logoText={{ projectName: 'UTD CLUBS', byline: 'by Nebula Labs' }}
       searchBar={<ClubSearchBar />}
-      account={<ProfileDropDown />}
+      account={
+        <Suspense fallback={<ProfileDropDownFallback />}>
+          <ProfileDropDown initialSession={session} />
+        </Suspense>
+      }
       {...props}
     >
       {props.children}
