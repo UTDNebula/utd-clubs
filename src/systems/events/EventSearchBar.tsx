@@ -3,6 +3,7 @@
 import { Autocomplete, TextField, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useBaseHeaderContext } from '@/lib/components/BaseHeader';
 import useDebounce from '@/lib/utils/useDebounce';
@@ -11,6 +12,7 @@ import { useTRPC } from '@/trpc/react';
 export const EventSearchBar = () => {
   const [input, setInput] = useState('');
   const debouncedSearch = useDebounce(input, 300);
+  const router = useRouter();
   const api = useTRPC();
   const { data } = useQuery(
     api.event.byName.queryOptions(
@@ -77,6 +79,15 @@ export const EventSearchBar = () => {
           return option;
         }
         return option.id;
+      }}
+      // If user presses enter it returns to events page with search bar ready for input
+      onKeyDown={(event) => {
+        if (event.key == 'Enter') {
+          event.preventDefault();
+
+          const paramaters = new URLSearchParams({ q: input });
+          router.push(`/events?${paramaters.toString()}`);
+        }
       }}
     />
   );
