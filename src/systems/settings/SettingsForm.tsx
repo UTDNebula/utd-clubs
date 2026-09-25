@@ -1,5 +1,5 @@
 import Alert from '@mui/material/Alert';
-import { emailAuth } from '@/lib/utils/flags';
+import { emailAuth, strictPasswordRequirements } from '@/lib/utils/flags';
 import { auth } from '@/server/auth';
 import {
   SelectUserMetadataToClubsWithClub,
@@ -21,33 +21,50 @@ async function SettingsForm({
   let userData: SelectUserMetadataWithClubs | undefined = undefined;
   let joinedClubs: SelectUserMetadataToClubsWithClub[] | undefined = undefined;
   let disableEmailAuth = false;
+  let disableStrictPasswordRequirements = false;
 
   // Concurrently run both procedures
   await Promise.allSettled([
     api.user.metadata.byId({ userId: user.id }),
     api.user.clubs.getMemberClubsMetadata(),
     emailAuth(),
-  ]).then(([userDataResult, joinedClubsResult, emailAuth]) => {
-    if (emailAuth.status === 'fulfilled') {
-      disableEmailAuth = !(emailAuth.value as boolean);
-    } else if (emailAuth.status === 'rejected') {
-      throw new Error('Failed to fetch email-auth flag in SettingsForm');
-    }
-    if (userDataResult.status === 'fulfilled' && userDataResult.value) {
-      userData = userDataResult.value;
-    } else if (userDataResult.status === 'rejected') {
-      throw new Error(
-        `Failed to fetch user data. Has the \`user_metadata\` table been migrated?\n\n${userDataResult.reason}`,
-      );
-    }
-    if (joinedClubsResult.status === 'fulfilled' && joinedClubsResult.value) {
-      joinedClubs = joinedClubsResult.value;
-    } else if (joinedClubsResult.status === 'rejected') {
-      throw new Error(
-        `Failed to fetch joined clubs. Has the \`user_metadata_to_clubs\` table been migrated?\n\n${joinedClubsResult.reason}`,
-      );
-    }
-  });
+    strictPasswordRequirements(),
+  ]).then(
+    ([
+      userDataResult,
+      joinedClubsResult,
+      emailAuth,
+      strictPasswordRequirements,
+    ]) => {
+      if (emailAuth.status === 'fulfilled') {
+        disableEmailAuth = !(emailAuth.value as boolean);
+      } else if (emailAuth.status === 'rejected') {
+        throw new Error('Failed to fetch email-auth flag in SettingsForm');
+      }
+      if (strictPasswordRequirements.status === 'fulfilled') {
+        disableStrictPasswordRequirements =
+          !(strictPasswordRequirements.value as boolean);
+      } else if (strictPasswordRequirements.status === 'rejected') {
+        throw new Error(
+          'Failed to fetch strict-password-requirements flag in SettingsForm',
+        );
+      }
+      if (userDataResult.status === 'fulfilled' && userDataResult.value) {
+        userData = userDataResult.value;
+      } else if (userDataResult.status === 'rejected') {
+        throw new Error(
+          `Failed to fetch user data. Has the \`user_metadata\` table been migrated?\n\n${userDataResult.reason}`,
+        );
+      }
+      if (joinedClubsResult.status === 'fulfilled' && joinedClubsResult.value) {
+        joinedClubs = joinedClubsResult.value;
+      } else if (joinedClubsResult.status === 'rejected') {
+        throw new Error(
+          `Failed to fetch joined clubs. Has the \`user_metadata_to_clubs\` table been migrated?\n\n${joinedClubsResult.reason}`,
+        );
+      }
+    },
+  );
 
   return (
     <div className="mb-24 flex w-full max-w-6xl flex-col gap-8">
@@ -60,7 +77,12 @@ async function SettingsForm({
       <SettingsHeader user={user} />
       {userData && <UserInfo user={userData} />}
       {joinedClubs && <JoinedClubs joinedClubs={joinedClubs} />}
-      {session && <ManageAccount disableEmailAuth={disableEmailAuth} />}
+      {session && (
+        <ManageAccount
+          disableEmailAuth={disableEmailAuth}
+          disableStrictPasswordRequirements={disableStrictPasswordRequirements}
+        />
+      )}
     </div>
   );
 }

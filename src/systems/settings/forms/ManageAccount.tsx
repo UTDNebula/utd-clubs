@@ -16,18 +16,22 @@ import { useAppForm } from '@/lib/utils/form';
 import {
   changeEmailSchema,
   ChangeEmailSchema,
-  changePasswordSchema,
   ChangePasswordSchema,
+  createChangePasswordSchema,
   deleteAccountSchema,
   DeleteAccountSchema,
 } from '../settingsSchema';
 
 type ManageAccountTab = 'email' | 'password' | 'delete';
 
-type ManageAccountProps = { disableEmailAuth?: boolean };
+type ManageAccountProps = {
+  disableEmailAuth?: boolean;
+  disableStrictPasswordRequirements?: boolean;
+};
 
 export default function ManageAccount({
   disableEmailAuth,
+  disableStrictPasswordRequirements,
 }: ManageAccountProps) {
   const session = authClient.useSession();
   const router = useRouter();
@@ -72,6 +76,9 @@ export default function ManageAccount({
     validators: { onChange: changeEmailSchema },
   });
 
+  const changePasswordSchema = createChangePasswordSchema({
+    disableStrictPasswordRequirements,
+  });
   const changePasswordForm = useAppForm({
     defaultValues: {
       currentPassword: '',

@@ -63,7 +63,7 @@ export default function LoginForm({
   });
 
   const signUpSchema = createSignUpSchema({
-    disableStrictPasswordRequirements: disableStrictPasswordRequirements,
+    disableStrictPasswordRequirements,
   });
   const signUpForm = useAppForm({
     defaultValues: {

@@ -90,3 +90,33 @@ export const contactSchema = z.discriminatedUnion(
   ],
 );
 export type ContactSchema = z.infer<typeof contactSchema>;
+
+export const createPasswordSchema = (
+  options: { disableStrictPasswordRequirements?: boolean } = {},
+) =>
+  z
+    .string()
+    .min(8, { error: 'Must be at least 8 characters' })
+    .superRefine((val, ctx) => {
+      if (options.disableStrictPasswordRequirements) return;
+
+      const fulfilledRequirements = {
+        lowercase: /[a-z]/.test(val),
+        uppercase: /[A-Z]/.test(val),
+        number: /[0-9]/.test(val),
+        symbol: /[`~!@#$%^&*()\-_=+\[{\]}|;:'",<.>/?]/.test(val),
+      };
+
+      const sum = Object.values(fulfilledRequirements).reduce(
+        (acc, val) => acc + Number(val),
+        0,
+      );
+
+      if (sum < 3) {
+        ctx.addIssue({
+          code: 'custom',
+          message:
+            'Must have at least 3 of the following: lowercase, uppercase, number, symbol',
+        });
+      }
+    });
