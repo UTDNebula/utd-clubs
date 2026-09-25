@@ -5,6 +5,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
 } from 'drizzle-orm/pg-core';
@@ -18,6 +19,11 @@ export const statusEnum = pgEnum('status_enum', [
   'pending',
   'deleted',
 ]);
+
+export const eventCollabInviteStatusEnum = pgEnum(
+  'event_collab_invite_status',
+  ['accepted', 'pending', 'rejected'],
+);
 
 export const events = pgTable(
   'events',
@@ -51,7 +57,26 @@ export const events = pgTable(
   (t) => [index('event_search_idx').using('lakebase_bm25', t.searchTsv)],
 );
 
+export const eventCollaborations = pgTable(
+  'event_collaborations',
+  {
+    eventId: text('event_id')
+      .notNull()
+      .references(() => events.id, { onDelete: 'cascade' }),
+    inviterClubId: text('inviter_club_id')
+      .notNull()
+      .references(() => club.id, { onDelete: 'cascade' }),
+    inviteeClubId: text('invitee_club_id')
+      .notNull()
+      .references(() => club.id, { onDelete: 'cascade' }),
+    role: text('role').notNull(),
+    status: eventCollabInviteStatusEnum('status').notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.eventId, table.inviteeClubId] })],
+);
+
 export const eventsRelation = relations(events, ({ one, many }) => ({
   club: one(club, { fields: [events.clubId], references: [club.id] }),
   userMetadataToEvents: many(userMetadataToEvents),
+  eventCollaborations: many(eventCollaborations),
 }));
