@@ -538,7 +538,7 @@ const eventPublicRouter = createTRPCRouter({
       }
     }),
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
-    const { name, sortByDate } = input;
+    const { name, size, sortByDate } = input;
     try {
       const events = await ctx.db.query.events.findMany({
         where: (event) =>
@@ -549,6 +549,7 @@ const eventPublicRouter = createTRPCRouter({
         with: {
           club: true,
         },
+        limit: size,
       });
 
       const approvedEvents = events.filter(
