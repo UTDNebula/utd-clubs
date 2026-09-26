@@ -7,7 +7,8 @@ import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import Confirmation from '@/lib/components/Confirmation';
 import { useLoginModal } from '@/lib/modules/loginModal';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
@@ -20,6 +21,7 @@ type JoinButtonProps = {
 };
 
 const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: session } = authClient.useSession();
   const api = useTRPC();
   const queryClient = useQueryClient();
@@ -101,7 +103,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
     },
   });
 
-  const memberType = memberState?.memberType ?? null;
+  const memberType = memberState?.memberType ?? null; 
 
   if (memberType === 'Officer' || memberType === 'President') {
     return (
@@ -119,62 +121,81 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   }
 
   return (
-    <Tooltip
-      title={
-        <div className="text-center">
-          <span className="font-bold">
-            {memberType ? 'Unfollow' : 'Follow'}
-          </span>
-          {memberType && memberState?.joinedAt && (
-            <>
-              <br />
-              Following since{' '}
-              {memberState?.joinedAt.toLocaleString('en-us', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true,
-              })}
-            </>
-          )}
-        </div>
-      }
-    >
-      <span>
-        <Button
-          variant="contained"
-          size={isHeader ? 'large' : 'small'}
-          startIcon={memberType ? <CheckIcon /> : <AddIcon />}
-          onClick={async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+    <>
+      <Tooltip
+        title={
+          <div className="text-center">
+            <span className="font-bold">
+              {memberType ? 'Unfollow' : 'Follow'}
+            </span>
+            {memberType && memberState?.joinedAt && (
+              <>
+                <br />
+                Following since{' '}
+                {memberState?.joinedAt.toLocaleString('en-us', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: true,
+                })}
+              </>
+            )}
+          </div>
+        }
+      >
+        <span>
+          <Button
+            variant="contained"
+            size={isHeader ? 'large' : 'small'}
+            startIcon={memberType ? <CheckIcon /> : <AddIcon />}
+            onClick={async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
 
-            if (isPending || joinLeave.isPending) return;
+              if (isPending || joinLeave.isPending) return;
 
-            if (!session) {
-              // This will use auth page when this JoinButton and a LoginModal are not wrapped in a `<LoginModalProvider>`.
-              if (useAuthPage.current) {
-                router.push(
-                  `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
-                );
-              } else {
-                openLoginModal();
+              if (!session) {
+                // This will use auth page when this JoinButton and a LoginModal are not wrapped in a `<LoginModalProvider>`.
+                if (useAuthPage.current) {
+                  router.push(
+                    `/auth?callbackUrl=${encodeURIComponent(window.location.href)}`,
+                  );
+                } else {
+                  openLoginModal();
+                }
+                return;
               }
-              return;
-            }
 
-            void joinLeave.mutate({ clubId });
-          }}
-          className="normal-case"
-          loading={isPending || joinLeave.isPending}
-        >
-          {memberType ? 'Following' : 'Follow'}
-        </Button>
-      </span>
-    </Tooltip>
+              if (memberType) {
+                setIsModalOpen(true);
+                return;
+              } else {
+                void joinLeave.mutate({ clubId });
+              }
+            }}
+            className="normal-case"
+            loading={isPending || joinLeave.isPending}
+          >
+            {memberType ? 'Following' : 'Follow'}
+          </Button>
+        </span>
+      </Tooltip>
+      <Confirmation
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Unfollow Club"
+        contentText="Are you sure you want to unfollow this club?"
+        confirmColor="error"
+        confirmText="Unfollow"
+        onConfirm={() => {
+          setIsModalOpen(false);
+          void joinLeave.mutate({ clubId });
+        }}
+      />
+    </>
   );
 };
 
