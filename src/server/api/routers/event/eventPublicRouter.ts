@@ -402,15 +402,13 @@ const eventPublicRouter = createTRPCRouter({
             }
 
             // filters.query
-            if (filters.query) {
+            if (filters.query?.trim()) {
+              const words = filters.query.trim().split(/\s+/);
+              const lastWord = words.pop();
+              const baseQuery = words.length > 0 ? words.join(' ') : '';
+
               conditions.push(
-                sql`${events.id} @@@
-              paradedb.boolean(
-                should => ARRAY[
-                  paradedb.boost(10.0,paradedb.match(field=>'name',value=>${filters.query},distance=>2)),
-                  paradedb.boost(1.0,paradedb.match(field=>'description',value=>${filters.query},distance=>1)),
-                  paradedb.boost(5.0,paradedb.match(field=>'location',value=>${filters.query},distance=>1))
-                ])`,
+                sql`${events.searchTsv} @@ (websearch_to_tsquery('english', ${baseQuery}) && to_tsquery('english', ${lastWord + ':*'}))`,
               );
             }
 
@@ -540,7 +538,7 @@ const eventPublicRouter = createTRPCRouter({
       }
     }),
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
-    const { name, sortByDate } = input;
+    const { name, size, sortByDate } = input;
     try {
       const events = await ctx.db.query.events.findMany({
         where: (event) =>
@@ -551,6 +549,7 @@ const eventPublicRouter = createTRPCRouter({
         with: {
           club: true,
         },
+        limit: size,
       });
 
       const approvedEvents = events.filter(
