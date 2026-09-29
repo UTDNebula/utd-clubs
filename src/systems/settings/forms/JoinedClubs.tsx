@@ -122,7 +122,7 @@ function ClubListItem({ joinedClub, onLeave }: ClubListItemProps) {
   const isAdmin = joinedClub?.memberType === 'President';
 
   return (
-    <div className="flex min-h-16 flex-wrap items-center gap-2 rounded-lg p-2 transition-colors max-sm:bg-neutral-100 sm:hover:bg-neutral-100 dark:max-sm:bg-neutral-800 dark:sm:hover:bg-neutral-800">
+    <div className="flex min-h-16 flex-wrap items-center gap-2 rounded-lg p-2 transition-colors max-sm:bg-neutral-100 sm:hover:bg-neutral-100 dark:max-sm:bg-neutral-800 dark:sm:hover:bg-neutral-700">
       <Tooltip title="View club directory page" disableInteractive>
         <Link
           href={club.approved === 'approved' ? `/directory/${club.slug}` : ''}
