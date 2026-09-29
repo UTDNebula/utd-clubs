@@ -9,6 +9,11 @@ import SyncfusionWrapper from '@/lib/components/SyncfusionWrapper';
 import { CheckRefreshToken } from '@/lib/modules/googleOAuth';
 import { LoginModalProvider } from '@/lib/modules/loginModal/provider';
 import { SnackbarProvider } from '@/lib/modules/snackbar';
+import {
+  emailAuth,
+  loginBannerText,
+  strictPasswordRequirements,
+} from '@/lib/utils/flags';
 import theme from '@/lib/utils/theme';
 import { TRPCReactProvider } from '@/trpc/react';
 
@@ -73,7 +78,13 @@ export default async function RootLayout({
             <TRPCReactProvider>
               <ThemeProvider theme={theme}>
                 <ClientLocalizationProvider>
-                  <LoginModalProvider>
+                  <LoginModalProvider
+                    flagPromises={{
+                      emailAuth: emailAuth(),
+                      strictPasswordRequirements: strictPasswordRequirements(),
+                      loginBannerText: loginBannerText(),
+                    }}
+                  >
                     <SnackbarProvider>
                       <CheckRefreshToken />
                       {children}
