@@ -57,7 +57,7 @@ export default function ProfileDropDown({
   }, [initialSession]);
 
   const { data, isPending, isRefetching } = authClient.useSession();
-  const session = isPending || !isRefetching ? initialSession : data;
+  const session = isPending || isRefetching ? initialSession : data;
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);

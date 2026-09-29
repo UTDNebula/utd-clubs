@@ -242,7 +242,11 @@ export default function ManageAccount({
                       type="password"
                       autoComplete="new-password"
                       className="w-full"
-                      helperText="At least 8 varied characters"
+                      helperText={
+                        disableStrictPasswordRequirements
+                          ? 'At least 8 characters'
+                          : 'At least 8 varied characters'
+                      }
                     />
                   )}
                 </changePasswordForm.AppField>
