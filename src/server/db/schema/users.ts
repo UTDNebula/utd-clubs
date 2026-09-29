@@ -23,8 +23,8 @@ export const studentClassificationEnum = pgEnum('student_classification', [
 ]);
 
 export const clubRoleEnum = pgEnum('member_type', [
-  'President',
-  'Officer',
+  'Admin',
+  'Collaborator',
   'Member',
 ]);
 

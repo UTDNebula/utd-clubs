@@ -1,6 +1,6 @@
 {
-  "id": "a4728b2d-9069-4b21-ae15-1be862c393fc",
-  "prevId": "f9890207-2ee7-4abe-bd75-341eebd82ef8",
+  "id": "018e76dd-86b4-4e0b-86c6-2865ec503b39",
+  "prevId": "7024df03-9669-42ce-9ead-d38060d56b8f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -392,6 +392,70 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.calendar_webhooks": {
+      "name": "calendar_webhooks",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "resource_id": {
+          "name": "resource_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "club_id": {
+          "name": "club_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiration": {
+          "name": "expiration",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "calendar_webhooks_club_id_club_id_fk": {
+          "name": "calendar_webhooks_club_id_club_id_fk",
+          "tableFrom": "calendar_webhooks",
+          "tableTo": "club",
+          "columnsFrom": [
+            "club_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.club": {
       "name": "club",
       "schema": "",
@@ -415,9 +479,21 @@
           "primaryKey": false,
           "notNull": true
         },
+        "alias": {
+          "name": "alias",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "founding_date": {
           "name": "founding_date",
-          "type": "text",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
@@ -448,12 +524,76 @@
           "primaryKey": false,
           "notNull": false
         },
+        "banner_image": {
+          "name": "banner_image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "soc": {
           "name": "soc",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
           "default": false
+        },
+        "page_views": {
+          "name": "page_views",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "calendar_id": {
+          "name": "calendar_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendar_name": {
+          "name": "calendar_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendar_sync_token": {
+          "name": "calendar_sync_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendar_webhook_id": {
+          "name": "calendar_webhook_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendar_webhook_expiration": {
+          "name": "calendar_webhook_expiration",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "club_size": {
+          "name": "club_size",
+          "type": "club_size",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendarGoogleAccountId": {
+          "name": "calendarGoogleAccountId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "schools": {
+          "name": "schools",
+          "type": "school_enum[]",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::school_enum[]"
         }
       },
       "indexes": {
@@ -468,6 +608,12 @@
             },
             {
               "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "alias",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -531,7 +677,21 @@
           "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "club_calendarGoogleAccountId_user_id_fk": {
+          "name": "club_calendarGoogleAccountId_user_id_fk",
+          "tableFrom": "club",
+          "tableTo": "user",
+          "columnsFrom": [
+            "calendarGoogleAccountId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -560,6 +720,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "display_order": {
+          "name": "display_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -619,19 +785,53 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "''"
+        },
+        "approved": {
+          "name": "approved",
+          "type": "status_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'approved'"
         },
         "start_time": {
           "name": "start_time",
-          "type": "timestamp with time zone",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
         "end_time": {
           "name": "end_time",
-          "type": "timestamp with time zone",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
+        },
+        "recurrence": {
+          "name": "recurrence",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recurence_id": {
+          "name": "recurence_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "google": {
+          "name": "google",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "etag": {
+          "name": "etag",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "location": {
           "name": "location",
@@ -639,9 +839,102 @@
           "primaryKey": false,
           "notNull": true,
           "default": "''"
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "page_views": {
+          "name": "page_views",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "calendar_id": {
+          "name": "calendar_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "event_search_idx": {
+          "name": "event_search_idx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "description",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "location",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "start_time",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "end_time",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "club_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "bm25",
+          "with": {
+            "key_field": "id"
+          }
+        }
+      },
       "foreignKeys": {
         "events_club_id_club_id_fk": {
           "name": "events_club_id_club_id_fk",
@@ -663,53 +956,58 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.feedback_form": {
-      "name": "feedback_form",
+    "public.membership_forms": {
+      "name": "membership_forms",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true,
-          "default": "nanoid(20)"
+          "default": "gen_random_uuid()"
         },
-        "rating": {
-          "name": "rating",
+        "club_id": {
+          "name": "club_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_order": {
+          "name": "display_order",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
-        },
-        "likes": {
-          "name": "likes",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "''"
-        },
-        "dislikes": {
-          "name": "dislikes",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "''"
-        },
-        "features": {
-          "name": "features",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "''"
-        },
-        "submit_on": {
-          "name": "submit_on",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "membership_forms_club_id_club_id_fk": {
+          "name": "membership_forms_club_id_club_id_fk",
+          "tableFrom": "membership_forms",
+          "tableTo": "club",
+          "columnsFrom": [
+            "club_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -745,19 +1043,11 @@
           "primaryKey": false,
           "notNull": true
         },
-        "image": {
-          "name": "image",
-          "type": "text",
+        "display_order": {
+          "name": "display_order",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'/nebula-logo.png'"
-        },
-        "is_president": {
-          "name": "is_president",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
+          "notNull": false
         }
       },
       "indexes": {},
@@ -801,6 +1091,12 @@
         "clubMatchLimit": {
           "name": "clubMatchLimit",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "responses": {
+          "name": "responses",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         }
@@ -847,24 +1143,23 @@
           "primaryKey": false,
           "notNull": false
         },
-        "year": {
-          "name": "year",
-          "type": "year",
+        "student_classification": {
+          "name": "student_classification",
+          "type": "student_classification",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'Student'"
         },
-        "role": {
-          "name": "role",
-          "type": "role",
-          "typeSchema": "public",
+        "graduation_date": {
+          "name": "graduation_date",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "career": {
-          "name": "career",
-          "type": "career",
-          "typeSchema": "public",
+        "contact_email": {
+          "name": "contact_email",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
@@ -899,6 +1194,13 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
+        },
+        "joined_at": {
+          "name": "joined_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -959,6 +1261,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "registered_at": {
+          "name": "registered_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -986,7 +1295,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
@@ -1012,7 +1321,31 @@
       "values": [
         "approved",
         "rejected",
-        "pending"
+        "pending",
+        "deleted"
+      ]
+    },
+    "public.club_size": {
+      "name": "club_size",
+      "schema": "public",
+      "values": [
+        "1-10",
+        "10-50",
+        "50-200",
+        "200+"
+      ]
+    },
+    "public.school_enum": {
+      "name": "school_enum",
+      "schema": "public",
+      "values": [
+        "bass",
+        "bbs",
+        "epps",
+        "ecs",
+        "is",
+        "jsom",
+        "nsm"
       ]
     },
     "public.platform": {
@@ -1031,16 +1364,14 @@
         "other"
       ]
     },
-    "public.career": {
-      "name": "career",
+    "public.status_enum": {
+      "name": "status_enum",
       "schema": "public",
       "values": [
-        "Healthcare",
-        "Art and Music",
-        "Engineering",
-        "Business",
-        "Sciences",
-        "Public Service"
+        "approved",
+        "rejected",
+        "pending",
+        "deleted"
       ]
     },
     "public.member_type": {
@@ -1052,24 +1383,16 @@
         "Member"
       ]
     },
-    "public.role": {
-      "name": "role",
+    "public.student_classification": {
+      "name": "student_classification",
       "schema": "public",
       "values": [
         "Student",
-        "Student Organizer",
-        "Administrator"
-      ]
-    },
-    "public.year": {
-      "name": "year",
-      "schema": "public",
-      "values": [
-        "Freshman",
-        "Sophomore",
-        "Junior",
-        "Senior",
-        "Grad Student"
+        "Graduate Student",
+        "Alum",
+        "Prospective Student",
+        "Faculty",
+        "Staff"
       ]
     }
   },
@@ -1099,7 +1422,7 @@
           "notNull": true
         }
       },
-      "definition": "select UNNEST(\"club\".\"tags\") as tag, COUNT(\"club\".\"tags\") as count, from club order by count desc",
+      "definition": "\n  SELECT \n    tag, \n    COUNT(*) as count, \n    ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC)::integer as id \n  FROM (\n    SELECT UNNEST(\"club\".\"tags\") as tag FROM \"club\" WHERE club.approved = 'approved'\n  ) sub \n  GROUP BY tag \n  ORDER BY count DESC\n",
       "name": "used_tags",
       "schema": "public",
       "isExisting": false,

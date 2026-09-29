@@ -103,7 +103,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
 
   const memberType = memberState?.memberType ?? null;
 
-  if (memberType === 'Officer' || memberType === 'President') {
+  if (memberType === 'Collaborator' || memberType === 'Admin') {
     return (
       <Button
         LinkComponent={Link}
