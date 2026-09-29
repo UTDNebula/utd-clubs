@@ -25,7 +25,7 @@ import {
 } from './inputSchemas';
 
 const clubManageRouter = createTRPCRouter({
-  create: authedProcedure
+  create: authedProcedure //Create a new club
     .input(createSchema)
     .mutation(async ({ input, ctx }) => {
       //Create unique slug based on name
@@ -66,7 +66,7 @@ const clubManageRouter = createTRPCRouter({
 
       return slug;
     }),
-  data: authedProcedure
+  data: authedProcedure // Update club data
     .input(editDataSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.id, {
@@ -92,7 +92,7 @@ const clubManageRouter = createTRPCRouter({
 
       return updatedClub[0];
     }),
-  setUpdatedAt: authedProcedure
+  setUpdatedAt: authedProcedure // Update the club's updatedAt timestamp
     .input(clubIdSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
@@ -108,7 +108,7 @@ const clubManageRouter = createTRPCRouter({
 
       return { success: true };
     }),
-  contacts: authedProcedure
+  contacts: authedProcedure // Manage club contacts/social links
     .input(editContactSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
@@ -201,7 +201,7 @@ const clubManageRouter = createTRPCRouter({
       });
       return newContacts;
     }),
-  officers: authedProcedure
+  officers: authedProcedure // Manage club officers (permissions)
     .input(editCollaboratorSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
@@ -223,6 +223,26 @@ const clubManageRouter = createTRPCRouter({
           code: 'FORBIDDEN',
           message: 'Cannot promote or demote yourself',
         });
+      }
+      if (input.created.length) {
+        const existingOfficers =
+          await ctx.db.query.userMetadataToClubs.findMany({
+            where: and(
+              eq(userMetadataToClubs.clubId, input.clubId),
+              inArray(
+                userMetadataToClubs.userId,
+                input.created.map((officer) => officer.userId),
+              ),
+              inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+            ),
+          });
+        if (existingOfficers.length) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message:
+              'Cannot promote someone who is already an officer or president',
+          });
+        }
       }
 
       // Deleted
@@ -300,7 +320,7 @@ const clubManageRouter = createTRPCRouter({
       });
       return newOfficers;
     }),
-  listedOfficers: authedProcedure
+  listedOfficers: authedProcedure // Manage club officers (cosmetic)
     .input(editOfficerSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
