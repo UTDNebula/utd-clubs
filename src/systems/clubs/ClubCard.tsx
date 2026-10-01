@@ -8,6 +8,7 @@ import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
 import type { SelectClub as Club } from '@/server/db/models';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
+
 const defaultClubImage = '/images/default-club.svg';
 
 type Props = { club: Club; priority?: boolean; manageView?: boolean };
