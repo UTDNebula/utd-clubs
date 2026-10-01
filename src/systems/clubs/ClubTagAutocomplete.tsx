@@ -153,12 +153,19 @@ export default function ClubTagAutocomplete({
       filterOptions={
         allowAddingOptions
           ? (options, params) => {
-              const filtered = filter(options, params);
+              const sanitizedInputValue = params.inputValue
+                .trimStart()
+                .replace(/^#+\s*/, '');
+
+              const filtered = filter(options, {
+                ...params,
+                inputValue: sanitizedInputValue,
+              });
 
               const ignoredWords = ['and', 'or', 'of', 'in', 'the'];
 
               // Trim user specified tag, then capitalize first letter of every word except ignoredWords
-              const input = params.inputValue
+              const input = sanitizedInputValue
                 .trim()
                 .replace(/\b\w+/g, (word, index) => {
                   if (index > 0 && ignoredWords.includes(word.toLowerCase())) {
