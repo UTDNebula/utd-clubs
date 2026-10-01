@@ -8,6 +8,7 @@ import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
 import type { SelectClub as Club } from '@/server/db/models';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
+const defaultClubImage = '/images/default-club.svg';
 
 type Props = { club: Club; priority?: boolean; manageView?: boolean };
 
@@ -27,7 +28,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
       >
         <div className="relative aspect-square overflow-hidden rounded-t-lg">
           <div className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-800" />
-          {club.profileImage && (
+          {club.profileImage ? (
             <Image
               src={addVersionToImage(
                 club.profileImage,
@@ -35,6 +36,15 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
               )}
               fill
               alt={club.name + ' logo'}
+              priority={priority}
+              sizes="20rem"
+              className="object-contain select-none"
+            />
+          ) : (
+            <Image
+              src={defaultClubImage}
+              fill
+              alt={club.name + ' default logo'}
               priority={priority}
               sizes="20rem"
               className="object-contain select-none"
