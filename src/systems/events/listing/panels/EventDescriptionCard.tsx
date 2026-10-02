@@ -26,7 +26,7 @@ export default function EventDescriptionCard({
 
   return (
     <>
-      <Panel className="!p-10 text-slate-700" id={id}>
+      <Panel className="p-10! text-slate-700" id={id}>
         {showImageTrigger && (
           <button
             onClick={() => setOpen(true)}
@@ -83,6 +83,28 @@ export default function EventDescriptionCard({
               fill
               unoptimized
               className="object-contain"
+              onClick={(e) => {
+                const image = e.currentTarget;
+                const scale = Math.min(
+                  image.clientWidth / image.naturalWidth,
+                  image.clientHeight / image.naturalHeight,
+                );
+                const displayedWidth = image.naturalWidth * scale;
+                const displayedHeight = image.naturalHeight * scale;
+                const left = (image.clientWidth - displayedWidth) / 2;
+                const top = (image.clientHeight - displayedHeight) / 2;
+                const x = e.nativeEvent.offsetX;
+                const y = e.nativeEvent.offsetY;
+
+                if (
+                  x < left ||
+                  x > left + displayedWidth ||
+                  y < top ||
+                  y > top + displayedHeight
+                ) {
+                  setOpen(false);
+                }
+              }}
               onError={() => setImgError(true)}
             />
           </div>
