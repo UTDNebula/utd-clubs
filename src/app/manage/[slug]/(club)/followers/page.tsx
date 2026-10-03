@@ -1,0 +1,32 @@
+import { notFound } from 'next/navigation';
+import ManageHeader from '@/systems/manage/ManageHeader';
+import MemberList from '@/systems/manage/MemberList';
+import { api } from '@/trpc/server';
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  const club = await api.club.bySlug({ slug });
+  if (!club) {
+    notFound();
+  }
+
+  const members = await api.club.getMembers({ clubId: club.id });
+
+  return (
+    <main>
+      <ManageHeader
+        club={club}
+        path={[{ text: 'Followers', href: `/manage/${slug}/followers` }]}
+        hrefBack={`/manage/${slug}/`}
+      />
+      <div className="flex w-full flex-col items-center">
+        <MemberList members={members} club={club} />
+      </div>
+    </main>
+  );
+}
