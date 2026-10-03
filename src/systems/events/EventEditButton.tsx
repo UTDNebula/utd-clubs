@@ -26,7 +26,7 @@ export default function EventEditButton({
       href={
         fromGoogle
           ? getGcalEventLink(eventId, calendarId, userEmail)
-          : `/manage/${clubSlug}/events/edit/${eventId}`
+          : `/manage/${clubSlug}/events/${eventId}`
       }
       {...(fromGoogle && { target: '_blank', rel: 'noopener noreferrer' })}
       variant="contained"
