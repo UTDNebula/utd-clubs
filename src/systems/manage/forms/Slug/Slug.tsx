@@ -98,12 +98,15 @@ const Slug = ({ club, role }: DetailsProps) => {
     if (isNewSlug && slugExists && !isFetchingOrWaiting) {
       form.setFieldMeta('slug', (prev) => {
         // Preserve existing errors
-        if (prev.errorMap.onChange?.length) return prev;
         return {
           ...prev,
           errorMap: {
             onChange: [
-              ...(prev.errorMap.onChange || []),
+              ...(prev.errorMap.onChange?.filter(
+                (err: { message?: string } | undefined) =>
+                  err?.message !== 'Checking availability..' &&
+                  err?.message !== 'This slug is already taken',
+              ) ?? []),
               { message: 'This slug is already taken' },
             ],
           },
