@@ -110,11 +110,6 @@ const EventRegisterButton = ({
   const registered = registerState?.registered ?? false;
   const [confirmationOpen, setConfirmationOpen] = useState(false);
 
-  if(registered) {
-    setConfirmationOpen(true);
-    return;
-  }
-
   const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -130,6 +125,11 @@ const EventRegisterButton = ({
       } else {
         openLoginModal();
       }
+      return;
+    }
+
+    if (registered) {
+      setConfirmationOpen(true);
       return;
     }
 
@@ -190,7 +190,7 @@ const EventRegisterButton = ({
         </span>
       </Tooltip>
 
-  <Confirmation
+      <Confirmation
         open={confirmationOpen}
         onClose={() => setConfirmationOpen(false)}
         title="Unregister from event?"
