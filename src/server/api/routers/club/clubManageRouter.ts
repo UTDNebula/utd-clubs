@@ -70,7 +70,9 @@ const clubManageRouter = createTRPCRouter({
     .input(editDataSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.id, {
-        Officer: { errorMessage: 'Must be an collaborator to modify this club' },
+        Officer: {
+          errorMessage: 'Must be an collaborator to modify this club',
+        },
       });
 
       const updatedClub = await ctx.db
@@ -112,7 +114,9 @@ const clubManageRouter = createTRPCRouter({
     .input(editContactSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        Officer: { errorMessage: 'Must be an collaborator to modify this club' },
+        Officer: {
+          errorMessage: 'Must be an collaborator to modify this club',
+        },
       });
 
       // Deleted
@@ -205,7 +209,9 @@ const clubManageRouter = createTRPCRouter({
     .input(editCollaboratorSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        Officer: { errorMessage: 'You must be an collaborator to modify this club' },
+        Officer: {
+          errorMessage: 'You must be an collaborator to modify this club',
+        },
         President: {
           errorMessage: 'Only an admin can remove or modify people',
           throwError: Boolean(input.deleted.length || input.modified.length),
@@ -324,7 +330,9 @@ const clubManageRouter = createTRPCRouter({
     .input(editOfficerSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        Officer: { errorMessage: 'Must be an collaborator to modify this club' },
+        Officer: {
+          errorMessage: 'Must be an collaborator to modify this club',
+        },
       });
 
       // Deleted
@@ -411,7 +419,9 @@ const clubManageRouter = createTRPCRouter({
     .input(editFormSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        Officer: { errorMessage: 'Must be an collaborator to modify this club' },
+        Officer: {
+          errorMessage: 'Must be an collaborator to modify this club',
+        },
       });
 
       // deletions
