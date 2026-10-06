@@ -30,10 +30,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
   const joinLeave = useMutation(
     api.user.clubs.joinLeave.mutationOptions({
       onMutate: async ({ clubId }) => {
-        const queryKey = [
-          ['user', 'clubs', 'memberState'],
-          { input: { clubId }, type: 'query' },
-        ];
+        const queryKey = api.user.clubs.memberState.queryKey({ clubId });
 
         // Cancel outgoing refetches
         await queryClient.cancelQueries({
@@ -45,12 +42,12 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
           queryClient.getQueryData<typeof memberState>(queryKey);
 
         // Optimistically update the cache
-        queryClient.setQueryData(queryKey, (old: typeof memberState) => {
+        queryClient.setQueryData(queryKey, (old) => {
           if (!old) return old;
 
           return {
             ...old,
-            memberType: old.memberType ? null : 'Member',
+            memberType: old.memberType ? null : ('Member' as const),
             joinedAt: old.memberType ? null : new Date(),
           };
         });
@@ -82,10 +79,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       },
       onSettled: (_data, _error, { clubId }) => {
         queryClient.invalidateQueries({
-          queryKey: [
-            ['user', 'clubs', 'memberState'],
-            { input: { clubId }, type: 'query' },
-          ],
+          queryKey: api.user.clubs.memberState.queryKey({ clubId }),
         });
       },
     }),
