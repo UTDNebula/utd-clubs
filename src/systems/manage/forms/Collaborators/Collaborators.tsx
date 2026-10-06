@@ -19,26 +19,26 @@ type FormData = z.infer<typeof editOfficerSchema>;
 
 function typedDefaultValues(
   officers: SelectUserMetadataToClubsWithUserMetadataWithUser[],
-  role: 'Officer' | 'President' | 'Admin',
+  role: 'Collaborator' | 'Admin',
   userId: string | undefined,
-): FormData['officers'] {
+): FormData['collaborators'] {
   return officers.map((officer) => ({
     userId: officer.userId,
     name:
       officer.userMetadata?.firstName + ' ' + officer.userMetadata?.lastName,
     email: officer.userMetadata?.user?.email ?? '',
-    // Can remove if self or President
+    // Can remove if self or Admin
     canRemove:
-      role === 'President' || role === 'Admin' || officer.userId === userId,
-    canTogglePresident: role === 'President' || role === 'Admin',
-    position: officer.memberType as 'President' | 'Officer',
+      role === 'Admin' || role === 'Collaborator' || officer.userId === userId,
+    canTogglePresident: role === 'Admin' || role === 'Collaborator',
+    position: officer.memberType as 'Admin' | 'Collaborator',
   }));
 }
 
 type CollaboratorsProps = {
   club: SelectClub;
   officers: SelectUserMetadataToClubsWithUserMetadataWithUser[];
-  role: 'Officer' | 'President' | 'Admin';
+  role: 'Collaborator' | 'Admin';
   userId?: string;
 };
 
@@ -64,28 +64,28 @@ const Collaborators = ({
   );
 
   const [defaultValues, setDefaultValues] = useState({
-    officers: typedDefaultValues(officers, role, userId),
+    collaborators: typedDefaultValues(officers, role, userId),
   });
 
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value, formApi }) => {
       // Separate created vs modified
-      const created: FormData['officers'] = [];
-      const modified: FormData['officers'] = [];
+      const created: FormData['collaborators'] = [];
+      const modified: FormData['collaborators'] = [];
 
-      value.officers.forEach((officer, index) => {
+      value.collaborators.forEach((collaborator, index) => {
         // If it has no ID, it's created
-        if (officer.new) {
-          created.push(officer);
+        if (collaborator.new) {
+          created.push(collaborator);
           return;
         }
         // If it has an ID, check if it was actually changed
         const isDirty = formApi.getFieldMeta(
-          `officers[${index}].position`,
+          `collaborators[${index}].position`,
         )?.isDirty;
         if (isDirty) {
-          modified.push(officer);
+          modified.push(collaborator);
         }
       });
       const updated = await editOfficers.mutateAsync({
@@ -96,8 +96,8 @@ const Collaborators = ({
       });
       setDeletedIds([]);
       const newOfficers = typedDefaultValues(updated, role, userId);
-      setDefaultValues({ officers: newOfficers });
-      formApi.reset({ officers: newOfficers });
+      setDefaultValues({ collaborators: newOfficers });
+      formApi.reset({ collaborators: newOfficers });
       // Reload if own role changed
       const self = newOfficers.find((o) => o.userId === userId);
       if (role !== 'Admin' && (!self || role !== self.position)) {
@@ -112,7 +112,7 @@ const Collaborators = ({
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
 
   const removeItem = (index: number) => {
-    const current = form.getFieldValue('officers')[index];
+    const current = form.getFieldValue('collaborators')[index];
     const userId = current?.userId;
     if (current && userId) {
       setDeletedIds((prev) => [...prev, userId]);
@@ -144,7 +144,7 @@ const Collaborators = ({
           </>
         }
       >
-        <form.Field name="officers">
+        <form.Field name="collaborators">
           {(field) => (
             <div className="flex flex-col gap-2">
               {field.state.value.map((value, index) => (
@@ -165,10 +165,9 @@ const Collaborators = ({
                     userId: user.id,
                     name: user.name,
                     email: user.email,
-                    position: 'Officer',
-                    canRemove: role === 'President' || role === 'Admin',
-                    canTogglePresident:
-                      role === 'President' || role === 'Admin',
+                    position: 'Collaborator',
+                    canRemove: role === 'Admin',
+                    canTogglePresident: role === 'Admin',
                     new: true,
                   });
                 }}

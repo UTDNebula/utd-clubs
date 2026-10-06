@@ -124,8 +124,8 @@ export function ContactEmailCell(params: GridRenderCellParams) {
 }
 
 const RoleToMemberType: Record<string, MemberTypes> = {
-  Admin: 'President',
-  Collaborator: 'Officer',
+  Admin: 'Admin',
+  Collaborator: 'Collaborator',
   Follower: 'Member',
 };
 
