@@ -134,7 +134,7 @@ export const HomePageSearchBar = () => {
           options={data?.tags.map((t) => t.tag) ?? []}
           filterOptions={(o) => o}
           onInputChange={(e, value) => {
-            setSearch(value.trimStart().replace(/^#+\s*/, ''));
+            setSearch(value);
             handleInteraction();
           }}
           onChange={(e, value) => {
