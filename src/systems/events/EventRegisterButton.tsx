@@ -5,7 +5,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import Confirmation from '@/lib/components/Confirmation';
 import { useLoginModal } from '@/lib/modules/loginModal';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
@@ -107,6 +108,7 @@ const EventRegisterButton = ({
   });
 
   const registered = registerState?.registered ?? false;
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -123,6 +125,11 @@ const EventRegisterButton = ({
       } else {
         openLoginModal();
       }
+      return;
+    }
+
+    if (registered) {
+      setConfirmationOpen(true);
       return;
     }
 
@@ -182,6 +189,20 @@ const EventRegisterButton = ({
           </Button>
         </span>
       </Tooltip>
+
+      <Confirmation
+        open={confirmationOpen}
+        onClose={() => setConfirmationOpen(false)}
+        title="Unregister from event?"
+        contentText="Are you sure you want to unregister from this event?"
+        confirmText="Unregister"
+        onConfirm={() => {
+          setConfirmationOpen(false);
+          toggleRegistration.mutate({ eventId });
+        }}
+        loading={toggleRegistration.isPending}
+      />
+
       {!isHeader &&
         (memberType === 'President' || memberType === 'Officer') && (
           <EventEditButton
