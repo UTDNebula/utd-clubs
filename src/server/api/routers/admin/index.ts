@@ -70,10 +70,12 @@ const adminRouter = createTRPCRouter({
   deleteClub: adminProcedure
     .input(clubIdSchema)
     .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(club).where(eq(club.id, input.clubId));
+      await ctx.db.refreshMaterializedView(usedTags);
+
       await Promise.all([
         callStorageAPI('DELETE', `${input.clubId}-profile`),
         callStorageAPI('DELETE', `${input.clubId}-banner`),
-        ctx.db.delete(club).where(eq(club.id, input.clubId)),
       ]);
     }),
   updateOfficers: adminProcedure
@@ -153,6 +155,7 @@ const adminRouter = createTRPCRouter({
         .update(club)
         .set({ approved: input.status })
         .where(eq(club.id, input.clubId));
+      await ctx.db.refreshMaterializedView(usedTags);
     }),
   getDirectoryInfo: adminProcedure
     .input(clubSlugSchema)
