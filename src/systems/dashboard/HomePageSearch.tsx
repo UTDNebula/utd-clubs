@@ -169,10 +169,10 @@ export const HomePageSearchBar = () => {
                   ),
                   className:
                     'bg-white dark:bg-neutral-800 ' +
-                    params.slotProps.input.className,
+                    params.slotProps.input.className +
+                    ' pr-12!',
                   sx: {
                     borderRadius: theme.shape.borderRadius,
-                    paddingRight: '48px !important',
                   },
                 },
               }}
