@@ -20,20 +20,17 @@ export default function EventDescriptionCard({
 }: EventDescriptionCardProps) {
   const [open, setOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
 
   const showImageTrigger = !!event.image && !imgError;
 
   return (
     <>
-      <Panel className="p-10! text-slate-700" id={id}>
+      <Panel className="!p-10 text-slate-700" id={id}>
         {showImageTrigger && (
           <button
             onClick={() => setOpen(true)}
             aria-label="View full size event poster"
-            className={`mx-auto mb-6 max-h-64 w-fit cursor-zoom-in ${
-              imgLoaded ? 'block' : 'hidden' // hide button until loaded
-            }`}
+            className="mx-auto mb-6 max-h-64 w-fit cursor-zoom-in"
           >
             <Image
               src={addVersionToImage(event.image!, event.updatedAt.getTime())}
@@ -42,11 +39,11 @@ export default function EventDescriptionCard({
               width={512}
               className="max-h-64 w-fit rounded-lg object-contain object-center"
               onError={() => setImgError(true)}
-              onLoad={() => setImgLoaded(true)}
-              priority // ensure fetch even when hidden
+              priority
             />
           </button>
         )}
+
         <ExpandableMarkdownText
           text={
             event.description.length > 0
@@ -56,6 +53,7 @@ export default function EventDescriptionCard({
           maxLines={10}
         />
       </Panel>
+
       {showImageTrigger && (
         <Dialog
           open={open}
@@ -66,6 +64,8 @@ export default function EventDescriptionCard({
               sx: {
                 backgroundColor: 'rgba(0,0,0,0.9)',
               },
+              className: 'flex items-center justify-center',
+              onClick: () => setOpen(false),
             },
           }}
         >
@@ -76,38 +76,17 @@ export default function EventDescriptionCard({
           >
             <CloseIcon />
           </IconButton>
-          <div className="relative flex h-full w-full items-center justify-center">
-            <Image
-              src={addVersionToImage(event.image!, event.updatedAt.getTime())}
-              alt="Event poster fullscreen"
-              fill
-              unoptimized
-              className="object-contain"
-              onClick={(e) => {
-                const image = e.currentTarget;
-                const scale = Math.min(
-                  image.clientWidth / image.naturalWidth,
-                  image.clientHeight / image.naturalHeight,
-                );
-                const displayedWidth = image.naturalWidth * scale;
-                const displayedHeight = image.naturalHeight * scale;
-                const left = (image.clientWidth - displayedWidth) / 2;
-                const top = (image.clientHeight - displayedHeight) / 2;
-                const x = e.nativeEvent.offsetX;
-                const y = e.nativeEvent.offsetY;
 
-                if (
-                  x < left ||
-                  x > left + displayedWidth ||
-                  y < top ||
-                  y > top + displayedHeight
-                ) {
-                  setOpen(false);
-                }
-              }}
-              onError={() => setImgError(true)}
-            />
-          </div>
+          <Image
+            src={addVersionToImage(event.image!, event.updatedAt.getTime())}
+            alt="Event poster fullscreen"
+            width={512}
+            height={256}
+            unoptimized
+            className="h-auto max-h-[90vh] w-auto max-w-[90vw] object-contain"
+            onClick={(event) => event.stopPropagation()}
+            onError={() => setImgError(true)}
+          />
         </Dialog>
       )}
     </>
