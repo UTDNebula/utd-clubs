@@ -100,6 +100,7 @@ const OfficerListItem = withForm({
             {(subField) => (
               <subField.TextField
                 label="Name"
+                autoComplete="off"
                 className="w-full"
                 {...(overlayData?.name !== undefined
                   ? { value: overlayData.name }
@@ -116,6 +117,7 @@ const OfficerListItem = withForm({
             {(subField) => (
               <subField.TextField
                 label="Position"
+                autoComplete="off"
                 className="w-full"
                 {...(overlayData?.position !== undefined
                   ? { value: overlayData.position }
