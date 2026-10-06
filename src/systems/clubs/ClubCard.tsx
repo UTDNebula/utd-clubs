@@ -1,5 +1,6 @@
 'use client';
 
+import defaultClubImage from '@mui/icons-material/Groups';
 import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,6 +9,8 @@ import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
 import type { SelectClub as Club } from '@/server/db/models';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
+
+const DefaultClubIcon = defaultClubImage;
 
 type Props = { club: Club; priority?: boolean; manageView?: boolean };
 
@@ -27,7 +30,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
       >
         <div className="relative aspect-square overflow-hidden rounded-t-lg">
           <div className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-800" />
-          {club.profileImage && (
+          {club.profileImage ? (
             <Image
               src={addVersionToImage(
                 club.profileImage,
@@ -38,6 +41,12 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
               priority={priority}
               sizes="20rem"
               className="object-contain select-none"
+            />
+          ) : (
+            <DefaultClubIcon
+              aria-label={club.name + ' default logo'}
+              className="select-none"
+              sx={{ width: '100%', height: '100%' }}
             />
           )}
         </div>
