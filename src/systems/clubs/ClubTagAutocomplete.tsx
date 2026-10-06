@@ -150,9 +150,7 @@ export default function ClubTagAutocomplete({
           );
         });
       }}
-      filterOptions={
-        allowAddingOptions
-          ? (options, params) => {
+      filterOptions={(options, params) => {
               const sanitizedInputValue = params.inputValue
                 .trimStart()
                 .replace(/^#+\s*/, '');
@@ -161,6 +159,8 @@ export default function ClubTagAutocomplete({
                 ...params,
                 inputValue: sanitizedInputValue,
               });
+
+              if (!allowAddingOptions) return filtered;
 
               const ignoredWords = ['and', 'or', 'of', 'in', 'the'];
 
@@ -181,7 +181,6 @@ export default function ClubTagAutocomplete({
 
               return filtered;
             }
-          : undefined
       }
       onChange={(_e, value) => {
         if (allowAddingOptions) {
