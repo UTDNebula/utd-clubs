@@ -3,10 +3,10 @@ import { Suspense } from 'react';
 import { BaseHeader, BaseHeaderProps } from '@/lib/components/BaseHeader';
 import UTDClubsLogoStandalone from '@/lib/icons/UTDClubsLogo';
 import { auth } from '@/server/auth';
-import { ClubSearchBar } from '@/systems/clubs/ClubSearchBar';
 import { EventSearchBar } from '@/systems/events/EventSearchBar';
 import Sidebar from '../drawer/Sidebar';
 import ClubMatchButton from './ClubMatchButton';
+import { ClubSearchContainer } from './ClubSearchContainer';
 import ProfileDropDown, { ProfileDropDownFallback } from './ProfileDropDown';
 
 const DefaultHeaderItems = () => (
@@ -30,7 +30,7 @@ const Header = async (props: BaseHeaderProps) => {
       menu={<Sidebar homepage={props.shadow} hamburgerColor={props.color} />}
       logoIcon={<UTDClubsLogoStandalone />}
       logoText={{ projectName: 'UTD CLUBS', byline: 'by Nebula Labs' }}
-      searchBar={<ClubSearchBar />}
+      searchBar={<ClubSearchContainer />}
       account={
         <Suspense fallback={<ProfileDropDownFallback />}>
           <ProfileDropDown initialSession={session} />

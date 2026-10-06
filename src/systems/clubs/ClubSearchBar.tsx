@@ -9,16 +9,28 @@ import {
   Typography,
 } from '@mui/material';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { useBaseHeaderContext } from '@/lib/components/BaseHeader';
 import useDebounce from '@/lib/utils/useDebounce';
 import { useTRPC } from '@/trpc/react';
 
-export const ClubSearchBar = () => {
-  const [input, setInput] = useState('');
+export type ClubSearchResult = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+type ClubSearchBarProps = {
+  input: string;
+  onChange: (input: string) => void;
+  onSelect: (value: string | ClubSearchResult) => void;
+};
+
+export const ClubSearchBar = ({
+  input,
+  onChange,
+  onSelect,
+}: ClubSearchBarProps) => {
   const debouncedSearch = useDebounce(input, 300);
-  const router = useRouter();
   const api = useTRPC();
 
   const { data, isFetching } = useQuery(
@@ -44,16 +56,14 @@ export const ClubSearchBar = () => {
       options={input === '' ? [] : (data ?? [])}
       filterOptions={(o) => o}
       onChange={(event, value, reason) => {
-        // navigation
-        if (reason == 'selectOption' && value && typeof value !== 'string') {
-          router.push(`/directory/${value.slug}`);
-        } else if (reason == 'createOption') {
-          // if no exact match, go to home screen search to try misspellings
-          router.push(`/?search=${input}`);
+        if (reason === 'selectOption' && value && typeof value !== 'string') {
+          onSelect(value);
+        } else if (reason === 'createOption' && typeof value === 'string') {
+          onSelect(value);
         }
       }}
-      onInputChange={(e, value) => {
-        setInput(value);
+      onInputChange={(event, value) => {
+        onChange(value);
       }}
       renderInput={(params) => (
         <TextField
