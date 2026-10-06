@@ -8,8 +8,10 @@ import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 import { convertMarkdownToPlaintext } from '@/lib/utils/markdown';
 import type { SelectClub as Club } from '@/server/db/models';
 import JoinButton, { JoinButtonSkeleton } from './JoinButton';
+import defaultClubImage from '@mui/icons-material/Groups';
 
-const defaultClubImage = '/images/default-club-NObkgrnd.svg';
+const DefaultClubIcon = defaultClubImage;
+
 
 type Props = { club: Club; priority?: boolean; manageView?: boolean };
 
@@ -42,13 +44,10 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
               className="object-contain select-none"
             />
           ) : (
-            <Image
-              src={defaultClubImage}
-              fill
-              alt={club.name + ' default logo'}
-              priority={priority}
-              sizes="20rem"
-              className="object-contain select-none"
+            <DefaultClubIcon
+            aria-label={club.name + ' default logo'}
+            className="select-none"
+            sx={{width: '100%', height: '100%'}}
             />
           )}
         </div>
