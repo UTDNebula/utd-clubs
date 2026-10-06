@@ -64,16 +64,8 @@ const EventCard = ({
           )}
           width={0}
           height={0}
-          style={{
-            height: 'auto',
-            width: 'auto',
-            maxHeight: '100%',
-            maxWidth: '100%',
-            margin: 'auto',
-            borderRadius: '10px',
-          }}
           alt="Club Profile"
-          className="object-cover object-center"
+          className="m-auto h-auto max-h-full w-auto max-w-full rounded-lg object-cover object-center"
         />
       )}
       {/* render event image on top*/}
