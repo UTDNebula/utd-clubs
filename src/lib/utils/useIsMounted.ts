@@ -1,5 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
+const subscribe = () => () => {};
+
 /**
  * Hook to return whether the page is finished mounting on the client.
  * Use for conditional components and props instead of
@@ -11,7 +13,7 @@ import { useSyncExternalStore } from 'react';
  */
 export function useIsMounted(): boolean {
   const isMounted = useSyncExternalStore(
-    () => () => {},
+    subscribe,
     () => true,
     () => false,
   );
