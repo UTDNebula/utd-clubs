@@ -79,6 +79,28 @@ const adminRouter = createTRPCRouter({
   updateOfficers: adminProcedure
     .input(editCollaboratorSchema)
     .mutation(async ({ ctx, input }) => {
+      // Check for existing officers or presidents before creating new ones
+      if (input.created.length) {
+        const existingOfficers =
+          await ctx.db.query.userMetadataToClubs.findMany({
+            where: and(
+              eq(userMetadataToClubs.clubId, input.clubId),
+              inArray(
+                userMetadataToClubs.userId,
+                input.created.map((officer) => officer.userId),
+              ),
+              inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+            ),
+          });
+        if (existingOfficers.length) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message:
+              'Cannot promote someone who is already an officer or president',
+          });
+        }
+      }
+
       // Deleted
       if (input.deleted.length) {
         await ctx.db
