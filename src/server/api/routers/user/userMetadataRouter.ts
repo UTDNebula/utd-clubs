@@ -10,6 +10,7 @@ import { auth } from '@/server/auth';
 import {
   SelectUserMetadataToClubs,
   SelectUserMetadataWithClubs,
+  SelectUserMetadataWithUser,
 } from '@/server/db/models';
 import { admin } from '@/server/db/schema/admin';
 import { user as users } from '@/server/db/schema/auth';
@@ -22,6 +23,21 @@ import { userIdSchema } from '../baseSchemas';
 import { updateByIdSchema } from './inputSchemas';
 
 const userMetadataRouter = createTRPCRouter({
+  getUsers: authedProcedure.query(
+    async ({
+      ctx,
+    }): Promise<
+      { userId: string; userMetadata: SelectUserMetadataWithUser }[]
+    > => {
+      const users = await ctx.db.query.userMetadata.findMany({
+        with: { user: true },
+      });
+      return users.map((userMetadata) => ({
+        userId: userMetadata.id,
+        userMetadata,
+      }));
+    },
+  ),
   byId: authedProcedure
     .input(userIdSchema)
     .query(

@@ -70,3 +70,8 @@ export const editSchema = editEventSchema;
 export const disableSyncSchema = clubIdSchema.extend({
   keepPastEvents: z.boolean().default(true).optional(),
 });
+
+export const removeParticipantsSchema = z.object({
+  eventId: z.string(), // Use your existing event ID schema if available
+  ids: z.union([z.string(), z.array(z.string()).min(1)]),
+});

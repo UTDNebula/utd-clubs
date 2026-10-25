@@ -6,7 +6,11 @@ import { contacts } from './schema/contacts';
 import { events } from './schema/events';
 import { membershipForms } from './schema/membershipForms';
 import { officers } from './schema/officers';
-import { userMetadata, userMetadataToClubs } from './schema/users';
+import {
+  userMetadata,
+  userMetadataToClubs,
+  userMetadataToEvents,
+} from './schema/users';
 
 // Schema definition for club table
 export const insertClub = createInsertSchema(club);
@@ -78,6 +82,9 @@ export const insertUserMetadataToClubs =
 export const selectUserMetadataToClubs =
   createSelectSchema(userMetadataToClubs);
 
+export const selectUserMetadataToEvents =
+  createSelectSchema(userMetadataToEvents);
+
 export type InsertUserMetadataToClubs = z.infer<
   typeof insertUserMetadataToClubs
 >;
@@ -128,4 +135,14 @@ export const selectUserMetadataToClubsWithUserMetadataWithUser =
 
 export type SelectUserMetadataToClubsWithUserMetadataWithUser = z.infer<
   typeof selectUserMetadataToClubsWithUserMetadataWithUser
+>;
+
+// With userMetadata, with user
+export const selectUserMetadataToEventsWithUserMetadataWithUser =
+  selectUserMetadataToEvents.extend({
+    userMetadata: selectUserMetadataWithUser,
+  });
+
+export type SelectUserMetadataToEventsWithUserMetadataWithUser = z.infer<
+  typeof selectUserMetadataToEventsWithUserMetadataWithUser
 >;

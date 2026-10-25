@@ -12,6 +12,7 @@ import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
 import { useTRPC } from '@/trpc/react';
 import EventEditButton from './EventEditButton';
+import EventParticipantsButton from './EventParticipantsButton';
 
 type EventRegisterButtonProps = {
   isHeader?: boolean;
@@ -136,6 +137,13 @@ const EventRegisterButton = ({
 
   return (
     <>
+      {isHeader && (memberType === 'President' || memberType === 'Officer') && (
+        <EventParticipantsButton
+          isHeader={isHeader}
+          eventId={eventId}
+          //NOPE
+        />
+      )}
       {isHeader && (memberType === 'President' || memberType === 'Officer') && (
         <EventEditButton
           isHeader={isHeader}
