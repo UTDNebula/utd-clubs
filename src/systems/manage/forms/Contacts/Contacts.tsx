@@ -35,6 +35,28 @@ import { editClubContactSchema } from './schema';
 type FormData = z.infer<typeof editClubContactSchema>;
 type ContactPlatform = keyof typeof contactNames;
 
+const contactPlatformDomains: readonly [ContactPlatform, readonly string[]][] =
+  [
+    ['discord', ['discord.com', 'discord.gg', 'discordapp.com']],
+    ['instagram', ['instagram.com']],
+    ['twitter', ['twitter.com', 'x.com']],
+    ['facebook', ['facebook.com', 'fb.com']],
+    ['youtube', ['youtube.com', 'youtu.be']],
+    ['twitch', ['twitch.tv']],
+    ['linkedIn', ['linkedin.com']],
+  ];
+
+function platformFromUrl(url: string): ContactPlatform | undefined {
+  if (!URL.canParse(url)) return undefined;
+
+  const hostname = new URL(url).hostname.toLowerCase();
+  return contactPlatformDomains.find(([, domains]) =>
+    domains.some(
+      (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
+    ),
+  )?.[0];
+}
+
 function typedDefaultValues(contacts: SelectContact[]): FormData['contacts'] {
   return contacts.map((contact) => ({
     clubId: contact.clubId,
@@ -78,23 +100,46 @@ const Contacts = ({ club }: ContactsProps) => {
       // Separate created vs modified
       const created: FormData['contacts'] = [];
       const modified: ContactWithId[] = [];
+      const deleted = [...deletedIds];
+      const platformsInUse = new Set(
+        value.contacts
+          .filter((contact) => contact.platform !== 'other')
+          .map((contact) => contact.platform),
+      );
+      const contactsToSave = value.contacts.map((contact) => {
+        if (contact.platform !== 'other') return contact;
+
+        const platform = platformFromUrl(contact.url);
+        if (!platform || platformsInUse.has(platform)) return contact;
+
+        platformsInUse.add(platform);
+        return { ...contact, platform };
+      });
       const order: FormData['contacts'][number]['platform'][] = [];
 
-      let hasReorder = false;
+      let hasOrderChange = false;
 
-      value.contacts.forEach((contact, index) => {
+      contactsToSave.forEach((contact, index) => {
         // Extra check for if user reorders, makes a change, then undoes reorder
         if (
           isReordered &&
           contact.platform !== defaultValues.contacts[index]?.platform
         ) {
-          hasReorder = true;
+          hasOrderChange = true;
         }
 
         order.push(contact.platform);
 
         // If it has no ID, it's created
         if (!hasId(contact)) {
+          created.push(contact);
+          return;
+        }
+        // Changing an existing contact's platform requires replacing its key.
+        const originalContact = value.contacts[index];
+        if (originalContact && contact.platform !== originalContact.platform) {
+          hasOrderChange = true;
+          deleted.push(originalContact.platform);
           created.push(contact);
           return;
         }
@@ -109,10 +154,10 @@ const Contacts = ({ club }: ContactsProps) => {
 
       const updated = await editContacts.mutateAsync({
         clubId: club.id,
-        deleted: deletedIds,
+        deleted,
         modified: modified,
         created: created,
-        order: hasReorder ? order : undefined,
+        order: hasOrderChange ? order : undefined,
       });
       setDeletedIds([]);
       setIsReordered(false);
