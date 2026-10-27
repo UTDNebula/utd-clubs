@@ -5,6 +5,7 @@ import {
 } from 'date-fns';
 import { useEffect, useState, type ReactNode } from 'react';
 import { type SelectEvent } from '@/server/db/models';
+import { timestamp } from 'drizzle-orm/gel-core';
 
 type EventDurationAlertProps = {
   event: SelectEvent;
@@ -27,25 +28,30 @@ const Base = ({ children, className }: BaseProps) => {
 //Multi-day events end on a different date than the start date
 
 const EventDurationAlert = ({ event }: EventDurationAlertProps) => {
-  const [now, setNow] = useState(() => Date.now());
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setNow(Date.now());
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, []);
-
   const start = event.startTime;
   const end = event.endTime;
-  const secDiff = differenceInSeconds(end, start);
+  const allDayStart = start.getHours() == 0 
+    && start.getMinutes() === 0 
+    && start.getSeconds() === 0
+    && start.getMilliseconds() === 0;
 
-  if(secDiff == 86340){
+  const allDayEnd = end.getHours() === 23
+    && end.getMinutes() === 59
+    && end.getSeconds() === 0
+    && end.getMilliseconds() === 0;
+
+  const notSameDate = start.getDate() != end.getDate()
+    || start.getMonth() != end.getMonth()
+    || start.getFullYear() != end.getFullYear();
+
+
+  if(allDayStart && allDayEnd && !notSameDate){
     return(
       <Base className="bg-black/70">All-Day</Base>);
-  } else if(secDiff > 86340){
+  }else if(notSameDate){
     return(
       <Base className="bg-black/70">Multi-Day</Base>);
-  } 
+  }
+   
 };
 export default EventDurationAlert;
