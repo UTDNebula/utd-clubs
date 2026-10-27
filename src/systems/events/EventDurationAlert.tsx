@@ -26,28 +26,27 @@ const Base = ({ children, className }: BaseProps) => {
 const EventDurationAlert = ({ event }: EventDurationAlertProps) => {
   const start = event.startTime;
   const end = event.endTime;
-  const allDayStart = start.getHours() == 0 
-    && start.getMinutes() === 0 
-    && start.getSeconds() === 0
-    && start.getMilliseconds() === 0;
+  const allDayStart =
+    start.getHours() == 0 &&
+    start.getMinutes() === 0 &&
+    start.getSeconds() === 0 &&
+    start.getMilliseconds() === 0;
 
-  const allDayEnd = end.getHours() === 23
-    && end.getMinutes() === 59
-    && end.getSeconds() === 0
-    && end.getMilliseconds() === 0;
+  const allDayEnd =
+    end.getHours() === 23 &&
+    end.getMinutes() === 59 &&
+    end.getSeconds() === 0 &&
+    end.getMilliseconds() === 0;
 
-  const notSameDate = start.getDate() != end.getDate()
-    || start.getMonth() != end.getMonth()
-    || start.getFullYear() != end.getFullYear();
+  const notSameDate =
+    start.getDate() != end.getDate() ||
+    start.getMonth() != end.getMonth() ||
+    start.getFullYear() != end.getFullYear();
 
-
-  if(allDayStart && allDayEnd && !notSameDate){
-    return(
-      <Base className="bg-black/70">All-Day</Base>);
-  }else if(notSameDate){
-    return(
-      <Base className="bg-black/70">Multi-Day</Base>);
+  if (allDayStart && allDayEnd && !notSameDate) {
+    return <Base className="bg-black/70">All-Day</Base>;
+  } else if (notSameDate) {
+    return <Base className="bg-black/70">Multi-Day</Base>;
   }
-
 };
 export default EventDurationAlert;

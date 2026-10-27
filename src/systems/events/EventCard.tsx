@@ -16,12 +16,12 @@ import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 import { type RouterOutputs } from '@/trpc/shared';
 import ClientEventTime from './ClientEventTime';
 import EventDeleteButton from './EventDeleteButton';
+import EventDurationAlert from './EventDurationAlert';
 import EventRegisterButton, {
   EventRegisterButtonPreview,
   EventRegisterButtonSkeleton,
 } from './EventRegisterButton';
 import EventTimeAlert from './EventTimeAlert';
-import EventDurationAlert from './EventDurationAlert';
 
 export type EventCardVariants = 'card' | 'list';
 
@@ -203,7 +203,7 @@ const EventCard = ({
               {EventImage}
               <div className="pointer-events-none absolute inset-0 flex items-start gap-1.5 p-2">
                 <EventTimeAlert event={event} />
-                <EventDurationAlert event={event}/>
+                <EventDurationAlert event={event} />
               </div>
               {event.google && (
                 <div className="absolute top-0 right-0 p-2">
