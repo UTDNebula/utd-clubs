@@ -150,32 +150,37 @@ export default function ClubTagAutocomplete({
           );
         });
       }}
-      filterOptions={
-        allowAddingOptions
-          ? (options, params) => {
-              const filtered = filter(options, params);
+      filterOptions={(options, params) => {
+        const sanitizedInputValue = params.inputValue
+          .trimStart()
+          .replace(/^#+\s*/, '');
 
-              const ignoredWords = ['and', 'or', 'of', 'in', 'the'];
+        const filtered = filter(options, {
+          ...params,
+          inputValue: sanitizedInputValue,
+        });
 
-              // Trim user specified tag, then capitalize first letter of every word except ignoredWords
-              const input = params.inputValue
-                .trim()
-                .replace(/\b\w+/g, (word, index) => {
-                  if (index > 0 && ignoredWords.includes(word.toLowerCase())) {
-                    return word;
-                  }
-                  return word.charAt(0).toUpperCase() + word.slice(1);
-                });
+        if (!allowAddingOptions) return filtered;
 
-              // Wait for fetching, don't allow blank tags, don't allow already existing tags
-              if (!isFetching && input != '' && !options.includes(input)) {
-                filtered.push(`Add "${input}" tag`);
-              }
+        const ignoredWords = ['and', 'or', 'of', 'in', 'the'];
 
-              return filtered;
+        // Trim user specified tag, then capitalize first letter of every word except ignoredWords
+        const input = sanitizedInputValue
+          .trim()
+          .replace(/\b\w+/g, (word, index) => {
+            if (index > 0 && ignoredWords.includes(word.toLowerCase())) {
+              return word;
             }
-          : undefined
-      }
+            return word.charAt(0).toUpperCase() + word.slice(1);
+          });
+
+        // Wait for fetching, don't allow blank tags, don't allow already existing tags
+        if (!isFetching && input != '' && !options.includes(input)) {
+          filtered.push(`Add "${input}" tag`);
+        }
+
+        return filtered;
+      }}
       onChange={(_e, value) => {
         if (allowAddingOptions) {
           const last = value[value.length - 1];

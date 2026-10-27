@@ -13,7 +13,6 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
@@ -152,17 +151,15 @@ const Officers = ({ club, listedOfficers }: OfficersProps) => {
 
     // Reorder only if moved to a new location
     if (active.id !== over?.id) {
-      form.setFieldValue('officers', (officers) => {
-        const oldIndex = officers.findIndex(
-          (officer) => officer.id === active.id,
-        );
-        const newIndex = officers.findIndex(
-          (officer) => officer.id === over?.id,
-        );
-
+      const officers = form.getFieldValue('officers');
+      const oldIndex = officers.findIndex(
+        (officer) => officer.id === active.id,
+      );
+      const newIndex = officers.findIndex((officer) => officer.id === over?.id);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        form.moveFieldValues('officers', oldIndex, newIndex);
         setIsReordered(true);
-        return arrayMove(officers, oldIndex, newIndex);
-      });
+      }
     }
     setActiveReorderId(null);
   };

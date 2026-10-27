@@ -5,7 +5,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Button, Skeleton, Tooltip } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import Confirmation from '@/lib/components/Confirmation';
 import { useLoginModal } from '@/lib/modules/loginModal';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { authClient } from '@/lib/utils/auth-client';
@@ -38,10 +39,7 @@ const EventRegisterButton = ({
   const toggleRegistration = useMutation(
     api.user.events.toggleRegistration.mutationOptions({
       onMutate: async ({ eventId }) => {
-        const queryKey = [
-          ['user', 'events', 'registerState'],
-          { input: { eventId }, type: 'query' },
-        ];
+        const queryKey = api.user.events.registerState.queryKey({ eventId });
 
         // Cancel outgoing refetches
         await queryClient.cancelQueries({ queryKey });
@@ -51,7 +49,7 @@ const EventRegisterButton = ({
           queryClient.getQueryData<typeof registerState>(queryKey);
 
         // Optimistically update the cache
-        queryClient.setQueryData(queryKey, (old: typeof registerState) => {
+        queryClient.setQueryData(queryKey, (old) => {
           if (!old) return old;
 
           const isRegistered = old.registered;
@@ -88,10 +86,7 @@ const EventRegisterButton = ({
       },
       onSettled: (_data, _error, { eventId }) => {
         queryClient.invalidateQueries({
-          queryKey: [
-            ['user', 'events', 'registerState'],
-            { input: { eventId }, type: 'query' },
-          ],
+          queryKey: api.user.events.registerState.queryKey({ eventId }),
         });
       },
     }),
@@ -107,6 +102,7 @@ const EventRegisterButton = ({
   });
 
   const registered = registerState?.registered ?? false;
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -123,6 +119,11 @@ const EventRegisterButton = ({
       } else {
         openLoginModal();
       }
+      return;
+    }
+
+    if (registered) {
+      setConfirmationOpen(true);
       return;
     }
 
@@ -182,6 +183,20 @@ const EventRegisterButton = ({
           </Button>
         </span>
       </Tooltip>
+
+      <Confirmation
+        open={confirmationOpen}
+        onClose={() => setConfirmationOpen(false)}
+        title="Unregister from event?"
+        contentText="Are you sure you want to unregister from this event?"
+        confirmText="Unregister"
+        onConfirm={() => {
+          setConfirmationOpen(false);
+          toggleRegistration.mutate({ eventId });
+        }}
+        loading={toggleRegistration.isPending}
+      />
+
       {!isHeader &&
         (memberType === 'President' || memberType === 'Officer') && (
           <EventEditButton
