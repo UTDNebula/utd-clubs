@@ -38,14 +38,14 @@ const EventDurationAlert = ({ event }: EventDurationAlertProps) => {
 
   const start = event.startTime;
   const end = event.endTime;
-  const secDiff = differenceInSeconds(start, end);
+  const secDiff = differenceInSeconds(end, start);
 
-  if(start.getDay != end.getDay){
+  if(secDiff == 86340){
     return(
-      <Base className="bg-red-600/70">Multi-Day</Base>);
-  }else if(secDiff == 86340){
+      <Base className="bg-black/70">All-Day</Base>);
+  } else if(secDiff > 86340){
     return(
-      <Base className="bg-red-600/70">All-Day</Base>);
-  }
+      <Base className="bg-black/70">Multi-Day</Base>);
+  } 
 };
 export default EventDurationAlert;
