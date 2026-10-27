@@ -1,11 +1,7 @@
 'use client';
 
-import {
-  differenceInSeconds,
-} from 'date-fns';
-import { useEffect, useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { type SelectEvent } from '@/server/db/models';
-import { timestamp } from 'drizzle-orm/gel-core';
 
 type EventDurationAlertProps = {
   event: SelectEvent;
@@ -52,6 +48,6 @@ const EventDurationAlert = ({ event }: EventDurationAlertProps) => {
     return(
       <Base className="bg-black/70">Multi-Day</Base>);
   }
-   
+
 };
 export default EventDurationAlert;
