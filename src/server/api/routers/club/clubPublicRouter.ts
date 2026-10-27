@@ -59,6 +59,14 @@ async function findClubByName(name: string) {
 }
 
 const clubPublicRouter = createTRPCRouter({
+  searchForClub: publicProcedure
+    .input(byNameSchema)
+    .query(async ({ input }) => {
+      // Pretend to wait 0.5 seconds
+      await new Promise((res) => setTimeout(res, 500));
+
+      return await findClubByName(input.name);
+    }),
   byName: publicProcedure.input(byNameSchema).query(async ({ input, ctx }) => {
     const { name, limit } = input;
     const clubs = await ctx.db.query.club.findMany({
