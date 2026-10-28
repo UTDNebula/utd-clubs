@@ -50,11 +50,13 @@ function platformFromUrl(url: string): ContactPlatform | undefined {
   if (!URL.canParse(url)) return undefined;
 
   const hostname = new URL(url).hostname.toLowerCase();
-  return contactPlatformDomains.find(([, domains]) =>
-    domains.some(
-      (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
-    ),
-  )?.[0];
+  return (
+    contactPlatformDomains.find(([, domains]) =>
+      domains.some(
+        (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
+      ),
+    )?.[0] ?? 'website'
+  );
 }
 
 function typedDefaultValues(contacts: SelectContact[]): FormData['contacts'] {
