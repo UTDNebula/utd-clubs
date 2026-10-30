@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { dateSchema } from '@/lib/utils/commonSchemas';
-import { statusEnum } from '@/server/db/schema/events';
+import { eventCollabInviteStatusEnum } from '@/server/db/schema/events';
 import {
   createEventSchema,
   editEventSchema,
@@ -77,5 +77,5 @@ export const getCollabInvitesSchema = clubIdSchema;
 export const changeCollabInviteStatusSchema = z.object({
   eventId: eventIdSchema.shape.eventId,
   clubId: clubIdSchema.shape.clubId,
-  status: z.enum(statusEnum.enumValues),
+  status: z.enum(eventCollabInviteStatusEnum.enumValues),
 });
