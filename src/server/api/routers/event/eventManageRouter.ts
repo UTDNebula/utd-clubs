@@ -4,9 +4,15 @@ import { stopWatching } from '@/lib/modules/googleCalendar';
 import { authedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
 import { club } from '@/server/db/schema/club';
-import { events } from '@/server/db/schema/events';
+import { eventCollaborations, events } from '@/server/db/schema/events';
 import { eventIdSchema } from '../baseSchemas';
-import { createSchema, disableSyncSchema, editSchema } from './inputSchemas';
+import {
+  changeCollabInviteStatusSchema,
+  createSchema,
+  disableSyncSchema,
+  editSchema,
+  getCollabInvitesSchema,
+} from './inputSchemas';
 
 const eventManageRouter = createTRPCRouter({
   create: authedProcedure
@@ -171,6 +177,53 @@ const eventManageRouter = createTRPCRouter({
         })
         .where(eq(club.id, input.clubId));
 
+      return { success: true };
+    }),
+  getCollabInvites: authedProcedure
+    .input(getCollabInvitesSchema)
+    .query(async ({ input, ctx }) => {
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
+        Officer: {
+          errorMessage: "Must be an officer to view this club\'s invites",
+        },
+      });
+
+      return ctx.db
+        .select()
+        .from(eventCollaborations)
+        .where(
+          and(
+            eq(eventCollaborations.inviteeClubId, input.clubId),
+            eq(eventCollaborations.status, 'pending'), //To only return pending invites
+          ),
+        );
+    }),
+  changeCollabInviteStatus: authedProcedure
+    .input(changeCollabInviteStatusSchema)
+    .mutation(async ({ input, ctx }) => {
+      await requireMemberRole(ctx.session.user.id, input.clubId, {
+        Officer: {
+          errorMessage: 'Must be an officer to respond to club invite',
+        },
+      });
+
+      const res = await ctx.db
+        .update(eventCollaborations)
+        .set({ status: input.status })
+        .where(
+          and(
+            eq(eventCollaborations.eventId, input.eventId),
+            eq(eventCollaborations.inviteeClubId, input.clubId),
+          ),
+        )
+        .returning({ eventId: eventCollaborations.eventId });
+
+      if (res.length === 0) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Invite not found.',
+        });
+      }
       return { success: true };
     }),
 });

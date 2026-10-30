@@ -1,11 +1,12 @@
 import { z } from 'zod';
 import { dateSchema } from '@/lib/utils/commonSchemas';
+import { eventCollabInviteStatusEnum } from '@/server/db/schema/events';
 import {
   createEventSchema,
   editEventSchema,
 } from '@/systems/events/create/createEventSchema';
 import { eventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
-import { clubIdSchema } from '../baseSchemas';
+import { clubIdSchema, eventIdSchema } from '../baseSchemas';
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public Router
@@ -69,4 +70,12 @@ export const editSchema = editEventSchema;
 
 export const disableSyncSchema = clubIdSchema.extend({
   keepPastEvents: z.boolean().default(true).optional(),
+});
+
+export const getCollabInvitesSchema = clubIdSchema;
+
+export const changeCollabInviteStatusSchema = z.object({
+  eventId: eventIdSchema.shape.eventId,
+  clubId: clubIdSchema.shape.clubId,
+  status: z.enum(eventCollabInviteStatusEnum.enumValues),
 });
