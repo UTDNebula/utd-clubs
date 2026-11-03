@@ -17,7 +17,7 @@ export default function EventEditButton({
   clubSlug: string;
   eventId: string;
   calendarId: string | null;
-  userEmail: string;
+  userEmail?: string;
   fromGoogle: boolean;
 }) {
   return (

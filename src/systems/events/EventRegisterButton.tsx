@@ -20,6 +20,7 @@ type EventRegisterButtonProps = {
   eventId: string;
   calendarId?: string | null;
   fromGoogle: boolean;
+  showEditButton?: boolean;
 };
 const EventRegisterButton = ({
   isHeader,
@@ -28,6 +29,7 @@ const EventRegisterButton = ({
   eventId,
   calendarId,
   fromGoogle,
+  showEditButton = true,
 }: EventRegisterButtonProps) => {
   const { data: session } = authClient.useSession();
   const api = useTRPC();
@@ -136,16 +138,18 @@ const EventRegisterButton = ({
 
   return (
     <>
-      {isHeader && (memberType === 'President' || memberType === 'Officer') && (
-        <EventEditButton
-          isHeader={isHeader}
-          clubSlug={clubSlug}
-          eventId={eventId}
-          calendarId={calendarId ?? null}
-          userEmail={session?.user.email as string}
-          fromGoogle={fromGoogle}
-        />
-      )}
+      {showEditButton &&
+        isHeader &&
+        (memberType === 'President' || memberType === 'Officer') && (
+          <EventEditButton
+            isHeader={isHeader}
+            clubSlug={clubSlug}
+            eventId={eventId}
+            calendarId={calendarId ?? null}
+            userEmail={session?.user.email as string}
+            fromGoogle={fromGoogle}
+          />
+        )}
       <Tooltip
         title={
           <div className="text-center">
@@ -197,7 +201,8 @@ const EventRegisterButton = ({
         loading={toggleRegistration.isPending}
       />
 
-      {!isHeader &&
+      {showEditButton &&
+        !isHeader &&
         (memberType === 'President' || memberType === 'Officer') && (
           <EventEditButton
             isHeader={isHeader}
