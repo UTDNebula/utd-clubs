@@ -16,6 +16,7 @@ import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 import { type RouterOutputs } from '@/trpc/shared';
 import ClientEventTime from './ClientEventTime';
 import EventDeleteButton from './EventDeleteButton';
+import EventEditButton from './EventEditButton';
 import EventRegisterButton, {
   EventRegisterButtonPreview,
   EventRegisterButtonSkeleton,
@@ -25,7 +26,9 @@ import EventTimeAlert from './EventTimeAlert';
 export type EventCardVariants = 'card' | 'list';
 
 interface EventCardProps {
-  event: RouterOutputs['event']['byClubId'][number];
+  event: RouterOutputs['event']['byClubId'][number] & {
+    isCoHosted?: boolean;
+  };
   /**
    * @default "card"
    */
@@ -36,6 +39,7 @@ interface EventCardProps {
   view?: 'normal' | 'manage' | 'preview' | 'admin';
   className?: string;
   responsive?: boolean;
+  manageClubSlug?: string;
 }
 
 const EventCard = ({
@@ -44,6 +48,7 @@ const EventCard = ({
   view = 'normal',
   className,
   responsive = false,
+  manageClubSlug,
 }: EventCardProps) => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -104,6 +109,7 @@ const EventCard = ({
               eventId={event.id}
               calendarId={event.club.calendarId}
               fromGoogle={event.google}
+              showEditButton={!event.isCoHosted}
             />
           </>
         ) : (
@@ -114,8 +120,15 @@ const EventCard = ({
               eventId={event.id}
               calendarId={event.club.calendarId}
               fromGoogle={event.google}
+              showEditButton={false}
             />
-            <EventDeleteButton event={event} />
+            <EventEditButton
+              clubSlug={manageClubSlug ?? event.club.slug}
+              eventId={event.id}
+              calendarId={event.club.calendarId}
+              fromGoogle={false}
+            />
+            {!event.isCoHosted && <EventDeleteButton event={event} />}
           </>
         ))}
       {view === 'preview' && <EventRegisterButtonPreview />}
@@ -161,6 +174,11 @@ const EventCard = ({
                   <h3 className="line-clamp-2 text-base font-medium sm:text-xl">
                     {event.name}
                   </h3>
+                  {view === 'manage' && event.isCoHosted && (
+                    <div className="text-royal dark:text-cornflower-300 w-fit rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold dark:bg-blue-950/50">
+                      Co-hosted · {event.club.name}
+                    </div>
+                  )}
                   {view !== 'manage' && view !== 'admin' && (
                     <div className="line-clamp-2 text-base font-medium text-neutral-600 max-sm:text-[0.75rem] dark:text-neutral-400">
                       {event.club.name}
@@ -213,6 +231,11 @@ const EventCard = ({
             </div>
             <div className="flex flex-col space-y-2.5 p-5">
               <h3 className="line-clamp-2 text-xl font-medium">{event.name}</h3>
+              {view === 'manage' && event.isCoHosted && (
+                <div className="text-royal dark:text-cornflower-300 w-fit rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold dark:bg-blue-950/50">
+                  Co-hosted · {event.club.name}
+                </div>
+              )}
               {view !== 'manage' && view !== 'admin' && (
                 <div className="line-clamp-2 text-base font-medium">
                   {event.club.name}

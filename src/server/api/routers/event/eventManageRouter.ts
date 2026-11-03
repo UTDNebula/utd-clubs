@@ -1,14 +1,138 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, gt, isNull, lte, or } from 'drizzle-orm';
+import {
+  and,
+  count,
+  eq,
+  exists,
+  gt,
+  gte,
+  inArray,
+  isNull,
+  lte,
+  or,
+} from 'drizzle-orm';
 import { stopWatching } from '@/lib/modules/googleCalendar';
-import { authedProcedure, createTRPCRouter } from '@/server/api/trpc';
+import {
+  authedProcedure,
+  createTRPCRouter,
+  type Context,
+} from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
 import { club } from '@/server/db/schema/club';
-import { events } from '@/server/db/schema/events';
+import { eventCollaborations, events } from '@/server/db/schema/events';
+import { userMetadataToClubs } from '@/server/db/schema/users';
 import { eventIdSchema } from '../baseSchemas';
-import { createSchema, disableSyncSchema, editSchema } from './inputSchemas';
+import {
+  byClubIdSchema,
+  createSchema,
+  disableSyncSchema,
+  editSchema,
+  eventManagementAccessSchema,
+} from './inputSchemas';
+
+type Database = Context['db'];
+
+async function canEditEventAsClub({
+  db,
+  userId,
+  eventId,
+  clubId,
+}: {
+  db: Database;
+  userId: string;
+  eventId: string;
+  clubId: string;
+}) {
+  const event = await db.query.events.findFirst({
+    where: (event) => eq(event.id, eventId),
+    columns: { clubId: true },
+  });
+  if (!event) return false;
+
+  const officerMembership = await db.query.userMetadataToClubs.findFirst({
+    where: and(
+      eq(userMetadataToClubs.userId, userId),
+      eq(userMetadataToClubs.clubId, clubId),
+      inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+    ),
+    columns: { clubId: true },
+  });
+  if (!officerMembership) return false;
+  if (event.clubId === clubId) return true;
+
+  const collaboration = await db
+    .select({ eventId: eventCollaborations.eventId })
+    .from(eventCollaborations)
+    .where(
+      and(
+        eq(eventCollaborations.eventId, eventId),
+        eq(eventCollaborations.inviterClubId, event.clubId),
+        eq(eventCollaborations.inviteeClubId, clubId),
+        eq(eventCollaborations.status, 'accepted'),
+      ),
+    )
+    .limit(1);
+
+  return collaboration.length > 0;
+}
 
 const eventManageRouter = createTRPCRouter({
+  list: authedProcedure.input(byClubIdSchema).query(async ({ input, ctx }) => {
+    await requireMemberRole(ctx.session.user.id, input.clubId, {
+      Officer: {
+        errorMessage: 'Must be an officer of this club to manage its events',
+      },
+    });
+
+    const page = Math.max(1, input.page ?? 1);
+    const pageSize = Math.max(1, Math.min(50, input.pageSize ?? 12));
+    const now = input.currentTime ?? new Date();
+    const acceptedCollaboration = ctx.db
+      .select({ eventId: eventCollaborations.eventId })
+      .from(eventCollaborations)
+      .where(
+        and(
+          eq(eventCollaborations.eventId, events.id),
+          eq(eventCollaborations.inviterClubId, events.clubId),
+          eq(eventCollaborations.inviteeClubId, input.clubId),
+          eq(eventCollaborations.status, 'accepted'),
+        ),
+      );
+    const conditions = and(
+      eq(events.status, 'approved'),
+      or(eq(events.clubId, input.clubId), exists(acceptedCollaboration)),
+      input.includePast ? undefined : gte(events.endTime, now),
+    );
+
+    const [managedEvents, countResult] = await Promise.all([
+      ctx.db.query.events.findMany({
+        where: conditions,
+        orderBy: input.sortByDate ? (event) => [event.startTime] : undefined,
+        with: { club: true },
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+      }),
+      ctx.db.select({ value: count() }).from(events).where(conditions),
+    ]);
+
+    return {
+      events: managedEvents.map((event) => ({
+        ...event,
+        isCoHosted: event.clubId !== input.clubId,
+      })),
+      totalCount: countResult[0]?.value ?? 0,
+    };
+  }),
+  canEdit: authedProcedure
+    .input(eventManagementAccessSchema)
+    .query(({ input, ctx }) =>
+      canEditEventAsClub({
+        db: ctx.db,
+        userId: ctx.session.user.id,
+        eventId: input.eventId,
+        clubId: input.clubId,
+      }),
+    ),
   create: authedProcedure
     .input(createSchema)
     .mutation(async ({ input, ctx }) => {
@@ -31,13 +155,20 @@ const eventManageRouter = createTRPCRouter({
       return newEvent.id;
     }),
   update: authedProcedure.input(editSchema).mutation(async ({ input, ctx }) => {
-    const { id, ...data } = input;
+    const { id, clubId, ...data } = input;
 
-    await requireMemberRole(ctx.session.user.id, input.clubId, {
-      Officer: {
-        errorMessage: "Must be an officer of this event's clubs to modify it",
-      },
+    const canEdit = await canEditEventAsClub({
+      db: ctx.db,
+      userId: ctx.session.user.id,
+      eventId: id,
+      clubId,
     });
+    if (!canEdit) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'Must be an officer of a host club to modify this event',
+      });
+    }
 
     const res = await ctx.db
       .update(events)

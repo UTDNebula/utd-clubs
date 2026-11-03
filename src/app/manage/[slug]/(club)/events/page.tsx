@@ -32,7 +32,7 @@ export default async function Page({
     notFound();
   }
 
-  const events = await api.event.byClubId({
+  const managedEvents = await api.event.manage.list({
     clubId: club.id,
     sortByDate: true,
     page,
@@ -41,14 +41,10 @@ export default async function Page({
     currentTime: now,
   });
 
-  const totalCount = await api.event.count({
-    clubId: club.id,
-    includePast,
-    includeAll: true,
-    currentTime: now,
-  });
-
-  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(managedEvents.totalCount / pageSize),
+  );
 
   return (
     <main>
@@ -71,8 +67,13 @@ export default async function Page({
         </div>
       </ManageHeader>
       <div className="flex w-full flex-wrap items-center justify-evenly gap-4 pt-10">
-        {events?.map((event) => (
-          <EventCard key={event.id} event={event} view="manage" />
+        {managedEvents.events.map((event) => (
+          <EventCard
+            key={event.id}
+            event={event}
+            view="manage"
+            manageClubSlug={club.slug}
+          />
         ))}
       </div>
       <div className="flex justify-center py-10">
