@@ -19,8 +19,8 @@ const userClubsRouter = createTRPCRouter({
           eq(userMetadataToClubs.userId, ctx.session.user.id),
           inArray(userMetadataToClubs.memberType, [
             'Member',
-            'Officer',
-            'President',
+            'Collaborator',
+            'Admin',
           ]),
         ),
         with: { club: true },
@@ -34,8 +34,8 @@ const userClubsRouter = createTRPCRouter({
         eq(userMetadataToClubs.userId, ctx.session.user.id),
         inArray(userMetadataToClubs.memberType, [
           'Member',
-          'Officer',
-          'President',
+          'Collaborator',
+          'Admin',
         ]),
       ),
       with: { club: true },
@@ -46,7 +46,7 @@ const userClubsRouter = createTRPCRouter({
     const results = await ctx.db.query.userMetadataToClubs.findMany({
       where: and(
         eq(userMetadataToClubs.userId, ctx.session.user.id),
-        inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+        inArray(userMetadataToClubs.memberType, ['Collaborator', 'Admin']),
       ),
       with: { club: true },
     });
@@ -59,7 +59,7 @@ const userClubsRouter = createTRPCRouter({
         where: and(
           eq(userMetadataToClubs.clubId, input.clubId),
           eq(userMetadataToClubs.userId, ctx.session.user.id),
-          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+          inArray(userMetadataToClubs.memberType, ['Collaborator', 'Admin']),
         ),
       });
       return !!found;
@@ -76,8 +76,8 @@ const userClubsRouter = createTRPCRouter({
               eq(userMetadataToClubs.userId, ctx.session.user.id),
               inArray(userMetadataToClubs.memberType, [
                 'Member',
-                'Officer',
-                'President',
+                'Collaborator',
+                'Admin',
               ]),
             ),
           })
@@ -95,8 +95,8 @@ const userClubsRouter = createTRPCRouter({
           eq(userMetadataToClubs.userId, ctx.session.user.id),
           inArray(userMetadataToClubs.memberType, [
             'Member',
-            'Officer',
-            'President',
+            'Collaborator',
+            'Admin',
           ]),
         ),
       });
@@ -118,7 +118,7 @@ const userClubsRouter = createTRPCRouter({
           ),
       });
       if (dataExists) {
-        if (dataExists.memberType !== 'President') {
+        if (dataExists.memberType !== 'Admin') {
           await ctx.db
             .delete(userMetadataToClubs)
             .where(

@@ -40,7 +40,7 @@ const ClubManageForm = async ({
     }),
   ]);
 
-  const role = awaitedRole as 'President' | 'Officer';
+  const role = awaitedRole as 'Admin' | 'Collaborator';
 
   const googleAccount = awaitedGoogleAccount.find(
     (acc) => acc.providerId === 'google',
@@ -83,7 +83,7 @@ const ClubManageForm = async ({
         userId={session?.user.id as string}
       />
       <Resources />
-      {role === 'President' && <DeleteClub view="manage" club={club} />}
+      {role === 'Admin' && <DeleteClub view="manage" club={club} />}
     </div>
   );
 };

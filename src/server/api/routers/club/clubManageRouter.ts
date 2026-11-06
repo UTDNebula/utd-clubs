@@ -61,7 +61,7 @@ const clubManageRouter = createTRPCRouter({
       await ctx.db.insert(userMetadataToClubs).values({
         userId: ctx.session.user.id,
         clubId: clubId,
-        memberType: 'President' as const,
+        memberType: 'Admin' as const,
       });
 
       return slug;
@@ -70,7 +70,9 @@ const clubManageRouter = createTRPCRouter({
     .input(editDataSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.id, {
-        Officer: { errorMessage: 'Must be an officer to modify this club' },
+        Collaborator: {
+          errorMessage: 'Must be a collaborator to modify this club',
+        },
       });
 
       const updatedClub = await ctx.db
@@ -96,7 +98,7 @@ const clubManageRouter = createTRPCRouter({
     .input(clubIdSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        Officer: true,
+        Collaborator: true,
       });
 
       await ctx.db
@@ -112,7 +114,9 @@ const clubManageRouter = createTRPCRouter({
     .input(editContactSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        Officer: { errorMessage: 'Must be an officer to modify this club' },
+        Collaborator: {
+          errorMessage: 'Must be a collaborator to modify this club',
+        },
       });
 
       // Deleted
@@ -205,8 +209,10 @@ const clubManageRouter = createTRPCRouter({
     .input(editCollaboratorSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        Officer: { errorMessage: 'You must be an officer to modify this club' },
-        President: {
+        Collaborator: {
+          errorMessage: 'You must be an officer to modify this club',
+        },
+        Admin: {
           errorMessage: 'Only an admin can remove or modify people',
           throwError: Boolean(input.deleted.length || input.modified.length),
         },
@@ -230,8 +236,8 @@ const clubManageRouter = createTRPCRouter({
         await ctx.db
           .insert(userMetadataToClubs)
           .values(
-            input.deleted.map((officer) => ({
-              userId: officer,
+            input.deleted.map((Collaborator) => ({
+              userId: Collaborator,
               clubId: input.clubId,
               memberType: 'Member' as const,
             })),
@@ -240,8 +246,8 @@ const clubManageRouter = createTRPCRouter({
             target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
             set: { memberType: 'Member' as const },
             where: inArray(userMetadataToClubs.memberType, [
-              'Officer',
-              'President',
+              'Collaborator',
+              'Admin',
             ]),
           });
       }
@@ -269,15 +275,15 @@ const clubManageRouter = createTRPCRouter({
         await ctx.db
           .insert(userMetadataToClubs)
           .values(
-            input.created.map((officer) => ({
-              userId: officer.userId,
+            input.created.map((Collaborator) => ({
+              userId: Collaborator.userId,
               clubId: input.clubId,
-              memberType: officer.position,
+              memberType: 'Collaborator' as const,
             })),
           )
           .onConflictDoUpdate({
             target: [userMetadataToClubs.userId, userMetadataToClubs.clubId],
-            set: { memberType: 'Officer' as const },
+            set: { memberType: 'Collaborator' as const },
             where: eq(userMetadataToClubs.memberType, 'Member'),
           });
       }
@@ -294,7 +300,7 @@ const clubManageRouter = createTRPCRouter({
       const newOfficers = await ctx.db.query.userMetadataToClubs.findMany({
         where: and(
           eq(userMetadataToClubs.clubId, input.clubId),
-          inArray(userMetadataToClubs.memberType, ['Officer', 'President']),
+          inArray(userMetadataToClubs.memberType, ['Collaborator', 'Admin']),
         ),
         with: { userMetadata: { with: { user: true } } },
       });
@@ -304,7 +310,9 @@ const clubManageRouter = createTRPCRouter({
     .input(editOfficerSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        Officer: { errorMessage: 'Must be an officer to modify this club' },
+        Collaborator: {
+          errorMessage: 'Must be a collaborator to modify this club',
+        },
       });
 
       // Deleted
@@ -391,7 +399,9 @@ const clubManageRouter = createTRPCRouter({
     .input(editFormSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        Officer: { errorMessage: 'Must be an officer to modify this club' },
+        Collaborator: {
+          errorMessage: 'Must be an officer to modify this club',
+        },
       });
 
       // deletions
@@ -588,7 +598,7 @@ const clubManageRouter = createTRPCRouter({
     .input(editSlugSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.id, {
-        President: {
+        Admin: {
           errorMessage: "Only a club admin can update the club's slug",
         },
       });
@@ -613,7 +623,7 @@ const clubManageRouter = createTRPCRouter({
     .input(clubIdSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        President: {
+        Admin: {
           errorMessage: 'Only a club admin can delete the club',
         },
       });
@@ -628,7 +638,7 @@ const clubManageRouter = createTRPCRouter({
     .input(clubIdSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        President: {
+        Admin: {
           errorMessage: 'Only a club admin can mark the club as deleted',
         },
       });
@@ -644,7 +654,7 @@ const clubManageRouter = createTRPCRouter({
     .input(clubIdSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        President: {
+        Admin: {
           errorMessage: 'Only a club admin can restore the club',
         },
       });
@@ -660,7 +670,7 @@ const clubManageRouter = createTRPCRouter({
     .input(removeMembersSchema)
     .mutation(async ({ input, ctx }) => {
       await requireMemberRole(ctx.session.user.id, input.clubId, {
-        President: {
+        Admin: {
           errorMessage: 'Must be a club admin to remove members',
         },
       });

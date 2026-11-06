@@ -1047,8 +1047,8 @@
       "name": "member_type",
       "schema": "public",
       "values": [
-        "President",
-        "Officer",
+        "Admin",
+        "Collaborator",
         "Member"
       ]
     },

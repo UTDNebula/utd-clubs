@@ -36,15 +36,7 @@ export const imageSchema = z
   );
 
 export const schools = z
-  .enum([
-    'Harry W. Bass Jr. School of Arts, Humanities, and Technology',
-    'School of Behavioral and Brain Sciences',
-    'School of Economic, Political and Policy Sciences',
-    'Erik Jonsson School of Engineering and Computer Science',
-    'School of Interdisciplinary Studies',
-    'Naveen Jindal School of Management',
-    'School of Natural Sciences and Mathematics',
-  ])
+  .enum(['bass', 'bbs', 'epps', 'ecs', 'is', 'jsom', 'nsm'])
   .array();
 
 export const platformEnum = z.enum([
