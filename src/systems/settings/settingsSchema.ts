@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { createPasswordSchema } from '@/lib/utils/commonSchemas';
 import { insertUserMetadata } from '@/server/db/models';
 import { studentClassificationEnum } from '@/server/db/schema/users';
 
@@ -96,3 +97,37 @@ export const userMetadataToAccountOnboardingSchema = z.codec(
     }),
   },
 );
+
+export const changeEmailSchema = z.object({
+  newEmail: z.email('Valid email required'),
+});
+
+export type ChangeEmailSchema = z.infer<typeof changeEmailSchema>;
+
+export const createChangePasswordSchema = (
+  options: { disableStrictPasswordRequirements?: boolean } = {},
+) =>
+  z
+    .object({
+      currentPassword: z.string().min(1, 'Current password required'),
+      newPassword: createPasswordSchema(options),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      error: 'Passwords must match',
+      path: ['confirmPassword'],
+    });
+
+export const changePasswordSchema = createChangePasswordSchema();
+
+export type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
+
+export const deleteAccountSchema = z.object({
+  confirmation: z
+    .string()
+    .refine((val) => /yes,? I would like to delete my account.?/i.test(val), {
+      error: 'Type out the entire sentence',
+    }),
+});
+
+export type DeleteAccountSchema = z.infer<typeof deleteAccountSchema>;

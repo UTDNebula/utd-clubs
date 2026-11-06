@@ -269,6 +269,7 @@ export default function TagList({ tags: tagsProp, topTags }: TagListProps) {
         {filteredTags.map((tag) => (
           <ListItem
             key={tag.id}
+            className="rounded-lg transition-colors max-sm:bg-neutral-100 sm:hover:bg-neutral-100 dark:max-sm:bg-neutral-800 dark:sm:hover:bg-neutral-700"
             secondaryAction={
               <>
                 <Tooltip title="Edit" disableInteractive>

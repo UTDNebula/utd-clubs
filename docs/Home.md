@@ -2,7 +2,7 @@
 
 Welcome to the **UTD Clubs Developer Documentation**!
 
-These docs are intended for developers of UTD Clubs rather than users. For usage instructions, see [README.md](../README.md).
+These docs are intended for developers of UTD Clubs rather than users. For usage instructions, see [README.md](https://github.com/UTDNebula/utd-clubs/blob/develop/README.md).
 
 If you are a new developer, we recommend visiting each page under "Getting Started" in order.
 
