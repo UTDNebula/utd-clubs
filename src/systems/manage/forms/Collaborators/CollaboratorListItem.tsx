@@ -23,7 +23,7 @@ const CollaboratorListItem = withForm({
       console.log(index);
     },
     canRemove: false,
-    canTogglePresident: false,
+    canToggleAdmin: false,
     self: false,
   },
   render: function Render({
@@ -31,7 +31,7 @@ const CollaboratorListItem = withForm({
     index,
     removeItem,
     canRemove,
-    canTogglePresident,
+    canToggleAdmin,
     self,
   }) {
     const handleRemove = () => {
@@ -63,7 +63,7 @@ const CollaboratorListItem = withForm({
             {(subField) => (
               <Tooltip
                 title={
-                  canTogglePresident
+                  canToggleAdmin
                     ? self && (
                         <div className="text-center">
                           You cannot take away your own admin status
@@ -74,7 +74,7 @@ const CollaboratorListItem = withForm({
                     : 'Only an admin can change admin status'
                 }
               >
-                {self || !canTogglePresident ? (
+                {self || !canToggleAdmin ? (
                   <div className="p-2">
                     <MemberRoleChip
                       key={subField.state.value}
@@ -87,7 +87,7 @@ const CollaboratorListItem = withForm({
                     input={
                       <OutlinedInput
                         id="collaborator-role-select"
-                        readOnly={self || !canTogglePresident}
+                        readOnly={self || !canToggleAdmin}
                         className="rounded-full [&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2 [&>.MuiSelect-select]:pr-8"
                       />
                     }

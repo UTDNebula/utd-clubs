@@ -230,7 +230,6 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
     },
     {
       field: 'memberType',
-
       headerName: 'Role',
       renderHeader: (params) => (
         <ColumnHeaderWithIcon icon={<PersonOutlinedIcon />}>

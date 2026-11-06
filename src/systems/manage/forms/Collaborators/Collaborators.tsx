@@ -19,7 +19,7 @@ type FormData = z.infer<typeof editOfficerSchema>;
 
 function typedDefaultValues(
   officers: SelectUserMetadataToClubsWithUserMetadataWithUser[],
-  role: 'Collaborator' | 'Admin',
+  role: 'Collaborator' | 'Admin' | 'SiteAdmin',
   userId: string | undefined,
 ): FormData['collaborators'] {
   return officers.map((officer) => ({
@@ -27,10 +27,13 @@ function typedDefaultValues(
     name:
       officer.userMetadata?.firstName + ' ' + officer.userMetadata?.lastName,
     email: officer.userMetadata?.user?.email ?? '',
-    // Can remove if self or Admin
     canRemove:
-      role === 'Admin' || role === 'Collaborator' || officer.userId === userId,
-    canTogglePresident: role === 'Admin' || role === 'Collaborator',
+      role === 'Admin' ||
+      role === 'SiteAdmin' ||
+      role === 'Collaborator' ||
+      officer.userId === userId,
+    canToggleAdmin:
+      role === 'Admin' || role === 'SiteAdmin' || role === 'Collaborator',
     position: officer.memberType as 'Admin' | 'Collaborator',
   }));
 }
@@ -38,7 +41,7 @@ function typedDefaultValues(
 type CollaboratorsProps = {
   club: SelectClub;
   officers: SelectUserMetadataToClubsWithUserMetadataWithUser[];
-  role: 'Collaborator' | 'Admin';
+  role: 'Collaborator' | 'Admin' | 'SiteAdmin';
   userId?: string;
 };
 
@@ -50,7 +53,7 @@ const Collaborators = ({
 }: CollaboratorsProps) => {
   const api = useTRPC();
   const editOfficers = useMutation(
-    (role === 'Admin'
+    (role === 'SiteAdmin'
       ? api.admin.updateOfficers
       : api.club.manage.officers
     ).mutationOptions({
@@ -100,7 +103,7 @@ const Collaborators = ({
       formApi.reset({ collaborators: newOfficers });
       // Reload if own role changed
       const self = newOfficers.find((o) => o.userId === userId);
-      if (role !== 'Admin' && (!self || role !== self.position)) {
+      if (role !== 'SiteAdmin' && (!self || role !== self.position)) {
         window.location.reload();
       }
     },
@@ -133,8 +136,9 @@ const Collaborators = ({
         description={
           <>
             <p>
-              Users in this list can edit {role === 'Admin' ? 'a' : 'your'}{' '}
-              organization&apos;s information and events.
+              Users in this list can edit
+              {role === 'SiteAdmin' ? ' a' : ' your'} organization&apos;s
+              information and events.
             </p>
             <p>Admins in this list can manage other collaborators.</p>
             <p>
@@ -154,7 +158,7 @@ const Collaborators = ({
                   form={form}
                   removeItem={removeItem}
                   canRemove={value.canRemove}
-                  canTogglePresident={value.canTogglePresident}
+                  canToggleAdmin={value.canToggleAdmin}
                   self={value.userId == userId}
                 />
               ))}
@@ -166,8 +170,8 @@ const Collaborators = ({
                     name: user.name,
                     email: user.email,
                     position: 'Collaborator',
-                    canRemove: role === 'Admin',
-                    canTogglePresident: role === 'Admin',
+                    canRemove: role === 'Admin' || role === 'SiteAdmin',
+                    canToggleAdmin: role === 'Admin' || role === 'SiteAdmin',
                     new: true,
                   });
                 }}

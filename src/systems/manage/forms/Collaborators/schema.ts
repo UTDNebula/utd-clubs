@@ -8,7 +8,7 @@ export const editOfficerSchema = z.object({
       email: z.string(),
       canRemove: z.boolean(),
       canToggleAdmin: z.boolean(),
-      position: z.enum(['Admin', 'Collaborator', 'SiteAdmin']),
+      position: z.enum(['Admin', 'Collaborator']),
       new: z.boolean().optional(),
     })
     .array(),
