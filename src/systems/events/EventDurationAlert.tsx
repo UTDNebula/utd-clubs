@@ -26,13 +26,9 @@ const Base = ({ children, className }: BaseProps) => {
 const EventDurationAlert = ({ event }: EventDurationAlertProps) => {
   const start = event.startTime;
   const end = event.endTime;
-  const allDayStart =
-    start.getHours() == 0 &&
-    start.getMinutes() === 0;
+  const allDayStart = start.getHours() == 0 && start.getMinutes() === 0;
 
-  const allDayEnd =
-    end.getHours() === 23 &&
-    end.getMinutes() === 59;
+  const allDayEnd = end.getHours() === 23 && end.getMinutes() === 59;
 
   const notSameDate =
     start.getDate() != end.getDate() ||
