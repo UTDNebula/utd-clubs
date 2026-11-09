@@ -7,7 +7,7 @@ import Header from '@/lib/modules/navigation/header';
 import ClubDirectoryGrid from '@/systems/clubs/directory/ClubDirectoryGrid';
 import { HomePageSearchBar } from '@/systems/dashboard/HomePageSearch';
 import { SearchStoreProvider } from '@/systems/dashboard/SearchStoreProvider';
-import {TagList} from '@/systems/dashboard/TagList';
+import { TagList } from '@/systems/dashboard/TagList';
 import { api } from '@/trpc/server';
 
 const Home = async () => {
@@ -73,7 +73,7 @@ const Home = async () => {
                 Discover the Best Clubs and Organizations at UTD
               </h1>
               <HomePageSearchBar />
-              <TagList tags = {tags} allTags = {allTags} />
+              <TagList tags ={tags} allTags={allTags} />
             </div>
           </section>
           <section className="h-full w-full">
