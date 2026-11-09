@@ -28,15 +28,11 @@ const EventDurationAlert = ({ event }: EventDurationAlertProps) => {
   const end = event.endTime;
   const allDayStart =
     start.getHours() == 0 &&
-    start.getMinutes() === 0 &&
-    start.getSeconds() === 0 &&
-    start.getMilliseconds() === 0;
+    start.getMinutes() === 0 &&;
 
   const allDayEnd =
     end.getHours() === 23 &&
-    end.getMinutes() === 59 &&
-    end.getSeconds() === 0 &&
-    end.getMilliseconds() === 0;
+    end.getMinutes() === 59 &&;
 
   const notSameDate =
     start.getDate() != end.getDate() ||
