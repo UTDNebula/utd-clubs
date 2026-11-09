@@ -5,10 +5,9 @@ import NebulaLogo from '@/lib/icons/NebulaLogo';
 import StarDoodle from '@/lib/icons/StarDoodle';
 import Header from '@/lib/modules/navigation/header';
 import ClubDirectoryGrid from '@/systems/clubs/directory/ClubDirectoryGrid';
-import { AllTags } from '@/systems/dashboard/AllTags';
 import { HomePageSearchBar } from '@/systems/dashboard/HomePageSearch';
 import { SearchStoreProvider } from '@/systems/dashboard/SearchStoreProvider';
-import { TagPill } from '@/systems/dashboard/TagPill';
+import { TagList } from '@/systems/dashboard/TagList';
 import { api } from '@/trpc/server';
 
 const Home = async () => {
@@ -74,17 +73,7 @@ const Home = async () => {
                 Discover the Best Clubs and Organizations at UTD
               </h1>
               <HomePageSearchBar />
-              <div className="pointer-events-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
-                {tags.map((tag) => (
-                  <TagPill
-                    name={tag.tag}
-                    count={tag.count}
-                    key={tag.tag}
-                    className="drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)]"
-                  />
-                ))}
-                <AllTags options={allTags} />
-              </div>
+              <TagList tags={tags} allTags={allTags} />
             </div>
           </section>
           <section className="h-full w-full">
