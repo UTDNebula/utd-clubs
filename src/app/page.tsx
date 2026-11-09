@@ -73,7 +73,7 @@ const Home = async () => {
                 Discover the Best Clubs and Organizations at UTD
               </h1>
               <HomePageSearchBar />
-              <TagList tags ={tags} allTags={allTags} />
+              <TagList tags={tags} allTags={allTags} />
             </div>
           </section>
           <section className="h-full w-full">
