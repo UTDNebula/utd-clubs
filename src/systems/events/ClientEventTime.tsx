@@ -1,7 +1,7 @@
 'use client';
 
 import { TZDateMini } from '@date-fns/tz';
-import { format, isSameWeek, isSameYear} from 'date-fns';
+import { format, isSameWeek, isSameYear } from 'date-fns';
 
 function isInvalidDateStrict(date: Date) {
   return date instanceof Date && Number.isNaN(date.getTime());
@@ -28,16 +28,10 @@ const ClientEventTime = ({ startTime, endTime }: ClientEventTimeProps) => {
 
   const duration =
     minutes >= 1440
-      ? `${days} ${days === 1
-        ? 'day' 
-        : 'days'}`
+      ? `${days} ${days === 1 ? 'day' : 'days'}`
       : minutes >= 60
-        ? `${hours} ${hours === 1
-          ? 'hr' 
-          : 'hrs'}`
-        : `${mins} ${mins === 1
-          ? 'min' 
-          : 'mins'}`;
+        ? `${hours} ${hours === 1 ? 'hr' : 'hrs'}`
+        : `${mins} ${mins === 1 ? 'min' : 'mins'}`;
 
   return (
     <>
