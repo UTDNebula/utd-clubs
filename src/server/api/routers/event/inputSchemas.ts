@@ -5,7 +5,7 @@ import {
   editEventSchema,
 } from '@/systems/events/create/createEventSchema';
 import { eventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
-import { clubIdSchema } from '../baseSchemas';
+import { clubIdSchema, eventIdSchema } from '../baseSchemas';
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public Router
@@ -34,6 +34,22 @@ export const countSchema = z.object({
 
 export const clubUpcomingEventsSchema = clubIdSchema.extend({
   currentTime: z.date().optional(),
+});
+
+export const editEventCollaboratorsSchema = eventIdSchema.extend({
+  deleted: z.string().array(),
+  modified: z
+    .object({
+      clubId: z.string(),
+      role: z.string(),
+    })
+    .array(),
+  created: z
+    .object({
+      clubId: z.string(),
+      role: z.string(),
+    })
+    .array(),
 });
 
 export const findByDateRangeSchema = z.object({

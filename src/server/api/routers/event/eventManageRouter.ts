@@ -1,12 +1,17 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, gt, isNull, lte, or } from 'drizzle-orm';
+import { and, eq, gt, inArray, isNull, lte, or } from 'drizzle-orm';
 import { stopWatching } from '@/lib/modules/googleCalendar';
 import { authedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
 import { club } from '@/server/db/schema/club';
-import { events } from '@/server/db/schema/events';
+import { eventCollaborations, events } from '@/server/db/schema/events';
 import { eventIdSchema } from '../baseSchemas';
-import { createSchema, disableSyncSchema, editSchema } from './inputSchemas';
+import {
+  createSchema,
+  disableSyncSchema,
+  editEventCollaboratorsSchema,
+  editSchema,
+} from './inputSchemas';
 
 const eventManageRouter = createTRPCRouter({
   create: authedProcedure
@@ -79,6 +84,63 @@ const eventManageRouter = createTRPCRouter({
     }
     return res[0]?.id;
   }),
+  collaborators: authedProcedure
+    .input(editEventCollaboratorsSchema)
+    .mutation(async ({ input, ctx }) => {
+      const event = await ctx.db.query.events.findFirst({
+        where: (events) => eq(events.id, input.eventId),
+      });
+
+      if (!event) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Event not found' });
+      }
+
+      await requireMemberRole(ctx.session.user.id, event.clubId, {
+        Officer: {
+          errorMessage: 'You must be an officer to edit event collaborators',
+        },
+      });
+
+      // Deleted
+      await ctx.db.transaction(async (tx) => {
+        if (input.deleted.length) {
+          await tx
+            .delete(eventCollaborations)
+            .where(
+              and(
+                eq(eventCollaborations.eventId, event.id),
+                inArray(eventCollaborations.inviteeClubId, input.deleted),
+              ),
+            );
+        }
+        // Modified
+        for (const collaborator of input.modified) {
+          await tx
+            .update(eventCollaborations)
+            .set({ role: collaborator.role })
+            .where(
+              and(
+                eq(eventCollaborations.eventId, event.id),
+                eq(eventCollaborations.inviteeClubId, collaborator.clubId),
+              ),
+            );
+        }
+        // Created
+        if (input.created.length) {
+          await tx.insert(eventCollaborations).values(
+            input.created.map((collaborator) => ({
+              eventId: event.id,
+              inviterClubId: event.clubId,
+              inviteeClubId: collaborator.clubId,
+              role: collaborator.role,
+              status: 'pending' as const,
+            })),
+          );
+        }
+      });
+
+      return { success: true };
+    }),
   delete: authedProcedure
     .input(eventIdSchema)
     .mutation(async ({ input, ctx }) => {
