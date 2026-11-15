@@ -30,10 +30,10 @@ function typedDefaultValues(
     canRemove:
       role === 'Admin' ||
       role === 'SiteAdmin' ||
-      role === 'Collaborator' ||
+      
       officer.userId === userId,
     canToggleAdmin:
-      role === 'Admin' || role === 'SiteAdmin' || role === 'Collaborator',
+      role === 'Admin' || role === 'SiteAdmin',
     position: officer.memberType as 'Admin' | 'Collaborator',
   }));
 }
