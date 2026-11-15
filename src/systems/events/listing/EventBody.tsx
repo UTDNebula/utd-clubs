@@ -24,6 +24,7 @@ const EventBody = async ({
 
   const clubUpcomingEventsCard = (
     <ClubUpcomingEventsCard
+      clubId={event.club.id}
       id="upcoming-events"
       heading="Other Events From This Club"
       upcomingEvents={events}

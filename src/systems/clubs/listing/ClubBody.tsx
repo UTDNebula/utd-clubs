@@ -61,6 +61,7 @@ const ClubBody = async ({
           id="upcoming-events"
           heading="Upcoming Events"
           upcomingEvents={events}
+          clubId={club.id}
           emptyText={
             club.updatedAt == null || club.updatedAt < oneYearAgo
               ? 'No info about upcoming events'
