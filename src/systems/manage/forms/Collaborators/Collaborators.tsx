@@ -28,12 +28,8 @@ function typedDefaultValues(
       officer.userMetadata?.firstName + ' ' + officer.userMetadata?.lastName,
     email: officer.userMetadata?.user?.email ?? '',
     canRemove:
-      role === 'Admin' ||
-      role === 'SiteAdmin' ||
-      
-      officer.userId === userId,
-    canToggleAdmin:
-      role === 'Admin' || role === 'SiteAdmin',
+      role === 'Admin' || role === 'SiteAdmin' || officer.userId === userId,
+    canToggleAdmin: role === 'Admin' || role === 'SiteAdmin',
     position: officer.memberType as 'Admin' | 'Collaborator',
   }));
 }
