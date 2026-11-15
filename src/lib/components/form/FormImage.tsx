@@ -2,7 +2,6 @@
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { FormHelperText } from '@mui/material';
-import Image from 'next/image';
 
 interface FormImageProps {
   label?: string;
@@ -37,7 +36,7 @@ const FormImage = ({
         )}
         {previewUrl ? (
           <>
-            <Image
+            <img
               src={previewUrl}
               alt="Preview image"
               className="max-h-full rounded-lg"
