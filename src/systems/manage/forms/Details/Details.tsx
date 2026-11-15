@@ -11,7 +11,10 @@ import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { schools } from '@/lib/utils/commonSchemas';
 import { useAppForm } from '@/lib/utils/form';
 import { addVersionToImage } from '@/lib/utils/imageCacheBust';
-import { useUploadToUploadURL } from '@/lib/utils/uploadImage';
+import {
+  useDeleteUploadURL,
+  useUploadToUploadURL,
+} from '@/lib/utils/uploadImage';
 import { SelectClub } from '@/server/db/models';
 import { ClubSchoolEdit } from '@/systems/clubs/ClubSchoolEdit';
 import ClubTagAutocomplete from '@/systems/clubs/ClubTagAutocomplete';
@@ -44,6 +47,8 @@ const Details = ({ club }: DetailsProps) => {
     api.club.manage.data.mutationOptions({
       onSuccess: () => {
         setSnackbar(SnackbarPresets.savedName('club details'));
+        setProfileImageRemoved(false);
+        setBannerImageRemoved(false);
       },
       onError: (error) => {
         setSnackbar(SnackbarPresets.saveFailedWithMessage(error.message));
@@ -51,6 +56,7 @@ const Details = ({ club }: DetailsProps) => {
     }),
   );
   const uploadImage = useUploadToUploadURL();
+  const deleteImage = useDeleteUploadURL();
   const queryClient = useQueryClient();
 
   const clubDetails = clubQuery.data;
@@ -68,6 +74,8 @@ const Details = ({ club }: DetailsProps) => {
   };
 
   const [aliasChangedPopupOpen, setAliasChangedPopupOpen] = useState(false);
+  const [profileImageRemoved, setProfileImageRemoved] = useState(false);
+  const [bannerImageRemoved, setBannerImageRemoved] = useState(false);
 
   const form = useAppForm({
     defaultValues,
@@ -75,33 +83,33 @@ const Details = ({ club }: DetailsProps) => {
       // Profile image
 
       const { profileImage, bannerImage, clubSize, ...formValues } = value;
-      let profileImageUrl, bannerImageUrl;
+      //let profileImageUrl, bannerImageUrl;
+      let profileImageUrl = clubDetails?.profileImage ?? null;
+      let bannerImageUrl = clubDetails?.bannerImage ?? null;
+
       const profileImageIsDirty =
-        !formApi.getFieldMeta('profileImage')?.isDefaultValue;
+        !formApi.getFieldMeta('profileImage')?.isDefaultValue ||
+        profileImageRemoved;
+
       if (profileImageIsDirty) {
-        if (profileImage === null) {
-          value.profileImage = null;
-        } else {
-          const url = await uploadImage.mutateAsync({
-            file: profileImage,
-            fileName: `${club.id}-profile`,
-          });
-          profileImageUrl = url;
-        }
+        profileImageUrl = profileImage
+          ? await uploadImage.mutateAsync({
+              file: profileImage,
+              fileName: `${club.id}-profile`,
+            })
+          : null;
       }
       // Banner image
       const bannerImageIsDirty =
-        !formApi.getFieldMeta('bannerImage')?.isDefaultValue;
+        !formApi.getFieldMeta('bannerImage')?.isDefaultValue ||
+        bannerImageRemoved;
       if (bannerImageIsDirty) {
-        if (bannerImage === null) {
-          value.bannerImage = null;
-        } else {
-          const url = await uploadImage.mutateAsync({
-            file: bannerImage,
-            fileName: `${club.id}-banner`,
-          });
-          bannerImageUrl = url;
-        }
+        bannerImageUrl = bannerImage
+          ? await uploadImage.mutateAsync({
+              file: bannerImage,
+              fileName: `${club.id}-banner`,
+            })
+          : null;
       }
 
       const updated = await editData.mutateAsync({
@@ -155,13 +163,26 @@ const Details = ({ club }: DetailsProps) => {
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     fallbackUrl={
-                      clubDetails!.profileImage
+                      !profileImageRemoved && clubDetails!.profileImage
                         ? addVersionToImage(
                             clubDetails!.profileImage,
                             clubDetails!.updatedAt?.getTime(),
                           )
                         : undefined
                     }
+                    onDelete={async () => {
+                      try {
+                        if (clubDetails!.profileImage) {
+                          await deleteImage.mutateAsync({
+                            objectId: `${club.id}-profile`,
+                          });
+                        }
+                        setProfileImageRemoved(true);
+                        field.handleChange(null);
+                      } catch (error) {
+                        console.error('Failed to delete profile image:', error);
+                      }
+                    }}
                     onChange={(e) => {
                       const file = e.target.files?.[0] ?? null;
                       field.handleChange(file);
@@ -184,13 +205,26 @@ const Details = ({ club }: DetailsProps) => {
                     onBlur={field.handleBlur}
                     value={field.state.value}
                     fallbackUrl={
-                      clubDetails!.bannerImage
+                      !bannerImageRemoved && clubDetails!.bannerImage
                         ? addVersionToImage(
                             clubDetails!.bannerImage,
                             clubDetails!.updatedAt?.getTime(),
                           )
                         : undefined
                     }
+                    onDelete={async () => {
+                      try {
+                        if (clubDetails!.bannerImage) {
+                          await deleteImage.mutateAsync({
+                            objectId: `${club.id}-banner`,
+                          });
+                        }
+                        setBannerImageRemoved(true);
+                        field.handleChange(null);
+                      } catch (error) {
+                        console.error('Failed to delete banner image:', error);
+                      }
+                    }}
                     onChange={(e) => {
                       const file = e.target.files?.[0] ?? null;
                       field.handleChange(file);

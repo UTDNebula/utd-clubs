@@ -19,8 +19,8 @@ export const editClubDetailsSchema = z.object({
     .min(1, 'Description is required')
     .max(5000, 'Character limit reached'),
   tags: tagsSchema,
-  profileImage: z.url().optional(),
-  bannerImage: z.url().optional(),
+  profileImage: z.url().nullable().optional(),
+  bannerImage: z.url().nullable().optional(),
   foundingDate: z.date().nullable(),
   clubSize: z.enum(['1-10', '10-50', '50-200', '200+']).nullable(),
   schools: schools,

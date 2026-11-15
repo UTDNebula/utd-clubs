@@ -5,13 +5,16 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useStore } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Panel, { PanelSkeleton } from '@nebula-library/components/Panel';
 import FormImage from '@/lib/components/form/FormImage';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { useAppForm } from '@/lib/utils/form';
 import { addVersionToImage } from '@/lib/utils/imageCacheBust';
-import { useUploadToUploadURL } from '@/lib/utils/uploadImage';
+import {
+  useDeleteUploadURL,
+  useUploadToUploadURL,
+} from '@/lib/utils/uploadImage';
 import { type SelectClub } from '@/server/db/models';
 import { useTRPC } from '@/trpc/react';
 import { type RouterOutputs } from '@/trpc/shared';
@@ -66,6 +69,8 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
     }),
   );
   const uploadImage = useUploadToUploadURL();
+  const deleteImage = useDeleteUploadURL();
+  const [eventImageRemoved, setEventImageRemoved] = useState(false);
   const router = useRouter();
 
   const defaultValues = useMemo(() => {
@@ -144,7 +149,8 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
           onSuccess: async (newId) => {
             // Uplaod image after we have an ID
             const iImageIsDirty =
-              !formApi.getFieldMeta('image')?.isDefaultValue;
+              !formApi.getFieldMeta('image')?.isDefaultValue ||
+              eventImageRemoved;
             if (!iImageIsDirty) {
               router.push(`/events/${newId}`);
               return;
@@ -199,13 +205,26 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
                   label="Event Image"
                   value={field.state.value}
                   fallbackUrl={
-                    event?.image
+                    !eventImageRemoved && event?.image
                       ? addVersionToImage(
                           event.image,
                           event.updatedAt.getTime(),
                         )
                       : undefined
                   }
+                  onDelete={async () => {
+                    try {
+                      if (event?.image) {
+                        await deleteImage.mutateAsync({
+                          objectId: `${club.id}-event-${event.id}`,
+                        });
+                      }
+                      setEventImageRemoved(true);
+                      field.handleChange(null);
+                    } catch (error) {
+                      console.error('Failed to delete event image:', error);
+                    }
+                  }}
                   onBlur={field.handleBlur}
                   onChange={(e) => {
                     const file = e.target.files?.[0] ?? null;

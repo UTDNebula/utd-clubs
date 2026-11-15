@@ -73,3 +73,19 @@ export function useUploadToUploadURL() {
     },
   });
 }
+export function useDeleteUploadURL() {
+  const api = useTRPC();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ objectId }: { objectId: string }) => {
+      const response = await queryClient.fetchQuery(
+        api.storage.delete.queryOptions({ objectId: objectId }),
+      );
+      if (response.message !== 'success') {
+        throw new Error('Failed to delete file.');
+      }
+      return response.data;
+    },
+  });
+}
