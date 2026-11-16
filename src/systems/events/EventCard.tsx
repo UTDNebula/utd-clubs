@@ -166,7 +166,7 @@ const EventCard = ({
                       {event.club.name}
                     </div>
                   )}
-                  <div className="text-royal dark:text-cornflower-300 text-base max-sm:text-[0.75rem]">
+                  <div className="line-clamp-2 text-base font-medium text-neutral-600 max-sm:text-[0.75rem] dark:text-neutral-400">
                     <ClientEventTime
                       startTime={event.startTime}
                       endTime={event.endTime}
@@ -218,7 +218,7 @@ const EventCard = ({
                   {event.club.name}
                 </div>
               )}
-              <div className="text-royal dark:text-cornflower-300">
+              <div className="line-clamp-2 text-base font-medium">
                 <ClientEventTime
                   startTime={event.startTime}
                   endTime={event.endTime}
