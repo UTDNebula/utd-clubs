@@ -8,6 +8,7 @@ const config: JestConfigWithTsJest = {
       'ts-jest',
       {
         useESM: true,
+        tsconfig: { rootDir: '.' },
       },
     ],
   },

@@ -6,7 +6,7 @@ import { getGoogleAccessToken } from '@/lib/modules/googleOAuth';
 import { callStorageAPI } from '@/lib/utils/storage';
 import { authedProcedure, createTRPCRouter } from '@/server/api/trpc';
 import { requireMemberRole } from '@/server/api/utils';
-import { club } from '@/server/db/schema/club';
+import { club, usedTags } from '@/server/db/schema/club';
 import { contacts } from '@/server/db/schema/contacts';
 import { membershipForms } from '@/server/db/schema/membershipForms';
 import { officers } from '@/server/db/schema/officers';
@@ -618,10 +618,12 @@ const clubManageRouter = createTRPCRouter({
         },
       });
 
+      await ctx.db.delete(club).where(eq(club.id, input.clubId));
+      await ctx.db.refreshMaterializedView(usedTags);
+
       await Promise.all([
         callStorageAPI('DELETE', `${input.clubId}-profile`),
         callStorageAPI('DELETE', `${input.clubId}-banner`),
-        ctx.db.delete(club).where(eq(club.id, input.clubId)),
       ]);
     }),
   markDeleted: authedProcedure
@@ -639,6 +641,7 @@ const clubManageRouter = createTRPCRouter({
           approved: 'deleted',
         })
         .where(and(eq(club.id, input.clubId), eq(club.approved, 'approved')));
+      await ctx.db.refreshMaterializedView(usedTags);
     }),
   restore: authedProcedure
     .input(clubIdSchema)
@@ -655,6 +658,7 @@ const clubManageRouter = createTRPCRouter({
           approved: 'approved',
         })
         .where(eq(club.id, input.clubId));
+      await ctx.db.refreshMaterializedView(usedTags);
     }),
   removeMembers: authedProcedure
     .input(removeMembersSchema)
