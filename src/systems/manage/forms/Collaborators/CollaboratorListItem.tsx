@@ -23,7 +23,7 @@ const CollaboratorListItem = withForm({
       console.log(index);
     },
     canRemove: false,
-    canTogglePresident: false,
+    canToggleAdmin: false,
     self: false,
   },
   render: function Render({
@@ -31,39 +31,39 @@ const CollaboratorListItem = withForm({
     index,
     removeItem,
     canRemove,
-    canTogglePresident,
+    canToggleAdmin,
     self,
   }) {
     const handleRemove = () => {
       removeItem(index);
-      const current = form.getFieldValue('officers') as
-        | FormData['officers']
+      const current = form.getFieldValue('collaborators') as
+        | FormData['collaborators']
         | undefined;
       const next = (current ?? []).filter((_, i) => i !== index);
-      form.setFieldValue('officers', next);
+      form.setFieldValue('collaborators', next);
     };
 
     return (
       <div className="flex flex-wrap items-center gap-2 rounded-lg p-2 transition-colors max-sm:bg-neutral-100 sm:hover:bg-neutral-100 dark:max-sm:bg-neutral-800 dark:sm:hover:bg-neutral-800">
         <div className="flex max-h-full min-h-12 grow flex-col justify-center pr-4 pl-2">
           <Tooltip
-            title={`User ID: ${form.getFieldValue(`officers[${index}].userId`)}`}
+            title={`User ID: ${form.getFieldValue(`collaborators[${index}].userId`)}`}
           >
             <Typography variant="body1">
-              <span>{form.getFieldValue(`officers[${index}].name`)}</span>
+              <span>{form.getFieldValue(`collaborators[${index}].name`)}</span>
               {self && <span>&nbsp;(You)</span>}
             </Typography>
           </Tooltip>
           <Typography variant="caption">
-            <span>{form.getFieldValue(`officers[${index}].email`)}</span>
+            <span>{form.getFieldValue(`collaborators[${index}].email`)}</span>
           </Typography>
         </div>
         <div className="flex grow items-center justify-end gap-2">
-          <form.AppField name={`officers[${index}].position`}>
+          <form.AppField name={`collaborators[${index}].position`}>
             {(subField) => (
               <Tooltip
                 title={
-                  canTogglePresident
+                  canToggleAdmin
                     ? self && (
                         <div className="text-center">
                           You cannot take away your own admin status
@@ -74,7 +74,7 @@ const CollaboratorListItem = withForm({
                     : 'Only an admin can change admin status'
                 }
               >
-                {self || !canTogglePresident ? (
+                {self || !canToggleAdmin ? (
                   <div className="p-2">
                     <MemberRoleChip
                       key={subField.state.value}
@@ -87,7 +87,7 @@ const CollaboratorListItem = withForm({
                     input={
                       <OutlinedInput
                         id="collaborator-role-select"
-                        readOnly={self || !canTogglePresident}
+                        readOnly={self || !canToggleAdmin}
                         className="rounded-full [&>.MuiOutlinedInput-notchedOutline]:rounded-full [&>.MuiSelect-select]:p-2 [&>.MuiSelect-select]:pr-8"
                       />
                     }
@@ -96,10 +96,10 @@ const CollaboratorListItem = withForm({
                       return <MemberRoleChip key={value} memberType={value} />;
                     }}
                   >
-                    <MenuItem key="admin" value="President">
+                    <MenuItem key="admin" value="Admin">
                       Admin
                     </MenuItem>
-                    <MenuItem key="collaborator" value="Officer">
+                    <MenuItem key="collaborator" value="Collaborator">
                       Collaborator
                     </MenuItem>
                   </subField.Select>

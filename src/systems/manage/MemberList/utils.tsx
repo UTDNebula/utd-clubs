@@ -230,16 +230,6 @@ export const columns: GridColDef<SelectUserMetadataToClubsWithUserMetadataWithUs
     },
     {
       field: 'memberType',
-      valueGetter: (value) => {
-        switch (value) {
-          case 'President':
-            return 'Admin';
-          case 'Officer':
-            return 'Collaborator';
-          default:
-            return 'Follower';
-        }
-      },
       headerName: 'Role',
       renderHeader: (params) => (
         <ColumnHeaderWithIcon icon={<PersonOutlinedIcon />}>

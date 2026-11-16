@@ -225,7 +225,7 @@ const MemberList = ({ members, club }: MemberListProps) => {
 
   const isAdmin =
     rows.find((row) => row.userId === session.data?.user.id)?.memberType ===
-    'President';
+    'Admin';
 
   const memberListAbilities: MemberListAbilities = useMemo(() => {
     return {

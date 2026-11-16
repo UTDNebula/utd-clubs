@@ -58,7 +58,7 @@ export default async function Page(props: Props) {
       <div className="flex w-full flex-col items-center">
         <div className="flex w-full max-w-6xl flex-col gap-8">
           <ChangeClubStatus club={club} />
-          <Collaborators club={club} officers={officers} role="Admin" />
+          <Collaborators club={club} officers={officers} role="SiteAdmin" />
           <DeleteClub view="admin" club={club} />
           {club.approved !== 'approved' && (
             <div className="mx-auto mb-5 flex max-w-6xl flex-col gap-y-6 p-4">
