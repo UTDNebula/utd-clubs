@@ -11,7 +11,7 @@ import {
 // Enums
 ///////////////////////////////////////////////////////////////////////////////
 
-export const sortEnum = z.enum(['upcoming', 'updated']);
+export const sortEnum = z.enum(['relevance', 'upcoming', 'updated']);
 
 export const eventClubsFilterEnum = z.enum(['all', 'following', 'new']);
 
@@ -64,9 +64,13 @@ export const eventLocationStrings: Record<
 // Schemas
 ///////////////////////////////////////////////////////////////////////////////
 
+export const getDefaultSort = (
+  query?: string | null,
+): z.infer<typeof sortEnum> => (query?.trim() ? 'relevance' : 'upcoming');
+
 export const eventParamsSchema = z.object({
   q: z.string().optional(),
-  s: sortEnum.default('upcoming').catch('upcoming'),
+  s: sortEnum.optional().catch(undefined),
   page: z.preprocess(preprocessParamNum, z.int().min(1).default(1).catch(1)),
   size: z.preprocess(preprocessParamNum, z.int().min(1).default(20).catch(20)),
   clubs: eventClubsFilterEnum.default('all').catch('all'),
@@ -123,9 +127,11 @@ export const eventParamsToFilters = eventParamsSchema
       'location!': locationExclude,
       ...rest
     }): z.input<typeof eventFiltersSchema> => {
+      const sort =
+        s === 'relevance' && q?.trim() ? 'upcoming' : (s ?? getDefaultSort(q));
       return {
         query: q,
-        sort: s,
+        sort,
         date:
           (dateStart && dateStart !== '') || (dateEnd && dateEnd !== '')
             ? temporalDeixisCustomDateSentinelValue

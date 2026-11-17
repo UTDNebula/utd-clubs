@@ -71,10 +71,20 @@ const EventsBody = ({ initialQueryData, total }: EventsBodyProps) => {
 
   const handleChangeQuery = (value: string) => {
     setEventsParams((params) => {
-      if (value) {
+      const hadQuery = Boolean(params.get('q')?.trim());
+      const hasQuery = Boolean(value.trim());
+
+      if (hasQuery) {
         params.set('q', value);
       } else {
         params.delete('q');
+      }
+
+      if (
+        (!hadQuery && hasQuery) ||
+        (!hasQuery && hadQuery && params.get('s') === 'relevance')
+      ) {
+        params.delete('s');
       }
     });
   };
