@@ -73,8 +73,13 @@ const Collaborators = ({
       // Separate created vs modified
       const created: FormData['officers'] = [];
       const modified: FormData['officers'] = [];
-
+      // Get the existing officer IDs
+      const existingOfficers = officers.map((item) => item.userId);
       value.officers.forEach((officer, index) => {
+        //If the ID already exists, skip it
+        if (existingOfficers.includes(officer.userId)) {
+          return;
+        }
         // If it has no ID, it's created
         if (officer.new) {
           created.push(officer);
