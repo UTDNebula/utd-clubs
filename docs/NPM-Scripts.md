@@ -57,11 +57,14 @@ Scans every file in the codebase using ESLint for code issues, and fixes if poss
 
 Utility script to scan every TypeScript file in the codebase for type errors. **This is required for CI/CD testing.**
 
+- If you're experiencing issues with static file imports not resolving correctly, use `npm run type:gen` to generate Next.JS's types.
 - If you're using VS Code, it will also automatically show inline type errors.
 
 ### `npm run test`
 
-Runs tests using Jest. Not currently functional. Will be required for CI/CD testing at some point.
+Runs codebase tests using Vitest. **This is required for CI/CD testing.**
+
+- If you're using VS Code, you can add the Vitest extension to integrate with VS Code's testing suite. Please see: [VS Code](VS-Code.md).
 
 ### `npm run drizzle:studio`
 

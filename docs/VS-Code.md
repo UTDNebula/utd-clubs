@@ -9,6 +9,7 @@ To get started, install the recommended extensions by heading over to the **Exte
 - [Tailwind CSS IntelliSense](vscode:extension/bradlc.vscode-tailwindcss) - Adds code completion for Tailwind's classes when adding `className` to React components.
 - [ESLint](vscode:extension/dbaeumer.vscode-eslint) - Adds inline warnings and errors for immediate feedback on linting issues, rather than having to use `npm run lint`
 - [Prettier - Code formatter](vscode:extension/esbenp.prettier-vscode) - Lets you [format when you save a file](vscode://settings/editor.formatOnSave), or when you use a hotkey (`shift + alt + f` by default)
+- [Vitest](vscode:extension/vitest.explorer) - Integrates Vitest's tests with VS Code's testing suite, allowing you to run tests from the Testing pane in the sidebar.
 
 Although VS Code may recommend other extensions, they are completely optional and up to you to figure out.
 

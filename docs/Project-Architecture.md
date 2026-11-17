@@ -37,7 +37,7 @@ UTD Clubs is a web application built using the [**TypeScript**](Languages-and-Fu
 - **Code Quality** - To ensure the UTD Clubs codebase follows good practices and remains readable to future developers, the following libraries are used:
   - [**Prettier**](Utility-and-Code-Quality-Libraries.md#prettier) formats code to maintain a consistent style
   - [**ESLint**](Utility-and-Code-Quality-Libraries.md#eslint) catches problems with poorly written code
-  - [**Jest**](Utility-and-Code-Quality-Libraries.md#jest) runs unit tests to ensure code works as expected
+  - [**Vitest**](Utility-and-Code-Quality-Libraries.md#vitest) runs unit and integration tests to ensure code works as expected
   - [**Sentry**](Utility-and-Code-Quality-Libraries.md#sentry) detects errors in production and allows website visitors to report bugs
 
 ---
