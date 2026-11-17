@@ -277,6 +277,14 @@ const eventPublicRouter = createTRPCRouter({
             )
         : undefined;
 
+      let tsQuery: SQL | undefined;
+      if (filters.query?.trim()) {
+        const words = filters.query.trim().split(/\s+/);
+        const lastWord = words.pop();
+        const baseQuery = words.length > 0 ? words.join(' ') : '';
+        tsQuery = sql`(websearch_to_tsquery('english', ${baseQuery}) && to_tsquery('english', ${lastWord + ':*'}))`;
+      }
+
       try {
         let query = ctx.db
           .select({
@@ -403,13 +411,7 @@ const eventPublicRouter = createTRPCRouter({
 
             // filters.query
             if (filters.query?.trim()) {
-              const words = filters.query.trim().split(/\s+/);
-              const lastWord = words.pop();
-              const baseQuery = words.length > 0 ? words.join(' ') : '';
-
-              conditions.push(
-                sql`${events.searchTsv} @@ (websearch_to_tsquery('english', ${baseQuery}) && to_tsquery('english', ${lastWord + ':*'}))`,
-              );
+              conditions.push(sql`${events.searchTsv} @@ ${tsQuery}`);
             }
 
             if (signedIn && userId) {
@@ -446,7 +448,19 @@ const eventPublicRouter = createTRPCRouter({
             const events = tables.events;
 
             switch (filters.sort) {
+              case 'updated':
+                return [desc(events.updatedAt)];
+              case 'relevance':
+                if (!tsQuery) {
+                  return [asc(events.startTime)];
+                } else {
+                  return [
+                    desc(sql`ts_rank(${events.searchTsv}, ${tsQuery})`),
+                    asc(events.startTime),
+                  ];
+                }
               case 'upcoming':
+              default:
                 // If past and no custom date, sort by recency
                 const sortByRecency =
                   filters.past &&
@@ -459,8 +473,6 @@ const eventPublicRouter = createTRPCRouter({
                 } else {
                   return [asc(events.startTime)];
                 }
-              case 'updated':
-                return [desc(events.updatedAt)];
             }
           });
 

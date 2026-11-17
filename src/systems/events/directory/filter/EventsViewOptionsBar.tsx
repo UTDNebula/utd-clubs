@@ -8,6 +8,7 @@ import ViewOption, {
 } from '@/lib/components/filter/ViewOptionItem';
 import {
   EventFiltersSchema,
+  getDefaultSort,
   sortEnum,
 } from '@/systems/events/directory/filter/eventsFilterSchema';
 import { EventCardVariants } from '@/systems/events/EventCard';
@@ -42,9 +43,11 @@ export default memo(function EventsViewOptionsBar({
     });
   };
 
+  const defaultSort = getDefaultSort(filters.query);
+
   const handleChangeSort = (newValue?: (typeof sortEnum.options)[number]) => {
     setEventsParams((params) => {
-      if (newValue && newValue !== 'upcoming') {
+      if (newValue && newValue !== defaultSort) {
         params.set('s', newValue);
       } else {
         params.delete('s');
@@ -77,6 +80,9 @@ export default memo(function EventsViewOptionsBar({
     filters.past && !filters.date && !filters.dateStart && !filters.dateEnd;
 
   const sortOptions: ViewOptionItem<(typeof sortEnum.options)[number]>[] = [
+    ...(defaultSort === 'relevance'
+      ? [{ label: 'Relevance', value: 'relevance' as const }]
+      : []),
     { label: sortByRecency ? 'Recent' : 'Upcoming', value: 'upcoming' },
     { label: 'Updated', value: 'updated' },
   ];
@@ -101,7 +107,7 @@ export default memo(function EventsViewOptionsBar({
           title="Sort"
           icon={<SortIcon />}
           labelContents="value"
-          defaultValue="upcoming"
+          defaultValue={defaultSort}
           options={sortOptions}
           value={filters.sort}
           onChange={handleChangeSort}
