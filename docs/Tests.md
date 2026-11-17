@@ -21,7 +21,13 @@ In your terminal, run the following command to immediately run every single test
 npm run test
 ```
 
-You can run specific tests by filtering by file name or test names:
+This runs Vitest in watch mode, meaning Vitest will continue running and will rerun tests related to any files that have been updated. To run Vitest a single time without using watch mode, use this command instead:
+
+```bash
+npm run test:check
+```
+
+You can also run specific tests by filtering by file name or test names:
 
 ```bash
 # Only run tests in test files that contain "event"
@@ -34,6 +40,9 @@ npm run test -- -t "CRUD"
 
 # You can combine both
 npm run test -- event -t "CRUD"
+
+# Also works without watch mode
+npm run test:check -- event -t "CRUD"
 ```
 
 For more information about filtering tests, see [Vitest's documentation on filtering](https://vitest.dev/guide/filtering).

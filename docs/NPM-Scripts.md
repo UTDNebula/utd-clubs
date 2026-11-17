@@ -62,8 +62,9 @@ Utility script to scan every TypeScript file in the codebase for type errors. **
 
 ### `npm run test`
 
-Runs codebase tests using Vitest. **This is required for CI/CD testing.**
+Runs codebase tests using Vitest. For more info, please see: [Writing tests with Vitest](Tests.md). **This is required for CI/CD testing.**
 
+- This runs Vitest in watch mode, meaning Vitest watches for changes and reruns tests if related files update. If you wish to just run tests a single time, use `npm run test:check`
 - If you're using VS Code, you can add the Vitest extension to integrate with VS Code's testing suite. Please see: [VS Code](VS-Code.md).
 
 ### `npm run drizzle:studio`
