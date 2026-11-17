@@ -1,19 +1,15 @@
 {
+  "extends": "./tsconfig.app.json",
   "compilerOptions": {
-    "module": "CommonJS",
-    "esModuleInterop": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "types": ["vitest/globals"]
   },
   "include": [
-    ".eslintrc.cjs",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.cjs",
-    "**/*.mjs"
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "tests"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/nebula-library"]
 }
