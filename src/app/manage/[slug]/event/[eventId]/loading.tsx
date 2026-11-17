@@ -1,11 +1,6 @@
-import { EventFormSkeleton } from '@/systems/events/create/EventForm';
-import ManageHeader from '@/systems/manage/ManageHeader';
+import { DetailsSkeleton } from '@/systems/manage/events/forms/Details';
 
+// Shown below the header (from layout.tsx) while the Details tab loads
 export default function Loading() {
-  return (
-    <>
-      <ManageHeader loading path={['Events', 'loading', 'Edit']} />
-      <EventFormSkeleton />
-    </>
-  );
+  return <DetailsSkeleton />;
 }

@@ -174,7 +174,7 @@ export default function PageHeader({
       {...props}
     >
       <div
-        className={`flex grow ${variant === 'compact' ? `flex-row items-end gap-8 ${backButtonEnabled && backButton.type !== 'link' ? 'mr-4 ml-2' : 'mx-4'}` : 'mx-4 flex-col'}`}
+        className={`flex min-w-0 grow ${variant === 'compact' ? `flex-row items-end gap-8 ${backButtonEnabled && backButton.type !== 'link' ? 'mr-4 ml-2' : 'mx-4'}` : 'mx-4 flex-col'}`}
       >
         <div className="group/back-link flex min-h-12 items-center gap-3 py-2">
           {backButtonEnabled && backButton.type !== 'link' && (
