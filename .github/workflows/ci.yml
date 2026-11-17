@@ -1,9 +1,9 @@
-name: Lint and Formatting Check
+name: CI Checks
 
 on: push
 
 jobs:
-  main:
+  check:
     name: Run ESLint + Prettier + TypeScript
     runs-on: ubuntu-latest
 
