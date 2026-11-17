@@ -2,8 +2,7 @@ import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { getGcalEventLink } from '@/lib/modules/googleCalendar/getGcalEventLink';
 import { auth } from '@/server/auth';
-import EventForm from '@/systems/events/create/EventForm';
-import ManageHeader from '@/systems/manage/ManageHeader';
+import Details from '@/systems/manage/events/forms/Details';
 import { api } from '@/trpc/server';
 
 const EditEventPage = async (props: {
@@ -28,20 +27,8 @@ const EditEventPage = async (props: {
     );
   }
 
-  return (
-    <>
-      <ManageHeader
-        club={club}
-        path={[
-          { text: 'Events', href: `/manage/${slug}/events` },
-          { text: event.name, href: `/events/${eventId}` },
-          { text: 'Edit', href: `/manage/${slug}/event/${eventId}` },
-        ]}
-        hrefBack={`/manage/${slug}/events`}
-      />
-      <EventForm mode="edit" club={club} event={event} />
-    </>
-  );
+  // The header is rendered by layout.tsx
+  return <Details mode="edit" club={club} event={event} />;
 };
 
 export default EditEventPage;
