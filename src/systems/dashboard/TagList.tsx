@@ -13,7 +13,7 @@ type TagListProps = {
 };
 export const TagList = ({ tags, allTags }: TagListProps) => {
   return (
-    <div className="pointer-events-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-x-2 gap-y-2 text-white">
+    <div className="pointer-events-auto flex flex-wrap justify-center gap-x-2 gap-y-2 text-white">
       {tags.map((tag) => (
         <TagPill
           name={tag.tag}
