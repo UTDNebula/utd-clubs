@@ -1,4 +1,12 @@
-import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
+
+'use client'; 
+import Diversity1Icon from '@mui/icons-material/Diversity1'; // for the new icons 
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import { useParams, usePathname } from 'next/navigation';
+import PageHeader, { PageHeaderTab } from '@/lib/components/PageHeader';
+// import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import BackButton from '@/lib/components/BackButton';
@@ -27,66 +35,69 @@ type ManageHeaderProps =
  */
 const ManageHeader = ({
   club,
-  loading,
   children,
   path,
   hrefBack,
 }: ManageHeaderProps) => {
-  const normalizedPath = path?.map((pathItem) => {
-    if (typeof pathItem === 'string') {
-      return { text: pathItem };
-    } else {
-      return pathItem;
-    }
-  });
+  const pathname = usePathname();
+ 
+  const params = useParams() as { slug: string };
+  const slug = club?.slug ?? params.slug;
+
+  const normalizedPath = path?.map((pathItem) =>
+    typeof pathItem === 'string' ? { text: pathItem } : pathItem,
+  );
+
+  // empty case 
+  if (!slug) {
+    return (
+      <div className="mb-8">
+        <PageHeader title="Manage">{children}</PageHeader>
+      </div>
+    );
+  }
+
+  // new header tabs design 
+  const base = `/manage/${slug}`; // club 
+  const tabs: PageHeaderTab[] = [
+    { label: 'Manage', href: base, icon: <SettingsOutlinedIcon /> },
+    { label: 'Engagement', href: `${base}/engagement`, icon: <Diversity1Icon /> },
+    { label: 'Members', href: `${base}/followers`, icon: <PersonOutlinedIcon /> },
+    { label: 'Events', href: `${base}/events`, icon: <CalendarTodayOutlinedIcon /> },
+  ];
+
+  const isTabPage = tabs.some((tab) => tab.href === pathname); // check if the current page is one of the tab pages
+
+  if (isTabPage) {
+    return (
+      // mb-8 keeps the same space below the header as the old version.
+      <div className="mb-8">
+        <PageHeader
+          title={club?.name} // blank while loading, then fills in
+          variant="compact" // puts the tabs on the same row as the title
+          backButton={{ href: hrefBack ?? '/manage', title: 'Back to Manage' }}
+          tabs={tabs}
+        >
+          {children}
+        </PageHeader>
+      </div>
+    );
+  }
+
+  const title = normalizedPath
+    ?.map(({ text }) => text)
+    .filter((text) => text !== 'loading')
+    .join(' / ');
 
   return (
-    <div className="mb-8 flex w-full flex-row flex-wrap items-center gap-x-10 gap-y-2">
-      <div className="flex min-h-10.5 flex-row items-center gap-2">
-        <BackButton href={hrefBack} />
-        <Breadcrumbs aria-label="breadcrumb">
-          {club || loading ? (
-            <Link href="/manage">Manage</Link>
-          ) : (
-            <Typography>Manage</Typography>
-          )}
-          {club &&
-            (normalizedPath?.length ? (
-              <Link className="font-bold" href={`/manage/${club.slug}`}>
-                {club.name}
-              </Link>
-            ) : (
-              <Typography className="font-bold">{club.name}</Typography>
-            ))}
-          {loading && <Skeleton variant="text" className="w-16" />}
-          {/* All but last path items can be links */}
-          {normalizedPath?.slice(0, -1).map(({ text, href }, index) => {
-            if (text === 'loading') {
-              return (
-                <Skeleton key={text + index} variant="text" className="w-16" />
-              );
-            }
-            if (href) {
-              return (
-                <Link key={text + href} href={href}>
-                  {text}
-                </Link>
-              );
-            }
-            return <Typography key={text + href}>{text}</Typography>;
-          })}
-          {/* Last path item is just text */}
-          {normalizedPath?.length &&
-            (normalizedPath[normalizedPath.length - 1]?.text === 'loading' ? (
-              <Skeleton variant="text" className="w-16" />
-            ) : (
-              <Typography>
-                {normalizedPath[normalizedPath.length - 1]?.text}
-              </Typography>
-            ))}
-        </Breadcrumbs>
-      </div>
-      {children}
+    <div className="mb-8">
+      <PageHeader // pass params to page header to display the title and subtitle
+        title={title}
+        subtitle={club?.name} // club name 
+        backButton={{ href: hrefBack }} // back button 
+      >
+        {children}
+      </PageHeader>
     </div>
   );
 };

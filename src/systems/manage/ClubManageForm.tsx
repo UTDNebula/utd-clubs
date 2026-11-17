@@ -12,7 +12,8 @@ import Details from './forms/Details';
 import MembershipForms from './forms/MembershipForms';
 import Officers from './forms/Officers';
 import Slug from './forms/Slug';
-import Resources from './Resources';
+// import Resources from './Resources';
+
 
 const ClubManageForm = async ({
   club,
@@ -69,7 +70,7 @@ const ClubManageForm = async ({
         hasScopes={hasScopesForCalendarSync}
         userEmail={session?.user.email as string}
       />
-      <Slug club={club} role={role} />
+      {/* <Slug club={club} role={role} /> */}
       <Officers club={club} listedOfficers={listedOfficers} />
       <Contacts club={club} />
       <MembershipForms
@@ -82,7 +83,7 @@ const ClubManageForm = async ({
         role={role}
         userId={session?.user.id as string}
       />
-      <Resources />
+      {/* <Resources /> */}
       {role === 'President' && <DeleteClub view="manage" club={club} />}
     </div>
   );
