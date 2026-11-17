@@ -71,7 +71,9 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
   const defaultValues = useMemo(() => {
     if (mode === 'edit' && event) {
       const defValues: EventDetails = {
-        clubId: event.clubId,
+        // In edit mode this identifies the club whose permissions are being
+        // used. The update procedure never changes the event's owning club.
+        clubId: club.id,
         name: event.name,
         location: event.location,
         description: event.description,
@@ -117,7 +119,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
           } else {
             const url = await uploadImage.mutateAsync({
               file: value.image,
-              fileName: `${club.id}-event-${event.id}`,
+              fileName: `${event.clubId}-event-${event.id}`,
             });
             imageUrl = url ?? null;
           }
@@ -329,7 +331,7 @@ const EventForm = ({ mode = 'create', club, event }: EventFormProps) => {
             id: '',
             ...formValues,
             image: previewUrl,
-            club,
+            club: event?.club ?? club,
             status: 'approved',
             updatedAt: new Date(),
             createdAt: new Date(),

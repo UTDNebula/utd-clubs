@@ -5,7 +5,7 @@ import {
   editEventSchema,
 } from '@/systems/events/create/createEventSchema';
 import { eventFiltersSchema } from '@/systems/events/directory/filter/eventsFilterSchema';
-import { clubIdSchema } from '../baseSchemas';
+import { clubIdSchema, eventIdSchema } from '../baseSchemas';
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public Router
@@ -66,6 +66,8 @@ export const byNameSchema = z.object({
 export const createSchema = createEventSchema;
 
 export const editSchema = editEventSchema;
+
+export const eventManagementAccessSchema = eventIdSchema.merge(clubIdSchema);
 
 export const disableSyncSchema = clubIdSchema.extend({
   keepPastEvents: z.boolean().default(true).optional(),
