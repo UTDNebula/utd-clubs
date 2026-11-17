@@ -1,10 +1,10 @@
-name: CI Checks for PR
+name: Code Quality Checks
 
 on: push
 
 jobs:
   check:
-    name: Run ESLint + Prettier + TypeScript
+    name: Check lint, formatting, types
     runs-on: ubuntu-latest
 
     steps:
