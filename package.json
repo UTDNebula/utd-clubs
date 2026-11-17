@@ -13,7 +13,7 @@
     "lint:check": "eslint .",
     "type:gen": "next typegen",
     "type:check": "next typegen && tsc --project tsconfig.test.json --noEmit",
-    "test": "dotenv -- vitest",
+    "test": "vitest",
     "drizzle:generate": "dotenv drizzle-kit generate",
     "auth-schema:generate": "dotenv -- npx @better-auth/cli@latest generate --output src/server/db/schema/auth.ts --config src/server/auth.ts",
     "drizzle:migrate": "dotenv drizzle-kit migrate",
