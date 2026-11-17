@@ -1,13 +1,14 @@
+'use client';
 
-'use client'; 
-import Diversity1Icon from '@mui/icons-material/Diversity1'; // for the new icons 
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import Diversity1Icon from '@mui/icons-material/Diversity1'; // for the new icons
+
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { useParams, usePathname } from 'next/navigation';
-import PageHeader, { PageHeaderTab } from '@/lib/components/PageHeader';
 // import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
+import PageHeader, { PageHeaderTab } from '@/lib/components/PageHeader';
 import type { SelectClub } from '@/server/db/models';
 
 type PathItem =
@@ -38,7 +39,7 @@ const ManageHeader = ({
   hrefBack,
 }: ManageHeaderProps) => {
   const pathname = usePathname();
- 
+
   const params = useParams() as { slug: string };
   const slug = club?.slug ?? params.slug;
 
@@ -46,7 +47,7 @@ const ManageHeader = ({
     typeof pathItem === 'string' ? { text: pathItem } : pathItem,
   );
 
-  // empty case 
+  // empty case
   if (!slug) {
     return (
       <div className="mb-8">
@@ -55,13 +56,25 @@ const ManageHeader = ({
     );
   }
 
-  // new header tabs design 
-  const base = `/manage/${slug}`; // club 
+  // new header tabs design
+  const base = `/manage/${slug}`; // club
   const tabs: PageHeaderTab[] = [
     { label: 'Manage', href: base, icon: <SettingsOutlinedIcon /> },
-    { label: 'Engagement', href: `${base}/engagement`, icon: <Diversity1Icon /> },
-    { label: 'Members', href: `${base}/followers`, icon: <PersonOutlinedIcon /> },
-    { label: 'Events', href: `${base}/events`, icon: <CalendarTodayOutlinedIcon /> },
+    {
+      label: 'Engagement',
+      href: `${base}/engagement`,
+      icon: <Diversity1Icon />,
+    },
+    {
+      label: 'Members',
+      href: `${base}/followers`,
+      icon: <PersonOutlinedIcon />,
+    },
+    {
+      label: 'Events',
+      href: `${base}/events`,
+      icon: <CalendarTodayOutlinedIcon />,
+    },
   ];
 
   const isTabPage = tabs.some((tab) => tab.href === pathname); // check if the current page is one of the tab pages
@@ -91,8 +104,8 @@ const ManageHeader = ({
     <div className="mb-8">
       <PageHeader // pass params to page header to display the title and subtitle
         title={title}
-        subtitle={club?.name} // club name 
-        backButton={{ href: hrefBack }} // back button 
+        subtitle={club?.name} // club name
+        backButton={{ href: hrefBack }} // back button
       >
         {children}
       </PageHeader>

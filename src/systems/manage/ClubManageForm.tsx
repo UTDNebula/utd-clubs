@@ -11,9 +11,9 @@ import DeleteClub from './forms/DeleteClub';
 import Details from './forms/Details';
 import MembershipForms from './forms/MembershipForms';
 import Officers from './forms/Officers';
+
 //import Slug from './forms/Slug';
 // import Resources from './Resources';
-
 
 const ClubManageForm = async ({
   club,
