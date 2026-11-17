@@ -2,28 +2,13 @@
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { subDays } from 'date-fns';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchStore } from '@/systems/dashboard/SearchStoreProvider';
 import { useTRPC } from '@/trpc/react';
-import { RouterOutputs } from '@/trpc/shared';
-import ClubCard, { ClubCardSkeleton } from '../ClubCard';
 import ClubMatchAdCard, {
   ClubMatchAdDismissedOnStorageKey,
 } from './ads/ClubMatchAdCard';
-import InfiniteScrollGrid from './InfiniteScrollGrid';
-
-type Cards = (
-  | {
-      type: 'club';
-      club: RouterOutputs['club']['search']['clubs'][number];
-    }
-  | {
-      type: 'ad';
-      key: string;
-      render: ReactNode;
-    }
-)[];
+import { Cards, ClubGrid } from './ClubGrid';
 
 const ClubDirectoryGrid = () => {
   const {
@@ -40,7 +25,7 @@ const ClubDirectoryGrid = () => {
     placeholderData: keepPreviousData,
   });
 
-  const showNoResults = !isFetching && data && data.clubs.length === 0;
+  const showNoResults = !isFetching && !!data && data.clubs.length === 0;
 
   useEffect(() => {
     setSearchBarLoading(isFetching);
@@ -98,50 +83,12 @@ const ClubDirectoryGrid = () => {
   }
 
   return (
-    <div
-      className={`grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,320px)] justify-center gap-16 pb-4 transition-opacity duration-300 ${!showNoResults && 'pb-40'}`}
-    >
-      {isFetching && !data ? (
-        <>
-          {Array.from({ length: 9 }).map((_, index) => (
-            <ClubCardSkeleton key={`skeleton-${index}`} />
-          ))}
-        </>
-      ) : showNoResults ? (
-        <div className="col-span-full mt-32 mb-24 text-center text-4xl font-bold text-slate-600 dark:text-slate-400">
-          No clubs found matching your search
-        </div>
-      ) : (
-        <AnimatePresence mode="popLayout">
-          {cards?.map((card) => (
-            <motion.div
-              key={card.type === 'club' ? card.club.id : card.key}
-              layout="position"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{
-                layout: { type: 'spring', stiffness: 120, damping: 20 },
-                opacity: { duration: 0.3 },
-              }}
-              className="h-full w-full"
-            >
-              {card.type === 'club' ? (
-                <ClubCard club={card.club} priority />
-              ) : (
-                card.render
-              )}
-            </motion.div>
-          ))}
-          {/* Only show infinite scroll if not fetching */}
-          {!isPlaceholderData && data?.clubs.length === 9 && (
-            <InfiniteScrollGrid />
-          )}
-        </AnimatePresence>
-      )}
-    </div>
+    <ClubGrid
+      cards={cards}
+      isLoading={isFetching && !data}
+      showNoResults={showNoResults}
+      showInfiniteScroll={!isPlaceholderData && data?.clubs.length === 9}
+    />
   );
 };
 
