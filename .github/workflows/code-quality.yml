@@ -1,10 +1,10 @@
-name: Lint and Formatting Check
+name: Code Quality Checks
 
 on: push
 
 jobs:
-  main:
-    name: Run ESLint + Prettier + TypeScript
+  check:
+    name: Check lint, formatting, types
     runs-on: ubuntu-latest
 
     steps:

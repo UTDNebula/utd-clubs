@@ -10,6 +10,8 @@ Ensure you have the following installed:
   - If you've never used Git, need a refresher, or need help setting it up—check out [Nebula's Git Workshop](https://github.com/UTDNebula/git-workshop).
 - [Node.js](https://nodejs.org/en/download)
   - If you're unsure what to do on this page, scroll down and click the green button that says "Windows Installer (.msi)" or "macOS Installer (.pkg)" then open that file.
+- A code editor or an IDE (Integrated Development Environment)
+  - If you don't have one, we recommend [VS Code](https://code.visualstudio.com). If you use VS Code, you should check out our page about it: [Recommended extensions and settings for VS Code](VS-Code.md)
 
 ## Local Setup
 

@@ -1,5 +1,6 @@
 {
   "name": "nebula-clubs",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
@@ -10,8 +11,10 @@
     "format:check": "prettier --check .",
     "lint": "eslint --fix .",
     "lint:check": "eslint .",
-    "type:check": "next typegen && tsc --noEmit",
-    "test": "NODE_OPTIONS=--experimental-vm-modules dotenv jest --detectOpenHandles --forceExit",
+    "type:gen": "next typegen",
+    "type:check": "next typegen && tsc --project tsconfig.test.json --noEmit",
+    "test": "vitest",
+    "test:check": "vitest run",
     "drizzle:generate": "dotenv drizzle-kit generate",
     "auth-schema:generate": "dotenv -- npx @better-auth/cli@latest generate --output src/server/db/schema/auth.ts --config src/server/auth.ts",
     "drizzle:migrate": "dotenv drizzle-kit migrate",
@@ -84,7 +87,6 @@
     "@tailwindcss/postcss": "^4.3.0",
     "@tailwindcss/typography": "^0.5.19",
     "@types/eslint": "^9.6.1",
-    "@types/jest": "^30.0.0",
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
@@ -100,14 +102,13 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "jest": "^30.4.2",
     "postcss": "^8.5.15",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "rimraf": "^6.1.3",
     "tailwindcss": "^4.1.18",
     "tailwindcss-animate": "^1.0.7",
-    "ts-jest": "^29.4.11",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^5.1.0"
   }
 }

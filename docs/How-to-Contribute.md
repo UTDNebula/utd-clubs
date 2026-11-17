@@ -44,19 +44,29 @@ git checkout -b '123-branch-name'
 
 It's time to code!
 
-Don't forget to format and check your code periodically:
-
-```bash
-npm run format
-npm run lint
-npm run type:check
-```
+Don't forget to check your code periodically using the `npm run lint` and `npm run type:check` commands in your terminal.
 
 Discuss your progress frequently, and push your commits to GitHub. You can use [GitHub Desktop](https://github.com/apps/desktop) to make this easier. Avoid using AI to write code for your first contribution.
 
 If you ever get stuck, feel free to ask. You can also create a draft pull request (see below) so we can see your progress and help out!
 
+There are several ways to see if your changes are working:
+
+- If you're making front-end UI changes, run the project using `npm run dev` and navigate to the page where your changes are located.
+- If you're making back-end changes, you should write tests to check the output of your code and ensure it works as expected. Please see: [Writing tests with Vitest](Tests.md)
+
 ## Making a Pull Request (PR)
+
+Before you push your code to GitHub, you should always format, check, and test your code:
+
+```bash
+npm run format
+npm run lint
+npm run type:check
+npm run test
+```
+
+Try to resolve any issues these commands display. If you cannot figure it out, feel free to push your branch to GitHub anyhow and ask for help.
 
 Once you've pushed your branch to GitHub, open the [pull request page](https://github.com/UTDNebula/utd-clubs/pulls) and create a PR.
 

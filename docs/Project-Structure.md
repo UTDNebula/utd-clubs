@@ -35,7 +35,7 @@ utd-clubs/
 │   │   └── admin/               # Website administrative features
 ├── docs/                      # Pages for Club's developer documentation
 │   └── assets/                 # Images used in documentation
-├── tests/                     # Jest unit tests
+├── tests/                     # Vitest tests
 ├── public/                    # Static assets served by Next.JS
 ├── scripts/                   # Automated scripts
 ├── .env.example               # Template for environment variables (copy to .env)

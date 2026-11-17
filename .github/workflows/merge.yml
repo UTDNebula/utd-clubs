@@ -1,0 +1,38 @@
+name: CI Checks for Merge
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  test:
+    name: Run tests that require env
+    runs-on: ubuntu-latest
+    environment: develop
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Node.JS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Run npm install
+        run: npm ci
+
+      - name: Create .env
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          cat <<EOF > .env.test
+          DATABASE_URL='$DATABASE_URL'
+          EOF
+
+      - name: Run tests
+        run: node --run test:check

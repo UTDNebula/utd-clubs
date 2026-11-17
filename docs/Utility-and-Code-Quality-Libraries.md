@@ -31,11 +31,11 @@ Prettier is a library that scans every file in the codebase and formats it to en
 
 ESLint scans every file in the codebase and finds potential code issues that either breaks good practices or will outright cause problems (for example, using a state setter in a `useEffect` hook). ESLint is triggered when using the [`npm run lint`](NPM-Scripts.md#npm-run-lint) script, which is automatically called during CI/CD testing.
 
-## Jest
+## Vitest
 
-- [Documentation](https://jestjs.io/docs/getting-started)
+- [Documentation](https://vitest.dev/guide/learn/writing-tests)
 
-Jest is the library used to run unit tests that developers write for React components, utility functions, and modules to ensure they continue to work as expected as the codebase grows. Jest is triggered when using the [`npm run test`](NPM-Scripts.md#npm-run-test) script, which is automatically called during CI/CD testing.
+Vitest is the library used to run unit and integration tests that developers write for React components, utility functions, and modules to ensure they continue to work as expected as the codebase grows. Vitest is triggered when using the [`npm run test`](NPM-Scripts.md#npm-run-test) script, which is automatically called during CI/CD testing.
 
 ## Sentry
 
