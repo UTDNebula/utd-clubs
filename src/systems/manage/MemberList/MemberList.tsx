@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  DataGrid,
   GridEventListener,
   GridRowId,
   GridRowSelectionModel,
@@ -23,6 +22,7 @@ import { useTRPC } from '@/trpc/react';
 import { RouterInputs } from '@/trpc/shared';
 import CustomFooter from './CustomFooter';
 import CustomToolbar from './CustomToolbar';
+import ListGrid from './ListGrid';
 import { MemberListContext, MemberListContextType } from './MemberListContext';
 import useMemberListDeletionState from './useMemberListDeletionState';
 import {
@@ -272,17 +272,16 @@ const MemberList = ({ members, club }: MemberListProps) => {
   return (
     <div className="flex w-full max-w-6xl flex-col gap-8">
       <MemberListContext.Provider value={MemberListContextValues}>
-        <DataGrid
+        <ListGrid
           rows={rows}
           columns={actionedColumns}
-          // MUI recommends type assertion for passing custom props to slots
-          // Documentation: https://mui.com/x/common-concepts/custom-components/#using-additional-prop
-          slots={{
-            toolbar: CustomToolbar as GridSlots['toolbar'],
-            footer: CustomFooter,
+          toolbar={CustomToolbar as GridSlots['toolbar']}
+          footer={CustomFooter}
+          slotProps={{
+            toolbar: {
+              club,
+            } as GridSlotProps['toolbar'],
           }}
-          slotProps={{ toolbar: { club: club } as GridSlotProps['toolbar'] }}
-          showToolbar
           initialState={{
             columns: {
               columnVisibilityModel: {
@@ -291,19 +290,14 @@ const MemberList = ({ members, club }: MemberListProps) => {
                 minor: false,
               },
             },
-            pagination: { paginationModel: { pageSize: 25 } },
+            pagination: {
+              paginationModel: { pageSize: 25 },
+            },
           }}
-          pageSizeOptions={[25]}
           checkboxSelection
-          disableRowSelectionOnClick
-          disableRowSelectionExcludeModel
-          className="rounded-lg"
           onCellDoubleClick={handleOnCellDoubleClick}
           rowSelectionModel={rowSelectionModel}
-          onRowSelectionModelChange={(newRowSelectionModel) => {
-            setRowSelectionModel(newRowSelectionModel);
-          }}
-          hideFooterSelectedRowCount
+          onRowSelectionModelChange={setRowSelectionModel}
         />
       </MemberListContext.Provider>
       <Confirmation
