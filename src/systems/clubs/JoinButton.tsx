@@ -27,6 +27,8 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
     api.user.clubs.memberState.queryOptions({ clubId }),
   );
 
+  const router = useRouter();
+
   const joinLeave = useMutation(
     api.user.clubs.joinLeave.mutationOptions({
       onMutate: async ({ clubId }) => {
@@ -56,6 +58,7 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
         return { previousState, queryKey };
       },
       onSuccess: (context) => {
+        router.refresh();
         const joined = context?.memberType === undefined;
 
         setSnackbar({
@@ -84,8 +87,6 @@ const JoinButton = ({ isHeader, clubId, clubSlug }: JoinButtonProps) => {
       },
     }),
   );
-
-  const router = useRouter();
 
   const useAuthPage = useRef(false);
 
