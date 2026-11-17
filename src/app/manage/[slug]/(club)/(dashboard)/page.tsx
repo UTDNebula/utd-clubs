@@ -27,7 +27,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
           <div className="flex flex-col gap-2 px-2">
             <div className="prose prose-slate dark:prose-invert prose-a:text-royal dark:prose-a:text-cornflower-300 prose-sm md:prose-base">
               Make sure to keep this page up to date with the latest information about your club. 
-              Click the button below to see your club's listing page. 
+              Click the button below to see your club&apos;s listing page. 
             </div>
              <div className="flex flex-wrap items-center gap-4">
             {club.approved === 'approved' && (

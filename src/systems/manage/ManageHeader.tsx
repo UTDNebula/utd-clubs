@@ -7,9 +7,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { useParams, usePathname } from 'next/navigation';
 import PageHeader, { PageHeaderTab } from '@/lib/components/PageHeader';
 // import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
-import Link from 'next/link';
 import type { ReactNode } from 'react';
-import BackButton from '@/lib/components/BackButton';
 import type { SelectClub } from '@/server/db/models';
 
 type PathItem =
