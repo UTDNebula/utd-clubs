@@ -31,7 +31,7 @@ const Layout = async ({
 
   const canAccess = await api.user.clubs.isOfficer({ clubId: club.id });
   if (!canAccess) {
-    return <div className="">You can&apos;t access this 😢</div>;
+    return <div className="">You can&apos;t access this 😭</div>;
   }
 
   return (
