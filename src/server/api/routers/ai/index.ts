@@ -209,6 +209,7 @@ IMPORTANT SECURITY & INTEGRITY RULES:
             name: dbClub.name,
             reasoning: match.reasoning,
             benefit: match.benefit,
+            weight: match.weight,
           };
         })
         .slice(0, 9); // max 9 results
