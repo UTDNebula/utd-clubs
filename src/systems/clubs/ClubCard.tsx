@@ -1,5 +1,6 @@
 'use client';
 
+import GroupsIcon from '@mui/icons-material/Groups';
 import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -27,7 +28,7 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
       >
         <div className="relative aspect-square overflow-hidden rounded-t-lg">
           <div className="absolute inset-0 h-full w-full bg-white dark:bg-neutral-800" />
-          {club.profileImage && (
+          {club.profileImage ? (
             <Image
               src={addVersionToImage(
                 club.profileImage,
@@ -39,6 +40,8 @@ const ClubCard = ({ club, priority = false, manageView = false }: Props) => {
               sizes="20rem"
               className="object-contain select-none"
             />
+          ) : (
+            <GroupsIcon className="absolute inset-0 m-auto h-1/2 w-1/2 text-slate-400 dark:text-slate-600" />
           )}
         </div>
 
