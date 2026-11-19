@@ -7,6 +7,7 @@ import type z from 'zod';
 import Panel, { PanelSkeleton } from '@nebula-library/components/Panel';
 import Confirmation from '@/lib/components/Confirmation';
 import FormImage from '@/lib/components/form/FormImage';
+import FormAvatar from '@/lib/components/form/FormAvatar';
 import { setSnackbar, SnackbarPresets } from '@/lib/modules/snackbar';
 import { schools } from '@/lib/utils/commonSchemas';
 import { useAppForm } from '@/lib/utils/form';
@@ -147,10 +148,10 @@ const Details = ({ club }: DetailsProps) => {
       >
         <Panel heading="Details">
           <div className="m-2 flex flex-col gap-4">
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col gap-4">
               <form.Field name="profileImage">
                 {(field) => (
-                  <FormImage
+                  <FormAvatar
                     label="Profile Image"
                     value={field.state.value}
                     onBlur={field.handleBlur}
@@ -173,7 +174,6 @@ const Details = ({ club }: DetailsProps) => {
                             .join('. ') + '.'
                         : undefined
                     }
-                    className="w-48 grow"
                   />
                 )}
               </form.Field>
@@ -202,7 +202,8 @@ const Details = ({ club }: DetailsProps) => {
                             .join('. ') + '.'
                         : undefined
                     }
-                    className="w-48 grow"
+                    className="w-full md:w-[70%]"
+                    aspectRatio={4.5}
                   />
                 )}
               </form.Field>

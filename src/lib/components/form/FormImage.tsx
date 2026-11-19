@@ -11,6 +11,7 @@ interface FormImageProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   helperText?: string;
   className?: string;
+  aspectRatio?: number;
 }
 
 const FormImage = ({
@@ -21,33 +22,32 @@ const FormImage = ({
   onChange,
   helperText,
   className,
+  aspectRatio,
 }: FormImageProps) => {
   const previewUrl = file ? URL.createObjectURL(file) : fallbackUrl;
 
   return (
     <div className={className}>
-      <div className="bg-cornflower-50 dark:bg-cornflower-950 has-[:hover]:bg-cornflower-100 dark:has-[:hover]:bg-cornflower-900 relative flex w-full flex-col items-center justify-center gap-2 rounded-md p-8 transition-colors max-lg:h-48 lg:h-96">
-        {label && (
-          <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
-            {label}
-          </p>
-        )}
+      {label && (
+        <p className="mb-2 text-xs font-bold text-slate-800 dark:text-slate-200">
+          {label}
+        </p>
+      )}
+      <div
+        className={`bg-cornflower-50 dark:bg-cornflower-950 has-[:hover]:bg-cornflower-100 dark:has-[:hover]:bg-cornflower-900 has-[:hover]:scale-[1.02] has-[:active]:scale-[0.98] relative flex w-full flex-col items-center justify-center gap-2 overflow-hidden rounded-[1.25rem] p-8 transition-all duration-200 ${aspectRatio ? '' : 'h-48'}`}
+        style={aspectRatio ? { aspectRatio } : undefined}
+      >
         {previewUrl ? (
-          <>
-            {previewUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={previewUrl}
-                alt="Preview image"
-                className="max-h-full rounded-lg"
-              />
-            )}
-            {file?.name && (
-              <p className="text-xs text-slate-800 dark:text-slate-200">
-                {file.name}
-              </p>
-            )}
-          </>
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={previewUrl}
+            alt="Preview image"
+            className={
+              aspectRatio
+                ? 'absolute inset-0 h-full w-full object-cover'
+                : 'max-h-full max-w-full rounded-lg'
+            }
+          />
         ) : (
           <>
             <CloudUploadIcon />
@@ -68,6 +68,11 @@ const FormImage = ({
           className="absolute inset-0 cursor-pointer text-transparent"
         />
       </div>
+      {file?.name && (
+        <p className="mt-2 max-w-full truncate text-xs text-slate-800 dark:text-slate-200">
+          {file.name}
+        </p>
+      )}
       {helperText && (
         <FormHelperText error className="">
           {helperText}
