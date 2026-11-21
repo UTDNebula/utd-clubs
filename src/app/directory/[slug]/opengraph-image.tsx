@@ -1,6 +1,6 @@
 import { and, eq } from 'drizzle-orm';
 import { ImageResponse } from 'next/og';
-import { UTDClubsLogoStandalone } from '@/lib/icons/UTDClubsLogo';
+import ClubsLogoStandalone from '@nebula-library/components/logos/ClubsLogo';
 import { addVersionToImage } from '@/lib/utils/imageCacheBust';
 import { db } from '@/server/db';
 
@@ -229,7 +229,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               height: 40,
             }}
           >
-            <UTDClubsLogoStandalone
+            <ClubsLogoStandalone
               fill="white"
               style={{
                 width: '100%',

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { UTDClubsLogoCombination } from '@/lib/icons/UTDClubsLogo';
+import { ClubsLogoCombination } from '@nebula-library/components/logos/ClubsLogo';
 import {
   mainCats,
   moreCats,
@@ -20,12 +20,16 @@ const NavMenu = ({ userCapabilites, pendingClubsCount }: NavMenuProps) => {
       {/* Logo Section */}
       <div className="flex w-full justify-center pt-14 pb-14">
         <Link className="flex items-center gap-2 select-none" href="/">
-          <UTDClubsLogoCombination
+          <ClubsLogoCombination
             duotone
             className="h-16 w-auto"
-            slotClassNames={{
-              nebulaLogo: 'fill-haiti dark:fill-white',
-              projectLogo: 'fill-royal dark:fill-cornflower-300',
+            slotProps={{
+              nebulaLogo: {
+                className: 'fill-haiti dark:fill-white',
+              },
+              projectLogo: {
+                className: 'fill-royal dark:fill-cornflower-300',
+              },
             }}
           />
           <h1 className="font-display text-2xl font-bold">UTD CLUBS</h1>

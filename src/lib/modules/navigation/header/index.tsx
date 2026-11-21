@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { Suspense } from 'react';
+import ClubsLogoStandalone from '@nebula-library/components/logos/ClubsLogo';
 import { BaseHeader, BaseHeaderProps } from '@/lib/components/BaseHeader';
-import UTDClubsLogoStandalone from '@/lib/icons/UTDClubsLogo';
 import { auth } from '@/server/auth';
 import { EventSearchBar } from '@/systems/events/EventSearchBar';
 import Sidebar from '../drawer/Sidebar';
@@ -28,7 +28,7 @@ const Header = async (props: BaseHeaderProps) => {
   return (
     <BaseHeader
       menu={<Sidebar homepage={props.shadow} hamburgerColor={props.color} />}
-      logoIcon={<UTDClubsLogoStandalone />}
+      logoIcon={<ClubsLogoStandalone />}
       logoText={{ projectName: 'UTD CLUBS', byline: 'by Nebula Labs' }}
       searchBar={<ClubSearchContainer />}
       account={
