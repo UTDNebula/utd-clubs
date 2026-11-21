@@ -37,8 +37,8 @@ Wait for your PR to be approved.
 > In the meantime, you can make a regular PR on the [UTD Clubs repository](https://github.com/UTDNebula/utd-clubs). Its checks and build may not pass without your changes in `src/nebula-library`, so you can switch the branch and push with the following commands:
 >
 > ```bash
-> # Replace <feature-name> with the feature name you used in step 1
-> git submodule set-branch --branch feature/<feature-name> src/nebula-library
+> # Replace <branch-name> with the branch name you used in step 1
+> git submodule set-branch --branch <branch-name> src/nebula-library
 > git push
 > ```
 >
