@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { UTDClubsLogoStandalone } from '@/lib/icons/UTDClubsLogo';
+import ClubsLogoStandalone from '@nebula-library/components/logos/ClubsLogo';
 import { LoginModalContents } from '@/lib/modules/loginModal';
 import {
   emailAuth,
@@ -50,7 +50,7 @@ export default async function Auth(props: {
               className="font-display flex items-center gap-2 text-white drop-shadow-[0_0_4px_rgb(0_0_0_/_0.4)] select-none"
             >
               <div className="flex flex-row items-center">
-                <UTDClubsLogoStandalone className="h-10 w-auto fill-white" />
+                <ClubsLogoStandalone className="h-10 w-auto fill-white" />
               </div>
               <div className="flex flex-col">
                 <span className="text-lg leading-5 font-bold whitespace-nowrap md:text-xl">
