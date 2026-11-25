@@ -1,5 +1,5 @@
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { betterAuth } from 'better-auth/minimal';
+import { betterAuth, BetterAuthOptions } from 'better-auth/minimal';
 import { oAuthProxy } from 'better-auth/plugins';
 import { eq } from 'drizzle-orm';
 import { env } from '@/env.mjs';
@@ -11,12 +11,7 @@ const AUTH_TRUSTED_ORIGINS = Array.isArray(env.AUTH_TRUSTED_ORIGINS)
   ? env.AUTH_TRUSTED_ORIGINS
   : [env.AUTH_TRUSTED_ORIGINS ?? ''];
 
-/**
- * Options for Better Auth used to configure adapters, providers, callbacks, etc.
- *
- * @see https://www.better-auth.com/docs/introduction
- */
-export const auth = betterAuth({
+export const options: BetterAuthOptions = {
   database: drizzleAdapter(db, {
     provider: 'pg',
   }),
@@ -123,6 +118,15 @@ export const auth = betterAuth({
     'https://clubs-*-utdnebula.vercel.app',
     ...AUTH_TRUSTED_ORIGINS,
   ],
+};
+
+/**
+ * Options for Better Auth used to configure adapters, providers, callbacks, etc.
+ *
+ * @see https://www.better-auth.com/docs/introduction
+ */
+export const auth = betterAuth({
+  ...options,
   plugins: [
     ...((() => {
       try {

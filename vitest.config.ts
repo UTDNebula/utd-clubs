@@ -16,11 +16,18 @@ export default defineConfig({
         find: '@nebula-library',
         replacement: fromHere('./src/nebula-library'),
       },
+      {
+        find: /^@mui\/(?!material\/Autocomplete).*/,
+        replacement: fromHere('./tests/helpers/mocks/mui-stub.ts'),
+      },
     ],
   },
   test: {
     globals: true,
-    setupFiles: ['./tests/helpers/mocks/db.ts'],
+    setupFiles: [
+      './tests/helpers/mocks/db.ts',
+      './tests/helpers/mocks/next.ts',
+    ],
     typecheck: {
       enabled: true,
       tsconfig: './tsconfig.test.json',
