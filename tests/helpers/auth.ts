@@ -1,7 +1,7 @@
 import { betterAuth } from 'better-auth/minimal';
-import { options } from '@/server/auth';
-import { testUtils } from 'better-auth/plugins';
 import { nextCookies } from 'better-auth/next-js';
+import { testUtils } from 'better-auth/plugins';
+import { options } from '@/server/auth';
 
 /**
  * Options for Better Auth used to configure adapters, providers, callbacks, etc.

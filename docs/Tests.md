@@ -70,7 +70,7 @@ Here's some more things you should know that are specific to `utd-clubs`:
   - `import { db } from '@/server/db';`
   - `import { api } from '@/trpc/server';`
 
-  **VERY IMPORTANT:** To actually use these singletons, you must call them inside a transactional test context. See [**Database Transactional Test Context**](#database-transactional-test-context)
+  **VERY IMPORTANT:** To actually use these singletons, you must call them inside a transactional test context. Please see [Database Transactional Test Context](#database-transactional-test-context)
 
 ### Database Transactional Test Context
 
