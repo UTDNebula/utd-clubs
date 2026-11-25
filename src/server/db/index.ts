@@ -11,7 +11,7 @@ import * as membershipForms from './schema/membershipForms';
 import * as officers from './schema/officers';
 import * as users from './schema/users';
 
-const schema = {
+export const schema = {
   ...club,
   ...calendarWebhooks,
   ...contacts,
@@ -22,6 +22,7 @@ const schema = {
   ...auth,
   ...membershipForms,
 };
+
 if (typeof process.env.DATABASE_URL === 'undefined') {
   throw new Error('DATABASE_URL is undefined.');
 }
