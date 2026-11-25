@@ -12,6 +12,8 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: '@', replacement: fromHere('./src') },
+      { find: '@public', replacement: fromHere('./public') },
+      { find: '@tests', replacement: fromHere('./tests') },
       {
         find: '@nebula-library',
         replacement: fromHere('./src/nebula-library'),
