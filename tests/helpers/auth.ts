@@ -19,5 +19,3 @@ const ctx = await auth.$context;
  * Factories, helpers, and utilities that help when writing tests against Better Auth
  */
 export const authTestHelpers = ctx.test;
-
-const user = authTestHelpers.createUser();
