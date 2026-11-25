@@ -281,6 +281,39 @@ export const describeWithSharedDb = createDescribeWithDb(
   wrapWithSharedDb,
 );
 
+/**
+ * Wraps each test in a suite with its own database transactional test context.
+ *
+ * @example
+ * suiteWithDb('suite', () => {
+ *   test('test 1', async () => {
+ *     await db.select(); // Uses transaction context A
+ *   });
+ *   test('test 2', async () => {
+ *     await db.select(); // Uses transaction context B
+ *   });
+ * });
+ */
+export const suiteWithDb = describeWithDb;
+
+/**
+ * Wraps a suite of tests with a shared database transactional test context.
+ *
+ * @example
+ * suiteWithSharedDb('suite', () => {
+ *   beforeAll(async () => {
+ *     await db.insert(); // Uses transaction context A
+ *   });
+ *   test('test 1', async () => {
+ *     await db.select(); // Uses transaction context A
+ *   });
+ *   test('test 2', async () => {
+ *     await db.select(); // Uses transaction context A
+ *   });
+ * });
+ */
+export const suiteWithSharedDb = describeWithSharedDb;
+
 Object.assign(globalThis, {
   withDb,
   wrapWithDb,
@@ -289,6 +322,8 @@ Object.assign(globalThis, {
   itWithDb,
   describeWithDb,
   describeWithSharedDb,
+  suiteWithDb,
+  suiteWithSharedDb,
 });
 
 afterAll(async () => {
