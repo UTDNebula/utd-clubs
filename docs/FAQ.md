@@ -9,7 +9,7 @@ Accesses the tRPC API, allowing you to call server-side procedures from either t
 <table>
 <tr>
 <th>Client</th>
-<th>Server</th>
+<th>Server & Tests</th>
 </tr>
 <tr>
 <td>
@@ -52,7 +52,7 @@ Accesses the database using Drizzle, allowing you to call queries and mutations 
 <table>
 <tr>
 <th>Client</th>
-<th>Server</th>
+<th>Server & Tests</th>
 </tr>
 <tr>
 <td>
