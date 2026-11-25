@@ -4,6 +4,13 @@ import { defineConfig } from 'vitest/config';
 
 dotenv.config();
 
+if (process.env.TEST_DATABASE_URL) {
+  process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
+  console.log('✅ Using TEST_DATABASE_URL environment variable for tests');
+} else {
+  console.log('⚠️ Using DATABASE_URL environment variable for tests');
+}
+
 function fromHere(...paths: string[]) {
   return path.resolve(import.meta.dirname, ...paths);
 }
