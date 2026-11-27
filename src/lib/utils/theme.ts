@@ -1,13 +1,13 @@
 'use client';
 
 import { ThemeOptions } from '@mui/material/styles';
-import { createThemeFromM3 } from './material3/integration/mui';
+import { createThemeFromM3 } from '@/lib/modules/material3/integration/mui';
 import {
   baselinePalette,
   baselinePaletteMapper,
-} from './material3/theme/baseline';
-import { createM3Theme } from './material3/theme/createM3Theme';
-import { createPalette } from './material3/theme/utils';
+} from '@/lib/modules/material3/theme/baseline';
+import { createM3Theme } from '@/lib/modules/material3/theme/createM3Theme';
+import { createPalette } from '@/lib/modules/material3/theme/utils';
 
 const ClubsColorPalette = createPalette(
   {
